@@ -1,7 +1,63 @@
 {
   "_lisezmoi": "État de référence relu et accepté des sources officielles (voir data/veille/sources.json). Réécrit par « node scripts/veille-officielle.mjs --enregistrer » : à ne lancer qu'après avoir mis le site à jour.",
   "_enregistre": "2026-10-05",
-  "legifrance": {},
+  "legifrance": {
+    "CGI art. 150 VH bis": {
+      "id": "LEGIARTI000050366751",
+      "debut": "2026-07-01",
+      "differees": []
+    },
+    "CGI art. 150 VH ter": {
+      "id": "LEGIARTI000054318308",
+      "debut": "2026-06-27",
+      "differees": []
+    },
+    "CGI art. 200 C": {
+      "id": "LEGIARTI000044983192",
+      "debut": "2023-01-01",
+      "differees": []
+    },
+    "CGI art. 197": {
+      "id": "LEGIARTI000053542636",
+      "debut": "2026-02-21",
+      "differees": []
+    },
+    "CGI art. 92": {
+      "id": "LEGIARTI000054335303",
+      "debut": "2026-06-27",
+      "differees": []
+    },
+    "CGI art. 102 ter": {
+      "id": "LEGIARTI000054373747",
+      "debut": "2026-07-01",
+      "differees": []
+    },
+    "CGI art. 156": {
+      "id": "LEGIARTI000054373682",
+      "debut": "2026-07-01",
+      "differees": []
+    },
+    "CGI art. 1649 bis C": {
+      "id": "LEGIARTI000054339286",
+      "debut": "2026-07-01",
+      "differees": []
+    },
+    "CSS art. L136-6": {
+      "id": "LEGIARTI000051218166",
+      "debut": "2025-02-16",
+      "differees": []
+    },
+    "CSS art. L136-8": {
+      "id": "LEGIARTI000054336623",
+      "debut": "2026-06-27",
+      "differees": []
+    },
+    "LPF art. L169": {
+      "id": "LEGIARTI000054358875",
+      "debut": "2026-07-01",
+      "differees": []
+    }
+  },
   "bofip": {
     "BOI-RPPM-PVBMC-30": "2024-04-23",
     "BOI-RPPM-PVBMC-30-10": "2019-09-02",
@@ -1186,24 +1242,24 @@
       },
       "https://feel-mining.com/feel-mining-platinum": {
         "mode": "navigateur",
-        "jetons": "ac2e5c9d67c2ffbf",
+        "jetons": "c6b81ae9690af3b8",
         "liste": [
           "0,25%",
           "0,5%",
           "0,75%",
           "1%",
-          "1,41€",
+          "1,42€",
           "1,5%",
           "11,92€",
-          "12,08€",
+          "12,07€",
           "13,00€",
           "14,26€",
           "14,90€",
           "14,99€",
           "143,00€",
-          "15,29€",
+          "15,28€",
           "178,80€",
-          "2,83€",
+          "2,81€",
           "20%",
           "33%",
           "50%",
