@@ -6,9 +6,10 @@
       "texte": "LEGITEXT000006069577",
       "num": "150 VH bis",
       "idConnu": "LEGIARTI000038612228",
-      "sujet": "Régime des plus-values crypto des particuliers : seuil de 305 €, méthode globale, sursis des échanges",
+      "sujet": "Régime des plus-values crypto des particuliers : seuil de 305 €, méthode globale, sursis des échanges (terme « crypto-actifs » depuis le 01/07/2026, ordonnance n° 2024-936 art. 26)",
       "attendus": [
-        "305 €"
+        "305 €",
+        "crypto-actifs"
       ]
     },
     {
