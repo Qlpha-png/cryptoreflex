@@ -91,6 +91,9 @@ const FISCAL_NUANCE =
   // (gas des transferts/swaps non déductible) ; sans cette entrée, l'article frais-acquisition bloquait la publication quotidienne.
   "pas une cession (?:imposable|taxable)|aucune cession (?:imposable|taxable)|li[ée] à aucune cession|" +
   "pas imm[ée]diatement (?:imposabl|taxabl)|" +
+  // 05/10/2026 : « un swap crypto-crypto n'est pas un événement imposable » = la nuance elle-même ; sans cette entrée,
+  // la publication quotidienne des actus était bloquée (run 37263816817).
+  "pas un [ée]v[ée]nement (?:imposabl|taxabl|fiscal)|" +
   "non[- ]?(?:imposable|taxable)|neutre|à vérifier|non[- ]?tranché|pas (?:de )?doctrine|pas tranché|" +
   "selon (?:votre|ta|sa|la) situation|source officielle|pruden|" +
   "interprétation (?:majoritaire|répandue|dominante)|hypothèse|deux approches|position (?:majoritaire|prudente|BNC|plus-value)|" +
