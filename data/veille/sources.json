@@ -47,9 +47,10 @@
       "texte": "LEGITEXT000006069577",
       "num": "92",
       "idConnu": "LEGIARTI000028448395",
-      "sujet": "BNC : opérations sur actifs numériques menées comme un professionnel (2-1° bis)",
+      "sujet": "BNC : opérations sur crypto-actifs menées comme un professionnel (2-1° bis ; « actifs numériques » devenu « crypto-actifs » le 27/06/2026, loi n° 2026-534 art. 91)",
       "attendus": [
-        "actifs numériques"
+        "crypto-actifs",
+        "conditions analogues"
       ]
     },
     {
@@ -77,9 +78,9 @@
       "cle": "CGI art. 1649 bis C",
       "texte": "LEGITEXT000006069577",
       "num": "1649 bis C",
-      "sujet": "Déclaration des comptes d'actifs numériques à l'étranger (3916-bis)",
+      "sujet": "Déclaration des comptes de crypto-actifs à l'étranger (3916-bis ; terme « crypto-actifs » depuis le 01/07/2026, loi n° 2026-534 art. 91 ; NFT inclus)",
       "attendus": [
-        "actifs numériques"
+        "crypto-actifs"
       ]
     },
     {
@@ -91,16 +92,17 @@
         "750 €",
         "1 500 €",
         "50 000 €"
-      ]
+      ],
+      "idConnu": "LEGIARTI000047623321"
     },
     {
       "cle": "CSS art. L136-6",
       "texte": "LEGITEXT000006073189",
       "num": "L136-6",
       "idConnu": "LEGIARTI000051218166",
-      "sujet": "CSG sur les revenus du patrimoine : assiette (plus-values crypto)",
+      "sujet": "CSG sur les revenus du patrimoine : assiette (plus-values soumises à l'impôt sur le revenu, dont crypto)",
       "attendus": [
-        "150 VH bis"
+        "gains en capital"
       ]
     },
     {
