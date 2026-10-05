@@ -32,7 +32,7 @@ export default function CompareSparkline({
   if (!data || data.length < 2) {
     return (
       <span className="inline-block text-[10px] text-muted italic">
-        Pas de donnees
+        Pas de données
       </span>
     );
   }

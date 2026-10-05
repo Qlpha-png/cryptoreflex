@@ -124,7 +124,7 @@ export default function CompareSurpriseMe({
       className={`group inline-flex items-center justify-center gap-2 rounded-xl border border-amber-400/40 bg-amber-400/5 font-semibold text-amber-200 hover:border-amber-400/60 hover:bg-amber-400/10 disabled:opacity-60 transition-colors ${
         isCompact ? "px-3 py-1.5 text-xs" : "px-5 py-3 text-sm"
       }`}
-      aria-label="Surprends-moi : pioche 4 cryptos aleatoires diversifiees"
+      aria-label="Surprends-moi : pioche 4 cryptos au hasard, de catégories variées"
     >
       {loading ? (
         <Loader2 className={`animate-spin ${isCompact ? "h-3.5 w-3.5" : "h-4 w-4"}`} aria-hidden="true" />

@@ -263,7 +263,7 @@ export default function WhitepaperTldrPage() {
               <Wand2 className="h-10 w-10 text-accent-cyan flex-none" />
               <div className="flex-1">
                 <h3 className="font-bold text-white text-lg">
-                  Decouvrez les autres outils Cryptoreflex
+                  Découvrez les autres outils Cryptoreflex
                 </h3>
                 <p className="text-sm text-white/70">
                   Calculateur de profits, simulateur DCA, convertisseur crypto
@@ -307,10 +307,10 @@ const RED_FLAGS_DOCS: Array<{ id: string; label: string; points: number }> = [
   { id: "RF007", label: "Aucun audit smart contract", points: 8 },
   { id: "RF008", label: "Mention 'ponzi' / 'pyramid' / 'MLM'", points: 30 },
   { id: "RF009", label: "Allocation équipe > 30%", points: 10 },
-  { id: "RF010", label: "Pas de roadmap ni jalons dates", points: 5 },
+  { id: "RF010", label: "Pas de roadmap ni jalons datés", points: 5 },
   { id: "RF011", label: "Marketing creux 'revolutionary' / 'next bitcoin'", points: 5 },
   { id: "RF012", label: "Aucun contenu technique blockchain", points: 12 },
   { id: "RF013", label: "ROI quotidien '10% daily'", points: 25 },
-  { id: "RF014", label: "Presale/ICO sans supply plafonnee", points: 12 },
+  { id: "RF014", label: "Presale/ICO sans supply plafonnée", points: 12 },
   { id: "RF015", label: "Whitepaper trop court (<1500 mots)", points: 10 },
 ];

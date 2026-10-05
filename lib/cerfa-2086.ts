@@ -1462,12 +1462,12 @@ export async function generateCerfaPdf(
     });
     drawText(
       ctx,
-      "La valeur globale du portefeuille (l. 212) ou une donnee manque : la plus-value de ces cessions n'est pas",
+      "La valeur globale du portefeuille (l. 212) ou une donnée manque : la plus-value de ces cessions n'est pas",
       { y: ctx.cursorY - 22, size: 8.5, color: COLORS.ink },
     );
     drawText(
       ctx,
-      "calculee et les totaux ci-dessous sont PARTIELS. Voir le detail de chaque cession.",
+      "calculée et les totaux ci-dessous sont PARTIELS. Voir le détail de chaque cession.",
       { y: ctx.cursorY - 32, size: 8.5, color: COLORS.ink },
     );
     ctx.cursorY -= 56;

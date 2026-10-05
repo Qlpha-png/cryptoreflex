@@ -255,7 +255,7 @@ export default function CompareSelector({ selected, catalog }: Props) {
                 <ul className="max-h-72 overflow-y-auto py-1">
                   {filtered.length === 0 && (
                     <li className="px-3 py-3 text-sm text-muted text-center">
-                      Aucune crypto trouvee
+                      Aucune crypto trouvée
                     </li>
                   )}
                   {filtered.map((c) => (
@@ -298,7 +298,7 @@ export default function CompareSelector({ selected, catalog }: Props) {
                   ))}
                 </ul>
                 <div className="border-t border-border px-3 py-2 text-[11px] text-muted text-center">
-                  {filtered.length} resultat{filtered.length > 1 ? "s" : ""} ·{" "}
+                  {filtered.length} résultat{filtered.length > 1 ? "s" : ""} ·{" "}
                   <Link
                     href="/cryptos"
                     className="text-primary-soft hover:underline"

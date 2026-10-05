@@ -19,8 +19,8 @@
     "Bahamas",
     "Fidji",
     "Guam",
-    "Iles Vierges américaines",
-    "Iles Vierges britanniques",
+    "Îles Vierges américaines",
+    "Îles Vierges britanniques",
     "Palaos",
     "Panama",
     "Samoa",
@@ -38,7 +38,7 @@
         "name",
         "country"
       ],
-      "warning": "Binance a opéré historiquement via une entité basée aux Iles Caïmans/Malte. Depuis 2023, Binance France SAS est enregistrée PSAN auprès de l'AMF. Si vous avez ouvert votre compte AVANT migration vers Binance France, le pays de référence peut être différent.",
+      "warning": "Binance a opéré historiquement via une entité basée aux Îles Caïmans/Malte. Depuis 2023, Binance France SAS est enregistrée PSAN auprès de l'AMF. Si vous avez ouvert votre compte AVANT migration vers Binance France, le pays de référence peut être différent.",
       "entities": [
         {
           "label": "Binance France (depuis 2023+)",
@@ -50,7 +50,7 @@
         {
           "label": "Binance Holdings (entité historique)",
           "legalName": "À vérifier sur vos anciens emails/contrats Binance",
-          "country": "Iles Caïmans (historique)",
+          "country": "Îles Caïmans (historique)",
           "isNonCooperative": false,
           "amendeRisque": 750
         }
@@ -146,7 +146,7 @@
           "label": "Bybit Fintech Limited (entité historique)",
           "legalName": "Bybit Fintech Limited",
           "address": "Road Town, Tortola, British Virgin Islands - adresse à reconfirmer",
-          "country": "Iles Vierges britanniques",
+          "country": "Îles Vierges britanniques",
           "isNonCooperative": true,
           "amendeRisque": 750
         }
@@ -339,13 +339,13 @@
         "name",
         "country"
       ],
-      "warning": "ATTENTION : Bitfinex (iFinex Inc.) est domicilié aux Iles Vierges britanniques. Amende de 750 € par compte non déclaré (1 500 € si la valeur de vos comptes dépasse 50 000 €).",
+      "warning": "ATTENTION : Bitfinex (iFinex Inc.) est domicilié aux Îles Vierges britanniques. Amende de 750 € par compte non déclaré (1 500 € si la valeur de vos comptes dépasse 50 000 €).",
       "entities": [
         {
           "label": "Bitfinex / iFinex Inc.",
           "legalName": "iFinex Inc.",
           "address": "Road Town, Tortola, British Virgin Islands - adresse précise à confirmer",
-          "country": "Iles Vierges britanniques",
+          "country": "Îles Vierges britanniques",
           "isNonCooperative": true,
           "amendeRisque": 750
         }

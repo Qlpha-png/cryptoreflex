@@ -17,7 +17,7 @@ const TOTAL_DUELS = (() => {
 
 export const metadata: Metadata = {
   title: fitTitle(`Comparer 2 cryptos — ${TOTAL_DUELS} duels analyses (BTC vs ETH, SOL vs ADA, etc.)`),
-  description: fitDescription(`${TOTAL_DUELS} comparatifs crypto-vs-crypto entre les 100 fiches éditoriales (top 10 + 90 hidden gems). Verdict 3 profils, plateformes communes, FAQ contextuelle, methodologie publique Cryptoreflex.`),
+  description: fitDescription(`${TOTAL_DUELS} comparatifs crypto-vs-crypto entre les 100 fiches éditoriales (top 10 + 90 hidden gems). Verdict 3 profils, plateformes communes, FAQ contextuelle, méthodologie publique Cryptoreflex.`),
   alternates: withHreflang(`${BRAND.url}/comparer`),
   robots: { index: true, follow: true },
 };

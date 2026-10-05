@@ -516,8 +516,8 @@
       "marketCapRange": "4Md$ - 9Md$",
       "yearCreated": 2020,
       "category": "Layer 0 / Interoperabilité",
-      "tagline": "Le réseau de blockchains qui se parlent : un Internet des chaines",
-      "what": "Polkadot est un protocole Layer 0 qui relie plusieurs blockchains spécialisées ('parachains') autour d'une chaine centrale ('Relay Chain') qui assure leur sécurité. Chaque parachain peut avoir ses propres règles tout en partageant la sécurité et la communication inter-chaines de Polkadot.",
+      "tagline": "Le réseau de blockchains qui se parlent : un Internet des chaînes",
+      "what": "Polkadot est un protocole Layer 0 qui relie plusieurs blockchains spécialisées ('parachains') autour d'une chaîne centrale ('Relay Chain') qui assure leur sécurité. Chaque parachain peut avoir ses propres règles tout en partageant la sécurité et la communication inter-chaines de Polkadot.",
       "whyHiddenGem": "Cofondé par Gavin Wood, cocréateur d'Ethereum et auteur du Yellow Paper. La mise à jour 'Polkadot 2.0' (Agile Coretime, JAM) a transformé le modèle économique en 2024-2025. Très faible empreinte énergétique grâce au Nominated Proof-of-Stake.",
       "reliability": {
         "score": 8.5,
@@ -544,7 +544,7 @@
         "Concurrence directe de Cosmos et des architectures modulaires (Celestia, EigenLayer)",
         "Inflation annuelle DOT autour de 8-10% qui dilue les holders non-stakers"
       ],
-      "useCase": "Interopérabilité multi-chaines, parachains spécialisées (DeFi, identité, IoT), gouvernance OpenGov, staking via nomination",
+      "useCase": "Interopérabilité multi-chaînes, parachains spécialisées (DeFi, identité, IoT), gouvernance OpenGov, staking via nomination",
       "whereToBuy": [
         "Coinbase",
         "Kraken",
@@ -566,9 +566,9 @@
       "marketCapRange": "1,5Md$ - 4Md$",
       "yearCreated": 2019,
       "category": "Layer 0 / Interopérabilité",
-      "tagline": "L'Internet des Blockchains : chaque app sa propre chaine, toutes connectées",
-      "what": "Cosmos est un écosystème de blockchains indépendantes (appelées 'app-chains') construites avec le Cosmos SDK et reliées par le protocole IBC (Inter-Blockchain Communication). ATOM est le token de la Cosmos Hub, la chaine centrale historique.",
-      "whyHiddenGem": "Plus de 90 chaines IBC-enabled (dYdX, Celestia, Injective, Sei, Osmosis...) représentent un écosystème très actif. IBC est devenu le standard de facto pour la communication inter-chaines. Ethos open-source et neutre cher aux développeurs.",
+      "tagline": "L'Internet des Blockchains : chaque app sa propre chaîne, toutes connectées",
+      "what": "Cosmos est un écosystème de blockchains indépendantes (appelées 'app-chains') construites avec le Cosmos SDK et reliées par le protocole IBC (Inter-Blockchain Communication). ATOM est le token de la Cosmos Hub, la chaîne centrale historique.",
+      "whyHiddenGem": "Plus de 90 chaînes IBC-enabled (dYdX, Celestia, Injective, Sei, Osmosis...) représentent un écosystème très actif. IBC est devenu le standard de facto pour la communication inter-chaines. Ethos open-source et neutre cher aux développeurs.",
       "reliability": {
         "score": 7.5,
         "teamIdentified": true,
@@ -589,7 +589,7 @@
         ]
       },
       "risks": [
-        "Capture de valeur faible : ATOM bénéficie peu du succès des chaines de l'écosystème",
+        "Capture de valeur faible : ATOM bénéficie peu du succès des chaînes de l'écosystème",
         "Gouvernance fragmentée, plusieurs propositions de 'ATOM 2.0' rejetées",
         "Forte inflation (jusqu'à 20% historique, réduite par la communauté en 2024)"
       ],
@@ -602,7 +602,7 @@
       "officialUrl": "https://docs.cosmos.network/hub",
       "monitoringSignals": [
         "Volume de transferts IBC mensuels (mapofzones.com)",
-        "Nombre de chaines utilisant Interchain Security",
+        "Nombre de chaînes utilisant Interchain Security",
         "Activité GitHub du Cosmos SDK et CometBFT"
       ]
     },
@@ -811,7 +811,7 @@
       "yearCreated": 2019,
       "category": "Layer 1 / Smart contracts",
       "tagline": "Le Layer 1 académique fondé par le prix Turing Silvio Micali",
-      "what": "Algorand est une blockchain Layer 1 fondée par Silvio Micali, professeur du MIT et lauréat du Prix Turing (Nobel d'informatique). Elle utilise un consensus Pure Proof-of-Stake avec finalité instantanée et zero fork. Carbon negative officiellement.",
+      "what": "Algorand est une blockchain Layer 1 fondée par Silvio Micali, professeur du MIT et lauréat du Prix Turing (Nobel d'informatique). Elle utilise un consensus Pure Proof-of-Stake avec finalité instantanée et zéro fork. Carbon negative officiellement.",
       "whyHiddenGem": "Bases scientifiques très solides (preuves cryptographiques formelles). Adoption institutionnelle au Salvador, en Italie (FIDA Sostenibile), aux EAU (banque centrale). Éligible MiCA et utilisée pour des CBDC pilotes.",
       "reliability": {
         "score": 8,
@@ -1058,7 +1058,7 @@
       "yearCreated": 2021,
       "category": "Layer 1 / Proof-of-Work",
       "tagline": "Le Proof-of-Work de nouvelle génération : la rapidité sans sacrifier la décentralisation",
-      "what": "Kaspa est une blockchain Layer 1 Proof-of-Work qui utilise le protocole GhostDAG (un DAG, pas une chaine linéaire) permettant 1 bloc par seconde et plusieurs milliers de TPS, tout en conservant la sécurité du PoW. Pas de prévente, pas d'ICO, pas d'allocation insiders.",
+      "what": "Kaspa est une blockchain Layer 1 Proof-of-Work qui utilise le protocole GhostDAG (un DAG, pas une chaîne linéaire) permettant 1 bloc par seconde et plusieurs milliers de TPS, tout en conservant la sécurité du PoW. Pas de prévente, pas d'ICO, pas d'allocation insiders.",
       "whyHiddenGem": "Lancé en 'fair launch' intégral (sans premine, sans VC) comme Bitcoin. Conception académique solide par Yonatan Sompolinsky (auteur du protocole GHOST cité dans le whitepaper Ethereum). Supply fixe (28,7Md KAS, émission déflationniste).",
       "reliability": {
         "score": 7,
@@ -1154,7 +1154,7 @@
         "teamIdentified": true,
         "openSource": true,
         "auditedBy": [
-          "Audits communautaires (code derive de Bitcoin Core)"
+          "Audits communautaires (code dérivé de Bitcoin Core)"
         ],
         "lastAuditDate": "n/a (revues continues code Bitcoin)",
         "yearsActive": 14,
@@ -1199,7 +1199,7 @@
         "teamIdentified": true,
         "openSource": true,
         "auditedBy": [
-          "Audits communautaires (heritage code Bitcoin Core)"
+          "Audits communautaires (code hérité de Bitcoin Core)"
         ],
         "lastAuditDate": "n/a",
         "yearsActive": 9,
@@ -1293,7 +1293,7 @@
         "teamIdentified": true,
         "openSource": true,
         "auditedBy": [
-          "Audits communautaires (code derive de Bitcoin Core)"
+          "Audits communautaires (code dérivé de Bitcoin Core)"
         ],
         "lastAuditDate": "n/a",
         "yearsActive": 12,
@@ -1377,8 +1377,8 @@
       "marketCapRange": "2Md$ - 6Md$",
       "yearCreated": 2020,
       "category": "Layer 2 Ethereum / Multi-chain",
-      "tagline": "L'écosystème multi-chaines Ethereum, du PoS aux ZK-rollups",
-      "what": "Polygon est un écosystème de scaling Ethereum qui regroupe plusieurs chaines : Polygon PoS (sidechain historique), zkEVM (rollup ZK), Polygon CDK (kit pour app-chains ZK), et l'AggLayer (couche d'agrégation cross-chain). Le token MATIC a été migré vers POL en 2024 pour devenir le token unifié de tout l'écosystème.",
+      "tagline": "L'écosystème multi-chaînes Ethereum, du PoS aux ZK-rollups",
+      "what": "Polygon est un écosystème de scaling Ethereum qui regroupe plusieurs chaînes : Polygon PoS (sidechain historique), zkEVM (rollup ZK), Polygon CDK (kit pour app-chains ZK), et l'AggLayer (couche d'agrégation cross-chain). Le token MATIC a été migré vers POL en 2024 pour devenir le token unifié de tout l'écosystème.",
       "whyHiddenGem": "L'un des Layer 2 les plus utilisés avec Arbitrum et Base. Adoption enterprise massive : Starbucks, Nike, Reddit, Disney y ont déployé des NFT/loyalty. Stratégie 'Polygon 2.0' axée sur l'agrégation ZK est ambitieuse.",
       "reliability": {
         "score": 8.5,
@@ -1416,7 +1416,7 @@
       "officialUrl": "https://polygon.technology",
       "monitoringSignals": [
         "TVL DeFi sur DefiLlama (Polygon PoS + zkEVM + CDK chains)",
-        "Adoption AggLayer (chaines connectées, volume de messages)",
+        "Adoption AggLayer (chaînes connectées, volume de messages)",
         "Avancement migration MATIC -> POL (>95% déjà migrés mi-2025)"
       ]
     },
@@ -1430,7 +1430,7 @@
       "yearCreated": 2021,
       "category": "Layer 2 Ethereum / Optimistic Rollup",
       "tagline": "L'Optimistic Rollup pionnier qui alimente la Superchain de Base et OP Mainnet",
-      "what": "Optimism est un Layer 2 Ethereum de type Optimistic Rollup. Il exécute les transactions hors chaine puis les ancre sur Ethereum, divisant les frais par 10 à 100x. Sa pile technique open-source (OP Stack) est utilisée par Coinbase Base, World Chain, Mode, Zora et d'autres pour former la 'Superchain'.",
+      "what": "Optimism est un Layer 2 Ethereum de type Optimistic Rollup. Il exécute les transactions hors chaîne puis les ancre sur Ethereum, divisant les frais par 10 à 100x. Sa pile technique open-source (OP Stack) est utilisée par Coinbase Base, World Chain, Mode, Zora et d'autres pour former la 'Superchain'.",
       "whyHiddenGem": "OP Stack est devenu un standard de l'écosystème L2 (Base, Worldcoin's World Chain, Zora utilisent tous OP Stack). Modèle de revenus partagés entre les chains de la Superchain et OP Mainnet. Gouvernance bicamérale (Token House + Citizens House) innovante.",
       "reliability": {
         "score": 8.5,
@@ -2387,7 +2387,7 @@
         ],
         "lastAuditDate": "2024-08",
         "yearsActive": 4,
-        "majorIncidents": "Aucun exploit majeur du protocole core ; controverses sur le geoblocage de l'airdrop et accusations de favoritisme dans la distribution.",
+        "majorIncidents": "Aucun exploit majeur du protocole core ; controverses sur le géoblocage de l'airdrop et accusations de favoritisme dans la distribution.",
         "fundingRaised": "155M$",
         "backers": [
           "Andreessen Horowitz (a16z)",

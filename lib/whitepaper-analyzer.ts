@@ -83,7 +83,7 @@ export const MAX_INPUT_LENGTH = 30_000;
 export const MIN_INPUT_LENGTH = 200;
 
 const DISCLAIMER =
-  "Analyse indicative basee sur des heuristiques publiques. Ne constitue pas un conseil en investissement. DYOR (Do Your Own Research) recommande avant toute decision.";
+  "Analyse indicative basée sur des heuristiques publiques. Ne constitue pas un conseil en investissement : faites vos propres recherches (DYOR) avant toute décision.";
 
 /* -------------------------------------------------------------------------- */
 /*  Helpers                                                                   */
@@ -159,7 +159,7 @@ function detectProblem(text: string): string {
     .filter((s) => s.trim().length >= 40)
     .slice(0, 2)
     .join(" ");
-  return firstSentences || "Probleme non identifie automatiquement dans le texte fourni.";
+  return firstSentences || "Problème non identifié automatiquement dans le texte fourni.";
 }
 
 function detectSolution(text: string): string {
@@ -174,7 +174,7 @@ function detectSolution(text: string): string {
     const found = nSentencesAfter(text, m, 3);
     if (found.length > 50) return found;
   }
-  return "Solution technique non clairement identifiee dans le texte fourni.";
+  return "Solution technique non clairement identifiée dans le texte fourni.";
 }
 
 function detectTokenomics(text: string): TokenomicsInfo {
@@ -215,7 +215,7 @@ function detectTokenomics(text: string): TokenomicsInfo {
     totalSupply,
     teamAllocation,
     hasVesting,
-    raw: raw || "Section tokenomics non detectee.",
+    raw: raw || "Section tokenomics non détectée.",
   };
 }
 
@@ -257,7 +257,7 @@ function detectTeam(text: string): TeamInfo {
   return {
     isAnonymous,
     mentions: Array.from(mentions),
-    raw: raw || "Section equipe non detectee.",
+    raw: raw || "Section équipe non détectée.",
   };
 }
 
@@ -306,7 +306,7 @@ const FLAG_DEFS: FlagDef[] = [
       const hasRiskFraming = /\b(risk[s]?|volatility|loss|disclaimer)\b/i.test(t);
       if (hasPassive && !hasRiskFraming) {
         const m = t.match(/\bpassive\s+income\b/i);
-        return m ? snippet(t, m.index ?? -1) : "passive income mentionne sans encadrement risque";
+        return m ? snippet(t, m.index ?? -1) : "« passive income » mentionné sans encadrement du risque";
       }
       return null;
     },
@@ -326,7 +326,7 @@ const FLAG_DEFS: FlagDef[] = [
         if (lower.includes("trillion") || lower.endsWith("t")) total = num * 1e12;
         else if (lower.includes("billion") || lower.endsWith("b")) total = num * 1e9;
         else if (lower.includes("million") || lower.endsWith("m")) total = num * 1e6;
-        if (total >= 1e12) return `Supply detectee : ${tokenomics.totalSupply}`;
+        if (total >= 1e12) return `Supply détectée : ${tokenomics.totalSupply}`;
       }
       // Detection texte direct
       const re = /\b\d{1,3}\s*(quadrillion|trillion)\b/i;
@@ -336,14 +336,14 @@ const FLAG_DEFS: FlagDef[] = [
   },
   {
     id: "RF005",
-    label: "Equipe anonyme ou non identifiable",
+    label: "Équipe anonyme ou non identifiable",
     severity: "high",
     points: 15,
     test: (_t, { team }) => {
       if (team.isAnonymous) {
         return team.mentions.length === 0
-          ? "Aucun nom d'equipe detectable dans le texte"
-          : "Mention explicite d'une equipe anonyme";
+          ? "Aucun nom d'équipe détectable dans le texte"
+          : "Mention explicite d'une équipe anonyme";
       }
       return null;
     },
@@ -354,7 +354,7 @@ const FLAG_DEFS: FlagDef[] = [
     severity: "medium",
     points: 8,
     test: (_t, { tokenomics }) => {
-      return tokenomics.hasVesting ? null : "Pas de mecanisme de vesting/lock detecte";
+      return tokenomics.hasVesting ? null : "Pas de mécanisme de vesting/lock détecté";
     },
   },
   {
@@ -364,7 +364,7 @@ const FLAG_DEFS: FlagDef[] = [
     points: 8,
     test: (t) => {
       const re = /\b(audit(?:ed|or)?|certik|hacken|trail\s+of\s+bits|consensys\s+diligence|quantstamp)\b/i;
-      return re.test(t) ? null : "Aucune mention d'audit smart contract detectee";
+      return re.test(t) ? null : "Aucune mention d'audit de smart contract détectée";
     },
   },
   {
@@ -380,7 +380,7 @@ const FLAG_DEFS: FlagDef[] = [
   },
   {
     id: "RF009",
-    label: "Allocation equipe > 30 %",
+    label: "Allocation équipe > 30 %",
     severity: "medium",
     points: 10,
     test: (_t, { tokenomics }) => {
@@ -388,17 +388,17 @@ const FLAG_DEFS: FlagDef[] = [
       const pctMatch = tokenomics.teamAllocation.match(/(\d{1,3}(?:\.\d+)?)/);
       if (!pctMatch) return null;
       const pct = parseFloat(pctMatch[1]);
-      return pct > 30 ? `Team allocation : ${tokenomics.teamAllocation}` : null;
+      return pct > 30 ? `Allocation équipe : ${tokenomics.teamAllocation}` : null;
     },
   },
   {
     id: "RF010",
-    label: "Pas de roadmap ni jalons dates",
+    label: "Pas de roadmap ni jalons datés",
     severity: "low",
     points: 5,
     test: (t) => {
       const hasRoadmap = /\b(roadmap|milestones?|jalons?|Q[1-4]\s*20\d{2}|H[12]\s*20\d{2})\b/i.test(t);
-      return hasRoadmap ? null : "Aucune roadmap ni jalon date detecte";
+      return hasRoadmap ? null : "Aucune roadmap ni jalon daté détecté";
     },
   },
   {
@@ -442,7 +442,7 @@ const FLAG_DEFS: FlagDef[] = [
   },
   {
     id: "RF014",
-    label: "Presale / ICO sans supply plafonnee",
+    label: "Presale / ICO sans supply plafonnée",
     severity: "high",
     points: 12,
     test: (t, { tokenomics }) => {
@@ -451,7 +451,7 @@ const FLAG_DEFS: FlagDef[] = [
       // Si pas de total supply detecte ET pas de mention "max supply"
       const hasMaxSupply = /\b(max(?:imum)?\s+supply|capped\s+at|hard\s+cap)\b/i.test(t);
       if (!tokenomics.totalSupply && !hasMaxSupply) {
-        return "Presale/ICO mentionne mais aucune supply maximale clairement plafonnee";
+        return "Presale/ICO mentionnée mais aucune supply maximale clairement plafonnée";
       }
       return null;
     },
@@ -555,7 +555,7 @@ export function validateInput(rawInput: string): { ok: true } | { ok: false; rea
   if (trimmed.length < MIN_INPUT_LENGTH) {
     return {
       ok: false,
-      reason: `Texte trop court (${trimmed.length} caracteres). Colle au moins ${MIN_INPUT_LENGTH} caracteres incluant l'introduction et la section tokenomics.`,
+      reason: `Texte trop court (${trimmed.length} caractères). Collez au moins ${MIN_INPUT_LENGTH} caractères incluant l'introduction et la section tokenomics.`,
     };
   }
   return { ok: true };

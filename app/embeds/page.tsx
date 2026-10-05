@@ -69,7 +69,7 @@ const FAQ_ITEMS = [
   {
     question: "Puis-je modifier le widget (couleurs, taille, langue) ?",
     answer:
-      "La taille (width / height) est libre — utilisez les attributs HTML standard de l'iframe. Pour les couleurs, le widget hérite du dark theme Cryptoreflex (gold + dark). Une version « light » et des couleurs personnalisables sont prévues pour la V2 — abonnez-vous à la newsletter pour être notifié.",
+      "La taille (width / height) est libre — utilisez les attributs HTML standard de l'iframe. Pour les couleurs, le widget hérite du thème sombre de Cryptoreflex (or sur fond noir). Une version « light » et des couleurs personnalisables sont prévues pour la V2 — abonnez-vous à la newsletter pour être notifié.",
   },
   {
     question: "Quelle license s'applique ?",
@@ -308,7 +308,7 @@ export default function EmbedsLandingPage() {
                 href="/mentions-legales"
                 className="inline-flex items-center gap-1.5 rounded-xl border border-border bg-elevated/40 px-3.5 py-2 text-xs font-semibold text-fg/90 hover:border-primary/40"
               >
-                Mentions legales Cryptoreflex
+                Mentions légales Cryptoreflex
               </Link>
               <a
                 href={`mailto:${BRAND.partnersEmail}?subject=Notification%20integration%20widget%20Cryptoreflex&body=Bonjour%2C%0A%0AJ%27ai%20integre%20le%20widget%20%5BNOM%5D%20sur%20%5BURL%5D.%0AAttribution%20conservee%20%3A%20%5BOUI%2FNON%5D.%0A%0AMerci.`}

@@ -34,7 +34,7 @@ export function GET() {
     info: {
       title: "Cryptoreflex Public Open Data API",
       description:
-        `API publique CC-BY 4.0 de Cryptoreflex.fr. 5 endpoints JSON sur le marche crypto francais : ${STATS.platformsAudited} plateformes auditees, registre PSAN+MiCA consolide, scores de decentralisation, top cryptos vulgarisees, outils fiscalite. Toute reutilisation = attribution requise = lien dofollow vers https://www.cryptoreflex.fr.`,
+        `API publique CC-BY 4.0 de Cryptoreflex.fr. 5 endpoints JSON sur le marché crypto français : ${STATS.platformsAudited} plateformes auditées, registre PSAN + MiCA consolidé, scores de décentralisation, top cryptos vulgarisées, outils de fiscalité. Toute réutilisation = attribution requise = lien dofollow vers https://www.cryptoreflex.fr.`,
       version: "1.0.0",
       termsOfService: BRAND.url + "/mentions-legales",
       contact: {
@@ -50,29 +50,29 @@ export function GET() {
     servers: [
       {
         url: BRAND.url,
-        description: "Production (Hetzner CCX13 + Cloudflare Free)",
+        description: "Production (Vercel)",
       },
     ],
     tags: [
       {
         name: "platforms",
-        description: "Catalogue des plateformes crypto auditees",
+        description: "Catalogue des plateformes crypto auditées",
       },
       {
         name: "regulatory",
-        description: "Donnees reglementaires (PSAN AMF, CASP MiCA UE)",
+        description: "Données réglementaires (PSAN AMF, CASP MiCA UE)",
       },
       {
         name: "blockchain",
-        description: "Donnees on-chain et metriques techniques",
+        description: "Données on-chain et métriques techniques",
       },
       {
         name: "education",
-        description: "Donnees vulgarisees pour debutants FR",
+        description: "Données vulgarisées pour débutants",
       },
       {
         name: "fiscal",
-        description: "Outils fiscalite crypto",
+        description: "Outils de fiscalité crypto",
       },
     ],
     paths: {
@@ -80,11 +80,11 @@ export function GET() {
         get: {
           summary: "Index / discovery",
           description:
-            "Liste tous les endpoints publics CC-BY 4.0 avec leur description et schema de reponse. Point d entree recommande pour decouvrir l API.",
+            "Liste tous les endpoints publics CC-BY 4.0 avec leur description et leur schéma de réponse. Point d'entrée recommandé pour découvrir l'API.",
           tags: ["platforms"],
           responses: {
             "200": {
-              description: "Index de l API",
+              description: "Index de l'API",
               content: {
                 "application/json": {
                   schema: { $ref: "#/components/schemas/IndexResponse" },
@@ -98,7 +98,7 @@ export function GET() {
         get: {
           summary: "Catalogue plateformes crypto",
           description:
-            `${STATS.platformsAudited} plateformes crypto auditees : frais maker/taker/SEPA, securite, statut MiCA, support FR. Mise a jour mensuelle.`,
+            `${STATS.platformsAudited} plateformes crypto auditées : frais maker/taker/SEPA, sécurité, statut MiCA, support FR. Mise à jour mensuelle.`,
           tags: ["platforms"],
           responses: {
             "200": {
@@ -114,13 +114,13 @@ export function GET() {
       },
       "/api/public/psan-registry": {
         get: {
-          summary: "Registre PSAN + MiCA consolide",
+          summary: "Registre PSAN + MiCA consolidé",
           description:
-            "Statut MiCA (registre ESMA) + numero d agrement AMF pour les prestataires francais. Le champ atRiskJuly2026 vaut true si la plateforme ne peut pas servir la France depuis le 1er juillet 2026.",
+            "Statut MiCA (registre ESMA) + numéro d'agrément AMF pour les prestataires français. Le champ atRiskJuly2026 vaut true si la plateforme ne peut pas servir la France depuis le 1er juillet 2026.",
           tags: ["regulatory"],
           responses: {
             "200": {
-              description: "Registre reglementaire",
+              description: "Registre réglementaire",
               content: {
                 "application/json": {
                   schema: { $ref: "#/components/schemas/PsanRegistryResponse" },
@@ -132,9 +132,9 @@ export function GET() {
       },
       "/api/public/decentralization-scores": {
         get: {
-          summary: "Scores de decentralisation",
+          summary: "Scores de décentralisation",
           description:
-            "Score composite Cryptoreflex (Nakamoto coef + validators + geo + clients + open source) pour Bitcoin, Ethereum, Solana, etc. Mise a jour trimestrielle.",
+            "Score composite Cryptoreflex (Nakamoto coef + validators + geo + clients + open source) pour Bitcoin, Ethereum, Solana, etc. Mise à jour trimestrielle.",
           tags: ["blockchain"],
           responses: {
             "200": {
@@ -150,9 +150,9 @@ export function GET() {
       },
       "/api/public/top-cryptos": {
         get: {
-          summary: "Top 10 cryptos vulgarisees",
+          summary: "Top 10 cryptos vulgarisées",
           description:
-            "Top 10 cryptos par capitalisation, expliquees en francais pour debutants : tagline, useCase, points forts/faibles, riskLevel.",
+            "Top 10 cryptos par capitalisation, expliquées en français pour débutants : tagline, useCase, points forts/faibles, riskLevel.",
           tags: ["education"],
           responses: {
             "200": {
@@ -168,7 +168,7 @@ export function GET() {
       },
       "/api/public/fiscal-tools": {
         get: {
-          summary: "Outils fiscalite crypto",
+          summary: "Outils de fiscalité crypto",
           description:
             "Comparatif Waltio, Koinly, CoinTracking : tarifs, plans, support FR, MiCA, freeTrial.",
           tags: ["fiscal"],
@@ -193,7 +193,7 @@ export function GET() {
           properties: {
             source: {
               type: "string",
-              description: "Source originale des donnees (compilations Cryptoreflex)",
+              description: "Source originale des données (compilations Cryptoreflex)",
             },
             schemaVersion: { type: "string", example: "1.0" },
             license: { type: "string", example: "CC-BY-4.0" },
@@ -205,11 +205,11 @@ export function GET() {
             attribution: {
               type: "string",
               description:
-                "Texte d attribution obligatoire en cas de reutilisation (clause CC-BY 4.0)",
+                "Texte d'attribution obligatoire en cas de réutilisation (clause CC-BY 4.0)",
             },
             attributionHtml: {
               type: "string",
-              description: "Attribution prete a coller en HTML (avec lien dofollow)",
+              description: "Attribution prête à coller en HTML (avec lien dofollow)",
             },
             canonicalUrl: { type: "string", format: "uri" },
             lastUpdated: {
@@ -288,7 +288,7 @@ export function GET() {
             amfRegistration: {
               type: "string",
               example: "A2025-003",
-              description: "Numero d agrement MiCA delivre par l AMF (A20xx-xxx), null pour un agrement etranger",
+              description: "Numéro d'agrément MiCA délivré par l'AMF (A20xx-xxx), null pour un agrément étranger",
             },
             micaStatus: {
               type: "string",
@@ -398,7 +398,7 @@ export function GET() {
       },
     },
     externalDocs: {
-      description: "Documentation lisible humaine",
+      description: "Documentation lisible par un humain",
       url: BRAND.url + "/api-publique",
     },
   };

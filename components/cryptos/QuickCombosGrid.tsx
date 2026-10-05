@@ -66,7 +66,7 @@ export default function QuickCombosGrid() {
             Comparaisons populaires
           </h2>
           <p className="mt-1 text-sm text-muted">
-            10 combos curees par notre redaction. Clique pour comparer en 1
+            10 combinaisons choisies par notre rédaction. Cliquez pour comparer en 1
             seconde.
           </p>
         </div>

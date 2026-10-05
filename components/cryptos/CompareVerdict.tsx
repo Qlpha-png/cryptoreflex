@@ -48,7 +48,7 @@ export default function CompareVerdict({ cryptos, details }: Props) {
 
   return (
     <section
-      aria-label="Verdict synthetique du comparatif"
+      aria-label="Verdict synthétique du comparatif"
       className="rounded-2xl border border-border bg-surface p-5 sm:p-6"
     >
       <header>
@@ -56,8 +56,8 @@ export default function CompareVerdict({ cryptos, details }: Props) {
           Verdict en 3 profils
         </h2>
         <p className="mt-1 text-xs text-muted">
-          Synthese 100% data-driven (capi CoinGecko, score Cryptoreflex,
-          age). Pas un conseil en investissement.
+          Synthèse fondée uniquement sur les données (capitalisation CoinGecko, score Cryptoreflex,
+          âge). Pas un conseil en investissement.
         </p>
       </header>
 
@@ -181,7 +181,7 @@ function computeVerdicts(
     verdicts.push({
       profile: "Diversification",
       icon: Layers,
-      winnerName: "Combo equilibre",
+      winnerName: "Combo équilibré",
       winnerSymbol: `${cryptos.length} catégories`,
       reason: `Vos ${cryptos.length} cryptos couvrent ${cryptos.length} catégories distinctes. Vous réduisez l'exposition à un seul récit.`,
       accent: "amber",

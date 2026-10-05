@@ -320,17 +320,17 @@ export default function NewsletterInline({
               Voir un exemple du dernier email
             </summary>
             <div className="mt-2 rounded-lg border border-border bg-elevated/40 p-3 text-xs text-fg/70 leading-relaxed">
-              <p className="font-semibold text-fg">[Cryptoreflex] Bitpanda decroche son agrement MiCA — 3 conséquences pour vous</p>
-              <p className="mt-1.5 italic text-muted">7h02 · Edition du jour</p>
+              <p className="font-semibold text-fg">[Cryptoreflex] Bitpanda décroche son agrément MiCA — 3 conséquences pour vous</p>
+              <p className="mt-1.5 italic text-muted">7 h 02 · Édition du jour</p>
               <p className="mt-2">
-                1/ <strong>Bitpanda Asset Management AG</strong> rejoint la liste des entites MiCA-compliant en zone UE.
-                Ce que ca change concretement…
+                1/ <strong>Bitpanda Asset Management AG</strong> rejoint la liste des entités conformes à MiCA dans l'UE.
+                Ce que ça change concrètement…
               </p>
               <p className="mt-1">
-                2/ <strong>Marche</strong> : BTC consolide entre 95 et 102 k$, ETH teste resistance 3 800 $.
+                2/ <strong>Marché</strong> : BTC consolide entre 95 et 102 k$, ETH teste la résistance des 3 800 $.
               </p>
               <p className="mt-1">
-                3/ <strong>Fisca FR</strong> : rappel — declaration crypto 2025 ouverte des avril 2026.
+                3/ <strong>Fisca FR</strong> : rappel — déclaration crypto 2025 ouverte dès avril 2026.
               </p>
             </div>
           </details>

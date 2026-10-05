@@ -283,7 +283,7 @@ export const EVENTS_SEED: CryptoEvent[] = [
     source: "EthCC",
     sourceUrl: "https://www.ethcc.io/",
     description:
-      "Edition 2026 de la conférence Ethereum Community Conference à Cannes. Cinq jours de talks indépendants, gratuits et orientés développeurs.",
+      "Édition 2026 de la conférence Ethereum Community Conference à Cannes. Cinq jours de talks indépendants, gratuits et orientés développeurs.",
     importance: 3,
   },
   {
@@ -331,7 +331,7 @@ export const EVENTS_SEED: CryptoEvent[] = [
     source: "Bitcoin Magazine",
     sourceUrl: "https://b.tc/conference/amsterdam",
     description:
-      "Edition européenne de la conférence Bitcoin Magazine. Public mixte institutionnel et cypherpunk, gros focus sur les solutions Lightning et self-custody.",
+      "Édition européenne de la conférence Bitcoin Magazine. Public mixte institutionnel et cypherpunk, gros focus sur les solutions Lightning et self-custody.",
     importance: 2,
   },
   {
@@ -391,7 +391,7 @@ export const EVENTS_SEED: CryptoEvent[] = [
     source: "CoinPost",
     sourceUrl: "https://webx-asia.com/",
     description:
-      "Edition 2025 du WebX Summit organisé par CoinPost à Tokyo. Plus de 25 000 participants, focus régulation japonaise et tokenisation des actifs.",
+      "Édition 2025 du WebX Summit organisé par CoinPost à Tokyo. Plus de 25 000 participants, focus régulation japonaise et tokenisation des actifs.",
     importance: 1,
   },
 ];
