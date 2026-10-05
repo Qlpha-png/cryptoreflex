@@ -18,8 +18,11 @@
 
 import { NextResponse } from "next/server";
 import { getTopMarket } from "@/lib/price-source";
+import { fiatPerUsd } from "@/lib/fx";
 
-export const revalidate = 600;
+/* rendue à chaque appel : la liste pleine est mise en cache par le CDN (s-maxage=600) et par getTopMarket ; une liste vide
+   (source en panne) répond 503 sans cache, au lieu d'être servie 10 minutes à tout le monde (audit du 05/10/2026) */
+export const dynamic = "force-dynamic";
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -27,18 +30,14 @@ export async function GET(request: Request) {
   const vs = (searchParams.get("vs") ?? "eur").toLowerCase();
   const limit = Math.min(Math.max(limitRaw || 100, 10), 200);
 
-  // Conversion fiat via taux fixes (mai 2026, ecart <2% acceptable
-  // pour autocomplete + listing). Pour USD natif, taux = 1.
-  const FIAT_FROM_USD: Record<string, number> = {
-    usd: 1,
-    eur: 0.92,
-    gbp: 0.79,
-    chf: 0.88,
-  };
-  const rate = FIAT_FROM_USD[vs] ?? 0.92;
+  // Conversion fiat au taux du jour (BCE, lib/fx.ts ; avant le 05/10/2026 : taux figé de mai, euros surévalués de 3,3 %).
+  const fx = await fiatPerUsd();
+  const FIAT_FROM_USD: Record<string, number> = { usd: 1, eur: fx.eur, gbp: fx.gbp, chf: fx.chf };
+  const rate = FIAT_FROM_USD[vs] ?? fx.eur;
 
   try {
     const top = await getTopMarket(limit);
+    if (top.length === 0) throw new Error("top vide");
     const coins = top.map((c) => ({
       id: c.id,
       symbol: c.symbol,
@@ -60,7 +59,7 @@ export async function GET(request: Request) {
   } catch {
     return NextResponse.json(
       { coins: [], updatedAt: new Date().toISOString(), error: "fetch failed" },
-      { status: 200 },
+      { status: 503, headers: { "Cache-Control": "no-store", "Retry-After": "30" } },
     );
   }
 }

@@ -2,6 +2,7 @@
 
 import { useState, useMemo, useCallback } from "react";
 import { ArrowRightLeft, Calculator } from "lucide-react";
+import { FX_FALLBACK } from "@/lib/fx-fallback";
 
 interface Props {
   /** Symbole de la crypto (ex: BTC). */
@@ -11,11 +12,11 @@ interface Props {
   /**
    * Prix de référence en USD (depuis CoinGecko, server-side).
    * On l'utilise comme prix initial. Pour la conversion EUR on applique le taux
-   * USD→EUR fourni en prop (ou 0.92 par défaut, fallback raisonnable 2026).
+   * USD→EUR fourni en prop par la page (taux du jour, lib/fx.ts ; à défaut le dernier taux BCE connu).
    */
   priceUsd: number;
   /**
-   * Taux de change USD→EUR optionnel. Si absent on prend 0.92 (≈ avril 2026).
+   * Taux de change USD→EUR optionnel. Si absent : FX_FALLBACK.eur (dernier taux BCE connu, lib/fx-fallback.ts).
    * Le composant accepte un override depuis la fiche pour précision.
    */
   usdToEur?: number;
@@ -46,7 +47,7 @@ export default function PairConverter({
   symbol,
   name,
   priceUsd,
-  usdToEur = 0.92,
+  usdToEur = FX_FALLBACK.eur,
 }: Props) {
   const [direction, setDirection] = useState<Direction>("fiat-to-crypto");
   const [fiat, setFiat] = useState<Fiat>("EUR");

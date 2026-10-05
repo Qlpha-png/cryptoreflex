@@ -71,7 +71,9 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     // Sans ça, si Binance hang, l'Edge worker tient 60s avant timeout
     // implicite Vercel = consume 60× le quota CPU pour 1 request bloqué.
     const upstream = await fetch(
-      `https://api.binance.com/api/v3/depth?symbol=${pair}&limit=${limit}`,
+      // 05/10/2026 : point d'accès public des données de marché (data-api.binance.vision) — api.binance.com refuse les
+      // connexions venant des États-Unis, et cette route tourne en edge, au plus près du visiteur (Googlebot compris).
+      `https://data-api.binance.vision/api/v3/depth?symbol=${pair}&limit=${limit}`,
       {
         // Cache Vercel edge 3s + SWR 15s. Combiné avec MiniOrderBook
         // refresh client 5s → 90% des hits servent du cache.

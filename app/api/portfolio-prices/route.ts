@@ -21,6 +21,7 @@ import { getAllCryptosUnified } from "@/lib/cryptos-extended";
 import { getTopMarket } from "@/lib/price-source";
 import { createRateLimiter } from "@/lib/rate-limit";
 import { getClientIp } from "@/lib/ip";
+import { fiatPerUsd } from "@/lib/fx";
 
 export const revalidate = 60;
 
@@ -76,11 +77,10 @@ async function _fetchPortfolioPrices(
   // (Binance + CoinCap). Critique car le portfolio user peut tracker
   // jusqu'a 50 cryptos (= 50 calls par poll). Cron 2min cote client +
   // 100 users actifs = quota CoinGecko free epuise en heures.
-  // Conversion EUR via taux fixe USD/EUR 0.92 (ecart <2% acceptable
-  // pour affichage portfolio non-trading critique).
+  // Conversion EUR au taux du jour (BCE, lib/fx.ts) — avant le 05/10/2026 : taux figé 0,92 (valeurs surévaluées de 3,3 %).
   try {
     const { getPriceSnapshot } = await import("@/lib/price-source");
-    const EUR_USD = 0.92;
+    const EUR_USD = (await fiatPerUsd()).eur;
     const snapshots = await Promise.all(ids.map((id) => getPriceSnapshot(id)));
     // BUG FIX 2026-05-03 — accept tout snapshot avec priceUsd>0 (incl. static)
     const withPrice = snapshots.filter((s) => s.priceUsd > 0);

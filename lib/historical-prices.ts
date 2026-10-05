@@ -217,8 +217,9 @@ async function _getEurUsdRate(): Promise<number> {
     return rate;
   } catch (err) {
     console.warn(`[historical-prices] EUR/USD fetch failed:`, err);
-    // Fallback : 1 USD ≈ 0.92 EUR (moyenne 2026, suffisant pour TA scale-invariant)
-    return 0.92;
+    // Secours : taux BCE du jour, sinon dernier taux BCE connu (lib/fx.ts ; avant le 05/10/2026 : 0,92 figé)
+    const { fiatPerUsd } = await import("@/lib/fx");
+    return (await fiatPerUsd()).eur;
   }
 }
 
@@ -752,15 +753,11 @@ async function _fetchConversionRate(
     // convertisseur est un outil hot-path tres consommateur (chaque
     // user qui change un input = 1 fetch). Maintenant : Binance +
     // CoinCap gratuit illimite via getPriceSnapshot.
-    // Conversion fiat via taux fixes : USD/EUR=0.92, GBP/EUR=1.17,
-    // CHF/EUR=1.05 (mai 2026, ecart <2% pour outil convertisseur
-    // educatif non-trading).
-    const FIAT_TO_USD: Record<string, number> = {
-      usd: 1,
-      eur: 1 / 0.92,    // 1 EUR = 1.087 USD
-      gbp: 1 / 0.79,    // 1 GBP = 1.266 USD (1 USD = 0.79 GBP)
-      chf: 1 / 0.88,    // 1 CHF = 1.136 USD
-    };
+    // Conversion fiat au taux du jour (BCE, lib/fx.ts). Avant le 05/10/2026 : taux figés de mai (euro surévalué de 3,3 %,
+    // franc suisse de 6,5 %, livre de 4,3 %).
+    const { fiatPerUsd } = await import("@/lib/fx");
+    const fx = await fiatPerUsd();
+    const FIAT_TO_USD: Record<string, number> = { usd: 1, eur: 1 / fx.eur, gbp: 1 / fx.gbp, chf: 1 / fx.chf };
 
     const { getPriceSnapshot } = await import("@/lib/price-source");
     const now = new Date().toISOString();
@@ -831,19 +828,27 @@ async function _fetchConversionRate(
       };
     }
 
-    // Fiat → Fiat
-    return { rate: 1, lastUpdated: new Date().toISOString() };
+    // Fiat → Fiat : rapport des taux du jour (avant le 05/10/2026 : « 1 USD = 1 EUR »)
+    return { rate: FIAT_TO_USD[fromLower] / FIAT_TO_USD[toLower], lastUpdated: new Date().toISOString() };
   } catch (err) {
     console.warn("[historical-prices] rate failed:", err);
     return null;
   }
 }
 
-export const fetchConversionRate = unstable_cache(
-  _fetchConversionRate,
+/* 05/10/2026 (audit navigateur de nuit) : un échec (null) était mis en cache 60 s → convertisseur « taux indisponible » (503)
+   pour tout le monde pendant une minute. unstable_cache ne garde pas un appel qui échoue : on lève une erreur sur null. */
+const _fetchConversionRateCached = unstable_cache(
+  async (from: string, to: string): Promise<SimplePrice> => {
+    const r = await _fetchConversionRate(from, to);
+    if (!r) throw new Error("taux indisponible (non mis en cache)");
+    return r;
+  },
   ["coingecko-rate"],
   { revalidate: 60, tags: ["coingecko-rate"] }
 );
+export const fetchConversionRate = (from: string, to: string): Promise<SimplePrice | null> =>
+  _fetchConversionRateCached(from, to).catch(() => null);
 
 /* -------------------------------------------------------------------------- */
 /*  Top 30 paires SEO programmatic                                            */

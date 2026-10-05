@@ -132,13 +132,15 @@ export async function middleware(request: NextRequest) {
     pass.headers.set("x-reflex-univers", UNIVERS_ON ? "on" : "off");
     return pass;
   }
+  /* 05/10/2026 (audit navigateur de nuit) : seul le PREMIER segment est le slug. Avant, « <actu>/opengraph-image » était pris pour
+     un slug inconnu daté de plus de 3 jours → l'image de partage de toutes les actus de plus de 3 jours redirigeait vers /actualites. */
   if (pathname.startsWith("/actualites/")) {
-    const slug = decodeURIComponent(pathname.slice("/actualites/".length)).replace(/\/+$/, "");
+    const slug = decodeURIComponent(pathname.slice("/actualites/".length)).replace(/\/+$/, "").split("/")[0];
     if (REMOVED_NEWS.has(slug) || isGoneDated(slug, LIVE_NEWS)) return NextResponse.redirect(new URL("/actualites", request.url), 308);
     return NextResponse.next();
   }
   if (pathname.startsWith("/analyses-techniques/")) {
-    const slug = decodeURIComponent(pathname.slice("/analyses-techniques/".length)).replace(/\/+$/, "");
+    const slug = decodeURIComponent(pathname.slice("/analyses-techniques/".length)).replace(/\/+$/, "").split("/")[0];
     if (isGoneDated(slug, LIVE_TA)) return NextResponse.redirect(new URL("/analyses-techniques", request.url), 308);
     return NextResponse.next();
   }

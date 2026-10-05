@@ -3,12 +3,15 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { Calculator, ArrowRight, Info } from "lucide-react";
+import { FX_FALLBACK } from "@/lib/fx-fallback";
 
 interface Props {
   symbol: string;
   cryptoName: string;
   /** Prix de la crypto en USD (depuis CoinGecko, server-side). */
   priceUsd: number;
+  /** Taux du jour : euros pour 1 dollar (lib/fx.ts, fourni par la page) */
+  usdToEur?: number;
 }
 
 /**
@@ -34,10 +37,9 @@ interface Props {
  *
  * Disclaimer obligatoire : "indicatif, pas un conseil fiscal".
  *
- * Tax-EUR (2026) : USD→EUR ≈ 0.92, plafond pas important pour ce calc.
+ * Euros : taux du jour fourni par la page (lib/fx.ts) ; à défaut, dernier taux BCE connu (avant le 05/10/2026 : 0,92 figé).
  */
-export default function PfuQuickCalc({ symbol, cryptoName, priceUsd }: Props) {
-  const usdToEur = 0.92; // approximatif 2026
+export default function PfuQuickCalc({ symbol, cryptoName, priceUsd, usdToEur = FX_FALLBACK.eur }: Props) {
   const priceEur = priceUsd * usdToEur;
 
   const [purchasePriceEur, setPurchasePriceEur] = useState<string>("");

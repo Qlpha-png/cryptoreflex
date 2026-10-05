@@ -635,8 +635,16 @@ async function _getTopMarket(limit: number): Promise<TopMarketCoin[]> {
   return [];
 }
 
-export const getTopMarket = unstable_cache(
-  _getTopMarket,
+/* 05/10/2026 (audit navigateur de nuit) : une liste VIDE (source en panne) était mise en cache 10 minutes, d'où une liste de
+   cryptos vide pour tout le monde (suivi de portefeuille : « Aucune crypto trouvée »). unstable_cache ne garde pas un appel qui
+   échoue : on lève donc une erreur sur une liste vide, et les appelants reçoivent toujours [] (comportement inchangé). */
+const _getTopMarketCached = unstable_cache(
+  async (limit: number): Promise<TopMarketCoin[]> => {
+    const top = await _getTopMarket(limit);
+    if (top.length === 0) throw new Error("price-source : top du marché vide (non mis en cache)");
+    return top;
+  },
   ["price-source-top-market-v2"],
   { revalidate: 600, tags: ["price-source"] },
 );
+export const getTopMarket = (limit: number): Promise<TopMarketCoin[]> => _getTopMarketCached(limit).catch(() => [] as TopMarketCoin[]);

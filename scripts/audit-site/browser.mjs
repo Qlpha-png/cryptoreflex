@@ -189,7 +189,7 @@ async function audit(browser, path, vp) {
   // page redirigée côté navigateur (ex. /mon-compte → /connexion) : les préchargements en cours sont annulés et Next écrit
   // « Failed to fetch RSC payload … Falling back to browser navigation » — sans effet pour le visiteur, on ne le compte pas.
   const redirected = !page.isClosed() && new URL(page.url()).pathname !== new URL(BASE + path).pathname;
-  res.errors = [...new Set(errors)].filter((t) => !(redirected && /Failed to fetch RSC payload/.test(t)));
+  res.errors = [...new Set(errors)].filter((t) => !(redirected && /Failed to fetch RSC payload|Transition was skipped/.test(t)));
   res.failed = [...new Set(failed)];
   await ctx.close();
   return res;

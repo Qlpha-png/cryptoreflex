@@ -40,6 +40,7 @@ import {
 import { conversionGrid, formatConverted, formatAmount, ratioSeries, rateStats, pairKind, historySupported, signedPct, pairUseText, formatDay, FIAT_EUR_PRICE, fallbackRate, lastPrice } from "@/lib/convertisseur-stats";
 import { getAllCryptos } from "@/lib/cryptos";
 import { withHreflang } from "@/lib/seo-alternates";
+import { eurPerUnit, fiatPerUsd } from "@/lib/fx";
 
 interface PageProps {
   params: { pair: string };
@@ -146,8 +147,9 @@ export default async function PairPage({ params }: PageProps) {
   const kind = pairKind(from, to);
   let stats: ReturnType<typeof rateStats> = null;
   /* dernier prix en euros de chaque côté : crypto = dernier point de sa série (365 j, cache 1 h), devise = taux fixe du site */
-  let eurFrom: number | null = FIAT_EUR_PRICE[from] ?? null;
-  let eurTo: number | null = FIAT_EUR_PRICE[to] ?? null;
+  const fiatEur = eurPerUnit(await fiatPerUsd()); // taux du jour (BCE)
+  let eurFrom: number | null = fiatEur[from] ?? null;
+  let eurTo: number | null = fiatEur[to] ?? null;
   try {
     const hist = async (sym: string) => (isFiatSym(sym) ? null : COIN_IDS[sym] ? await fetchHistoricalPrices(COIN_IDS[sym], 365) : []);
     const [hf, ht] = await Promise.all([hist(from), hist(to)]);

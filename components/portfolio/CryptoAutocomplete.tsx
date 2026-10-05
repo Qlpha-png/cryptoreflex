@@ -56,6 +56,7 @@ async function fetchTop100(vsCurrency: string): Promise<CoinSuggestion[]> {
     });
     if (!res.ok) throw new Error(`coins/top ${res.status}`);
     const json = (await res.json()) as { coins: Array<{ id: string; symbol: string; name: string; image: string; current_price: number }> };
+    if (!json.coins?.length) throw new Error("coins/top vide");
     CACHED_TOP100 = json.coins.map((c) => ({
       id: c.id,
       symbol: c.symbol.toUpperCase(),
@@ -81,7 +82,8 @@ export default function CryptoAutocomplete({
   const [loading, setLoading] = useState(false);
   const containerRef = useRef<HTMLDivElement | null>(null);
 
-  // Fetch top 100 au mount.
+  // Fetch top 100 au mount ; si la liste est vide (source momentanément indisponible), nouvel essai à l'ouverture de la liste.
+  const [attempt, setAttempt] = useState(0);
   useEffect(() => {
     let cancelled = false;
     setLoading(true);
@@ -93,7 +95,11 @@ export default function CryptoAutocomplete({
     return () => {
       cancelled = true;
     };
-  }, [vsCurrency]);
+  }, [vsCurrency, attempt]);
+  useEffect(() => {
+    if (open && !loading && coins.length === 0) setAttempt((n) => n + 1);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open]);
 
   // Filtrage live (max 8 résultats).
   const suggestions = useMemo(() => {

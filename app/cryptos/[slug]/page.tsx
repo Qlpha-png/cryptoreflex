@@ -111,6 +111,7 @@ import {
 } from "@/lib/programmatic-pages";
 import { fitDescription, fitTitle } from "@/lib/seo-text";
 import { fmtFr } from "@/lib/format-fr";
+import { fiatPerUsd } from "@/lib/fx";
 
 /* -------------------------------------------------------------------------- */
 /*  Static generation                                                         */
@@ -423,6 +424,7 @@ export default async function CryptoPage({ params }: Props) {
   }
 
   const detail = await fetchCoinDetail(c.coingeckoId);
+  const fx = await fiatPerUsd(); // taux du jour pour les euros du convertisseur et du calcul PFU (lib/fx.ts)
   // FIX 2026-05-14 — Lecture du cache ticker pour exposer le timestamp de
   // dernière mise à jour des prix à <CryptoHero>. Le composant client
   // <PriceFreshnessBadge> calcule l'âge et affiche un badge si stale (>12 min).
@@ -616,6 +618,7 @@ export default async function CryptoPage({ params }: Props) {
               symbol={c.symbol}
               name={c.name}
               priceUsd={detail.currentPrice}
+              usdToEur={fx.eur}
             />
           </div>
         )}
@@ -626,7 +629,7 @@ export default async function CryptoPage({ params }: Props) {
             calculateur complet pour calcul cumulé annuel + Cerfa 2086. */}
         {detail && detail.currentPrice > 0 && (
           <div className="mt-8">
-            <PfuQuickCalc symbol={c.symbol} cryptoName={c.name} priceUsd={detail.currentPrice} />
+            <PfuQuickCalc symbol={c.symbol} cryptoName={c.name} priceUsd={detail.currentPrice} usdToEur={fx.eur} />
           </div>
         )}
 

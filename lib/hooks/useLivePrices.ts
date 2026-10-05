@@ -297,7 +297,9 @@ export function useLivePrices(ids: string[]): UseLivePricesResult {
         // de pare-feux/réseaux (constaté au contrôle local), et la CSP
         // wss://stream.binance.com ne couvre que le port par défaut.
         const ws = new WebSocket(
-          `wss://stream.binance.com/stream?streams=${streams}`,
+          // 05/10/2026 : flux public des données de marché (data-stream.binance.vision), identique à stream.binance.com mais
+          // ouvert depuis tous les pays (stream.binance.com refuse les connexions venant des États-Unis).
+          `wss://data-stream.binance.vision/stream?streams=${streams}`,
         );
         wsRef.current = ws;
 

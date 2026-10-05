@@ -10,6 +10,7 @@
  * Fonctions pures, testées dans tests/lib/convertisseur-stats.test.ts.
  */
 import type { HistoricalPoint } from "@/lib/historical-prices";
+import { FX_FALLBACK } from "@/lib/fx-fallback";
 
 export type PairKind = "crypto-fiat" | "fiat-crypto" | "crypto-crypto" | "fiat-fiat";
 const FIATS = new Set(["eur", "usd", "gbp", "chf"]);
@@ -30,11 +31,14 @@ export function pairKind(from: string, to: string): PairKind {
 export const historySupported = (s: string): boolean => s.toLowerCase() === "eur" || !isFiatLike(s);
 
 /**
- * Prix en euros des monnaies « fiduciaires » du convertisseur : MÊMES taux fixes que fetchConversionRate (mai 2026,
- * écart < 2 %, outil éducatif non-trading). Ne sert qu'au taux de repli de la grille quand le taux du moment manque
- * (CoinGecko 429 au build) ; jamais pour l'historique sur un an.
+ * Monnaies « fiduciaires » du convertisseur et leur prix en euros de secours (derniers taux BCE connus, lib/fx-fallback.ts).
+ * La page utilise le taux du jour (eurPerUnit(fiatPerUsd()), lib/fx.ts) ; ces valeurs ne servent que si celui-ci manque.
+ * Avant le 05/10/2026 : taux figés de mai (1 USD = 0,92 €).
  */
-export const FIAT_EUR_PRICE: Record<string, number> = { eur: 1, usd: 0.92, usdt: 0.92, usdc: 0.92, dai: 0.92, gbp: 1.17, chf: 1.05 };
+export const FIAT_EUR_PRICE: Record<string, number> = {
+  eur: 1, usd: FX_FALLBACK.eur, usdt: FX_FALLBACK.eur, usdc: FX_FALLBACK.eur, dai: FX_FALLBACK.eur,
+  gbp: FX_FALLBACK.eur / FX_FALLBACK.gbp, chf: FX_FALLBACK.eur / FX_FALLBACK.chf,
+};
 
 /** Taux de repli `from`/`to` à partir des derniers prix en euros connus (null = inconnu) */
 export function fallbackRate(fromEur: number | null | undefined, toEur: number | null | undefined): number | null {
