@@ -18,9 +18,10 @@
  * Un écart → ligne « - ❌ » dans le rapport, code de sortie 1, ticket GitHub « veille-officielle » (lu par la routine
  * Claude du matin, qui relit la source, met le site à jour puis réenregistre la référence).
  *
- * Usage : node scripts/veille-officielle.mjs [--enregistrer] [--detail] [--sans-frais]
+ * Usage : node scripts/veille-officielle.mjs [--enregistrer] [--detail] [--sans-frais] [--navigateur]
  *   --enregistrer  réécrit data/veille/etat.json avec l'état observé (APRÈS relecture humaine ou de la routine)
  *   --detail       imprime les extraits officiels (versions, phrases chiffrées) : sert à écrire les « attendus »
+ *   --navigateur   relit au navigateur (Playwright) les grilles de frais illisibles sans lui
  * Variables : PISTE_CLIENT_ID / PISTE_CLIENT_SECRET (Légifrance ; jamais imprimées), VEILLE_REPORT (défaut
  * veille-report.md). Textes de loi = domaine public ; aucun secret ni donnée personnelle dans le rapport.
  */
@@ -34,6 +35,7 @@ const ARGS = new Set(process.argv.slice(2));
 const ENREGISTRER = ARGS.has("--enregistrer");
 const DETAIL = ARGS.has("--detail");
 const SANS_FRAIS = ARGS.has("--sans-frais");
+const NAVIGATEUR = ARGS.has("--navigateur");
 const SOURCES = JSON.parse(readFileSync(path.join(ROOT, "data/veille/sources.json"), "utf8"));
 const ETAT_PATH = path.join(ROOT, "data/veille/etat.json");
 const ETAT = existsSync(ETAT_PATH) ? JSON.parse(readFileSync(ETAT_PATH, "utf8")) : {};
@@ -362,39 +364,111 @@ async function veilleRegistre() {
 }
 
 /* ------------------------------------------------------------------ grilles de frais */
-async function veilleFrais() {
-  const { platforms } = JSON.parse(readFileSync(path.join(ROOT, "data/platforms.json"), "utf8"));
-  const ignorer = new Set(SOURCES.frais?.ignorer || []);
-  const illisibles = [];
-  for (const p of platforms) {
-    const url = p.fees?.cost?.source;
-    if (!url || typeof url !== "string" || ignorer.has(p.id)) continue;
-    let emp = null;
+/** Taux et montants d'une grille (« 1 000 € » et « 1,50 % » compris), normalisés et dédoublonnés. */
+const jetonsFrais = (t) => [...new Set((t.match(/\d{1,3}(?:[ .,]\d{3})+(?:,\d+)? ?(?:%|€)|\d+(?:[.,]\d+)? ?(?:%|€)/g) || []).map((x) => x.replace(/ /g, "").replace(/\./g, ",")))].sort();
+/* Navigateur réel (Playwright, option --navigateur) pour les grilles rendues en JavaScript ou filtrées : lancé une seule fois. */
+let navigateur = null;
+async function rendre(url) {
+  if (!navigateur) {
+    const { chromium } = await import("playwright");
+    const b = await chromium.launch();
+    navigateur = { b, ctx: await b.newContext({ locale: "fr-FR", viewport: { width: 1280, height: 900 } }) };
+  }
+  const page = await navigateur.ctx.newPage();
+  try {
+    const res = await page.goto(url, { waitUntil: "domcontentloaded", timeout: 45_000 });
+    await page.waitForTimeout(5000);
+    return { status: res?.status() ?? 0, texte: texte(await page.evaluate(() => document.body?.innerText || "")), html: await page.content() };
+  } finally {
+    await page.close().catch(() => {});
+  }
+}
+/** Pages sans chiffre (« quels moyens de paiement ? ») : phrases qui parlent de frais, de minimum ou de limites. */
+const MOTS_FRAIS = /frais|fee|commission|spread|marge|majoration|minimum|limite|limit|gratuit|free of charge|no fee|tarif|pricing|co[uû]t|cost/i;
+const phrasesFrais = (t) => [...new Set(t.split(/(?<=[.!?])\s+/).filter((s) => MOTS_FRAIS.test(s) && s.length > 25).map((s) => s.trim().slice(0, 160)))].sort();
+/** Liens vers des PDF d'une page qui liste les documents (une nouvelle grille tarifaire = un nouveau lien). */
+const liensPdf = (html, base) => [...new Set([...String(html).matchAll(/href=["']([^"']+?\.pdf[^"']*)["']/gi)].map((m) => { try { return decodeURI(new URL(m[1].replace(/&amp;/g, "&"), base).href); } catch { return m[1]; } }))].sort();
+/** Empreinte d'une page de frais : PDF (octets), liste de PDF (page index) ou taux et montants (page). null + raison si illisible. */
+async function empreinte(url, { index = false, viaNav = false } = {}) {
+  let pourquoi = "";
+  if (!viaNav) {
     try {
       const res = await req(url, { timeout: 45_000 });
       const type = res.headers.get("content-type") || "";
-      if (!res.ok) { illisibles.push(`${p.name} (HTTP ${res.status})`); continue; }
-      if (/pdf/i.test(type) || /\.pdf($|\?)/i.test(url)) emp = { pdf: sha(Buffer.from(await res.arrayBuffer())) };
+      if (res.status === 404 || res.status === 410) return { pourquoi: `HTTP ${res.status}`, disparue: true };
+      if (!res.ok) pourquoi = `HTTP ${res.status}`;
+      else if (/pdf/i.test(type) || /\.pdf($|\?)/i.test(url)) return { emp: { pdf: sha(Buffer.from(await res.arrayBuffer())) } };
       else {
-        const t = texte(await res.text());
-        const jetons = [...new Set((t.match(/\d+(?:[.,]\d+)? ?(?:%|€)/g) || []).map((x) => x.replace(/\./g, ",").replace(/ /g, "")))].sort();
-        if (t.length < 1500 || !jetons.length) { illisibles.push(`${p.name} (page sans grille lisible sans navigateur)`); continue; }
-        emp = { jetons: sha(jetons.join("|")), liste: jetons.slice(0, 80) };
+        const html = await res.text();
+        if (index) {
+          const liens = liensPdf(html, url);
+          if (liens.length) return { emp: { liens: sha(liens.join("|")), liste: liens } };
+          pourquoi = "aucun lien PDF sans navigateur";
+        } else {
+          const t = texte(html);
+          const jetons = jetonsFrais(t);
+          if (t.length >= 1500 && jetons.length) return { emp: { jetons: sha(jetons.join("|")), liste: jetons.slice(0, 80) } };
+          const ph = phrasesFrais(t);
+          if (t.length >= 1500 && ph.length) return { emp: { phrases: sha(ph.join("|")), liste: ph.slice(0, 40) } };
+          pourquoi = "pas de grille lisible sans navigateur";
+        }
       }
-    } catch (e) { illisibles.push(`${p.name} (${raison(e)})`); continue; }
-    observe.frais[p.id] = emp;
-    const ref = ETAT.frais?.[p.id];
-    if (!ref) { nouveau("frais", `${p.name} : empreinte relevée (pas encore de référence)`); continue; }
-    const same = emp.pdf ? ref.pdf === emp.pdf : ref.jetons === emp.jetons;
-    if (same) { ok("frais", `${p.name} : grille inchangée`); continue; }
-    let diff = "";
-    if (emp.liste && ref.liste) {
-      const plus = emp.liste.filter((x) => !ref.liste.includes(x)), moins = ref.liste.filter((x) => !emp.liste.includes(x));
-      diff = ` (apparus : ${plus.join(" ") || "—"} ; disparus : ${moins.join(" ") || "—"})`;
-    }
-    changement("frais", `${p.name} : la grille tarifaire a changé${diff} → revérifier le coût affiché au comparateur ; ${url}`);
+    } catch (e) { pourquoi = raison(e); }
   }
-  if (illisibles.length) warn("frais", `grilles non surveillables sans navigateur (${illisibles.length}) : ${illisibles.join(", ")}`);
+  if (!NAVIGATEUR) return { pourquoi };
+  try {
+    const r = await rendre(url);
+    if (index) {
+      const liens = liensPdf(r.html, url);
+      if (r.status < 400 && liens.length) return { emp: { mode: "navigateur", liens: sha(liens.join("|")), liste: liens } };
+      return { pourquoi: `navigateur : HTTP ${r.status}, ${liens.length} lien(s) PDF` };
+    }
+    const jetons = jetonsFrais(r.texte);
+    if (r.status < 400 && r.texte.length >= 800 && jetons.length) return { emp: { mode: "navigateur", jetons: sha(jetons.join("|")), liste: jetons.slice(0, 80) } };
+    const ph = phrasesFrais(r.texte);
+    if (r.status < 400 && r.texte.length >= 800 && ph.length) return { emp: { mode: "navigateur", phrases: sha(ph.join("|")), liste: ph.slice(0, 40) } };
+    return { pourquoi: r.status >= 400 ? `bloquée (HTTP ${r.status}, protection anti-robot probable)` : `navigateur : HTTP ${r.status}, ${r.texte.length} caractères, ni taux ni phrase de frais` };
+  } catch (e) {
+    return { pourquoi: `navigateur : ${raison(e)}` };
+  }
+}
+async function veilleFrais() {
+  const { platforms } = JSON.parse(readFileSync(path.join(ROOT, "data/platforms.json"), "utf8"));
+  const F = SOURCES.frais || {};
+  const ignorer = new Set(F.ignorer || []);
+  const illisibles = [];
+  let vues = 0;
+  for (const p of platforms) {
+    if (ignorer.has(p.id)) continue;
+    const pages = [...new Set([p.fees?.cost?.source, ...(F.pages?.[p.id] || [])].filter((u) => typeof u === "string" && u))];
+    const index = F.index?.[p.id] || [];
+    if (!pages.length && !index.length) continue;
+    const refP = ETAT.frais?.[p.id] || {};
+    const obs = (observe.frais[p.id] = {});
+    for (const [url, estIndex] of [...pages.map((u) => [u, false]), ...index.map((u) => [u, true])]) {
+      // Une page relevée au navigateur se relit TOUJOURS au navigateur (sinon l'empreinte changerait avec la méthode).
+      const { emp, pourquoi, disparue } = await empreinte(url, { index: estIndex, viaNav: NAVIGATEUR && refP[url]?.mode === "navigateur" });
+      // Page de frais supprimée (404/410) : la source citée par le comparateur n'existe plus → à traiter, pas à taire.
+      if (disparue) { if (!refP[url]?.disparue) changement("frais", `${p.name} : page de frais disparue (${pourquoi}) → retrouver la grille officielle et corriger la source citée ; ${url}`); obs[url] = { disparue: true }; continue; }
+      if (!emp) { illisibles.push(`${p.name} ${url} (${pourquoi})`); if (refP[url]) obs[url] = refP[url]; continue; }
+      vues++;
+      obs[url] = emp;
+      const ref = refP[url];
+      if (!ref) { nouveau("frais", `${p.name} : ${url} relevée (pas encore de référence)`); continue; }
+      const cle = emp.pdf ? "pdf" : emp.liens ? "liens" : emp.phrases ? "phrases" : "jetons";
+      if (ref[cle] === emp[cle]) continue;
+      let diff = "";
+      if (emp.liste && ref.liste) {
+        const plus = emp.liste.filter((x) => !ref.liste.includes(x)), moins = ref.liste.filter((x) => !emp.liste.includes(x));
+        diff = ` (apparus : ${plus.join(" ") || "—"} ; disparus : ${moins.join(" ") || "—"})`;
+      }
+      const quoi = cle === "pdf" ? "le document PDF a changé" : cle === "liens" ? "la liste des documents tarifaires a changé" : cle === "phrases" ? "les phrases sur les frais ou limites ont changé" : "les taux ou montants de la page ont changé";
+      changement("frais", `${p.name} : ${quoi}${diff} → revérifier les frais affichés au comparateur ; ${url}`);
+    }
+  }
+  if (navigateur) await navigateur.b.close().catch(() => {});
+  ok("frais", `${vues} page(s) de frais relues`);
+  if (illisibles.length) warn("frais", `pages de frais non relues cette nuit (${illisibles.length}) — référence précédente conservée : ${illisibles.join(" ; ")}`);
 }
 
 /* ------------------------------------------------------------------ exécution */

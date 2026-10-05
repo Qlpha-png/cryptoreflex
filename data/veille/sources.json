@@ -1,45 +1,430 @@
 {
   "_lisezmoi": "Sources officielles surveillées chaque nuit par scripts/veille-officielle.mjs (.github/workflows/veille-officielle.yml). « attendus » = phrases qui doivent figurer TELLES QUELLES dans le texte officiel (espaces normalisées) : si l'une disparaît, un chiffre du site est peut-être devenu faux. L'état de référence (versions, dates, empreintes) est dans data/veille/etat.json, réécrit seulement par « --enregistrer » après relecture.",
   "legifrance": [
-    { "cle": "CGI art. 150 VH bis", "texte": "LEGITEXT000006069577", "num": "150 VH bis", "idConnu": "LEGIARTI000038612228", "sujet": "Régime des plus-values crypto des particuliers : seuil de 305 €, méthode globale, sursis des échanges", "attendus": ["305 €"] },
-    { "cle": "CGI art. 150 VH ter", "texte": "LEGITEXT000006069577", "num": "150 VH ter", "sujet": "NFT : régime du bien ou du droit représenté (loi n° 2026-534)", "attendus": [] },
-    { "cle": "CGI art. 200 C", "texte": "LEGITEXT000006069577", "num": "200 C", "sujet": "Taux forfaitaire de 12,8 % sur les plus-values crypto", "attendus": ["12,8 %"] },
-    { "cle": "CGI art. 197", "texte": "LEGITEXT000006069577", "num": "197", "sujet": "Barème de l'impôt sur le revenu et décote (calculateur, articles barème)", "attendus": ["11 600 €", "29 579 €", "84 577 €", "181 917 €", "897 €", "1 483 €", "45,25 %"] },
-    { "cle": "CGI art. 92", "texte": "LEGITEXT000006069577", "num": "92", "idConnu": "LEGIARTI000028448395", "sujet": "BNC : opérations sur actifs numériques menées comme un professionnel (2-1° bis)", "attendus": ["actifs numériques"] },
-    { "cle": "CGI art. 102 ter", "texte": "LEGITEXT000006069577", "num": "102 ter", "idConnu": "LEGIARTI000053546823", "sujet": "Micro-BNC : abattement de 34 %, minimum de 305 €", "attendus": ["34 %", "305 €"] },
-    { "cle": "CGI art. 156", "texte": "LEGITEXT000006069577", "num": "156", "idConnu": "LEGIARTI000054373682", "sujet": "Déficits BNC non professionnels : imputation sur 6 ans", "attendus": ["six années suivantes"] },
-    { "cle": "CGI art. 1649 bis C", "texte": "LEGITEXT000006069577", "num": "1649 bis C", "sujet": "Déclaration des comptes d'actifs numériques à l'étranger (3916-bis)", "attendus": ["actifs numériques"] },
-    { "cle": "CGI art. 1736", "texte": "LEGITEXT000006069577", "num": "1736", "sujet": "Amende 3916-bis : 750 € par compte, 1 500 € au-delà de 50 000 €", "attendus": ["750 €", "1 500 €", "50 000 €"] },
-    { "cle": "CSS art. L136-6", "texte": "LEGITEXT000006073189", "num": "L136-6", "idConnu": "LEGIARTI000051218166", "sujet": "CSG sur les revenus du patrimoine : assiette (plus-values crypto)", "attendus": ["150 VH bis"] },
-    { "cle": "CSS art. L136-8", "texte": "LEGITEXT000006073189", "num": "L136-8", "idConnu": "LEGIARTI000051287395", "sujet": "Taux de CSG de 10,6 % sur les revenus du patrimoine (18,6 % de prélèvements sociaux au total)", "attendus": ["10,6 %"] },
-    { "cle": "LPF art. L169", "texte": "LEGITEXT000006069583", "num": "L169", "idConnu": "LEGIARTI000051759330", "sujet": "Délai de reprise : 3 ans, 10 ans si compte à l'étranger non déclaré", "attendus": ["troisième année", "dixième année"] }
+    {
+      "cle": "CGI art. 150 VH bis",
+      "texte": "LEGITEXT000006069577",
+      "num": "150 VH bis",
+      "idConnu": "LEGIARTI000038612228",
+      "sujet": "Régime des plus-values crypto des particuliers : seuil de 305 €, méthode globale, sursis des échanges",
+      "attendus": [
+        "305 €"
+      ]
+    },
+    {
+      "cle": "CGI art. 150 VH ter",
+      "texte": "LEGITEXT000006069577",
+      "num": "150 VH ter",
+      "sujet": "NFT : régime du bien ou du droit représenté (loi n° 2026-534)",
+      "attendus": []
+    },
+    {
+      "cle": "CGI art. 200 C",
+      "texte": "LEGITEXT000006069577",
+      "num": "200 C",
+      "sujet": "Taux forfaitaire de 12,8 % sur les plus-values crypto",
+      "attendus": [
+        "12,8 %"
+      ]
+    },
+    {
+      "cle": "CGI art. 197",
+      "texte": "LEGITEXT000006069577",
+      "num": "197",
+      "sujet": "Barème de l'impôt sur le revenu et décote (calculateur, articles barème)",
+      "attendus": [
+        "11 600 €",
+        "29 579 €",
+        "84 577 €",
+        "181 917 €",
+        "897 €",
+        "1 483 €",
+        "45,25 %"
+      ]
+    },
+    {
+      "cle": "CGI art. 92",
+      "texte": "LEGITEXT000006069577",
+      "num": "92",
+      "idConnu": "LEGIARTI000028448395",
+      "sujet": "BNC : opérations sur actifs numériques menées comme un professionnel (2-1° bis)",
+      "attendus": [
+        "actifs numériques"
+      ]
+    },
+    {
+      "cle": "CGI art. 102 ter",
+      "texte": "LEGITEXT000006069577",
+      "num": "102 ter",
+      "idConnu": "LEGIARTI000053546823",
+      "sujet": "Micro-BNC : abattement de 34 %, minimum de 305 €",
+      "attendus": [
+        "34 %",
+        "305 €"
+      ]
+    },
+    {
+      "cle": "CGI art. 156",
+      "texte": "LEGITEXT000006069577",
+      "num": "156",
+      "idConnu": "LEGIARTI000054373682",
+      "sujet": "Déficits BNC non professionnels : imputation sur 6 ans",
+      "attendus": [
+        "six années suivantes"
+      ]
+    },
+    {
+      "cle": "CGI art. 1649 bis C",
+      "texte": "LEGITEXT000006069577",
+      "num": "1649 bis C",
+      "sujet": "Déclaration des comptes d'actifs numériques à l'étranger (3916-bis)",
+      "attendus": [
+        "actifs numériques"
+      ]
+    },
+    {
+      "cle": "CGI art. 1736",
+      "texte": "LEGITEXT000006069577",
+      "num": "1736",
+      "sujet": "Amende 3916-bis : 750 € par compte, 1 500 € au-delà de 50 000 €",
+      "attendus": [
+        "750 €",
+        "1 500 €",
+        "50 000 €"
+      ]
+    },
+    {
+      "cle": "CSS art. L136-6",
+      "texte": "LEGITEXT000006073189",
+      "num": "L136-6",
+      "idConnu": "LEGIARTI000051218166",
+      "sujet": "CSG sur les revenus du patrimoine : assiette (plus-values crypto)",
+      "attendus": [
+        "150 VH bis"
+      ]
+    },
+    {
+      "cle": "CSS art. L136-8",
+      "texte": "LEGITEXT000006073189",
+      "num": "L136-8",
+      "idConnu": "LEGIARTI000051287395",
+      "sujet": "Taux de CSG de 10,6 % sur les revenus du patrimoine (18,6 % de prélèvements sociaux au total)",
+      "attendus": [
+        "10,6 %"
+      ]
+    },
+    {
+      "cle": "LPF art. L169",
+      "texte": "LEGITEXT000006069583",
+      "num": "L169",
+      "idConnu": "LEGIARTI000051759330",
+      "sujet": "Délai de reprise : 3 ans, 10 ans si compte à l'étranger non déclaré",
+      "attendus": [
+        "troisième année",
+        "dixième année"
+      ]
+    }
   ],
   "bofip": {
     "fiches": [
-      { "id": "BOI-RPPM-PVBMC-30", "page": "https://bofip.impots.gouv.fr/bofip/11966-PGP.html", "sujet": "Plus-values sur actifs numériques : vue d'ensemble" },
-      { "id": "BOI-RPPM-PVBMC-30-10", "page": "https://bofip.impots.gouv.fr/bofip/11967-PGP.html", "sujet": "Champ d'application (150 VH bis)" },
-      { "id": "BOI-RPPM-PVBMC-30-20", "page": "https://bofip.impots.gouv.fr/bofip/11968-PGP.html", "sujet": "Calcul de la plus-value (méthode globale, exemple chiffré du Cerfa)" },
-      { "id": "BOI-RPPM-PVBMC-30-30", "page": "https://bofip.impots.gouv.fr/bofip/11969-PGP.html", "sujet": "Imposition (taux, option barème)" },
-      { "id": "BOI-BNC-CHAMP-10-10-20-40", "page": "https://bofip.impots.gouv.fr/bofip/2824-PGP.html", "sujet": "BNC : opérations sur actifs numériques (§ 1080 cas exceptionnels)" },
-      { "id": "BOI-BIC-CHAMP-60-50", "page": "https://bofip.impots.gouv.fr/bofip/4755-PGP.html", "sujet": "BIC : achat-revente de crypto à titre de métier" },
-      { "id": "BOI-BNC-DECLA-20-10", "page": "https://bofip.impots.gouv.fr/bofip/4807-PGP.html", "sujet": "Micro-BNC" },
-      { "id": "BOI-IR-LIQ-20-20-30", "page": "https://bofip.impots.gouv.fr/bofip/2495-PGP.html", "sujet": "Décote" },
-      { "id": "BOI-CF-INF-20-10-50", "page": "https://bofip.impots.gouv.fr/bofip/10841-PGP.html", "sujet": "Amendes des comptes à l'étranger (3916-bis)" },
-      { "id": "BOI-CF-PGR-10-20", "page": "https://bofip.impots.gouv.fr/bofip/1396-PGP.html", "sujet": "Délai de reprise" }
+      {
+        "id": "BOI-RPPM-PVBMC-30",
+        "page": "https://bofip.impots.gouv.fr/bofip/11966-PGP.html",
+        "sujet": "Plus-values sur actifs numériques : vue d'ensemble"
+      },
+      {
+        "id": "BOI-RPPM-PVBMC-30-10",
+        "page": "https://bofip.impots.gouv.fr/bofip/11967-PGP.html",
+        "sujet": "Champ d'application (150 VH bis)"
+      },
+      {
+        "id": "BOI-RPPM-PVBMC-30-20",
+        "page": "https://bofip.impots.gouv.fr/bofip/11968-PGP.html",
+        "sujet": "Calcul de la plus-value (méthode globale, exemple chiffré du Cerfa)"
+      },
+      {
+        "id": "BOI-RPPM-PVBMC-30-30",
+        "page": "https://bofip.impots.gouv.fr/bofip/11969-PGP.html",
+        "sujet": "Imposition (taux, option barème)"
+      },
+      {
+        "id": "BOI-BNC-CHAMP-10-10-20-40",
+        "page": "https://bofip.impots.gouv.fr/bofip/2824-PGP.html",
+        "sujet": "BNC : opérations sur actifs numériques (§ 1080 cas exceptionnels)"
+      },
+      {
+        "id": "BOI-BIC-CHAMP-60-50",
+        "page": "https://bofip.impots.gouv.fr/bofip/4755-PGP.html",
+        "sujet": "BIC : achat-revente de crypto à titre de métier"
+      },
+      {
+        "id": "BOI-BNC-DECLA-20-10",
+        "page": "https://bofip.impots.gouv.fr/bofip/4807-PGP.html",
+        "sujet": "Micro-BNC"
+      },
+      {
+        "id": "BOI-IR-LIQ-20-20-30",
+        "page": "https://bofip.impots.gouv.fr/bofip/2495-PGP.html",
+        "sujet": "Décote"
+      },
+      {
+        "id": "BOI-CF-INF-20-10-50",
+        "page": "https://bofip.impots.gouv.fr/bofip/10841-PGP.html",
+        "sujet": "Amendes des comptes à l'étranger (3916-bis)"
+      },
+      {
+        "id": "BOI-CF-PGR-10-20",
+        "page": "https://bofip.impots.gouv.fr/bofip/1396-PGP.html",
+        "sujet": "Délai de reprise"
+      }
     ],
     "_filets": "Requêtes sur le jeu de données ouvert bofip-vigueur (mis à jour chaque mois) : toute fiche nouvelle ou modifiée qui cite le régime crypto est signalée, même si elle n'est pas suivie ci-dessus.",
-    "filets": ["\"actifs numériques\" AND \"150 VH bis\""]
+    "filets": [
+      "\"actifs numériques\" AND \"150 VH bis\""
+    ]
   },
   "pages": [
-    { "cle": "impots.gouv : FAQ plus-values crypto", "url": "https://www.impots.gouv.fr/particulier/questions/comment-declarer-les-plus-ou-moins-values-sur-cessions-dactifs-numeriques", "repere": "modifi[ée] le (\\d{2}/\\d{2}/\\d{4})", "attendus": ["31,4 %", "12,8 %", "18,6 %", "305 €"], "sujet": "Taux, seuil, staking (BNC)" },
-    { "cle": "impots.gouv : formulaire 2086", "url": "https://www.impots.gouv.fr/formulaire/2086/declaration-des-plus-ou-moins-values-de-cessions-dactifs-numeriques", "repere": "Mill[ée]sime (\\d{4})", "attendus": [], "sujet": "Nouveau millésime du 2086 = numéros de lignes du générateur Cerfa à revérifier" },
-    { "cle": "service-public : prélèvements sociaux (F2329)", "url": "https://www.service-public.gouv.fr/particuliers/vosdroits/F2329", "repere": "V[ée]rifi[ée]e? le (\\d{1,2}(?:er)? [a-zéû]+ \\d{4})", "attendus": ["10,6 %", "0,5 %", "7,5 %", "18,6 %"], "sujet": "18,6 % de prélèvements sociaux" },
-    { "cle": "service-public : barème de l'impôt (F1419)", "url": "https://www.service-public.gouv.fr/particuliers/vosdroits/F1419", "repere": "V[ée]rifi[ée]e? le (\\d{1,2}(?:er)? [a-zéû]+ \\d{4})", "attendus": ["11 600 €", "29 579 €", "84 577 €", "181 917 €"], "sujet": "Tranches du barème" }
+    {
+      "cle": "impots.gouv : FAQ plus-values crypto",
+      "url": "https://www.impots.gouv.fr/particulier/questions/comment-declarer-les-plus-ou-moins-values-sur-cessions-dactifs-numeriques",
+      "repere": "modifi[ée] le (\\d{2}/\\d{2}/\\d{4})",
+      "attendus": [
+        "31,4 %",
+        "12,8 %",
+        "18,6 %",
+        "305 €"
+      ],
+      "sujet": "Taux, seuil, staking (BNC)"
+    },
+    {
+      "cle": "impots.gouv : formulaire 2086",
+      "url": "https://www.impots.gouv.fr/formulaire/2086/declaration-des-plus-ou-moins-values-de-cessions-dactifs-numeriques",
+      "repere": "Mill[ée]sime (\\d{4})",
+      "attendus": [],
+      "sujet": "Nouveau millésime du 2086 = numéros de lignes du générateur Cerfa à revérifier"
+    },
+    {
+      "cle": "service-public : prélèvements sociaux (F2329)",
+      "url": "https://www.service-public.gouv.fr/particuliers/vosdroits/F2329",
+      "repere": "V[ée]rifi[ée]e? le (\\d{1,2}(?:er)? [a-zéû]+ \\d{4})",
+      "attendus": [
+        "10,6 %",
+        "0,5 %",
+        "7,5 %",
+        "18,6 %"
+      ],
+      "sujet": "18,6 % de prélèvements sociaux"
+    },
+    {
+      "cle": "service-public : barème de l'impôt (F1419)",
+      "url": "https://www.service-public.gouv.fr/particuliers/vosdroits/F1419",
+      "repere": "V[ée]rifi[ée]e? le (\\d{1,2}(?:er)? [a-zéû]+ \\d{4})",
+      "attendus": [
+        "11 600 €",
+        "29 579 €",
+        "84 577 €",
+        "181 917 €"
+      ],
+      "sujet": "Tranches du barème"
+    }
   ],
   "registre": {
     "esma": "https://www.esma.europa.eu/sites/default/files/2024-12/CASPS.csv",
     "exceptions": {
       "gemini": "Autorisée au registre (passeport FR) mais sortie commerciale de France en avril 2026 : affichée comme non disponible."
     }
+  },
+  "frais": {
+    "_lisezmoi": "Pages officielles qui portent les frais affichés au comparateur (relevés vérifiés du 05/10/2026), en plus de fees.cost.source de data/platforms.json. « pages » : empreinte des taux et montants (ou du PDF) ; « index » : liste des PDF publiés (une nouvelle grille tarifaire = un nouveau lien). « ignorer » : identifiants de plateformes à ne pas surveiller.",
+    "pages": {
+      "swissborg": [
+        "https://swissborg.com/legal/pricing-policy",
+        "https://help.swissborg.com/hc/fr-fr/articles/360006797858-Frais-de-d%C3%A9p%C3%B4t-et-de-retrait-Fiat",
+        "https://help.swissborg.com/hc/en-gb/articles/10688496470673-Top-Up-with-Card",
+        "https://help.swissborg.com/hc/fr-fr/articles/39402519621521-Niveau-de-fid%C3%A9lit%C3%A9-On-vous-paie-pour-%C3%A9changer",
+        "https://help.swissborg.com/hc/fr-fr/articles/360005856217-Effectuer-un-%C3%A9change"
+      ],
+      "deblock": [
+        "https://deblock.com/fr/abonnements",
+        "https://cdn1.deblock.com/terms/fee_info/Fees_Pages_Deblock_FR_v6.4.3.pdf",
+        "https://cdn1.deblock.com/terms/order-execution-policy/20250528-1.5-politique-dexecution-des-ordres.pdf",
+        "https://deblock.com/fr/frequently-asked-questions?collection=11397498&article=10365148",
+        "https://deblock.com/fr/frequently-asked-questions?collection=11397498&article=10410646",
+        "https://cdn1.deblock.com/terms/personal-terms/FR/20260313-v13-personal-terms-FR.pdf"
+      ],
+      "21bitcoin": [
+        "https://21bitcoin.app/en/fees",
+        "https://help.21bitcoin.app/en/articles/15284683-does-21bitcoin-charge-a-spread",
+        "https://help.21bitcoin.app/en/articles/6453204-what-are-the-fees-at-21bitcoin",
+        "https://help.21bitcoin.app/en/articles/7052947-what-are-the-limits-for-buying-bitcoin",
+        "https://help.21bitcoin.app/en/articles/5332229-how-to-fund-your-eur-account",
+        "https://help.21bitcoin.app/en/articles/5884050-how-to-buy-bitcoin",
+        "https://help.21bitcoin.app/en/articles/12944303-is-21bitcoin-a-regulated-company"
+      ],
+      "coinhouse": [
+        "https://cms-www.coinhouse.com/wp-content/uploads/2026/08/CH_-GrilleTarifaire_Web_FR_AUG26.pdf",
+        "https://support.coinhouse.com/hc/fr/articles/4889682146450-comment-effectuer-un-achat-de-cryptoactif-sur-coinhouse",
+        "https://cms-www.coinhouse.com/wp-content/uploads/2026/06/Politique-·-Execution-Version-Publique-Mai-2026.pdf",
+        "https://cms-www.coinhouse.com/wp-content/uploads/2026/09/Coinhouse-·-PSCA-·-CGU-Sept-2026-1.pdf",
+        "https://support.coinhouse.com/hc/fr/articles/360016554959-dans-quels-cryptoactifs-puis-je-investir-sur-coinhouse",
+        "https://support.coinhouse.com/hc/fr/articles/12419059991826-qu-est-ce-que-le-compte-euro-et-comment-le-mettre-en-place"
+      ],
+      "bitstack": [
+        "https://help.bitstack-app.com/fr/articles/6377515-quels-sont-les-prix-et-les-frais-pratiques-par-bitstack",
+        "https://help.bitstack-app.com/fr/articles/12783145-comment-alimenter-mon-compte-euro-bitstack",
+        "https://help.bitstack-app.com/fr/articles/8335761-comment-acheter-du-bitcoin-sur-bitstack",
+        "https://help.bitstack-app.com/fr/articles/6371263-est-ce-que-bitstack-propose-d-autres-cryptomonnaies-que-le-bitcoin",
+        "https://help.bitstack-app.com/fr/articles/6379341-quels-sont-les-modes-de-paiement-disponibles-sur-l-application",
+        "https://help.bitstack-app.com/fr/articles/12784290-comment-effectuer-un-virement-depuis-mon-compte-euro-bitstack",
+        "https://cdn.prod.website-files.com/63ea3e6e2856fff9dbd7717e/696564ed52db4078b1297604_Bitstack%20-%20Politique%20tarifaire.pdf"
+      ],
+      "paymium": [
+        "https://www.paymium.com/fr/tarification",
+        "https://www.paymium.com/fr/aide/comment-acheter-des-bitcoins",
+        "https://www.paymium.com/fr/aide/quels-sont-les-types-d-ordres-sur-paymium",
+        "https://paymium-public-files.s3.fr-par.scw.cloud/CGU/CGU_Paymium.pdf",
+        "https://paymium-public-files.s3.fr-par.scw.cloud/regles/regles_de_fonctionnement_de_la_plateforme_de_negociation.pdf",
+        "https://www.paymium.com/fr/aide/quelles-paires-de-crypto-monnaies-sont-proposees-sur-paymium"
+      ],
+      "just-mining": [
+        "https://www.meria.com/feePolicy",
+        "https://www.meria.com/resources/terms.pdf",
+        "https://help-center.meria.com/article/1116-deposer-des-euros-sur-votre-compte-meria",
+        "https://help-center.meria.com/article/1154-quel-est-le-minimum-pour-acheter-du-bitcoin",
+        "https://help-center.meria.com/article/1119--comment-retirer-mes-cryptomonnaies-sur-mon-compte-bancaire",
+        "https://help-center.meria.com/article/1304-🚨-annonce-delistings-de-septembre-2026-🚨-tutoriel-de-retrait"
+      ],
+      "coinbase": [
+        "https://help.coinbase.com/fr/coinbase/trading-and-funding/pricing-and-fees/fees",
+        "https://www.coinbase.com/blog/were-lowering-fees-for-many-active-traders-on-coinbase-advanced",
+        "https://help.coinbase.com/en/coinbase/trading-and-funding/advanced-trade/advanced-trade-fees",
+        "https://help.coinbase.com/fr/coinbase/trading-and-funding/depositing-or-withdrawing-fiat-money/funding-your-account-emea",
+        "https://help.coinbase.com/fr/coinbase/getting-started/add-a-payment-method/add-and-verify-pm-emea",
+        "https://help.coinbase.com/fr/coinbase/trading-and-funding/buying-selling-or-converting-crypto/how-do-i-buy-digital-currency"
+      ],
+      "kraken": [
+        "https://www.kraken.com/fr/features/fee-schedule",
+        "https://support.kraken.com/articles/360060101312-faq-s-about-buying-instantly",
+        "https://support.kraken.com/articles/360000381846-cash-deposit-options-fees-minimums-and-processing-times-",
+        "https://support.kraken.com/articles/360000423043-cash-withdrawal-options-fees-minimums-and-processing-times-",
+        "https://support.kraken.com/articles/360048212832-debit-or-credit-card-purchases-with-visa-and-mastercard-"
+      ],
+      "bybit": [
+        "https://www.bybit.eu/en-EU/help-center/article/FAQ-One-Click-Buy/",
+        "https://www.bybit.eu/en-EU/help-center/article/How-to-Buy-Coins-With-Fiat-Balance",
+        "https://www.bybit.eu/en-EU/help-center/article/Trading-Fee-Structure",
+        "https://www.bybit.eu/en-EU/help-center/article/FAQ-Fiat-Deposit",
+        "https://www.bybit.eu/en-EU/help-center/article/Bybit-Fees-You-Need-to-Know",
+        "https://www.bybit.eu/en-EU/help-center/article/FAQ-Fiat-Withdrawal",
+        "https://www.bybit.eu/en-EU/learn/essential-guides/bybit-trading-fees"
+      ],
+      "okx": [
+        "https://www.okx.com/en-eu/help/how-do-i-buy-crypto-with-my-cash-balance-eea",
+        "https://www.okx.com/en-eu/help/buy-sell-convert-spread-disclosure",
+        "https://www.okx.com/en-eu/help/what-are-the-new-trading-fees-for-eea-users",
+        "https://www.okx.com/en-eu/help/how-do-i-buy-with-debit-credit-cards",
+        "https://www.okx.com/en-eu/fees",
+        "https://www.okx.com/en-eu/help/how-do-i-deposit-eur-with-sepa-bank-transfer",
+        "https://www.okx.com/en-eu/help/how-do-i-withdraw-eur-with-sepa-bank-transfer"
+      ],
+      "crypto-com": [
+        "https://help.crypto.com/en/articles/10981986-fees-limits-eea",
+        "https://crypto.com/eea",
+        "https://crypto.com/exchange/document/fees-limits",
+        "https://crypto.com/document/mco_services",
+        "https://crypto.com/eea/fees-limits"
+      ],
+      "bitstamp": [
+        "https://www.bitstamp.net/fee-schedule/",
+        "https://www.bitstamp.net/faq/does-the-fee-structure-change-depending-on-the-app-dashboard-view-simple-pro",
+        "https://www.bitstamp.net/legal/order-execution-policy/",
+        "https://www.bitstamp.net/faq/key-questions-on-quick-buy-sell-and-convert-options/",
+        "https://www.bitstamp.net/faq/navigating-the-bitstamp-app-and-its-modes/",
+        "https://www.bitstamp.net/faq/how-can-i-buy-cryptocurrency-with-a-credit-or-debit-card",
+        "https://www.bitstamp.net/legal/europe-sa",
+        "https://www.bitstamp.net/faq/why-are-the-buy-and-sell-options-unavailable-for-me/"
+      ],
+      "moonpay": [
+        "https://www.moonpay.com/legal/europe_pricing_disclosure",
+        "https://support.moonpay.com/en/articles/381106-moonpay-balance-how-to-top-up-use-and-withdraw",
+        "https://support.moonpay.com/en/articles/380500-how-do-i-buy-cryptocurrency-with-moonpay"
+      ],
+      "n26-crypto": [
+        "https://support.n26.com/en-fr/app-and-features/savings-and-invest/how-n26-crypto-works",
+        "https://docs.n26.com/legal/01+DE/022+Crypto/en/04crypto-prices-and-fees-en.pdf",
+        "https://support.n26.com/fr-fr/paiements-virements-et-retraits/solde-et-plafonds/comment-alimenter-mon-compte",
+        "https://docs.n26.com/legal/core/fr/account-pricelist-latest.pdf"
+      ],
+      "young-platform": [
+        "https://exchange.youngplatform.com/fr/fees",
+        "https://pro.youngplatform.com/fees",
+        "https://youngplatform.com/fr/faq/fees/"
+      ],
+      "feel-mining": [
+        "https://feel-mining.com/offres-et-frais",
+        "https://feel-mining.com/feel-mining-platinum",
+        "https://feel-mining.zendesk.com/hc/fr/articles/6364254220306-Comment-effectuer-un-retrait-en-euro",
+        "https://feel-mining.com/documents/FEELMINING_CGV_B2C.pdf"
+      ],
+      "trade-republic": [
+        "https://traderepublic.com/fr-fr/crypto?openModal=pricing-scheme",
+        "https://assets.traderepublic.com/assets/files/FeeInformation_PaymentAccount_fr.pdf",
+        "https://assets.traderepublic.com/assets/files/CA_FR-en-fr.pdf"
+      ],
+      "etoro": [
+        "https://www.etoro.com/fr/trading/fees/",
+        "https://www.etoro.com/fr/trading/fees/conversion/",
+        "https://help.etoro.com/s/article/How-do-I-open-a-position-using-my-GBP-EUR-account-balance-aka-eToro-Money-account-balance?language=fr",
+        "https://help.etoro.com/s/article/how-does-etoro-crypto-pricing-work?language=fr",
+        "https://help.etoro.com/s/article/what-is-the-minimum-trade-size?language=fr",
+        "https://help.etoro.com/s/article/What-s-the-deposit-minimum?language=fr",
+        "https://help.etoro.com/s/article/Adding-money-to-an-eToro-Money-account-by-manual-bank-transfer?language=en_GB",
+        "https://www.etoro.com/fr/money/availability/"
+      ],
+      "trading212": [
+        "https://www.trading212.com/fr/terms/crypto",
+        "https://helpcentre.trading212.com/hc/en-us/articles/30752021087005-What-fees-does-Trading-212-charge-for-crypto-trading",
+        "https://helpcentre.trading212.com/hc/en-us/articles/30719568726173-How-can-I-manage-my-funds",
+        "https://helpcentre.trading212.com/hc/en-us/articles/360007139838-What-are-the-fees-for-funding-my-account",
+        "https://helpcentre.trading212.com/hc/en-us/articles/360013564178-Instant-Bank-Transfer-Open-Banking-Deposits",
+        "https://helpcentre.trading212.com/hc/en-us/articles/30721439008797-What-are-the-types-of-orders",
+        "https://helpcentre.trading212.com/hc/en-us/articles/30717768082461-What-is-the-Trading-212-Crypto-account",
+        "https://helpcentre.trading212.com/hc/en-us/articles/30718913607709-Trading-212-Markets-Ltd-Crypto-Account-Regulations",
+        "https://www.trading212.com/legal-documentation/cy/common/Costs-and-Charges-Disclosure_EN.pdf"
+      ],
+      "bitvavo": [
+        "https://bitvavo.com/fr/fees",
+        "https://bitvavo.com/en/fees",
+        "https://support.bitvavo.com/hc/en-us/articles/4405175148689-What-is-the-trading-fee-when-I-buy-or-sell-crypto",
+        "https://support.bitvavo.com/hc/en-us/articles/4405182039057-How-do-I-easily-buy-crypto",
+        "https://support.bitvavo.com/hc/en-us/articles/21896525491857-How-can-I-transfer-funds-using-a-credit-card",
+        "https://support.bitvavo.com/hc/en-us/articles/4405188690065-How-do-I-withdraw-euros-to-my-bank-account",
+        "https://support.bitvavo.com/hc/en-us/articles/4405175127825-What-is-the-minimum-transaction-amount-and-how-can-I-remove-or-sell-small-crypto-balances-dust",
+        "https://bitvavo.com/en/pricing-policy",
+        "https://support.bitvavo.com/hc/en-us/articles/25974760217873-Price-Guarantee-for-trading",
+        "https://support.bitvavo.com/hc/en-us/articles/34402209296401-How-to-set-your-default-order-type-for-trading"
+      ],
+      "bitpanda": [
+        "https://cdn.bitpanda.com/terms-and-conditions/cost-transparency-crypto-bitpanda-fr-latest.pdf",
+        "https://support.bitpanda.com/hc/fr/articles/360000902525-Quels-sont-les-frais-et-majorations-%C3%A0-payer-sur-Bitpanda",
+        "https://support.bitpanda.com/hc/fr/articles/16259273206044-Tout-savoir-sur-les-frais-et-majorations-de-Bitpanda",
+        "https://www.bitpanda.com/fr/limits"
+      ],
+      "revolut": [
+        "https://www.revolut.com/fr-FR/legal/exchangingcryptocurrenciespersonalfees/",
+        "https://www.revolut.com/fr-FR/legal/exchangingcryptocurrenciespersonalfees/history/",
+        "https://www.revolut.com/fr-FR/legal/standard-fees/",
+        "https://help.revolut.com/fr-FR/help/wealth/cryptocurrencies/understanding-revolut-cryptocurrency/are-there-any-limits-on-crypto-exchanges/"
+      ]
+    },
+    "index": {
+      "deblock": [
+        "https://deblock.com/fr/accords-juridiques"
+      ],
+      "coinhouse": [
+        "https://www.coinhouse.com/fr/documents-legaux"
+      ]
+    },
+    "ignorer": []
   }
 }

@@ -35,7 +35,7 @@ concurrency:
 jobs:
   veille:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 50
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -46,6 +46,13 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version: "20"
+          cache: npm
+
+      # Navigateur réel pour les pages de frais rendues en JavaScript ou filtrées (option --navigateur)
+      - name: Dépendances + Chromium
+        run: |
+          npm ci --no-audit --no-fund
+          npx playwright install --with-deps chromium
 
       - name: Veille
         id: run
@@ -54,7 +61,7 @@ jobs:
           PISTE_CLIENT_ID: ${{ secrets.PISTE_CLIENT_ID }}
           PISTE_CLIENT_SECRET: ${{ secrets.PISTE_CLIENT_SECRET }}
           VEILLE_REPORT: veille-report.md
-        run: node scripts/veille-officielle.mjs ${{ inputs.enregistrer && '--enregistrer' || '' }} ${{ inputs.detail && '--detail' || '' }}
+        run: node scripts/veille-officielle.mjs --navigateur ${{ inputs.enregistrer && '--enregistrer' || '' }} ${{ inputs.detail && '--detail' || '' }}
 
       - name: Enregistrer la nouvelle référence
         # aussi quand des écarts de valeur restent : les versions relues sont enregistrées, l'écart reste signalé
