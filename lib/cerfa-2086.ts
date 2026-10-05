@@ -585,7 +585,7 @@ function sameDayPrice(
  *  - buy / reward : quantité détenue += qty ; l. 220 += qty × priceEur
  *    (reward : hypothèse "valeur à la réception", signalée dans le résumé).
  *  - fee : la quantité quitte le portefeuille (ligne 212 exacte) ; rien sur 214.
- *  - swap : neutre (sursis art. 150 VH bis II B, sans soulte) MAIS la composition
+ *  - swap : neutre (sursis art. 150 VH bis II A, sans soulte) MAIS la composition
  *    du portefeuille devient non traçable (une seule ligne, un seul actif) →
  *    la l. 212 ne peut plus être calculée automatiquement (saisie requise).
  *  - transfer : ignoré (mouvement interne).
@@ -861,7 +861,7 @@ export function buildSummary(
   const swaps = transactions.filter((t) => t.type === "swap").length;
   if (swaps > 0) {
     avertissements.push(
-      `${swaps} échange(s) crypto/crypto (swap) traités comme neutres (sursis d'imposition, art. 150 VH bis II B) — valable UNIQUEMENT sans soulte. Un échange avec soulte est une cession imposable (lignes 216/222) non gérée par cet outil : à traiter manuellement.`,
+      `${swaps} échange(s) crypto/crypto (swap) traités comme neutres (sursis d'imposition, art. 150 VH bis II A) — valable UNIQUEMENT sans soulte. Un échange avec soulte est une cession imposable (lignes 216/222) non gérée par cet outil : à traiter manuellement.`,
     );
   }
 

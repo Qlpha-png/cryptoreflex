@@ -114,7 +114,7 @@ Prêt de crypto-actifs sur une plateforme (centralisée ou DeFi) en échange d'i
 ## M
 
 ### MiCA (Markets in Crypto-Assets)
-Règlement européen (UE 2023/1114) qui encadre les Crypto-Asset Service Providers (CASP). En France, la période transitoire a pris fin le 1er juillet 2026 : depuis, seul un prestataire agréé MiCA (par l'AMF, ou par l'autorité d'un autre État de l'UE avec un passeport vers la France) peut fournir des services sur crypto-actifs à des résidents français. Le régime PSAN a pris fin.
+Règlement européen (UE 2023/1114) qui encadre les Crypto-Asset Service Providers (CASP). En France, la période transitoire a pris fin le 30 juin 2026 : depuis le 1er juillet 2026, seul un prestataire agréé MiCA (par l'AMF, ou par l'autorité d'un autre État de l'UE avec un passeport vers la France) peut fournir des services sur crypto-actifs à des résidents français. Le régime PSAN a pris fin.
 
 ### Mining
 Activité de validation des transactions blockchain en échange de tokens. Le mining relève des **BNC** (article 92 du CGI). Il est professionnel s'il est exercé à titre habituel et constant, dans un but lucratif (conditions cumulatives) ; sinon, il relève des BNC non professionnels. À faire valider par un expert-comptable. En déclaration contrôlée, charges déductibles (matériel, électricité, internet).
@@ -142,7 +142,7 @@ Gain réalisé à la cession d'un crypto-actif. Calculée selon la formule 150 V
 18,6 % au total : 10,6 % CSG + 0,5 % CRDS + 7,5 % prélèvement de solidarité. S'appliquent à la PV crypto, que vous choisissiez le PFU ou le barème.
 
 ### PSAN (Prestataire de Services sur Actifs Numériques)
-Ancien régime français d'enregistrement obligatoire (AMF) pour les exchanges, custodians et conseillers crypto. **Il a pris fin avec la période transitoire MiCA, le 1er juillet 2026** : un ancien numéro PSAN (E20xx-xxx) ne vaut plus autorisation, seul l'agrément CASP MiCA compte.
+Ancien régime français d'enregistrement obligatoire (AMF) pour les exchanges, custodians et conseillers crypto. **Il a pris fin avec la période transitoire MiCA, le 30 juin 2026** : un ancien numéro PSAN (E20xx-xxx) ne vaut plus autorisation, seul l'agrément CASP MiCA compte.
 
 ## Q
 

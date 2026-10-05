@@ -173,7 +173,7 @@ const FAQ_ITEMS = [
     question:
       "Que se passe-t-il si j'ai un compte sur une plateforme étrangère ?",
     answer:
-      "Vous devez remplir le Cerfa 3916-bis pour CHAQUE compte ouvert sur une plateforme étrangère (Coinbase, Kraken, Bitpanda… et Binance ou Bitget pour les années où vous y aviez un compte), même si le compte est inactif ou a été fermé en cours d'année. Sanction d'oubli : 750 € par compte si solde sous 50 000 €, 1 500 € au-dessus (article 1736 X CGI, propre aux comptes de crypto-actifs). Applicable sur toutes les années non prescrites (délai de reprise porté à 10 ans pour un compte non déclaré).",
+      "Vous devez remplir le Cerfa 3916-bis pour CHAQUE compte ouvert sur une plateforme étrangère (Coinbase, Kraken, Bitpanda… et Binance ou Bitget pour les années où vous y aviez un compte), même si le compte est inactif ou a été fermé en cours d'année. Sanction d'oubli : 750 € par compte, 1 500 € si la valeur dépasse 50 000 € à un moment quelconque de l'année (article 1736, X du CGI, propre aux comptes de crypto-actifs). Applicable sur toutes les années non prescrites (délai de reprise porté à 10 ans pour un compte non déclaré).",
   },
   {
     question:

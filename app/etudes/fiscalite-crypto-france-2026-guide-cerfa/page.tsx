@@ -520,7 +520,7 @@ export default function FiscaliteCryptoStudyPage() {
           </p>
           <h3>2.2. Le seuil d’exonération de 305 €</h3>
           <p>
-            L’article 150 VH bis I-2° du CGI prévoit une{" "}
+            L’article 150 VH bis, II B du CGI prévoit une{" "}
             <strong>exonération totale</strong> de la plus-value lorsque le{" "}
             <strong>montant total des cessions</strong> de l’année n’excède pas
             305 €. Le seuil porte sur le <em>prix de cession</em>, pas sur la
