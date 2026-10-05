@@ -103,6 +103,7 @@ jobs:
         uses: actions/github-script@v9
         env:
           OUTCOME: ${{ steps.run.outcome }}
+          FULL: ${{ env.FULL }}
         with:
           script: |
             const fs = require("fs");
@@ -124,8 +125,17 @@ jobs:
               const lastDefects = (lastBody || "").split("\n").filter((l) => l.startsWith("- ❌")).sort().join("\n");
               if (lastDefects !== defects) await github.rest.issues.createComment({ ...context.repo, issue_number: issue.number, body });
             } else if (issue) {
-              await github.rest.issues.createComment({ ...context.repo, issue_number: issue.number, body: `✅ Tout est revenu au vert.\n\n${report}\n\n[Voir l'exécution](${runUrl})` });
-              await github.rest.issues.update({ ...context.repo, issue_number: issue.number, state: "closed" });
+              // Un contrôle LÉGER ne ferme le ticket que si tous les défauts ouverts relèvent de ce qu'il vérifie
+              // (constaté le 05/10/2026 : un contrôle léger avait fermé un ticket de défauts des plans du site).
+              const { data: comments } = await github.rest.issues.listComments({ ...context.repo, issue_number: issue.number, per_page: 100 });
+              const lastBody = comments.length ? comments[comments.length - 1].body : issue.body;
+              const openDefects = (lastBody || "").split("\n").filter((l) => l.startsWith("- ❌"));
+              const quickAreas = /^- ❌ \[(pages|chiffres|fraîcheur|prix|robots)\]/;
+              const canClose = process.env.FULL === "true" || openDefects.every((l) => quickAreas.test(l));
+              if (canClose) {
+                await github.rest.issues.createComment({ ...context.repo, issue_number: issue.number, body: `✅ Tout est revenu au vert.\n\n${report}\n\n[Voir l'exécution](${runUrl})` });
+                await github.rest.issues.update({ ...context.repo, issue_number: issue.number, state: "closed" });
+              }
             }
 
       - name: Échec si défaut (e-mail GitHub)
