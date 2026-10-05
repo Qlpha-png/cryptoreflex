@@ -136,7 +136,7 @@ export default async function AccountPage() {
                     Cerfa 2086 + 3916-bis auto
                   </h3>
                   <p className="mt-1 text-xs text-fg/70 leading-snug">
-                    Importez votre CSV → PDF pré-rempli en 30s. 5 PDF/jour.
+                    Remplissez le modèle CSV → récapitulatif 2086 ligne par ligne. 5 PDF/jour.
                   </p>
                 </div>
                 <ArrowRight

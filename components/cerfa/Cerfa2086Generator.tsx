@@ -7,7 +7,8 @@
  * (gratuit pour tout le monde — démonétisation juin 2026).
  *
  * Flow utilisateur :
- *  1. Upload CSV (Binance/Coinbase/Bitpanda) ou JSON Waltio
+ *  1. Upload du modèle CSV (public/modeles/cerfa-2086-modele.csv : PAS les exports natifs des plateformes) ou d'un
+ *     JSON aux mêmes champs (l'export de Waltio est un fichier Excel : il n'est pas lu)
  *     + saisie nom + année fiscale.
  *  2. Client : parse CSV en JSON normalisé.
  *  3. Preview : affiche résumé (n cessions, plus-values, impôt PFU estimé)
@@ -24,7 +25,8 @@
  */
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import type { CerfaSummary } from "@/lib/cerfa-2086";
+import type { CerfaSummary, CerfaTransaction } from "@/lib/cerfa-2086";
+import { parseCerfaFile } from "@/lib/cerfa-csv";
 import {
   AlertTriangle,
   CheckCircle2,
@@ -36,24 +38,6 @@ import {
   XCircle,
 } from "lucide-react";
 
-/* -------------------------------------------------------------------------- */
-/*  Types locaux (réplique légère de lib/cerfa-2086.ts pour le client)        */
-/* -------------------------------------------------------------------------- */
-
-type CerfaTxType = "buy" | "sell" | "swap" | "transfer" | "fee" | "reward";
-
-interface CerfaTransaction {
-  date: string;
-  type: CerfaTxType;
-  asset: string;
-  quantity: number;
-  priceEur: number;
-  fees: number;
-  exchange?: string;
-  /** (Vente) Valeur globale du portefeuille au moment de la cession — ligne 212, saisie par l'utilisateur. */
-  portfolioValueEur?: number;
-}
-
 type State = "idle" | "parsing" | "preview" | "generating" | "success" | "error";
 
 interface Props {
@@ -61,98 +45,8 @@ interface Props {
   cryptoId?: string;
 }
 
-/* -------------------------------------------------------------------------- */
-/*  Helpers parsing CSV (côté client — symétrique du serveur)                 */
-/* -------------------------------------------------------------------------- */
-
-const REQUIRED_HEADERS = ["date", "type", "asset", "quantity"]; // priceEur peut être 0
-const SUPPORTED_TYPES = new Set(["buy", "sell", "swap", "transfer", "fee", "reward"]);
-
-function parseCsv(text: string): Array<Record<string, string>> {
-  const lines = text.split(/\r?\n/).filter((l) => l.trim().length > 0);
-  if (lines.length < 2) return [];
-  const headers = lines[0].split(",").map((h) => h.trim().toLowerCase());
-  const rows: Array<Record<string, string>> = [];
-  for (let i = 1; i < lines.length; i++) {
-    const cols = lines[i].split(",");
-    const row: Record<string, string> = {};
-    for (let j = 0; j < headers.length; j++) {
-      row[headers[j]] = (cols[j] ?? "").trim();
-    }
-    rows.push(row);
-  }
-  return rows;
-}
-
-function num(v: unknown): number {
-  if (typeof v === "number" && Number.isFinite(v)) return v;
-  if (typeof v === "string") {
-    const n = Number(v.replace(",", ".").trim());
-    return Number.isFinite(n) ? n : NaN;
-  }
-  return NaN;
-}
-
-function csvToTransactions(rows: Array<Record<string, string>>): {
-  txs: CerfaTransaction[];
-  errors: string[];
-} {
-  const errors: string[] = [];
-  if (rows.length === 0) {
-    return { txs: [], errors: ["Fichier CSV vide ou en-têtes manquantes."] };
-  }
-
-  const sample = rows[0];
-  for (const h of REQUIRED_HEADERS) {
-    if (!(h in sample)) {
-      errors.push(`Colonne manquante : ${h}. Colonnes attendues : ${REQUIRED_HEADERS.join(", ")}, price_eur (ou priceEur), fees, exchange.`);
-      return { txs: [], errors };
-    }
-  }
-
-  const txs: CerfaTransaction[] = [];
-  for (let i = 0; i < rows.length; i++) {
-    const r = rows[i];
-    const type = (r.type ?? "").toLowerCase();
-    if (!SUPPORTED_TYPES.has(type)) {
-      errors.push(`Ligne ${i + 2}: type "${type}" non supporté.`);
-      continue;
-    }
-    const date = r.date;
-    if (!date || Number.isNaN(new Date(date).getTime())) {
-      errors.push(`Ligne ${i + 2}: date invalide.`);
-      continue;
-    }
-    const asset = (r.asset ?? "").toUpperCase();
-    if (!asset) {
-      errors.push(`Ligne ${i + 2}: actif vide.`);
-      continue;
-    }
-    const quantity = num(r.quantity);
-    const priceEur = num(r.priceeur ?? r.price_eur ?? r.price ?? "0");
-    const fees = num(r.fees ?? "0");
-    if (!Number.isFinite(quantity)) {
-      errors.push(`Ligne ${i + 2}: quantité invalide.`);
-      continue;
-    }
-    // Ligne 212 (ventes) : valeur globale du portefeuille au moment de la cession, si l'utilisateur la fournit.
-    const pvRaw = r.portfolio_value_eur ?? r.portfoliovalueeur ?? r.valeur_portefeuille_eur ?? "";
-    const portfolioValueEur = pvRaw.trim() ? num(pvRaw) : NaN;
-    txs.push({
-      date,
-      type: type as CerfaTxType,
-      asset,
-      quantity,
-      priceEur: Number.isFinite(priceEur) ? priceEur : 0,
-      fees: Number.isFinite(fees) ? fees : 0,
-      exchange: r.exchange || undefined,
-      ...(type === "sell" && Number.isFinite(portfolioValueEur) && portfolioValueEur > 0
-        ? { portfolioValueEur }
-        : {}),
-    });
-  }
-  return { txs, errors };
-}
+// Lecture du fichier (modèle CSV, y compris enregistré par Excel en français, ou JSON aux mêmes champs) :
+// lib/cerfa-csv.ts (testée : tests/lib/cerfa-2086-modele.test.ts).
 
 /* -------------------------------------------------------------------------- */
 /*  Aperçu : calculé par le serveur (audit 2026-10-03)                         */
@@ -237,51 +131,7 @@ export default function Cerfa2086Generator({ cryptoId: _cryptoId }: Props) {
       setParseErrors([]);
 
       try {
-        // Heuristique : JSON Waltio ?
-        const trimmed = text.trim();
-        let txs: CerfaTransaction[] = [];
-        let errors: string[] = [];
-
-        if (trimmed.startsWith("[") || trimmed.startsWith("{")) {
-          // Tentative JSON (Waltio export)
-          const json = JSON.parse(trimmed);
-          const arr = Array.isArray(json) ? json : Array.isArray(json.transactions) ? json.transactions : null;
-          if (!arr) {
-            errors.push("JSON détecté mais format inattendu (tableau de transactions requis).");
-          } else {
-            txs = arr
-              .map((row: unknown): CerfaTransaction | null => {
-                if (!row || typeof row !== "object") return null;
-                const r = row as Record<string, unknown>;
-                const type = String(r.type ?? "").toLowerCase();
-                if (!SUPPORTED_TYPES.has(type)) return null;
-                const q = num(r.quantity ?? r.amount);
-                const p = num(r.priceEur ?? r.price_eur ?? r.price);
-                const fees = num(r.fees ?? 0);
-                const pvj = num(r.portfolioValueEur ?? r.portfolio_value_eur ?? NaN);
-                return {
-                  date: String(r.date ?? ""),
-                  type: type as CerfaTxType,
-                  asset: String(r.asset ?? r.symbol ?? "").toUpperCase(),
-                  quantity: Number.isFinite(q) ? q : 0,
-                  priceEur: Number.isFinite(p) ? p : 0,
-                  fees: Number.isFinite(fees) ? fees : 0,
-                  exchange:
-                    typeof r.exchange === "string" ? r.exchange : undefined,
-                  ...(type === "sell" && Number.isFinite(pvj) && pvj > 0
-                    ? { portfolioValueEur: pvj }
-                    : {}),
-                };
-              })
-              .filter((x: CerfaTransaction | null): x is CerfaTransaction => x !== null);
-          }
-        } else {
-          // CSV
-          const rows = parseCsv(text);
-          const parsed = csvToTransactions(rows);
-          txs = parsed.txs;
-          errors = parsed.errors;
-        }
+        const { txs, errors } = parseCerfaFile(text);
 
         if (txs.length === 0) {
           setParseErrors(
@@ -296,7 +146,8 @@ export default function Cerfa2086Generator({ cryptoId: _cryptoId }: Props) {
 
         if (txs.length > 1000) {
           setErrorMsg(
-            `Trop de transactions (${txs.length}, max 1000 par PDF). Découpez votre fichier par année.`,
+            // Ne PAS conseiller de découper par année : les lignes 220 et 221 exigent tout l'historique (revue 05/10/2026).
+            `Trop d'opérations (${txs.length}, maximum 1 000) : l'outil ne peut pas traiter un historique aussi long. Pour un tel volume, un logiciel spécialisé dans la fiscalité crypto est plus adapté.`,
           );
           setState("error");
           setTransactions([]);
@@ -365,7 +216,8 @@ export default function Cerfa2086Generator({ cryptoId: _cryptoId }: Props) {
   /* ---------- Submit ---------- */
 
   const handleGenerate = useCallback(async () => {
-    if (transactions.length === 0) return;
+    // Une ligne écartée (prix ambigu, colonnes décalées…) fausserait les lignes 220/221 : pas de PDF tant qu'il en reste.
+    if (transactions.length === 0 || parseErrors.length > 0) return;
     setState("generating");
     setErrorMsg(null);
 
@@ -423,7 +275,7 @@ export default function Cerfa2086Generator({ cryptoId: _cryptoId }: Props) {
       );
       setState("error");
     }
-  }, [transactions, taxYear, taxpayerName]);
+  }, [transactions, taxYear, taxpayerName, parseErrors]);
 
   const reset = useCallback(() => {
     setTransactions([]);
@@ -473,8 +325,8 @@ export default function Cerfa2086Generator({ cryptoId: _cryptoId }: Props) {
         {[
           {
             n: "1",
-            title: "Exportez votre CSV",
-            desc: "Sur Coinbase, Kraken ou Bitpanda : Compte → Historique → Exporter en CSV (vos anciens exports Binance passent aussi).",
+            title: "Remplissez le modèle",
+            desc: "Téléchargez notre modèle CSV et recopiez-y TOUS vos achats et ventes depuis votre premier achat (pas seulement ceux de l'année), depuis l'historique de vos plateformes.",
             done: transactions.length > 0,
           },
           {
@@ -516,13 +368,63 @@ export default function Cerfa2086Generator({ cryptoId: _cryptoId }: Props) {
         ))}
       </ol>
 
-      {/* Tutoriel "Où trouver mon CSV ?" — repliable */}
+      {/* 05/10/2026 : l'outil lit son propre format (ou un JSON aux mêmes champs), PAS les exports des plateformes →
+          le modèle doit se trouver sans ouvrir le tutoriel. */}
+      <div className="flex flex-wrap gap-3">
+        <a
+          href="/modeles/cerfa-2086-modele-excel.csv"
+          download
+          className="btn-ghost inline-flex items-center gap-2 text-sm"
+        >
+          <Download className="h-4 w-4" aria-hidden="true" />
+          Modèle pour Excel en français (exemple rempli)
+        </a>
+        <a
+          href="/modeles/cerfa-2086-modele.csv"
+          download
+          className="btn-ghost inline-flex items-center gap-2 text-sm"
+        >
+          <Download className="h-4 w-4" aria-hidden="true" />
+          Modèle CSV standard (Google Sheets, LibreOffice…)
+        </a>
+      </div>
+
+      {/* Tutoriel "Comment remplir le fichier ?" — repliable */}
       <details className="glass rounded-xl p-4 text-sm">
         <summary className="cursor-pointer font-semibold text-fg flex items-center gap-2">
           <FileText className="h-4 w-4 text-primary-soft" aria-hidden="true" />
-          Où trouver mon CSV de transactions ? (clique pour voir le pas-à-pas par
-          plateforme)
+          Comment remplir le fichier ? (modèle, colonnes et où trouver vos opérations)
         </summary>
+        <div className="mt-4 space-y-2 text-xs text-fg/75">
+          <p>
+            <a
+              href="/modeles/cerfa-2086-modele.csv"
+              download
+              className="font-semibold text-primary-soft underline underline-offset-2 hover:text-primary"
+            >
+              Télécharger le modèle CSV
+            </a>{" "}
+            (exemple rempli : 2 achats et 1 vente ; version{" "}
+            <a href="/modeles/cerfa-2086-modele-excel.csv" download className="underline underline-offset-2">
+              pour Excel en français
+            </a>
+            ). Gardez la première ligne et remplacez les exemples par toutes vos opérations depuis votre
+            premier achat, une ligne chacune, puis enregistrez au format CSV (avec Excel en français :
+            « CSV (séparateur : point-virgule) »). Virgule décimale et dates JJ/MM/AAAA sont acceptées ; dans le
+            modèle standard à virgules, écrivez les décimales avec un point (0.02).
+          </p>
+          <ul className="list-disc pl-5 space-y-1">
+            <li><code className="font-mono">date</code> : AAAA-MM-JJ ; <code className="font-mono">type</code> : buy, sell, swap, transfer, fee ou reward</li>
+            <li><code className="font-mono">asset</code> : symbole (BTC, ETH…) ; <code className="font-mono">quantity</code> : quantité</li>
+            <li><code className="font-mono">price_eur</code> : prix d&apos;UNE unité en euros ce jour-là ; <code className="font-mono">fees</code> : frais en euros</li>
+            <li><code className="font-mono">exchange</code> : nom de la plateforme (sert à la fiche 3916-bis des comptes à l&apos;étranger)</li>
+            <li><code className="font-mono">portfolio_value_eur</code> (ventes seulement) : valeur totale de vos cryptos le jour de la vente, si vous la connaissez (ligne 212)</li>
+          </ul>
+          <p>
+            Les fichiers exportés par les plateformes n&apos;ont pas ces colonnes : ils ne s&apos;importent
+            pas tels quels. Ils servent de source pour recopier vos opérations. Voici où les trouver&nbsp;:
+          </p>
+        </div>
         <div className="mt-4 grid sm:grid-cols-3 gap-3 text-xs">
           {[
             {
@@ -530,7 +432,7 @@ export default function Cerfa2086Generator({ cryptoId: _cryptoId }: Props) {
               steps: [
                 "Connectez-vous sur binance.com",
                 "Compte (icône en haut à droite) → Historique de transactions",
-                "Sélectionnez la période (toute l'année fiscale)",
+                "Sélectionnez toute la période, depuis l'ouverture du compte",
                 "Cliquez « Exporter rapport CSV » — délai 24-48h, email envoyé",
               ],
             },
@@ -539,7 +441,7 @@ export default function Cerfa2086Generator({ cryptoId: _cryptoId }: Props) {
               steps: [
                 "Connectez-vous sur coinbase.com",
                 "Profil → Rapports → Générer un rapport",
-                "Période : année fiscale complète",
+                "Période : depuis l'ouverture du compte",
                 "Format CSV → Télécharger",
               ],
             },
@@ -564,8 +466,8 @@ export default function Cerfa2086Generator({ cryptoId: _cryptoId }: Props) {
           ))}
         </div>
         <p className="mt-3 text-[11px] text-fg/55">
-          Vous utilisez un autre exchange ? Importez votre export Waltio (JSON) — c&apos;est
-          le format pivot universel pour les déclarants crypto FR.
+          Gardez tout votre historique dans le même fichier, années précédentes comprises : la ligne 220
+          additionne tous vos achats depuis le premier, et la ligne 221 tient compte de vos ventes passées.
         </p>
       </details>
 
@@ -638,10 +540,10 @@ export default function Cerfa2086Generator({ cryptoId: _cryptoId }: Props) {
           aria-hidden="true"
         />
         <p className="mt-3 font-semibold text-fg">
-          Déposez votre CSV (Coinbase, Kraken, Bitpanda, anciens exports Binance) ou JSON Waltio
+          Déposez votre fichier (le modèle CSV rempli)
         </p>
         <p className="mt-1 text-xs text-fg/60">
-          ou clique pour parcourir — max 5 MB, 1000 lignes
+          ou cliquez pour parcourir — max 5 Mo, 1000 lignes
         </p>
         <p className="mt-3 text-[11px] text-fg/55">
           Colonnes attendues :{" "}
@@ -664,7 +566,8 @@ export default function Cerfa2086Generator({ cryptoId: _cryptoId }: Props) {
         <div className="rounded-xl border border-warning/40 bg-warning/10 p-4 text-sm">
           <div className="flex items-center gap-2 mb-2 text-warning-fg font-semibold">
             <AlertTriangle className="h-4 w-4" aria-hidden="true" />
-            {parseErrors.length} ligne(s) ignorée(s) :
+            {parseErrors.length} ligne(s) à corriger — le PDF reste bloqué tant qu&apos;elles ne le sont pas
+            (une ligne écartée fausserait le calcul) :
           </div>
           <ul className="list-disc pl-5 space-y-1 text-fg/70 max-h-40 overflow-auto">
             {parseErrors.slice(0, 10).map((e, i) => (
@@ -803,7 +706,8 @@ export default function Cerfa2086Generator({ cryptoId: _cryptoId }: Props) {
             <button
               type="button"
               onClick={handleGenerate}
-              disabled={state === "generating"}
+              disabled={state === "generating" || parseErrors.length > 0}
+              title={parseErrors.length > 0 ? "Corrigez d'abord les lignes signalées puis réimportez le fichier" : undefined}
               className="btn-primary disabled:opacity-60 disabled:cursor-not-allowed"
             >
               {state === "generating" ? (
@@ -908,7 +812,7 @@ export default function Cerfa2086Generator({ cryptoId: _cryptoId }: Props) {
       <details className="glass rounded-xl p-4 text-sm">
         <summary className="cursor-pointer font-semibold text-fg flex items-center gap-2">
           <FileText className="h-4 w-4 text-primary-soft" aria-hidden="true" />
-          Format CSV attendu (clique pour voir)
+          Format CSV attendu (cliquez pour voir)
         </summary>
         <div className="mt-3 space-y-2 text-fg/75 text-xs">
           <p>
@@ -927,7 +831,7 @@ export default function Cerfa2086Generator({ cryptoId: _cryptoId }: Props) {
           <pre className="overflow-x-auto rounded-lg bg-elevated/60 p-3 text-[11px] font-mono leading-relaxed">
 {`date,type,asset,quantity,price_eur,fees,exchange,portfolio_value_eur
 2024-03-15,buy,BTC,0.05,60000,5,Kraken,
-2024-09-22,sell,BTC,0.02,58000,3,Kraken,2140
+2024-09-22,sell,BTC,0.02,58000,3,Kraken,2900
 2024-11-10,reward,ETH,0.5,2300,0,Coinbase,`}
           </pre>
           <p>
@@ -936,7 +840,9 @@ export default function Cerfa2086Generator({ cryptoId: _cryptoId }: Props) {
             <code className="font-mono">swap</code> (crypto/crypto, neutre),{" "}
             <code className="font-mono">transfer</code>,{" "}
             <code className="font-mono">fee</code>,{" "}
-            <code className="font-mono">reward</code> (staking/airdrop).
+            <code className="font-mono">reward</code> (staking/airdrop) ; en français aussi : achat, vente,
+            échange, transfert, frais, récompense. La valeur de 2 900 € de l&apos;exemple = 0,05 BTC détenus
+            × 58 000 € le jour de la vente.
           </p>
         </div>
       </details>

@@ -231,6 +231,18 @@ describe("legacy-redirects — les 33 chemins de la Search Console (toutes les r
     }
   });
 
+  it("Fiscal Copilot retiré (05/10/2026) : /outils/fiscal-copilot → générateur Cerfa 2086 en un saut", () => {
+    expect(isRealPage("/outils/fiscal-copilot"), "la page vitrine existe encore").toBe(false);
+    expect(resolve("/outils/fiscal-copilot")).toBe("/outils/cerfa-2086-auto");
+    expect(isRealPage("/outils/cerfa-2086-auto")).toBe(true);
+    expect(resolve("/outils/cerfa-2086-auto")).toBeNull();
+  });
+
+  it("landing /lp/cerfa-2026 retirée (05/10/2026) → générateur Cerfa 2086 en un saut", () => {
+    expect(isRealPage("/lp/cerfa-2026"), "la landing existe encore").toBe(false);
+    expect(resolve("/lp/cerfa-2026")).toBe("/outils/cerfa-2086-auto");
+  });
+
   it("aucune vraie page n'est masquée par une règle legacy (avis, alternatives, comparatifs publiés)", () => {
     for (const r of reviews) expect(resolve(`/avis/${r}`), `/avis/${r}`).toBeNull();
     for (const a of alternatives) expect(resolve(`/alternative-a/${a}`), `/alternative-a/${a}`).toBeNull();

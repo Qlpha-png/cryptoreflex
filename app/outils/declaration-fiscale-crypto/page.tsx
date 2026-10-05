@@ -88,12 +88,12 @@ const FAQ_ITEMS = [
   {
     question: "Waltio vs Koinly : lequel choisir ?",
     answer:
-      "Waltio si vous êtes contribuable en France et voulez une déclaration clé-en-main : interface FR, support FR, export Cerfa 2086 + 3916-bis prêt à téléverser sur impots.gouv.fr. Koinly si vous êtes expatrié, multi-pays ou que vous voulez un free tier généreux (10 000 transactions visibles) avant d'acheter un export. Côté tarif palier d'entrée, Waltio est à 39 €/an (50 transactions) et Koinly à 49 USD par année fiscale (100 transactions).",
+      "Waltio si vous êtes contribuable en France et voulez une déclaration clé-en-main : interface FR, support FR, rapport Cerfa 2086 + 3916-bis dont vous recopiez les chiffres sur impots.gouv.fr. Koinly si vous êtes expatrié, multi-pays ou que vous voulez un free tier généreux (10 000 transactions visibles) avant d'acheter un export. Côté tarif palier d'entrée, Waltio est à 39 €/an (50 transactions) et Koinly à 49 USD par année fiscale (100 transactions).",
   },
   {
     question: "Pourquoi ne pas faire la déclaration crypto manuellement ?",
     answer:
-      "Au-delà de 50 transactions par an, le calcul manuel devient piégeux : prix d'acquisition moyen pondéré, conversions crypto-crypto neutres, gestion du seuil de 305 €, méthode FIFO… Une erreur sur la valeur globale du portefeuille au moment de chaque cession peut multiplier votre imposition par 2. Un outil automatisé évite ces erreurs et fournit le détail ligne par ligne en cas de contrôle.",
+      "Au-delà de 50 transactions par an, le calcul manuel devient piégeux : prix total d'acquisition du portefeuille, conversions crypto-crypto neutres, seuil de 305 €… Une erreur sur la valeur globale du portefeuille au moment de chaque cession fausse directement votre plus-value. Un outil automatisé évite ces erreurs et fournit le détail ligne par ligne en cas de contrôle.",
   },
   {
     question: "Combien coûte Waltio pour quelques centaines de transactions ?",
@@ -319,7 +319,7 @@ export default function DeclarationFiscaleCryptoPage() {
               placement="declaration-page-banner"
               variant="banner"
               headline="Générez votre Cerfa 2086 + 3916-bis en 10 minutes avec Waltio"
-              description="Connectez vos exchanges (Kraken, Coinbase, Bitpanda, Ledger…), Waltio calcule automatiquement vos plus-values selon la fiscalité française et vous livre les formulaires prêts à téléverser sur impots.gouv.fr. Rapport fiscal dès 39 €/an."
+              description="Connectez vos exchanges (Kraken, Coinbase, Bitpanda, Ledger…), Waltio calcule automatiquement vos plus-values selon la fiscalité française et vous livre les formulaires à recopier sur impots.gouv.fr. Rapport fiscal dès 39 €/an."
             />
           </div>
 
@@ -430,10 +430,10 @@ export default function DeclarationFiscaleCryptoPage() {
                   <p className="mt-2 text-sm text-fg/75">
                     Dès que vous tradez sur plusieurs plateformes, faites du
                     staking, de l'airdrop ou du swap entre tokens, le calcul
-                    manuel devient piégeux. La méthode du prix d'acquisition
-                    moyen pondéré exige une rigueur que seul un outil peut
+                    manuel devient piégeux. La méthode globale de l'article
+                    150 VH bis exige une rigueur que seul un outil peut
                     tenir. Waltio (plan Starter à 99 €/an) ou Koinly (dès 49 USD)
-                    couvrent 99 % des profils particuliers.
+                    couvrent la plupart des profils particuliers.
                   </p>
                 </div>
               </div>

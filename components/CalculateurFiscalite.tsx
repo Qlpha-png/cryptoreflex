@@ -555,7 +555,7 @@ function WaltioPostResultCta({
   } else {
     headline = "Économisez 40 h sur votre déclaration crypto";
     pitch =
-      "Notre calculateur vous donne le montant. Waltio (édité en France) connecte vos exchanges, calcule chaque cession au prorata article 150 VH bis et génère le Cerfa 2086 + 3916-bis prêts à téléverser sur impots.gouv.fr en 30 minutes au lieu d'un week-end entier.";
+      "Notre calculateur vous donne le montant. Waltio (édité en France) connecte vos exchanges, calcule chaque cession au prorata article 150 VH bis et prépare le Cerfa 2086 + 3916-bis à recopier sur impots.gouv.fr, bien plus vite qu'à la main.";
   }
 
   return (

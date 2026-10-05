@@ -198,7 +198,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // FIX 2026-05-02 #11 — TIER 3 features (audit consolidé 6 experts).
     entry("/outils/yield-stablecoins", "weekly", 0.8),
     entry("/outils/tax-loss-harvesting", "monthly", 0.75),
-    entry("/outils/fiscal-copilot", "monthly", 0.7),
     entry("/outils/wallet-connect", "monthly", 0.65),
     entry("/crypto-wrapped", "monthly", 0.6),
     // Pack Déclaration (ressource gratuite depuis juin 2026).

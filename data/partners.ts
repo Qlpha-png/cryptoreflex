@@ -269,11 +269,11 @@ export const partners: Partner[] = [
     slug: "waltio",
     name: "Waltio",
     category: "fiscalite",
-    tagline: "Cerfa 2086 prêt en 12 minutes, pas en 12 heures.",
+    tagline: "Votre Cerfa 2086 préparé pour vous, sans Excel.",
     shortDescription:
-      "SaaS français leader fiscalité crypto. Génère Cerfa 2086 + 3916-bis pré-remplis selon doctrine Bercy (méthode PMP, art. 150 VH bis CGI). Connecte 220+ plateformes.",
+      "SaaS français leader fiscalité crypto. Génère Cerfa 2086 + 3916-bis pré-remplis selon la méthode globale de l'art. 150 VH bis CGI. Connecte 220+ plateformes.",
     whyWeUseIt:
-      "On déclare nos propres plus-values dessus depuis 2022. Le seul outil qui produit un Cerfa 2086 conforme à la doctrine fiscale française — Koinly et CoinTracking ne le font pas pour la France.",
+      "On déclare nos propres plus-values dessus depuis 2022. Un outil conçu pour la fiscalité française : rapport 2086 + 3916-bis calculé selon la méthode globale de l'art. 150 VH bis.",
     affiliateUrl: "https://www.waltio.com/fr/?a_aid=Cryptoreflex",
     logoPath: "/logos/partners/waltio.svg",
     // Couleur officielle Waltio = purple #503BFF (vérifiée logo officiel waltio.com).
@@ -283,8 +283,8 @@ export const partners: Partner[] = [
     priceFrom: "Gratuit",
     commission: "20% par vente",
     pros: [
-      "Cerfa 2086 + 3916-bis pré-remplis automatiquement (unique en FR)",
-      "Méthode PMP native (art. 150 VH bis CGI exigée par Bercy)",
+      "Cerfa 2086 + 3916-bis pré-remplis automatiquement",
+      "Méthode globale de l'art. 150 VH bis CGI appliquée nativement",
       "Support par e-mail, chat à partir de l'offre Smart",
       "Connexion 220+ plateformes (Binance, Bitpanda, Coinhouse, Kraken, MetaMask…)",
     ],

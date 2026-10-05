@@ -108,7 +108,7 @@ Léo reporte les **45 000 euros** en colonne "prix de cession" du Cerfa 2086, **
 
 ## 3. Exemple 2 — DCA Bitcoin sur 12 mois
 
-**Le cas :** Camille fait du DCA Bitcoin chaque mois sur Bitstamp en 2024 : 200 euros par mois pendant 12 mois (soit 2 400 euros investis). Le BTC moyen acheté lui a coûté un PRU de 38 500 euros. En octobre 2025, elle vend la moitié de ses BTC pour un montant de cession de 4 200 euros, frais 4 euros. Au jour de la vente, son portefeuille total vaut 8 400 euros.
+**Le cas :** Camille fait du DCA Bitcoin chaque mois sur Bitstamp en 2024 : 200 euros par mois pendant 12 mois (soit 2 400 euros investis). En octobre 2025, elle vend la moitié de ses BTC pour un montant de cession de 4 200 euros, frais 4 euros. Au jour de la vente, son portefeuille total vaut 8 400 euros.
 
 **Calcul (formule prorata article 150 VH bis) :**
 
@@ -123,7 +123,7 @@ Plus-value = 4 200 − (2 400 × 4 200 / 8 400) − 4 = 4 200 − 1 200 − 4 = 
 
 - IR (12,8 %) : 2 996 × 0,128 = **383,49 euros**
 - PS (18,6 %) : 2 996 × 0,186 = **557,26 euros**
-- **Total impôt** : 940,74 euros
+- **Total impôt** : 940,75 euros (chaque prélèvement arrondi au centime)
 
 C'est le piège du DCA : Camille n'a vendu que la moitié de ses BTC, donc seule **la moitié du prix d'acquisition** est imputable sur cette cession. Si elle revend le reste plus tard, elle recalculera avec la nouvelle valeur globale.
 
@@ -140,7 +140,7 @@ Pour automatiser ce calcul de prorata, le [calculateur fiscalité crypto Cryptor
 **Conséquences :**
 
 - Aucune ligne sur le Cerfa 2086 cette année.
-- En revanche, le **PRU des SOL est désormais 72 euros par SOL** (18 000 / 250). Cette base d'acquisition sera utilisée le jour où Hugo vendra ses SOL contre des EUR.
+- Rien ne change dans le **prix total d'acquisition** du portefeuille de Hugo (ligne 220 du 2086) : ce qu'il a payé pour ses ETH y reste. Ses 250 SOL n'ont pas de prix de revient propre ; ils compteront dans la valeur globale du portefeuille (ligne 212) lors de sa prochaine vente en euros.
 - Hugo doit conserver l'historique du swap (capture, export CSV) pendant 6 ans en cas de contrôle.
 
 À noter : **la conversion crypto vers stablecoin (USDC, USDT, EUROC) reste neutre fiscalement**, parce que le BOFiP considère les stablecoins comme des cryptoactifs et non comme une monnaie ayant cours légal.
@@ -149,7 +149,7 @@ Pour automatiser ce calcul de prorata, le [calculateur fiscalité crypto Cryptor
 
 ## 5. Exemple 4 — gros gain (50 000 euros)
 
-**Le cas :** Sophie a acheté 0,5 BTC à 25 000 euros en juillet 2022 sur Kraken (donc 12 500 euros d'investissement). En décembre 2025, elle vend la totalité de ces 0,5 BTC pour 65 000 euros (BTC à 130 000 euros). Frais Kraken 0,26 % soit 169 euros.
+**Le cas :** Sophie a acheté 0,5 BTC à 25 000 euros en juillet 2022 sur Kraken (donc 12 500 euros d'investissement). En décembre 2025, elle vend la totalité de ces 0,5 BTC pour 65 000 euros (cours retenu pour l'exemple : 130 000 euros le BTC). Frais Kraken 0,26 % soit 169 euros.
 
 **Calcul :**
 
@@ -164,9 +164,9 @@ Plus-value = 65 000 − (12 500 × 65 000 / 65 000) − 169 = 65 000 − 12 500 
 
 - IR (12,8 %) : 52 331 × 0,128 = **6 698,37 euros**
 - PS (18,6 %) : 52 331 × 0,186 = **9 733,57 euros**
-- **Total impôt** : 16 431,93 euros
+- **Total impôt** : 16 431,94 euros
 
-Reste net pour Sophie : 65 000 − 12 500 − 16 431,93 = **36 068,07 euros**.
+Reste net pour Sophie : 65 000 − 12 500 − 169 (frais) − 16 431,94 = **35 899,06 euros**.
 
 À ce niveau, Sophie a aussi intérêt à se poser la question du **barème progressif** si elle est non-imposable ou TMI 11 %. Notre comparatif détaillé est dans le guide [Barème progressif ou PFU 31,4 % crypto](/blog/bareme-progressif-vs-pfu-crypto-2026).
 
@@ -188,12 +188,12 @@ Reste net pour Sophie : 65 000 − 12 500 − 16 431,93 = **36 068,07 euros**.
 
 ## 7. Récapitulatif — les 5 cas en un tableau
 
-| Cas | Cessions (€) | PRU (€) | PV nette (€) | PFU 31,4 % (€) |
+| Cas | Cessions (€) | Prix d'acquisition imputé (€) | PV nette (€) | PFU 31,4 % (€) |
 |---|---|---|---|---|
 | 1. Vente unique BTC | 45 000 | 30 000 | 14 955 | 4 695,87 |
-| 2. DCA Bitcoin | 4 200 | 1 200 (prorata) | 2 996 | 940,74 |
+| 2. DCA Bitcoin | 4 200 | 1 200 (prorata) | 2 996 | 940,75 |
 | 3. Swap ETH→SOL | 0 (neutre) | — | 0 | 0 |
-| 4. Gros gain BTC | 65 000 | 12 500 | 52 331 | 16 431,93 |
+| 4. Gros gain BTC | 65 000 | 12 500 | 52 331 | 16 431,94 |
 | 5. Micro 280 € | 280 | — | — | 0 (exonéré) |
 
 ---

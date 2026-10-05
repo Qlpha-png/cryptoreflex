@@ -2,7 +2,8 @@
  * lib/cerfa-2086.ts
  * -----------------
  * Logique métier "Cerfa 2086 + 3916-bis pré-rempli" :
- *  - Parsing CSV multi-exchanges (Binance, Coinbase, Bitpanda) → transactions normalisées.
+ *  - Lecture d'un CSV au format pivot de l'outil (modèle public/modeles/cerfa-2086-modele.csv ; côté navigateur :
+ *    lib/cerfa-csv.ts) → transactions normalisées. Les exports bruts des plateformes ne sont PAS lus.
  *  - Calcul des cessions imposables selon l'article 150 VH bis du CGI, ligne
  *    par ligne du formulaire 2086 (lignes 211 à 224).
  *  - Génération PDF (récap "annexe Cerfa") via pdf-lib.
@@ -384,9 +385,8 @@ export function validateTransactions(raw: unknown): ValidationResult {
 /* -------------------------------------------------------------------------- */
 
 /**
- * Parser CSV minimal (pas de support des champs entre quotes avec virgule
- * interne — suffit pour les exports stockés bruts par Binance/Coinbase/Bitpanda
- * qui n'utilisent pas de virgule dans les champs critiques pour notre usage).
+ * Parser CSV minimal, séparateur virgule, sans guillemets (utilisé par les tests serveur). Le navigateur passe par
+ * lib/cerfa-csv.ts, qui gère aussi « ; », les guillemets, la virgule décimale et les dates JJ/MM/AAAA.
  *
  * Retourne un tableau d'objets indexés par les en-têtes (1ère ligne).
  */
@@ -496,8 +496,10 @@ const KNOWN_FR_EXCHANGES = new Set([
   "feel mining",
   "feel-mining",
   "stackinsat",
-  "bitpanda france", // Bitpanda BG entity FR
   "paymium",
+  "bitstack", // Bitstack Digital Assets SAS (Meyreuil, France) — vérifié le 05/10/2026
+  // 05/10/2026 : « bitpanda france » retiré : les comptes sont tenus par Bitpanda GmbH (droit autrichien) ; son
+  // enregistrement auprès de l'AMF ne fait pas du compte un compte français → 3916-bis dû.
 ]);
 
 function isForeignExchange(name: string | undefined): boolean {

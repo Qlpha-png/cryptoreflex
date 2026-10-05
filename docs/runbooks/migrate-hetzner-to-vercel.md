@@ -172,13 +172,13 @@ Environment Variables. Compte = au minimum 8-10 indispensables + Supabase
 # Tests à lancer (Claude le fait dès que tu lui donnes l'URL staging)
 curl -I https://cryptoreflex-xxx.vercel.app/
 curl -I https://cryptoreflex-xxx.vercel.app/cryptos/bitcoin
-curl -I https://cryptoreflex-xxx.vercel.app/api/community-stats
+curl -I https://cryptoreflex-xxx.vercel.app/api/health
 npm run audit:sitemap -- --base https://cryptoreflex-xxx.vercel.app
 ```
 
 Critères de validation :
 - ✅ HTTP 200 sur home + 5 pages clés
-- ✅ /api/community-stats répond JSON
+- ✅ /api/health répond JSON
 - ✅ Sitemap accessible
 - ✅ Pas de "Bn", pas de "0+"
 - ✅ Marqueurs Phase 3 visibles (Sources utilisées, Vérif.)
@@ -271,7 +271,7 @@ Si Vercel se plaint de SSL avec Cloudflare proxy ON :
 
 ```bash
 # Suite de checks live (Claude le fait pour toi)
-for url in / /cryptos/bitcoin /academie /comparatif /outils /api/community-stats; do
+for url in / /cryptos/bitcoin /academie /comparatif /outils /api/health; do
   code=$(curl -s -o /dev/null -w "%{http_code}" "https://www.cryptoreflex.fr$url")
   echo "$code $url"
 done

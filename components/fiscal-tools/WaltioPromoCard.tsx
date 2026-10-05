@@ -154,7 +154,7 @@ export default function WaltioPromoCard({
 
           <ul className="mt-3 space-y-1 text-xs text-white/70">
             <li>· Connexion à 220+ exchanges et wallets (Binance, Kraken, Ledger…)</li>
-            <li>· Pré-remplissage du formulaire 2086 + 3916-bis prêt à téléverser</li>
+            <li>· Pré-remplissage du formulaire 2086 + 3916-bis à recopier</li>
             <li>· Support client en français par chat (réponse &lt; 24h)</li>
           </ul>
 

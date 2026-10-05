@@ -104,30 +104,34 @@ Le **2086** (« Annexe à la déclaration des plus-values de cession d'actifs nu
 **Quand on n'a PAS à le remplir** :
 
 - Si on n'a fait **aucune cession** en 2025 (HODL pur, jamais vendu).
-- Si le **prix total des cessions de l'année ne dépasse pas 305 €** (seuil de tolérance, peu connu mais inscrit en doctrine 150 VH bis CGI).
+- Si le **total de vos prix de cession de l'année (nets de frais) ne dépasse pas 305 €** : c'est l'exonération prévue par l'article 150 VH bis du CGI (elle porte sur le total des ventes, pas sur la plus-value).
 
 **Structure du formulaire** :
 
-Le 2086 demande, ligne par ligne, **chaque cession** réalisée en 2025. Pour chacune :
+Le 2086 demande, ligne par ligne, **chaque cession** réalisée en 2025. Pour chacune, les principales lignes sont :
 
-- Date de cession
-- Prix de cession en EUR
-- Prix d'acquisition pondéré (méthode PMP : Prix Moyen Pondéré du portefeuille global)
-- Plus-value ou moins-value en EUR
+- Date de cession (ligne 211)
+- Valeur globale de **tout** votre portefeuille crypto au moment de la vente (ligne 212)
+- Prix de cession et frais de cession (lignes 213 et 214)
+- Prix total d'acquisition de **tout** le portefeuille, moins les fractions déjà imputées lors des ventes précédentes (lignes 220 à 223)
+- Plus-value ou moins-value : **224 = 218 − 223 × 217 / 212** (prix net − prix total d'acquisition net × prix de cession / valeur globale)
 
 **Exemple concret** :
 
 Vous avez acheté 1 BTC le 15/01/2025 à 80 000 € puis 0,5 BTC le 10/06/2025 à 90 000 €. Le 20/12/2025 vous vendez 0,7 BTC à 95 000 €/BTC.
 
-- **Prix moyen pondéré (PMP)** = (1 × 80 000 + 0,5 × 90 000) / 1,5 = 83 333 €/BTC
-- **Prix de cession** = 0,7 × 95 000 = 66 500 €
-- **Prix d'acquisition de la fraction cédée** = 0,7 × 83 333 = 58 333 €
-- **Plus-value** = 66 500 - 58 333 = **8 167 €**
+- **Prix total d'acquisition** (ligne 220) = 80 000 + 45 000 = 125 000 €
+- **Prix de cession** (ligne 213) = 0,7 × 95 000 = 66 500 € (sans frais)
+- **Valeur globale du portefeuille** au moment de la vente (ligne 212) = 1,5 BTC × 95 000 = 142 500 €
+- **Fraction du prix d'acquisition imputée** = 125 000 × 66 500 / 142 500 = 58 333,33 €
+- **Plus-value** (ligne 224) = 66 500 − 58 333,33 = **8 166,67 €**, arrondie à 8 167 €
+
+Avec une seule crypto, ce calcul revient au même qu'un prix moyen. Dès que vous détenez plusieurs cryptos, ce n'est plus le cas : c'est la valeur de **tout** le portefeuille (ligne 212) et le prix d'achat de **tous** vos actifs (ligne 220) qui comptent, pas un prix moyen par crypto.
 
 Cette plus-value est reportée case **3AN** du formulaire 2042 C.
 
 <Callout type="info" title="L'erreur classique">
-Beaucoup recalculent le PMP par exchange (1 PMP pour Binance, 1 PMP pour Coinbase). **C'est faux.** La doctrine fiscale impose un PMP **global**, calculé sur l'ensemble du patrimoine crypto du foyer fiscal, indépendamment de la plateforme. Des logiciels comme Koinly l'agrègent automatiquement.
+Beaucoup calculent « prix de vente − prix d'achat » de la seule crypto vendue, ou font un calcul par plateforme. **C'est faux.** La formule du 2086 est **globale** : valeur de tout le portefeuille crypto du foyer fiscal (toutes cryptos, toutes plateformes, portefeuilles personnels compris) et prix total d'acquisition de tous vos achats. Les logiciels spécialisés l'appliquent automatiquement.
 </Callout>
 
 ---
@@ -142,7 +146,7 @@ C'est le piège qui coûte le plus cher. Le **3916-bis** a été créé en 2020 
 - **Liste non exhaustive de plateformes étrangères courantes** : Binance, Bitget, Kraken (Irlande), Coinbase (Luxembourg), Bitpanda (Autriche), Revolut (Chypre), KuCoin, MEXC, OKX, ByBit, Crypto.com, Bitstamp. Un compte se déclare pour chaque année où il était ouvert, même s'il a été fermé depuis : c'est le cas, par exemple, d'un compte Binance ou Bitget. Ces deux plateformes ne sont pas autorisées à servir des clients français depuis le 1er juillet 2026, mais un compte ouvert chez elles en 2025 se déclare bien au titre de 2025.
 - **À déclarer** : tous les comptes, **même si solde nul ou clôturé** dans l'année.
 
-**Plateformes françaises = pas de 3916-bis** : Coinhouse, Bitstack, SwissBorg (entité FR), Trade Republic Cryptos (passeporté depuis Allemagne mais avec entité française).
+**Plateformes françaises = pas de 3916-bis** : Coinhouse, Bitstack. SwissBorg : vérifiez dans vos conditions générales quelle entité tient votre compte. Trade Republic : voir la question dédiée en fin d'article.
 
 **Comment remplir un 3916-bis** :
 
@@ -182,12 +186,13 @@ Vous faites 200 € de Bitcoin par mois sur Bitstack pendant 12 mois en 2025. Au
 
 Mêmes 12 × 200 € = 2 400 € investis dans l'année. À fin décembre, votre portefeuille vaut 3 200 €. Vous vendez 1 000 € pour partir en vacances.
 
-- **PMP** = 2 400 € / total BTC accumulé (suppose 0,03 BTC) = 80 000 €/BTC
-- **Cession** : 1 000 €, soit ~0,01 BTC
-- **Prix de revient de la fraction cédée** : 0,01 × 80 000 = 800 €
-- **Plus-value** = 1 000 - 800 = **200 €**
-- **2086** : 1 ligne renseignée
-- **Imposition** : 200 € × 31,4 % = **62,80 €**
+- **Prix total d'acquisition** (ligne 220) = 2 400 €
+- **Valeur globale du portefeuille** au moment de la vente (ligne 212) = 3 200 €
+- **Prix de cession** (ligne 213) = 1 000 € (plus de 305 € : pas d'exonération)
+- **Fraction du prix d'acquisition imputée** = 2 400 × 1 000 / 3 200 = 750 €
+- **Plus-value** (ligne 224) = 1 000 − 750 = **250 €**
+- **2086** : 1 ligne renseignée ; pour la prochaine vente, 750 € iront en ligne 221
+- **Imposition** : 250 € × 31,4 % = **78,50 €**
 
 ### Cas 3 — Swap ETH → SOL
 
@@ -196,16 +201,16 @@ Le 15/06/2025, vous échangez 1 ETH (acquis à 3 000 € en janvier) contre 30 S
 - **Cession imposable** : non. Un échange crypto → crypto **sans soulte** bénéficie d'un **sursis d'imposition** (art. 150 VH bis CGI, BOFiP BOI-RPPM-PVBMC-30-30) : ce n'est pas un fait générateur, et aucune obligation déclarative ne naît de cet échange.
 - **L'imposition n'intervient qu'à la cession contre euro** (ou un bien/service), ou en présence d'une soulte.
 - **Exception** : si vous exercez l'achat/vente d'actifs numériques **à titre habituel/professionnel**, vous relevez d'un **régime distinct (BIC)**, apprécié au cas par cas (faisceau d'indices, **sans seuil chiffré officiel**) — à voir avec un professionnel.
-- **Suivi du PMP** : les 30 SOL acquis entrent dans votre prix moyen pondéré global à 100 €/SOL, prix de revient utilisé lors d'une future cession contre euro.
+- **Suivi** : rien ne change dans le prix total d'acquisition de votre portefeuille (ligne 220) : les 3 000 € payés pour l'ETH y restent, et les 30 SOL n'ont pas de « prix de revient » propre. Ils compteront dans la valeur globale (ligne 212) lors de votre prochaine vente.
 
 ### Cas 4 — Récompenses staking ETH
 
 Vous stakez 5 ETH sur Coinbase pendant l'année 2025. Vous recevez 0,15 ETH de rewards versés mensuellement (12 versements moyens).
 
 - **Imposition** : les revenus de staking sont imposables, mais le **moment exact** (à la réception comme un revenu, ou à la cession contre euro) n'est **pas tranché par une source officielle que nous puissions citer** à ce jour. L'exemple ci-dessous illustre l'hypothèse « imposition à la réception » — à confirmer selon la doctrine à jour et votre situation.
-- **Calcul (hypothèse réception)** : 0,15 ETH × cours moyen ~3 200 € = **480 €** de base, soit 480 € × 31,4 % ≈ **150,72 €**.
+- **Calcul (hypothèse réception)** : 0,15 ETH × cours moyen ~3 200 € = **480 €** de revenu, imposé en BNC au barème de l'impôt sur le revenu (après l'abattement micro-BNC de 34 %), plus les prélèvements sociaux : le montant dépend de votre taux marginal.
 - **À reporter** : selon l'analyse retenue ; en cas de doute, vérifiez auprès d'un professionnel et de la source officielle à jour.
-- **Suivi du PMP** : ces 0,15 ETH entrent dans votre prix moyen pondéré (prix de revient ≈ 3 200 €/ETH dans cette hypothèse).
+- **Suivi** : la façon d'intégrer ces récompenses au prix total d'acquisition (ligne 220) dépend de l'analyse retenue. Conservez la valeur en euros de chaque versement au jour où vous l'avez reçu.
 
 ### Cas 5 — NFT vendu
 
@@ -245,7 +250,8 @@ Faire la déclaration manuellement, c'est faisable jusqu'à 5-10 transactions / 
     ["Waltio", "39 à 249 €/an", "150+ exchanges, focus FR", "2086 + 3916-bis générés", "8.5/10 — éditeur français"],
     ["Cointracker", "~80 €/an", "300+ exchanges/wallets", "Export CSV à reformater", "7/10 — bon pour US, moyen pour FR"],
     ["Crypto.com Tax", "Gratuit", "30+ exchanges (limité FR)", "Pas de format FR", "5/10 — utile pour US uniquement"],
-    ["Cryptoreflex calculateur fiscalité", "Gratuit", "Saisie manuelle ou import CSV", "Export PDF compatible 2086", "Utile pour vérifier un calcul ponctuel"],
+    ["Cryptoreflex calculateur fiscalité", "Gratuit", "Saisie manuelle des montants", "Estimation de l'impôt (PFU ou barème)", "Utile pour vérifier un calcul ponctuel"],
+    ["Cryptoreflex générateur Cerfa 2086", "Gratuit", "Modèle CSV à remplir (tout l'historique)", "Récapitulatif 2086 ligne par ligne + fiches 3916-bis", "Utile jusqu'à quelques centaines d'opérations"],
   ]}
 />
 
@@ -258,7 +264,7 @@ Faire la déclaration manuellement, c'est faisable jusqu'à 5-10 transactions / 
 <CTABox
   variant="primary"
   title="Calculer votre plus-value crypto en 2 minutes"
-  description="Notre calculateur fiscalité crypto applique la méthode PMP, calcule la flat tax 31,4 %, et génère un PDF prêt à attacher à votre 2086. Gratuit, pas d'inscription."
+  description="Notre calculateur applique la formule de l'article 150 VH bis (valeur globale du portefeuille) et estime votre impôt au PFU de 31,4 % ou au barème. Gratuit, sans inscription."
   ctaText="Lancer le calculateur"
   ctaUrl="/outils/calculateur-fiscalite"
   disclosure="Outil informatif. Ne remplace pas le conseil d'un expert-comptable pour les cas complexes (BNC, BIC, NFT, dérivés)."
@@ -272,9 +278,9 @@ Faire la déclaration manuellement, c'est faisable jusqu'à 5-10 transactions / 
 
 C'est l'erreur n°1 observée dans les contrôles DGFiP 2024-2025. Beaucoup pensent que « si je n'ai rien gagné, je n'ai rien à déclarer ». Faux : le 3916-bis se déclare **par compte ouvert**, **indépendamment du solde ou du gain**. Sanction : 750-1500 € par compte par année.
 
-**Erreur 2 — Calculer le PMP par plateforme**
+**Erreur 2 — Calculer la plus-value crypto par crypto ou plateforme par plateforme**
 
-Un PMP global est obligatoire (foyer fiscal entier, toutes plateformes confondues). Erreur fréquente, redressée systématiquement en cas de contrôle.
+La formule du 2086 est globale : valeur de tout le portefeuille du foyer fiscal (toutes cryptos, toutes plateformes) et prix total d'acquisition de tous vos achats. Un calcul « vente − achat » sur une seule crypto ou une seule plateforme donne un résultat faux.
 
 **Erreur 3 — Ne pas déclarer les rewards staking**
 
@@ -296,15 +302,16 @@ La DGFiP peut revenir **3 ans en arrière** en règle générale, et **10 ans** 
 
 ## 7. Sanctions en cas de contrôle
 
-Récapitulatif des sanctions observées en 2024-2025, source DGFiP et jurisprudence Conseil d'État :
+Les principales sanctions prévues par le Code général des impôts (articles 1727, 1728, 1729 et 1736 X) :
 
-| Manquement | Sanction de base | Majoration possible |
-|---|---|---|
-| **Oubli compte étranger (3916-bis)** | 750-1500 € par compte | × 4 ans rétroactivement, soit 3 000-6 000 € |
-| **Sous-déclaration < 5 % du revenu** | 0,2 %/mois d'intérêts | Aucune majoration si bonne foi |
-| **Sous-déclaration > 5 % et bonne foi** | Intérêts + 10 % majoration | — |
-| **Manœuvre frauduleuse (PMP truqué, faux justificatifs)** | Intérêts + 40 % majoration | Pénale possible si > 100 000 € |
-| **Activité commerciale crypto (BNC) non déclarée** | Redressement BNC + cotisations URSSAF | + 80 % majoration possible |
+| Manquement | Sanction |
+|---|---|
+| **Compte étranger non déclaré (3916-bis)** | 750 € par compte et par année, 1 500 € si la valeur des comptes concernés a dépassé 50 000 € à un moment de l'année (art. 1736 X du CGI) ; par exemple 3 000 € pour un compte oublié 4 ans |
+| **Erreur de bonne foi** | Intérêt de retard de 0,20 % par mois sur l'impôt éludé, sans majoration |
+| **Déclaration déposée en retard** | Majoration de 10 % ; 40 % sans dépôt dans les 30 jours suivant une mise en demeure |
+| **Manquement délibéré** | Intérêt de retard + majoration de 40 % |
+| **Manœuvres frauduleuses (faux justificatifs, prix d'acquisition gonflé)** | Intérêt de retard + majoration de 80 %, poursuites pénales possibles |
+| **Activité crypto professionnelle (BIC) cachée** | Redressement + majoration de 80 % pour activité occulte |
 
 <Callout type="info" title="Bonne foi = votre meilleur argument">
 La DGFiP fait la différence entre une **erreur de bonne foi** (oubli mineur, mauvaise compréhension) et une **manœuvre intentionnelle**. Garder une trace écrite de vos calculs (Koinly export, screenshots) suffit généralement à démontrer la bonne foi et limiter les sanctions au minimum (intérêts seulement).
@@ -383,19 +390,19 @@ Pour info, voilà le process que je suis chaque année (2 heures réelles, 1 wee
   },
   {
     question: "Si j'ai oublié de déclarer en 2024, que faire ?",
-    answer: "Régularisation spontanée via le service de mise en conformité de la DGFiP (espace particulier > Mes contacts > Service Mise en Conformité). Cela divise par 2 les majorations possibles. Plus vous attendez, plus c'est cher."
+    answer: "Corrigez au plus vite : en ligne via le service de correction pour la dernière déclaration déposée (ouvert jusqu'au 30 novembre 2026 pour celle de 2026), sinon par une réclamation depuis votre espace particulier sur impots.gouv.fr. Une régularisation spontanée et de bonne foi limite les pénalités aux intérêts de retard (0,20 % par mois) ; plus vous attendez, plus ils s'accumulent."
   },
   {
     question: "Les frais de transaction crypto sont-ils déductibles ?",
-    answer: "Oui, ils sont intégrés au prix d'acquisition (donc augmentent le PMP) et au prix de cession (donc diminuent la plus-value). Koinly et Waltio les comptabilisent automatiquement."
+    answer: "Les frais de vente (commissions de la plateforme sur la cession) oui : ils réduisent le prix de cession (ligne 214 du 2086), sans toucher au quotient de la formule. Les frais d'achat dépendent de la lecture retenue de la ligne 220 (« prix acquittés ») : les compter est courant, mais l'administration ne l'a pas écrit. Les frais de retrait et le gas de vos transferts ne sont pas déductibles."
   },
   {
     question: "Faut-il déclarer Trade Republic Crypto ?",
-    answer: "Trade Republic Crypto est passeporté depuis l'Allemagne (BaFin) avec une succursale française. Selon les CGU 2025, **le compte est considéré comme français** pour la fiscalité = pas de 3916-bis nécessaire. Mais l'IFU émis sera pris en compte automatiquement par la DGFiP. Vérifiez votre convention compte si vous avez un doute."
+    answer: "Trade Republic est un établissement allemand (supervisé par la BaFin) doté d'une succursale en France. Vérifiez dans vos documents contractuels quelle entité tient votre compte crypto : s'il est tenu hors de France, il se déclare sur le 3916-bis. Dans le doute, déclarez-le : une déclaration en trop ne coûte rien, un oubli peut coûter 750 €."
   },
   {
     question: "Comment prouver le prix d'acquisition d'une crypto reçue il y a 5 ans ?",
-    answer: "L'historique CSV de la plateforme d'achat est la meilleure preuve. À défaut, screenshots, confirmations email d'ordres exécutés, hash on-chain. Si vraiment impossible : utiliser le cours de la première date où vous pouvez prouver la détention (méthode prudente, pénalisante mais acceptée par la DGFiP)."
+    answer: "L'historique CSV de la plateforme d'achat est la meilleure preuve. À défaut, screenshots, confirmations email d'ordres exécutés, hash on-chain. Sans aucun justificatif, l'administration retient un prix d'acquisition nul (BOFiP BOI-RPPM-PVBMC-30-20, § 90) : rassemblez donc tout ce qui prouve le prix payé (relevé du virement d'achat, e-mails de confirmation, historique d'ordres)."
   }
 ]} />
 
@@ -416,7 +423,7 @@ Pour info, voilà le process que je suis chaque année (2 heures réelles, 1 wee
 - [Déclaration crypto Cerfa 2086 : tutoriel complet 2026 (avec captures)](/blog/declaration-crypto-cerfa-2086-tutoriel-2026)
 - [Cerfa 3916-bis crypto : déclarer ses comptes étrangers en 2026](/blog/cerfa-3916-bis-crypto-declarer-comptes-etrangers-2026)
 - [Calculateur fiscalité crypto Cryptoreflex](/outils/calculateur-fiscalite)
-- [Génération auto Cerfa 2086 + 3916-bis (Soutien)](/outils/cerfa-2086-auto) — importez votre CSV, recevez le PDF en 30 s
+- [Générateur Cerfa 2086 + 3916-bis (gratuit)](/outils/cerfa-2086-auto) — remplissez le modèle CSV avec tout votre historique, obtenez le récapitulatif ligne par ligne
 - [MiCA juillet 2026 : checklist de survie](/blog/mica-juillet-2026-checklist-survie)
 - [Staking ETH vs SOL vs ADA en 2026 : fiscalité incluse](/blog/staking-eth-vs-sol-vs-ada-2026)
 - [ETF Bitcoin spot Europe 2026 : fiscalité comparée vs Bitcoin direct](/blog/etf-bitcoin-spot-europe-2026-arbitrage)
@@ -432,7 +439,7 @@ La déclaration crypto en 2026 n'est pas plus complexe qu'une déclaration bours
 <KeyTakeaways>
 - Remplissez le formulaire 2086 si vous avez fait au moins une cession imposable en 2025 (vente en euros, ou achat d'un bien/service avec crypto). Un swap crypto→crypto sans soulte n'est pas imposable (sursis, art. 150 VH bis).
 - Déclarez un 3916-bis pour chaque compte ouvert sur une plateforme étrangère, même à solde nul : l'oubli coûte 750 à 1 500 € par compte.
-- Calculez votre plus-value avec un prix moyen pondéré global sur tout votre patrimoine crypto, jamais par plateforme : c'est l'erreur redressée le plus souvent en contrôle.
+- Calculez votre plus-value avec la formule globale du 2086 (valeur de tout le portefeuille, prix total d'acquisition de tous vos achats), jamais crypto par crypto ni plateforme par plateforme.
 - Retenez que les cas particuliers (staking, airdrops, NFT) ont leurs propres règles détaillées dans le guide, et qu'un simple transfert entre vos propres comptes n'est pas une cession imposable.
 - Au-delà de quelques dizaines de transactions, passez par un logiciel et conservez tous vos justificatifs : la bonne foi documentée limite les sanctions.
 </KeyTakeaways>

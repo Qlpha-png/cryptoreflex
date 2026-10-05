@@ -54,7 +54,7 @@ export default function RelatedPagesNav({
     title ??
     (cluster
       ? `Pour aller plus loin sur "${cluster.name}"`
-      : "Continuer ta lecture sur Cryptoreflex");
+      : "Continuez votre lecture sur Cryptoreflex");
 
   if (variant === "compact") {
     return (

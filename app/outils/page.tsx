@@ -39,7 +39,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: `${STATS.tools} outils crypto FR gratuits — Cryptoreflex`,
     description:
-      "Calculateur fiscalité PFU 31,4 %, simulateur DCA, convertisseur live, glossaire 250+, vérificateur MiCA, Cerfa 2086 auto. Méthode publique, sans inscription.",
+      "Calculateur fiscalité PFU 31,4 %, simulateur DCA, convertisseur live, glossaire 250+, vérificateur MiCA, générateur Cerfa 2086. Méthode publique, gratuits.",
     url: "https://www.cryptoreflex.fr/outils",
     type: "website",
   },
@@ -47,7 +47,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: `${STATS.tools} outils crypto FR gratuits — Cryptoreflex`,
     description:
-      "Calculateur fiscalité PFU, simulateur DCA, vérificateur MiCA, Cerfa 2086 auto. Méthode publique, sans inscription.",
+      "Calculateur fiscalité PFU, simulateur DCA, vérificateur MiCA, générateur Cerfa 2086. Méthode publique, gratuits.",
   },
 };
 import { TOOLS, PUBLISHED_TOOLS, type Tool } from "@/lib/tools-catalog";
@@ -187,9 +187,9 @@ export default function OutilsPage() {
           </h1>
           <p className="mt-3 text-base text-muted">
             <strong className="text-fg">{liveTools} disponibles maintenant</strong>, {soonTools} en
-            préparation. <strong className="text-fg">100 % gratuits</strong>, sans inscription —
-            y compris les outils avancés (Cerfa 2086 auto, résumés éditoriaux par fiche). Méthodologie
-            publique, aucune donnée bancaire stockée.
+            préparation. <strong className="text-fg">100 % gratuits</strong>, sans inscription — seul
+            le PDF du générateur Cerfa 2086 demande un compte gratuit. Méthodologie publique, aucune
+            donnée bancaire stockée.
           </p>
         </header>
 

@@ -29,7 +29,7 @@ keywords:
   - "logiciel impôt crypto France"
 ---
 
-La déclaration de revenus se fait chaque printemps (la date limite dépend de votre département et du mode de déclaration ; si vous devez corriger votre déclaration 2026 déjà déposée, le service de correction en ligne d'impots.gouv.fr est ouvert jusqu'au 30 novembre 2026 inclus). Si vous avez bougé plus de quelques transactions cette année (DCA mensuel, swap, staking, NFT), faire votre déclaration **manuellement dans Excel est devenu impossible** : la doctrine Bercy impose la méthode PMP (Prix Moyen Pondéré) sur l'**ensemble du portefeuille global** au moment de chaque cession, et le Cerfa 2086 demande une ligne par cession.
+La déclaration de revenus se fait chaque printemps (la date limite dépend de votre département et du mode de déclaration ; si vous devez corriger votre déclaration 2026 déjà déposée, le service de correction en ligne d'impots.gouv.fr est ouvert jusqu'au 30 novembre 2026 inclus). Si vous avez bougé plus de quelques transactions cette année (DCA mensuel, swap, staking, NFT), faire votre déclaration **manuellement dans Excel est devenu impossible** : l'article 150 VH bis impose une méthode globale, sur l'**ensemble du portefeuille** au moment de chaque cession, et le Cerfa 2086 demande une ligne par cession.
 
 Deux outils dominent le marché en 2026 : **Waltio** (français, leader FR) et **Koinly** (suédo-britannique, leader monde). Le troisième nom souvent cité, **Accointing**, n'existe plus : racheté par Blockpit (annonce du 6 novembre 2023), il a fermé le 31 janvier 2024 et ses utilisateurs ont été invités à passer sur Blockpit. Lequel choisir entre Waltio et Koinly ? Ça dépend de **votre profil**, de **où vous fiscalisez**, et de la **complexité de votre portefeuille**.
 
@@ -70,7 +70,7 @@ Les trois opèrent en **SaaS** (abonnement annuel), pas de version perpétuelle.
 | **Intégrations blockchains** | ~80+ | ~170+ | ~75+ |
 | **Cerfa 2086 (FR)** | **Oui, natif et conforme doctrine** | Oui, mais moins détaillé | Limité |
 | **Cerfa 3916-bis (FR)** | **Oui, pré-rempli** | Non automatisé | Non |
-| **Méthode PMP globale (doctrine FR)** | **Oui, par défaut** | Oui (à activer) | Partiellement |
+| **Méthode globale du 150 VH bis (doctrine FR)** | **Oui, par défaut** | Oui (à activer) | Partiellement |
 | **Support en français** | **Oui, équipe FR** | Oui (chat traduit) | Limité |
 | **App mobile** | Web only (responsive) | iOS + Android | iOS + Android |
 | **DeFi / staking / LP** | Bon | Très bon | Correct |
@@ -94,9 +94,9 @@ Le formulaire **2086 « Plus-values sur actifs numériques »** est obligatoire 
 - Valeur globale du portefeuille au moment de la cession
 - Plus-value calculée selon la formule **PV = Prix cession − (Prix acquisition global × Prix cession / Valeur globale)**
 
-**Waltio** : génère un 2086 **conforme à la doctrine** par défaut, ligne par ligne, avec le détail PMP. C'est leur cœur de produit, l'équipe travaille avec des avocats fiscalistes français pour le maintenir à jour à chaque mise à jour du BOFiP.
+**Waltio** : génère un 2086 **conforme à la doctrine** par défaut, ligne par ligne, avec le détail du calcul. C'est leur cœur de produit, l'équipe travaille avec des avocats fiscalistes français pour le maintenir à jour à chaque mise à jour du BOFiP.
 
-**Koinly** : propose **aussi** un export 2086 français (depuis 2022), mais l'algorithme de calcul PMP est moins fin sur les cas limites (forks, airdrops, transferts inter-wallets requalifiés). Reste utilisable, mais demande de **vérifier manuellement** quelques cessions.
+**Koinly** : propose **aussi** un export 2086 français (depuis 2022), mais l'algorithme de calcul est moins fin sur les cas limites (forks, airdrops, transferts inter-wallets requalifiés). Reste utilisable, mais demande de **vérifier manuellement** quelques cessions.
 
 **Accointing** (fermé depuis janvier 2024) : pas de 2086 natif. Vous devez exporter votre historique et reconstruire le formulaire à la main (ou via leur export générique « tax report »). À éviter si vous déclarez en France.
 
@@ -200,7 +200,7 @@ Vous achetez/vendez des NFT sur OpenSea, Blur, Magic Eden.
   },
   {
     question: "Puis-je changer d'outil d'une année à l'autre ?",
-    answer: "Oui, mais c'est plus simple de rester sur le même : votre historique cumulatif (et votre PMP global) est calculé année après année. Si vous changez, vous devez ré-importer tout l'historique depuis le début dans le nouvel outil — ce qui prend du temps mais reste faisable. Waltio comme Koinly permettent l'import CSV de l'historique d'un autre outil. Ne jamais changer en pleine saison fiscale (avril-mai) : vous risquez des incohérences."
+    answer: "Oui, mais c'est plus simple de rester sur le même : votre historique cumulatif (prix total d'acquisition et fractions déjà imputées) est calculé année après année. Si vous changez, vous devez ré-importer tout l'historique depuis le début dans le nouvel outil — ce qui prend du temps mais reste faisable. Waltio comme Koinly permettent l'import CSV de l'historique d'un autre outil. Ne jamais changer en pleine saison fiscale (avril-mai) : vous risquez des incohérences."
   },
   {
     question: "Est-ce que ces outils déclarent à ma place sur impots.gouv.fr ?",
@@ -212,7 +212,7 @@ Vous achetez/vendez des NFT sur OpenSea, Blur, Magic Eden.
   },
   {
     question: "Et si je n'ai jamais déclaré mes cryptos depuis des années ?",
-    answer: "Vous pouvez régulariser via le service de mise en conformité de la DGFiP. Importez votre historique complet (Waltio et Koinly remontent jusqu'à 2014-2015 sur la plupart des exchanges) et générez les déclarations rectificatives année par année. Pénalités : intérêts de retard (0,2 %/mois) + majoration 10-40 % selon la bonne foi. Vaut mieux régulariser spontanément que se faire rattraper par un contrôle. Pour le détail, voir notre [guide complet déclaration crypto 2026](/blog/comment-declarer-crypto-impots-2026-guide-complet)."
+    answer: "Vous pouvez régulariser en déposant des déclarations rectificatives depuis votre espace particulier sur impots.gouv.fr. Importez votre historique complet (Waltio et Koinly remontent jusqu'à 2014-2015 sur la plupart des exchanges) et préparez les déclarations année par année. Pénalités : de bonne foi, l'intérêt de retard (0,20 % par mois) ; en cas de manquement délibéré, une majoration de 40 % s'y ajoute (art. 1727 et 1729 du CGI). Vaut mieux régulariser spontanément que se faire rattraper par un contrôle. Pour le détail, voir notre [guide complet déclaration crypto 2026](/blog/comment-declarer-crypto-impots-2026-guide-complet)."
   }
 ]} />
 

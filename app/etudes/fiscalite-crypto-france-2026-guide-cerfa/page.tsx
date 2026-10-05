@@ -32,7 +32,7 @@ import { withHreflang } from "@/lib/seo-alternates";
  *
  * Aligne avec :
  *  - Saison fiscale active (mai 2026, deadline declaration revenus 19 mai)
- *  - LP /lp/cerfa-2026 (pre-conversion)
+ *  - (LP /lp/cerfa-2026 retirée le 05/10/2026 → redirigée vers l'outil)
  *  - CP #2 fiscalite (Affidavit Press)
  *  - Outil /outils/cerfa-2086-auto (CTA principal)
  *
@@ -113,7 +113,7 @@ const FAQ = [
   },
   {
     q: "Comment calcule-t-on la plus-value ?",
-    a: "La formule officielle (BOFiP §70) est : Plus-Value = Prix de cession − [Prix total d’acquisition × (Prix de cession / Valeur globale du portefeuille à la date de cession)]. Cette formule, dite « par fraction », tient compte du prix moyen pondéré du portefeuille au moment de chaque cession. Elle est complexe à calculer à la main, d’où l’existence d’outils dédiés.",
+    a: "Selon l’article 150 VH bis du CGI (formulaire 2086, ligne 224) : plus-value = prix de cession net des frais − [prix total d’acquisition net × (prix de cession / valeur globale du portefeuille au moment de la cession)]. Cette formule, dite « par fraction », raisonne sur tout le portefeuille : à chaque vente, on n’impute que la part du prix d’acquisition qui correspond à la part vendue, et l’on retire du prix d’acquisition les fractions déjà imputées lors des ventes précédentes. Elle est fastidieuse à calculer à la main, d’où l’existence d’outils dédiés.",
   },
   {
     q: "Dois-je déclarer mes cryptos même si je n’ai rien vendu ?",
@@ -141,7 +141,7 @@ const FAQ = [
   },
   {
     q: "L’outil gratuit Cryptoreflex remplace-t-il un expert-comptable ?",
-    a: "Non. L’outil /outils/cerfa-2086-auto automatise le calcul mécanique de la plus-value selon la formule BOFiP §70 et génère le PDF pré-rempli. Pour les patrimoines complexes (>50k€, multi-exchanges, staking, DeFi, NFT), Cryptoreflex recommande systématiquement la validation par un expert-comptable agréé maîtrisant la fiscalité numérique. L’outil est un assistant, pas un conseil fiscal personnalisé.",
+    a: "Non. L’outil /outils/cerfa-2086-auto automatise le calcul de la plus-value selon la formule de l’article 150 VH bis (à partir de votre historique recopié dans son modèle CSV) et génère un récapitulatif ligne par ligne, à recopier sur impots.gouv.fr. Pour les patrimoines complexes (>50k€, multi-exchanges, staking, DeFi, NFT), Cryptoreflex recommande systématiquement la validation par un expert-comptable agréé maîtrisant la fiscalité numérique. L’outil est un assistant, pas un conseil fiscal personnalisé.",
   },
 ];
 
@@ -540,39 +540,48 @@ export default function FiscaliteCryptoStudyPage() {
           </p>
           <h3>2.3. La formule de calcul de la plus-value</h3>
           <p>
-            La doctrine BOFiP §70 prévoit une formule dite « par fraction » qui
-            tient compte du prix moyen pondéré du portefeuille global au moment
-            de chaque cession :
+            L’article 150 VH bis du CGI (commenté au BOFiP,
+            BOI-RPPM-PVBMC-30-20) impose une méthode globale, dite « par
+            fraction » : à chaque vente, on n’impute que la part du prix
+            d’acquisition de tout le portefeuille qui correspond à la part
+            vendue. Avec les numéros de lignes du formulaire 2086 :
           </p>
           <pre className="not-prose rounded-lg border border-white/10 bg-black/40 p-4 font-mono text-xs text-slate-200 overflow-x-auto my-4">
-            <code>{`PV = Px_cession − (Px_acq_total × (Px_cession / Valeur_globale_portefeuille))`}</code>
+            <code>{`PV (224) = Prix net (218) − Acquisition nette (223) × Prix de cession (217) / Valeur globale (212)`}</code>
           </pre>
           <p>Avec :</p>
           <ul>
             <li>
-              <strong>PV</strong> : plus-value de la cession.
+              <strong>Prix net (ligne 218)</strong> : prix de vente moins les
+              frais de cession (et les soultes éventuelles).
             </li>
             <li>
-              <strong>Px_cession</strong> : prix de cession (en euros, à la date
-              de la cession).
+              <strong>Acquisition nette (ligne 223)</strong> : somme de tous vos
+              achats en euros, toutes cryptos et toutes années confondues (ligne
+              220), moins les fractions déjà imputées lors des ventes précédentes
+              (ligne 221) et les soultes reçues lors d’échanges antérieurs
+              (ligne 222).
             </li>
             <li>
-              <strong>Px_acq_total</strong> : somme des prix d’acquisition de
-              tous les actifs numériques détenus au moment de la cession.
+              <strong>Prix de cession (ligne 217)</strong> : prix de vente
+              <em> avant</em> frais (net des soultes) : les frais ne réduisent
+              pas la fraction.
             </li>
             <li>
-              <strong>Valeur_globale_portefeuille</strong> : valeur de marché de
-              l’ensemble du portefeuille à la date de la cession.
+              <strong>Valeur globale (ligne 212)</strong> : valeur de toutes vos
+              cryptos, sur toutes vos plateformes et portefeuilles, au moment de
+              la vente.
             </li>
           </ul>
           <p>
-            Cette formule est complexe à appliquer manuellement, notamment en
-            cas de cessions multiples ou de portefeuille fragmenté entre
-            plusieurs exchanges. Un outil dédié (
+            Cette formule est fastidieuse à appliquer à la main, surtout avec
+            plusieurs ventes dans l’année ou un portefeuille réparti sur
+            plusieurs plateformes. Un outil dédié (
             <Link href="/outils/cerfa-2086-auto">
               /outils/cerfa-2086-auto
             </Link>
-            ) automatise le calcul à partir d’un export CSV.
+            ) fait le calcul à partir de votre historique recopié dans son
+            modèle CSV.
           </p>
         </section>
 
@@ -585,57 +594,78 @@ export default function FiscaliteCryptoStudyPage() {
             cession d’actifs numériques de l’année. Il se compose de plusieurs
             sections :
           </p>
-          <h3>3.1. Identification du contribuable (lignes 1-3)</h3>
+          <h3>3.1. Identification du contribuable</h3>
           <p>
-            Nom, prénom, numéro fiscal. Pré-rempli si vous déclarez en ligne.
+            Nom, prénom, adresse. Pré-rempli si vous déclarez en ligne.
           </p>
-          <h3>3.2. Détail des cessions (lignes 211 à 234)</h3>
-          <p>Pour chaque cession, indiquer :</p>
-          <ul>
-            <li>
-              <strong>Ligne 211</strong> — Date de la cession (JJ/MM/AAAA).
-            </li>
-            <li>
-              <strong>Ligne 212</strong> — Prix de cession (en euros, net de
-              frais d’exchange).
-            </li>
-            <li>
-              <strong>Ligne 213</strong> — Frais inhérents à la cession (frais
-              de plateforme, déductibles du prix de cession).
-            </li>
-            <li>
-              <strong>Ligne 214</strong> — Prix d’acquisition retenu pour la
-              cession (calculé selon la formule par fraction §70).
-            </li>
-            <li>
-              <strong>Ligne 215</strong> — Plus-value ou moins-value de la
-              cession.
-            </li>
-          </ul>
-          <h3>3.3. Récapitulatif annuel (lignes 233-235)</h3>
-          <ul>
-            <li>
-              <strong>Ligne 233</strong> — Somme totale des plus-values.
-            </li>
-            <li>
-              <strong>Ligne 234</strong> — Somme totale des moins-values.
-            </li>
-            <li>
-              <strong>Ligne 235</strong> — Plus-value nette imposable (233 −
-              234).
-            </li>
-          </ul>
+          <h3>3.2. Détail des cessions (lignes 211 à 224)</h3>
           <p>
-            Le résultat de la ligne 235 est ensuite reporté sur la ligne{" "}
-            <strong>3AN</strong> de la déclaration 2042-C (cessions d’actifs
-            numériques) et imposé au PFU 31,4 %.
+            Pour chaque cession imposable, le formulaire comporte un bloc de
+            lignes en trois parties : la cession (211 à 218), le prix total
+            d’acquisition du portefeuille (220 à 223), puis la plus-value ou
+            moins-value (224).
+          </p>
+          <ul>
+            <li>
+              <strong>Ligne 211</strong> — Date de la cession.
+            </li>
+            <li>
+              <strong>Ligne 212</strong> — Valeur globale du portefeuille au
+              moment de la cession.
+            </li>
+            <li>
+              <strong>Ligne 213</strong> — Prix de cession.
+            </li>
+            <li>
+              <strong>Ligne 214</strong> — Frais de cession.
+            </li>
+            <li>
+              <strong>Ligne 215</strong> — Prix de cession net des frais (213 −
+              214).
+            </li>
+            <li>
+              <strong>Lignes 216 et 217</strong> — Soulte éventuelle, puis prix
+              de cession net des soultes (sans soulte, 217 = 213).
+            </li>
+            <li>
+              <strong>Ligne 218</strong> — Prix de cession net des frais et des
+              soultes (sans soulte, 218 = 215).
+            </li>
+            <li>
+              <strong>Ligne 220</strong> — Prix total d’acquisition du
+              portefeuille (tous vos achats en euros).
+            </li>
+            <li>
+              <strong>Ligne 221</strong> — Fractions de capital initial déjà
+              imputées lors des cessions précédentes.
+            </li>
+            <li>
+              <strong>Ligne 222</strong> — Soultes reçues lors d’échanges
+              antérieurs.
+            </li>
+            <li>
+              <strong>Ligne 223</strong> — Prix total d’acquisition net (220 −
+              221 − 222).
+            </li>
+            <li>
+              <strong>Ligne 224</strong> — Plus-value ou moins-value : 218 − 223
+              × 217 / 212.
+            </li>
+          </ul>
+          <h3>3.3. Report sur la déclaration 2042-C</h3>
+          <p>
+            La somme des lignes 224 de l’année est reportée en case{" "}
+            <strong>3AN</strong> (plus-value nette) ou <strong>3BN</strong>{" "}
+            (moins-value nette) de la déclaration 2042-C. La plus-value est
+            imposée au PFU de 31,4 %, ou au barème progressif si vous optez pour
+            le barème (case 3CN).
           </p>
           <h3>3.4. Saisie en ligne sur impots.gouv.fr</h3>
           <p>
-            Si vous déclarez en ligne, le formulaire est intégré au parcours
-            standard. Cherchez la section « Plus-values » → « Cessions
-            d’actifs numériques » → cochez la case correspondante. Le détail
-            des cessions est saisi dans une grille interactive.
+            Si vous déclarez en ligne, l’annexe est intégrée au parcours :
+            rubrique « Plus-values et gains divers » → écran « Plus-values sur
+            actifs numériques » → annexe 2086, où vous saisissez les lignes de
+            chaque cession. Le site n’accepte aucun fichier joint.
           </p>
         </section>
 
@@ -700,10 +730,10 @@ export default function FiscaliteCryptoStudyPage() {
           <h3>4.3. Régularisation spontanée</h3>
           <p>
             Si vous découvrez un oubli, la <strong>régularisation spontanée</strong>{" "}
-            via le service de mise en conformité de la DGFiP réduit
-            généralement les sanctions à un niveau symbolique (cf. circulaire
-            n°2017-12-15 et pratique observée sur les régularisations crypto
-            2023-2025).
+            (déclaration rectificative depuis votre espace particulier) limite les
+            pénalités : de bonne foi, seul l&apos;intérêt de retard de 0,20 % par
+            mois s&apos;applique (art. 1727 du CGI) ; l&apos;amende pour un compte
+            étranger non déclaré (3916-bis) reste due.
           </p>
         </section>
 
@@ -800,9 +830,10 @@ export default function FiscaliteCryptoStudyPage() {
             </li>
             <li>
               <strong>Calcul incorrect de la plus-value</strong> (oubli de la
-              formule §70 par fraction). Erreur fréquente quand le contribuable
-              calcule « cession − achat » sans tenir compte du prix moyen
-              pondéré.
+              formule par fraction de l’article 150 VH bis). Erreur fréquente
+              quand le contribuable calcule « vente − achat » de la crypto
+              vendue, au lieu de raisonner sur la valeur globale de tout le
+              portefeuille.
             </li>
             <li>
               <strong>Omission des frais de cession</strong> (pas déduits du
@@ -926,9 +957,9 @@ export default function FiscaliteCryptoStudyPage() {
                       /outils/cerfa-2086-auto
                     </strong>
                     <p className="mt-1 text-sm text-slate-300">
-                      Génère le Cerfa 2086 + 3916-bis pré-remplis depuis un
-                      CSV exchange. Calcul automatique de la formule §70.
-                      Sans inscription.
+                      Récapitulatif Cerfa 2086 ligne par ligne + fiches 3916-bis,
+                      depuis notre modèle CSV (tout l'historique). Aperçu sans
+                      compte, PDF avec un compte gratuit.
                     </p>
                   </div>
                 </div>
@@ -1064,8 +1095,8 @@ export default function FiscaliteCryptoStudyPage() {
                 Outil Cerfa 2086 + 3916-bis auto
               </h3>
               <p className="mt-2 text-sm text-slate-300">
-                Génère votre PDF en 2 minutes depuis un CSV exchange. Gratuit,
-                sans inscription.
+                Récapitulatif 2086 ligne par ligne depuis notre modèle CSV, à remplir
+                avec tout votre historique. Gratuit ; PDF avec un compte gratuit.
               </p>
               <div className="mt-3 inline-flex items-center gap-1.5 text-sm font-medium text-emerald-300">
                 Lancer l’outil

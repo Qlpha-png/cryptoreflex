@@ -2,9 +2,10 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import {
   FileText,
-  Calculator,
-  Calendar,
+  Globe2,
+  FileSpreadsheet,
   ShieldCheck,
+  Calendar,
   ArrowRight,
   Sparkles,
 } from "lucide-react";
@@ -32,18 +33,23 @@ import { withHreflang } from "@/lib/seo-alternates";
  * contenu SEO fiscal utile (méthodologie 150 VH bis, Cerfa 2086, 3916-bis) et
  * on oriente vers les outils fiscaux gratuits (Cerfa 2086 auto, calculateur
  * de fiscalité). Plus aucun prix, aucun lien Stripe, aucun checkout.
+ *
+ * 05/10/2026 — textes remis en conformité avec l'outil réel : le générateur lit son modèle CSV, PAS les exports
+ * bruts des plateformes ni l'export de Waltio (un fichier Excel) ; le PDF est un récapitulatif à recopier (rien ne se dépose ni
+ * ne se signe) ; méthode = valeur globale du portefeuille (art. 150 VH bis), pas un « prix moyen pondéré » ; plus
+ * de « 5 minutes », « 95 % des Français », « précision ≥ 99 % » ni « archivage 5 ans » (rien de tout cela n'existe).
  */
 
 export const revalidate = 86400;
 
 export const metadata: Metadata = {
-  title: "Pack Déclaration Crypto 2026 — Cerfa 2086 + 3916-bis pré-remplis (gratuit)",
+  title: "Pack Déclaration Crypto 2026 — Cerfa 2086 et 3916-bis (gratuit)",
   description:
-    "Déclaration crypto 2026 simplifiée : importez votre CSV, générez votre Cerfa 2086 + Annexe 3916-bis pré-remplis en 5 minutes. 100 % gratuit et automatisé. Économisez 5 h de saisie manuelle.",
+    "Déclarer ses cryptos pas à pas : générateur Cerfa 2086 (modèle CSV à remplir), fiches 3916-bis, calculateur d'impôt et guide. Gratuit, à vérifier avant dépôt.",
   alternates: withHreflang(`${BRAND.url}/pack-declaration-crypto-2026`),
   openGraph: {
     title: "Pack Déclaration Crypto 2026 — Cryptoreflex",
-    description: "Cerfa 2086 + 3916-bis pré-remplis, gratuit. 100 % automatisé.",
+    description: "Récapitulatif Cerfa 2086 ligne par ligne et fiches 3916-bis, gratuits.",
     url: `${BRAND.url}/pack-declaration-crypto-2026`,
     type: "website",
   },
@@ -52,69 +58,73 @@ export const metadata: Metadata = {
 const FEATURES = [
   {
     Icon: FileText,
-    title: "Cerfa 2086 pré-rempli",
+    title: "Récapitulatif 2086 ligne par ligne",
     blurb:
-      "Toutes les lignes calculées (prix moyen pondéré, plus-values, swaps, paliers PFU). Format PDF conforme impots.gouv.fr 2026.",
+      "Pour chaque vente, les lignes 211 à 224 calculées selon l'article 150 VH bis du CGI (valeur globale du portefeuille, prix total d'acquisition, frais de cession), puis le total à reporter en case 3AN ou 3BN.",
   },
   {
-    Icon: Calculator,
-    title: "Annexe 3916-bis détectée",
+    Icon: Globe2,
+    title: "Fiches 3916-bis",
     blurb:
-      "Détection automatique des comptes étrangers à déclarer (Binance, Coinbase, Kraken hors UE) + génération du formulaire.",
+      "Une fiche de préparation par compte ouvert auprès d'une plateforme établie à l'étranger (Coinbase, Kraken, Bitpanda… le sont), à recopier dans votre déclaration.",
   },
   {
-    Icon: Calendar,
-    title: "Économie 5 h+ de saisie",
+    Icon: FileSpreadsheet,
+    title: "Un modèle simple à remplir",
     blurb:
-      "Au lieu de calculer manuellement 150 VH bis ligne par ligne, vous obtenez le résultat en 5 minutes. Multi-exchange supporté.",
+      "Vous recopiez tous vos achats et ventes, depuis le premier, dans notre modèle CSV (exemple rempli fourni ; Excel en français accepté). Les fichiers exportés par les plateformes ne s'importent pas tels quels.",
   },
   {
     Icon: ShieldCheck,
-    title: "Sources légales citées",
+    title: "Aucun chiffre deviné",
     blurb:
-      "Chaque calcul est accompagné de la référence CGI / BOFiP / décision CE applicable. Audit-ready pour votre expert-comptable.",
+      "Le moteur est vérifié chaque nuit sur l'exemple officiel du BOFiP (deux ventes : 75 € puis 675 € de plus-value, au centime). S'il manque une donnée (valeur du portefeuille le jour d'une vente), la cession est marquée « à compléter » au lieu d'être estimée.",
   },
 ];
 
 export default function PackDeclarationPage() {
   const faqItems = [
     {
-      q: "Quelle différence avec le calculateur fiscalité gratuit ?",
-      a: "Le calculateur estime votre impôt PFU à partir d'inputs manuels (montant investi, montant vendu). Le Pack Déclaration parse votre VRAI historique CSV (Binance, Coinbase, Kraken, Bitpanda…), calcule les plus-values selon l'article 150 VH bis (prix moyen pondéré agrégé), génère le Cerfa 2086 PDF officiel + Annexe 3916-bis si applicable. Vous pouvez directement remettre le PDF à votre service d'impôts. Les deux sont gratuits.",
+      q: "Quelle différence avec le calculateur de fiscalité ?",
+      a: "Le calculateur estime votre impôt à partir de quelques montants (achats, ventes). Le générateur 2086 calcule chaque vente à partir de toutes vos opérations (modèle CSV) et produit le récapitulatif ligne par ligne du formulaire 2086, avec les fiches 3916-bis. Les deux sont gratuits.",
     },
     {
-      q: "Quelles plateformes / exchanges sont supportées ?",
-      a: "V1 mai 2026 : Binance, Coinbase, Kraken, Bitpanda, OKX, KuCoin, Bitget, Crypto.com, Trade Republic. Format d'import : CSV téléchargé depuis votre compte exchange (jamais d'API key requise). On couvre 95 % du volume des Français.",
+      q: "Quels fichiers puis-je importer ?",
+      a: "Le modèle CSV de Cryptoreflex (à télécharger sur la page du générateur, avec un exemple rempli ; un enregistrement depuis Excel en français est accepté). Les fichiers bruts des plateformes (Coinbase, Kraken, Bitpanda…) et l'export de Waltio (un fichier Excel) n'ont pas les mêmes colonnes : servez-vous-en pour recopier vos opérations dans le modèle.",
     },
     {
-      q: "C'est vraiment 100 % automatisé ? Pas de support humain ?",
-      a: "Oui. Tout est généré par algorithme déterministe (parser CSV + 150 VH bis pas-à-pas + PDF generator). Si vous avez une question sur une situation très complexe (DeFi exotique, NFT créateurs, mining BIC, BNC), on vous redirige vers un expert-comptable agréé crypto-actifs (liste fournie). Cryptoreflex ne donne pas de conseil personnalisé.",
+      q: "Qu'est-ce qui est automatique, et qu'est-ce qui reste à faire ?",
+      a: "Le calcul est automatique : le même moteur produit l'aperçu et le PDF, sans intervention humaine. Il vous reste à remplir le modèle, à vérifier l'aperçu, puis à recopier les lignes sur impots.gouv.fr. Le téléchargement du PDF demande un compte gratuit (5 PDF par jour). Pour une situation complexe (DeFi, NFT en tant que créateur, minage, activité professionnelle), faites relire par un expert-comptable : Cryptoreflex ne donne pas de conseil personnalisé.",
     },
     {
-      q: "C'est fiable pour ma déclaration officielle ?",
-      a: "Le Cerfa 2086 généré suit STRICTEMENT la méthodologie CGI 150 VH bis (prix moyen pondéré du portefeuille global, plus-values nettes après moins-values intra-année). Précision ≥ 99 % sur des trades simples (achat/vente/swap). Pour le DeFi avancé, faites relire par un expert-comptable. Cryptoreflex décline toute responsabilité fiscale.",
+      q: "Le résultat est-il fiable ?",
+      a: "Le moteur applique la formule du formulaire 2086 : plus-value = prix de cession net − prix total d'acquisition net × prix de cession / valeur globale du portefeuille. Il est vérifié chaque nuit sur l'exemple officiel du BOFiP. Ne sont pas pris en charge : les échanges avec soulte et les paiements en crypto ; les frais d'achat ne sont pas ajoutés au prix d'acquisition (ils sont signalés). Relisez toujours le récapitulatif avant de déclarer : vous restez responsable de votre déclaration.",
     },
     {
-      q: "Pourquoi déclarer correctement, ça vaut le coup ?",
-      a: "Déclarer correctement n'évite pas l'impôt légal dû, mais vous évite une amende potentielle de 750 €/compte non déclaré (Annexe 3916-bis) + un redressement fiscal sur des plus-values mal calculées. Le Pack est gratuit : aucune raison de s'en priver.",
+      q: "Le PDF se dépose-t-il sur impots.gouv.fr ?",
+      a: "Non. Le site des impôts n'accepte aucun fichier pour le 2086 : vous recopiez les lignes de chaque cession dans l'annexe 2086 en ligne, puis le total en case 3AN ou 3BN, et une annexe 3916-bis par compte à l'étranger. Le PDF sert de guide et de justificatif à conserver.",
+    },
+    {
+      q: "Pourquoi déclarer correctement ?",
+      a: "Un compte crypto à l'étranger non déclaré (annexe 3916-bis) expose à une amende de 750 € par compte, 1 500 € si la valeur des comptes concernés a dépassé 50 000 € à un moment de l'année (art. 1736 X du CGI), sans compter le redressement d'une plus-value mal calculée. Bien déclarer ne réduit pas l'impôt dû : cela évite les pénalités.",
     },
     {
       q: "C'est à refaire chaque année ?",
-      a: "Le Pack couvre la déclaration de l'année en cours (revenus 2025 → déclaration 2026). L'année suivante (revenus 2026 → déclaration 2027), vous régénérez simplement votre Cerfa. C'est gratuit et sans abonnement.",
+      a: "Oui : chaque année, vous ajoutez les nouvelles opérations à votre fichier et vous générez le récapitulatif de l'année (revenus 2026 → déclaration 2027). La ligne 221 reprend les fractions de capital déjà imputées les années précédentes : gardez donc tout votre historique dans le même fichier. Gratuit et sans abonnement.",
     },
     {
-      q: "Quand est la date limite de déclaration ?",
-      a: "Pour la déclaration 2026 (revenus 2025), les dates limites s'échelonnaient de mi-mai à début juin selon votre zone géographique. Pour corriger une déclaration déjà déposée, le service de correction en ligne est ouvert du 29 juillet au 30 novembre 2026 inclus (impots.gouv.fr).",
+      q: "Quand est la date limite ?",
+      a: "Pour la déclaration 2026 (revenus 2025), les dates limites s'échelonnaient de mi-mai à début juin selon votre département. Pour corriger une déclaration déjà déposée en ligne, le service de correction est ouvert du 29 juillet au 30 novembre 2026 inclus (impots.gouv.fr).",
     },
   ];
 
   const schemas = graphSchema([
     articleSchema({
       slug: "pack-declaration-crypto-2026",
-      title: "Pack Déclaration Crypto 2026 — Cerfa 2086 auto (gratuit)",
-      description: "Cerfa 2086 + Annexe 3916-bis pré-remplis automatiquement.",
+      title: "Pack Déclaration Crypto 2026 — Cerfa 2086 et 3916-bis (gratuit)",
+      description: "Récapitulatif Cerfa 2086 ligne par ligne et fiches 3916-bis, gratuits.",
       date: "2026-05-02",
-      dateModified: "2026-10-02",
+      dateModified: "2026-10-05",
       category: "Service fiscal",
       tags: ["Cerfa 2086", "déclaration crypto", "fiscalité", "PFU 31,4%", "150 VH bis"],
     }),
@@ -141,25 +151,26 @@ export default function PackDeclarationPage() {
             <Calendar className="h-3 w-3" aria-hidden /> Correction en ligne jusqu'au 30 novembre 2026
           </span>
           <h1 className="mt-4 text-4xl sm:text-6xl font-extrabold tracking-tight">
-            Cerfa 2086 prêt en{" "}
-            <span className="gradient-text">5 minutes</span>.
+            Votre déclaration crypto,{" "}
+            <span className="gradient-text">étape par étape</span>.
           </h1>
           <p className="mt-5 text-base sm:text-lg text-fg/80 leading-relaxed">
-            Importez votre CSV exchange. Récupérez votre Cerfa 2086 + Annexe
-            3916-bis pré-remplis. <strong>100 % gratuit</strong> et automatisé,
-            aucune présence humaine.
+            Remplissez notre modèle avec vos achats et ventes : le générateur
+            calcule chaque ligne du Cerfa 2086 et prépare vos fiches 3916-bis.
+            Vous recopiez ensuite le tout sur impots.gouv.fr.{" "}
+            <strong>100 % gratuit</strong>.
           </p>
         </header>
 
         <div className="mt-8">
           <Tldr
-            headline="Générez gratuitement votre Cerfa 2086 officiel à partir de votre CSV exchange en 5 minutes au lieu de 5 heures."
+            headline="Un récapitulatif Cerfa 2086 calculé ligne par ligne et des fiches 3916-bis, à recopier sur impots.gouv.fr."
             bullets={[
-              { emoji: "📋", text: "Cerfa 2086 + Annexe 3916-bis PDF pré-remplis" },
-              { emoji: "💸", text: "Calcul 150 VH bis pas-à-pas avec sources CGI/BOFiP citées" },
-              { emoji: "⏱️", text: "5 min vs 5 h de saisie manuelle (gain temps massif)" },
-              { emoji: "✅", text: "Évite les amendes 750 €/compte non déclaré (3916-bis)" },
-              { emoji: "🤖", text: "100 % gratuit et automatisé. Audit-ready pour votre expert-comptable." },
+              { emoji: "📋", text: "Lignes 211 à 224 du 2086 pour chaque vente, total à reporter en 3AN ou 3BN" },
+              { emoji: "🌍", text: "Une fiche 3916-bis par compte ouvert à l'étranger" },
+              { emoji: "🧾", text: "Modèle CSV à remplir avec tout votre historique (exemple fourni)" },
+              { emoji: "✅", text: "Moteur vérifié chaque nuit sur l'exemple officiel du BOFiP" },
+              { emoji: "🆓", text: "Gratuit, sans abonnement ; à relire avant de déclarer" },
             ]}
             readingTime="4 min"
             level="Tous niveaux"
@@ -175,16 +186,15 @@ export default function PackDeclarationPage() {
             <span className="gradient-text">Gratuit</span>
           </h2>
           <p className="mt-3 text-sm text-fg/80 max-w-xl mx-auto">
-            Générez votre Cerfa 2086 et détectez vos comptes 3916-bis sans
-            payer. Tous les outils fiscaux Cryptoreflex sont ouverts à tout le
-            monde.
+            Préparez votre Cerfa 2086 et vos fiches 3916-bis sans payer. Tous
+            les outils fiscaux Cryptoreflex sont ouverts à tout le monde.
           </p>
           <div className="mt-5 flex flex-wrap justify-center gap-3">
             <Link
               href="/outils/cerfa-2086-auto"
               className="btn-primary btn-primary-shine inline-flex"
             >
-              Générer mon Cerfa 2086
+              Préparer mon Cerfa 2086
               <ArrowRight className="h-4 w-4" aria-hidden />
             </Link>
             <Link
@@ -209,25 +219,25 @@ export default function PackDeclarationPage() {
           ))}
         </section>
 
-        {/* Étapes wizard */}
+        {/* Étapes */}
         <section className="mt-12">
-          <h2 className="text-2xl font-bold">3 étapes en 5 minutes</h2>
+          <h2 className="text-2xl font-bold">3 étapes</h2>
           <ol className="mt-5 space-y-4">
             {[
               {
                 n: "1",
-                title: "Importez votre CSV",
-                desc: "Téléchargez votre historique depuis Binance / Coinbase / Kraken / Bitpanda / OKX / KuCoin / Bitget / Crypto.com / Trade Republic et glissez-déposez dans le wizard.",
+                title: "Remplissez le modèle",
+                desc: "Téléchargez le modèle CSV sur la page du générateur et recopiez-y une ligne par opération (date, type, crypto, quantité, prix unitaire en euros, frais, plateforme), depuis votre tout premier achat : les années précédentes comptent aussi.",
               },
               {
                 n: "2",
-                title: "Vérifiez le calcul",
-                desc: "L'algorithme parse votre historique, calcule plus-values selon 150 VH bis (PMP global), détecte les comptes étrangers à déclarer en 3916-bis. Vous pouvez ajuster manuellement avant export.",
+                title: "Vérifiez l'aperçu",
+                desc: "Le générateur calcule chaque vente selon l'article 150 VH bis et signale ce qui manque. Rien n'est deviné : une cession incomplète reste « à compléter ».",
               },
               {
                 n: "3",
-                title: "Téléchargez vos PDF",
-                desc: "Cerfa 2086 + Annexe 3916-bis (si applicable) prêts à signer. Format conforme impots.gouv.fr 2026. Archivés 5 ans dans votre espace Cryptoreflex.",
+                title: "Téléchargez et recopiez",
+                desc: "Avec un compte gratuit, téléchargez le récapitulatif 2086 et vos fiches 3916-bis, puis recopiez les lignes dans votre déclaration en ligne. Le PDF ne se dépose pas : gardez-le comme justificatif.",
               },
             ].map((step) => (
               <li key={step.n} className="flex items-start gap-4 hover-lift rounded-2xl border border-border bg-surface p-5">

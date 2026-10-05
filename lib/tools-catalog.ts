@@ -24,7 +24,6 @@ import {
   Radar,
   ShieldAlert,
   ShieldCheck,
-  Sparkles,
   TestTube2,
   TrendingUp,
   Trophy,
@@ -54,7 +53,7 @@ export const TOOLS: Tool[] = [
   // ─── FISCALITÉ ───
   {
     title: "Cerfa 2086 + 3916-bis auto",
-    desc: "Importez votre CSV exchange → PDF Cerfa pré-rempli en 30 secondes. Calcul selon l'article 150 VH bis du CGI, à vérifier avant envoi.",
+    desc: "Remplissez notre modèle CSV avec tout votre historique → récapitulatif 2086 ligne par ligne et fiches 3916-bis. Article 150 VH bis du CGI, à vérifier avant dépôt.",
     href: "/outils/cerfa-2086-auto",
     Icon: FileText,
     tier: "pro",
@@ -208,8 +207,9 @@ export const TOOLS: Tool[] = [
   // FIX 2026-05-02 #11 — TIER 3 features (5 nouvelles pages) du plan
   // d'audit consolidé 6 experts. Chaque outil a sa propre page avec
   // landing + maillage + schemas. Démonétisation juin 2026 : tous gratuits.
-  // Le tier "pro" ne marque plus qu'un niveau « avancé » (Fiscal Copilot,
-  // Cerfa auto, IA) pour le tri/filtre interne.
+  // Le tier "pro" ne marque plus qu'un niveau « avancé » (Cerfa auto, IA) pour
+  // le tri/filtre interne. (Fiscal Copilot, page vitrine jamais construite :
+  // retiré le 05/10/2026 → redirigé vers le générateur Cerfa.)
   {
     title: "Tax Loss Harvesting (FR)",
     desc: "Réduisez votre impôt (PFU 31,4 %) en compensant vos plus-values par des moins-values réalisées la même année, avant le 31/12.",
@@ -218,15 +218,6 @@ export const TOOLS: Tool[] = [
     tier: "free",
     status: "new",
     cat: "fiscalite",
-  },
-  {
-    title: "Fiscal Copilot IA",
-    desc: "Agent conversationnel qui parse votre CSV exchange et génère votre Cerfa 2086 pré-rempli. Sources légales citées.",
-    href: "/outils/fiscal-copilot",
-    Icon: Sparkles,
-    tier: "pro",
-    status: "soon",
-    cat: "ia",
   },
   {
     title: "Wallet Connect read-only",
@@ -297,11 +288,11 @@ export const TOOLS: Tool[] = [
   },
   {
     title: "Succession Crypto",
-    desc: "Guide légal FR + checklist sécurité + générateur lettre d'intention crypto pour votre notaire.",
+    desc: "Lettre d'intention à imprimer pour vos proches, liste de contrôle et règles françaises (testament, droits de succession). Rien n'est enregistré.",
     href: "/outils/succession-crypto",
     Icon: Heart,
     tier: "free",
-    status: "soon",
+    status: "new",
     cat: "portfolio",
   },
   {

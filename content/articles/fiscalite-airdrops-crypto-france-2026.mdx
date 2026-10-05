@@ -60,8 +60,8 @@ Ce guide vous explique les **deux régimes possibles**, comment fixer le **prix 
 
 - **Pas de régime fiscal explicite** : le BOFiP ne mentionne pas les airdrops directement, on raisonne par analogie (BOI-RPPM-PVBMC-30-30 et article 92 CGI).
 - **Airdrop "passif"** (juste détenir une crypto, ex. ENS pour les détenteurs de noms .eth) → généralement **plus-value classique** à la cession ultérieure, valeur d'acquisition = **0 €**.
-- **Airdrop "actif"** (claim conditionné à une activité onchain, ex. Arbitrum, Jupiter, Optimism) → position prudente = **BNC** à la réception (cours du jour), position majoritaire = plus-value à la cession avec PRU = 0 €.
-- **Prix d'acquisition** : si imposé en BNC à la réception → cours du jour devient le PRU. Sinon → PRU = 0 € (toute la valeur de cession est plus-value).
+- **Airdrop "actif"** (claim conditionné à une activité onchain, ex. Arbitrum, Jupiter, Optimism) → position prudente = **BNC** à la réception (cours du jour), position majoritaire = plus-value à la cession (prix d'acquisition nul).
+- **Prix d'acquisition** : si imposé en BNC à la réception → la valeur du jour s'ajoute au prix total d'acquisition du portefeuille (ligne 220 du 2086). Sinon → rien ne s'y ajoute (prix d'acquisition nul). Dans les deux cas, la plus-value se calcule ensuite avec la formule globale, sur tout le portefeuille.
 - **Formulaires** : **2086** pour la cession (plus-value), **2042-C-PRO case 5KU/5HQ** si vous retenez le BNC.
 - **Justificatifs critiques** : screenshot Snapshot/Etherscan du claim, prix CoinGecko historique au jour J, hash de transaction.
 - **Outil pratique** : notre [calculateur fiscalité crypto](/outils/calculateur-fiscalite) intègre les airdrops dans la formule de plus-value globale.
@@ -74,9 +74,9 @@ Avant de parler régime, il faut bien distinguer trois choses qui se ressemblent
 
 | Type de revenu | Description | Régime fiscal dominant |
 |---|---|---|
-| **Airdrop** | Distribution gratuite de tokens, souvent rétroactive, à des adresses éligibles | Plus-value à la cession (PRU = 0 €) ou BNC selon activité |
-| **Récompense de staking** | Tokens reçus en contrepartie d'une délégation ou validation | Plus-value à la cession (PRU = 0 €) ou BNC si activité régulière — voir [guide staking](/blog/fiscalite-staking-eth-sol-ada-france-2026-guide-complet) |
-| **Free mint NFT** | NFT obtenu gratuitement (allowlist, OG role, etc.) | Plus-value à la cession (PRU = 0 €) — voir [guide NFT](/blog/fiscalite-nft-france-2026-guide-complet-creation-achat-vente) |
+| **Airdrop** | Distribution gratuite de tokens, souvent rétroactive, à des adresses éligibles | Plus-value à la cession (prix d'acquisition nul) ou BNC selon activité |
+| **Récompense de staking** | Tokens reçus en contrepartie d'une délégation ou validation | Plus-value à la cession (prix d'acquisition nul) ou BNC si activité régulière — voir [guide staking](/blog/fiscalite-staking-eth-sol-ada-france-2026-guide-complet) |
+| **Free mint NFT** | NFT obtenu gratuitement (allowlist, OG role, etc.) | Plus-value à la cession (prix d'acquisition nul) — voir [guide NFT](/blog/fiscalite-nft-france-2026-guide-complet-creation-achat-vente) |
 
 La différence clé entre un airdrop et un staking reward : le **caractère ponctuel** et **non-contractuel**. Vous ne saviez pas que vous alliez recevoir l'airdrop Arbitrum en mars 2023 quand vous utilisiez le réseau en 2022 — c'est une distribution surprise. À l'inverse, un staking reward est la rémunération attendue d'un contrat de délégation.
 
@@ -94,13 +94,13 @@ Au 1er mai 2026, la doctrine BOFiP **ne contient pas de paragraphe dédié aux a
 - **Article 92 du CGI** : définit les BNC comme "bénéfices des professions libérales, des charges et offices, et toutes occupations, exploitations lucratives et sources de profits ne se rattachant pas à une autre catégorie".
 - **Jurisprudence Conseil d'État 26 avril 2018 (n° 417809)** : sur les bitcoins de minage — le fait générateur n'intervient qu'à la cession en monnaie ayant cours légal pour l'occasionnel.
 
-Cette analogie avec le minage est la base du raisonnement majoritaire des fiscalistes français : **un airdrop reçu n'est pas imposable à la réception** dans le régime occasionnel, mais devient imposable à la cession comme une plus-value à PRU = 0 €.
+Cette analogie avec le minage est la base du raisonnement majoritaire des fiscalistes français : **un airdrop reçu n'est pas imposable à la réception** dans le régime occasionnel, mais devient imposable à la cession comme une plus-value, avec un prix d'acquisition nul.
 
 ### Cas 1 : airdrop passif (détention seule)
 
 Vous déteniez un nom ENS en octobre 2021 ? Vous avez reçu 200 ENS sans rien faire d'autre. Idem pour les détenteurs de tokens UNI à l'origine, ou les détenteurs Cosmos qui ont reçu plusieurs airdrops (ATOM stakers).
 
-**Position majoritaire** : c'est un **fruit de détention**, traité comme une plus-value à la cession (article 150 VH bis CGI), avec PRU = 0 €. Pas d'imposition à la réception.
+**Position majoritaire** : c'est un **fruit de détention**, traité comme une plus-value à la cession (article 150 VH bis CGI), avec un prix d'acquisition nul. Pas d'imposition à la réception.
 
 ### Cas 2 : airdrop actif (claim conditionné)
 
@@ -113,7 +113,7 @@ Là, deux écoles s'affrontent :
 <Callout type="info" title="Position prudente vs position majoritaire">
 **Position prudente (cabinets EY, PwC, certains avocats fiscalistes)** : l'airdrop actif rémunère une "activité" passée → traitement BNC à la réception (cours du jour), surtout si vous cumulez plusieurs claims dans l'année.
 
-**Position majoritaire (communauté crypto FR + nombreux experts-comptables crypto-natifs)** : pas d'activité habituelle si c'est ponctuel et non rémunéré contractuellement → plus-value classique à la cession avec PRU = 0 €, comme pour le minage occasionnel (jurisprudence CE 2018).
+**Position majoritaire (communauté crypto FR + nombreux experts-comptables crypto-natifs)** : pas d'activité habituelle si c'est ponctuel et non rémunéré contractuellement → plus-value classique à la cession (prix d'acquisition nul), comme pour le minage occasionnel (jurisprudence CE 2018).
 
 En 2026, **aucun rescrit officiel ne tranche** explicitement la question pour les airdrops crypto. La position majoritaire est tenable mais comporte un risque de requalification.
 </Callout>
@@ -138,14 +138,14 @@ C'est la question qui détermine **combien vous allez payer** : quel prix d'acqu
 ### Si imposé en BNC à la réception
 
 - Vous déclarez la **valeur en EUR au cours du jour de réception** comme recette BNC.
-- Cette même valeur devient le **PRU (prix de revient unitaire)** du token pour une cession future.
-- À la revente, vous calculez une plus-value classique sur la **différence cours de revente − cours de réception**.
+- Cette même valeur s'ajoute au **prix total d'acquisition** de votre portefeuille (ligne 220 du 2086).
+- À la revente, la plus-value se calcule avec la **formule globale** de l'article 150 VH bis, comme pour toute cession.
 
-**Exemple** : 1 200 ARB reçus en mars 2023 à 1,40 € l'unité = 1 680 € en BNC cette année-là. Si vous revendez ces 1 200 ARB en 2026 à 0,80 €, vous réalisez une **moins-value** de 720 € (1 680 € − 960 €).
+**Exemple** : 1 200 ARB reçus en mars 2023, valorisés pour l'exemple à 1,00 € l'unité = 1 200 € en BNC cette année-là. Si vous revendez ces 1 200 ARB en 2026 à 0,80 €, vous réalisez une **moins-value** de 240 € (1 200 € − 960 €), si ces ARB sont tout votre portefeuille ; sinon, appliquez la formule globale ci-dessous.
 
 ### Si non-imposé à la réception (plus-value classique)
 
-- **PRU = 0 €** pour les tokens reçus en airdrop.
+- **Prix d'acquisition nul** pour les tokens reçus en airdrop.
 - Les tokens augmentent la **valeur globale du portefeuille** sans augmenter le **prix total d'acquisition**.
 - À la cession, la formule du prorata (article 150 VH bis CGI) intègre cette dilution :
 
@@ -170,9 +170,9 @@ Le hash de transaction du claim (visible sur Etherscan, Arbiscan, Solscan, etc.)
 
 ### Exemple 1 : Airdrop Arbitrum (ARB)
 
-**Contexte** : Léa a réclamé **1 200 ARB** le 23 mars 2023. Cours moyen ce jour-là : **1,00 € / ARB**. Elle revend les 1 200 ARB en avril 2026 à **0,80 € / ARB**.
+**Contexte** : Léa a réclamé **1 200 ARB** le 23 mars 2023. Cours retenu pour l'exemple : **1,00 € / ARB**. Elle revend les 1 200 ARB en avril 2026 à **0,80 € / ARB**.
 
-**Position plus-value (PRU = 0 €)** :
+**Position plus-value (prix d'acquisition nul)** :
 - Prix de cession : 1 200 × 0,80 = 960 €
 - Valeur globale portefeuille (avant cession, simplifié) : 5 000 €
 - Prix total d'acquisition cumulé : 2 000 € (le reste du portefeuille — les ARB comptent pour 0 €)
@@ -183,15 +183,15 @@ Le hash de transaction du claim (visible sur Etherscan, Arbiscan, Solscan, etc.)
 - Recette BNC 2023 : 1 200 × 1,00 = 1 200 €
 - Abattement micro-BNC 34 % : base = 792 €
 - Si TMI 30 % + PS 17,2 % = 792 × 47,2 % = **373,82 €** d'impôt en 2023
-- En 2026 : moins-value de 1 200 × (0,80 − 1,00) = **− 240 €** imputable.
+- En 2026 : les 1 200 € imposés en BNC s'ajoutent au prix total d'acquisition, qui passe à 3 200 €. Plus-value = 960 − [3 200 × (960 / 5 000)] = 960 − 614,40 = **345,60 €**, soit **108,52 €** de PFU.
 
-Sur 3 ans, la position plus-value est **plus avantageuse** ici (181 € vs 374 € net). Mais elle suppose qu'aucun rescrit ne vienne requalifier rétroactivement.
+Sur 3 ans, la position plus-value est **plus avantageuse** ici (180,86 € contre 373,82 € + 108,52 € = 482,34 €). Mais elle suppose qu'aucun rescrit ne vienne requalifier rétroactivement.
 
 ### Exemple 2 : Airdrop Jupiter (JUP)
 
-**Contexte** : Marc a claim **350 JUP** le 31 janvier 2024. Cours d'ouverture (très volatil le premier jour) : **0,70 € / JUP**. Il **garde encore** ses tokens en mai 2026.
+**Contexte** : Marc a claim **350 JUP** le 31 janvier 2024. Cours retenu pour l'exemple (très volatil le premier jour) : **0,70 € / JUP**. Il **garde encore** ses tokens en mai 2026.
 
-**Position plus-value (PRU = 0 €)** :
+**Position plus-value (prix d'acquisition nul)** :
 - Aucun fait générateur tant que pas de cession.
 - **Rien à déclarer** au titre de l'IR pour 2024, 2025, 2026.
 
@@ -220,7 +220,7 @@ C'est un **airdrop passif pur** (aucun claim conditionné, juste un mapping de d
 
 <CTABox
   title="Calculez votre imposition airdrop en 2 minutes"
-  description="Notre calculateur fiscalité crypto modélise les deux positions (plus-value PRU=0 vs BNC) sur vos airdrops Arbitrum, Jupiter, ENS, Optimism et autres, avec la formule du prorata officielle."
+  description="Notre calculateur estime l'impôt de vos ventes (PFU, barème ou BIC) avec la formule officielle du prorata. Pour un airdrop, saisissez-le selon la position que vous retenez."
   ctaText="Lancer le calculateur"
   ctaUrl="/outils/calculateur-fiscalite"
   variant="primary"
@@ -268,7 +268,7 @@ Certains projets distribuent des **NFT gratuits** qui donnent ensuite droit à u
 
 ### Retrodrops conditionnels (vesting, claim deadline)
 
-Certains airdrops sont **vestés** (ex. 25 % à TGE, 75 % sur 2 ans). Position majoritaire : le fait générateur (en BNC) intervient à chaque **unlock**, pas au TGE total. En plus-value classique : pas d'incidence, on reste sur PRU = 0 € à la cession.
+Certains airdrops sont **vestés** (ex. 25 % à TGE, 75 % sur 2 ans). Position majoritaire : le fait générateur (en BNC) intervient à chaque **unlock**, pas au TGE total. En plus-value classique : pas d'incidence, le prix d'acquisition reste nul à la cession.
 
 ### Airdrop reçu mais token sans valeur de marché immédiate
 
@@ -281,7 +281,7 @@ Si l'airdrop est reçu **avant cotation officielle** (pas de marché liquide, pa
 <FAQ items={[
   {
     question: "Et si je n'ai jamais déclaré mes airdrops 2021-2024 ?",
-    answer: "En position plus-value avec PRU = 0 €, vous n'aviez rien à déclarer tant que vous ne vendiez pas. Si vous n'avez effectué aucune cession en EUR depuis la réception, aucune obligation rétroactive. Si vous avez vendu sans déclarer, vous pouvez régulariser via une déclaration rectificative (formulaire 2042 corrective) — les pénalités sont moindres en cas de régularisation spontanée. Pour les comptes étrangers non déclarés en 3916-bis, prescription de 10 ans : régularisez en priorité."
+    answer: "En position plus-value (prix d'acquisition nul), vous n'aviez rien à déclarer tant que vous ne vendiez pas. Si vous n'avez effectué aucune cession en EUR depuis la réception, aucune obligation rétroactive. Si vous avez vendu sans déclarer, vous pouvez régulariser via une déclaration rectificative (formulaire 2042 corrective) — les pénalités sont moindres en cas de régularisation spontanée. Pour les comptes étrangers non déclarés en 3916-bis, prescription de 10 ans : régularisez en priorité."
   },
   {
     question: "Faut-il déclarer un airdrop reçu mais pas vendu ?",
@@ -297,7 +297,7 @@ Si l'airdrop est reçu **avant cotation officielle** (pas de marché liquide, pa
   },
   {
     question: "Mes airdrops Solana (Jupiter, Jito, Wen) tombent directement dans Phantom — c'est différent d'Ethereum ?",
-    answer: "Non, le régime fiscal est identique : c'est la nature de l'opération (réception gratuite de tokens) qui compte, pas le réseau. Jupiter, Jito, Wen et autres airdrops Solana suivent la même logique : position plus-value à la cession (PRU = 0 €) ou position BNC à la réception. Particularité technique : sur Solana, certains airdrops arrivent directement dans le wallet sans claim manuel — la date de réception est celle du transfert visible sur Solscan."
+    answer: "Non, le régime fiscal est identique : c'est la nature de l'opération (réception gratuite de tokens) qui compte, pas le réseau. Jupiter, Jito, Wen et autres airdrops Solana suivent la même logique : position plus-value à la cession (prix d'acquisition nul) ou position BNC à la réception. Particularité technique : sur Solana, certains airdrops arrivent directement dans le wallet sans claim manuel — la date de réception est celle du transfert visible sur Solscan."
   }
 ]} />
 

@@ -59,7 +59,7 @@ const TOPICS_FISCALITE: SeoTopic[] = [
     competitionLevel: "low",
     cluster: "fiscalite-calcul",
     outline: [
-      "Pourquoi la formule du prix moyen pondéré est imposée",
+      "Pourquoi une formule globale (sur tout le portefeuille) est imposée",
       "Formule officielle article 150 VH bis pas-à-pas",
       "Exemple chiffré 1 : un seul achat, une seule vente",
       "Exemple chiffré 2 : DCA mensuel sur 12 mois",

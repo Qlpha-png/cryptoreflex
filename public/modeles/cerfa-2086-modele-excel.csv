@@ -1,0 +1,4 @@
+date;type;asset;quantity;price_eur;fees;exchange;portfolio_value_eur
+15/01/2025;achat;BTC;0,02;90000;5;Coinbase;
+10/03/2025;achat;ETH;0,5;3000;3;Kraken;
+20/09/2025;vente;BTC;0,01;100000;4;Coinbase;4000

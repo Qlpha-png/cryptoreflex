@@ -667,6 +667,18 @@ describe("buildSummary", () => {
     expect(buildSummary(computeCessions(t3, 2024), t3, 2024).exonere).toBe(false);
   });
 
+  it("3916-bis : « Bitpanda France » est un compte étranger (Bitpanda GmbH, Autriche), Coinhouse non", () => {
+    const txs: CerfaTransaction[] = [
+      { date: "2024-01-01", type: "buy", asset: "BTC", quantity: 1, priceEur: 100, fees: 0, exchange: "Bitpanda France" },
+      { date: "2024-02-01", type: "buy", asset: "ETH", quantity: 1, priceEur: 100, fees: 0, exchange: "Coinhouse" },
+      { date: "2024-03-01", type: "buy", asset: "BTC", quantity: 1, priceEur: 100, fees: 0, exchange: "Bitstack" },
+    ];
+    const s = buildSummary(computeCessions(txs, 2024), txs, 2024);
+    expect(s.foreignExchanges).toContain("Bitpanda France");
+    expect(s.foreignExchanges).not.toContain("Coinhouse");
+    expect(s.foreignExchanges).not.toContain("Bitstack"); // Bitstack Digital Assets SAS, France
+  });
+
   it("pas d'exonération à 305,01 € de ventes", () => {
     const txs: CerfaTransaction[] = [
       { date: "2024-01-01", type: "buy", asset: "BTC", quantity: 1, priceEur: 100, fees: 0 },

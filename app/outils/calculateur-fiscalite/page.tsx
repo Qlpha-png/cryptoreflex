@@ -60,7 +60,7 @@ import { withHreflang } from "@/lib/seo-alternates";
 const PAGE_TITLE = "Calculateur fiscalité crypto 2026 — PFU 31,4%, Cerfa";
 // 158 caractères, optimisé Google SERP
 const PAGE_DESCRIPTION =
-  "Calculez votre impôt crypto 2026 en 2 min : PFU 31,4%, barème progressif IR, BIC. Aide Cerfa 2086 + 3916-bis. Calcul officiel 150 VH bis CGI, gratuit, anonyme.";
+  "Calculez votre impôt crypto 2026 en 2 min : PFU 31,4%, barème progressif IR, BIC. Aide Cerfa 2086 + 3916-bis. Formule de l'article 150 VH bis du CGI, gratuit, anonyme.";
 const PAGE_PATH = "/outils/calculateur-fiscalite";
 const PAGE_URL = `${BRAND.url}${PAGE_PATH}`;
 
@@ -155,7 +155,7 @@ const FAQ_ITEMS = [
     question:
       "Les swaps crypto contre crypto (BTC vers ETH) sont-ils imposables ?",
     answer:
-      "Non. Les conversions entre cryptoactifs sont fiscalement neutres depuis 2019 (BOFiP BOI-RPPM-PVBMC-30-30). Seul le passage en monnaie ayant cours légal (EUR, USD) ou l'achat d'un bien/service avec une crypto déclenche l'imposition. Mettez simplement à jour votre PRU pour la nouvelle crypto.",
+      "Non. Les conversions entre cryptoactifs sont fiscalement neutres depuis 2019 (BOFiP BOI-RPPM-PVBMC-30-30). Seul le passage en monnaie ayant cours légal (EUR, USD) ou l'achat d'un bien/service avec une crypto déclenche l'imposition. Rien ne change dans le prix total d'acquisition de votre portefeuille (ligne 220 du 2086) : gardez simplement la trace de l'échange.",
   },
   {
     question:
@@ -192,13 +192,13 @@ const FAQ_ITEMS = [
     question:
       "Pourquoi utiliser Waltio plutôt que de tout faire à la main ?",
     answer:
-      "Au-delà de 50 transactions par an, le calcul manuel devient piégeux : prix d'acquisition moyen pondéré, swap crypto-crypto neutre, valeur globale du portefeuille au jour de chaque cession (article 150 VH bis), seuil 305 €. Waltio (édité en France) connecte vos exchanges et wallets, applique automatiquement la formule légale et génère le Cerfa 2086 + 3916-bis prêts à téléverser. Comptez 30 minutes au total au lieu d'un week-end. Rapport fiscal à partir de 39 €/an (jusqu'à 50 transactions).",
+      "Au-delà de 50 transactions par an, le calcul manuel devient piégeux : prix total d'acquisition du portefeuille, swap crypto-crypto neutre, valeur globale du portefeuille au jour de chaque cession (article 150 VH bis), seuil 305 €. Waltio (édité en France) connecte vos exchanges et wallets, applique automatiquement la formule légale et prépare le Cerfa 2086 + 3916-bis à recopier dans votre déclaration en ligne. Comptez 30 minutes au total au lieu d'un week-end. Rapport fiscal à partir de 39 €/an (jusqu'à 50 transactions).",
   },
   {
     question:
       "Combien me coûte Waltio par rapport à un expert-comptable crypto ?",
     answer:
-      "Waltio : Lite 39 €/an (jusqu'à 50 transactions), Starter 99 €/an (jusqu'à 1 000, DeFi inclus) ou Smart 249 €/an (jusqu'à 10 000) — tarifs relevés sur waltio.com le 2 octobre 2026. Un expert-comptable spécialisé crypto facture entre 600 € et 1 500 € pour une déclaration particulier (selon volume), et 2 000 € à 5 000 € pour un dossier BIC. Pour un particulier au régime PFU, Waltio couvre 95 % des cas sans expert-comptable. À partir du régime BIC, gardez l'expert-comptable : un export Waltio propre (Smart 249 €/an ou Unlimited 999 €/an selon le volume) peut alléger son travail.",
+      "Waltio : Lite 39 €/an (jusqu'à 50 transactions), Starter 99 €/an (jusqu'à 1 000, DeFi inclus) ou Smart 249 €/an (jusqu'à 10 000) — tarifs relevés sur waltio.com le 2 octobre 2026. Un expert-comptable spécialisé crypto facture entre 600 € et 1 500 € pour une déclaration particulier (selon volume), et 2 000 € à 5 000 € pour un dossier BIC. Pour un particulier au régime PFU, Waltio couvre la plupart des cas sans expert-comptable. À partir du régime BIC, gardez l'expert-comptable : un export Waltio propre (offre Smart à 249 €/an, ou supérieure selon le volume) peut alléger son travail.",
   },
   {
     question: "Waltio prend-il en compte le DeFi, le staking et les NFT ?",
@@ -493,8 +493,8 @@ export default function CalculateurFiscalitePage() {
               ETH, USDC vers SOL, swap sur Uniswap) sont{" "}
               <strong>fiscalement neutres</strong> depuis le BOFiP de septembre
               2019. Aucune ligne sur le Cerfa 2086, aucun calcul de plus-value à
-              déclarer. Vous mettez simplement à jour votre PRU pour la nouvelle
-              crypto reçue, et conservez l'historique du swap (export CSV) en
+              déclarer. Le prix total d'acquisition de votre portefeuille ne change
+              pas ; conservez l'historique du swap (export CSV) en
               cas de contrôle. Seul le passage en monnaie ayant cours légal
               (EUR, USD) ou l'achat d'un bien/service en crypto déclenche
               l'imposition.
@@ -758,8 +758,7 @@ export default function CalculateurFiscalitePage() {
               Étape 4 — Remplissez le Cerfa 2086 ligne par ligne
             </h3>
             <p>
-              Une ligne par cession (ou agrégation par crypto/mois si vous avez
-              plus de 30 cessions). Saisissez la valeur globale de VOTRE
+              Une colonne par cession imposable de l'année. Saisissez la valeur globale de VOTRE
               portefeuille au jour de la cession (ligne 212 — tous portefeuilles
               confondus), le prix de cession brut (ligne 213), les frais de
               cession (ligne 214), le prix total d'acquisition de votre
@@ -926,9 +925,9 @@ export default function CalculateurFiscalitePage() {
                   Vous voulez le PDF Cerfa 2086 pré-rempli ?
                 </h3>
                 <p className="mt-1 text-sm text-white/70">
-                  Importez votre CSV Coinbase, Kraken ou Bitpanda et recevez un
-                  récapitulatif Cerfa 2086 + 3916-bis ligne par ligne, à vérifier
-                  avant dépôt. Gratuit, compte Cryptoreflex requis pour le PDF.
+                  Remplissez notre modèle CSV avec tout votre historique et
+                  recevez un récapitulatif Cerfa 2086 + 3916-bis ligne par ligne, à
+                  vérifier avant dépôt. Gratuit, compte Cryptoreflex requis pour le PDF.
                 </p>
               </div>
             </div>

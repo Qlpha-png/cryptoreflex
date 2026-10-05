@@ -56,7 +56,7 @@ const Cerfa2086Generator = dynamic(
 
 const PAGE_TITLE = "Génération auto Cerfa 2086 crypto 2026 — gratuit";
 const PAGE_DESCRIPTION =
-  "Importez votre CSV Coinbase, Kraken ou Bitpanda (ou un ancien export Binance) et générez un récapitulatif Cerfa 2086 + 3916-bis. Formule de l'article 150 VH bis du CGI, ligne par ligne, à vérifier avant dépôt. Gratuit.";
+  "Remplissez notre modèle CSV → récapitulatif Cerfa 2086 + 3916-bis calculé ligne par ligne (article 150 VH bis du CGI), à vérifier avant dépôt. Gratuit.";
 const PAGE_PATH = "/outils/cerfa-2086-auto";
 const PAGE_URL = `${BRAND.url}${PAGE_PATH}`;
 
@@ -70,7 +70,7 @@ export const metadata: Metadata = {
     "Cerfa 2086 PDF",
     "3916-bis crypto",
     "déclaration crypto automatique",
-    "import CSV Binance impôts",
+    "modèle CSV Cerfa 2086",
     "outil fiscal crypto gratuit",
     "calculateur Cerfa 2086",
   ],
@@ -109,7 +109,7 @@ export default function Cerfa2086AutoPage() {
       "@type": "Offer",
       price: "0",
       priceCurrency: "EUR",
-      description: "Outil gratuit, sans inscription",
+      description: "Outil gratuit : aperçu sans compte, PDF avec un compte gratuit",
     },
   };
 
@@ -126,27 +126,27 @@ export default function Cerfa2086AutoPage() {
           // Étude #9 ETUDE-2026-05-02 : HowTo schema → snippet "Comment
           // générer son Cerfa 2086" éligible aux rich results recettes/HowTo.
           howToSchema({
-            name: "Comment générer son Cerfa 2086 crypto en 30 secondes",
+            name: "Comment préparer son Cerfa 2086 crypto",
             description:
-              "Procédure pour préparer la déclaration de ses plus-values crypto via le formulaire 2086 (article 150 VH bis du CGI), à partir d'un export CSV d'exchange. Le récapitulatif généré est à vérifier avant dépôt.",
-            totalTime: "PT30S",
+              "Procédure pour préparer la déclaration de ses plus-values crypto via le formulaire 2086 (article 150 VH bis du CGI), à partir de l'historique de ses plateformes recopié dans le modèle CSV de l'outil. Le récapitulatif généré est à vérifier avant dépôt.",
+            totalTime: "PT20M",
             estimatedCost: { currency: "EUR", value: 0 },
             steps: [
               {
-                name: "Exporter votre historique de trades",
-                text: "Allez dans votre compte Coinbase, Kraken ou Bitpanda (ou votre ancien compte Binance) → Export CSV. Sélectionnez toute la période fiscale (1er janv → 31 déc).",
+                name: "Récupérer votre historique",
+                text: "Dans chacun de vos comptes (Coinbase, Kraken, Bitpanda…), affichez ou exportez l'historique complet de vos opérations, depuis votre tout premier achat (pas seulement l'année déclarée).",
               },
               {
-                name: "Importer le CSV dans l'outil",
-                text: "Glissez le fichier CSV dans la zone d'upload de cet outil. Le parser détecte automatiquement le format de votre exchange.",
+                name: "Remplir le modèle CSV",
+                text: "Téléchargez le modèle de l'outil et recopiez une ligne par opération : date, type (buy, sell, swap, transfer, fee, reward), actif, quantité, prix unitaire en euros, frais en euros, plateforme ; sur chaque vente, la valeur totale de votre portefeuille ce jour-là si vous la connaissez. Mettez tout l'historique, années précédentes comprises (lignes 220 et 221). Les fichiers exportés par les plateformes ne s'importent pas tels quels.",
               },
               {
-                name: "Vérifier les transactions parsées",
-                text: "L'outil affiche un récap : nombre de cessions, total acquisitions, plus-value brute. Vérifiez qu'aucun trade n'est manquant.",
+                name: "Importer le fichier dans l'outil",
+                text: "Glissez le fichier dans la zone d'import. L'aperçu affiche les totaux calculés par le même moteur que le PDF (prix de cession, plus-values et moins-values, impôt estimé) et signale toute ligne à corriger : vérifiez qu'aucune opération ne manque.",
               },
               {
                 name: "Générer le PDF Cerfa 2086 + 3916-bis",
-                text: "Cliquez sur Générer. L'outil applique la formule de l'article 150 VH bis (lignes 212 à 224 du 2086 : valeur globale du portefeuille, prix total d'acquisition minoré des fractions déjà imputées, frais de cession) et produit un récapitulatif ligne par ligne, à vérifier avant dépôt, + un 3916-bis par compte étranger détecté.",
+                text: "Avec un compte gratuit, cliquez sur « Télécharger le PDF ». L'outil applique la formule de l'article 150 VH bis (lignes 212 à 224 du 2086 : valeur globale du portefeuille, prix total d'acquisition minoré des fractions déjà imputées, frais de cession) et produit un récapitulatif ligne par ligne, à vérifier avant dépôt, + un 3916-bis par compte étranger détecté.",
               },
               {
                 name: "Reporter sur impots.gouv.fr",
@@ -167,14 +167,14 @@ export default function Cerfa2086AutoPage() {
             </span>
 
             <h1 className="mt-4 font-display text-4xl sm:text-5xl font-extrabold tracking-tight text-fg">
-              Générez votre{" "}
+              Préparez votre{" "}
               <span className="gradient-text">Cerfa 2086 + 3916-bis</span>{" "}
-              en 30 secondes
+              ligne par ligne
             </h1>
 
             <p className="mt-4 max-w-3xl text-lg text-fg/80 leading-relaxed">
-              Importez le CSV de vos exchanges (Coinbase, Kraken, Bitpanda, anciens exports Binance) ou
-              votre export JSON Waltio. Notre moteur applique la formule de
+              Recopiez tous vos achats et ventes dans notre modèle CSV, depuis
+              votre premier achat. Notre moteur applique la formule de
               l&apos;<strong>article 150 VH bis du CGI</strong> telle que le
               formulaire 2086 la pose (lignes 212 à 224 : valeur globale du
               portefeuille au jour de la cession, prix total d&apos;acquisition

@@ -155,7 +155,8 @@ Reprenons un cas concret pour bien visualiser. Vous allez voir, c'est beaucoup p
 
 - Léa achète 1 BTC à 30 000 euros le 10 mars 2024 sur Bitstamp.
 - Elle achète 0,5 BTC supplémentaires à 18 000 euros (BTC à 36 000 euros) le 20 août 2024.
-- Total acquisitions : 48 000 euros.
+- Elle achète aussi 2 ETH pour 4 000 euros le 15 juin 2024.
+- Total acquisitions (tout le portefeuille) : 52 000 euros.
 - Le 4 octobre 2025, elle vend 1 BTC à 50 000 euros sur Bitstamp, frais 50 euros.
 - Elle détient encore 0,5 BTC en portefeuille au moment de la vente (valeur 25 000 euros) et 2 ETH (valeur 6 000 euros). Pas d'autre crypto.
 
@@ -170,32 +171,28 @@ Reprenons un cas concret pour bien visualiser. Vous allez voir, c'est beaucoup p
 | 215 | Prix de cession net des frais | 49 950 € |
 | 217 | Prix de cession net des soultes | 50 000 € (pas de soulte) |
 | 218 | Prix net des frais et soultes | 49 950 € |
-| 220 | Prix total d'acquisition | 48 000 € |
+| 220 | Prix total d'acquisition | 52 000 € (30 000 + 18 000 de BTC + 4 000 d'ETH) |
 | 221 | Fractions déjà déduites | 0 € (première cession) |
-| 223 | Prix total d'acquisition net | 48 000 € |
-| 224 | Plus-value | 20 320,37 € (49 950 − 48 000 × 50 000 / 81 000 = 49 950 − 29 629,63) |
+| 223 | Prix total d'acquisition net | 52 000 € |
+| 224 | Plus-value | 17 851,23 € (49 950 − 52 000 × 50 000 / 81 000 = 49 950 − 32 098,77) |
 
 **Calcul PFU 31,4 % :**
 
-- 20 320,37 × 31,4 % = **6 380,60 euros d'impôt total** (2 601,01 IR + 3 779,59 PS).
-- Pour sa prochaine cession, Léa reportera en ligne 221 les **29 629,63 euros** déjà imputés.
+- Sur les 17 851 € déclarés : 2 284,93 € d'impôt sur le revenu (12,8 %) + 3 320,29 € de prélèvements sociaux (18,6 %) = **5 605,22 euros d'impôt total** (PFU 31,4 %, chaque prélèvement arrondi au centime).
+- Pour sa prochaine cession, Léa reportera en ligne 221 les **32 098,77 euros** déjà imputés.
 
-Léa reporte ensuite **20 350 euros en case 3AN du Cerfa 2042-C** (plus-value totale annuelle, somme de toutes les lignes du 2086).
+Léa reporte ensuite **17 851 euros en case 3AN du Cerfa 2042-C** (plus-value totale annuelle, somme de toutes les lignes 224 du 2086, arrondie à l'euro).
 
 ---
 
-## 5. Plusieurs lignes ? Comment les agréger
+## 5. Beaucoup de cessions ? Comment s'organiser
 
-Le 2086 accepte **autant de lignes que vous le souhaitez**. Mais à partir de 20-30 cessions, ça devient pénible. Deux approches autorisées :
-
-**Approche 1 — agrégation par cession journalière.** Si vous vendez plusieurs fois la même crypto le même jour, vous pouvez **agréger** en une seule ligne (somme des prix cession et frais).
-
-**Approche 2 — agrégation par crypto/mois.** Toléré par la DGFiP pour les **traders très actifs** : une ligne par crypto et par mois, avec total cessions, total frais et valeur globale moyenne. À privilégier si vous faites 100+ cessions par mois.
+Le 2086 demande **une colonne par cession imposable** de l'année, avec la valeur globale du portefeuille au moment de **chaque** vente (ligne 212). Nous n'avons trouvé aucune règle officielle permettant de regrouper plusieurs ventes (par jour ou par mois) : sans source, ne regroupez pas. À partir de quelques cessions, un outil devient vite indispensable.
 
 Pour automatiser le 2086, plusieurs solutions :
 
 - **Logiciels payants** : Koinly (~50 €/an), Waltio (39 à 249 €/an selon le volume), Cointracker (~80 €/an) — ils génèrent un PDF du 2086 prêt à recopier.
-- **Calculateur gratuit Cryptoreflex** : pour les cas simples (1 à 10 cessions), notre [calculateur fiscalité crypto](/outils/calculateur-fiscalite) calcule la plus-value totale et vous donne le chiffre exact à reporter en case 3AN.
+- **Outils gratuits Cryptoreflex** : pour une seule vente dans l'année, notre [calculateur fiscalité crypto](/outils/calculateur-fiscalite) donne la plus-value à reporter en case 3AN ; dès plusieurs ventes, notre [générateur Cerfa 2086](/outils/cerfa-2086-auto) calcule chacune à partir de votre historique complet.
 
 ---
 
@@ -218,9 +215,9 @@ Le système impots.gouv.fr **reporte automatiquement** ces totaux si vous utilis
 
 **Erreur 2 — déduire les frais de retrait.** Seuls les frais **directement liés à la cession** sont déductibles. Frais de réseau (gas), frais de retrait Binance ne le sont pas. Détails : [Frais d'acquisition crypto déductibles 2026](/blog/frais-acquisition-crypto-deductible-2026).
 
-**Erreur 3 — oublier d'imputer les moins-values dans la même année.** Pour la crypto, la compensation est **strictement intra-annuelle** (pas de report sur les années suivantes). Si vous faites +5 000 € sur Bitcoin et −2 000 € sur Solana **la même année**, vous déclarez +3 000 € (compensation auto). En revanche, une moins-value Solana réalisée en 2024 **ne peut pas** compenser une plus-value Bitcoin de 2025. Méthode : [Comment déduire ses pertes crypto](/blog/deduire-pertes-crypto-impot-2026).
+**Erreur 3 — oublier d'imputer les moins-values dans la même année.** Pour la crypto, la compensation est **strictement intra-annuelle** (pas de report sur les années suivantes). Si une vente dégage +5 000 € et une autre −2 000 € **la même année**, vous déclarez +3 000 € (compensation automatique entre les lignes 224). En revanche, une moins-value réalisée en 2024 **ne peut pas** compenser une plus-value de 2025. Méthode : [Comment déduire ses pertes crypto](/blog/deduire-pertes-crypto-impot-2026).
 
-**Erreur 4 — déclarer les swaps crypto/crypto.** Un swap BTC→ETH est **fiscalement neutre**. Pas de ligne sur le 2086 nécessaire. Vous mettez à jour votre PRU pour la nouvelle crypto, c'est tout.
+**Erreur 4 — déclarer les swaps crypto/crypto.** Un swap BTC→ETH est **fiscalement neutre**. Pas de ligne sur le 2086 nécessaire, et rien ne change dans le prix total d'acquisition de votre portefeuille (ligne 220) : gardez simplement la trace de l'échange.
 
 **Erreur 5 — confondre seuil 305 € (exonération totale) et abattement.** Le seuil 305 euros est une **exonération totale** SI le total annuel des cessions reste sous ce seuil. Dès qu'il dépasse 305 euros, **toute** la plus-value devient imposable.
 

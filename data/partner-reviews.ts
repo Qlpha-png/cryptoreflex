@@ -470,7 +470,7 @@ export const partnerReviews: PartnerReview[] = [
     testDuration: "4 ans (campagnes fiscales 2022, 2023, 2024, 2025)",
     verdict: {
       summary:
-        "Waltio est la seule solution SaaS qui produit un Cerfa 2086 conforme à la doctrine fiscale française (méthode du prix moyen pondéré, art. 150 VH bis CGI). Koinly et CoinTracking ne le font pas pour la France. Pour un contribuable FR avec multi-exchanges, c'est l'outil qui fait gagner le plus de temps en mai.",
+        "Waltio est conçu pour la fiscalité française : son rapport suit la méthode globale de l'art. 150 VH bis CGI (valeur de tout le portefeuille à chaque cession). Pour un contribuable FR avec multi-exchanges, c'est l'outil qui fait gagner le plus de temps en mai.",
       bestFor: [
         "Contribuable FR avec >100 transactions/an",
         "Multi-exchanges (Coinbase + Bitpanda + Coinhouse + Kraken…)",
@@ -486,17 +486,17 @@ export const partnerReviews: PartnerReview[] = [
     pedagogy: {
       problem: {
         title: "Déclarer ses cryptos en France, c'est un piège technique",
-        body: "Bercy exige la méthode PMP (Prix Moyen Pondéré, art. 150 VH bis CGI) cession par cession. Excel ne le fait pas naturellement. En plus, chaque compte ouvert sur un exchange étranger (Binance, Bitpanda, Kraken…) doit être déclaré sur le formulaire 3916-bis (case 8UU cochée sur la 2042) — sous peine de 750 € d'amende PAR compte oublié, 1 500 € si la valeur des comptes dépasse 50 000 € (art. 1736 X CGI). Sans outil, c'est 14 heures de travail manuel et une boule au ventre permanente.",
+        body: "L'art. 150 VH bis CGI impose une méthode globale, cession par cession (valeur de tout le portefeuille, prix total d'acquisition). Excel ne le fait pas naturellement. En plus, chaque compte ouvert sur un exchange étranger (Binance, Bitpanda, Kraken…) doit être déclaré sur le formulaire 3916-bis (case 8UU cochée sur la 2042) — sous peine de 750 € d'amende PAR compte oublié, 1 500 € si la valeur des comptes dépasse 50 000 € (art. 1736 X CGI). Sans outil, c'est 14 heures de travail manuel et une boule au ventre permanente.",
         stat: "750 €",
       },
       solution: {
-        title: "Le seul SaaS qui produit un Cerfa 2086 prêt à téléverser",
-        body: "Waltio est conçu spécifiquement pour la doctrine BOFiP française. Vous connectez vos exchanges, l'outil applique automatiquement la méthode PMP, classe vos plus-values cession par cession, et vous génère deux PDF : le Cerfa 2086 (plus-values) et la liste 3916-bis (comptes étrangers). Vous n'avez qu'à recopier les chiffres sur impots.gouv.fr.",
+        title: "Un rapport Cerfa 2086 calculé pour vous, à recopier",
+        body: "Waltio est conçu spécifiquement pour la doctrine BOFiP française. Vous connectez vos exchanges, l'outil applique automatiquement la méthode globale de l'art. 150 VH bis, classe vos plus-values cession par cession, et vous génère deux PDF : le Cerfa 2086 (plus-values) et la liste 3916-bis (comptes étrangers). Vous n'avez qu'à recopier les chiffres sur impots.gouv.fr.",
         stat: "100% Bercy",
       },
       mechanism: {
         title: "Comment Waltio transforme 14h de Excel en 45 min",
-        body: "Le secret : automatiser la partie chiante (importer + classer + calculer en PMP) pour vous laisser uniquement la partie qui demande votre validation (réconcilier les transactions ambiguës comme un airdrop ou un swap DeFi exotique).",
+        body: "Le secret : automatiser la partie chiante (importer + classer + calculer selon la formule du 2086) pour vous laisser uniquement la partie qui demande votre validation (réconcilier les transactions ambiguës comme un airdrop ou un swap DeFi exotique).",
         steps: [
           "Vous collez les clés API READ-ONLY de chaque exchange dans Waltio (5 min). L'historique s'importe automatiquement.",
           "L'IA reconnaît et classe 95% des transactions ; vous réconciliez manuellement les 5% restants (15-30 min).",
@@ -512,7 +512,7 @@ export const partnerReviews: PartnerReview[] = [
     beforeAfter: {
       beforeTitle: "Sans Waltio en mai",
       beforeItems: [
-        "14 heures de Excel multi-onglets pour calculer vos plus-values en PMP manuellement",
+        "14 heures de Excel multi-onglets pour calculer vos plus-values à la main avec la formule du 2086",
         "Risque réel d'amende de 750 € (1 500 € au-delà de 50 000 €) par compte étranger oublié au 3916-bis",
         "Stress fiscal jusqu'au dépôt — vous doutez de chaque calcul, vous refaites 3 fois",
         "Pas de traçabilité : si Bercy vous contrôle, vous n'avez pas de méthode défendable",
@@ -520,16 +520,16 @@ export const partnerReviews: PartnerReview[] = [
       afterTitle: "Avec Waltio Investisseur",
       afterItems: [
         "1h30 la première année, 45 min les suivantes — incrémental automatique",
-        "Cerfa 2086 + 3916-bis pré-remplis selon doctrine BOFiP, prêts à téléverser",
+        "Cerfa 2086 + 3916-bis pré-remplis selon la doctrine BOFiP, prêts à recopier",
         "Toutes vos plateformes étrangères listées exhaustivement, aucun oubli possible",
-        "Méthode PMP horodatée + sources légales citées : vous êtes défendable face à un audit fiscal",
+        "Calcul détaillé cession par cession + sources légales citées : vous êtes défendable face à un audit fiscal",
       ],
     },
     sections: [
       {
-        title: "Pourquoi Waltio est l'unique solution conforme à Bercy",
+        title: "Pourquoi Waltio est conçu pour la fiscalité française",
         content:
-          "Pour un résident fiscal français, Waltio est le seul SaaS qui produit un export 100% conforme au Cerfa 2086 (formulaire des plus-values d'actifs numériques) avec la méthode exigée par la doctrine BOFiP : le PMP (Prix Moyen Pondéré, art. 150 VH bis CGI).\n\nLe résultat : vous obtenez deux PDFs prêts à téléverser sur impots.gouv.fr. Le 2086 avec vos plus-values calculées cession par cession, et la liste exhaustive des comptes étrangers (3916-bis, case 8UU) à déclarer. Vous copiez les valeurs, c'est fini. Sans cet outil, c'est 14 heures de Excel multi-onglets.",
+          "Pour un résident fiscal français, Waltio produit un rapport conçu pour le Cerfa 2086 (formulaire des plus-values d'actifs numériques), avec la méthode globale de l'art. 150 VH bis CGI.\n\nLe résultat : vous obtenez deux PDF dont vous recopiez les chiffres sur impots.gouv.fr (le site n'accepte aucun fichier). Le 2086 avec vos plus-values calculées cession par cession, et la liste exhaustive des comptes étrangers (3916-bis, case 8UU) à déclarer. Vous copiez les valeurs, c'est fini. Sans cet outil, c'est 14 heures de Excel multi-onglets.",
       },
       {
         title: "Ce qu'on a confirmé en 4 campagnes fiscales",
@@ -545,7 +545,7 @@ export const partnerReviews: PartnerReview[] = [
     specs: [
       { label: "Plans testés", value: "Découverte (gratuit), Investisseur (199 €/an) — ancienne grille ; aujourd'hui Free, Lite 39 €, Starter 99 €, Smart 249 €, Unlimited 999 €" },
       { label: "Plateformes connectées", value: "220+ (API + import CSV)" },
-      { label: "Méthode de calcul", value: "PMP (art. 150 VH bis CGI)" },
+      { label: "Méthode de calcul", value: "Méthode globale (art. 150 VH bis CGI)" },
       { label: "Exports", value: "Cerfa 2086, 3916-bis pré-rempli, CSV détaillé" },
       { label: "Pays supportés", value: "France (focus), Belgique, Italie, Espagne, Portugal" },
       { label: "Support", value: "FR + EN, 24h ouvrées en période fiscale" },
@@ -574,9 +574,9 @@ export const partnerReviews: PartnerReview[] = [
           "Une fois votre historique réconcilié, passez au plan adapté à votre volume (Lite 39 €/an jusqu'à 50 transactions, Starter 99 €/an jusqu'à 1 000) pour générer les documents fiscaux. Le paiement débloque les exports PDF + CSV.",
       },
       {
-        title: "5. Téléversement sur impots.gouv.fr",
+        title: "5. Report sur impots.gouv.fr",
         description:
-          "Vous vous connectez à impots.gouv.fr, allez dans la déclaration des revenus, et copiez les chiffres du PDF Waltio dans les cases du formulaire 2086 + 3916-bis. Ne téléversez pas le PDF Waltio en pièce jointe (le fisc veut les valeurs, pas le PDF).",
+          "Vous vous connectez à impots.gouv.fr, allez dans la déclaration des revenus, et copiez les chiffres du PDF Waltio dans les cases du formulaire 2086 + 3916-bis. Le site des impôts n'accepte aucun fichier : ce sont les valeurs qui comptent, le PDF reste votre justificatif.",
       },
     ],
     faq: [
@@ -588,7 +588,7 @@ export const partnerReviews: PartnerReview[] = [
       {
         question: "Que se passe-t-il si Bercy change la doctrine fiscale ?",
         answer:
-          "Waltio met à jour ses calculs en suivant les évolutions BOFiP. La doctrine PMP (art. 150 VH bis CGI) est stable depuis 2019. Si une évolution majeure survient (ex : nouveau régime DeFi, fiscalité spécifique NFT), Waltio communique les changements en amont de la période fiscale.",
+          "Waltio met à jour ses calculs en suivant les évolutions BOFiP. La méthode de calcul (art. 150 VH bis CGI) est stable depuis 2019. Si une évolution majeure survient (ex : nouveau régime DeFi, fiscalité spécifique NFT), Waltio communique les changements en amont de la période fiscale.",
       },
       {
         question: "Mes données sont-elles en sécurité chez Waltio ?",
@@ -608,9 +608,9 @@ export const partnerReviews: PartnerReview[] = [
     ],
     whyBuyNow: [
       {
-        reason: "Le seul outil qui produit un Cerfa 2086 conforme à Bercy",
+        reason: "Un rapport Cerfa 2086 + 3916-bis conçu pour la France",
         description:
-          "La méthode du prix moyen pondéré (PMP) imposée par l'art. 150 VH bis CGI est native dans Waltio. Vous téléchargez, vous téléversez sur impots.gouv.fr, c'est fini. Aucun autre SaaS international (Koinly, CoinTracking) ne le fait pour la France.",
+          "La méthode globale imposée par l'art. 150 VH bis CGI est native dans Waltio. Vous téléchargez le rapport et vous recopiez les chiffres sur impots.gouv.fr (le site n'accepte aucun fichier).",
       },
       {
         reason: "Évite 750 € (ou 1 500 €) d'amende par compte 3916-bis non déclaré",
@@ -635,7 +635,7 @@ export const partnerReviews: PartnerReview[] = [
     ],
     risksAvoided: [
       "Amende de 750 € (1 500 € au-delà de 50 000 €) par compte étranger crypto non déclaré (3916-bis, art. 1736, X du CGI)",
-      "Redressement fiscal sur plus-values mal calculées (méthode FIFO au lieu de PMP)",
+      "Redressement fiscal sur plus-values mal calculées (méthode FIFO au lieu de la méthode globale)",
       "Oubli des airdrops, staking rewards, swaps DeFi (revenus imposables — moment exact non tranché officiellement, à vérifier)",
       "Erreur déclaration aboutissant à intérêts de retard 0,2%/mois + majoration 10-80%",
     ],

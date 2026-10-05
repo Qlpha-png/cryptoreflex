@@ -191,7 +191,7 @@ export default function ProfitLossCalculatorPage() {
               <ArrowRight className="h-4 w-4" />
             </div>
             <div className="mt-1 text-xs text-muted">
-              Generez votre PDF declaratif pre-rempli en 30 secondes.
+              Préparez le récapitulatif de votre formulaire 2086, ligne par ligne.
             </div>
           </Link>
         </section>

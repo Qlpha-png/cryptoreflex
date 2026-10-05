@@ -54,7 +54,6 @@ const ALLOWED_TAGS = new Set([
   "news-mdx",         // pages /actualites + /actualites/[slug] (Pilier 1)
   "ta-articles",      // analyses techniques /analyses-tech/[slug] (Pilier 2)
   "events",           // calendrier /calendrier (Pilier 4)
-  "community-stats",  // /api/community-stats (LiveCommunityStats Footer + Pro)
   // Tags CoinGecko (étude #12 2026-05-02) — busts ciblés via cron orchestrator
   // ou debug admin. Le pattern `coingecko:crypto:<id>` est validé séparément
   // (whitelist dynamique sur le préfixe + slug whitelist coingeckoId).
