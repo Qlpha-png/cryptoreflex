@@ -243,12 +243,14 @@ async function checkOrchestrator() {
     const r = await fetch(`${kvUrl}/get/${encodeURIComponent("cron:orchestrator:last")}`, { headers: { Authorization: `Bearer ${kvToken}` }, signal: AbortSignal.timeout(10_000) });
     const j = await r.json();
     const t = typeof j.result === "string" ? JSON.parse(j.result) : j.result;
-    if (!t?.at) return warn("robots", "orchestrateur quotidien : pas encore de trace (premier passage attendu à 7 h UTC)");
-    const h = (Date.now() - Date.parse(t.at)) / HOUR;
-    if (h > 27) fail("robots", `orchestrateur quotidien (prix, alertes, e-mails, agenda) : dernier passage il y a ${Math.round(h)} h`);
-    const bad = (t.jobs || []).filter((x) => !x.ok);
-    for (const x of bad) (x.critical ? fail : warn)("robots", `orchestrateur : tâche « ${x.name} » en échec (${x.status || x.error || "?"})`);
-    if (h <= 27 && !bad.length) ok("robots", `orchestrateur quotidien passé il y a ${Math.round(h)} h, ${(t.jobs || []).length} tâches réussies`);
+    if (!t?.at) warn("robots", "orchestrateur quotidien : pas encore de trace (premier passage attendu à 7 h UTC)");
+    else {
+      const h = (Date.now() - Date.parse(t.at)) / HOUR;
+      if (h > 27) fail("robots", `orchestrateur quotidien (prix, alertes, e-mails, agenda) : dernier passage il y a ${Math.round(h)} h`);
+      const bad = (t.jobs || []).filter((x) => !x.ok);
+      for (const x of bad) (x.critical ? fail : warn)("robots", `orchestrateur : tâche « ${x.name} » en échec (${x.status || x.error || "?"})`);
+      if (h <= 27 && !bad.length) ok("robots", `orchestrateur quotidien passé il y a ${Math.round(h)} h, ${(t.jobs || []).length} tâches réussies`);
+    }
   } catch (e) {
     warn("robots", `trace de l'orchestrateur illisible : ${e.message}`);
   }
