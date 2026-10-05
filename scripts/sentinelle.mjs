@@ -25,6 +25,9 @@ const UA = "cryptoreflex-sentinelle/1.0 (+https://www.cryptoreflex.fr)";
 const HOUR = 3_600_000;
 
 const results = []; // { area, level: "ok"|"warn"|"fail", msg }
+/* 05/10/2026 (Kev : « un truc sans jeton et sans devoir que je l'actualise ») : réparations SANS IA décidées ici, exécutées par
+   .github/workflows/sentinelle.yml (relancer la publication du jour, l'orchestrateur de secours, un robot GitHub en échec). */
+const repairs = { dailyContent: null, orchestrator: null, rerun: [] };
 const ok = (area, msg) => results.push({ area, level: "ok", msg });
 const warn = (area, msg) => results.push({ area, level: "warn", msg });
 const fail = (area, msg) => results.push({ area, level: "fail", msg });
@@ -96,8 +99,10 @@ async function checkAnalyses() {
     const last = dates.map((m) => m[1]).sort().pop();
     const h = (Date.now() - Date.parse(last + "T04:30:00Z")) / HOUR;
     const n = new Set(dates.filter((m) => m[1] === last).map((m) => m[2])).size;
-    if (h > 36) fail("fraîcheur", `dernière analyse technique du ${last} (robot des analyses en panne ?)`);
+    const today = new Date().toISOString().slice(0, 10), hourUtc = new Date().getUTCHours();
+    if (h > 36) { fail("fraîcheur", `dernière analyse technique du ${last} (robot des analyses en panne ?)`); repairs.dailyContent ??= "analyses périmées"; }
     else if (n < 5) warn("fraîcheur", `${n} analyse(s) technique(s) sur 5 le ${last}`);
+    if ((last < today && hourUtc >= 6) || (last === today && n < 5)) repairs.dailyContent ??= `analyses du jour incomplètes (${last === today ? n : 0}/5)`;
     else ok("fraîcheur", `5 analyses techniques le ${last}`);
   } catch (e) {
     warn("fraîcheur", `page des analyses illisible : ${e.message}`);
@@ -114,7 +119,7 @@ async function checkFreshness() {
     if (!dates.length) fail("fraîcheur", "flux RSS sans date de publication");
     else {
       const h = (Date.now() - last) / HOUR;
-      if (h > 36) fail("fraîcheur", `dernière actu publiée il y a ${Math.round(h)} h (robot d'actus en panne ?)`);
+      if (h > 36) { fail("fraîcheur", `dernière actu publiée il y a ${Math.round(h)} h (robot d'actus en panne ?)`); repairs.dailyContent ??= "actus périmées"; }
       else ok("fraîcheur", `dernière actu il y a ${Math.round(h)} h`);
     }
   } catch (e) {
@@ -183,6 +188,10 @@ async function checkRobots() {
     const broken = [...latest.values()].filter((w) => w.conclusion === "failure");
     if (broken.length) for (const w of broken) fail("robots", `tâche « ${w.name} » en échec (${w.html_url})`);
     else ok("robots", `${latest.size} tâches GitHub, aucune en échec sur 26 h`);
+    for (const w of broken) {
+      if (/daily-content\.yml$/.test(w.path || "")) repairs.dailyContent ??= "publication du jour en échec";
+      else if ((w.run_attempt ?? 1) === 1 && !/audit-navigateur|e2e|coolify-crons/.test(w.path || "")) repairs.rerun.push({ id: w.id, name: w.name });
+    }
   } catch (e) {
     warn("robots", `liste des tâches GitHub illisible : ${e.message}`);
   }
@@ -246,7 +255,7 @@ async function checkOrchestrator() {
     if (!t?.at) warn("robots", "orchestrateur quotidien : pas encore de trace (premier passage attendu à 7 h UTC)");
     else {
       const h = (Date.now() - Date.parse(t.at)) / HOUR;
-      if (h > 27) fail("robots", `orchestrateur quotidien (prix, alertes, e-mails, agenda) : dernier passage il y a ${Math.round(h)} h`);
+      if (h > 27) { fail("robots", `orchestrateur quotidien (prix, alertes, e-mails, agenda) : dernier passage il y a ${Math.round(h)} h`); repairs.orchestrator = `dernier passage il y a ${Math.round(h)} h`; }
       const bad = (t.jobs || []).filter((x) => !x.ok);
       for (const x of bad) (x.critical ? fail : warn)("robots", `orchestrateur : tâche « ${x.name} » en échec (${x.status || x.error || "?"})`);
       if (h <= 27 && !bad.length) ok("robots", `orchestrateur quotidien passé il y a ${Math.round(h)} h, ${(t.jobs || []).length} tâches réussies`);
@@ -419,5 +428,7 @@ const lines = [
   "</details>",
 ];
 writeFileSync(REPORT, lines.join("\n") + "\n");
+writeFileSync(path.join(path.dirname(REPORT), "sentinelle-repairs.json"), JSON.stringify(repairs, null, 1));
+if (repairs.dailyContent || repairs.orchestrator || repairs.rerun.length) console.log("\nRéparations proposées :", JSON.stringify(repairs));
 console.log(lines.join("\n"));
 process.exit(fails.length ? 1 : 0);

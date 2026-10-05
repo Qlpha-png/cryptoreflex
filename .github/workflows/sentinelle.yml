@@ -17,6 +17,11 @@ on:
     - cron: "17 * * * *" # contrôle léger, toutes les heures
     - cron: "35 5 * * *" # contrôle complet, 7 h 35 à Paris (après le robot d'actus de 4 h 30 UTC)
   deployment_status:
+  # 05/10/2026 : juste après chaque publication du jour (déclenchement fiable : les tâches programmées de GitHub prennent
+  # souvent plusieurs heures de retard) — contrôle, puis réparation automatique si la publication a raté.
+  workflow_run:
+    workflows: ["Daily content generator (news + TA)"]
+    types: [completed]
   workflow_dispatch:
     inputs:
       full:
@@ -27,7 +32,8 @@ on:
 permissions:
   contents: write
   issues: write
-  actions: read
+  # write : relancer un robot (publication du jour, orchestrateur de secours, nouvelle tentative d'un robot en échec)
+  actions: write
 
 concurrency:
   group: sentinelle
@@ -137,6 +143,46 @@ jobs:
                 await github.rest.issues.update({ ...context.repo, issue_number: issue.number, state: "closed" });
               }
             }
+
+      # 05/10/2026 (Kev : « un truc sans jeton et sans devoir que je l'actualise ») : réparations SANS IA, décidées par
+      # scripts/sentinelle.mjs (sentinelle-repairs.json) avec garde-fous anti-boucle :
+      #  - publication du jour ratée ou incomplète (actus périmées, moins de 5 analyses) → relancée (elle ne recrée que ce qui
+      #    manque), au plus 3 passages par jour et jamais pendant qu'une autre tourne ;
+      #  - orchestrateur quotidien sans passage depuis plus de 27 h → lancement de secours, au plus une fois toutes les 20 h ;
+      #  - autre robot GitHub en échec → une seule nouvelle tentative des étapes en échec.
+      - name: Réparations automatiques (sans IA)
+        if: always()
+        continue-on-error: true
+        uses: actions/github-script@v9
+        with:
+          script: |
+            const fs = require("fs");
+            if (!fs.existsSync("sentinelle-repairs.json")) return core.info("pas de décision de réparation");
+            const R = JSON.parse(fs.readFileSync("sentinelle-repairs.json", "utf8"));
+            const runsOf = async (wf) => (await github.rest.actions.listWorkflowRuns({ ...context.repo, workflow_id: wf, per_page: 20 })).data.workflow_runs;
+            const today = new Date().toISOString().slice(0, 10), done = [];
+            if (R.dailyContent) {
+              const runs = await runsOf("daily-content.yml");
+              const busy = runs.some((r) => r.status !== "completed");
+              const n = runs.filter((r) => r.created_at.startsWith(today)).length;
+              if (busy) core.info("publication du jour déjà en cours : rien à relancer");
+              else if (n >= 3) done.push(`publication du jour NON relancée (${R.dailyContent}) : déjà ${n} passages aujourd'hui, intervention humaine nécessaire`);
+              else { await github.rest.actions.createWorkflowDispatch({ ...context.repo, workflow_id: "daily-content.yml", ref: "main" }); done.push(`publication du jour relancée (${R.dailyContent})`); }
+            }
+            if (R.orchestrator) {
+              const runs = await runsOf("coolify-crons.yml");
+              if (runs.some((r) => Date.now() - Date.parse(r.created_at) < 20 * 3600e3)) core.info("orchestrateur : lancement de secours déjà fait il y a moins de 20 h");
+              else { await github.rest.actions.createWorkflowDispatch({ ...context.repo, workflow_id: "coolify-crons.yml", ref: "main", inputs: { job: "daily-orchestrator" } }); done.push(`orchestrateur quotidien relancé en secours (${R.orchestrator})`); }
+            }
+            for (const r of R.rerun || []) {
+              try { await github.rest.actions.reRunWorkflowFailedJobs({ ...context.repo, run_id: r.id }); done.push(`« ${r.name} » : nouvelle tentative lancée`); }
+              catch (e) { done.push(`« ${r.name} » : nouvelle tentative impossible (${e.message})`); }
+            }
+            if (!done.length) return core.info("rien à réparer");
+            core.info(done.join("\n"));
+            fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, `\n### Réparations automatiques\n\n${done.map((d) => "- " + d).join("\n")}\n`);
+            const { data: open } = await github.rest.issues.listForRepo({ ...context.repo, state: "open", labels: "sentinelle", per_page: 5 });
+            if (open[0]) await github.rest.issues.createComment({ ...context.repo, issue_number: open[0].number, body: `🔧 Réparations automatiques (sans IA) :\n\n${done.map((d) => "- " + d).join("\n")}` });
 
       # 05/10/2026 : 13 tickets d'échec de robots restaient ouverts depuis des mois (jamais fermés, donc plus lus). Ménage à
       # chaque passage : un ticket est fermé dès que son robot a réussi APRÈS son ouverture, et les doublons d'un même robot
