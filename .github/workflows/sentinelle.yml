@@ -35,8 +35,9 @@ concurrency:
 
 jobs:
   sentinelle:
-    # après un déploiement : seulement les déploiements de production réussis
-    if: github.event_name != 'deployment_status' || (github.event.deployment_status.state == 'success' && github.event.deployment.environment == 'Production')
+    # après un déploiement : seulement les déploiements de production réussis (Vercel nomme l'environnement
+    # « Production – cryptoreflex », d'où startsWith ; constaté le 05/10/2026)
+    if: github.event_name != 'deployment_status' || (github.event.deployment_status.state == 'success' && startsWith(github.event.deployment.environment, 'Production'))
     runs-on: ubuntu-latest
     timeout-minutes: 45
     env:
