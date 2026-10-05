@@ -108,4 +108,29 @@ describe("price-providers cascade", () => {
     // Pas de "mantra-dao" : c'est l'OLD ERC-20 mort.
     expect(STATIC_FALLBACK["mantra-dao"]).toBeUndefined();
   });
+
+  it("binanceProvider : data-api.binance.vision, et refus d'une paire retirée au ticker figé (05/10/2026)", async () => {
+    const realFetch = globalThis.fetch;
+    const urls: string[] = [];
+    let closeTime = Date.now() - 60_000;
+    globalThis.fetch = vi.fn(async (input: string | URL | Request) => {
+      const u = String(input);
+      urls.push(u);
+      const body = u.includes("/ticker/24hr")
+        ? { symbol: "XMRUSDT", lastPrice: "118.70", priceChangePercent: "0", volume: "0", quoteVolume: "0", openPrice: "118.70", closeTime }
+        : [];
+      return new Response(JSON.stringify(body), { status: 200, headers: { "content-type": "application/json" } });
+    }) as unknown as typeof fetch;
+    try {
+      const { PROVIDERS } = await import("@/lib/price-providers");
+      const bp = PROVIDERS.find((p) => p.name === "binance")!;
+      const meta = { coingeckoId: "monero", symbol: "XMR", name: "Monero" };
+      expect((await bp.fetch(meta))?.priceUsd).toBe(118.7); // ticker frais : accepté
+      expect(urls.every((u) => u.startsWith("https://data-api.binance.vision/api/v3/"))).toBe(true);
+      closeTime = Date.UTC(2026, 8, 9); // dernier échange le 09/09/2026 : paire retirée
+      expect(await bp.fetch(meta)).toBeNull();
+    } finally {
+      globalThis.fetch = realFetch;
+    }
+  });
 });

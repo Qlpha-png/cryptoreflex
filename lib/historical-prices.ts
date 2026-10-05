@@ -182,7 +182,10 @@ const CRYPTOCOMPARE_BASE = "https://min-api.cryptocompare.com/data/v2";
 // Limitations :
 //  - Prix en USDT (≈ USD) → convertis en EUR via ratio EUR/USD
 //  - Stablecoins peg USD (USDT, USDC, DAI) → hardcodés à 1.0 USD
-const BINANCE_BASE = "https://api.binance.com/api/v3";
+/* 05/10/2026 : point d'accès public des données de marché (data-api.binance.vision, documenté par Binance : klines et
+   tickers, sans clé), comme le carnet d'ordres et lib/fx.ts. api.binance.com répond 451 aux États-Unis (build Vercel :
+   ~300 échecs par build) et ne répond plus du tout depuis la France (fonctions en cdg1 : 8 s perdues par appel). */
+const BINANCE_BASE = "https://data-api.binance.vision/api/v3";
 
 // Override pour les coingeckoIds dont la pair Binance ne suit pas le pattern
 // "<CC_SYMBOL>USDT". Stablecoins peg USD = pas de pair (price = 1 USD).
@@ -190,6 +193,11 @@ const BINANCE_PAIR_OVERRIDE: Record<string, string | "__USD_1__"> = {
   tether: "__USD_1__", // USDT/USDT n'existe pas
   "usd-coin": "__USD_1__", // USDC peg 1:1
   dai: "__USD_1__", // DAI peg 1:1
+  // MATIC migré 1:1 en POL : MATICUSDT retirée (dernière bougie 10/09/2024), POLUSDT cotée depuis le 13/09/2024 — même
+  // paire que le prix en direct (lib/binance-mapping.ts)
+  "matic-network": "POLUSDT",
+  // RNDR renommé RENDER par Binance (RNDRUSDT : dernière bougie 22/07/2024, RENDERUSDT depuis le 26/07/2024) — cf. lib/symbol-overrides.ts
+  "render-token": "RENDERUSDT",
   // Cryptos non-listées Binance → null (force fallback)
   // (laissé vide pour l'instant, fallback CC/CG prendra le relais)
 };
@@ -269,11 +277,17 @@ async function _fetchFromBinance(
         next: { revalidate: 60 },
         signal: AbortSignal.timeout(8000),
       });
+      // 400 = paire non listée sur Binance (ex. KASUSDT, OKBUSDT, CROUSDT) : on passe à la source suivante sans bruit dans les journaux
+      if (res.status === 400 && all.length === 0) return [];
       if (!res.ok) {
         throw new Error(`Binance ${pair} → ${res.status}`);
       }
       const klines = (await res.json()) as Kline[];
       if (!Array.isArray(klines) || klines.length === 0) break;
+      /* Paire retirée de Binance : l'API sert encore ses anciennes bougies (contrôle du 05/10/2026 : XMR arrêtée le
+         20/02/2024, MATIC 09/2024, MKR 09/2025, TON 30/06/2026…). Dernière bougie de plus de 3 jours (6 h en horaire) →
+         série refusée, source suivante, sinon on afficherait le prix d'il y a des mois. */
+      if (round === 0 && Date.now() - klines[klines.length - 1][0] > (hourly ? 6 * 3600_000 : 3 * SECONDS_PER_DAY * 1000)) return [];
       all = klines.concat(all);
       endTime = klines[0][0] - 1;
       if (klines.length < limit) break; // début de la cotation atteint
@@ -465,6 +479,7 @@ async function _fetchFromCryptoCompare(
   try {
     // FIX P0 2026-05-06 — timeout 8s
     const res = await fetch(url, {
+      headers: { authorization: `Apikey ${process.env.CRYPTOCOMPARE_API_KEY ?? ""}` },
       next: { revalidate: 60 },
       signal: AbortSignal.timeout(8000),
     });
@@ -536,7 +551,8 @@ async function _fetchHistoricalRange(
  * Stratégie post-fix 2026-05-09 (chaîne 3 sources) :
  *   1. Binance Public API : 1200 req/min, gratuit, sans clé, 99% des cryptos
  *      liquides via pair USDT. Source primaire pour stabilité.
- *   2. CryptoCompare : fonctionne 5.5 ans sans clé pour les cryptos non-Binance.
+ *   2. CryptoCompare : seulement avec CRYPTOCOMPARE_API_KEY. CoinDesk (ex-CryptoCompare) a fermé son offre gratuite le
+ *      21/05/2026 : sans clé chaque appel renvoie 401, on saute donc la source sans appel réseau (comme lib/cryptocompare.ts).
  *   3. CoinGecko : fallback final (rate-limited mais couvre les exotiques).
  *
  * Seuil de validité : 30 points utilisables (1 mois de daily) avant de passer
@@ -557,9 +573,9 @@ async function _fetchHistoricalPrices(
     );
   }
 
-  // ---- Source 2 : CryptoCompare (5+ ans sans clé) ----
+  // ---- Source 2 : CryptoCompare (abonnement payant uniquement depuis le 21/05/2026) ----
   const ccSymbol = CG_TO_CC[coinId];
-  if (ccSymbol) {
+  if (ccSymbol && process.env.CRYPTOCOMPARE_API_KEY) {
     const ccPoints = await _fetchFromCryptoCompare(ccSymbol, days);
     if (ccPoints.length >= 30) {
       return ccPoints;
@@ -759,7 +775,17 @@ async function _fetchConversionRate(
     const fx = await fiatPerUsd();
     const FIAT_TO_USD: Record<string, number> = { usd: 1, eur: 1 / fx.eur, gbp: 1 / fx.gbp, chf: 1 / fx.chf };
 
-    const { getPriceSnapshot } = await import("@/lib/price-source");
+    /* 05/10/2026 : getPriceSnapshot sert d'abord le cache KV des 50 premières cryptos, marqué source « static » → le test
+       ci-dessous le rejetait et CHAQUE taux partait sur CoinGecko simple/price (714 refus 429 en une heure en production,
+       taux « indisponible » sur les convertisseurs). On interroge directement la cascade des places de marché (Binance,
+       Kraken, Coinbase…) ; « static » (prix figés de mai) reste refusé. */
+    const { fetchPriceCascade } = await import("@/lib/price-providers");
+    const { applySymbolOverride } = await import("@/lib/symbol-overrides");
+    const getPriceSnapshot = async (id: string) => {
+      const sym = Object.keys(COIN_IDS).find((s) => COIN_IDS[s] === id) ?? id;
+      const r = await fetchPriceCascade({ coingeckoId: id, symbol: applySymbolOverride(id, sym.toUpperCase()), name: COIN_NAMES[sym] ?? id });
+      return { priceUsd: r?.data.priceUsd ?? 0, source: r?.source ?? "static", fetchedAt: new Date().toISOString() };
+    };
     const now = new Date().toISOString();
 
     // Crypto → Fiat

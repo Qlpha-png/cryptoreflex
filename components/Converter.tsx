@@ -91,7 +91,7 @@ export default function Converter({
         <div>
           <h2 className="font-bold text-xl text-white">Convertisseur Crypto</h2>
           <p className="text-sm text-muted">
-            Taux en temps réel via CoinGecko — supporte cross-crypto et fiat
+            Taux du marché (Binance, Kraken, Coinbase…) — supporte cross-crypto et fiat
           </p>
         </div>
       </div>

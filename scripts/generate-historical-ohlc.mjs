@@ -45,7 +45,8 @@ const TICKER_OVERRIDE = {
 };
 
 const YEARS = [2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026];
-const BINANCE = "https://api.binance.com/api/v3/klines";
+// 05/10/2026 : données de marché publiques (api.binance.com ne répond plus depuis la France et répond 451 aux États-Unis)
+const BINANCE = "https://data-api.binance.vision/api/v3/klines";
 
 function roundSig(n, sig = 6) {
   if (!Number.isFinite(n) || n === 0) return n;

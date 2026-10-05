@@ -23,7 +23,7 @@ import { withHreflang } from "@/lib/seo-alternates";
 const PAGE_TITLE = "Convertisseur crypto temps réel — toutes les paires";
 const OG_TITLE = "Convertisseur crypto temps réel — Cryptoreflex";
 const PAGE_DESCRIPTION =
-  "Convertis BTC, ETH, SOL, USDT et 12 autres cryptos vers EUR/USD avec les taux CoinGecko temps réel. Toutes les paires populaires en un clic.";
+  "Convertis BTC, ETH, SOL, USDT et 12 autres cryptos vers EUR/USD au taux du marché (Binance, Kraken, Coinbase…). Toutes les paires populaires en un clic.";
 
 export const metadata: Metadata = {
   title: PAGE_TITLE,
@@ -69,7 +69,7 @@ export default function ConvertisseurHub() {
         <header className="text-center mb-12">
           <span className="inline-flex items-center gap-1.5 rounded-full border border-success-border bg-success-soft px-3 py-1 text-[10px] font-mono font-bold text-success-fg uppercase tracking-wider mb-4">
             <Globe className="h-3 w-3" aria-hidden="true" />
-            Taux CoinGecko live
+            Taux du marché en direct
           </span>
           <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-fg leading-tight">
             Convertisseur{" "}
@@ -77,8 +77,8 @@ export default function ConvertisseurHub() {
           </h1>
           <p className="mt-4 text-base sm:text-lg text-fg/75 max-w-2xl mx-auto leading-relaxed">
             {TOP_PAIRS.length} paires de conversion populaires.
-            BTC, ETH, SOL, USDT, USDC vers EUR ou USD — taux CoinGecko
-            mis à jour chaque minute.
+            BTC, ETH, SOL, USDT, USDC vers EUR ou USD — taux du marché, à jour
+            à quelques minutes près.
           </p>
         </header>
 

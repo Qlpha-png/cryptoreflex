@@ -95,7 +95,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   return {
     title: `Convertir ${fromUp} en ${toUp} (${fromName}) en temps réel`,
-    description: `Combien vaut 1 ${fromName} (${fromUp}) en ${toName} (${toUp}) aujourd'hui ? Convertisseur ${fromUp}/${toUp} gratuit, taux CoinGecko mis à jour toutes les minutes.`,
+    description: `Combien vaut 1 ${fromName} (${fromUp}) en ${toName} (${toUp}) aujourd'hui ? Convertisseur ${fromUp}/${toUp} gratuit, au taux du marché (Binance, Kraken, Coinbase…).`,
     alternates: withHreflang(url),
     openGraph: {
       title: `${fromUp} en ${toUp} — Convertisseur temps réel`,
@@ -172,9 +172,9 @@ export default async function PairPage({ params }: PageProps) {
     {
       question: `Combien vaut 1 ${fromUp} en ${toUp} aujourd'hui ?`,
       answer: rate?.rate != null
-        ? `Au taux actuel CoinGecko, 1 ${fromName} (${fromUp}) vaut environ ${formatRate(
+        ? `Au dernier relevé de cette page, 1 ${fromName} (${fromUp}) valait environ ${formatRate(
             rate.rate
-          )} ${toUp}. Ce taux est mis à jour toutes les 60 secondes.`
+          )} ${toUp} (taux du marché : Binance, Kraken, Coinbase…, CoinGecko en secours). Le convertisseur ci-dessus donne le taux du moment.`
         : `Le taux ${fromUp}/${toUp} est temporairement indisponible. Réessayez dans une minute.`,
     },
     {
@@ -334,7 +334,7 @@ export default async function PairPage({ params }: PageProps) {
                 ) : null}
               </p>
               <p className="mt-2 text-xs text-muted">
-                Clôtures quotidiennes (Binance, repli CryptoCompare puis CoinGecko), prix en dollars convertis en euros à un taux de change constant ;
+                Clôtures quotidiennes (Binance, repli CoinGecko), prix en dollars convertis en euros à un taux de change constant ;
                 valeurs indicatives, à recouper avant toute décision. Ce n&apos;est pas un conseil en investissement.
               </p>
             </section>
@@ -381,9 +381,9 @@ export default async function PairPage({ params }: PageProps) {
               Cette page vous permet de convertir{" "}
               <strong className="text-white">{fromName} ({fromUp})</strong> en{" "}
               <strong className="text-white">{toName} ({toUp})</strong> avec le taux
-              de change marché actuel. Les données proviennent de l'API CoinGecko,
-              agrégateur qui combine les prix de centaines de plateformes
-              (Binance, Coinbase, Kraken…). Le taux est rafraîchi toutes les 60 secondes.
+              de change marché actuel. Le taux vient directement des places de marché
+              (Binance, Kraken, Coinbase…), avec CoinGecko en secours ; il date au plus
+              de quelques minutes.
             </p>
             <p className="text-white/70 mt-3">
               Pour une conversion réelle (achat / vente), passez par une plateforme

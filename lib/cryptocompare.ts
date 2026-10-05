@@ -105,7 +105,7 @@ async function _fetchBatch(): Promise<Record<string, CryptoComparePriceData>> {
   // (constaté en prod). On ne tente même pas le réseau : retour vide → la
   // cascade tombe instantanément sur CoinGecko (chaîne gratuite déjà en
   // place), sans 401 ni spam de logs. Pour réactiver CC : poser
-  // CRYPTOCOMPARE_API_KEY (offre gratuite cryptocompare.com).
+  // CRYPTOCOMPARE_API_KEY (abonnement CoinDesk payant : l'offre gratuite a fermé le 21/05/2026).
   if (!process.env.CRYPTOCOMPARE_API_KEY) {
     return {};
   }

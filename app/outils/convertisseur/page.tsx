@@ -25,12 +25,12 @@ export const metadata: Metadata = {
   // BATCH 37 — fix audit SEO P0 : title enrichi avec FR 2026 + brand
   title: "Convertisseur crypto FR 2026 — BTC/ETH/SOL en EUR live",
   description:
-    "Convertisseur crypto temps réel : BTC, ETH, SOL et 12 autres en EUR/USD. Taux CoinGecko live, gratuit, sans inscription. 100 % FR.",
+    "Convertisseur crypto temps réel : BTC, ETH, SOL et 12 autres en EUR/USD. Taux du marché en direct, gratuit, sans inscription. 100 % FR.",
   alternates: withHreflang("https://www.cryptoreflex.fr/outils/convertisseur"),
   openGraph: {
     title: "Convertisseur crypto temps réel — Cryptoreflex",
     description:
-      "Conversion BTC, ETH, SOL, USDT vers EUR/USD avec les taux CoinGecko. Cross-crypto supporté.",
+      "Conversion BTC, ETH, SOL, USDT vers EUR/USD au taux du marché. Cross-crypto supporté.",
     url: "https://www.cryptoreflex.fr/outils/convertisseur",
     type: "website",
   },
@@ -40,12 +40,12 @@ const FAQ_ITEMS = [
   {
     question: "D'où viennent les taux de conversion ?",
     answer:
-      "Les taux proviennent de l'API publique CoinGecko, agrégateur de référence qui combine les prix de centaines d'exchanges (Binance, Coinbase, Kraken…). Les données sont rafraîchies toutes les 60 secondes pour limiter les requêtes API.",
+      "Les taux proviennent directement des places de marché (Binance, Kraken, Coinbase…), avec CoinGecko en secours. Ils sont relevés à la demande et datent au plus de quelques minutes.",
   },
   {
     question: "Puis-je convertir entre deux cryptos (cross-crypto) ?",
     answer:
-      "Oui — par exemple BTC → ETH ou SOL → USDT. Le calcul passe par l'EUR comme devise pivot, ce qui garantit la cohérence avec les autres conversions.",
+      "Oui — par exemple BTC → ETH ou SOL → USDT. Le calcul rapporte le prix des deux cryptos dans une même devise, ce qui garantit la cohérence avec les autres conversions.",
   },
   {
     question: "Les frais d'exchange sont-ils inclus ?",
@@ -68,12 +68,12 @@ export default function ConvertisseurPage() {
             slug: "convertisseur",
             name: "Convertisseur crypto temps réel Cryptoreflex",
             description:
-              "Convertisseur BTC, ETH, SOL, USDT et 11 autres cryptos vers EUR/USD avec taux CoinGecko en temps réel.",
+              "Convertisseur BTC, ETH, SOL, USDT et 11 autres cryptos vers EUR/USD au taux du marché.",
             featureList: [
               "15 cryptos majeures (BTC, ETH, SOL, BNB, XRP, ADA, USDT, USDC…)",
               "Conversion fiat (EUR, USD)",
-              "Cross-crypto (BTC vers ETH, etc.) via EUR pivot",
-              "Taux CoinGecko rafraîchis toutes les 60 secondes",
+              "Cross-crypto (BTC vers ETH, etc.)",
+              "Taux du marché (Binance, Kraken, Coinbase…) à jour à quelques minutes près",
               "Aucune inscription, aucune publicité",
               "Mode pleine page ou widget embeddable",
             ],
@@ -82,7 +82,7 @@ export default function ConvertisseurPage() {
               "BTC EUR",
               "ETH EUR",
               "convertisseur Bitcoin",
-              "taux CoinGecko",
+              "taux crypto",
             ],
           }),
           breadcrumbSchema([
@@ -99,14 +99,14 @@ export default function ConvertisseurPage() {
           <div className="max-w-3xl">
             <span className="inline-flex items-center gap-2 rounded-full border border-accent-green/30 bg-accent-green/10 px-3 py-1 text-xs font-semibold text-accent-green">
               <Zap className="h-3.5 w-3.5" />
-              Temps réel — CoinGecko
+              Temps réel — taux du marché
             </span>
             <h1 className="mt-4 text-4xl sm:text-5xl font-extrabold tracking-tight text-white">
               Convertisseur <span className="gradient-text">crypto</span>
             </h1>
             <p className="mt-4 text-lg text-white/70">
               15 cryptos, 2 fiats, toutes les combinaisons possibles. Taux
-              actualisés toutes les minutes, sans pub ni inscription.
+              à jour à quelques minutes près, sans pub ni inscription.
             </p>
           </div>
 
@@ -144,7 +144,7 @@ export default function ConvertisseurPage() {
             <Card
               icon={<Zap className="h-6 w-6" />}
               title="Taux en temps réel"
-              text="Refresh toutes les 60 s via CoinGecko, l'agrégateur le plus utilisé du marché."
+              text="Taux relevé à la demande sur les places de marché (Binance, Kraken, Coinbase…), CoinGecko en secours : quelques minutes de décalage au plus."
             />
             <Card
               icon={<Globe className="h-6 w-6" />}

@@ -19,7 +19,9 @@ import type {
   ProviderPriceData,
 } from "./types";
 
-const BINANCE_BASE = "https://api.binance.com/api/v3";
+/* 05/10/2026 : point d'accès public des données de marché — api.binance.com répond 451 aux États-Unis et ne répond plus
+   depuis la France (4 s perdues par appel en cdg1 avant de passer à Kraken). Voir lib/historical-prices.ts. */
+const BINANCE_BASE = "https://data-api.binance.vision/api/v3";
 
 interface BinanceTicker24h {
   symbol: string;
@@ -28,6 +30,8 @@ interface BinanceTicker24h {
   volume: string;
   quoteVolume: string;
   openPrice: string;
+  /** fin de la fenêtre glissante 24 h (ms) — proche de maintenant pour une paire active */
+  closeTime: number;
 }
 
 async function _binanceTicker(pair: string): Promise<BinanceTicker24h | null> {
@@ -37,7 +41,11 @@ async function _binanceTicker(pair: string): Promise<BinanceTicker24h | null> {
       signal: AbortSignal.timeout(4000),
     });
     if (!res.ok) return null;
-    return (await res.json()) as BinanceTicker24h;
+    const t = (await res.json()) as BinanceTicker24h;
+    /* Paire retirée de Binance : le ticker répond encore avec un dernier prix figé (05/10/2026 : XMRUSDT « 118,70 $ »,
+       MKRUSDT, TONUSDT… arrêtés au 09/09/2026). Plus d'une heure sans échange → on laisse la place de marché suivante. */
+    if (!Number.isFinite(t.closeTime) || Date.now() - t.closeTime > 3600_000) return null;
+    return t;
   } catch {
     return null;
   }

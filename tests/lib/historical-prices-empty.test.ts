@@ -36,7 +36,8 @@ describe("fetchHistoricalPrices et séries vides", () => {
     expect(H.calls).toBeGreaterThan(callsAfterFirst); // nouvel essai réseau, pas un vide resservi
   });
   it("une série non vide est mémorisée : le 2e appel ne refait aucune requête", async () => {
-    const klines = Array.from({ length: 40 }, (_, i) => [Date.UTC(2026, 8, 1) + i * 86_400_000, "1", "1", "1", String(100 + i), "0", 0, "0"]);
+    /* bougies se terminant aujourd'hui : une série dont la dernière bougie a plus de 3 jours est refusée (paire retirée) */
+    const klines = Array.from({ length: 40 }, (_, i) => [Date.now() - (39 - i) * 86_400_000, "1", "1", "1", String(100 + i), "0", 0, "0"]);
     globalThis.fetch = vi.fn(async (url: string | URL | Request) => {
       H.calls++;
       const u = String(url);
