@@ -39,276 +39,1181 @@
   },
   "frais": {
     "bitpanda": {
-      "pdf": "53c828cd48d1fad5"
+      "https://cdn.bitpanda.com/terms-and-conditions/cost-transparency-crypto-bitpanda-fr-latest.pdf": {
+        "pdf": "53c828cd48d1fad5"
+      },
+      "https://www.bitpanda.com/fr/limits": {
+        "jetons": "ea5a6816a19d361e",
+        "liste": [
+          "100000000€",
+          "10000000€",
+          "100000€",
+          "10000€",
+          "1€",
+          "2000000€",
+          "20000€",
+          "300000€",
+          "5000000€",
+          "999999999€"
+        ]
+      }
     },
     "kraken": {
-      "jetons": "abe4a8609d3abeff",
-      "liste": [
-        "0%",
-        "0,0%",
-        "0,00%",
-        "0,000%",
-        "0,001%",
-        "0,003%",
-        "0,005%",
-        "0,006%",
-        "0,007%",
-        "0,0075%",
-        "0,01%",
-        "0,010%",
-        "0,013%",
-        "0,0135%",
-        "0,015%",
-        "0,016%",
-        "0,017%",
-        "0,0175%",
-        "0,018%",
-        "0,02%",
-        "0,0200%",
-        "0,0225%",
-        "0,025%",
-        "0,0275%",
-        "0,03%",
-        "0,035%",
-        "0,04%",
-        "0,045%",
-        "0,05%",
-        "0,050%",
-        "0,055%",
-        "0,06%",
-        "0,060%",
-        "0,07%",
-        "0,070%",
-        "0,075%",
-        "0,08%",
-        "0,080%",
-        "0,09%",
-        "0,1%",
-        "0,10%",
-        "0,12%",
-        "0,13%",
-        "0,15%",
-        "0,16%",
-        "0,18%",
-        "0,2%",
-        "0,20%",
-        "0,22%",
-        "0,25%",
-        "0,28%",
-        "0,3%",
-        "0,30%",
-        "0,35%",
-        "0,38%",
-        "0,4%",
-        "0,40%",
-        "0,6%",
-        "0,60%",
-        "0,8%",
-        "0,80%",
-        "1%",
-        "1,5%",
-        "2%",
-        "20%",
-        "3%"
-      ]
+      "https://www.kraken.com/fr/features/fee-schedule": {
+        "jetons": "abe4a8609d3abeff",
+        "liste": [
+          "0%",
+          "0,0%",
+          "0,00%",
+          "0,000%",
+          "0,001%",
+          "0,003%",
+          "0,005%",
+          "0,006%",
+          "0,007%",
+          "0,0075%",
+          "0,01%",
+          "0,010%",
+          "0,013%",
+          "0,0135%",
+          "0,015%",
+          "0,016%",
+          "0,017%",
+          "0,0175%",
+          "0,018%",
+          "0,02%",
+          "0,0200%",
+          "0,0225%",
+          "0,025%",
+          "0,0275%",
+          "0,03%",
+          "0,035%",
+          "0,04%",
+          "0,045%",
+          "0,05%",
+          "0,050%",
+          "0,055%",
+          "0,06%",
+          "0,060%",
+          "0,07%",
+          "0,070%",
+          "0,075%",
+          "0,08%",
+          "0,080%",
+          "0,09%",
+          "0,1%",
+          "0,10%",
+          "0,12%",
+          "0,13%",
+          "0,15%",
+          "0,16%",
+          "0,18%",
+          "0,2%",
+          "0,20%",
+          "0,22%",
+          "0,25%",
+          "0,28%",
+          "0,3%",
+          "0,30%",
+          "0,35%",
+          "0,38%",
+          "0,4%",
+          "0,40%",
+          "0,6%",
+          "0,60%",
+          "0,8%",
+          "0,80%",
+          "1%",
+          "1,5%",
+          "2%",
+          "20%",
+          "3%"
+        ]
+      },
+      "https://support.kraken.com/articles/360060101312-faq-s-about-buying-instantly": {
+        "jetons": "0b41028676848984",
+        "liste": [
+          "1%"
+        ]
+      },
+      "https://support.kraken.com/articles/360000381846-cash-deposit-options-fees-minimums-and-processing-times-": {
+        "jetons": "94e8648f599a5f05",
+        "liste": [
+          "0,25%",
+          "0,3%",
+          "3,75%"
+        ]
+      },
+      "https://support.kraken.com/articles/360000423043-cash-withdrawal-options-fees-minimums-and-processing-times-": {
+        "jetons": "5abef4cbfd31fbe6",
+        "liste": [
+          "0,35%",
+          "0,5%",
+          "0,50%",
+          "1,5%",
+          "1,50%"
+        ]
+      },
+      "https://support.kraken.com/articles/360048212832-debit-or-credit-card-purchases-with-visa-and-mastercard-": {
+        "jetons": "f40aa31d8ecf0571",
+        "liste": [
+          "10,00€",
+          "5000€"
+        ]
+      }
     },
     "coinhouse": {
-      "pdf": "52179fd876503771"
+      "https://cms-www.coinhouse.com/wp-content/uploads/2026/08/CH_-GrilleTarifaire_Web_FR_AUG26.pdf": {
+        "pdf": "52179fd876503771"
+      },
+      "https://support.coinhouse.com/hc/fr/articles/4889682146450-comment-effectuer-un-achat-de-cryptoactif-sur-coinhouse": {
+        "jetons": "d4c83ef23b41ff1d",
+        "liste": [
+          "10€",
+          "210000€"
+        ]
+      },
+      "https://cms-www.coinhouse.com/wp-content/uploads/2026/06/Politique-·-Execution-Version-Publique-Mai-2026.pdf": {
+        "pdf": "b3f828a6014577d2"
+      },
+      "https://cms-www.coinhouse.com/wp-content/uploads/2026/09/Coinhouse-·-PSCA-·-CGU-Sept-2026-1.pdf": {
+        "pdf": "0d7d80f606422144"
+      },
+      "https://support.coinhouse.com/hc/fr/articles/360016554959-dans-quels-cryptoactifs-puis-je-investir-sur-coinhouse": {
+        "jetons": "b7db2c86d15d2a72",
+        "liste": [
+          "210000€"
+        ]
+      },
+      "https://support.coinhouse.com/hc/fr/articles/12419059991826-qu-est-ce-que-le-compte-euro-et-comment-le-mettre-en-place": {
+        "jetons": "b7db2c86d15d2a72",
+        "liste": [
+          "210000€"
+        ]
+      },
+      "https://www.coinhouse.com/fr/documents-legaux": {
+        "liens": "4305bf95cd6db51b",
+        "liste": [
+          "https://cms-www.coinhouse.com/wp-content/uploads/2025/05/CPS-CGU-Mai-2025.pdf",
+          "https://cms-www.coinhouse.com/wp-content/uploads/2026/02/Coinhouse-Politique-de-cookies-Janv-2026.pdf",
+          "https://cms-www.coinhouse.com/wp-content/uploads/2026/06/Coinhouse-Conditions-generales-du-programme-de-parrainage-VF-juin-26.pdf",
+          "https://cms-www.coinhouse.com/wp-content/uploads/2026/06/Coinhouse-·-Abonnements-payants-CGV-Mai-2026.pdf",
+          "https://cms-www.coinhouse.com/wp-content/uploads/2026/06/Coinhouse-·-Conditions-Generales-Achat-Recurrent-avril-2026.pdf",
+          "https://cms-www.coinhouse.com/wp-content/uploads/2026/06/Coinhouse-·-Mention-Legales-Mai-2026-1.pdf",
+          "https://cms-www.coinhouse.com/wp-content/uploads/2026/06/Coinhouse_-_Conditions_Generales_Staking_-_2026_.pdf",
+          "https://cms-www.coinhouse.com/wp-content/uploads/2026/06/Politique-·-Conservation-Version-Publique-Mai-2026.pdf",
+          "https://cms-www.coinhouse.com/wp-content/uploads/2026/06/Politique-·-Execution-Version-Publique-Mai-2026.pdf",
+          "https://cms-www.coinhouse.com/wp-content/uploads/2026/06/Politique-·-Gestion-Conflits-dinterets-Version-Publique-Mai-2026.pdf",
+          "https://cms-www.coinhouse.com/wp-content/uploads/2026/06/Politique-·-Gestion-Reclamations-Version-Publique-Mai-2026-1.pdf",
+          "https://cms-www.coinhouse.com/wp-content/uploads/2026/08/CH_-GrilleTarifaire_Web_FR_AUG26.pdf",
+          "https://cms-www.coinhouse.com/wp-content/uploads/2026/09/Coinhouse-Politique-de-confidentialite-Septembre-2026.pdf",
+          "https://cms-www.coinhouse.com/wp-content/uploads/2026/09/Coinhouse-·-PSCA-·-CGU-Sept-2026-1.pdf",
+          "https://cms-www.coinhouse.com/wp-content/uploads/2026/09/Conditions-des-operations-promotionnelles-FR-1.pdf"
+        ]
+      }
     },
     "bitstack": {
-      "jetons": "e9b91a66084c24f7",
-      "liste": [
-        "0%",
-        "0,70%",
-        "0,75%",
-        "000€",
-        "1%",
-        "1,00%",
-        "1,25%",
-        "1,50%",
-        "250€",
-        "2€",
-        "3€"
-      ]
+      "https://help.bitstack-app.com/fr/articles/6377515-quels-sont-les-prix-et-les-frais-pratiques-par-bitstack": {
+        "jetons": "37f9748c3d395664",
+        "liste": [
+          "0%",
+          "0,70%",
+          "0,75%",
+          "1%",
+          "1,00%",
+          "1,25%",
+          "1,50%",
+          "1000€",
+          "250€",
+          "2€",
+          "3€"
+        ]
+      },
+      "https://help.bitstack-app.com/fr/articles/12783145-comment-alimenter-mon-compte-euro-bitstack": {
+        "jetons": "f2a132466973bdaa",
+        "liste": [
+          "0,70%",
+          "10€"
+        ]
+      },
+      "https://help.bitstack-app.com/fr/articles/8335761-comment-acheter-du-bitcoin-sur-bitstack": {
+        "jetons": "d78bd2dd99d24978",
+        "liste": [
+          "1€"
+        ]
+      },
+      "https://help.bitstack-app.com/fr/articles/6371263-est-ce-que-bitstack-propose-d-autres-cryptomonnaies-que-le-bitcoin": {
+        "phrases": "2102663b9267c0eb",
+        "liste": [
+          "Politique monétaire prévisible : le Bitcoin est limité à 21 millions d'unités .",
+          "See the License for the specific language governing permissions and limitations under the License."
+        ]
+      },
+      "https://help.bitstack-app.com/fr/articles/6379341-quels-sont-les-modes-de-paiement-disponibles-sur-l-application": {
+        "phrases": "5c7e6a47b62ebf00",
+        "liste": [
+          "Quels sont les prix et les frais pratiqués par Bitstack ?",
+          "See the License for the specific language governing permissions and limitations under the License.",
+          "Écrit par Arthur 30 juillet 2026 Table des matières Les modes de paiement acceptés Bitstack prend en charge les modes de paiement suivants pour les clients euro"
+        ]
+      },
+      "https://help.bitstack-app.com/fr/articles/12784290-comment-effectuer-un-virement-depuis-mon-compte-euro-bitstack": {
+        "phrases": "e797596d5122ba72",
+        "liste": [
+          "See the License for the specific language governing permissions and limitations under the License."
+        ]
+      },
+      "https://cdn.prod.website-files.com/63ea3e6e2856fff9dbd7717e/696564ed52db4078b1297604_Bitstack%20-%20Politique%20tarifaire.pdf": {
+        "pdf": "f878532618ebc4b6"
+      }
     },
     "swissborg": {
-      "jetons": "134eff091386e8c3",
-      "liste": [
-        "0%",
-        "0,1%",
-        "0,10%",
-        "0,12%",
-        "0,16%",
-        "0,25%",
-        "0,5%",
-        "0,75%",
-        "0,99%",
-        "1%",
-        "1,49%",
-        "1,5%",
-        "1,75%",
-        "10%",
-        "100%",
-        "10€",
-        "12,5%",
-        "15%",
-        "2%",
-        "2,25%",
-        "20%",
-        "25%",
-        "3,75%",
-        "30%",
-        "37,5%",
-        "3€",
-        "4%",
-        "4,25%",
-        "4,5%",
-        "5%",
-        "50%",
-        "5€",
-        "65%",
-        "80%",
-        "90%",
-        "92%",
-        "95%",
-        "99%"
-      ]
+      "https://swissborg.com/legal/pricing-policy": {
+        "jetons": "134eff091386e8c3",
+        "liste": [
+          "0%",
+          "0,1%",
+          "0,10%",
+          "0,12%",
+          "0,16%",
+          "0,25%",
+          "0,5%",
+          "0,75%",
+          "0,99%",
+          "1%",
+          "1,49%",
+          "1,5%",
+          "1,75%",
+          "10%",
+          "100%",
+          "10€",
+          "12,5%",
+          "15%",
+          "2%",
+          "2,25%",
+          "20%",
+          "25%",
+          "3,75%",
+          "30%",
+          "37,5%",
+          "3€",
+          "4%",
+          "4,25%",
+          "4,5%",
+          "5%",
+          "50%",
+          "5€",
+          "65%",
+          "80%",
+          "90%",
+          "92%",
+          "95%",
+          "99%"
+        ]
+      }
     },
     "bybit": {
-      "jetons": "77e405ec2b648d94",
-      "liste": [
-        "1,30%",
-        "1,80%"
-      ]
+      "https://www.bybit.eu/en-EU/help-center/article/FAQ-One-Click-Buy/": {
+        "jetons": "77e405ec2b648d94",
+        "liste": [
+          "1,30%",
+          "1,80%"
+        ]
+      },
+      "https://www.bybit.eu/en-EU/help-center/article/Trading-Fee-Structure": {
+        "jetons": "b636b126e4fbb984",
+        "liste": [
+          "0,0450%",
+          "0,0500%",
+          "0,0600%",
+          "0,0750%",
+          "0,0775%",
+          "0,1200%",
+          "0,1500%",
+          "0,2000%",
+          "0,2200%",
+          "0,2500%",
+          "20%"
+        ]
+      },
+      "https://www.bybit.eu/en-EU/help-center/article/FAQ-Fiat-Deposit": {
+        "phrases": "585015aa5f057431",
+        "liste": [
+          "All deposits made via SEPA will have a deposit limit of 10 millions per order, applicable to all users.",
+          "Bybit EU GmbH charges zero exchange deposit fees for Fiat Deposits.",
+          "For all other payment methods, deposit limits will be applied based on your account's KYC and VIP levels.",
+          "If a payment method you previously saw is no longer visible, the payment provider may have temporarily limited or suspended its availability.",
+          "Please note that external payment service providers may apply separate processing fees or charges depending on the selected currency and payment methods.",
+          "Region Unsupported Payment Method Germany Zen.com BLIK France Portugal Netherlands Zen.com BLIK Easy Bank Payment Are there any fees associated with Fiat Deposi",
+          "VIP Level Total Limits Shared Across All non-SEPA Deposits Standard Identity Verification Advanced Identity Verification VIP 0 Per Order: ≤ 250k Daily: ≤ 500k W",
+          "What is the fiat deposit limit applied on my account?",
+          "You can check the deposit limit per transaction from the deposit window.",
+          "— All fiat deposit limits shall follow EUR equivalent value.",
+          "— Please note that for some currencies, additional verification may be requested in order for the full maximum deposit limit amount to be applied on your accoun"
+        ]
+      },
+      "https://www.bybit.eu/en-EU/help-center/article/Bybit-Fees-You-Need-to-Know": {
+        "jetons": "3342b7db5f17734b",
+        "liste": [
+          "2%"
+        ]
+      },
+      "https://www.bybit.eu/en-EU/help-center/article/FAQ-Fiat-Withdrawal": {
+        "phrases": "481dd1337ddbce9a",
+        "liste": [
+          "All withdrawals made via SEPA will have a withdrawal limit of 10 millions per order, applicable to all users.",
+          "Are there any fees associated with Fiat Withdrawal?",
+          "For all other payment methods, withdrawal limits will be applied based on your account's KYC and VIP levels.",
+          "The minimum and maximum withdrawal amounts per transaction are indicated in the order zone.",
+          "There are the following requirements: Email Authentication Google Two Factor Authentication Individual KYC Verification Note: — There is a withdrawal limit for ",
+          "There may be fees associated with your fiat withdrawal depending on the fiat currency and payment method selected.",
+          "VIP Level Total Limits Shared Across All non-SEPA Withdrawals Standard Identity Verification Advanced Identity Verification VIP 0 Per Order: ≤ 250K Daily: ≤ 500",
+          "What is the fiat withdrawal limit applied on my account?",
+          "You can find the relevant fee rates applied for each fiat currency and payment method by going to the Fiat withdrawal page and selecting the fiat currency of yo",
+          "— Additional verification may be requested even before reaching the limit due to risk control and the review is expected to take up t o 2 working days."
+        ]
+      },
+      "https://www.bybit.eu/en-EU/learn/essential-guides/bybit-trading-fees": {
+        "jetons": "1656a20d84a19352",
+        "liste": [
+          "0,03%",
+          "0,0300%",
+          "0,0400%",
+          "0,0450%",
+          "0,0500%",
+          "0,0600%",
+          "0,0625%",
+          "0,0650%",
+          "0,0675%",
+          "0,0750%",
+          "0,0775%",
+          "0,08%",
+          "0,0800%",
+          "0,1%",
+          "0,1000%",
+          "0,1200%",
+          "0,1500%",
+          "0,2000%",
+          "0,92%",
+          "2%",
+          "20%",
+          "3%",
+          "4%"
+        ]
+      }
     },
     "crypto-com": {
-      "jetons": "4429bf8a89975f21",
-      "liste": [
-        "0,00%",
-        "0,80%",
-        "4%"
-      ]
+      "https://help.crypto.com/en/articles/10981986-fees-limits-eea": {
+        "jetons": "4429bf8a89975f21",
+        "liste": [
+          "0,00%",
+          "0,80%",
+          "4%"
+        ]
+      },
+      "https://crypto.com/eea": {
+        "jetons": "d1ce334b6a7f364b",
+        "liste": [
+          "5%"
+        ]
+      },
+      "https://crypto.com/exchange/document/fees-limits": {
+        "mode": "navigateur",
+        "jetons": "2124bc9c444aefee",
+        "liste": [
+          "0%",
+          "0,080%",
+          "0,100%",
+          "0,150%",
+          "0,1584%",
+          "0,1760%",
+          "0,180%",
+          "0,200%",
+          "0,2200%",
+          "0,250%",
+          "0,3520%",
+          "0,400%",
+          "0,4400%",
+          "0,5%",
+          "0,500%",
+          "12%"
+        ]
+      },
+      "https://crypto.com/document/mco_services": {
+        "pdf": "cd107587bf8c9af8"
+      },
+      "https://crypto.com/eea/fees-limits": {
+        "jetons": "41719b2bc325d11c",
+        "liste": [
+          "0,00%",
+          "0,5%",
+          "0,8%",
+          "1,49%",
+          "1,50%",
+          "1,99%",
+          "3,99%",
+          "4%"
+        ]
+      }
     },
     "etoro": {
-      "jetons": "f3fda40053dc5ccc",
-      "liste": [
-        "0,1%",
-        "0,10%",
-        "0,15%",
-        "0,2%",
-        "0,30%",
-        "0,5%",
-        "0,50%",
-        "0,6%",
-        "0,70%",
-        "0,75%",
-        "0,8%",
-        "0,80%",
-        "0,85%",
-        "0,90%",
-        "0,95%",
-        "1%",
-        "1,00%",
-        "1,2%",
-        "10000€",
-        "15%",
-        "2%",
-        "20%",
-        "2500€",
-        "40%",
-        "50%",
-        "51%"
-      ]
+      "https://www.etoro.com/fr/trading/fees/": {
+        "jetons": "f3fda40053dc5ccc",
+        "liste": [
+          "0,1%",
+          "0,10%",
+          "0,15%",
+          "0,2%",
+          "0,30%",
+          "0,5%",
+          "0,50%",
+          "0,6%",
+          "0,70%",
+          "0,75%",
+          "0,8%",
+          "0,80%",
+          "0,85%",
+          "0,90%",
+          "0,95%",
+          "1%",
+          "1,00%",
+          "1,2%",
+          "10000€",
+          "15%",
+          "2%",
+          "20%",
+          "2500€",
+          "40%",
+          "50%",
+          "51%"
+        ]
+      },
+      "https://www.etoro.com/fr/trading/fees/conversion/": {
+        "jetons": "bae09710f0e50299",
+        "liste": [
+          "0,75%",
+          "1%",
+          "1,50%",
+          "1,80%",
+          "100%",
+          "2,00%",
+          "2,40%",
+          "2,50%",
+          "20%",
+          "25%",
+          "3%",
+          "3,00%",
+          "40%",
+          "50%",
+          "51%",
+          "80%"
+        ]
+      },
+      "https://help.etoro.com/s/article/How-do-I-open-a-position-using-my-GBP-EUR-account-balance-aka-eToro-Money-account-balance?language=fr": {
+        "mode": "navigateur",
+        "phrases": "07c16c9efd8a488a",
+        "liste": [
+          "Commencez à discuter Ouvrez un ticket Retrouvez-nous sur Principaux Instruments Bitcoin (BTC) Ethereum (ETH) Shiba (en millions) Tesla Apple Nio Assistance Cent",
+          "Dans cet exemple, un client choisit d'utiliser les fonds de son compte en GBP pour ouvrir une position sur un actif libellé en GBP : Informations importantes Si",
+          "Examinez les coûts estimés en cliquant sur l'icône « i » à côté de « Estimation des coûts ».",
+          "Pour les utilisateurs australiens, la devise locale et l'entité du compte d'investissement sont eToro AUS Capital Limited.",
+          "Si un ordre (au marché, à cours limité ou en dehors des horaires d'ouverture) échoue ou est annulé, les fonds réservés pour cet ordre peuvent être crédités sur ",
+          "Si vous détenez un compte en devise locale*, vous pouvez utiliser ses fonds pour ouvrir des positions sur : actions, ETF ou crypto garantis par les actifs sous-",
+          "eToro (Europe) Ltd, est autorisé et réglementé par la Cyprus Securities Exchange Commission (CySEC) sous le numéro de licence 109/10.",
+          "eToro AUS Capital Limited (eToro Australia) est réglementé par l'Australian Securities & Investments Commission (ASIC) pour la fourniture de services et de prod",
+          "eToro Asset Management Limited (eToro AM) est autorisé à agir en tant qu'entité responsable en vertu du chapitre 5C de la loi sur les sociétés de 2001.",
+          "eToro Money Malta Limited (numéro d'enregistrement de la société C97952) adresse enregistrée : 68, Northfields, Penthouse 10, Independence Avenue MST 9026 Mosta",
+          "eToroX Ltd, est autorisé et réglementé par la Commission des services financiers de Gibraltar en tant que fournisseur de technologie de registre distribué, avec"
+        ]
+      },
+      "https://help.etoro.com/s/article/how-does-etoro-crypto-pricing-work?language=fr": {
+        "mode": "navigateur",
+        "jetons": "0b41028676848984",
+        "liste": [
+          "1%"
+        ]
+      },
+      "https://help.etoro.com/s/article/what-is-the-minimum-trade-size?language=fr": {
+        "mode": "navigateur",
+        "phrases": "38103004a6fedda8",
+        "liste": [
+          "*L'utilisation de l'effet de levier peut être soumise à des limites conformément aux mesures de l'Autorité européenne des marchés financiers (ESMA).",
+          "Au 5 décembre 2021, les tailles de trade minimales pour tous les utilisateurs d'eToro étaient : Classe d'actifs Montant minimum des trades Actions et ETF 10 $ C",
+          "Centre d'aideInvestir et traderLes basesGérer mes trades Quel est le montant de trade minimum ?",
+          "Commencez à discuter Ouvrez un ticket Retrouvez-nous sur Principaux Instruments Bitcoin (BTC) Ethereum (ETH) Shiba (en millions) Tesla Apple Nio Assistance Cent",
+          "Dans cet exemple, l'utilisateur peut investir 100 $ en utilisant un effet de levier X10 et tout en répondant aux exigences de taille de trade minimum.",
+          "Informations sur les risques Politique de confidentialité Conditions générales d'utilisation Copyright © 2006-2026 eToro - Your Social Investment Network, Tous ",
+          "Le montant minimum requis pour investir dans un Smart Portfolio est de 500 $.",
+          "Par exemple : si un utilisateur d'eToro ouvre une position sur le pétrole (matière première), pour laquelle la taille de trade minimum est de 1 000 $, il peut i",
+          "Pour GainersQtr, SharpTraders et ActiveTraders, le montant minimum requis est de 5 000 $.",
+          "Veuillez noter que le montant minimum exigé pour copier un autre trader est de 200 $ et il y a un montant minimum pour chaque position copiée de 1 $.",
+          "eToro (Europe) Ltd, est autorisé et réglementé par la Cyprus Securities Exchange Commission (CySEC) sous le numéro de licence 109/10.",
+          "eToro AUS Capital Limited (eToro Australia) est réglementé par l'Australian Securities & Investments Commission (ASIC) pour la fourniture de services et de prod",
+          "eToro Asset Management Limited (eToro AM) est autorisé à agir en tant qu'entité responsable en vertu du chapitre 5C de la loi sur les sociétés de 2001.",
+          "eToro Money Malta Limited (numéro d'enregistrement de la société C97952) adresse enregistrée : 68, Northfields, Penthouse 10, Independence Avenue MST 9026 Mosta",
+          "eToroX Ltd, est autorisé et réglementé par la Commission des services financiers de Gibraltar en tant que fournisseur de technologie de registre distribué, avec"
+        ]
+      },
+      "https://help.etoro.com/s/article/What-s-the-deposit-minimum?language=fr": {
+        "mode": "navigateur",
+        "phrases": "9d3ec3a179926ba2",
+        "liste": [
+          "Centre d'aideDépôts et retraitsDépôtsApprovisionner mon compte Quel est le dépôt minimum ?",
+          "Commencez à discuter Ouvrez un ticket Retrouvez-nous sur Principaux Instruments Bitcoin (BTC) Ethereum (ETH) Shiba (en millions) Tesla Apple Nio Assistance Cent",
+          "Dans de nombreux pays, vous pouvez commencer à investir avec un premier dépôt minimum de 50 USD .",
+          "Informations sur les risques Politique de confidentialité Conditions générales d'utilisation Copyright © 2006-2026 eToro - Your Social Investment Network, Tous ",
+          "Utilisateurs qui résident dans les pays suivants : Premier dépôt minimum demandé : Allemagne, Argentine, Australie, Autriche, Belgique, Brésil, Chili, Chypre, C",
+          "Veuillez noter qu'eToro se réserve le droit de modifier les dépôts minimums mentionnés ci-dessus à tout moment.",
+          "eToro (Europe) Ltd, est autorisé et réglementé par la Cyprus Securities Exchange Commission (CySEC) sous le numéro de licence 109/10.",
+          "eToro AUS Capital Limited (eToro Australia) est réglementé par l'Australian Securities & Investments Commission (ASIC) pour la fourniture de services et de prod",
+          "eToro Asset Management Limited (eToro AM) est autorisé à agir en tant qu'entité responsable en vertu du chapitre 5C de la loi sur les sociétés de 2001.",
+          "eToro Money Malta Limited (numéro d'enregistrement de la société C97952) adresse enregistrée : 68, Northfields, Penthouse 10, Independence Avenue MST 9026 Mosta",
+          "eToroX Ltd, est autorisé et réglementé par la Commission des services financiers de Gibraltar en tant que fournisseur de technologie de registre distribué, avec"
+        ]
+      },
+      "https://help.etoro.com/s/article/Adding-money-to-an-eToro-Money-account-by-manual-bank-transfer?language=en_GB": {
+        "mode": "navigateur",
+        "phrases": "3157e30ccd677596",
+        "liste": [
+          "Other types of transfers, or transfers from banks based in other regions, may be returned and subject to a fee.",
+          "Registered Office: Level 3, 60 Castlereagh Street, Sydney NSW 2000, Australia eToro Asset Management Limited (“eToro AM”), is licensed to act as a Responsible E",
+          "Registered office: KANIKA BUSINESS CENTRE, FLOOR 7, 4 Profiti Ilia Germasogeia, 4046 Cyprus eToro AUS Capital Limited(“eToro Australia”) is regulated by the Aus",
+          "eToro (Europe) Ltd, is authorised and regulated by the Cyprus Securities Exchange Commission (CySEC) under the license number# 109/10.",
+          "eToro Money Malta Limited (company registration number C97952) registered address: 68, Northfields, Penthouse 10, Independence Avenue MST 9026 Mosta, Malta.",
+          "eToroX Ltd, is authorised and regulated by the Gibraltar Financial Services Commission as a distributed ledger technology provider, with Financial Services Comm"
+        ]
+      },
+      "https://www.etoro.com/fr/money/availability/": {
+        "jetons": "0bab1578bdec6d53",
+        "liste": [
+          "51%"
+        ]
+      }
     },
     "paymium": {
-      "jetons": "b72efab2cb4c3d74",
-      "liste": [
-        "0%",
-        "0,00%",
-        "0,02%",
-        "0,05%",
-        "0,08%",
-        "0,10%",
-        "0,12%",
-        "0,15%",
-        "0,18%",
-        "0,25%",
-        "0,30%",
-        "0,40%",
-        "0,60%",
-        "0,90%",
-        "0,99€",
-        "0€",
-        "1,49%",
-        "10%",
-        "10€",
-        "3,5%",
-        "30€",
-        "4€",
-        "5€"
-      ]
+      "https://www.paymium.com/fr/tarification": {
+        "jetons": "b72efab2cb4c3d74",
+        "liste": [
+          "0%",
+          "0,00%",
+          "0,02%",
+          "0,05%",
+          "0,08%",
+          "0,10%",
+          "0,12%",
+          "0,15%",
+          "0,18%",
+          "0,25%",
+          "0,30%",
+          "0,40%",
+          "0,60%",
+          "0,90%",
+          "0,99€",
+          "0€",
+          "1,49%",
+          "10%",
+          "10€",
+          "3,5%",
+          "30€",
+          "4€",
+          "5€"
+        ]
+      },
+      "https://www.paymium.com/fr/aide/comment-acheter-des-bitcoins": {
+        "jetons": "8df4cba6305fc55a",
+        "liste": [
+          "5€"
+        ]
+      },
+      "https://www.paymium.com/fr/aide/quels-sont-les-types-d-ordres-sur-paymium": {
+        "jetons": "76168d3851177243",
+        "liste": [
+          "50000€",
+          "5€"
+        ]
+      },
+      "https://paymium-public-files.s3.fr-par.scw.cloud/CGU/CGU_Paymium.pdf": {
+        "pdf": "7610a6e3fa77270d"
+      },
+      "https://paymium-public-files.s3.fr-par.scw.cloud/regles/regles_de_fonctionnement_de_la_plateforme_de_negociation.pdf": {
+        "pdf": "dcaf6a660c712912"
+      },
+      "https://www.paymium.com/fr/aide/quelles-paires-de-crypto-monnaies-sont-proposees-sur-paymium": {
+        "jetons": "8df4cba6305fc55a",
+        "liste": [
+          "5€"
+        ]
+      }
     },
     "moonpay": {
-      "jetons": "291d5809ce37823c",
-      "liste": [
-        "0%",
-        "0,25%",
-        "1%",
-        "10%",
-        "2%",
-        "3,4%",
-        "4,5%",
-        "5%"
-      ]
+      "https://www.moonpay.com/legal/europe_pricing_disclosure": {
+        "jetons": "291d5809ce37823c",
+        "liste": [
+          "0%",
+          "0,25%",
+          "1%",
+          "10%",
+          "2%",
+          "3,4%",
+          "4,5%",
+          "5%"
+        ]
+      },
+      "https://support.moonpay.com/en/articles/381106-moonpay-balance-how-to-top-up-use-and-withdraw": {
+        "phrases": "7628262d1c36e439",
+        "liste": [
+          "Common top-up issues Incorrect account details – Check IBAN, sort code, or account number Missing reference code – Always include it so we can match your deposi",
+          "Daily limits reset 24 hours after your last order; monthly limits reset 30 days after your last order Unsupported cryptocurrency — MoonPay Balance can't be used",
+          "If you need ETH to cover network fees, you'll need to purchase it using a card, Apple Pay, or another supported payment method.",
+          "If you'd prefer not to, you must withdraw your balance You cannot hold a balance for more than 30 consecutive days Your maximum balance is limited to the greate",
+          "If you've hit your limit, the balance option is hidden until it resets.",
+          "If your registered address falls outside these regions, the option won't appear Balance is zero or too low — If your balance doesn't cover the minimum purchase ",
+          "Key benefits Be ready for the market – Buy crypto instantly with near-perfect approval rates No expiry – Your balance stays available as long as you need it No ",
+          "No deposit fee Important: Only use your own bank account, PayPal, or Venmo to top up.",
+          "No deposit fee Important: You don't need to create a MoonPay Balance order before sending a bank transfer.",
+          "On this page Overview Key benefits Eligibility Getting started What you can do with your balance Supported top-up and withdrawal methods Things to know before y",
+          "Selling crypto with your MoonPay Balance Tap Sell on the Home screen Select the cryptocurrency Enter the amount Choose MoonPay Balance as the payout method Tap ",
+          "Troubleshooting MoonPay Balance isn't showing as a payment option If MoonPay Balance doesn't appear at checkout, it's usually because of one of the following: P",
+          "You can't cancel or use the funds until credited A credit or debit card can also be used to top up, with no deposit fee You can top up with PayPal, Venmo, ACH, "
+        ]
+      },
+      "https://support.moonpay.com/en/articles/380500-how-do-i-buy-cryptocurrency-with-moonpay": {
+        "phrases": "01321509f5a6a01b",
+        "liste": [
+          "Important: For residents of Maine, US , the maximum buy limit is $2,999 per transaction .",
+          "Read about MoonPay's fees in our pricing disclosure .",
+          "Step 2: Choose your crypto and amount Select the cryptocurrency and enter the amount you want to buy in fiat or crypto Note: Because of how network fees work, w",
+          "This can change a little depending on network conditions – but we'll always tell you the minimum amount."
+        ]
+      }
     },
     "n26-crypto": {
-      "jetons": "4c29bb2a47b49441",
-      "liste": [
-        "1%",
-        "1,5%",
-        "2%",
-        "2,5%",
-        "3,5%",
-        "30%"
-      ]
+      "https://support.n26.com/en-fr/app-and-features/savings-and-invest/how-n26-crypto-works": {
+        "jetons": "4c29bb2a47b49441",
+        "liste": [
+          "1%",
+          "1,5%",
+          "2%",
+          "2,5%",
+          "3,5%",
+          "30%"
+        ]
+      },
+      "https://docs.n26.com/legal/01+DE/022+Crypto/en/04crypto-prices-and-fees-en.pdf": {
+        "pdf": "9f0a75bfaa78423a"
+      },
+      "https://support.n26.com/fr-fr/paiements-virements-et-retraits/solde-et-plafonds/comment-alimenter-mon-compte": {
+        "jetons": "359752d17cf0736c",
+        "liste": [
+          "20€",
+          "3%",
+          "5000€"
+        ]
+      },
+      "https://docs.n26.com/legal/core/fr/account-pricelist-latest.pdf": {
+        "pdf": "598811fc7e6b7815"
+      }
     },
     "21bitcoin": {
-      "jetons": "b62abd9066e17f06",
-      "liste": [
-        "0%",
-        "0,49%",
-        "0,79%",
-        "0,99%",
-        "000,000€",
-        "1%",
-        "1,21%",
-        "1,25%",
-        "1,29%",
-        "1,49%",
-        "1,5%",
-        "10,000€",
-        "100,000€",
-        "21,000€"
-      ]
+      "https://21bitcoin.app/en/fees": {
+        "jetons": "107552784ff75e24",
+        "liste": [
+          "0%",
+          "0,49%",
+          "0,79%",
+          "0,99%",
+          "1%",
+          "1,000,000€",
+          "1,21%",
+          "1,25%",
+          "1,29%",
+          "1,49%",
+          "1,5%",
+          "10,000€",
+          "100,000€",
+          "21,000€"
+        ]
+      },
+      "https://help.21bitcoin.app/en/articles/15284683-does-21bitcoin-charge-a-spread": {
+        "jetons": "c9701128775525d2",
+        "liste": [
+          "0,15%",
+          "0,3%",
+          "0,5%",
+          "1,5%"
+        ]
+      },
+      "https://help.21bitcoin.app/en/articles/6453204-what-are-the-fees-at-21bitcoin": {
+        "jetons": "cf82b58a1c039b75",
+        "liste": [
+          "0%",
+          "0,2%",
+          "0,79%",
+          "1,29%",
+          "1,49%"
+        ]
+      },
+      "https://help.21bitcoin.app/en/articles/7052947-what-are-the-limits-for-buying-bitcoin": {
+        "jetons": "b3852c1a0e5ad899",
+        "liste": [
+          "10€",
+          "5€"
+        ]
+      },
+      "https://help.21bitcoin.app/en/articles/5332229-how-to-fund-your-eur-account": {
+        "phrases": "7b0fe650eff3f68b",
+        "liste": [
+          "International transfers incur high costs and will be automatically returned."
+        ]
+      },
+      "https://help.21bitcoin.app/en/articles/5884050-how-to-buy-bitcoin": {
+        "mode": "navigateur",
+        "phrases": "05c86143082b3236",
+        "liste": [
+          "Order Types Custom Price Order Auto-Invest Order Fees Euro Funding & Withdrawals Bitcoin Withdrawals Custody Taxes All Collections Buy & Sell How to buy Bitcoin",
+          "Skip to main content English Deutsch English Search Ctrl K General Account Buy & Sell How to buy Bitcoin Create a Savings Plan How to sell Bitcoin What are the "
+        ]
+      }
     },
     "just-mining": {
-      "jetons": "94eac6b651bf9296",
-      "liste": [
-        "0,99%",
-        "1,24%",
-        "1,5%",
-        "1,75%",
-        "10%",
-        "100%",
-        "100€",
-        "12%",
-        "14%",
-        "2,39%",
-        "25€",
-        "3,15%",
-        "5%",
-        "7,5%"
-      ]
+      "https://www.meria.com/feePolicy": {
+        "jetons": "94eac6b651bf9296",
+        "liste": [
+          "0,99%",
+          "1,24%",
+          "1,5%",
+          "1,75%",
+          "10%",
+          "100%",
+          "100€",
+          "12%",
+          "14%",
+          "2,39%",
+          "25€",
+          "3,15%",
+          "5%",
+          "7,5%"
+        ]
+      },
+      "https://www.meria.com/resources/terms.pdf": {
+        "pdf": "2b19b8c92a390298"
+      },
+      "https://help-center.meria.com/article/1116-deposer-des-euros-sur-votre-compte-meria": {
+        "jetons": "d480c1284426fb36",
+        "liste": [
+          "100€"
+        ]
+      },
+      "https://help-center.meria.com/article/1154-quel-est-le-minimum-pour-acheter-du-bitcoin": {
+        "mode": "navigateur",
+        "jetons": "e7cdac8828d906b2",
+        "liste": [
+          "100000€",
+          "10€"
+        ]
+      },
+      "https://help-center.meria.com/article/1119--comment-retirer-mes-cryptomonnaies-sur-mon-compte-bancaire": {
+        "jetons": "2388425354345e45",
+        "liste": [
+          "1,24%",
+          "100€",
+          "30000€",
+          "5000€"
+        ]
+      }
+    },
+    "coinbase": {},
+    "trade-republic": {
+      "https://assets.traderepublic.com/assets/files/FeeInformation_PaymentAccount_fr.pdf": {
+        "pdf": "9ea2062201e4dd96"
+      },
+      "https://assets.traderepublic.com/assets/files/CA_FR-en-fr.pdf": {
+        "pdf": "310cf0276d224b02"
+      }
+    },
+    "revolut": {},
+    "okx": {
+      "https://www.okx.com/en-eu/help/how-do-i-buy-crypto-with-my-cash-balance-eea": {
+        "phrases": "e8c17c246504b7fd",
+        "liste": [
+          "Compare the confirmed quote, crypto amount received, and any separately listed fee in the order details.If the completed result does not match the quote you con",
+          "Earn Margin Rewards Onchain Earn Flash Earn Stable Rewards Dual Investment BTC Yield+ Loan Borrow to earn, borrow to spend Jumpstart Discover new, high-quality ",
+          "Getting started Login to your account Open your OKX app > Buy and sell > Buy Log in to your account okx.com , go to Buy and Sell, then select Buy Select Buy fro",
+          "If the issue still exists, feel free to reach out to our customer support for further assistance.",
+          "Is there a fee for buying with my cash balance?",
+          "It may change after the order is completed because of market-price movement, the quoted price or applicable spread, FX conversion, or a payment fee shown in the",
+          "Limits may vary by account market, verification status, crypto, cash currency, payment method, and current product rules.Use the real-time limit displayed in yo",
+          "No, there's no fees associated with buying with your cash balance.",
+          "OKX Europe Limited is also licensed and regulated by the MFSA as a financial institution under the Financial Institutions Act, Chapter 376, to provide services ",
+          "Open Activity , select the Buy order, and review its status and any reason shown in the order details.A failed checkout and a failed or rejected order are not a",
+          "Published on Nov 16, 2023 Updated on Sep 30, 2026 7 min read 1 You now have the option to buy crypto instantly with no fees using your cash balance.",
+          "Stake to Earn Subscribe to receive new crypto airdrops with your assets Agent Trade Kit Automate your trades with AI agents and community-built skills Agent Tra",
+          "Switch site Skip to main content Buy crypto P2P trading Buy/Sell with zero trading fees via 100+ payment methods Buy and Sell SEPA, Visa, Mastercard, and more C",
+          "The applicable minimum and maximum amounts are shown during checkout.",
+          "What are the minimum and maximum Buy limits?",
+          "You can also: Check that the amount is within the displayed limits.",
+          "©2017 - 2026 OKX.COM Language Europe English Deutsch Español (España) Français Italiano Nederlands Polski Português (Portugal) Română Norsk (bokmål) Suomi Svens"
+        ]
+      },
+      "https://www.okx.com/en-eu/help/buy-sell-convert-spread-disclosure": {
+        "jetons": "a7de8dee4ca829bb",
+        "liste": [
+          "1,00%"
+        ]
+      },
+      "https://www.okx.com/en-eu/help/what-are-the-new-trading-fees-for-eea-users": {
+        "jetons": "5103b1b52d54e3bf",
+        "liste": [
+          "0,0000%",
+          "0,0020%",
+          "0,0050%",
+          "0,0075%",
+          "0,0175%",
+          "0,0200%",
+          "0,0250%",
+          "0,030%",
+          "0,0300%",
+          "0,0350%",
+          "0,045%",
+          "0,0450%",
+          "0,055%",
+          "0,0550%",
+          "0,060%",
+          "0,0600%",
+          "0,065%",
+          "0,0650%",
+          "0,0675%",
+          "0,070%",
+          "0,0700%",
+          "0,075%",
+          "0,080%",
+          "0,0800%",
+          "0,085%",
+          "0,090%",
+          "0,100%",
+          "0,1000%",
+          "0,150%",
+          "0,180%",
+          "0,200%",
+          "0,350%"
+        ]
+      },
+      "https://www.okx.com/en-eu/help/how-do-i-buy-with-debit-credit-cards": {
+        "jetons": "b0cb042a83e92578",
+        "liste": [
+          "0%",
+          "1,99%",
+          "2,49%",
+          "3,00%"
+        ]
+      },
+      "https://www.okx.com/en-eu/fees": {
+        "phrases": "fc8db7bd2d5920a4",
+        "liste": [
+          "Earn Margin Rewards Onchain Earn Flash Earn Stable Rewards Dual Investment BTC Yield+ Loan Borrow to earn, borrow to spend Jumpstart Discover new, high-quality ",
+          "OKX Europe Limited is also licensed and regulated by the MFSA as a financial institution under the Financial Institutions Act, Chapter 376, to provide services ",
+          "Stake to Earn Subscribe to receive new crypto airdrops with your assets Agent Trade Kit Automate your trades with AI agents and community-built skills Agent Tra",
+          "Switch site Skip to main content Buy crypto P2P trading Buy/Sell with zero trading fees via 100+ payment methods Buy and Sell SEPA, Visa, Mastercard, and more C",
+          "Trading Fee | Fee Rate | Crypto Exchange Fees | Fee Tiers | OKX Europe Looks like you're in the United States."
+        ]
+      },
+      "https://www.okx.com/en-eu/help/how-do-i-deposit-eur-with-sepa-bank-transfer": {
+        "phrases": "6eab8b76adc010fd",
+        "liste": [
+          "Check with your bank for transfer availability and any applicable fees.",
+          "Earn Margin Rewards Onchain Earn Flash Earn Stable Rewards Dual Investment BTC Yield+ Loan Borrow to earn, borrow to spend Jumpstart Discover new, high-quality ",
+          "Make sure to check with your bank about their fees and SEPA instant availability.",
+          "OKX Europe Limited is also licensed and regulated by the MFSA as a financial institution under the Financial Institutions Act, Chapter 376, to provide services ",
+          "Payment limits, fees and processing time information will be displayed on the payment method.",
+          "SEPA Instant is a great option for fast deposits within the €100,000 limit.",
+          "Stake to Earn Subscribe to receive new crypto airdrops with your assets Agent Trade Kit Automate your trades with AI agents and community-built skills Agent Tra",
+          "Switch site Skip to main content Buy crypto P2P trading Buy/Sell with zero trading fees via 100+ payment methods Buy and Sell SEPA, Visa, Mastercard, and more C",
+          "To comply with local laws and regulations, the payment methods available to you on your account will be limited to those that are appropriate based on the ident",
+          "To learn more about our fees and processing time, read more here .",
+          "Where do I find limits, fees and processing time details for cash deposit?",
+          "While we don't charge a fee for EUR deposits via SEPA bank transfers, additional transfer fees may be charged by your bank.",
+          "©2017 - 2026 OKX.COM Language Europe English Deutsch Español (España) Français Italiano Nederlands Polski Português (Portugal) Română Norsk (bokmål) Suomi Svens"
+        ]
+      },
+      "https://www.okx.com/en-eu/help/how-do-i-withdraw-eur-with-sepa-bank-transfer": {
+        "phrases": "b548166e74a7584f",
+        "liste": [
+          "Earn Margin Rewards Onchain Earn Flash Earn Stable Rewards Dual Investment BTC Yield+ Loan Borrow to earn, borrow to spend Jumpstart Discover new, high-quality ",
+          "OKX Europe Limited is also licensed and regulated by the MFSA as a financial institution under the Financial Institutions Act, Chapter 376, to provide services ",
+          "Payment limits, fees and processing time information will be displayed on the payment method.",
+          "Stake to Earn Subscribe to receive new crypto airdrops with your assets Agent Trade Kit Automate your trades with AI agents and community-built skills Agent Tra",
+          "Switch site Skip to main content Buy crypto P2P trading Buy/Sell with zero trading fees via 100+ payment methods Buy and Sell SEPA, Visa, Mastercard, and more C",
+          "To learn more about our fees and processing time, read more here .",
+          "Where do I find limits, fees and processing time details for cash withdrawal?",
+          "While we don't charge a fee for EUR withdrawals via SEPA bank transfers, additional transfer fees may be charged by your bank.",
+          "©2017 - 2026 OKX.COM Language Europe English Deutsch Español (España) Français Italiano Nederlands Polski Português (Portugal) Română Norsk (bokmål) Suomi Svens"
+        ]
+      }
+    },
+    "bitstamp": {},
+    "bitvavo": {},
+    "deblock": {
+      "https://deblock.com/fr/accords-juridiques": {
+        "mode": "navigateur",
+        "liens": "c964d128f2c9eaaf",
+        "liste": [
+          "https://cdn1.deblock.com/terms/Glossary/Glossaire-FR-EN.pdf",
+          "https://cdn1.deblock.com/terms/april-2026-BTC-Roundup/Terms_Automatic_RoundUp_FR_v1.1.pdf",
+          "https://cdn1.deblock.com/terms/btc-double/20260930_BTC_double_FR.pdf",
+          "https://cdn1.deblock.com/terms/crypto-wallet-import-terms/20260107_crypto_wallet_import_terms_v0_FR.pdf",
+          "https://cdn1.deblock.com/terms/feb-2026-500-bonus/20262302_Terms_500_bonus_FR.docx.pdf",
+          "https://cdn1.deblock.com/terms/fee_info/20231206-BETA-Fee_Information_Document-FR.pdf",
+          "https://cdn1.deblock.com/terms/fee_info/Fees_Pages_Deblock_FR_v6.3.pdf",
+          "https://cdn1.deblock.com/terms/fee_info/Fees_Pages_Deblock_FR_v6.4.3.pdf",
+          "https://cdn1.deblock.com/terms/game10k/10k_raffle_2025_rules_FR.pdf",
+          "https://cdn1.deblock.com/terms/inactive-accounts/20241231_inactive_accounts_website page_FR.pdf",
+          "https://cdn1.deblock.com/terms/jan-2026-design-contest/20260127_design_contest_terms_FR.pdf",
+          "https://cdn1.deblock.com/terms/jan-2026-onboarding-raffle/20260123_onboarding_raffle_FR.pdf",
+          "https://cdn1.deblock.com/terms/june-2026-welcome-bonus-btc/20260601-BTC-welcome-bonus-FR.pdf",
+          "https://cdn1.deblock.com/terms/may-2026-payment-groceries/Rules-Payment-groceries-FR.pdf",
+          "https://cdn1.deblock.com/terms/order-execution-policy/20250528-1.5-politique-dexecution-des-ordres.pdf",
+          "https://cdn1.deblock.com/terms/personal-terms/FR/20260223-v12.3-personal_terms-FR.pdf",
+          "https://cdn1.deblock.com/terms/personal-terms/FR/20260313-v13-personal-terms-FR.pdf",
+          "https://cdn1.deblock.com/terms/personal-terms/FR/20260918-v3_2-Techblock-FR.docx.pdf",
+          "https://cdn1.deblock.com/terms/referrals/FR/Continuous_referrals_terms_v1_FR.pdf",
+          "https://cdn1.deblock.com/terms/vaults/FR/20260610-v3.0-Techblock-FR.pdf",
+          "https://cdn1.deblock.com/terms/xPay/FR/20240507-v1-applepay-terms-fr.pdf"
+        ]
+      },
+      "https://deblock.com/fr/abonnements": {
+        "jetons": "b2527f6c98187023",
+        "liste": [
+          "0%",
+          "0,49%",
+          "1%",
+          "1,99%",
+          "1000€",
+          "100€",
+          "10€",
+          "15000€",
+          "30000€",
+          "50%"
+        ]
+      },
+      "https://cdn1.deblock.com/terms/fee_info/Fees_Pages_Deblock_FR_v6.4.3.pdf": {
+        "pdf": "f6a6599ae746e804"
+      },
+      "https://cdn1.deblock.com/terms/order-execution-policy/20250528-1.5-politique-dexecution-des-ordres.pdf": {
+        "pdf": "74f7afffe8585fe6"
+      },
+      "https://cdn1.deblock.com/terms/personal-terms/FR/20260313-v13-personal-terms-FR.pdf": {
+        "pdf": "55e3de3ef7e6ef21"
+      }
+    },
+    "young-platform": {
+      "https://exchange.youngplatform.com/fr/fees": {
+        "mode": "navigateur",
+        "jetons": "87fe1b743bfa7c5a",
+        "liste": [
+          "0%",
+          "0,10%",
+          "0,25€",
+          "0,30%",
+          "0,40%",
+          "0,60%",
+          "0,6€",
+          "0,80%",
+          "0€",
+          "1%",
+          "1,00%",
+          "1,35%",
+          "1,50%",
+          "1,89%",
+          "1,99€",
+          "10%",
+          "100€",
+          "10€",
+          "12%",
+          "15%",
+          "1500€",
+          "2%",
+          "2,2%",
+          "2,49€",
+          "20€",
+          "23%",
+          "25000€",
+          "3%",
+          "30%",
+          "3000€",
+          "300€",
+          "35%",
+          "3€",
+          "4000€",
+          "5%",
+          "50€",
+          "6%",
+          "600€",
+          "70%",
+          "8%"
+        ]
+      },
+      "https://pro.youngplatform.com/fees": {
+        "mode": "navigateur",
+        "jetons": "7c7194fcd29479c3",
+        "liste": [
+          "0%",
+          "0,00€",
+          "0,05%",
+          "0,1%",
+          "0,14%",
+          "0,18%",
+          "0,22%",
+          "0,25€",
+          "0,28%",
+          "0,35%",
+          "0,4%",
+          "0,6€",
+          "0€",
+          "1,000,000,00€",
+          "10,000,00€",
+          "100,000,00€",
+          "100€",
+          "10€",
+          "1500€",
+          "2,2%",
+          "2,500,000,00€",
+          "20€",
+          "25000€",
+          "3000€",
+          "300€",
+          "3€",
+          "4000€",
+          "4100,000,00€",
+          "5,000,000,00€",
+          "50,000,00€",
+          "5000,00€",
+          "50€",
+          "6%",
+          "600€"
+        ]
+      },
+      "https://youngplatform.com/fr/faq/fees/": {
+        "phrases": "22261d461af91462",
+        "liste": [
+          "$YNG Tokenomics Clubs Graphique News Communications informatives Informations privilégiées Leadership Écosystème Nous rejoindre On parle de nous Sicurezza Accue",
+          "1.2 Qu'est-ce que le Spread et comment est-il calculé ?",
+          "2.2 Quels frais s'appliquent aux conversions entre crypto-actifs ?",
+          "2.3 Quels frais s'appliquent au token YNG ?",
+          "2.4 Quels frais s'appliquent aux achats récurrents ?",
+          "2.5 Quels sont les montants minimum et maximum d'un ordre ?",
+          "3.2 Quels frais s'appliquent aux retraits en euros ?",
+          "3.3 Quels frais s'appliquent aux dépôts et envois de crypto-actifs ?",
+          "4.2 Y a-t-il des frais sur le staking ?",
+          "4.3 La conservation des crypto-actifs a-t-elle un coût ?",
+          "Academy Apprends les bases des crypto-actifs et de la blockchain avec des guides simples et un accès gratuit.",
+          "Comment se forme le prix 1.1 Pourquoi y a-t-il des frais ?",
+          "Foire aux questions Frais crypto-actif | Young Platform Apps Marché $YNG Business About us Blog Support IT EN Connexion S'inscrire Pour trader Young Platform Ac",
+          "Frais d'achat-vente et de conversion 2.1 Quels frais s'appliquent à l'achat et à la vente en euros ?",
+          "Frais de dépôt et de retrait 3.1 Quels frais s'appliquent aux dépôts en euros ?",
+          "Introduction Toute plateforme d'échange applique des frais : ils couvrent les coûts des services de paiement, de l'infrastructure et de la conservation de tes c",
+          "Les montants et pourcentages à jour sont toujours disponibles sur la page Frais et Tarifs, qui fait foi en cas de modification.",
+          "Notre support est disponible support.youngplatform.com pour t'aider Ecosystème Young Platform Young Platform Pro Young Platform Step Young Platform Academy Toke",
+          "Pour les conditions contractuelles et tarifaires, veuillez vous référer aux Fiches d'information et aux Conditions Générales d'Utilisation.",
+          "Réductions et cas particuliers 4.1 Comment réduire les frais ?",
+          "Sur Young Platform, le prix de chaque opération se compose de deux éléments : la valeur de référence de marché avec le Spread déjà inclus, et une éventuelle com",
+          "Tu trouveras ici les réponses aux questions les plus fréquentes : comment se forme le prix, quels frais s'appliquent aux achats-ventes, conversions, dépôts et r"
+        ]
+      }
+    },
+    "trading212": {
+      "https://helpcentre.trading212.com/hc/en-us/articles/30752021087005-What-fees-does-Trading-212-charge-for-crypto-trading": {
+        "jetons": "84da96e75c299cb2",
+        "liste": [
+          "77%"
+        ]
+      },
+      "https://helpcentre.trading212.com/hc/en-us/articles/30719568726173-How-can-I-manage-my-funds": {
+        "jetons": "84da96e75c299cb2",
+        "liste": [
+          "77%"
+        ]
+      },
+      "https://helpcentre.trading212.com/hc/en-us/articles/360007139838-What-are-the-fees-for-funding-my-account": {
+        "jetons": "ea5ed3c57f9bb08a",
+        "liste": [
+          "0,7%",
+          "77%"
+        ]
+      },
+      "https://helpcentre.trading212.com/hc/en-us/articles/360013564178-Instant-Bank-Transfer-Open-Banking-Deposits": {
+        "jetons": "84da96e75c299cb2",
+        "liste": [
+          "77%"
+        ]
+      },
+      "https://helpcentre.trading212.com/hc/en-us/articles/30721439008797-What-are-the-types-of-orders": {
+        "jetons": "84da96e75c299cb2",
+        "liste": [
+          "77%"
+        ]
+      },
+      "https://helpcentre.trading212.com/hc/en-us/articles/30717768082461-What-is-the-Trading-212-Crypto-account": {
+        "jetons": "84da96e75c299cb2",
+        "liste": [
+          "77%"
+        ]
+      },
+      "https://helpcentre.trading212.com/hc/en-us/articles/30718913607709-Trading-212-Markets-Ltd-Crypto-Account-Regulations": {
+        "jetons": "84da96e75c299cb2",
+        "liste": [
+          "77%"
+        ]
+      },
+      "https://www.trading212.com/legal-documentation/cy/common/Costs-and-Charges-Disclosure_EN.pdf": {
+        "pdf": "50c608f14cacc027"
+      }
+    },
+    "feel-mining": {
+      "https://feel-mining.com/offres-et-frais": {
+        "mode": "navigateur",
+        "jetons": "ee3090389e95d4b0",
+        "liste": [
+          "0,25%",
+          "0,5%",
+          "0,75%",
+          "1%",
+          "1,5%",
+          "10%",
+          "2€",
+          "3%",
+          "525040€"
+        ]
+      },
+      "https://feel-mining.com/feel-mining-platinum": {
+        "mode": "navigateur",
+        "jetons": "ac2e5c9d67c2ffbf",
+        "liste": [
+          "0,25%",
+          "0,5%",
+          "0,75%",
+          "1%",
+          "1,41€",
+          "1,5%",
+          "11,92€",
+          "12,08€",
+          "13,00€",
+          "14,26€",
+          "14,90€",
+          "14,99€",
+          "143,00€",
+          "15,29€",
+          "178,80€",
+          "2,83€",
+          "20%",
+          "33%",
+          "50%",
+          "50€",
+          "525040€"
+        ]
+      },
+      "https://feel-mining.com/documents/FEELMINING_CGV_B2C.pdf": {
+        "pdf": "8fbf4fe41d117b58"
+      }
     }
   }
 }
