@@ -60,7 +60,7 @@ jobs:
         # aussi quand des écarts de valeur restent : les versions relues sont enregistrées, l'écart reste signalé
         if: inputs.enregistrer
         run: |
-          if git diff --quiet -- data/veille/etat.json; then
+          if [ -z "$(git status --porcelain -- data/veille/etat.json)" ]; then
             echo "Référence inchangée."
             exit 0
           fi
