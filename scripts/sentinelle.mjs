@@ -134,7 +134,9 @@ async function checkFreshness() {
       const j = await r.json();
       const payload = typeof j.result === "string" ? JSON.parse(j.result) : j.result;
       const age = payload?.fetchedAt ? (Date.now() - Date.parse(payload.fetchedAt)) / 60_000 : null;
-      if (age == null) fail("fraîcheur", "prix du bandeau : aucun relevé en cache");
+      // 06/10/2026 : un refus d'Upstash (quota « max requests limit exceeded ») passait pour « aucun relevé »
+      if (j.error || !r.ok) fail("fraîcheur", `prix du bandeau : lecture du cache refusée par Upstash (HTTP ${r.status}${j.error ? ` : ${String(j.error).slice(0, 160)}` : ""})`);
+      else if (age == null) fail("fraîcheur", "prix du bandeau : aucun relevé en cache");
       else if (age > 30) fail("fraîcheur", `prix du bandeau vieux de ${Math.round(age)} min (tâche Vercel des prix en panne ?)`);
       else ok("fraîcheur", `prix du bandeau relevés il y a ${Math.round(age)} min`);
     } catch (e) {
