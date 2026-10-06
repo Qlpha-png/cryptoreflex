@@ -442,8 +442,10 @@ async function veilleFrais() {
   let vues = 0;
   for (const p of platforms) {
     if (ignorer.has(p.id)) continue;
-    const pages = [...new Set([p.fees?.cost?.source, ...(F.pages?.[p.id] || [])].filter((u) => typeof u === "string" && u))];
     const index = F.index?.[p.id] || [];
+    // Une page déclarée « index » n'est relue que comme liste de PDF : relue aussi comme page, les deux empreintes s'écrasaient
+    // (faux « phrases changées » chaque nuit sur deblock.com/fr/accords-juridiques, vu le 06/10/2026).
+    const pages = [...new Set([p.fees?.cost?.source, ...(F.pages?.[p.id] || [])].filter((u) => typeof u === "string" && u && !index.includes(u)))];
     if (!pages.length && !index.length) continue;
     const refP = ETAT.frais?.[p.id] || {};
     const obs = (observe.frais[p.id] = {});
