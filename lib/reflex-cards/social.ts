@@ -132,12 +132,15 @@ export function planPick(draw: DrawRow, rnd: Rnd = cryptoRnd) {
 /* belles cartes d'un booster annoncées dans le fil des amis : la plus belle du booster seulement */
 const ED_SCORE: Record<string, number> = { relic: 100, myth: 90, toty: 80, icon: 70 };
 const FIN_SCORE: Record<string, number> = { onyx: 65, or: 60, ag: 55 };
+/** les Reliques de la chambre forte ne sont pas dans CARD (hors Univers comme en Univers) */
+const RELIC_IDS = new Set(RULES.relics);
 export function notablePull(items: { id: string; ed: string | null; fin: string | null; serial?: number | null }[]) {
   let best: (typeof items)[number] | null = null, score = 0;
   for (const it of items) {
+    /* une Relique est scorée bien qu'absente de CARD ; toute autre carte doit être connue */
     const c = CARD.get(it.id);
-    if (!c) continue;
-    const sc = Math.max(it.ed ? ED_SCORE[it.ed] ?? 0 : 0, !it.ed && it.fin ? FIN_SCORE[it.fin] ?? 0 : 0, !it.ed && c.r === "L" ? 50 : 0, !it.ed && c.r === "UR" ? 40 : 0);
+    if (!c && !(it.ed === "relic" && RELIC_IDS.has(it.id))) continue;
+    const sc = Math.max(it.ed ? ED_SCORE[it.ed] ?? 0 : 0, !it.ed && it.fin ? FIN_SCORE[it.fin] ?? 0 : 0, !it.ed && c?.r === "L" ? 50 : 0, !it.ed && c?.r === "UR" ? 40 : 0);
     /* à score égal, la dernière : le booster est trié du moins rare au plus rare (Légendaire Holo annoncée plutôt que la Légendaire) */
     if (sc > 0 && sc >= score) { score = sc; best = it; }
   }
@@ -170,7 +173,7 @@ export async function socialView(sdb: SocialDb, s: GameState, player: string, ct
     giftUsed: giftUsed(s, ctx.today),
     picksLeft: Math.max(0, pmax - picksUsed(s, ctx.today)), pickMax: pmax,
     packs: packs.map((p) => ({ code: p.code, id: p.id, at: p.at, cards: p.cards.filter((c) => CARD.get(c.id) && (CARD.get(c.id)!.fossil || isOut(CARD.get(c.id)!, ctx.day))) })),
-    feed: feed.filter((f) => !f.card || !!CARD.get(f.card)),
+    feed: feed.filter((f) => !f.card || !!CARD.get(f.card) || (f.kind === "pull" && f.data?.ed === "relic" && RELIC_IDS.has(f.card))),
     referral: { week: refWeek, max: REFERRALS_PER_WEEK },
     mine: tradeables(s.cards, ctx.day),
   };

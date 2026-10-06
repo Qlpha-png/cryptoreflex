@@ -24,7 +24,7 @@ const action = await import("@/app/api/cartes/action/route");
 const social = await import("@/app/api/cartes/social/route");
 const etat = await import("@/app/api/cartes/etat/route");
 const { CARD, RULES, isOut, copyOk, tradeables } = await import("@/lib/reflex-cards/engine");
-const { notablePull, planPick } = await import("@/lib/reflex-cards/social");
+const { notablePull, planPick, afterOpen, supabaseSocialDb } = await import("@/lib/reflex-cards/social");
 
 const BASE = "https://www.cryptoreflex.fr";
 let ipN = 0;
@@ -412,6 +412,25 @@ describe("fil d'activité et réactions", () => {
     if (L) expect(notablePull([{ id: L, ed: null, fin: null }, { id: L, ed: null, fin: "holo" }])?.fin).toBe("holo");
     expect(notablePull([{ id: C1, ed: null, fin: "or", serial: 3 }])?.fin).toBe("or");
     expect(notablePull([{ id: C1, ed: "icon", fin: null }])?.ed).toBe("icon");
+  });
+  /* défaut du 06/10 : les Reliques ne sont pas dans CARD, elles n'étaient jamais annoncées (et la Mythique passait devant) */
+  const RELIC = RULES.relics.find((id) => !CARD.has(id))!, MYTH = RULES.ed.myth.list[0];
+  it("Relique (absente de CARD) : annoncée ; Mythique + Relique → la Relique", () => {
+    expect(RELIC).toBeTruthy();
+    expect(CARD.has(MYTH)).toBe(true);
+    expect(notablePull([{ id: C1, ed: null, fin: null }, { id: RELIC, ed: "relic", fin: null }])).toMatchObject({ id: RELIC, ed: "relic" });
+    expect(notablePull([{ id: MYTH, ed: "myth", fin: null }, { id: RELIC, ed: "relic", fin: null }])).toMatchObject({ id: RELIC, ed: "relic" });
+    expect(notablePull([{ id: RELIC, ed: "relic", fin: null }, { id: MYTH, ed: "myth", fin: null }])).toMatchObject({ id: RELIC, ed: "relic" });
+    /* une carte inconnue n'est jamais annoncée, même déguisée en Relique hors de la chambre forte */
+    expect(notablePull([{ id: "inconnue", ed: null, fin: "onyx" }, { id: "inconnue", ed: "relic", fin: null }])).toBeNull();
+  });
+  it("Relique tirée par A : B la voit dans son fil (carte et édition)", async () => {
+    await afterOpen(supabaseSocialDb(fakeSupabase(pg)), await pid("A"), { data: { items: [{ id: C1, ed: null, fin: null }, { id: MYTH, ed: "myth", fin: null }, { id: RELIC, ed: "relic", fin: null }] } });
+    as("B");
+    const f = (await getSoc()).j.feed as { kind: string; card: string | null; data: { ed?: string }; me: boolean }[];
+    const pulls = f.filter((e) => e.kind === "pull" && !e.me);
+    expect(pulls.find((e) => e.card === RELIC)?.data.ed).toBe("relic");
+    expect(pulls.some((e) => e.card === MYTH)).toBe(false);
   });
 });
 
