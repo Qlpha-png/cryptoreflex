@@ -1,5 +1,7 @@
 /* Jetons de couleur --c-* (canaux « R G B »), GÉNÉRÉS par scripts/design/tokens.source.mjs (lot A1). */
 @import "./styles/tokens.css";
+/* Lot A2 : les couleurs de ce fichier passent par ces jetons (rgb(var(--c-…) / a)) ; restent en dur les seules teintes
+   sans jeton de valeur identique (héros, crème #ffe9c2…), les masques et le voile de [popover]::backdrop. */
 
 @tailwind base;
 @tailwind components;
@@ -105,11 +107,11 @@ body {
     radial-gradient(
       ellipse 120% 90% at 50% 10%,
       transparent 55%,
-      rgba(0, 0, 0, 0.42) 100%
+      rgb(var(--c-scrim) / 0.42) 100%
     ),
     radial-gradient(
       ellipse 45% 32% at 82% -4%,
-      rgba(56, 189, 248, 0.055),
+      rgb(var(--c-ice) / 0.055),
       transparent 62%
     ),
     radial-gradient(
@@ -119,7 +121,7 @@ body {
     ),
     radial-gradient(
       ellipse 38% 26% at 12% -2%,
-      rgba(245, 165, 36, 0.04),
+      rgb(var(--c-primary) / 0.04),
       transparent 60%
     );
   /* PAS de background-attachment: fixed — combiné aux backdrop-filter des
@@ -145,11 +147,11 @@ body {
    highlight suffisent à lire "verre" — réserver backdrop-blur aux PETITES
    surfaces (ticker, badges). */
 .glass-card {
-  background: rgba(22, 25, 31, 0.72);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgb(var(--c-surface) / 0.72);
+  border: 1px solid rgb(var(--c-fg-max) / 0.06);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.04),
-    0 6px 16px -4px rgba(0, 0, 0, 0.4);
+    inset 0 1px 0 rgb(var(--c-fg-max) / 0.04),
+    0 6px 16px -4px rgb(var(--c-scrim) / 0.4);
 }
 
 /* .num-data — chiffres "terminal" : mono + tabular pour que les prix
@@ -198,8 +200,8 @@ body {
   .hover-lift:hover {
     transform: translateY(-2px);
     box-shadow:
-      0 4px 12px -2px rgba(245, 165, 36, 0.12),
-      0 2px 4px -1px rgba(0, 0, 0, 0.18);
+      0 4px 12px -2px rgb(var(--c-primary) / 0.12),
+      0 2px 4px -1px rgb(var(--c-scrim) / 0.18);
   }
 }
 
@@ -231,52 +233,14 @@ body {
  * répétés dans chaque composant. Voir plan/code/design-system.md.
  * ================================================================ */
 @layer components {
-  .ds-display {
-    @apply font-display text-h2 sm:text-h1 md:text-display text-fg;
-  }
   .ds-h1 {
     @apply font-display text-h2 sm:text-h1 text-fg;
-  }
-  .ds-h2 {
-    @apply font-display text-h3 sm:text-h2 text-fg;
-  }
-  .ds-h3 {
-    @apply font-display text-h4 sm:text-h3 text-fg;
-  }
-  .ds-h4 {
-    @apply font-sans text-h5 sm:text-h4 text-fg;
-  }
-  .ds-h5 {
-    @apply font-sans text-h6 sm:text-h5 text-fg;
-  }
-  .ds-h6 {
-    @apply font-sans text-h6 text-fg;
   }
   .ds-lead {
     @apply text-body sm:text-lead text-fg/75;
   }
-  .ds-body {
-    @apply text-body text-fg/85;
-  }
-  .ds-small {
-    @apply text-small text-muted;
-  }
-  .ds-caption {
-    @apply text-caption uppercase tracking-wider text-muted;
-  }
   .ds-eyebrow {
     @apply text-caption font-semibold uppercase tracking-wider text-primary-soft;
-  }
-
-  /* Surface utilities — élévation cohérente (cf. shadow.e1..e5) */
-  .surface-1 {
-    @apply bg-surface border border-border rounded-2xl shadow-e1;
-  }
-  .surface-2 {
-    @apply bg-elevated border border-border rounded-2xl shadow-e2;
-  }
-  .surface-3 {
-    @apply bg-elevated border border-border rounded-2xl shadow-e3;
   }
 }
 
@@ -292,9 +256,6 @@ body {
   .glow-border {
     @apply border border-primary/30;
   }
-  .accent-text {
-    @apply text-primary;
-  }
   .btn-primary {
     /* min-h-tap = 44px = guideline Apple HIG / WCAG 2.5.5 (tap target).
        Audit a11y 26/04/2026 : avant text-white sur bg-primary (#f5a524 or)
@@ -305,7 +266,7 @@ body {
            min-h-tap
            bg-primary text-background shadow-e2
            transition-all duration-normal ease-emphasized
-           hover:bg-primary-glow hover:shadow-[0_8px_24px_-8px_rgba(245,165,36,0.5)] hover:-translate-y-[1px]
+           hover:bg-primary-glow hover:shadow-[0_8px_24px_-8px_rgb(var(--c-primary)/0.5)] hover:-translate-y-[1px]
            active:bg-primary active:translate-y-0 active:shadow-none
            focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background;
   }
@@ -326,16 +287,6 @@ body {
   .badge-info {
     @apply badge border-primary/40 bg-primary/10 text-primary-soft;
   }
-  .badge-warning {
-    @apply badge border-warning/40 bg-warning/10 text-warning-fg;
-  }
-  .badge-danger {
-    @apply badge border-danger/40 bg-danger/10 text-danger-fg;
-  }
-  /* Tap target accessible : utilitaire générique (icône, lien icône, etc.) */
-  .tap-target {
-    @apply inline-flex items-center justify-center min-h-tap min-w-tap;
-  }
   /* Conteneur scroll horizontal mobile (évite que le table cassée le layout global) */
   .mobile-scroll-x {
     @apply overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0;
@@ -354,12 +305,12 @@ body {
    */
   .card-premium {
     background:
-      linear-gradient(180deg, rgba(31, 36, 44, 0.85) 0%, rgba(22, 25, 31, 0.85) 100%);
-    border: 1px solid rgba(38, 43, 51, 0.9);
+      linear-gradient(180deg, rgb(var(--c-elevated) / 0.85) 0%, rgb(var(--c-surface) / 0.85) 100%);
+    border: 1px solid rgb(var(--c-border) / 0.9);
     box-shadow:
-      inset 0 1px 0 0 rgba(255, 255, 255, 0.04),
-      0 8px 24px -8px rgba(0, 0, 0, 0.4),
-      0 2px 4px -2px rgba(0, 0, 0, 0.25);
+      inset 0 1px 0 0 rgb(var(--c-fg-max) / 0.04),
+      0 8px 24px -8px rgb(var(--c-scrim) / 0.4),
+      0 2px 4px -2px rgb(var(--c-scrim) / 0.25);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     @apply rounded-2xl ring-1 ring-primary/10;
@@ -371,23 +322,23 @@ body {
   @media (hover: hover) {
     .card-premium:hover {
       transform: translateY(-3px);
-      border-color: rgba(245, 165, 36, 0.25);
+      border-color: rgb(var(--c-primary) / 0.25);
       box-shadow:
-        inset 0 1px 0 0 rgba(255, 255, 255, 0.06),
-        0 16px 36px -10px rgba(0, 0, 0, 0.55),
-        0 4px 8px -4px rgba(0, 0, 0, 0.3),
-        0 0 32px -12px rgba(245, 165, 36, 0.35);
+        inset 0 1px 0 0 rgb(var(--c-fg-max) / 0.06),
+        0 16px 36px -10px rgb(var(--c-scrim) / 0.55),
+        0 4px 8px -4px rgb(var(--c-scrim) / 0.3),
+        0 0 32px -12px rgb(var(--c-primary) / 0.35);
     }
   }
   /* Variante gold prononcée : platforms section */
   @media (hover: hover) {
     .card-premium-gold:hover {
-      border-color: rgba(245, 165, 36, 0.4);
+      border-color: rgb(var(--c-primary) / 0.4);
       box-shadow:
-        inset 0 1px 0 0 rgba(255, 255, 255, 0.08),
-        0 18px 40px -10px rgba(0, 0, 0, 0.6),
-        0 4px 12px -4px rgba(0, 0, 0, 0.35),
-        0 0 48px -10px rgba(245, 165, 36, 0.55);
+        inset 0 1px 0 0 rgb(var(--c-fg-max) / 0.08),
+        0 18px 40px -10px rgb(var(--c-scrim) / 0.6),
+        0 4px 12px -4px rgb(var(--c-scrim) / 0.35),
+        0 0 48px -10px rgb(var(--c-primary) / 0.55);
     }
   }
 
@@ -402,7 +353,7 @@ body {
    * Fix : couleur `--primary` solide systématique en fallback ; le gradient
    * n'override que si `background-clip: text` est SUPPORTÉ (@supports). */
   .text-gradient-gold {
-    color: var(--primary);
+    color: rgb(var(--c-primary));
   }
   @supports ((-webkit-background-clip: text) or (background-clip: text)) {
     .text-gradient-gold {
@@ -425,22 +376,12 @@ body {
     background: linear-gradient(
       90deg,
       transparent 0%,
-      rgba(245, 165, 36, 0.0) 5%,
-      rgba(245, 165, 36, 0.35) 50%,
-      rgba(245, 165, 36, 0.0) 95%,
+      rgb(var(--c-primary) / 0.0) 5%,
+      rgb(var(--c-primary) / 0.35) 50%,
+      rgb(var(--c-primary) / 0.0) 95%,
       transparent 100%
     );
     border: 0;
-  }
-
-  /* Glow gold mesuré — pour scores, badges, CTA */
-  .glow-gold-soft {
-    box-shadow: 0 0 24px -6px rgba(245, 165, 36, 0.4);
-  }
-  .glow-gold-medium {
-    box-shadow:
-      0 0 0 1px rgba(245, 165, 36, 0.3),
-      0 0 28px -4px rgba(245, 165, 36, 0.55);
   }
 }
 
@@ -492,29 +433,6 @@ body {
   letter-spacing: 0.12em;
 }
 
-/* Sparkline glow — appliqué via class sur le path SVG */
-.sparkline-glow-up {
-  filter: drop-shadow(0 0 3px rgba(34, 197, 94, 0.45));
-}
-.sparkline-glow-down {
-  filter: drop-shadow(0 0 3px rgba(239, 68, 68, 0.45));
-}
-
-/* Row hover refined : gradient sweep gauche → droite très subtil */
-.row-hover-refined {
-  position: relative;
-  transition: background-color 220ms ease, box-shadow 220ms ease;
-}
-.row-hover-refined:hover {
-  background: linear-gradient(
-    90deg,
-    rgba(245, 165, 36, 0.05) 0%,
-    rgba(31, 36, 44, 0.55) 28%,
-    rgba(31, 36, 44, 0.55) 100%
-  );
-  box-shadow: inset 2px 0 0 0 rgba(245, 165, 36, 0.45);
-}
-
 /* Dotted grid — pattern recommandé par le design lead, plus subtil que la grille linéaire */
 .bg-grid {
   background-image: radial-gradient(
@@ -549,12 +467,12 @@ body {
   background:
     radial-gradient(
       ellipse 52% 40% at 18% 22%,
-      rgba(245, 165, 36, 0.18),
+      rgb(var(--c-primary) / 0.18),
       transparent 60%
     ),
     radial-gradient(
       ellipse 38% 32% at 86% 10%,
-      rgba(56, 189, 248, 0.14),
+      rgb(var(--c-ice) / 0.14),
       transparent 64%
     );
 }
@@ -599,7 +517,7 @@ body {
   background: radial-gradient(
     120% 90% at 50% 30%,
     #0e1116 0%,
-    #0b0d10 55%,
+    rgb(var(--c-background)) 55%,
     #07080a 100%
   );
 }
@@ -611,7 +529,7 @@ body {
   letter-spacing: -0.035em;
 }
 .hero-h1-accent {
-  background-image: linear-gradient(100deg, #f5a524 0%, #fbbf24 45%, #ffe9c2 75%, #fbbf24 100%);
+  background-image: linear-gradient(100deg, rgb(var(--c-primary)) 0%, rgb(var(--c-primary-glow)) 45%, #ffe9c2 75%, rgb(var(--c-primary-glow)) 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -657,9 +575,9 @@ body {
   border-radius: 9999px;
   background: #ffe9c2;
   box-shadow:
-    0 0 0 3px rgba(125, 211, 252, 0.25),
-    0 0 18px 4px rgba(125, 211, 252, 0.55),
-    0 0 40px 10px rgba(56, 189, 248, 0.25);
+    0 0 0 3px rgb(var(--c-ice-fg) / 0.25),
+    0 0 18px 4px rgb(var(--c-ice-fg) / 0.55),
+    0 0 40px 10px rgb(var(--c-ice) / 0.25);
   animation: pulse-head 2.4s ease-in-out infinite;
 }
 @keyframes pulse-head {
@@ -679,18 +597,18 @@ body {
   font-size: 13px;
   color: var(--color-fg);
   background: rgba(14, 17, 22, 0.82);
-  border: 1px solid rgba(125, 211, 252, 0.28);
+  border: 1px solid rgb(var(--c-ice-fg) / 0.28);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.06),
-    0 8px 24px -8px rgba(0, 0, 0, 0.6);
+    inset 0 1px 0 rgb(var(--c-fg-max) / 0.06),
+    0 8px 24px -8px rgb(var(--c-scrim) / 0.6);
   white-space: nowrap;
   transition: border-color 300ms ease, box-shadow 300ms ease;
 }
 .hero-pulse-chip-flash {
-  border-color: rgba(125, 211, 252, 0.7);
+  border-color: rgb(var(--c-ice-fg) / 0.7);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.06),
-    0 0 22px -2px rgba(56, 189, 248, 0.45);
+    inset 0 1px 0 rgb(var(--c-fg-max) / 0.06),
+    0 0 22px -2px rgb(var(--c-ice) / 0.45);
 }
 .hero-pulse-chip-label {
   font-weight: 700;
@@ -735,7 +653,7 @@ body {
 
 .hero-stat-sep {
   margin: 0 0.6em;
-  color: rgba(245, 165, 36, 0.5);
+  color: rgb(var(--c-primary) / 0.5);
 }
 
 @media (max-width: 640px) {
@@ -780,8 +698,8 @@ body {
   background: linear-gradient(
     to bottom,
     transparent,
-    rgba(125, 211, 252, 0.35) 30%,
-    rgba(125, 211, 252, 0.35) 70%,
+    rgb(var(--c-ice-fg) / 0.35) 30%,
+    rgb(var(--c-ice-fg) / 0.35) 70%,
     transparent
   );
 }
@@ -792,17 +710,18 @@ body {
   transform: translate(-50%, -50%);
   background: #ffe9c2;
   box-shadow:
-    0 0 0 3px rgba(125, 211, 252, 0.25),
-    0 0 14px rgba(125, 211, 252, 0.8);
+    0 0 0 3px rgb(var(--c-ice-fg) / 0.25),
+    0 0 14px rgb(var(--c-ice-fg) / 0.8);
 }
 .hero-scrub-chip {
   transform: translate(-50%, -100%);
   font-size: 12px;
   letter-spacing: 0.02em;
   white-space: nowrap;
-  color: var(--color-foreground, #e8e6e1);
+  /* Lot A2 : --color-foreground n'a jamais existé, le secours s'affichait : valeur effective gardée (aucun jeton exact). */
+  color: #e8e6e1;
   background: rgba(10, 12, 16, 0.88);
-  border: 1px solid rgba(125, 211, 252, 0.28);
+  border: 1px solid rgb(var(--c-ice-fg) / 0.28);
   border-radius: 9999px;
   padding: 4px 12px;
   backdrop-filter: blur(6px);
@@ -830,8 +749,8 @@ body {
   position: relative;
   overflow: hidden;
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.10),
-    0 6px 16px -4px rgba(0, 0, 0, 0.4);
+    inset 0 1px 0 rgb(var(--c-fg-max) / 0.10),
+    0 6px 16px -4px rgb(var(--c-scrim) / 0.4);
 }
 .card-obsidian::after {
   content: "";
@@ -853,23 +772,6 @@ body {
     transform: translateX(130%) skewX(-18deg);
   }
 }
-
-/* .filon-hairline — separateur de section signature : 1px or->glacier
-   avec un leger bloom. Remplace les border-t/divider neutres. */
-.filon-hairline {
-  height: 1px;
-  border: 0;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(245, 165, 36, 0.45) 22%,
-    rgba(255, 233, 194, 0.55) 50%,
-    rgba(125, 211, 252, 0.45) 78%,
-    transparent 100%
-  );
-  box-shadow: 0 0 12px rgba(245, 165, 36, 0.18);
-}
-
 
 /* DA POULS — grammaire des pages-piliers : eyebrow mono + H1 display.
    Constat (inspection Chrome 2026-06-12) : toutes les pages internes
@@ -893,40 +795,6 @@ body {
   letter-spacing: -0.03em;
 }
 
-
-/* LA COMÈTE — ride la courbe BTC (HeroPulseComet.tsx). Positionnée par
-   left/top en % (set par rAF), la traînée est un pseudo orienté par
-   --comet-angle. Compositor-friendly : la tête est minuscule. */
-.hero-pulse-comet {
-  position: absolute;
-  width: 7px;
-  height: 7px;
-  margin: -3.5px 0 0 -3.5px;
-  border-radius: 9999px;
-  background: #ffffff;
-  opacity: 0;
-  box-shadow:
-    0 0 10px 3px rgba(255, 233, 194, 0.85),
-    0 0 26px 8px rgba(245, 165, 36, 0.45);
-  transition: opacity 300ms ease;
-}
-.hero-pulse-comet::before {
-  content: "";
-  position: absolute;
-  right: 4px;
-  top: 50%;
-  width: 64px;
-  height: 2px;
-  transform-origin: right center;
-  transform: translateY(-50%) rotate(var(--comet-angle, 0deg));
-  background: linear-gradient(
-    270deg,
-    rgba(255, 233, 194, 0.75),
-    rgba(245, 165, 36, 0.28) 55%,
-    transparent
-  );
-  border-radius: 9999px;
-}
 
 /* Étincelles aux sommets — 5 spans recyclés, animation one-shot. */
 .hero-spark {
@@ -955,7 +823,6 @@ body {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .hero-pulse-comet,
   .hero-spark {
     display: none;
   }
@@ -976,12 +843,12 @@ body {
   opacity: 0;
   transition: opacity 300ms ease, filter 350ms ease;
   will-change: transform;
-  filter: drop-shadow(0 0 12px rgba(245, 165, 36, 0.35));
+  filter: drop-shadow(0 0 12px rgb(var(--c-primary) / 0.35));
 }
 /* En vol : la lumière passe de l'or au glacier et s'intensifie — écho de
    la thermique du pouls (l'or = le sol/passé, le glacier = l'air/présent). */
 .hero-rider-air {
-  filter: drop-shadow(0 0 18px rgba(125, 211, 252, 0.55));
+  filter: drop-shadow(0 0 18px rgb(var(--c-ice-fg) / 0.55));
 }
 /* Halo de contact : la ligne s'illumine sous la roue arrière au roulage
    (la moto « charge » le pouls en lumière). Positionné en px par le
@@ -1006,8 +873,8 @@ body {
   border-radius: 9999px;
   background: radial-gradient(
     closest-side,
-    rgba(125, 211, 252, 0.55),
-    rgba(125, 211, 252, 0.18) 45%,
+    rgb(var(--c-ice-fg) / 0.55),
+    rgb(var(--c-ice-fg) / 0.18) 45%,
     transparent 72%
   );
   mix-blend-mode: screen;
@@ -1028,7 +895,7 @@ body {
 .hero-rider-ghost {
   opacity: 0;
   transition: opacity 250ms ease;
-  filter: blur(1.2px) drop-shadow(0 0 10px rgba(125, 211, 252, 0.3));
+  filter: blur(1.2px) drop-shadow(0 0 10px rgb(var(--c-ice-fg) / 0.3));
 }
 .hero-rider-ghost[data-ghost="1"].hero-rider-ghost-on {
   opacity: 0.26;
@@ -1080,7 +947,7 @@ body {
   border-radius: 50%;
   background: var(--color-success);
   margin-right: 6px;
-  box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7);
+  box-shadow: 0 0 0 0 rgb(var(--c-success) / 0.7);
   animation: pulse-dot 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
@@ -1120,109 +987,6 @@ body {
 /* DA POULS 2026-06-11 — hero-aurora SUPPRIMEE (remplacee par la ligne
    de vie HeroPulse : une signature forte au lieu de 5 effets faibles). */
 
-/* SCAN LINE — barre lumineuse gold qui balaye horizontalement le bandeau
-   live-market-strip. Évoque "scanner crypto live" Bloomberg style.
-   BATCH 33 : élargie 20%→40% + opacity 0.8→1 + epaisseur 1px→2px pour
-   être perceptible immédiatement (user feedback "ça bouge quasiment pas").
-   Cycle 4s linéaire sur largeur entière. */
-.live-market-strip {
-  position: relative;
-  overflow: hidden;
-}
-.live-market-strip::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: -40%;
-  width: 40%;
-  height: 2px;
-  background: linear-gradient(90deg, transparent 0%, rgba(245, 165, 36, 0.9) 30%, rgba(255, 255, 255, 0.95) 50%, rgba(245, 165, 36, 0.9) 70%, transparent 100%);
-  box-shadow: 0 0 14px 0 rgba(245, 165, 36, 0.55);
-  /* BATCH 42 — gardé 4.5s (déjà visible, animation courte). */
-  animation: scan-line 3.5s linear infinite;
-  pointer-events: none;
-  z-index: 5;
-}
-.live-market-strip::after {
-  content: "";
-  position: absolute;
-  bottom: 0;
-  right: -40%;
-  width: 40%;
-  height: 2px;
-  background: linear-gradient(270deg, transparent 0%, rgba(34, 197, 94, 0.7) 30%, rgba(255, 255, 255, 0.85) 50%, rgba(34, 197, 94, 0.7) 70%, transparent 100%);
-  box-shadow: 0 0 14px 0 rgba(34, 197, 94, 0.4);
-  animation: scan-line-back 3.5s linear infinite;
-  animation-delay: 2.25s;
-  pointer-events: none;
-  z-index: 5;
-}
-@keyframes scan-line {
-  0%   { left: -40%; }
-  100% { left: 140%; }
-}
-@keyframes scan-line-back {
-  0%   { right: -40%; }
-  100% { right: 140%; }
-}
-
-/* LIVE PULSE GLOW — pulse plus visible sur les éléments .live-pulse
-   (numéros critiques du bandeau). Pour signaler "données live". */
-.live-pulse {
-  animation: live-pulse-glow 2.4s ease-in-out infinite;
-}
-@keyframes live-pulse-glow {
-  0%, 100% {
-    text-shadow:
-      0 0 0 rgba(245, 165, 36, 0),
-      0 0 0 rgba(34, 197, 94, 0);
-  }
-  50% {
-    text-shadow:
-      0 0 12px rgba(34, 197, 94, 0.45),
-      0 0 4px rgba(245, 165, 36, 0.25);
-  }
-}
-
-/* CARD AURORA BORDER — bordure conic gold qui circule (4s).
-   @property --angle pour anim CSS pure. Fallback : bordure statique
-   via @supports. Référence : Vercel cards hover, Stripe sessions. */
-@property --angle {
-  syntax: '<angle>';
-  inherits: false;
-  initial-value: 0deg;
-}
-.card-aurora-border {
-  position: relative;
-}
-.card-aurora-border::before {
-  content: "";
-  position: absolute;
-  inset: -1px;
-  border-radius: inherit;
-  padding: 1px;
-  background: conic-gradient(
-    from var(--angle),
-    transparent 70%,
-    rgba(245, 165, 36, 0.65),
-    transparent
-  );
-  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite: xor;
-          mask-composite: exclude;
-  animation: angle-rotate 4s linear infinite;
-  pointer-events: none;
-  z-index: 0;
-}
-@keyframes angle-rotate {
-  to { --angle: 360deg; }
-}
-@supports not (background: conic-gradient(from 0deg, red, blue)) {
-  .card-aurora-border::before {
-    background: linear-gradient(135deg, rgba(245, 165, 36, 0.4), transparent);
-  }
-}
-
 /* REVEAL ON SCROLL — opacity + translateY 24px, déclenché via
    IntersectionObserver. Réutilisable sur toutes les sections. */
 .reveal {
@@ -1251,46 +1015,11 @@ body {
 
 /* Reduced motion — désactiver toutes les nouvelles anims */
 @media (prefers-reduced-motion: reduce) {
-  .hero-aurora,
-  .live-market-strip::before,
-  .live-market-strip::after,
-  .card-aurora-border::before,
-  .live-pulse {
-    animation: none !important;
-  }
   .reveal {
     opacity: 1 !important;
     transform: none !important;
   }
 }
-
-/* ============================================================
- * BATCH 41b — Mesh gradient body drift (signature 2026)
- *
- * Référence : Stripe.com 2025+, Phantom.app, Anthropic.com.
- * 2 radial-gradients très subtils (3-4% opacity) qui dérivent lentement
- * en alternance sur 60s. Pattern "le fond du site respire" sans gimmick.
- *
- * Performance : 1 pseudo-element fixe, transform composé GPU = 0 cost.
- * Pause auto via .tab-hidden (VisibilityPauser) + reduced-motion.
- *
- * z-index 0 + pointer-events:none = ne perturbe rien.
- * ============================================================ */
-/* BATCH 43 — body::before mesh gradient RETIRÉ.
-   User feedback "aucun liens nul par marche" — le pseudo-element en
-   position fixed inset 0 z-index 0 créait un stacking context qui
-   bloquait les clics sur certains navigateurs malgré pointer-events:
-   none. Le gain visuel (drift gradient subtil 25s) ne valait pas le
-   risque sur l'interactivité site entier. À reconsidérer plus tard
-   avec une approche fixed à z-index: -1 dans un wrapper dédié. */
-@keyframes mesh-drift {
-  0%   { transform: translate(0, 0) scale(1); }
-  100% { transform: translate(-8%, 5%) scale(1.15); }
-}
-@media (prefers-reduced-motion: reduce) {
-  body::before { animation: none !important; }
-}
-.tab-hidden body::before { animation-play-state: paused !important; }
 
 /* ============================================================
  * BATCH 41b — Marquee trust strip
@@ -1300,8 +1029,8 @@ body {
 .marquee-trust {
   position: relative;
   overflow: hidden;
-  border-block: 1px solid rgba(255, 255, 255, 0.06);
-  background: rgba(22, 25, 31, 0.3);
+  border-block: 1px solid rgb(var(--c-fg-max) / 0.06);
+  background: rgb(var(--c-surface) / 0.3);
   padding: 1rem 0;
 }
 .marquee-trust-track {
@@ -1335,83 +1064,6 @@ body {
 }
 @media (prefers-reduced-motion: reduce) {
   .digit-flip-cell { animation: none !important; }
-}
-
-/* ============================================================
- * BATCH 41c — Scroll-driven Animations natives (Chrome 115+, Edge 115+,
- * Firefox 142+ behind flag, Safari TP). Remplace les IntersectionObserver
- * JS pour les reveals. Performance : compositor-driven 60fps natif,
- * 0 main-thread cost, 0 JS overhead.
- *
- * Fallback : si pas supporté, le composant Reveal JS continue de
- * fonctionner (les classes .scroll-reveal-css sont simplement ignorées).
- * ============================================================ */
-@supports (animation-timeline: view()) {
-  @media (prefers-reduced-motion: no-preference) {
-    .scroll-reveal-css {
-      animation: scroll-reveal-in linear both;
-      animation-timeline: view();
-      animation-range: entry 0% cover 30%;
-    }
-    @keyframes scroll-reveal-in {
-      from { opacity: 0; transform: translateY(30px) scale(0.98); }
-      to   { opacity: 1; transform: translateY(0) scale(1); }
-    }
-
-    /* Reading progress bar fixed top — track scroll global du body */
-    .reading-progress-css {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%;
-      height: 3px;
-      background: linear-gradient(90deg, var(--color-primary, #F5A524), var(--color-primary-glow, #FBBF24));
-      transform-origin: 0 50%;
-      transform: scaleX(0);
-      animation: reading-progress-fill linear forwards;
-      animation-timeline: scroll(root);
-      z-index: 100;
-    }
-    @keyframes reading-progress-fill {
-      from { transform: scaleX(0); }
-      to   { transform: scaleX(1); }
-    }
-  }
-}
-
-/* ============================================================
- * BATCH 41c — @starting-style + transition-behavior: allow-discrete
- * (Chrome 117+, Safari 17.5+, Firefox 129+, ~92% support).
- *
- * Permet animations enter/exit natives sur display: none ↔ block,
- * popovers, dialogs sans framer-motion. Les drawers/cookie-banner
- * peuvent utiliser .smooth-discrete pour fade+slide gratuit.
- *
- * Fallback : navigateurs anciens ignorent @starting-style → snap
- * sans anim, UX non dégradée.
- * ============================================================ */
-.smooth-discrete {
-  transition: opacity 240ms ease, transform 240ms cubic-bezier(0.22, 1, 0.36, 1),
-              display 240ms allow-discrete, overlay 240ms allow-discrete;
-  opacity: 1;
-  transform: translateY(0);
-}
-.smooth-discrete[hidden],
-.smooth-discrete:not([popover]):not(:popover-open).hidden {
-  opacity: 0;
-  transform: translateY(20px);
-}
-@starting-style {
-  .smooth-discrete:not([hidden]):not(.hidden),
-  .smooth-discrete:popover-open {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .smooth-discrete {
-    transition: none !important;
-    transform: none !important;
-  }
 }
 
 /* ============================================================
@@ -1491,72 +1143,21 @@ body {
  * - pretty : évite les "veuves orphelines" sur paragraphes (ideal lead)
  * Pas besoin de @supports : graceful (ignoré si pas supporté). */
 h1, h2, h3,
-.ds-h1, .ds-h2, .ds-h3 {
+.ds-h1 {
   text-wrap: balance;
 }
 p.lead, .ds-lead, .lead {
   text-wrap: pretty;
 }
 
-/* CONTAINER QUERIES @container (Chrome 105+, Safari 16+, Firefox 110+, ~94%)
- * Permet aux composants de s'adapter selon LEUR largeur, pas le viewport.
- * Particulièrement utile sur HeroLiveWidget qui peut vivre en sidebar
- * de pages secondaires (largeur variable). */
-.cq-widget {
-  container-type: inline-size;
-  container-name: widget;
-}
-@container widget (min-width: 480px) {
-  .cq-grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .cq-show-md { display: block; }
-}
-@container widget (max-width: 320px) {
-  .cq-hide-sm { display: none; }
-  .cq-text-compact { font-size: 0.875rem; line-height: 1.25rem; }
-}
-
 /* :HAS() PARENT SELECTOR (Chrome 105+, Safari 15.4+, Firefox 121+, ~94%)
  * Permet styling contextuel basé sur les enfants. Cas Cryptoreflex :
- * coloration adaptative du hero halo selon trend des coins live. */
+ * Cas Cryptoreflex : bouton d'envoi grisé tant qu'un champ du formulaire est invalide. */
 @supports selector(:has(*)) {
-  /* Si une crypto en hausse est présente dans le widget live, halo plus vert */
-  .hero-halo:has(~ * [data-trend="up"]) {
-    background-image: radial-gradient(ellipse at top, rgba(34, 197, 94, 0.08), transparent 60%);
-  }
   /* Form invalide → CTA submit dimmed (sans JS) */
   form:has(input:invalid) button[type="submit"]:not([data-allow-invalid]) {
     opacity: 0.55;
     cursor: not-allowed;
-  }
-  /* Section qui a un Reveal-CSS dedans → padding ajusté */
-  section:has(.scroll-reveal-css) {
-    overflow: clip; /* évite les jumps pendant le reveal */
-  }
-}
-
-/* COLOR-MIX() DYNAMIQUE (Chrome 111+, Safari 16.2+, Firefox 113+, ~95%)
- * Permet de dériver des nuances en CSS pur sans hardcoder.
- * Cas Cryptoreflex : badge gradient continu vs paliers fixes. */
-@supports (background: color-mix(in oklab, red, blue)) {
-  /* Hover state dérivé du brand sans 8 variantes */
-  .hover-mix-brand:hover {
-    background-color: color-mix(in oklab, var(--color-primary, #F5A524) 85%, white);
-  }
-  /* Badge "heat" : --heat 0..1 fond gradient continu success → warning → danger */
-  .heat-badge {
-    --heat: var(--heat-value, 0);
-    background: color-mix(
-      in oklab,
-      var(--color-success-soft, rgba(34, 197, 94, 0.1))
-        calc((1 - var(--heat)) * 100%),
-      var(--color-danger-soft, rgba(239, 68, 68, 0.1))
-    );
-    border-color: color-mix(
-      in oklab,
-      var(--color-success-border, rgba(34, 197, 94, 0.4))
-        calc((1 - var(--heat)) * 100%),
-      var(--color-danger-border, rgba(239, 68, 68, 0.4))
-    );
   }
 }
 
@@ -1603,25 +1204,9 @@ p.lead, .ds-lead, .lead {
    set par VisibilityPauser), on pause toutes les animations CSS gourmandes.
    Économie CPU/batterie mobile estimée 5-12%. Aucune impact UX visible
    (l'utilisateur ne voit pas l'onglet caché). */
-.tab-hidden .hero-aurora,
-.tab-hidden .hero-particles,
 .tab-hidden .hero-headline-accent,
-.tab-hidden .live-market-strip::before,
-.tab-hidden .live-market-strip::after,
-.tab-hidden .card-aurora-border::before,
-.tab-hidden .live-pulse,
 .tab-hidden .animate-pulse-dot {
   animation-play-state: paused !important;
-}
-
-/* BATCH 36 — color-mix() helpers (audit Tech 2026 Expert).
-   Permet hover states dérivés de --brand-gold sans hardcoder 8 nuances.
-   Support Chrome 111+ / Safari 16.2+ / Firefox 113+ (~95% globally).
-   Fallback : la valeur brand directe est gardée par cascade. */
-@supports (color: color-mix(in oklab, red, blue)) {
-  .hover-mix-brand:hover {
-    background-color: color-mix(in oklab, var(--color-primary, #F5A524) 85%, white);
-  }
 }
 
 /* Live dot — radar pulse (deuxième ring décalé 1s pour effet "ping ping").
@@ -1636,14 +1221,14 @@ p.lead, .ds-lead, .lead {
   height: 6px;
   border-radius: 50%;
   transform: translateY(-50%);
-  box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.55);
+  box-shadow: 0 0 0 0 rgb(var(--c-success) / 0.55);
   animation: pulse-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite 1s;
   pointer-events: none;
 }
 @keyframes pulse-ring {
-  0%   { box-shadow: 0 0 0 0   rgba(34, 197, 94, 0.55); opacity: 1; }
-  70%  { box-shadow: 0 0 0 10px rgba(34, 197, 94, 0);   opacity: 0; }
-  100% { box-shadow: 0 0 0 0   rgba(34, 197, 94, 0);   opacity: 0; }
+  0%   { box-shadow: 0 0 0 0   rgb(var(--c-success) / 0.55); opacity: 1; }
+  70%  { box-shadow: 0 0 0 10px rgb(var(--c-success) / 0);   opacity: 0; }
+  100% { box-shadow: 0 0 0 0   rgb(var(--c-success) / 0);   opacity: 0; }
 }
 
 /* Sparkline drawn progressively (1.2s) — style Stripe dashboard.
@@ -1674,11 +1259,11 @@ p.lead, .ds-lead, .lead {
   margin: 0 -4px;
 }
 @keyframes flash-bg-up {
-  0%   { background: rgba(34, 197, 94, 0.35); }
+  0%   { background: rgb(var(--c-success) / 0.35); }
   100% { background: transparent; }
 }
 @keyframes flash-bg-down {
-  0%   { background: rgba(239, 68, 68, 0.35); }
+  0%   { background: rgb(var(--c-danger) / 0.35); }
   100% { background: transparent; }
 }
 
@@ -1706,101 +1291,6 @@ p.lead, .ds-lead, .lead {
 }
 .logo-mount {
   animation: logo-mount 600ms cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-
-/* Drawer mobile — slide-in from right + spring easeOutBack (style iOS/Stripe) */
-@keyframes drawer-slide-in {
-  from { transform: translateX(100%); }
-  to   { transform: translateX(0); }
-}
-@keyframes backdrop-fade-in {
-  from { opacity: 0; }
-  to   { opacity: 1; }
-}
-@keyframes drawer-item-up {
-  from { opacity: 0; transform: translateY(8px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-.drawer-panel {
-  animation: drawer-slide-in 420ms cubic-bezier(0.34, 1.32, 0.64, 1) both;
-  will-change: transform;
-}
-.drawer-backdrop {
-  animation: backdrop-fade-in 240ms ease-out both;
-}
-.drawer-item {
-  opacity: 0;
-  animation: drawer-item-up 380ms cubic-bezier(0.22, 1, 0.36, 1) both;
-  /* Stagger via --i CSS var (set via inline style sur chaque item) */
-  animation-delay: calc(120ms + var(--i, 0) * 40ms);
-}
-
-/* ============================================================
- * NAV ITEM "Pro" — Premium Beacon (audit business 27/04/2026)
- * Item monétisation explicite : pulse gold permanent (signal
- * "important" pas agressif) + shine sweep diagonal au hover
- * (signature Apple/Stripe). Pattern cohérent avec .live-dot
- * (radar pulse) + .btn-primary-shine (sweep) déjà en prod.
- * ============================================================ */
-.nav-pro {
-  position: relative;
-  isolation: isolate;
-}
-
-/* Shine sweep diagonal au hover — gradient gold transparent
-   qui balaye 0 → 100% en 700ms. Réutilise le pattern
-   .btn-primary-shine::before mais adapté au contexte gold (pas blanc). */
-.nav-pro::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  background: linear-gradient(
-    115deg,
-    transparent 30%,
-    rgba(252, 211, 77, 0.28) 50%,
-    transparent 70%
-  );
-  transform: translateX(-120%);
-  transition: transform 700ms cubic-bezier(0.22, 1, 0.36, 1);
-  pointer-events: none;
-  z-index: -1;
-}
-@media (hover: hover) {
-  .nav-pro:hover::before {
-    transform: translateX(120%);
-  }
-}
-
-/* Pulse permanent — halo gold qui respire (cycle 3.2s, lent).
-   Très faible amplitude (0 → 18px spread, alpha 0.55 max) :
-   signal subliminal, pas distrayant pendant la lecture du contenu.
-   Même principe que .live-dot::after radar pulse (déjà en prod). */
-@keyframes nav-pro-pulse {
-  0%, 100% {
-    box-shadow:
-      0 0 0 0 rgba(245, 165, 36, 0),
-      0 0 8px -2px rgba(245, 165, 36, 0.25);
-  }
-  50% {
-    box-shadow:
-      0 0 0 3px rgba(245, 165, 36, 0.10),
-      0 0 18px -2px rgba(245, 165, 36, 0.55);
-  }
-}
-.animate-nav-pro-pulse {
-  animation: nav-pro-pulse 3.2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-}
-
-/* prefers-reduced-motion : neutralise sweep + pulse + crown rotation.
-   On garde le ring + bg primary/8 statiques (lisibilité préservée). */
-@media (prefers-reduced-motion: reduce) {
-  .animate-nav-pro-pulse {
-    animation: none !important;
-  }
-  .nav-pro::before {
-    display: none !important;
-  }
 }
 
 /* ============================================================
@@ -1845,10 +1335,7 @@ p.lead, .ds-lead, .lead {
 
 /* prefers-reduced-motion : neutralise tous les keyframes Block 2 nav. */
 @media (prefers-reduced-motion: reduce) {
-  .logo-mount,
-  .drawer-panel,
-  .drawer-backdrop,
-  .drawer-item {
+  .logo-mount {
     animation: none !important;
     opacity: 1 !important;
     transform: none !important;
@@ -1882,7 +1369,7 @@ p.lead, .ds-lead, .lead {
   border-radius: inherit;
   background: radial-gradient(
     220px circle at var(--mx, 50%) var(--my, 50%),
-    rgba(245, 165, 36, 0.10),
+    rgb(var(--c-primary) / 0.10),
     transparent 60%
   );
   opacity: 0;
@@ -1895,25 +1382,25 @@ p.lead, .ds-lead, .lead {
   }
   .journey-card:hover {
     transform: translateY(-2px);
-    box-shadow: 0 12px 32px -16px rgba(245, 165, 36, 0.25);
+    box-shadow: 0 12px 32px -16px rgb(var(--c-primary) / 0.25);
   }
 }
 
 /* Card "current step" — pulse gold doux (étape suivante à faire) */
 .journey-card[data-active="true"] {
-  border-color: rgba(245, 165, 36, 0.55);
+  border-color: rgb(var(--c-primary) / 0.55);
   animation: journey-pulse 2.4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 @keyframes journey-pulse {
   0%, 100% {
     box-shadow:
-      0 0 0 0 rgba(245, 165, 36, 0),
-      0 0 24px -8px rgba(245, 165, 36, 0.35);
+      0 0 0 0 rgb(var(--c-primary) / 0),
+      0 0 24px -8px rgb(var(--c-primary) / 0.35);
   }
   50% {
     box-shadow:
-      0 0 0 4px rgba(245, 165, 36, 0.10),
-      0 0 36px -6px rgba(245, 165, 36, 0.55);
+      0 0 0 4px rgb(var(--c-primary) / 0.10),
+      0 0 36px -6px rgb(var(--c-primary) / 0.55);
   }
 }
 
@@ -1963,8 +1450,8 @@ p.lead, .ds-lead, .lead {
   width: 6px;
   height: 6px;
   border-radius: 9999px;
-  background: rgb(245 165 36);
-  box-shadow: 0 0 8px 2px rgba(245, 165, 36, 0.7);
+  background: rgb(var(--c-primary));
+  box-shadow: 0 0 8px 2px rgb(var(--c-primary) / 0.7);
   opacity: 0;
   animation: sparkle-rise 1400ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
@@ -1987,7 +1474,7 @@ p.lead, .ds-lead, .lead {
   }
   .journey-card[data-active="true"] {
     animation: none !important;
-    box-shadow: 0 0 24px -8px rgba(245, 165, 36, 0.45) !important;
+    box-shadow: 0 0 24px -8px rgb(var(--c-primary) / 0.45) !important;
   }
   .journey-card::before {
     display: none !important;
@@ -2028,13 +1515,13 @@ p.lead, .ds-lead, .lead {
 @keyframes badge-pulse-strong {
   0%, 100% {
     box-shadow:
-      0 0 0 0 rgba(245, 165, 36, 0),
-      0 4px 14px -2px rgba(245, 165, 36, 0.55);
+      0 0 0 0 rgb(var(--c-primary) / 0),
+      0 4px 14px -2px rgb(var(--c-primary) / 0.55);
   }
   50% {
     box-shadow:
-      0 0 0 6px rgba(245, 165, 36, 0.10),
-      0 4px 22px -2px rgba(245, 165, 36, 0.75);
+      0 0 0 6px rgb(var(--c-primary) / 0.10),
+      0 4px 22px -2px rgb(var(--c-primary) / 0.75);
   }
 }
 
@@ -2053,7 +1540,7 @@ p.lead, .ds-lead, .lead {
   background: linear-gradient(
     115deg,
     transparent 30%,
-    rgba(255, 255, 255, 0.35) 50%,
+    rgb(var(--c-fg-max) / 0.35) 50%,
     transparent 70%
   );
   transition: left 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
@@ -2145,7 +1632,7 @@ p.lead, .ds-lead, .lead {
   background: var(--color-surface);
 }
 ::-webkit-scrollbar-thumb {
-  background: #2A2F3A;
+  background: rgb(var(--c-border-strong));
   border-radius: 999px;
 }
 ::-webkit-scrollbar-thumb:hover {
@@ -2161,6 +1648,8 @@ p.lead, .ds-lead, .lead {
 body.modal-open {
   overflow: hidden;
   overscroll-behavior: contain;
+  /* doublon fusionné (lot A2) : pull-to-refresh bloqué seulement quand une modale est ouverte (BATCH 36) */
+  overscroll-behavior-y: none;
 }
 
 /* BATCH 36 — fix audit Mobile UX P0 : overscroll-behavior-y: none
@@ -2172,12 +1661,8 @@ body.modal-open {
    - prefers-reduced-data : désactive les gradients animés pour le
      data-saver mode + battery
    - active:scale subtil sur les liens/boutons pour feel "press" iOS */
-body.modal-open {
-  overscroll-behavior-y: none;
-}
 @media (prefers-reduced-data: reduce) {
-  .text-gradient-gold-animate,
-  .gradient-text-animated {
+  .text-gradient-gold-animate {
     animation: none !important;
   }
 }
@@ -2204,7 +1689,7 @@ section[id^="cat-"] {
   background: transparent;
 }
 .scrollbar-thin::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgb(var(--c-fg-max) / 0.1);
   border-radius: 2px;
 }
 
@@ -2230,14 +1715,14 @@ section[id^="cat-"] {
 .skeleton {
   position: relative;
   overflow: hidden;
-  background-color: #1F242C; /* elevated */
+  background-color: rgb(var(--c-elevated)); /* elevated */
   background-image: linear-gradient(
     90deg,
-    rgba(255, 255, 255, 0) 0,
-    rgba(255, 255, 255, 0.04) 20%,
-    rgba(245, 165, 36, 0.08) 50%,
-    rgba(255, 255, 255, 0.04) 80%,
-    rgba(255, 255, 255, 0) 100%
+    rgb(var(--c-fg-max) / 0) 0,
+    rgb(var(--c-fg-max) / 0.04) 20%,
+    rgb(var(--c-primary) / 0.08) 50%,
+    rgb(var(--c-fg-max) / 0.04) 80%,
+    rgb(var(--c-fg-max) / 0) 100%
   );
   background-size: 800px 100%;
   background-repeat: no-repeat;
@@ -2355,22 +1840,7 @@ section[id^="cat-"] {
 @media (hover: hover) {
   .hover-lift:hover {
     transform: translateY(-4px);
-    box-shadow: 0 8px 24px -8px rgba(0, 0, 0, 0.4);
-  }
-}
-
-/*
- * Card tilt subtil — rotation perspective au hover.
- * Reste très léger (0.5deg) pour ne pas tomber dans le gimmick.
- */
-.card-tilt {
-  transform-style: preserve-3d;
-  transition: transform 320ms cubic-bezier(0.22, 1, 0.36, 1);
-  will-change: transform;
-}
-@media (hover: hover) {
-  .card-tilt:hover {
-    transform: perspective(900px) rotateX(0.5deg) rotateY(-0.5deg) translateY(-2px);
+    box-shadow: 0 8px 24px -8px rgb(var(--c-scrim) / 0.4);
   }
 }
 
@@ -2415,7 +1885,7 @@ section[id^="cat-"] {
   content: "";
   position: absolute;
   inset: 50% 50% 50% 50%;
-  background: rgba(255, 255, 255, 0.35);
+  background: rgb(var(--c-fg-max) / 0.35);
   border-radius: 9999px;
   transform: scale(0);
   opacity: 0;
@@ -2429,95 +1899,6 @@ section[id^="cat-"] {
   transform: scale(1);
   opacity: 1;
   transition: transform 0ms, opacity 0ms;
-}
-
-/* =========================================================================
- * BLOCK 5 — /pro PREMIUM POLISH (BATCH 8 — Visual + Mobile + Perf agents)
- *
- * Animations dédiées à la landing /pro pour booster le perceived value :
- *  - .pro-feature-icon-pop : icône qui « pop » au hover de sa carte parent
- *  - .pro-feature-card     : staggered fade-in basé sur --i (variable inline)
- *  - .pro-sticky-cta       : bottom sheet mobile sticky qui glisse à l'apparition
- *
- * Tous les keyframes ici sont compositor-only (transform / opacity)
- * pour ne JAMAIS déclencher de layout/paint coûteux (perf 60 FPS garanti
- * y compris sur Android low-end).
- *
- * Neutralisés intégralement par le bloc prefers-reduced-motion juste en bas.
- * ========================================================================= */
-
-/* Icon pop au hover de la carte parente — délai 0ms pour réactivité immédiate.
- * Pattern utilisé par Linear (feature cards) + Notion (icon hover).
- * Translation + scale en une seule transform GPU-accelerated. */
-.pro-feature-card:hover .pro-feature-icon-pop {
-  transform: translateY(-2px) scale(1.06) rotate(-2deg);
-}
-.pro-feature-icon-pop {
-  transition: transform 320ms cubic-bezier(0.34, 1.56, 0.64, 1);
-  will-change: transform;
-}
-
-/* Staggered fade-in cards — utilise --i comme cascade index.
- * Animation auto au mount (pas besoin de IO observer pour 6 cards above-the-fold).
- * delay = i * 60ms, max 360ms cumulés (smooth pour humans). */
-@keyframes pro-card-enter {
-  from {
-    opacity: 0;
-    transform: translateY(12px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-.pro-feature-card {
-  animation: pro-card-enter 480ms cubic-bezier(0.22, 1, 0.36, 1) both;
-  animation-delay: calc(var(--i, 0) * 60ms);
-  will-change: opacity, transform;
-}
-
-/* Sticky CTA mobile bottom sheet — slide-up from bottom + fade.
- * Visible uniquement < md (sm:hidden) car desktop a son CTA hero toujours visible.
- * Pattern utilisé par Booking.com, Airbnb, Uber Eats — convertit + sur mobile. */
-@keyframes pro-sticky-slide-up {
-  from {
-    opacity: 0;
-    transform: translateY(100%);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-.pro-sticky-cta {
-  animation: pro-sticky-slide-up 360ms cubic-bezier(0.22, 1, 0.36, 1) 1.2s both;
-  will-change: opacity, transform;
-  /* iOS safe area inset (notch + home indicator) */
-  padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
-}
-
-/* Backdrop blur subtil derrière le sticky CTA pour lisibilité contenu derrière */
-.pro-sticky-cta-backdrop {
-  -webkit-backdrop-filter: blur(12px);
-  backdrop-filter: blur(12px);
-}
-
-/* Roadmap card hover : glow gold subtil (< 16ms paint, 0 layout shift) */
-.pro-roadmap-glow {
-  transition: box-shadow 240ms ease, border-color 240ms ease;
-}
-@media (hover: hover) {
-  .pro-roadmap-glow:hover {
-    box-shadow: 0 0 0 1px rgba(255, 196, 64, 0.15),
-                0 8px 24px -8px rgba(255, 196, 64, 0.1);
-  }
-}
-
-/* Optimisation perf — content-visibility auto sur les sections sub-fold.
- * Skip rendering coûteux si pas dans le viewport. Win LCP ~80ms sur mobile. */
-.pro-cv-auto {
-  content-visibility: auto;
-  contain-intrinsic-size: 0 600px; /* hint au browser pour scroll bar stable */
 }
 
 /* Accessibilité : respect strict de prefers-reduced-motion.
@@ -2547,8 +1928,7 @@ section[id^="cat-"] {
     transform: none !important;
     transition: none !important;
   }
-  .hover-lift:hover,
-  .card-tilt:hover {
+  .hover-lift:hover {
     transform: none !important;
   }
   .skeleton {
@@ -2569,21 +1949,6 @@ section[id^="cat-"] {
   .card-premium:hover,
   .card-premium-gold:hover {
     transform: none !important;
-  }
-  /* BLOCK 5 — /pro premium polish neutralisé en reduced-motion */
-  .pro-feature-card,
-  .pro-feature-icon-pop,
-  .pro-sticky-cta,
-  .pro-roadmap-glow {
-    animation: none !important;
-    transform: none !important;
-    transition: none !important;
-    opacity: 1 !important;
-  }
-  .pro-feature-card:hover .pro-feature-icon-pop,
-  .pro-roadmap-glow:hover {
-    transform: none !important;
-    box-shadow: none !important;
   }
 }
 
@@ -2633,7 +1998,7 @@ section[id^="cat-"] {
   position: absolute;
   inset: -4px;
   border-radius: inherit;
-  border: 2px solid rgba(245, 158, 11, 0.6);
+  border: 2px solid rgb(var(--c-warning) / 0.6);
   pointer-events: none;
   animation: partner-cta-ring 2.5s ease-out infinite;
 }
@@ -2648,9 +2013,7 @@ section[id^="cat-"] {
   .partner-section,
   .partner-stat-pop,
   .partner-cta-pulse::after,
-  .conic-border-anim,
   .marquee-track,
-  .gradient-text-anim,
   .spotlight-card::before,
   .magnetic-cta {
     animation: none !important;
@@ -2682,7 +2045,7 @@ section[id^="cat-"] {
   border-radius: inherit;
   background: radial-gradient(
     260px circle at var(--mx, 50%) var(--my, 50%),
-    rgba(245, 165, 36, 0.18),
+    rgb(var(--c-primary) / 0.18),
     transparent 65%
   );
   opacity: 0;
@@ -2695,39 +2058,6 @@ section[id^="cat-"] {
 }
 /* Garantie : tous les enfants restent au-dessus du halo */
 .spotlight-card > * { position: relative; z-index: 1; }
-
-/* 2. CONIC-GRADIENT BORDER ANIMÉ — bordure dégradée gold qui tourne.
- *    Signature "premium animé" sur badges PRO / Score 9+ / HIDDEN GEM. */
-@property --conic-angle {
-  syntax: "<angle>";
-  initial-value: 0deg;
-  inherits: false;
-}
-@keyframes conic-spin {
-  from { --conic-angle: 0deg; }
-  to   { --conic-angle: 360deg; }
-}
-.conic-border-anim {
-  position: relative;
-  background: var(--surface, #1a1f25);
-  border-radius: 9999px;
-  isolation: isolate;
-}
-.conic-border-anim::before {
-  content: "";
-  position: absolute;
-  inset: -2px;
-  z-index: -1;
-  border-radius: inherit;
-  background: conic-gradient(
-    from var(--conic-angle),
-    rgba(245, 165, 36, 1) 0deg,
-    rgba(245, 165, 36, 0.1) 60deg,
-    rgba(245, 165, 36, 0.1) 300deg,
-    rgba(245, 165, 36, 1) 360deg
-  );
-  animation: conic-spin 6s linear infinite;
-}
 
 /* 3. MARQUEE LOGOS — bandeau infini défilant (preuve sociale).
  *    Le wrapper masque les bords avec mask-image fade. */
@@ -2753,28 +2083,6 @@ section[id^="cat-"] {
   animation-play-state: paused;
 }
 
-/* 4. GRADIENT TEXT ANIMÉ — gold qui se déplace lentement de gauche à droite.
- *    Optimisé pour lisibilité : amplitude faible, easing doux. */
-@keyframes gradient-shift {
-  0%, 100% { background-position: 0% 50%; }
-  50%      { background-position: 100% 50%; }
-}
-.gradient-text-anim {
-  background: linear-gradient(
-    90deg,
-    #f5a524 0%,
-    #ffd166 25%,
-    #f5a524 50%,
-    #d97706 75%,
-    #f5a524 100%
-  );
-  background-size: 200% 100%;
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  animation: gradient-shift 8s ease-in-out infinite;
-}
-
 /* 5. MAGNETIC CTA — la classe ne fait que la transition smooth.
  *    Le translate(--mag-x, --mag-y) est posé via 1 hook React (useMagnetic).
  *    Mobile : disabled (no hover, no fine pointer). */
@@ -2788,26 +2096,9 @@ section[id^="cat-"] {
   }
 }
 
-/* 6. TEXT-WRAP BALANCE — meilleure lisibilité titres FR.
- *    Évite le mot orphelin sur la dernière ligne (Chrome 114+/Safari 17.5+). */
-h1, h2, h3 {
-  text-wrap: balance;
-}
-
 /* 7. SCROLL-DRIVEN ANIMATIONS — natif moderne, 0kb runtime.
  *    Fallback graceful pour Firefox via @supports. */
 @supports (animation-timeline: view()) {
-  .scroll-reveal-native {
-    opacity: 0;
-    transform: translateY(24px);
-    animation: scroll-reveal-frames linear both;
-    animation-timeline: view();
-    animation-range: entry 0% cover 25%;
-  }
-  @keyframes scroll-reveal-frames {
-    to { opacity: 1; transform: translateY(0); }
-  }
-
   /* BATCH 48b — count-up scroll-driven natif via @property + view().
      Avant : AnimatedStat.tsx fait un IntersectionObserver + setInterval
      pour animer un compteur de 0 à N (~2KB JS, 60 fps mais main thread).
