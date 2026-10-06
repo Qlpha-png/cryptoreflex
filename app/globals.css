@@ -296,7 +296,7 @@ body {
 
   /* ============================================================
    * PREMIUM UTILITIES — visual polish v2 (fintech grade)
-   * card-premium / text-gradient-gold / divider-gradient
+   * card-premium / text-gradient-gold
    * ============================================================ */
 
   /*
@@ -330,17 +330,6 @@ body {
         0 0 32px -12px rgb(var(--c-primary) / 0.35);
     }
   }
-  /* Variante gold prononcée : platforms section */
-  @media (hover: hover) {
-    .card-premium-gold:hover {
-      border-color: rgb(var(--c-primary) / 0.4);
-      box-shadow:
-        inset 0 1px 0 0 rgb(var(--c-fg-max) / 0.08),
-        0 18px 40px -10px rgb(var(--c-scrim) / 0.6),
-        0 4px 12px -4px rgb(var(--c-scrim) / 0.35),
-        0 0 48px -10px rgb(var(--c-primary) / 0.55);
-    }
-  }
 
   /*
    * Texte gradient gold — highlights premium (h1, h2 marketing).
@@ -365,23 +354,6 @@ body {
   .text-gradient-gold-animate {
     @apply text-gradient-gold;
     animation: gradient-shift 8s ease-in-out infinite;
-  }
-
-  /*
-   * Divider gradient — 1px line gold qui fade aux extrémités.
-   * Plus premium qu'un border-t plat, à utiliser pour séparer sections internes.
-   */
-  .divider-gradient {
-    height: 1px;
-    background: linear-gradient(
-      90deg,
-      transparent 0%,
-      rgb(var(--c-primary) / 0.0) 5%,
-      rgb(var(--c-primary) / 0.35) 50%,
-      rgb(var(--c-primary) / 0.0) 95%,
-      transparent 100%
-    );
-    border: 0;
   }
 }
 
@@ -1007,11 +979,6 @@ body {
   transition: transform 300ms cubic-bezier(0.22, 1, 0.36, 1);
   will-change: transform;
 }
-.magnetic-inner {
-  display: inline-block;
-  transition: transform 150ms ease-out;
-  will-change: transform;
-}
 
 /* Reduced motion — désactiver toutes les nouvelles anims */
 @media (prefers-reduced-motion: reduce) {
@@ -1019,51 +986,6 @@ body {
     opacity: 1 !important;
     transform: none !important;
   }
-}
-
-/* ============================================================
- * BATCH 41b — Marquee trust strip
- * Bandeau régulateurs/sources qui défilent lentement.
- * Pattern Stripe Press / Vercel customers.
- * ============================================================ */
-.marquee-trust {
-  position: relative;
-  overflow: hidden;
-  border-block: 1px solid rgb(var(--c-fg-max) / 0.06);
-  background: rgb(var(--c-surface) / 0.3);
-  padding: 1rem 0;
-}
-.marquee-trust-track {
-  display: flex;
-  gap: 3rem;
-  white-space: nowrap;
-  /* BATCH 42 — accéléré 40s → 18s (user "rien ne défile faut vraiment
-     tu accélère ça la rien bouge jamais"). À 18s on perçoit clairement
-     le défilement en 3 secondes de visite. Pause au hover préservée. */
-  animation: marquee-trust-scroll 18s linear infinite;
-  will-change: transform;
-}
-.marquee-trust:hover .marquee-trust-track,
-.marquee-trust:focus-within .marquee-trust-track {
-  animation-play-state: paused;
-}
-@keyframes marquee-trust-scroll {
-  0%   { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
-}
-
-/* ============================================================
- * BATCH 41b — Digit flip Apple Stocks / Robinhood iOS
- * Chaque chiffre qui change flip individuellement.
- * Performance : compositor only, no re-layout.
- * ============================================================ */
-@keyframes digit-flip-in {
-  0%   { transform: translateY(-30%); opacity: 0; }
-  60%  { opacity: 1; }
-  100% { transform: translateY(0); opacity: 1; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .digit-flip-cell { animation: none !important; }
 }
 
 /* ============================================================
@@ -1152,7 +1074,7 @@ p.lead, .ds-lead, .lead {
 
 /* :HAS() PARENT SELECTOR (Chrome 105+, Safari 15.4+, Firefox 121+, ~94%)
  * Permet styling contextuel basé sur les enfants. Cas Cryptoreflex :
- * Cas Cryptoreflex : bouton d'envoi grisé tant qu'un champ du formulaire est invalide. */
+ * bouton d'envoi grisé tant qu'un champ du formulaire est invalide. */
 @supports selector(:has(*)) {
   /* Form invalide → CTA submit dimmed (sans JS) */
   form:has(input:invalid) button[type="submit"]:not([data-allow-invalid]) {
@@ -1195,16 +1117,10 @@ p.lead, .ds-lead, .lead {
     transition: opacity 200ms;
   }
 }
-@media (prefers-reduced-motion: reduce) {
-  .marquee-trust-track { animation: none !important; }
-}
-.tab-hidden .marquee-trust-track { animation-play-state: paused !important; }
-
 /* BATCH 36 — Page Visibility API : quand l'onglet est masqué (.tab-hidden
    set par VisibilityPauser), on pause toutes les animations CSS gourmandes.
    Économie CPU/batterie mobile estimée 5-12%. Aucune impact UX visible
    (l'utilisateur ne voit pas l'onglet caché). */
-.tab-hidden .hero-headline-accent,
 .tab-hidden .animate-pulse-dot {
   animation-play-state: paused !important;
 }
@@ -1347,84 +1263,12 @@ p.lead, .ds-lead, .lead {
 }
 
 /* ============================================================
- * BLOCK 3 BeginnerJourney DYNAMISM — Audit Block 3 RE-AUDIT
+ * BLOCK 3 DYNAMISM — Audit Block 3 RE-AUDIT
  * (Agent animation : 3/10 → 9.5/10)
- * Cards du parcours débutant : magnetic, spotlight, active pulse,
- * checkmark reveal, sparkles 4/4, icon bounce-in, arrow-spring.
+ * Animations partagées : arrow-spring, sparkles.
+ * (Lot A3 07/10/2026 : règles du parcours débutant et keyframes check-pop
+ * retirées avec BeginnerJourney, composant jamais importé.)
  * ============================================================ */
-
-/* Card magnetic + spotlight (style Linear/Arc) */
-.journey-card {
-  position: relative;
-  transition:
-    transform 280ms cubic-bezier(0.22, 1, 0.36, 1),
-    border-color 220ms ease,
-    background 220ms ease,
-    box-shadow 280ms ease;
-}
-.journey-card::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  background: radial-gradient(
-    220px circle at var(--mx, 50%) var(--my, 50%),
-    rgb(var(--c-primary) / 0.10),
-    transparent 60%
-  );
-  opacity: 0;
-  transition: opacity 220ms ease;
-  pointer-events: none;
-}
-@media (hover: hover) {
-  .journey-card:hover::before {
-    opacity: 1;
-  }
-  .journey-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 12px 32px -16px rgb(var(--c-primary) / 0.25);
-  }
-}
-
-/* Card "current step" — pulse gold doux (étape suivante à faire) */
-.journey-card[data-active="true"] {
-  border-color: rgb(var(--c-primary) / 0.55);
-  animation: journey-pulse 2.4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-}
-@keyframes journey-pulse {
-  0%, 100% {
-    box-shadow:
-      0 0 0 0 rgb(var(--c-primary) / 0),
-      0 0 24px -8px rgb(var(--c-primary) / 0.35);
-  }
-  50% {
-    box-shadow:
-      0 0 0 4px rgb(var(--c-primary) / 0.10),
-      0 0 36px -6px rgb(var(--c-primary) / 0.55);
-  }
-}
-
-/* Card "visited" — opacité légèrement réduite + checkmark reveal */
-.journey-card[data-visited="true"] {
-  opacity: 0.92;
-}
-.journey-card[data-visited="true"] .journey-check-badge {
-  opacity: 1;
-  transform: scale(1);
-  animation: check-pop 380ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
-}
-
-/* Icon medaillon — bounce-in à mount + rotation hover */
-.journey-icon-wrap {
-  animation: journey-icon-in 700ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
-  animation-delay: calc(120ms + var(--i, 0) * 80ms);
-  will-change: transform;
-}
-@keyframes journey-icon-in {
-  0% { opacity: 0; transform: scale(0.5) rotate(-8deg); }
-  60% { opacity: 1; transform: scale(1.08) rotate(2deg); }
-  100% { opacity: 1; transform: scale(1) rotate(0); }
-}
 
 /* Arrow CTA — spring overshoot au hover */
 .group:hover .arrow-spring {
@@ -1434,13 +1278,6 @@ p.lead, .ds-lead, .lead {
   0% { transform: translateX(0); }
   55% { transform: translateX(6px); }
   100% { transform: translateX(3px); }
-}
-
-/* Checkmark badge pop-in (étape complétée) */
-@keyframes check-pop {
-  0% { opacity: 0; transform: scale(0.5); }
-  60% { opacity: 1; transform: scale(1.15); }
-  100% { transform: scale(1); }
 }
 
 /* Sparkles 4/4 (parcours complet — confetti gold qui s'élève) */
@@ -1463,24 +1300,11 @@ p.lead, .ds-lead, .lead {
 
 /* prefers-reduced-motion : neutralise tous les keyframes Block 3 dynamism */
 @media (prefers-reduced-motion: reduce) {
-  .journey-card,
-  .journey-icon-wrap,
   .arrow-spring,
   .sparkle,
   .journey-check-badge {
     animation: none !important;
     transition: none !important;
-    transform: none !important;
-  }
-  .journey-card[data-active="true"] {
-    animation: none !important;
-    box-shadow: 0 0 24px -8px rgb(var(--c-primary) / 0.45) !important;
-  }
-  .journey-card::before {
-    display: none !important;
-  }
-  .journey-card[data-visited="true"] .journey-check-badge {
-    opacity: 1 !important;
     transform: none !important;
   }
 }
@@ -1946,8 +1770,7 @@ section[id^="cat-"] {
     opacity: 1 !important;
     transform: none !important;
   }
-  .card-premium:hover,
-  .card-premium-gold:hover {
+  .card-premium:hover {
     transform: none !important;
   }
 }
@@ -2013,7 +1836,6 @@ section[id^="cat-"] {
   .partner-section,
   .partner-stat-pop,
   .partner-cta-pulse::after,
-  .marquee-track,
   .spotlight-card::before,
   .magnetic-cta {
     animation: none !important;
@@ -2058,30 +1880,6 @@ section[id^="cat-"] {
 }
 /* Garantie : tous les enfants restent au-dessus du halo */
 .spotlight-card > * { position: relative; z-index: 1; }
-
-/* 3. MARQUEE LOGOS — bandeau infini défilant (preuve sociale).
- *    Le wrapper masque les bords avec mask-image fade. */
-@keyframes marquee-scroll {
-  from { transform: translateX(0); }
-  to   { transform: translateX(-50%); }
-}
-.marquee-wrap {
-  overflow: hidden;
-  position: relative;
-  -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
-  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
-}
-.marquee-track {
-  display: inline-flex;
-  gap: 2.5rem;
-  animation: marquee-scroll 38s linear infinite;
-  width: max-content;
-  align-items: center;
-}
-.marquee-wrap:hover .marquee-track,
-.marquee-wrap:focus-within .marquee-track {
-  animation-play-state: paused;
-}
 
 /* 5. MAGNETIC CTA — la classe ne fait que la transition smooth.
  *    Le translate(--mag-x, --mag-y) est posé via 1 hook React (useMagnetic).
@@ -2175,46 +1973,6 @@ section[id^="cat-"] {
 }
 
 /* =========================================================================
-   INNOVATION BATCH 12 — Popover API natif (anchor positioning)
-   --------------------------------------------------------------------------
-   Style des tooltips natifs HTML <... popover="auto">. Le navigateur gère
-   automatiquement : focus trap, light dismiss, Esc, top-layer.
-   Position : anchor positioning natif si dispo (Chrome 125+), fallback
-   absolute centered sinon.
-   ========================================================================= */
-.popover-tooltip {
-  /* Reset position natif Popover (top-layer) */
-  position: fixed;
-  inset: unset;
-  margin: 0;
-  /* Animation entrée smooth */
-  opacity: 0;
-  transform: translateY(-4px) scale(0.97);
-  transition:
-    opacity 200ms cubic-bezier(0.22, 1, 0.36, 1),
-    transform 200ms cubic-bezier(0.22, 1, 0.36, 1);
-}
-.popover-tooltip:popover-open {
-  opacity: 1;
-  transform: translateY(0) scale(1);
-}
-/* Anchor positioning natif (Chrome 125+) — fallback graceful */
-@supports (anchor-name: --x) {
-  .popover-tooltip {
-    position: absolute;
-    /* Si trigger a anchor-name, le tooltip s'auto-positionne. Sinon on
-       laisse le navigateur centrer dans le top-layer par défaut. */
-    position-try-fallbacks: flip-block, flip-inline;
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .popover-tooltip {
-    transition: none !important;
-    transform: none !important;
-  }
-}
-
-/* =========================================================================
    INNOVATION BATCH 14 — View Transition Names sur logos crypto
    --------------------------------------------------------------------------
    Combiné avec Speculation Rules (BATCH 12) : quand l'utilisateur clique
@@ -2230,11 +1988,6 @@ section[id^="cat-"] {
 ::view-transition-new(crypto-logo-sol) {
   animation-duration: 320ms;
   animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-/* BATCH 19 a11y WCAG 2.2.2 — pause via [data-paused="true"] sur parent */
-[data-marquee-pause-target][data-paused="true"] .marquee-track {
-  animation-play-state: paused !important;
 }
 
 /* BATCH 19 — View Transition morph cross-document logos plateformes.

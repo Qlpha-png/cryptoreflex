@@ -133,9 +133,9 @@ export default function AccessibilitePage() {
         </li>
         <li>
           Quelques <strong>termes techniques crypto</strong> (jargon : MiCA,
-          PFU, Nakamoto coefficient, FDV…) apparaissent sans tooltip
-          explicatif. Une généralisation du composant{" "}
-          <code>GlossaryTooltip</code> est planifiée pour mai-juin 2026.
+          PFU, Nakamoto coefficient, FDV…) apparaissent sans définition au
+          survol ; ils sont expliqués dans le{" "}
+          <a href="/outils/glossaire-crypto" className="underline">glossaire</a>.
         </li>
       </ul>
 
