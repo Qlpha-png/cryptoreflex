@@ -35,7 +35,9 @@ async function clickThrough(page, max = 10) {
     for (let i = 0; i < n; i++) {
       const b = buttons.nth(i);
       const t = (await b.innerText().catch(() => "")).trim();
-      if (!t || /précédent|réinitialiser|recommencer|refaire|recevoir|retour|partager|copier|fermer/i.test(t) || seen.has(`${step}:${t}`)) continue;
+      // « Modifier » (récapitulatif des réponses) renvoie au début du questionnaire : le robot bouclait et ne voyait plus
+      // le résultat (faux défaut quiz-exchange / comparateur-personnalise, 06/10/2026).
+      if (!t || /précédent|réinitialiser|recommencer|refaire|recevoir|retour|partager|copier|fermer|modifier/i.test(t) || seen.has(`${step}:${t}`)) continue;
       if (/suivant|voir|résultat|continuer|terminer/i.test(t)) continue;
       seen.add(`${step}:${t}`);
       await b.click().catch(() => {});

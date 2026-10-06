@@ -82,6 +82,8 @@ export default function ScrollableTable({
           type="button"
           tabIndex={-1}
           aria-hidden="true"
+          aria-label="Faire défiler le tableau vers la droite"
+          title="Faire défiler le tableau vers la droite"
           onClick={() => {
             const el = ref.current;
             if (el) el.scrollBy({ left: Math.round(el.clientWidth * 0.8), behavior: "smooth" });
