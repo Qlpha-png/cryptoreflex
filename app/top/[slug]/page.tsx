@@ -19,6 +19,8 @@ import type { AnyCrypto } from "@/lib/cryptos";
 import { BRAND } from "@/lib/brand";
 import StructuredData from "@/components/StructuredData";
 import AmfDisclaimer from "@/components/AmfDisclaimer";
+import PaidLinkCaption from "@/components/PaidLinkCaption";
+import { outboundRel } from "@/lib/partnerships";
 import {
   breadcrumbSchema,
   faqSchema,
@@ -273,13 +275,14 @@ function PlatformItem({
             <a
               href={platform.affiliateUrl}
               target="_blank"
-              rel="noopener noreferrer sponsored"
+              rel={outboundRel(platform.id, platform.affiliateUrl)}
               className="btn-primary text-xs px-3 py-1.5"
             >
               Aller sur {platform.name}
               <ExternalLink className="h-3 w-3" />
             </a>
           </div>
+          <PaidLinkCaption platformId={platform.id} href={platform.affiliateUrl} className="mt-1.5 block text-[11px] text-muted underline hover:text-fg" />
         </div>
       </div>
     </article>

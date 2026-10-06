@@ -36,7 +36,7 @@ export default function MotDePasseOubliePage() {
             Mot de passe <span className="gradient-text">oublié&nbsp;?</span>
           </h1>
           <p className="mt-3 text-sm text-fg/70">
-            Entre votre email — on t&apos;envoie un lien pour en définir un nouveau.
+            Entrez votre e-mail : nous vous envoyons un lien pour en définir un nouveau.
           </p>
         </div>
 

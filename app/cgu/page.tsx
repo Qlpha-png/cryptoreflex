@@ -87,11 +87,12 @@ export default function CguPage() {
 
       <h2 className="mt-10 text-2xl font-bold text-fg">5. Liens d&apos;affiliation</h2>
       <p className="text-fg/85 leading-relaxed">
-        Le Site contient des liens d&apos;affiliation rémunérés (signalés
-        par la mention « Publicité » ou{" "}
-        <code>rel=&quot;sponsored&quot;</code>). L&apos;éditeur perçoit une
-        commission lorsqu&apos;un utilisateur ouvre un compte chez l&apos;une
-        des plateformes recommandées via ces liens. Ces partenariats financent
+        Le Site contient quelques liens rémunérés, signalés par la mention
+        « Publicité » (et <code>rel=&quot;sponsored&quot;</code>) : des liens
+        d&apos;affiliation (Ledger, Trezor, Waltio), pour lesquels
+        l&apos;éditeur perçoit une commission sur un achat ou un abonnement, et
+        des liens de parrainage personnels du fondateur (Bitpanda, Trade
+        Republic). Les autres liens ne sont pas rémunérés. Ces liens financent
         la gratuité du contenu mais{" "}
         <strong>n&apos;influencent pas le classement</strong> :
         la méthodologie est publique sur{" "}
@@ -167,8 +168,9 @@ export default function CguPage() {
       <p className="text-fg/85 leading-relaxed">
         L&apos;éditeur se réserve le droit de modifier les CGU à tout moment.
         Les modifications prennent effet à leur publication sur cette page.
-        La date de dernière mise à jour figure en haut du document. Pour
-        être notifié des changements majeurs, abonnez-vous à la newsletter.
+        La date de dernière mise à jour figure en haut du document : consultez
+        cette page pour prendre connaissance des changements.
+        {/* 06/10/2026 : « abonnez-vous à la newsletter » pour être notifié retiré (aucune édition n'est envoyée). */}
       </p>
 
       <h2 className="mt-10 text-2xl font-bold text-fg">12. Droit applicable</h2>

@@ -191,7 +191,7 @@ export default function SearchClient() {
         )}
         {!isLoading && !error && query && results.length === 0 && (
           <span>
-            Aucun résultat pour <strong>« {query} »</strong>. Essaie un autre
+            Aucun résultat pour <strong>« {query} »</strong>. Essayez un autre
             terme ou{" "}
             <Link href="/blog" className="text-primary-soft hover:underline">
               parcours le blog
@@ -266,7 +266,7 @@ export default function SearchClient() {
             articles, plateformes, cryptos, comparatifs, outils, glossaire.
           </p>
           <p className="mt-3 text-xs text-muted">
-            Astuce&nbsp;: tu peux aussi appuyer sur <kbd>⌘</kbd>+<kbd>K</kbd>{" "}
+            Astuce&nbsp;: vous pouvez aussi appuyer sur <kbd>⌘</kbd>+<kbd>K</kbd>{" "}
             (ou <kbd>Ctrl</kbd>+<kbd>K</kbd>) depuis n'importe quelle page pour
             ouvrir la recherche rapide.
           </p>

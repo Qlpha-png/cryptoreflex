@@ -4,6 +4,7 @@ import PlatformLogo from "./PlatformLogo";
 import PlatformCardSubCta from "./PlatformCardSubCta";
 import { type Platform, pickSocialProof, buildMicaLabel } from "@/lib/platforms";
 import { getAffiliationKind } from "@/lib/partnerships";
+import { fmtDateFr, fmtFr } from "@/lib/format-fr";
 
 /**
  * PlatformCard — carte de plateforme crypto pour la home (block conversion N°1).
@@ -78,6 +79,10 @@ export default function PlatformCard({ platform, placement, index = 0 }: Props) 
   const titleId = `${cardId}-title`;
   const micaLabel = buildMicaLabel(platform);
   const social = pickSocialProof(platform);
+  const socialRatingFr = social ? fmtFr(social.rating, 1) : "";
+  const socialDate = social?.verified
+    ? fmtDateFr(social.verified)
+    : "";
   const isPriorityLogo = index < 3;
 
   // Format français : virgule décimale.
@@ -142,10 +147,12 @@ export default function PlatformCard({ platform, placement, index = 0 }: Props) 
             </div>
           )}
           {/* Rating français : virgule + tabular-nums + social proof */}
+          {/* La note Trustpilot est affichée avec sa propre valeur et la date du relevé : accolé à NOTRE
+              note, le seul nombre d'avis laissait croire que « 4,4/5 » venait de Trustpilot. */}
           <div
-            className="flex items-center gap-1 mt-1"
+            className="flex flex-wrap items-center gap-1 mt-1"
             role="img"
-            aria-label={`Note Cryptoreflex : ${ratingFr} sur 5${social ? `. ${social.label}${social.count ? " : " + social.count.toLocaleString("fr-FR") + " avis." : "."}` : "."}`}
+            aria-label={`Note Cryptoreflex : ${ratingFr} sur 5${social ? `. ${social.label} : ${socialRatingFr} sur 5${social.count ? ", " + social.count.toLocaleString("fr-FR") + " avis" : ""}${socialDate ? ", relevé le " + socialDate : ""}.` : "."}`}
           >
             {STARS.map((i) => (
               <Star
@@ -160,7 +167,8 @@ export default function PlatformCard({ platform, placement, index = 0 }: Props) 
             <span className="text-[11px] text-white/60 font-normal" aria-hidden="true">/5</span>
             {social && social.count != null && social.count > 0 && (
               <span className="ml-1.5 text-[10px] text-white/50" aria-hidden="true">
-                · {social.count.toLocaleString("fr-FR")} avis {social.label}
+                · {social.label} {socialRatingFr}/5 ({social.count.toLocaleString("fr-FR")} avis
+                {socialDate ? `, relevé le ${socialDate}` : ""})
               </span>
             )}
           </div>

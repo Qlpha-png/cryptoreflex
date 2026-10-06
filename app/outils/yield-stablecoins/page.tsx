@@ -15,7 +15,7 @@ import {
   getAvailableStablecoins,
 } from "@/lib/stablecoin-yields";
 import { BRAND } from "@/lib/brand";
-import { getAffiliationKind } from "@/lib/partnerships";
+import { findPaidPlatformByUrl } from "@/lib/platforms";
 import StructuredData from "@/components/StructuredData";
 import {
   articleSchema,
@@ -63,11 +63,15 @@ export const metadata: Metadata = {
 
 export default function YieldStablecoinsPage() {
   const stablecoins = getAvailableStablecoins();
+  // 06/10/2026 : un lien n'est rémunéré que s'il porte le vrai code d'affiliation / de parrainage (lib/partnerships.ts) ;
+  // « bitpanda.com/fr » sans code n'en est pas un → plus de rel « sponsored » ni d'annonce « liens d'affiliation ».
+  const isPaidYield = (url: string) => findPaidPlatformByUrl(url) !== undefined;
+  const anyPaidYield = STABLECOIN_YIELDS.some((y) => isPaidYield(y.url));
 
   const faqItems = [
     {
       q: "Le yield sur stablecoin est-il garanti ?",
-      a: "Non, jamais. Les APY varient au jour le jour selon le taux d'utilisation côté plateforme et les conditions de marché. Les chiffres affichés sont indicatifs (snapshot hebdo).",
+      a: "Non, jamais. Les APY varient au jour le jour selon le taux d'utilisation côté plateforme et les conditions de marché. Les chiffres affichés sont indicatifs, relevés à la date indiquée sur la page.",
     },
     {
       q: "Quelle est la fiscalité du yield stablecoin en France ?",
@@ -254,12 +258,15 @@ export default function YieldStablecoinsPage() {
                             <a
                               href={y.url}
                               target="_blank"
-                              rel={getAffiliationKind(y.platformId) ? "sponsored noopener noreferrer" : "noopener noreferrer"}
+                              rel={isPaidYield(y.url) ? "sponsored nofollow noopener" : "nofollow noopener noreferrer"}
                               className="inline-flex items-center gap-1 text-xs font-semibold text-primary-soft hover:text-primary"
                             >
                               Voir
                               <ExternalLink className="h-3 w-3" aria-hidden />
                             </a>
+                            {isPaidYield(y.url) && (
+                              <span className="block text-[10px] text-muted">Publicité</span>
+                            )}
                           </td>
                         </tr>
                       ))}
@@ -278,8 +285,10 @@ export default function YieldStablecoinsPage() {
             <strong>Mises à jour : {STABLECOIN_YIELDS_LAST_UPDATED}.</strong>{" "}
             Les APY varient au jour le jour selon le taux d&apos;utilisation
             côté plateforme. Données relevées à la main à la date indiquée : vérifiez le taux du jour sur la plateforme.
-            Pas un conseil en investissement (cf. AMF). Liens d&apos;affiliation
-            signalés <code>rel=&quot;sponsored&quot;</code>.
+            Pas un conseil en investissement (cf. AMF).{" "}
+            {anyPaidYield
+              ? "Les liens marqués « Publicité » sont rémunérés (affiliation ou parrainage) : voir la page transparence."
+              : "Les liens « Voir » mènent aux sites officiels."}
           </p>
         </div>
 

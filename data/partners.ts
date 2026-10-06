@@ -10,6 +10,7 @@
  */
 
 import type { LucideIcon } from "lucide-react";
+import { AFFILIATE_URLS } from "@/lib/partner-links";
 import {
   Wallet,
   ShieldCheck,
@@ -117,7 +118,7 @@ export const partners: Partner[] = [
       "Un portefeuille matériel très répandu (plus de 8 millions d'appareils vendus selon Ledger) : il garde vos clés hors ligne, et son application gère plus de 500 cryptos, plus de 15 000 avec des portefeuilles tiers.",
     // Lien officiel Ledger Affiliate Program (email d'onboarding 26/04/2026).
     // r=5313c8e86d40 = ID affilié unique Cryptoreflex pour tracker conversions.
-    affiliateUrl: "https://shop.ledger.com/?r=5313c8e86d40",
+    affiliateUrl: AFFILIATE_URLS.ledger,
     logoPath: "/logos/partners/ledger.svg",
     brandColor: "#000000",
     since: "2014",
@@ -196,7 +197,7 @@ export const partners: Partner[] = [
       "Pionnier du portefeuille matériel (fondé en 2013, basé à Prague, premier modèle en 2014). Firmware open source publié sur GitHub. Sauvegarde multi-fragments sur les Safe 3, 5 et 7.",
     whyWeChoseIt:
       "Un portefeuille matériel dont le code est public : chacun peut vérifier ce qu'il fait. Un bon second appareil pour ne pas dépendre d'un seul fabricant.",
-    affiliateUrl: "https://affil.trezor.io/aff_c?offer_id=137&aff_id=141576",
+    affiliateUrl: AFFILIATE_URLS.trezor,
     logoPath: "/logos/partners/trezor.svg",
     brandColor: "#1B1B1B",
     // trezor.io/about (05/10/2026) : « 2013 — Fondation de Trezor » ; Model One sorti en 2014.
@@ -279,7 +280,7 @@ export const partners: Partner[] = [
       "Logiciel français de déclaration fiscale crypto. Prépare l'annexe 2086 selon la méthode globale de l'art. 150 VH bis CGI et les informations du 3916-bis. Plus de 700 intégrations (plateformes, wallets, blockchains).",
     whyWeChoseIt:
       "Un outil conçu pour la fiscalité française : il prépare le formulaire 2086 selon la méthode globale de l'article 150 VH bis et les informations des comptes à déclarer au 3916-bis.",
-    affiliateUrl: "https://www.waltio.com/fr/?a_aid=Cryptoreflex",
+    affiliateUrl: AFFILIATE_URLS.waltio,
     logoPath: "/logos/partners/waltio.svg",
     // Couleur officielle Waltio = purple #503BFF (vérifiée logo officiel waltio.com).
     brandColor: "#503BFF",

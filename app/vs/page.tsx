@@ -188,7 +188,7 @@ export default function VsHub() {
             Tous les duels, crypto par crypto
           </h2>
           <p className="text-sm text-muted mb-6 max-w-2xl">
-            Choisis une crypto, puis son adversaire. Chaque duel compare prix,
+            Choisissez une crypto, puis son adversaire. Chaque duel compare prix,
             market cap, supply, sécurité et plateformes FR côte à côte.
           </p>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">

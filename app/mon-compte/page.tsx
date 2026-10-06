@@ -110,7 +110,7 @@ export default async function AccountPage() {
               className="font-display text-lg font-extrabold text-fg flex items-center gap-2"
             >
               <Sparkles className="h-4 w-4 text-primary" aria-hidden="true" />
-              Tes outils
+              Vos outils
             </h2>
             <Link
               href="/outils"
@@ -182,7 +182,7 @@ export default async function AccountPage() {
                 <div className="flex-1 min-w-0">
                   <h3 className="font-bold text-fg text-sm">Portfolio</h3>
                   <p className="mt-1 text-xs text-fg/70 leading-snug">
-                    Suis tes positions. Allocation, P&amp;L live.
+                    Suivez vos positions. Allocation, P&amp;L live.
                   </p>
                 </div>
                 <ArrowRight
@@ -230,7 +230,7 @@ export default async function AccountPage() {
                 className="h-4 w-4 text-success"
                 aria-hidden="true"
               />
-              <h2 className="font-bold text-fg">Ton compte</h2>
+              <h2 className="font-bold text-fg">Votre compte</h2>
             </div>
 
             <div className="rounded-xl bg-elevated/40 border border-border p-4">
@@ -368,8 +368,7 @@ function NotConfiguredView() {
         </h1>
         <p className="text-sm text-fg/70 leading-relaxed mb-6">
           On finalise l&apos;activation de l&apos;espace personnel Cryptoreflex.
-          Tous les outils du site restent gratuits et accessibles — un email te
-          sera envoyé dès l&apos;ouverture officielle de l&apos;espace.
+          Tous les outils du site restent gratuits et accessibles en attendant.
         </p>
         <Link
           href="/outils"

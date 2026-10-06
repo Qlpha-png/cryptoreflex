@@ -312,7 +312,7 @@ export default function LoginForm() {
         >
           <label className="block">
             <span className="block text-sm font-semibold text-fg mb-2">
-              Ton email
+              Votre e-mail
             </span>
             <div className="relative">
               <Mail

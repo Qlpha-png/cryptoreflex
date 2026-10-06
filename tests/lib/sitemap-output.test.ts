@@ -59,7 +59,7 @@ describe("sitemap.xml — uniquement des URLs canoniques, indexables, en 200", (
   });
 
   it("pas de pages noindex / transition / 404", () => {
-    for (const p of ["/lp/cerfa-2026", "/lp/mica-2026", "/pro", "/pro-plus", "/cgv-abonnement", "/alternative-a/ledger", "/alternative-a/trezor"]) {
+    for (const p of ["/lp/cerfa-2026", "/lp/mica-2026", "/pro", "/pro-plus", "/cgv-abonnement", "/alternative-a/ledger", "/alternative-a/trezor", "/impact"]) {
       expect(paths(), p).not.toContain(p);
     }
   });

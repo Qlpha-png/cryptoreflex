@@ -96,7 +96,7 @@ export async function checkApiKeyIsReadOnly(
     const text = await res.text().catch(() => "");
     return {
       ok: false,
-      reason: `Binance refuse la clé (${res.status}). Vérifie que la clé est valide et autorisée à lire. ${text.slice(0, 200)}`,
+      reason: `Binance refuse la clé (${res.status}). Vérifiez que la clé est valide et autorisée en lecture. ${text.slice(0, 200)}`,
     };
   }
 

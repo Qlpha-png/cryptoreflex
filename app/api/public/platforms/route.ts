@@ -27,6 +27,7 @@
 import { NextResponse } from "next/server";
 import platformsData from "@/data/platforms.json";
 import { BRAND } from "@/lib/brand";
+import { withOfficialLink } from "@/lib/platforms";
 
 // Force static eval au build (data/platforms.json est versionne en repo).
 export const dynamic = "force-static";
@@ -70,9 +71,13 @@ function buildPayload(): PlatformsPayload {
     },
     // Exclut les plateformes fermées au marché FR (ex : Gemini) — le dataset public
     // reflète les plateformes disponibles en France (cohérent avec le compteur 33).
-    platforms: ((raw.platforms as Array<{ fees?: { verified?: { verdict?: string } } }>) ?? []).filter(
-      (p) => p?.fees?.verified?.verdict !== "indisponible",
-    ),
+    // 06/10/2026 : affiliateUrl = site officiel pour toute plateforme sans relation rémunérée réelle
+    // (lib/partnerships.ts) — plus de faux codes de parrainage (« ?ref=cryptoreflex ») dans le jeu public.
+    platforms: (
+      (raw.platforms as Array<{ id: string; websiteUrl: string; affiliateUrl: string; fees?: { verified?: { verdict?: string } } }>) ?? []
+    )
+      .filter((p) => p?.fees?.verified?.verdict !== "indisponible")
+      .map(withOfficialLink),
   };
 }
 

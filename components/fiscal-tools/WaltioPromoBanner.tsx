@@ -14,13 +14,19 @@
 import { useCallback, useEffect, useState } from "react";
 import { Tag, X } from "lucide-react";
 import { track, trackAffiliateClick } from "@/lib/analytics";
+import { waltioAffiliateUrl } from "@/lib/partner-links";
 
 const STORAGE_KEY = "waltio-promo-banner-dismissed-2026-05";
 /** Fin de l'offre (-30 % jusqu'au 31 mai 2026 inclus, heure de Paris) : passé ce moment, la bannière ne s'affiche plus
  *  (audit 2026-10-02 : elle annonçait encore une offre expirée). */
 const PROMO_END = Date.parse("2026-06-01T00:00:00+02:00");
-const WALTIO_AFFILIATE_URL =
-  "https://waltio.com?ref=cryptoreflex&utm_source=cryptoreflex&utm_medium=affiliate&utm_campaign=calculator-promo-banner&utm_content=fr-2026-05";
+// 06/10/2026 : « waltio.com?ref=cryptoreflex » n'était pas tracé (le programme Waltio identifie l'affilié par a_aid).
+const WALTIO_AFFILIATE_URL = waltioAffiliateUrl({
+  utm_source: "cryptoreflex",
+  utm_medium: "affiliate",
+  utm_campaign: "calculator-promo-banner",
+  utm_content: "fr-2026-05",
+});
 
 export default function WaltioPromoBanner() {
   const [dismissed, setDismissed] = useState(true); // hidden until we check storage

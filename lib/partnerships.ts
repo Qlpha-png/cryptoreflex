@@ -86,10 +86,29 @@ export function getAffiliationKind(platformId: string): PartnershipKind | null {
   return p && p.status === "live" ? p.kind : null;
 }
 
-/** Mention visible sous un lien sortant : ne jamais annoncer une rémunération qui n'existe pas (ni en cacher une). */
-export function affiliationNotice(platformId: string): string {
-  const kind = getAffiliationKind(platformId);
-  if (kind === "affiliate") return "Lien d'affiliation : commission Cryptoreflex";
-  if (kind === "referral") return "Lien de parrainage : prime de parrainage";
-  return "Lien direct : aucune commission";
+/*
+ * 06/10/2026 — helpers partagés par TOUS les liens sortants vers une plateforme (avis, comparatifs, fiches crypto,
+ * quiz, outils, MDX) : la page /avis/kraken affichait « Publicité — Cryptoreflex perçoit une commission » alors que
+ * Kraken n'est pas partenaire. Un lien n'est rémunéré que si la plateforme est listée ci-dessus (status live) ET que
+ * le lien sort du site (un lien interne, ex. /comparatif/frais pour une plateforme non autorisée, ne rapporte rien).
+ * Ces helpers remplacent affiliationNotice() (wording « Lien direct : aucune commission » retiré, plus utilisé).
+ */
+
+/** Vrai si le lien vers cette plateforme est réellement rémunéré (relation live + lien externe). */
+export function isPaidLink(platformId: string, href?: string): boolean {
+  if (getAffiliationKind(platformId) === null) return false;
+  return href === undefined || /^https?:\/\//i.test(href);
+}
+
+/** rel d'un lien sortant ouvert dans un nouvel onglet : « sponsored » uniquement si le lien est rémunéré. */
+export function outboundRel(platformId: string, href?: string): string {
+  return isPaidLink(platformId, href) ? "sponsored nofollow noopener" : "nofollow noopener noreferrer";
+}
+
+/** Mention « Publicité » à afficher sous un lien rémunéré (bon type : affiliation ou parrainage), null sinon. */
+export function paidLinkCaption(platformId: string, href?: string): string | null {
+  if (!isPaidLink(platformId, href)) return null;
+  return getAffiliationKind(platformId) === "affiliate"
+    ? "Publicité — Cryptoreflex perçoit une commission"
+    : "Publicité — lien de parrainage personnel";
 }

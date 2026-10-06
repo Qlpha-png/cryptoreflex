@@ -112,7 +112,8 @@ const WE_DO: Array<{ title: string; detail: string }> = [
   {
     title: "On déclare TOUS les liens d'affiliation",
     detail:
-      "Chaque lien sponsorisé porte la mention « lien affilié » + un disclosure. La liste exhaustive est sur /transparence (3 affiliations live, 0 caché). On distingue scrupuleusement affiliation commerciale et code de parrainage personnel.",
+      // 06/10/2026 : aligné sur lib/partnerships.ts (3 affiliations + 2 parrainages personnels) et sur la mention réellement affichée.
+      "Chaque lien rémunéré porte la mention « Publicité » sous le bouton ; les autres liens n'en portent pas. La liste exhaustive est sur /transparence (3 affiliations commerciales, 2 codes de parrainage personnels, rien de caché). On distingue scrupuleusement affiliation commerciale et code de parrainage personnel.",
   },
   {
     title: "On corrige nos erreurs publiquement",
@@ -153,9 +154,10 @@ const WE_DONT: Array<{ title: string; detail: string }> = [
       "Pas de partenariat avec des influenceurs crypto qui ont fait pump leur token. Pas de promotion de memecoins, pas de presale, pas de NFT « Mint exclusif ». Si un projet vous promet 100x, fuyez.",
   },
   {
-    title: "On ne touche pas de commission sur du trading",
+    title: "Aucune commission sur vos ordres de trading",
     detail:
-      "Toutes nos affiliations sont sur des produits HARDWARE WALLETS (Ledger, Trezor) ou SOFTWARE FISCAL (Waltio). Aucun lien rémunéré ne pousse vers une plateforme de trading. Le conflit d'intérêt est structurellement éliminé.",
+      // 06/10/2026 : « Aucun lien rémunéré ne pousse vers une plateforme de trading » était faux (parrainages Bitpanda et Trade Republic).
+      "Nos 3 affiliations commerciales portent sur des portefeuilles matériels (Ledger, Trezor) et un logiciel fiscal (Waltio). Les seuls liens rémunérés vers des plateformes d'achat sont 2 codes de parrainage personnels du fondateur (Bitpanda, Trade Republic) : la prime prévue par chaque programme, versée seulement si le filleul remplit sa condition. Ils sont signalés « Publicité ».",
   },
   {
     title: "On n'accepte pas d'argent contre une bonne note",
@@ -394,9 +396,9 @@ export default function ChartePage() {
               </li>
               <li>
                 Si la correction est mineure (typo, lien cassé), on corrige
-                discrètement. Si elle est substantielle (chiffre, status MiCA,
-                interprétation fiscale), on met une mention voyante et on
-                envoie un follow-up dans la newsletter du vendredi suivant.
+                discrètement. Si elle est substantielle (chiffre, statut MiCA,
+                interprétation fiscale), on met une mention voyante.
+                {/* 06/10/2026 : « follow-up dans la newsletter du vendredi suivant » retiré (aucune édition envoyée). */}
               </li>
             </ol>
           </section>

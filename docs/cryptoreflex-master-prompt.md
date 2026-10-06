@@ -40,7 +40,7 @@ CONTEXTE PROJET — CRYPTOREFLEX.FR
 - Stack : Next.js 14 App Router, Vercel, Tailwind, MDX (next-mdx-remote v6),
   Plausible + Clarity, Beehiiv, Resend, Upstash KV, GitHub Actions
 - Tonalité : tutoiement, langage clair, anti-jargon, pédagogique, sans hype
-- Conformité : AMF (art. 222-15), MiCA, RGPD. Aucun conseil en investissement.
+- Conformité : publicité identifiée (art. 20 LCEN, loi n° 2004-575), loi Influenceurs (n° 2023-451), MiCA, RGPD. Aucun conseil en investissement. Ne JAMAIS citer « art. 222-15 RG AMF » (hors sujet : information périodique des émetteurs hors EEE).
 - Concurrents : Cryptoast, Journal du Coin, Cointribune, CafeDuCoin,
   Coin Academy, Hellosafe, Selectra
 
@@ -108,7 +108,7 @@ Avant de commencer, demande-moi tout élément manquant nécessaire.
 ### Conformité (P0)
 
 14. **P0** — Bandeau cookies cassé sans JS = potentielle non-conformité CNIL. Fallback SSR obligatoire.
-15. **P0** — Page Politique d'affiliation : auditer conforme art. 222-15 AMF.
+15. **P0** — Page Politique d'affiliation : auditer (publicité clairement identifiée, art. 20 LCEN + loi n° 2023-451).
 16. **P1** — RGPD : DPO désigné, registre des traitements, mentions légales à jour.
 
 ### UX et conversion (P1-P2)

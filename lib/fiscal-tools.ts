@@ -12,8 +12,15 @@ import type {
   FiscalToolPlan,
   FiscalToolsData,
 } from "@/lib/fiscal-tools-types";
+import { getAffiliationKind } from "@/lib/partnerships";
 
-const data = fiscalToolsData as unknown as FiscalToolsData;
+const raw = fiscalToolsData as unknown as FiscalToolsData;
+// 06/10/2026 : Koinly et CoinTracking ne sont pas partenaires (lib/partnerships.ts) → lien vers leur site officiel,
+// sans le « ?ref=cryptoreflex&utm_medium=affiliate » qui laissait croire à une affiliation.
+const data: FiscalToolsData = {
+  ...raw,
+  tools: raw.tools.map((t) => (getAffiliationKind(t.id) === null ? { ...t, affiliateUrl: t.websiteUrl } : t)),
+};
 
 /* -------------------------------------------------------------------------- */
 /*  Lecture                                                                   */

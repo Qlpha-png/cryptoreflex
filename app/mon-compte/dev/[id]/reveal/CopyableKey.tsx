@@ -23,7 +23,7 @@ export function CopyableKey({ value }: { value: string }) {
     } catch {
       // Si le clipboard est bloqué (contexte non-secure), on ne peut pas
       // grand-chose ; le user peut sélectionner manuellement.
-      alert("Impossible de copier automatiquement. Sélectionne le texte avec votre souris.");
+      alert("Impossible de copier automatiquement. Sélectionnez le texte avec votre souris.");
     }
   }
 

@@ -387,8 +387,8 @@ export default function ComparatifSecuritePage() {
 
         <p className="mt-10 text-[11px] text-muted leading-relaxed">
           Statuts MiCA vérifiés le {formatMicaDate(getMicaMeta().lastUpdated)} sur le registre de l&apos;ESMA et la
-          liste blanche de l&apos;AMF (à recouper avant toute décision). Cette page contient des liens
-          d&apos;affiliation : voir notre{" "}
+          liste blanche de l&apos;AMF (à recouper avant toute décision). Seuls les liens marqués
+          « Publicité » sont rémunérés (affiliation ou parrainage personnel du fondateur) : voir notre{" "}
           <Link href="/transparence" className="underline hover:text-fg">page transparence</Link>.
         </p>
       </div>

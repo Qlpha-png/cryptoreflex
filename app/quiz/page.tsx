@@ -34,7 +34,8 @@ const PAGE_PATH = "/quiz";
 const PAGE_URL = `${BRAND.url}${PAGE_PATH}`;
 const TITLE = "Questionnaires crypto : plateforme idéale";
 const DESCRIPTION =
-  "Deux questionnaires courts et neutres pour vous aider à démarrer dans la crypto : quelle plateforme pour votre profil (6 questions) et quelle crypto pour votre premier achat (5 questions). Recommandation Cryptoreflex sans biais commercial.";
+  // 06/10/2026 : plus de « recommandation » ni de « quelle crypto pour votre premier achat » ; le quiz crypto a 6 questions (pas 5).
+  "Deux questionnaires courts et neutres pour démarrer dans la crypto : quelles plateformes correspondent à votre usage (6 questions) et quels types de projets crypto découvrir en premier (6 questions). Outils pédagogiques, pas un conseil d'investissement.";
 
 export const metadata: Metadata = {
   title: TITLE,
@@ -54,7 +55,7 @@ export const metadata: Metadata = {
   keywords: [
     "quiz crypto",
     "quiz plateforme crypto",
-    "quelle crypto acheter",
+    "découvrir les projets crypto",
     "quel exchange crypto choisir",
     "test crypto débutant",
   ],
@@ -82,17 +83,17 @@ const QUIZZES: QuizCard[] = [
     highlights: [
       "Tient compte du support FR",
       "Filtre les plateformes non-MiCA",
-      "Reco neutre, pas d'affilié biaisé",
+      "Résultat neutre, pas d'affilié biaisé",
     ],
     icon: Building2,
     accent: "from-cyan-500/20 to-blue-500/20 border-cyan-500/30",
   },
   {
     href: "/quiz/crypto",
-    title: "Quelle crypto pour votre premier achat ?",
+    title: "Quels projets crypto découvrir en premier ?",
     description:
-      "Cinq questions sur votre horizon, votre tolérance au risque et ce que vous cherchez (réserve de valeur, smart contracts, hidden gems). Recommandation parmi notre top 10 et nos hidden gems.",
-    questionCount: "5 questions",
+      "Six questions sur votre horizon, le risque que vous acceptez et ce que vous cherchez (réserve de valeur, smart contracts, paiements…) pour savoir quelles fiches lire en premier parmi notre top 10 et nos hidden gems.",
+    questionCount: "6 questions",
     estimatedTime: "~2 minutes",
     highlights: [
       "Top 10 + hidden gems vérifiés",
@@ -159,9 +160,9 @@ export default function QuizHubPage() {
             </h1>
             <p className="mt-3 text-lg text-fg/70">
               Deux questionnaires courts, neutres et pédagogiques pour démarrer sans
-              prendre de mauvaise décision : choisir sa plateforme, choisir sa
-              première crypto. Aucune réponse n'est "fausse" — on adapte la
-              recommandation à votre profil.
+              prendre de mauvaise décision : comparer les plateformes, repérer quels
+              projets crypto lire en premier. Aucune réponse n'est &quot;fausse&quot; — le
+              résultat s&apos;adapte à vos réponses, sans vous dire quoi acheter.
             </p>
           </header>
 
@@ -230,14 +231,14 @@ export default function QuizHubPage() {
                   <li className="flex items-start gap-2">
                     <CheckCircle2 className="h-3.5 w-3.5 text-accent-green shrink-0 mt-0.5" />
                     <span>
-                      Vous recommander en sortie une option neutre (pas la plus
-                      rémunératrice pour nous).
+                      Vous présenter en sortie des options qui correspondent à vos
+                      réponses (pas les plus rémunératrices pour nous).
                     </span>
                   </li>
                   <li className="flex items-start gap-2">
                     <CheckCircle2 className="h-3.5 w-3.5 text-accent-green shrink-0 mt-0.5" />
                     <span>
-                      T'expliquer pourquoi cette reco — pas de boîte noire.
+                      Vous expliquer d&apos;où vient le résultat — pas de boîte noire.
                     </span>
                   </li>
                 </ul>

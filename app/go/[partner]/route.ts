@@ -31,6 +31,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getPartner } from "@/data/partners";
 import { getKv } from "@/lib/kv";
+import { acceptsUtm } from "@/lib/partner-links";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -130,11 +131,14 @@ export async function GET(
   }
 
   // Construit l'URL affiliée finale avec UTM enrichis
+  // (sauf lien de suivi d'un réseau, transmis tel quel : voir acceptsUtm)
   const targetUrl = new URL(partner.affiliateUrl);
-  targetUrl.searchParams.set("utm_source", "cryptoreflex");
-  targetUrl.searchParams.set("utm_medium", "affiliate");
-  targetUrl.searchParams.set("utm_campaign", partner.slug);
-  if (ctx !== "direct") targetUrl.searchParams.set("utm_content", ctx);
+  if (acceptsUtm(partner.affiliateUrl)) {
+    targetUrl.searchParams.set("utm_source", "cryptoreflex");
+    targetUrl.searchParams.set("utm_medium", "affiliate");
+    targetUrl.searchParams.set("utm_campaign", partner.slug);
+    if (ctx !== "direct") targetUrl.searchParams.set("utm_content", ctx);
+  }
 
   // Redirect 302 (temporary) — préserve le tracking partenaire
   const response = NextResponse.redirect(targetUrl.toString(), 302);

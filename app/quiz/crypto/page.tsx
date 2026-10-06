@@ -3,7 +3,6 @@ import Link from "next/link";
 import { ArrowRight, Sparkles } from "lucide-react";
 
 import { getAllCryptos } from "@/lib/cryptos";
-import { getAllCryptosUnified } from "@/lib/cryptos-extended";
 import { BRAND } from "@/lib/brand";
 import StructuredData from "@/components/StructuredData";
 import CryptoQuiz from "@/components/CryptoQuiz";
@@ -14,9 +13,11 @@ import { fitTitle } from "@/lib/seo-text";
 export const revalidate = 86400;
 
 // Suffixe "| Cryptoreflex" auto-ajouté par template root layout.
-const TITLE = `Questionnaire : quelle crypto correspond à votre profil ?`;
+// 06/10/2026 : plus de recommandation personnalisée (« la crypto la plus adaptée », « Reco neutre ») —
+// le questionnaire oriente les lectures (quelles fiches lire en premier), ce n'est pas un conseil d'investissement.
+const TITLE = `Questionnaire : quels projets crypto découvrir en premier ?`;
 const DESCRIPTION =
-  "6 questions courtes pour découvrir la crypto la plus adaptée à votre profil : tolérance au risque, horizon, type de projet, capital, stratégie. Reco neutre Cryptoreflex.";
+  "6 questions courtes pour découvrir quels types de projets crypto correspondent à ce que vous cherchez (réserve de valeur, smart contracts, paiements…) et orienter vos lectures. Outil pédagogique, pas un conseil d'investissement.";
 const PATH = "/quiz/crypto";
 
 export const metadata: Metadata = {
@@ -36,17 +37,17 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function QuizCryptoPage() {
+export default function QuizCryptoPage() {
   // SCORING : on garde les 100 fiches editoriales (top10 + hidden-gems).
   // Les fields specifiques (riskLevel, reliability, kind, tagline...) sont
   // requis par scoreCrypto() qui differencie la matrice par type de fiche.
   // Compat issue (bug fix critique 2026-05-09) : les 680 fiches LLM-pipeline
   // ne possedent pas ces fields editoriaux donc ne peuvent pas etre scorees
-  // sans degrader la qualite de la reco. Future evolution : enrichir les
+  // sans degrader la qualite du resultat. Future evolution : enrichir les
   // fiches LLM avec un mini-scoring (riskTier, beginnerLevel) cote pipeline.
   const cryptos = getAllCryptos();
-  // DISPLAY : on compte les 780 cryptos visibles cote site dans le hero.
-  const unifiedCount = (await getAllCryptosUnified()).length;
+  // 06/10/2026 : le hero annonçait « parmi 780 fiches analysées » alors que seules ces fiches détaillées
+  // sont départagées → on affiche leur nombre réel (getAllCryptosUnified n'est plus appelé ici).
 
   const breadcrumbs = breadcrumbSchema([
     { name: "Accueil", url: BRAND.url },
@@ -60,7 +61,7 @@ export default async function QuizCryptoPage() {
     description: DESCRIPTION,
     about: {
       "@type": "Thing",
-      name: "Cryptomonnaies adaptées au profil investisseur",
+      name: "Types de projets crypto (outil pédagogique)",
     },
     educationalLevel: "Beginner",
     inLanguage: "fr-FR",
@@ -94,16 +95,18 @@ export default async function QuizCryptoPage() {
           <header className="mb-10 sm:mb-12">
             <span className="badge-info">
               <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
-              Questionnaire personnalisé · 2 minutes
+              Questionnaire pédagogique · 2 minutes
             </span>
             <h1 className="mt-3 text-3xl sm:text-5xl font-extrabold tracking-tight">
-              Quelle crypto pour{" "}
-              <span className="gradient-text">votre profil&nbsp;?</span>
+              Quels projets crypto{" "}
+              <span className="gradient-text">découvrir en premier&nbsp;?</span>
             </h1>
             <p className="mt-3 max-w-2xl text-fg/80 text-base sm:text-lg">
               Répondez à 6 questions courtes — risque accepté, horizon, type de
-              projet, familiarité tech, capital, stratégie — on vous recommande la
-              crypto la plus adaptée parmi {unifiedCount} fiches analysées.
+              projet, familiarité tech, capital, stratégie — pour découvrir quels
+              types de projets correspondent à ce que vous cherchez, et orienter vos
+              lectures parmi nos {cryptos.length} fiches détaillées. Ce n&apos;est pas
+              un conseil d&apos;investissement.
             </p>
           </header>
 
@@ -121,8 +124,8 @@ export default async function QuizCryptoPage() {
               description="Aucun lien d'affiliation crypto — Cryptoreflex ne touche rien si vous choisissez BTC plutôt qu'un autre."
             />
             <Method
-              title="Reco honnête"
-              description="Si rien ne matche vos contraintes, on vous le dit. Pas de reco forcée pour faire plaisir."
+              title="Pas un conseil"
+              description="Le résultat vous dit quelles fiches lire en premier, pas quoi acheter. Si rien ne correspond à vos réponses, on vous le dit."
             />
           </section>
 

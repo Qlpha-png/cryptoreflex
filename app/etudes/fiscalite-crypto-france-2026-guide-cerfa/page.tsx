@@ -982,7 +982,7 @@ export default function FiscaliteCryptoStudyPage() {
                     </strong>
                     <p className="mt-1 text-sm text-slate-300">
                       Simulateur de l’imposition PFU 31,4 % vs barème
-                      progressif. Calcule le gain fiscal de chaque option en
+                      progressif. Il calcule l’écart d’impôt entre les deux options en
                       fonction de votre TMI.
                     </p>
                   </div>
@@ -1077,9 +1077,11 @@ export default function FiscaliteCryptoStudyPage() {
             source="bottom-article"
             context="fiscalite"
             variant="default"
-            title="Ne ratez aucune mise à jour fiscale"
-            subtitle="Cette étude est révisée chaque trimestre et après chaque nouvelle publication BOFiP. Recevez la version mise à jour par email. 1 envoi par trimestre, 0 spam."
-            ctaLabel="M'abonner à la veille fiscale crypto"
+            // 06/10/2026 : « Recevez la version mise à jour par email. 1 envoi par trimestre » retiré : aucun envoi
+            // de ce type n'existe (l'inscription ajoute seulement à la newsletter).
+            title="La newsletter fiscalité crypto"
+            subtitle="La date de révision de cette étude figure en haut de page. Inscrivez-vous pour recevoir la newsletter : l'essentiel de la fiscalité crypto en français, sans spam."
+            ctaLabel="M'abonner à la newsletter"
           />
         </div>
       </section>

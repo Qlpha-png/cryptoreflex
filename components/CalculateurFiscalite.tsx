@@ -43,6 +43,7 @@ import {
   type TmiRate,
 } from "@/lib/fiscalite";
 import { track, trackAffiliateClick } from "@/lib/analytics";
+import { waltioAffiliateUrl as waltioAffiliateUrlWith } from "@/lib/partner-links";
 import CountUp from "@/components/animations/CountUp";
 import PdfModal from "@/components/calculateur-fiscalite/PdfModal";
 
@@ -233,9 +234,9 @@ export default function CalculateurFiscalite() {
         return;
       }
       setEmailState("success");
-      setEmailMsg(
-        "C'est noté ! La checklist Cerfa 2086 + 2042-C arrive dans votre boîte mail.",
-      );
+      // 06/10/2026 : « La checklist arrive dans votre boîte mail » était faux — l'inscription (newsletter) n'envoie
+      // aucune checklist. Le PDF est proposé en téléchargement direct dans l'écran de succès.
+      setEmailMsg("C'est noté : vous êtes inscrit à la newsletter. Votre checklist est prête :");
       // Plausible : conversion email
       track("Calculator Email Signup", {
         tool: "tax-calculator-fr",
@@ -520,10 +521,12 @@ function WaltioPostResultCta({
   isExonere,
   regime,
 }: WaltioPostResultCtaProps) {
-  // URL d'affiliation Waltio — synchronisée avec data/fiscal-tools.json.
-  // Hardcodée ici pour rester côté client sans import data JSON inutile.
-  const waltioAffiliateUrl =
-    "https://waltio.com?ref=cryptoreflex&utm_source=cryptoreflex&utm_medium=affiliate&utm_campaign=calculator-post-result";
+  // URL d'affiliation Waltio — vrai lien tracé (lib/partner-links.ts, 06/10/2026 : « ?ref=cryptoreflex » ne l'était pas).
+  const waltioAffiliateUrl = waltioAffiliateUrlWith({
+    utm_source: "cryptoreflex",
+    utm_medium: "affiliate",
+    utm_campaign: "calculator-post-result",
+  });
 
   function handleAffiliateClick() {
     trackAffiliateClick(
@@ -1138,7 +1141,16 @@ function EmailCapture({
           className="h-5 w-5 shrink-0 text-success mt-0.5"
           aria-hidden="true"
         />
-        <p>{message}</p>
+        <div>
+          <p>{message}</p>
+          <a
+            href="/lead-magnets/checklist-declaration-crypto-2026.pdf"
+            download
+            className="mt-2 inline-flex items-center gap-1.5 font-semibold text-primary-soft underline hover:text-primary-glow"
+          >
+            Télécharger la checklist (PDF)
+          </a>
+        </div>
       </div>
     );
   }
@@ -1158,11 +1170,11 @@ function EmailCapture({
             id="lead-magnet-title"
             className="font-display font-bold text-white"
           >
-            Recevez la checklist Cerfa 2086 + déclaration 2042-C
+            La checklist Cerfa 2086 + déclaration 2042-C (PDF)
           </h4>
           <p className="mt-1 text-sm text-white/75">
             Pas-à-pas pour reporter vos cessions sur les bons formulaires, avec
-            les pièges à éviter. Gratuit, désinscription en 1 clic.
+            les pièges à éviter. Gratuite, téléchargeable dès votre inscription.
           </p>
           <form
             onSubmit={onSubmit}
@@ -1200,7 +1212,7 @@ function EmailCapture({
                 </>
               ) : (
                 <>
-                  Recevoir la checklist
+                  Obtenir la checklist
                   <Mail className="h-4 w-4" aria-hidden="true" />
                 </>
               )}
@@ -1217,8 +1229,8 @@ function EmailCapture({
             </p>
           )}
           <p className="mt-3 text-[11px] text-muted">
-            En vous inscrivant, vous recevez aussi notre newsletter hebdo crypto FR.
-            Vos données ne sont jamais revendues.
+            En vous inscrivant, vous êtes inscrit à notre newsletter crypto FR (sans spam,
+            désinscription en 1 clic). Vos données ne sont jamais revendues.
           </p>
         </div>
       </div>

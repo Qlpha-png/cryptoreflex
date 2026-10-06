@@ -44,6 +44,9 @@ import { withHreflang } from "@/lib/seo-alternates";
  *
  * Aujourd'hui (scaffold) : page éditoriale teasing + capture email
  * waitlist (réutilise NewsletterCapture).
+ *
+ * 06/10/2026 : plus de date de sortie promise (« mi-décembre 2026 ») ni d'« email avec votre récap » —
+ * l'outil n'est pas développé et aucune édition de newsletter n'est envoyée ; tout au vouvoiement.
  */
 
 export const revalidate = 86400;
@@ -51,7 +54,7 @@ export const revalidate = 86400;
 export const metadata: Metadata = {
   title: "Crypto Wrapped 2026 — Votre année crypto en 60 secondes",
   description:
-    "Bientôt : votre récap crypto personnalisé style Spotify Wrapped — meilleure perf, biais détectés, badges, partageable en 1 clic. Laissez votre email pour le lancement.",
+    "En préparation : votre récap crypto personnalisé style Spotify Wrapped — meilleure perf, biais détectés, badges, partageable en 1 clic.",
   alternates: withHreflang(`${BRAND.url}/crypto-wrapped`),
   openGraph: {
     title: "Crypto Wrapped 2026 — Votre année crypto en 60 secondes",
@@ -74,8 +77,8 @@ const STORIES = [
   {
     Icon: TrendingUp,
     eyebrow: "Story 2",
-    title: "Ta strat dominante",
-    blurb: "DCA, lump sum, swing trader ou hodler ? On te révèle votre style.",
+    title: "Votre stratégie dominante",
+    blurb: "DCA, lump sum, swing trader ou hodler ? Le récap révèle votre style.",
     color: "text-success",
     bg: "bg-success/15",
   },
@@ -90,7 +93,7 @@ const STORIES = [
   {
     Icon: Calendar,
     eyebrow: "Story 4",
-    title: "Tes 12 mois en 12 chiffres",
+    title: "Vos 12 mois en 12 chiffres",
     blurb: "Achats, ventes, swaps, stakes, alertes déclenchées — la timeline complète.",
     color: "text-primary-soft",
     bg: "bg-primary/15",
@@ -107,7 +110,7 @@ const STORIES = [
     Icon: Share2,
     eyebrow: "Story 6",
     title: "Vos badges débloqués",
-    blurb: "Hodler 365j, First Steps, Streak Master… Partage vos trophées en 1 clic.",
+    blurb: "Hodler 365j, First Steps, Streak Master… Partagez vos trophées en 1 clic.",
     color: "text-primary",
     bg: "bg-primary/15",
   },
@@ -146,7 +149,7 @@ export default function CryptoWrappedPage() {
         {/* Hero */}
         <header className="mt-6 max-w-3xl">
           <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/15 border border-primary/30 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-primary-soft">
-            <Sparkles className="h-3 w-3" aria-hidden /> Lancement décembre 2026
+            <Sparkles className="h-3 w-3" aria-hidden /> En préparation
           </span>
           <h1 className="mt-4 text-4xl sm:text-6xl font-extrabold tracking-tight">
             Votre année crypto,
@@ -155,7 +158,7 @@ export default function CryptoWrappedPage() {
           </h1>
           <p className="mt-5 text-base sm:text-lg text-fg/80 leading-relaxed">
             Spotify Wrapped, mais pour votre portefeuille crypto. 6 stories
-            partageables : meilleure perf, biais cachés, strat dominante,
+            partageables : meilleure perf, biais cachés, stratégie dominante,
             facture fiscale projetée, badges débloqués. Un clic = un récap
             personnalisé.
           </p>
@@ -166,7 +169,7 @@ export default function CryptoWrappedPage() {
           <Tldr
             headline="Votre année crypto résumée en 6 stories partageables, basées sur votre vrai portefeuille."
             bullets={[
-              { emoji: "🎯", text: "100 % personnalisé — connecte votre portfolio Cryptoreflex" },
+              { emoji: "🎯", text: "100 % personnalisé — calculé sur votre portefeuille Cryptoreflex" },
               { emoji: "📊", text: "Détection de biais (overtrading, FOMO, concentration)" },
               { emoji: "📋", text: "Estimation Cerfa 2086 incluse pour la déclaration" },
               { emoji: "🚀", text: "Partage en 1 clic Insta / X / TikTok (image OG dédiée)" },
@@ -213,26 +216,26 @@ export default function CryptoWrappedPage() {
         {/* CTA waitlist */}
         <section className="mt-16 rounded-3xl border border-primary/30 bg-gradient-to-br from-primary/15 via-primary/5 to-transparent p-6 sm:p-10 text-center">
           <h2 className="text-2xl sm:text-3xl font-extrabold">
-            Sois prévenu·e au lancement
+            Crypto Wrapped n&apos;est pas encore disponible
           </h2>
           <p className="mt-3 text-sm text-fg/80 max-w-xl mx-auto">
-            Le Wrapped 2026 sortira mi-décembre 2026, juste avant la déclaration
-            fiscale. Inscrivez-vous à la newsletter — vous recevrez un email avec
-            votre récap dès qu&apos;il sera prêt.
+            Cette page présente le récap prévu. Il sera calculé à partir du
+            portefeuille que vous suivez dans votre compte gratuit Cryptoreflex,
+            que vous pouvez créer dès maintenant.
           </p>
           <div className="mt-5 flex flex-wrap items-center justify-center gap-3">
             <Link
-              href="/#cat-informe"
+              href="/inscription"
               className="btn-primary btn-primary-shine"
             >
-              M&apos;inscrire à la newsletter
+              Créer un compte gratuit
               <ArrowRight className="h-4 w-4" aria-hidden />
             </Link>
             <Link
-              href="/inscription"
+              href="/#cat-informe"
               className="btn-ghost"
             >
-              Créer un compte gratuit
+              S&apos;inscrire à la newsletter
             </Link>
           </div>
           <p className="mt-4 text-[11px] text-muted">

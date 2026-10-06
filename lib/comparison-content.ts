@@ -17,11 +17,11 @@
  *   wordCount export).
  */
 
-import { cardBuyPct, isAvailableFr, type Platform } from "@/lib/platforms";
+import { cardBuyPct, isAvailableFr, type Platform, trustpilotText } from "@/lib/platforms";
 import type { ComparisonEntry } from "@/lib/comparisons";
 import type { FaqItem } from "@/lib/schema";
 import type { ProfileVerdict } from "@/components/comparison/VerdictByProfile";
-import { fmtFr } from "@/lib/format-fr";
+import { fmtDateFr, fmtFr } from "@/lib/format-fr";
 
 /* -------------------------------------------------------------------------- */
 /*  Types                                                                     */
@@ -421,7 +421,7 @@ export function buildComparisonCopy(
 
   const supportAnalysis = [
     `Le support client en français est un critère sous-estimé jusqu'au premier problème (KYC bloqué, retrait en attente, oubli 2FA). ${a.name} propose : chat FR ${a.support.frenchChat ? "✅" : "❌"}, téléphone FR ${a.support.frenchPhone ? "✅" : "❌"}, temps de réponse moyen ${a.support.responseTime}. ${b.name} : chat FR ${b.support.frenchChat ? "✅" : "❌"}, téléphone FR ${b.support.frenchPhone ? "✅" : "❌"}, temps de réponse ${b.support.responseTime}.`,
-    `Sur notre note support pondérée, ${sup.winner.name} prend l'avantage avec ${fmtScore(sup.winner.scoring.support)} (vs ${fmtScore(sup.loser.scoring.support)}). Trustpilot : ${a.name} ${a.ratings.trustpilot}/5 sur ${a.ratings.trustpilotCount.toLocaleString("fr-FR")} avis, ${b.name} ${b.ratings.trustpilot}/5 sur ${b.ratings.trustpilotCount.toLocaleString("fr-FR")} avis. Attention : Trustpilot est biaisé négativement (les utilisateurs satisfaits notent rarement). Notre note interne corrige ce biais en pondérant par la qualité documentaire et la réactivité observée sur incident réel.`,
+    `Sur notre note support pondérée, ${sup.winner.name} prend l'avantage avec ${fmtScore(sup.winner.scoring.support)} (vs ${fmtScore(sup.loser.scoring.support)}). Trustpilot : ${a.name} ${trustpilotText(a.ratings) ?? "sans note publique"} (relevé le ${fmtDateFr(a.ratings.trustpilotVerified)}), ${b.name} ${trustpilotText(b.ratings) ?? "sans note publique"} (relevé le ${fmtDateFr(b.ratings.trustpilotVerified)}). Attention : une note Trustpilot reflète surtout les clients qui prennent la peine d'écrire, souvent après un incident ou sur invitation de la plateforme ; elle ne mesure pas à elle seule la qualité du support.`,
   ];
 
   const catalogAnalysis = [

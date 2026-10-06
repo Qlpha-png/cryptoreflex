@@ -49,7 +49,7 @@ export default function OfflinePage() {
       </div>
 
       <h1 className="mb-4 font-display text-3xl font-bold tracking-tight md:text-4xl">
-        Tu es hors ligne
+        Vous êtes hors ligne
       </h1>
 
       <p className="mx-auto mb-8 max-w-md text-base text-neutral-300">

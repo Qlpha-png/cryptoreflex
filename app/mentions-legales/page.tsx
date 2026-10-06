@@ -70,9 +70,11 @@ export default function MentionsLegalesPage() {
       <h2 className="mt-10 text-2xl font-bold text-fg">5. Liens d'affiliation</h2>
       <p className="text-fg/85 leading-relaxed">
         Conformément à nos engagements de transparence, nous précisons que certains liens
-        figurant sur ce site sont des <strong>liens d'affiliation</strong>. Nous percevons une
-        commission lorsqu'un utilisateur s'inscrit à un service via ces liens, sans surcoût pour
-        lui. Notre politique d'affiliation est détaillée dans la page{" "}
+        figurant sur ce site sont rémunérés, et signalés par la mention « Publicité » : des{" "}
+        <strong>liens d'affiliation</strong> (Ledger, Trezor, Waltio : l'éditeur perçoit une
+        commission sur un achat ou un abonnement) et des <strong>liens de parrainage personnels</strong>{" "}
+        du fondateur (Bitpanda, Trade Republic), sans surcoût pour l'utilisateur. Les autres liens
+        ne sont pas rémunérés. Le détail est publié dans la page{" "}
         <a href="/transparence" className="text-primary-soft hover:underline">Transparence et partenariats</a>.
       </p>
 

@@ -6,7 +6,7 @@ import { getAllPlatforms, getPlatformById, isAvailableFr, type Platform } from "
 import { getPublishableComparisons, type ComparisonSpec } from "@/lib/programmatic";
 import { buildRows } from "@/lib/comparateur";
 import { BRAND, STATS } from "@/lib/brand";
-import { affiliationNotice, getAffiliationKind } from "@/lib/partnerships";
+import { paidLinkCaption } from "@/lib/partnerships";
 import { withHreflang } from "@/lib/seo-alternates";
 import StructuredData from "@/components/StructuredData";
 import PlatformLogo from "@/components/PlatformLogo";
@@ -67,7 +67,8 @@ function duelTitle(c: ComparisonSpec): string {
 export default function ComparatifPage() {
   const all = getAllPlatforms();
   /* mention affichée seulement quand le lien rapporte quelque chose (sinon : bruit inutile sous chaque carte) */
-  const rows = buildRows(all, (id) => (getAffiliationKind(id) ? affiliationNotice(id) : ""));
+  // 06/10/2026 : même mention « Publicité — … » (bon type) que partout ailleurs sur le site.
+  const rows = buildRows(all, (id) => paidLinkCaption(id) ?? "");
   const wallets = all.filter((p) => p.category === "wallet");
   const blocked: Platform[] = all.filter((p) => p.category !== "wallet" && !isAvailableFr(p));
   const duels = getPublishableComparisons().filter((c) => {

@@ -76,7 +76,7 @@ export default function HiddenGemsSection() {
           ))}
         </div>
 
-        {/* Disclaimer obligatoire — conforme article 222-15 AMF */}
+        {/* Avertissement risques — cryptos spéculatives */}
         <AmfDisclaimer variant="speculation" className="mt-10" />
       </div>
     </section>

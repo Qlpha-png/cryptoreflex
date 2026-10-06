@@ -91,9 +91,9 @@ export default function ConfidentialitePage() {
         à la déconnexion ou à leur expiration.
       </p>
       <p className="text-fg/85 leading-relaxed">
-        Lorsque vous cliquez sur un lien d'affiliation et que vous êtes redirigé vers une
-        plateforme partenaire (Bitpanda, Kraken, etc.), cette plateforme peut utiliser ses propres
-        cookies, conformément à sa propre politique de confidentialité.
+        Lorsque vous cliquez sur un lien vers un site tiers (une plateforme comme Kraken ou
+        Bitpanda, ou un partenaire d'affiliation comme Ledger, Trezor ou Waltio), ce site peut
+        utiliser ses propres cookies, conformément à sa propre politique de confidentialité.
       </p>
 
       <h2 className="mt-10 text-2xl font-bold text-fg">8. Sous-traitants</h2>

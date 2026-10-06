@@ -335,11 +335,11 @@
       "id": "bitstack",
       "name": "Bitstack",
       "aliases": [
-        "bitstack.com",
+        "bitstack-app.com",
         "bitstack app"
       ],
       "logo": "/logos/bitstack.svg",
-      "websiteUrl": "https://bitstack.com",
+      "websiteUrl": "https://www.bitstack-app.com",
       "legalEntity": "BITSTACK DIGITAL ASSETS SAS",
       "headquarters": "France",
       "psanStatus": "registered",
@@ -354,7 +354,7 @@
       ],
       "atRiskJuly2026": false,
       "restrictions": [],
-      "publicSource": "https://bitstack.com/fr/legal",
+      "publicSource": "https://www.bitstack-app.com/conditions-generales-de-vente",
       "wikipediaSource": null,
       "lastVerified": "2026-10-02",
       "notes": "Agrément MiCA délivré le 30/06/2025 à BITSTACK DIGITAL ASSETS SAS (AMF, France, n° A2025-003)."

@@ -21,7 +21,7 @@
  * Cadence : 5 emails sur 14 jours = ~1 email tous les 3 jours en moyenne.
  *  - Cadence raisonnable, jamais 2 emails le même jour
  *  - Dernier touch J14 = ré-engagement final avant transition vers la
- *    newsletter quotidienne standard
+ *    newsletter générale (06/10/2026 : aucune édition de newsletter n'est envoyée par le code)
  *
  * Conformité :
  *  - RGPD : opt-out global (lien Beehiiv {{unsubscribe_url}}) dans chaque email
@@ -32,6 +32,7 @@
  */
 
 import { BRAND } from "@/lib/brand";
+import { waltioAffiliateUrl } from "@/lib/partner-links";
 import { generateUnsubscribeToken } from "@/lib/auth-tokens";
 
 /* -------------------------------------------------------------------------- */
@@ -109,12 +110,13 @@ export interface EmailInSequence {
  * Source unique : si Waltio change d'URL d'affiliation, on ne touche qu'ici.
  */
 function waltioUrl(day: FiscaliteDayOffset, sub: string): string {
-  const base =
-    "https://waltio.com?ref=cryptoreflex&utm_source=cryptoreflex&utm_medium=email&utm_campaign=fiscalite-d" +
-    String(day) +
-    "&utm_content=" +
-    encodeURIComponent(sub);
-  return base;
+  // 06/10/2026 : vrai lien d'affiliation (a_aid) — « waltio.com?ref=cryptoreflex » n'était pas tracé.
+  return waltioAffiliateUrl({
+    utm_source: "cryptoreflex",
+    utm_medium: "email",
+    utm_campaign: `fiscalite-d${day}`,
+    utm_content: sub,
+  });
 }
 
 /** URL interne Cryptoreflex avec UTM séquence. */

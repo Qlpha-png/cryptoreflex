@@ -20,6 +20,8 @@ import { BRAND } from "@/lib/brand";
 import StructuredData from "@/components/StructuredData";
 import AmfDisclaimer from "@/components/AmfDisclaimer";
 import MobileStickyCTA from "@/components/MobileStickyCTA";
+import PaidLinkCaption from "@/components/PaidLinkCaption";
+import { outboundRel } from "@/lib/partnerships";
 import { breadcrumbSchema, faqSchema, graphSchema } from "@/lib/schema";
 import { withHreflang } from "@/lib/seo-alternates";
 import { fitDescription, fitTitle } from "@/lib/seo-text";
@@ -331,13 +333,14 @@ export default async function AcheterEnFrancePage({ params }: Props) {
                           <a
                             href={p.affiliateUrl}
                             target="_blank"
-                            rel="noopener noreferrer sponsored"
+                            rel={outboundRel(p.id, p.affiliateUrl)}
                             className="btn-primary text-xs px-3 py-1.5"
                           >
                             Acheter {meta.symbol} sur {p.name}
                             <ExternalLink className="h-3 w-3" />
                           </a>
                         </div>
+                        <PaidLinkCaption platformId={p.id} href={p.affiliateUrl} className="mt-1.5 block text-[11px] text-muted underline hover:text-fg" />
                       </div>
                     </div>
                   </article>

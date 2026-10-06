@@ -66,7 +66,7 @@ export default function EditableDisplayName({ initialName }: Props) {
           autoFocus
           disabled={pending}
           className="rounded-lg border border-primary/40 bg-elevated px-3 py-1.5 text-base font-bold text-fg focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30 max-w-xs"
-          aria-label="Modifier ton nom d'affichage"
+          aria-label="Modifier votre nom d'affichage"
           onKeyDown={(e) => {
             if (e.key === "Enter") save();
             if (e.key === "Escape") cancel();

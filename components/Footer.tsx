@@ -248,8 +248,8 @@ export default async function Footer() {
             Les contenus de {BRAND.name} ont une vocation purement informative et pédagogique et
             ne constituent pas un conseil en investissement au sens de l&apos;article L.321-1 du Code
             monétaire et financier. Consultez un conseiller en investissements financiers (CIF)
-            enregistré ORIAS pour toute décision patrimoniale significative. Certains liens sont
-            des liens d&apos;affiliation —{" "}
+            enregistré ORIAS pour toute décision patrimoniale significative. Certains liens, marqués
+            « Publicité », sont rémunérés (affiliation ou parrainage personnel du fondateur) —{" "}
             <Link
               href="/transparence"
               className="underline hover:text-white rounded

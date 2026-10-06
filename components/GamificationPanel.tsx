@@ -117,7 +117,7 @@ export default function GamificationPanel() {
           className="text-xl sm:text-2xl font-bold text-fg flex items-center gap-2"
         >
           <Trophy className="h-5 w-5 text-amber-400" />
-          Ta progression
+          Votre progression
         </h2>
         {degraded && (
           <span className="text-xs text-amber-300/80">

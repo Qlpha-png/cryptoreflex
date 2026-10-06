@@ -14,7 +14,7 @@ import {
   Plus,
   Equal,
 } from "lucide-react";
-import { cardBuyPct, getPlatformById, isAvailableFr, type Platform, hasNoIncident } from "@/lib/platforms";
+import { cardBuyPct, getPlatformById, isAvailableFr, type Platform, hasNoIncident, trustpilotText, verifiedBonus } from "@/lib/platforms";
 import {
   getComparison,
   getPublishableComparisons,
@@ -22,6 +22,8 @@ import {
 } from "@/lib/programmatic";
 import { BRAND } from "@/lib/brand";
 import MobileStickyCTA from "@/components/MobileStickyCTA";
+import PaidLinkCaption from "@/components/PaidLinkCaption";
+import { isPaidLink, outboundRel } from "@/lib/partnerships";
 import MiCAComplianceBadge from "@/components/MiCAComplianceBadge";
 import { breadcrumbSchema } from "@/lib/schema";
 import RelatedPagesNav from "@/components/RelatedPagesNav";
@@ -68,7 +70,28 @@ export function generateMetadata({ params }: Props): Metadata {
  * Helpers de comparaison
  * ------------------------------------------------------------------ */
 
-type WinnerHint = "a" | "b" | "tie";
+/** "na" = valeurs non comparables (ex. une note Trustpilot absente) : aucun badge. */
+type WinnerHint = "a" | "b" | "tie" | "na";
+
+/** Cellule Trustpilot : note relevée (+ précision éventuelle), sinon la raison de son absence. */
+function trustpilotCell(p: Platform, withDate: boolean): string {
+  const t = trustpilotText(p.ratings);
+  const note = p.ratings.trustpilotNote;
+  const base = t ? (note ? `${t} — ${note}` : t) : note ? note.charAt(0).toUpperCase() + note.slice(1) : "—";
+  return withDate ? `${base} · relevé le ${fmtDateFr(p.ratings.trustpilotVerified)}` : base;
+}
+
+function trustpilotRow(a: Platform, b: Platform): CompareRow {
+  const sameDate = a.ratings.trustpilotVerified === b.ratings.trustpilotVerified;
+  const ra = a.ratings.trustpilot;
+  const rb = b.ratings.trustpilot;
+  return {
+    label: sameDate ? `Trustpilot (relevé du ${fmtDateFr(a.ratings.trustpilotVerified)})` : "Trustpilot",
+    aDisplay: trustpilotCell(a, !sameDate),
+    bDisplay: trustpilotCell(b, !sameDate),
+    hint: ra != null && rb != null ? winner(ra, rb) : "na",
+  };
+}
 
 function winner(aValue: number, bValue: number, lowerIsBetter = false): WinnerHint {
   if (aValue === bValue) return "tie";
@@ -77,6 +100,7 @@ function winner(aValue: number, bValue: number, lowerIsBetter = false): WinnerHi
 }
 
 function WinnerBadge({ hint, side }: { hint: WinnerHint; side: "a" | "b" }) {
+  if (hint === "na") return null;
   if (hint === "tie") return <Equal className="h-4 w-4 text-muted inline" />;
   if (hint === side) return <Trophy className="h-4 w-4 text-primary inline" />;
   return <Minus className="h-4 w-4 text-muted inline" />;
@@ -179,7 +203,7 @@ function buildRows(a: Platform, b: Platform): { fees: CompareRow[]; security: Co
     { label: "Score UX", aDisplay: `${fmtNb(a.scoring.ux)}/5`, bDisplay: `${fmtNb(b.scoring.ux)}/5`, hint: winner(a.scoring.ux, b.scoring.ux) },
     { label: "Note App Store", aDisplay: `${fmtNb(a.ratings.appStore)}/5`, bDisplay: `${fmtNb(b.ratings.appStore)}/5`, hint: winner(a.ratings.appStore, b.ratings.appStore) },
     { label: "Note Play Store", aDisplay: `${fmtNb(a.ratings.playStore)}/5`, bDisplay: `${fmtNb(b.ratings.playStore)}/5`, hint: winner(a.ratings.playStore, b.ratings.playStore) },
-    { label: "Trustpilot", aDisplay: `${fmtNb(a.ratings.trustpilot)}/5 (${a.ratings.trustpilotCount.toLocaleString("fr-FR")})`, bDisplay: `${fmtNb(b.ratings.trustpilot)}/5 (${b.ratings.trustpilotCount.toLocaleString("fr-FR")})`, hint: winner(a.ratings.trustpilot, b.ratings.trustpilot) },
+    trustpilotRow(a, b),
     { label: "Cryptos listées", aDisplay: `${a.cryptos.totalCount}`, bDisplay: `${b.cryptos.totalCount}`, hint: winner(a.cryptos.totalCount, b.cryptos.totalCount) },
   ];
 
@@ -373,15 +397,18 @@ export default function ComparisonPage({ params }: Props) {
                   </div>
                 )}
                 {isAvailableFr(plat) ? (
-                  <a
-                    href={plat.affiliateUrl}
-                    target="_blank"
-                    rel="noopener noreferrer sponsored"
-                    className="mt-2 inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-primary to-primary-glow px-4 py-2.5 text-sm font-semibold text-background hover:opacity-90 transition"
-                  >
-                    Tester {plat.name}
-                    <ExternalLink className="h-4 w-4" />
-                  </a>
+                  <>
+                    <a
+                      href={plat.affiliateUrl}
+                      target="_blank"
+                      rel={outboundRel(plat.id, plat.affiliateUrl)}
+                      className="mt-2 inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-primary to-primary-glow px-4 py-2.5 text-sm font-semibold text-background hover:opacity-90 transition"
+                    >
+                      Tester {plat.name}
+                      <ExternalLink className="h-4 w-4" />
+                    </a>
+                    <PaidLinkCaption platformId={plat.id} href={plat.affiliateUrl} className="text-center text-[11px] text-muted underline hover:text-white" />
+                  </>
                 ) : (
                   <span className="mt-2 inline-flex items-center justify-center rounded-xl border border-red-400/40 bg-red-400/10 px-4 py-2.5 text-sm font-semibold text-red-200">
                     Non autorisée en France
@@ -451,7 +478,8 @@ export default function ComparisonPage({ params }: Props) {
           </section>
         ))}
 
-        {/* BONUS COMPARÉS */}
+        {/* BONUS COMPARÉS : seulement si une offre est relevée (verifiedBonus) */}
+        {(verifiedBonus(a) || verifiedBonus(b)) && (
         <section className="mt-10">
           <h2 className="text-2xl font-bold tracking-tight flex items-center gap-2">
             <Gift className="h-6 w-6 text-primary" />
@@ -467,15 +495,16 @@ export default function ComparisonPage({ params }: Props) {
                   {plat.name}
                 </div>
                 <div className="mt-1 text-sm font-semibold text-white">
-                  {plat.bonus.welcome}
+                  {verifiedBonus(plat) ?? "Aucune offre relevée"}
                 </div>
-                {plat.bonus.conditions && (
+                {verifiedBonus(plat) && plat.bonus.conditions && (
                   <p className="mt-2 text-xs text-white/70">{plat.bonus.conditions}</p>
                 )}
               </div>
             ))}
           </div>
         </section>
+        )}
 
         {/* POINTS FORTS DIFFÉRENCIATEURS */}
         <section className="mt-10 grid gap-6 lg:grid-cols-2">
@@ -520,14 +549,17 @@ export default function ComparisonPage({ params }: Props) {
               </div>
               <p className="mt-2 text-sm text-white/85 leading-relaxed">{verdict.pickA}</p>
               {okA ? (
-                <a
-                  href={a.affiliateUrl}
-                  target="_blank"
-                  rel="noopener noreferrer sponsored"
-                  className="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-primary-glow hover:underline"
-                >
-                  Aller sur {a.name} <ArrowRight className="h-4 w-4" />
-                </a>
+                <>
+                  <a
+                    href={a.affiliateUrl}
+                    target="_blank"
+                    rel={outboundRel(a.id, a.affiliateUrl)}
+                    className="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-primary-glow hover:underline"
+                  >
+                    Aller sur {a.name} <ArrowRight className="h-4 w-4" />
+                  </a>
+                  <PaidLinkCaption platformId={a.id} href={a.affiliateUrl} />
+                </>
               ) : (
                 <Link href={`/avis/${a.id}`} className="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-red-200 hover:underline">
                   Non autorisée en France : voir la fiche <ArrowRight className="h-4 w-4" />
@@ -540,14 +572,17 @@ export default function ComparisonPage({ params }: Props) {
               </div>
               <p className="mt-2 text-sm text-white/85 leading-relaxed">{verdict.pickB}</p>
               {okB ? (
-                <a
-                  href={b.affiliateUrl}
-                  target="_blank"
-                  rel="noopener noreferrer sponsored"
-                  className="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-primary-glow hover:underline"
-                >
-                  Aller sur {b.name} <ArrowRight className="h-4 w-4" />
-                </a>
+                <>
+                  <a
+                    href={b.affiliateUrl}
+                    target="_blank"
+                    rel={outboundRel(b.id, b.affiliateUrl)}
+                    className="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-primary-glow hover:underline"
+                  >
+                    Aller sur {b.name} <ArrowRight className="h-4 w-4" />
+                  </a>
+                  <PaidLinkCaption platformId={b.id} href={b.affiliateUrl} />
+                </>
               ) : (
                 <Link href={`/avis/${b.id}`} className="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-red-200 hover:underline">
                   Non autorisée en France : voir la fiche <ArrowRight className="h-4 w-4" />
@@ -593,7 +628,10 @@ export default function ComparisonPage({ params }: Props) {
         {/* DISCLAIMER */}
         <section className="mt-12 rounded-xl border border-border bg-surface/50 p-5">
           <p className="text-xs text-muted leading-relaxed">
-            Comparatif rédigé par l'équipe éditoriale {BRAND.name}. Les frais et données réglementaires sont vérifiés trimestriellement (dernière vérif : {new Date(a.mica.lastVerified).toLocaleDateString("fr-FR")}). Les liens marqués « Publicité » génèrent une commission à {BRAND.name} sans surcoût pour vous, ce qui n'influence pas l'attribution du verdict — voir <Link href="/methodologie" className="underline hover:text-white">/methodologie</Link> et <Link href="/transparence" className="underline hover:text-white">/transparence</Link>. Investir dans les cryptoactifs présente un risque de perte en capital. Ce comparatif n'est pas un conseil en investissement.
+            Comparatif rédigé par l'équipe éditoriale {BRAND.name}. Les frais et données réglementaires sont vérifiés trimestriellement (dernière vérif : {new Date(a.mica.lastVerified).toLocaleDateString("fr-FR")}). {(okA && isPaidLink(a.id, a.affiliateUrl)) || (okB && isPaidLink(b.id, b.affiliateUrl))
+              ? "Les liens marqués « Publicité » sont rémunérés (affiliation ou parrainage), sans surcoût pour vous, ce qui n'influence pas l'attribution du verdict"
+              : "Les liens vers les plateformes mènent à leur site officiel ; le verdict suit notre méthodologie"}{" "}
+            — voir <Link href="/methodologie" className="underline hover:text-white">/methodologie</Link> et <Link href="/transparence" className="underline hover:text-white">/transparence</Link>. Investir dans les cryptoactifs présente un risque de perte en capital. Ce comparatif n'est pas un conseil en investissement.
           </p>
         </section>
       </div>

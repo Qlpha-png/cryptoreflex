@@ -4,11 +4,12 @@
  * Server Component, full data statique. Affichage responsive : table desktop +
  * cards stackées mobile (gestion via Tailwind sm:hidden / hidden sm:table).
  *
- * Tous les CTA en bas du tableau sont des <AffiliateLink /> tagués sponsored.
+ * Tous les CTA en bas du tableau sont des <AffiliateLink /> (« sponsored » seulement pour un partenaire réel).
  */
 
 import { Check, X, ArrowRight, Minus } from "lucide-react";
 import AffiliateLink from "@/components/AffiliateLink";
+import { isPaidLink } from "@/lib/partnerships";
 import { formatStartingPrice, getCheapestPaidPlan } from "@/lib/fiscal-tools";
 import type { FiscalTool } from "@/lib/fiscal-tools-types";
 import { fmtFr } from "@/lib/format-fr";
@@ -126,6 +127,7 @@ export default function FiscalToolComparisonTable({
   tools,
   placement = "fiscal-comparison-table",
 }: FiscalToolComparisonTableProps) {
+  const paidTools = tools.filter((t) => isPaidLink(t.id, t.affiliateUrl));
   return (
     <div className="space-y-6">
       {/* Desktop table */}
@@ -276,11 +278,15 @@ export default function FiscalToolComparisonTable({
         ))}
       </div>
 
-      {/* Mention sponsored globale */}
+      {/* Mention de rémunération — 06/10/2026 : nomme les SEULS outils réellement partenaires (lib/partnerships.ts) ;
+          avant, tous les liens (Koinly, CoinTracking compris) étaient annoncés comme rémunérés. */}
       <p className="text-[11px] text-muted text-center">
-        Liens d'affiliation publicitaires — Cryptoreflex perçoit une commission
-        si vous souscrivez via ces liens. Le classement reste basé sur nos critères
-        éditoriaux publics (cf.{" "}
+        {paidTools.length > 0
+          ? `Publicité — ${paidTools.map((t) => t.name).join(", ")} : lien${paidTools.length > 1 ? "s" : ""} d'affiliation, Cryptoreflex perçoit une commission si vous souscrivez. ${
+              paidTools.length < tools.length ? "Les autres liens mènent au site officiel de l'outil. " : ""
+            }`
+          : "Les liens mènent au site officiel de chaque outil. "}
+        Le classement reste basé sur nos critères éditoriaux publics (cf.{" "}
         <a href="/methodologie" className="underline hover:text-primary-soft">
           méthodologie
         </a>

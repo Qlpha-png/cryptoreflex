@@ -34,13 +34,13 @@ const CARDS: TrustCard[] = [
     Icon: HandCoins,
     title: "0 € reçus pour modifier les notes",
     pitch:
-      "Les liens d'affiliation rémunèrent le site, jamais les classements.",
+      "Les liens rémunérés ne changent jamais les classements.",
     // Fix audit cohérence 30/04/2026 — /partenariats a été 301 vers /transparence.
     // Aussi : « notre n°1 actuel n'est pas notre meilleur partenaire commercial »
     // était un claim de spectacle invérifiable retiré (le site est jeune, peu de
     // comparaisons probantes). Reformulé en engagement procédural.
     detail:
-      "Nous percevons des commissions d'affiliation quand un visiteur ouvre un compte via nos liens — c'est le modèle économique. Mais la méthodologie de scoring est appliquée de façon identique à tous les acteurs (affiliés ou non). La preuve : nos 3 vrais partenaires commerciaux (Ledger, Trezor, Waltio) sont aussi listés à côté de plateformes non affiliées dans nos comparatifs. Détail des programmes sur la page Transparence.",
+      "Seuls quelques liens sont rémunérés, tous marqués « Publicité » : une commission de nos 3 partenaires d'affiliation (Ledger, Trezor, Waltio) sur un achat ou un abonnement, et les liens de parrainage personnels du fondateur chez Bitpanda et Trade Republic. Les autres plateformes ne nous versent rien. La méthodologie de scoring est appliquée de façon identique à tous les acteurs : nos 3 partenaires commerciaux sont listés à côté de concurrents non affiliés dans nos comparatifs. Détail des programmes sur la page Transparence.",
     cta: { label: "Voir le détail des affiliations", href: "/transparence" },
   },
   {
@@ -79,7 +79,7 @@ export default function WhyTrustUs() {
             Pourquoi nous croire ?
           </h2>
           <p className="mt-3 text-fg/75 text-lg">
-            On ne te demande pas de nous faire confiance sur parole. Voici les 3 garde-fous
+            Nous ne vous demandons pas de nous croire sur parole. Voici les 3 garde-fous
             vérifiables qui rendent nos comparatifs honnêtes.
           </p>
         </div>

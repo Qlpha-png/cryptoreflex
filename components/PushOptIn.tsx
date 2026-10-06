@@ -252,7 +252,8 @@ export default function PushOptIn({
       </div>
 
       <p className="text-sm text-fg/70 leading-relaxed mb-4">
-        Recevez vos alertes prix et le brief quotidien directement sur votre appareil,
+        {/* 06/10/2026 : « et le brief quotidien » retiré — aucun cron n'envoie de push sur le sujet « brief » */}
+        Recevez vos alertes prix directement sur votre appareil,
         même quand le site est fermé. Pas d&apos;email, pas de spam — juste vos
         notifs en temps réel.
       </p>

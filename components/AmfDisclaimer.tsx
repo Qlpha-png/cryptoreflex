@@ -1,10 +1,14 @@
 import { AlertTriangle, Info, Scale, BookOpen } from "lucide-react";
 
 /**
- * Bandeau d'information AMF — conforme à l'article 222-15 du règlement général
- * de l'AMF (Autorité des Marchés Financiers) et à la doctrine PSAN/MiCA.
+ * Bandeau d'avertissement sur les risques des crypto-actifs.
  *
- * Wording de base (obligatoire, repris dans toutes les variantes) :
+ * 05/10/2026 : la mention « conforme à l'article 222-15 du règlement général AMF »
+ * est retirée — cet article porte sur l'information périodique des émetteurs dont
+ * le siège est hors de l'EEE, sans rapport avec ce bandeau. Ne citer ici aucun
+ * article de loi ou de règlement sans l'avoir vérifié sur Légifrance / amf-france.org.
+ *
+ * Wording de base (repris dans toutes les variantes) :
  *
  *   « L'investissement en crypto-actifs comporte un risque élevé de perte
  *     totale en capital. Cryptoreflex n'est pas un conseiller en
@@ -40,14 +44,14 @@ interface VariantConfig {
   label: string;
   title: string;
   Icon: typeof AlertTriangle;
-  /** Phrase additionnelle, après le wording AMF de base. */
+  /** Phrase additionnelle, après le wording de base. */
   extra: string;
   tone: "info" | "warn" | "danger" | "neutral";
 }
 
 const VARIANTS: Record<AmfVariant, VariantConfig> = {
   educatif: {
-    label: "Information AMF",
+    label: "Avertissement — risques",
     title: "Article éducatif — pas un conseil en investissement",
     Icon: BookOpen,
     extra:
@@ -57,20 +61,22 @@ const VARIANTS: Record<AmfVariant, VariantConfig> = {
       "en Investissements Financiers (CIF) immatriculé à l'ORIAS.",
     tone: "info",
   },
+  // 06/10/2026 : « Comparatif sponsorisé » était faux (aucun comparatif n'est vendu) et la commission était annoncée
+  // pour toutes les plateformes ; seuls les liens marqués « Publicité » sont rémunérés (lib/partnerships.ts).
   comparatif: {
-    label: "Avertissement AMF — Comparatif",
-    title: "Comparatif sponsorisé — pas un conseil en investissement",
+    label: "Avertissement — comparatif",
+    title: "Comparatif éditorial — pas un conseil en investissement",
     Icon: Scale,
     extra:
       "Ce comparatif présente des plateformes agréées MiCA (CASP) " +
-      "par l'AMF ou par leur régulateur européen. Cryptoreflex peut percevoir " +
-      "une commission d'affiliation lorsqu'un visiteur s'inscrit via un lien partenaire ; " +
+      "par l'AMF ou par leur régulateur européen. Seuls les liens marqués « Publicité » " +
+      "sont rémunérés (affiliation ou parrainage), sans surcoût pour vous ; " +
       "cela n'influence ni le classement éditorial, ni la note attribuée. " +
-      "Vérifiez systématiquement le statut PSAN/MiCA de la plateforme avant tout dépôt.",
+      "Vérifiez systématiquement le statut MiCA de la plateforme avant tout dépôt.",
     tone: "warn",
   },
   speculation: {
-    label: "Avertissement AMF — Cryptos spéculatives",
+    label: "Avertissement — cryptos spéculatives",
     title: "Cryptos à forte volatilité — perte totale possible (x0)",
     Icon: AlertTriangle,
     /**
@@ -92,7 +98,7 @@ const VARIANTS: Record<AmfVariant, VariantConfig> = {
     tone: "danger",
   },
   fiscalite: {
-    label: "Avertissement AMF & fiscal",
+    label: "Avertissement — fiscalité",
     title: "Information fiscale générale — pas un conseil personnalisé",
     Icon: Info,
     extra:
@@ -149,11 +155,6 @@ export default function AmfDisclaimer({
               </>
             )}
           </p>
-          {!compact && (
-            <p className="mt-2 text-[11px] text-fg/60">
-              Mention conforme à l'article 222-15 du règlement général AMF.
-            </p>
-          )}
         </div>
       </div>
     </aside>

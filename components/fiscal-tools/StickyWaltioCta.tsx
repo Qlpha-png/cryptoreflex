@@ -18,11 +18,16 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ArrowRight, X, Sparkles } from "lucide-react";
 import { track, trackAffiliateClick } from "@/lib/analytics";
+import { waltioAffiliateUrl } from "@/lib/partner-links";
 
 const STORAGE_KEY = "waltio-sticky-dismissed";
 const SCROLL_THRESHOLD = 0.45; // affiche au-delà de 45 % de scroll
-const WALTIO_AFFILIATE_URL =
-  "https://waltio.com?ref=cryptoreflex&utm_source=cryptoreflex&utm_medium=affiliate&utm_campaign=calculator-sticky";
+// 06/10/2026 : « waltio.com?ref=cryptoreflex » n'était pas tracé (le programme Waltio identifie l'affilié par a_aid).
+const WALTIO_AFFILIATE_URL = waltioAffiliateUrl({
+  utm_source: "cryptoreflex",
+  utm_medium: "affiliate",
+  utm_campaign: "calculator-sticky",
+});
 
 export default function StickyWaltioCta() {
   const [visible, setVisible] = useState(false);

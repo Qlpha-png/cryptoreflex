@@ -25,7 +25,7 @@ import {
 } from "lucide-react";
 import type { Platform } from "@/lib/platforms";
 import { isAvailableFr } from "@/lib/platforms";
-import { affiliationNotice } from "@/lib/partnerships";
+import { outboundRel, paidLinkCaption } from "@/lib/partnerships";
 import { trackAffiliateClick, trackToolUsage } from "@/lib/analytics";
 import { fmtNb } from "@/lib/format-fr";
 
@@ -915,7 +915,7 @@ function Top3Card({ entry }: { entry: QuizResultEntry }) {
         <a
           href={p.affiliateUrl}
           target="_blank"
-          rel="sponsored nofollow noopener noreferrer"
+          rel={outboundRel(p.id, p.affiliateUrl)}
           onClick={() => trackAffiliateClick(p.id, `platform-quiz-rank-${rank}`)}
           className={
             rank === 1
@@ -936,7 +936,8 @@ function Top3Card({ entry }: { entry: QuizResultEntry }) {
       </div>
 
       <p className="mt-2 text-[10px] text-muted text-center">
-        {affiliationNotice(p.id)} · <Link href="/transparence" className="underline hover:text-fg">transparence</Link>
+        {/* 06/10/2026 : mention « Publicité » (bon type) seulement pour un lien réellement rémunéré. */}
+        {paidLinkCaption(p.id, p.affiliateUrl) ?? "Lien direct vers le site officiel"} · <Link href="/transparence" className="underline hover:text-fg">transparence</Link>
       </p>
     </article>
   );

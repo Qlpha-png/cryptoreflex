@@ -169,7 +169,7 @@ export default function NewsletterModal({
             >
               <strong className="text-fg">&quot;Les plateformes crypto régulées MiCA à utiliser
               en France 2026&quot;</strong> — comparatif complet, frais réels, statut MiCA, fiabilité.
-              Envoyé après inscription à la newsletter (3 min/jour).
+              Envoyé après inscription à la newsletter (gratuite, sans spam).
             </p>
 
             <ul className="mt-4 space-y-1.5 text-sm text-fg/75">
@@ -199,7 +199,7 @@ export default function NewsletterModal({
                   setEmail(e.target.value);
                   if (status === "error") setStatus("idle");
                 }}
-                placeholder="ton.email@exemple.com"
+                placeholder="votre.email@exemple.com"
                 aria-label="Adresse email"
                 aria-invalid={status === "error"}
                 disabled={status === "loading"}

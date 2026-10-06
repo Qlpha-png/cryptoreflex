@@ -163,17 +163,18 @@ function Results({ answers, onReset }: { answers: QuizAnswers; onReset: () => vo
         ))}
       </div>
 
-      {/* Lead capture optionnel — non bloquant pour le résultat */}
+      {/* 06/10/2026 : « Recevez ces recommandations par email — récap PDF + alertes » était une promesse sans envoi
+          derrière (le bouton menait à /ressources, aucun récap ni alerte n'existe). Remplacé par un renvoi honnête. */}
       <div className="glass rounded-2xl p-6">
-        <h4 className="font-bold text-white">Recevez ces recommandations par email</h4>
+        <h4 className="font-bold text-white">Aller plus loin</h4>
         <p className="mt-1 text-sm text-white/70">
-          On vous envoie un récap PDF + nos alertes quand une nouvelle plateforme MiCA arrive.
+          Guides et outils gratuits pour la suite : fiscalité, vérificateur MiCA, simulateur DCA.
         </p>
         <Link
           href="/ressources?source=comparateur-perso"
           className="mt-4 btn-primary inline-flex"
         >
-          Recevoir mon récap
+          Voir les ressources gratuites
           <ArrowRight className="h-4 w-4" />
         </Link>
       </div>

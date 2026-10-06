@@ -1,7 +1,12 @@
 "use client";
 
 /**
- * CryptoQuiz — Quiz "Quelle crypto pour ton profil ?".
+ * CryptoQuiz — Questionnaire "Quels projets crypto découvrir en premier ?".
+ *
+ * 06/10/2026 : textes repassés en orientation pédagogique (quelles fiches lire en premier), plus de
+ * « recommandation pour votre profil » ni de bouton « Comment l'acheter » sur le résultat. Scoring : plus de
+ * bonus memecoin pour un petit capital, et un memecoin n'est jamais le résultat principal d'un débutant.
+ * Résultat présenté comme « des types de projets à étudier » (plus d'icône trophée ni de vocabulaire de gagnant).
  *
  * Pattern UX inspiré de PlatformQuiz : steps, focus auto, raccourcis 1-4,
  * animation slide subtile (CSS pur, prefers-reduced-motion respecté).
@@ -19,11 +24,10 @@ import Link from "next/link";
 import {
   ArrowLeft,
   ArrowRight,
-  ExternalLink,
   RefreshCcw,
   Sparkles,
   Target,
-  Trophy,
+  Compass,
   ShieldCheck,
 } from "lucide-react";
 import type { AnyCrypto } from "@/lib/cryptos";
@@ -62,7 +66,7 @@ const QUESTIONS: Question[] = [
     key: "risk",
     title: "Quel niveau de risque acceptez-vous ?",
     subtitle:
-      "Plus le risque accepté est élevé, plus on peut s'orienter vers des cryptos petites ou émergentes.",
+      "Plus le risque accepté est élevé, plus le résultat inclut des projets petits ou émergents (et plus risqués).",
     options: [
       { value: "very_low", label: "Très faible", hint: "Préserver le capital avant tout" },
       { value: "moderate", label: "Modéré", hint: "Volatilité ok mais pas folle" },
@@ -83,7 +87,7 @@ const QUESTIONS: Question[] = [
   },
   {
     key: "projectType",
-    title: "Quel type de projet t'attire le plus ?",
+    title: "Quel type de projet vous attire le plus ?",
     subtitle: "Une seule réponse — celle qui pèsera le plus dans le matching.",
     options: [
       { value: "store_of_value", label: "Réserve de valeur", hint: "Or numérique, anti-inflation" },
@@ -96,7 +100,7 @@ const QUESTIONS: Question[] = [
     key: "techFamiliarity",
     title: "Vous connaissez bien la blockchain ?",
     subtitle:
-      "Plus la familiarité est faible, plus on recommande des cryptos majeures, faciles à acheter et stocker.",
+      "Plus la familiarité est faible, plus le résultat met en avant des projets majeurs, plus simples à comprendre et à conserver.",
     options: [
       { value: "none", label: "Pas du tout", hint: "Je débute totalement" },
       { value: "basics", label: "Bases", hint: "Je sais ce qu'est un wallet" },
@@ -107,7 +111,7 @@ const QUESTIONS: Question[] = [
   {
     key: "capital",
     title: "Combien pouvez-vous mettre au début ?",
-    subtitle: "Pour calibrer la pertinence (gros wallets = privilégier la sécurité).",
+    subtitle: "Sert à pondérer le résultat : plus le montant est élevé, plus les projets établis passent devant.",
     options: [
       { value: "tiny", label: "Moins de 100 €", hint: "Tester le marché" },
       { value: "small", label: "100 – 1 000 €", hint: "Premier vrai capital" },
@@ -122,7 +126,7 @@ const QUESTIONS: Question[] = [
     options: [
       { value: "diversify", label: "Diversifier", hint: "Mix Top 10 + petites caps" },
       { value: "concentrate", label: "Concentrer 1-2 cryptos", hint: "Forte conviction" },
-      { value: "no_opinion", label: "Pas d'avis", hint: "Recommandation libre" },
+      { value: "no_opinion", label: "Pas d'avis", hint: "Sans préférence" },
     ],
   },
 ];
@@ -173,7 +177,7 @@ interface CryptoScore {
  *   "expert"     → hidden-gems +12
  *
  * Q5 — Capital
- *   "tiny"       → memecoins +5 (montants symboliques OK), hidden-gems -3
+ *   "tiny"       → hidden-gems -3 (06/10/2026 : plus de bonus memecoin pour un petit capital)
  *   "small"      → Top10 +5
  *   "medium"     → BTC/ETH +5 (conviction long terme)
  *   "large"      → BTC +15, ETH +10 (sécurité), pénalise high-risk -10
@@ -188,6 +192,8 @@ interface CryptoScore {
  * - very_low risk + memecoin (DOGE) → exclu (volatilité incompatible)
  *
  * Résultat = top 1 + 2 backups (cryptos non exclues triées desc).
+ * Débutant (familiarité « Pas du tout » ou « Bases ») : un memecoin n'est jamais le résultat principal
+ * (06/10/2026, cf. computeResult) ; il peut rester parmi les projets « à étudier aussi ».
  */
 function scoreCrypto(c: AnyCrypto, answers: Answers): CryptoScore {
   const isGem = c.kind === "hidden-gem";
@@ -287,7 +293,8 @@ function scoreCrypto(c: AnyCrypto, answers: Answers): CryptoScore {
 
   /* ---------------- Q5 — Capital ---------------- */
   if (answers.capital === "tiny") {
-    if (isMemecoin) bonuses += 5;
+    // 06/10/2026 : bonus memecoin « montants symboliques OK » supprimé — un petit capital n'est pas une raison
+    // de pousser l'actif le plus spéculatif.
     if (isGem) bonuses -= 3;
   } else if (answers.capital === "small") {
     if (c.kind === "top10") bonuses += 5;
@@ -304,7 +311,7 @@ function scoreCrypto(c: AnyCrypto, answers: Answers): CryptoScore {
   if (answers.strategy === "concentrate" && (isBtc || isEth)) bonuses += 10;
 
   // BNB/Tron/Chainlink reçoivent un léger malus si aucun matching projet
-  // (sinon ils gagnent par défaut sur le base score Top10 sans signal fort).
+  // (sinon ils passent devant par défaut sur le base score Top10 sans signal fort).
   if (
     !excluded &&
     (isBnb || isTron || isLink) &&
@@ -327,6 +334,12 @@ interface QuizResult {
   backups: AnyCrypto[];
 }
 
+/** Débutant : ne connaît pas (ou peu) la blockchain. */
+const isBeginner = (answers: Answers): boolean =>
+  answers.techFamiliarity === "none" || answers.techFamiliarity === "basics";
+
+const isMemecoinCrypto = (c: AnyCrypto): boolean => c.category.toLowerCase().includes("memecoin");
+
 function computeResult(cryptos: AnyCrypto[], answers: Answers): QuizResult | null {
   const scored = cryptos
     .map((c) => ({ c, score: scoreCrypto(c, answers) }))
@@ -334,6 +347,15 @@ function computeResult(cryptos: AnyCrypto[], answers: Answers): QuizResult | nul
     .sort((a, b) => b.score.total - a.score.total);
 
   if (scored.length === 0) return null;
+
+  // 06/10/2026 : jamais un memecoin en résultat principal pour un débutant — le 1er projet non-memecoin passe
+  // en tête (l'ordre des autres est conservé) ; s'il n'y en a aucun, pas de résultat.
+  if (isBeginner(answers)) {
+    const firstNonMeme = scored.findIndex((s) => !isMemecoinCrypto(s.c));
+    if (firstNonMeme === -1) return null;
+    if (firstNonMeme > 0) scored.unshift(...scored.splice(firstNonMeme, 1));
+  }
+
   return {
     top: scored[0].c,
     backups: scored.slice(1, 3).map((s) => s.c),
@@ -432,7 +454,7 @@ export default function CryptoQuiz({ cryptos }: Props) {
   return (
     <section
       role="form"
-      aria-label="Questionnaire crypto pour votre profil"
+      aria-label="Questionnaire pédagogique : quels projets crypto découvrir"
       className="glass rounded-3xl p-6 sm:p-10 relative overflow-hidden min-h-[60vh] flex flex-col"
     >
       <div className="absolute -top-24 -right-24 w-80 h-80 bg-primary/15 rounded-full blur-3xl pointer-events-none" />
@@ -468,7 +490,9 @@ export default function CryptoQuiz({ cryptos }: Props) {
 
       <div id={liveRegionId} aria-live="polite" className="sr-only">
         {showResult
-          ? `Résultat du questionnaire : ${result?.top.name ?? "aucune crypto ne correspond"}.`
+          ? result
+            ? `Projets à étudier : ${[result.top, ...result.backups].map((c) => c.name).join(", ")}.`
+            : "Résultat du questionnaire : aucune fiche ne correspond."
           : `Étape ${step + 1} sur ${TOTAL_STEPS} : ${currentQuestion?.title ?? ""}`}
       </div>
 
@@ -624,10 +648,16 @@ function ResultView({
 
   return (
     <div>
+      {/* 06/10/2026 : boussole + « types de projets à étudier » au lieu du trophée (pas de « gagnant »). */}
       <div className="flex items-center gap-2 text-primary-soft text-sm font-semibold">
-        <Trophy className="h-4 w-4" aria-hidden="true" />
-        Notre recommandation pour votre profil
+        <Compass className="h-4 w-4" aria-hidden="true" />
+        Des types de projets à étudier, d&apos;après vos réponses
       </div>
+      <p className="mt-1.5 text-xs text-muted">
+        Résultat pédagogique : il vous dit quelles fiches lire en premier, pas quoi acheter.
+        Ce n&apos;est pas un conseil d&apos;investissement — toute crypto peut perdre tout ou
+        partie de sa valeur.
+      </p>
 
       {/* Top crypto */}
       <article className="mt-3 glass glow-border rounded-2xl p-6 sm:p-8 relative overflow-hidden">
@@ -646,10 +676,10 @@ function ResultView({
             </div>
             <span
               className="badge-info shrink-0"
-              aria-label={`${top.category}, ${topRiskOrFiability}`}
+              aria-label={`Type de projet : ${top.category}, ${topRiskOrFiability}`}
             >
               <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
-              {top.category}
+              Type de projet : {top.category}
             </span>
           </div>
 
@@ -657,15 +687,8 @@ function ResultView({
 
           <div className="mt-6 flex items-center gap-3 flex-wrap">
             <Link href={`/cryptos/${top.id}`} className="btn-primary">
-              Voir la fiche complète {top.symbol}
+              Lire la fiche complète {top.symbol}
               <ArrowRight className="h-4 w-4" aria-hidden="true" />
-            </Link>
-            <Link
-              href={`/cryptos/${top.id}/acheter-en-france`}
-              className="btn-ghost"
-            >
-              Comment l'acheter en France
-              <ExternalLink className="h-4 w-4" aria-hidden="true" />
             </Link>
           </div>
         </div>
@@ -681,7 +704,7 @@ function ResultView({
             >
               <div className="flex items-center gap-2 text-xs text-muted font-semibold uppercase tracking-wider">
                 <Target className="h-3.5 w-3.5" aria-hidden="true" />
-                Plan B
+                À étudier aussi
               </div>
               <div className="mt-2 flex items-start justify-between gap-3 flex-wrap">
                 <div>
@@ -754,13 +777,13 @@ function ResultView({
         >
           <div className="flex items-center gap-2 text-primary-soft text-sm font-semibold">
             <ShieldCheck className="h-4 w-4" aria-hidden="true" />
-            Étape suivante
+            Pour aller plus loin
           </div>
           <div className="mt-1 font-bold text-fg">
-            Maintenant choisissez votre plateforme
+            Comparer les plateformes régulées
           </div>
           <div className="mt-1 text-xs text-muted">
-            6 questions pour trouver l'exchange régulé MiCA adapté.
+            6 questions pour voir quels exchanges agréés MiCA correspondent à votre usage.
           </div>
         </Link>
         <button
@@ -776,7 +799,7 @@ function ResultView({
           </div>
           <div className="mt-1 font-bold text-fg">Tester d'autres réponses</div>
           <div className="mt-1 text-xs text-muted">
-            Comparez la reco selon votre profil.
+            Voyez comment le résultat change selon vos réponses.
           </div>
         </button>
       </div>
@@ -788,7 +811,7 @@ function NoResultView({ onRestart }: { onRestart: () => void }) {
   return (
     <div className="text-center py-8">
       <h3 className="text-2xl font-extrabold text-fg">
-        Aucune crypto ne matche ce profil
+        Aucune fiche ne correspond à ces réponses
       </h3>
       <p className="mt-2 text-fg/70 max-w-md mx-auto">
         Vos contraintes sont peut-être trop strictes (ex : tolérance très faible

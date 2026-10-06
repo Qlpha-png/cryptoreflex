@@ -25,6 +25,8 @@ import {
 } from "lucide-react";
 import type { Platform } from "@/lib/platforms";
 import { trackAffiliateClick, trackToolUsage } from "@/lib/analytics";
+import { outboundRel } from "@/lib/partnerships";
+import PaidLinkCaption from "@/components/PaidLinkCaption";
 import { fmtNb } from "@/lib/format-fr";
 
 /* ------------------------------------------------------------------ */
@@ -64,24 +66,26 @@ const AMOUNT_OPTIONS: { value: AmountChoice; label: string; numeric: number }[] 
   { value: "more", label: "Plus de 1 000 €", numeric: 2000 },
 ];
 
-const CRYPTOS: { value: CryptoChoice; name: string; pitch: string; for: string }[] = [
+// 06/10/2026 : « la plus échangée » était faux (l'USDT dépasse le BTC en volume) ; « Idéal si… » et « Pour les profils
+// plus tolérants au risque » (ton de conseil) remplacés par le rôle de chaque crypto, sans orienter le lecteur.
+const CRYPTOS: { value: CryptoChoice; name: string; pitch: string; role: string }[] = [
   {
     value: "BTC",
     name: "Bitcoin",
-    pitch: "L'or numérique. La crypto la plus sûre, la plus liquide, la plus régulée.",
-    for: "Idéal pour un premier achat — référence absolue.",
+    pitch: "L'or numérique : la plus ancienne et la plus connue des cryptos.",
+    role: "Conçue comme une monnaie numérique de pair à pair, sans banque centrale.",
   },
   {
     value: "ETH",
     name: "Ethereum",
     pitch: "La blockchain qui fait tourner DeFi, NFT, stablecoins. Plus volatile.",
-    for: "Idéal si vous voulez exposer au reste de l'écosystème.",
+    role: "Sert à payer les frais du réseau Ethereum, sur lequel tournent ces applications.",
   },
   {
     value: "SOL",
     name: "Solana",
     pitch: "Layer 1 ultra rapide et peu coûteux. Plus risqué, plus volatile.",
-    for: "Pour les profils plus tolérants au risque.",
+    role: "Sert à payer les frais du réseau Solana, plus récent que Bitcoin et Ethereum.",
   },
 ];
 
@@ -247,7 +251,6 @@ export default function FirstPurchaseWizard({ platforms }: Props) {
           {step === 1 && (
             <Step2Crypto
               titleRef={titleRef}
-              amount={amountNumeric}
               crypto={choices.crypto}
               onSelect={(v) => setChoices({ ...choices, crypto: v })}
             />
@@ -456,37 +459,27 @@ function Step1Why({
 
 function Step2Crypto({
   titleRef,
-  amount,
   crypto,
   onSelect,
 }: {
   titleRef: React.RefObject<HTMLHeadingElement>;
-  amount: number;
   crypto?: CryptoChoice;
   onSelect: (v: CryptoChoice) => void;
 }) {
-  // Reco contextuelle
-  const recoCryptos: CryptoChoice[] =
-    amount <= 100 ? ["BTC"] : amount <= 1000 ? ["BTC", "ETH"] : ["BTC", "ETH"];
-  const isReco = (c: CryptoChoice) => recoCryptos.includes(c);
-
+  // 06/10/2026 : plus de badge « Recommandé » selon le montant ni de « on recommande Bitcoin » /
+  // « mixez 80 % BTC / 20 % ETH » (recommandation personnalisée) — description neutre, le choix reste au lecteur.
   return (
     <>
       <StepHeader
         titleRef={titleRef}
-        eyebrow="Étape 2 — Quelle crypto pour vous"
+        eyebrow="Étape 2 — Votre choix de crypto"
         title="Bitcoin, Ethereum ou Solana ?"
-        subtitle={
-          amount <= 100
-            ? "Pour votre premier achat, on recommande Bitcoin — la référence, la plus sûre, la plus régulée."
-            : "Vous pouvez mixer 80 % BTC / 20 % ETH pour rester équilibré. Solana = pour les profils plus tolérants au risque."
-        }
+        subtitle="Elles n'ont ni le même rôle ni le même niveau de risque : lisez les trois descriptions, puis choisissez. Ce n'est pas un conseil d'investissement."
       />
 
       <div role="radiogroup" className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-3">
         {CRYPTOS.map((c) => {
           const isSelected = crypto === c.value;
-          const reco = isReco(c.value);
           return (
             <button
               key={c.value}
@@ -520,15 +513,9 @@ function Step2Crypto({
                     <span className="font-mono text-sm text-muted">{c.value}</span>
                   </h3>
                 </div>
-                {reco && (
-                  <span className="badge-info text-[10px]">
-                    <Sparkles className="h-3 w-3" aria-hidden="true" />
-                    Recommandé
-                  </span>
-                )}
               </div>
               <p className="mt-3 text-sm text-fg/80">{c.pitch}</p>
-              <p className="mt-3 text-xs text-muted">{c.for}</p>
+              <p className="mt-3 text-xs text-muted">{c.role}</p>
             </button>
           );
         })}
@@ -841,7 +828,7 @@ function Step5Recap({
             <a
               href={platform.affiliateUrl}
               target="_blank"
-              rel="noopener noreferrer sponsored"
+              rel={outboundRel(platform.id, platform.affiliateUrl)}
               onClick={() => trackAffiliateClick(platform.id, "first-purchase-wizard-cta")}
               className="btn-primary"
             >
@@ -861,6 +848,8 @@ function Step5Recap({
               Notre méthodologie
             </Link>
           </div>
+          {/* 06/10/2026 : mention « Publicité » seulement si ce lien est réellement rémunéré (lib/partnerships.ts). */}
+          <PaidLinkCaption platformId={platform.id} href={platform.affiliateUrl} className="mt-3 block text-xs text-muted underline hover:text-fg" />
         </div>
       )}
 

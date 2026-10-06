@@ -74,7 +74,7 @@ export default function ResetPasswordForm() {
     <form onSubmit={handleSubmit} className="glass rounded-2xl p-6 space-y-4">
       <label className="block">
         <span className="block text-sm font-semibold text-fg mb-2">
-          Ton email
+          Votre e-mail
         </span>
         <div className="relative">
           <Mail

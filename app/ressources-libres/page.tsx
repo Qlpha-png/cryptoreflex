@@ -199,34 +199,38 @@ export default function RessourcesLibresPage() {
           <header className="max-w-3xl">
             <span className="badge-info">2 / 4 — API</span>
             <h2 className="mt-4 font-display text-3xl font-extrabold tracking-tight text-fg">
-              API publique (en préparation)
+              API publique
             </h2>
+            {/* 06/10/2026 : la section annonçait une API « en préparation », « annoncée par newsletter », alors que
+                /api-publique est en ligne (endpoints /api/public/*, sans clé). */}
             <p className="mt-3 text-fg/70">
-              Une API REST gratuite pour requêter les données Cryptoreflex (top
-              cryptos, statuts MiCA, glossaire, taux historiques) est prévue
-              pour la V2 du site.
+              Une API REST gratuite et sans clé expose déjà les données
+              Cryptoreflex au format JSON : catalogue des plateformes, registre
+              MiCA, scores de décentralisation, top cryptos vulgarisées et
+              outils de fiscalité.
             </p>
           </header>
 
-          <div className="mt-8 max-w-3xl rounded-2xl border border-warning/30 bg-warning/5 p-6">
+          <div className="mt-8 max-w-3xl rounded-2xl border border-primary/30 bg-primary/5 p-6">
             <div className="flex items-start gap-4">
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-warning/15 text-warning-fg border border-warning/30 shrink-0">
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/15 text-primary-glow border border-primary/30 shrink-0">
                 <Code className="h-6 w-6" />
               </div>
               <div className="flex-1">
                 <h3 className="font-bold text-fg text-lg">
-                  En attendant : utilise les données ouvertes ci-dessous
+                  En ligne, sans inscription
                 </h3>
                 <p className="mt-2 text-sm text-fg/75 leading-relaxed">
-                  L'API publique sera annoncée par newsletter dès qu'elle sera
-                  prête. Endpoint prévu : <code className="text-primary-soft font-mono">api.cryptoreflex.fr/v1</code>{" "}
-                  — rate-limit généreux, auth optionnelle pour quotas étendus.
+                  Les endpoints sont servis sous{" "}
+                  <code className="text-primary-soft font-mono">/api/public</code>.
+                  La page dédiée détaille chaque endpoint, le schéma OpenAPI et
+                  des exemples prêts à copier.
                 </p>
                 <Link
-                  href="/newsletter"
+                  href="/api-publique"
                   className="mt-4 inline-flex items-center gap-2 text-sm text-primary-soft hover:text-primary-glow font-semibold"
                 >
-                  Être notifié à la sortie de l'API
+                  Voir la documentation de l&apos;API
                   <ArrowRight className="h-4 w-4" />
                 </Link>
               </div>

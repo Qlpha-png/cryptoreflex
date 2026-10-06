@@ -180,8 +180,9 @@ const POOL: Record<string, Step> = {
     // no-op. Fix : pointer vers la page dédiée /newsletter (existe).
     href: "/newsletter",
     Icon: Mail,
-    label: "Newsletter quotidienne",
-    desc: "1 e-mail le matin (3 min) : l'actu, plus le guide PDF des plateformes offert.",
+    // 06/10/2026 : plus de « quotidienne / 1 e-mail le matin » (aucune édition envoyée par le code)
+    label: "Newsletter crypto FR",
+    desc: "L'essentiel de la crypto en français, sans spam, plus le guide PDF des plateformes offert.",
   },
   outils: {
     href: "/outils",

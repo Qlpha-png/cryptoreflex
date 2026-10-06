@@ -114,7 +114,7 @@ export default function QuizPlateformePage() {
             />
             <Method
               title="Aucun biais sponsor"
-              description="Les liens d'affiliation existent mais ne modifient ni le scoring ni la reco."
+              description="Les liens rémunérés, marqués « Publicité », ne modifient ni le scoring ni la reco."
             />
             <Method
               title="Reco neutre"

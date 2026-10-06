@@ -202,7 +202,7 @@ export default function PlatformsSection() {
           </Link>
         </div>
 
-        {/* Avertissement AMF — article 222-15 */}
+        {/* Avertissement risques + affiliation */}
         <AmfDisclaimer variant="comparatif" className="mt-6" />
       </div>
     </section>

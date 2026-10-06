@@ -1,9 +1,10 @@
 import Link from "next/link";
 import { ExternalLink, ShieldCheck, Star } from "lucide-react";
-import { getAllPlatforms, isAvailableFr, feeShort, type Platform } from "@/lib/platforms";
+import { getAllPlatforms, isAvailableFr, feeShort, type Platform, verifiedBonus } from "@/lib/platforms";
 import PlatformLogo from "@/components/PlatformLogo";
 import AffiliateLink from "@/components/AffiliateLink";
-import { getAffiliationKind } from "@/lib/partnerships";
+import PaidLinkCaption from "@/components/PaidLinkCaption";
+import { isPaidLink } from "@/lib/partnerships";
 import { getMicaStatusByName } from "@/lib/mica";
 import { isNoPlatformNote } from "@/lib/cryptos";
 
@@ -58,7 +59,7 @@ export default function WhereToBuy({ cryptoName, platformNames }: Props) {
   // que si au moins une plateforme listée est réellement rémunérée. Sinon =
   // claim trompeur (DGCCRF L.121-1). Source de vérité : lib/partnerships.ts.
   const anyPaid = matches.some(
-    (m) => m.platform && getAffiliationKind(m.platform.id) !== null,
+    (m) => m.platform && isPaidLink(m.platform.id, m.platform.affiliateUrl),
   );
 
   return (
@@ -69,7 +70,7 @@ export default function WhereToBuy({ cryptoName, platformNames }: Props) {
       <p className="mt-2 text-sm text-muted max-w-3xl">
         Plateformes agréées MiCA avec un accès à la France (registre de l&apos;ESMA) qui listent{" "}
         {cryptoName}, et protocoles décentralisés le cas échéant. Ouvrez un compte directement depuis Cryptoreflex
-        {anyPaid ? " (certains liens sont rémunérés, sans surcoût pour vous)" : ""}.
+        {anyPaid ? " (les liens marqués « Publicité » sont rémunérés, sans surcoût pour vous)" : ""}.
       </p>
 
       <div className="mt-6 grid gap-3 sm:grid-cols-2">
@@ -81,7 +82,7 @@ export default function WhereToBuy({ cryptoName, platformNames }: Props) {
       <p className="mt-4 text-[11px] text-muted leading-relaxed">
         {anyPaid ? (
           <>
-            Publicité. Certains de ces liens sont rémunérés (affiliation ou
+            Seuls les liens marqués « Publicité » sont rémunérés (affiliation ou
             parrainage) — cela ne change ni le classement, ni la note attribuée
             (cf.{" "}
             <Link href="/transparence" className="underline hover:text-white">
@@ -155,9 +156,9 @@ function PlatformRow({
         </div>
       </div>
 
-      {p.bonus.welcome && (
+      {verifiedBonus(p) && (
         <div className="mt-3 rounded-lg border border-accent-green/30 bg-accent-green/5 px-3 py-1.5 text-xs text-accent-green">
-          {p.bonus.welcome}
+          {verifiedBonus(p)}
         </div>
       )}
 
@@ -183,6 +184,8 @@ function PlatformRow({
           Avis
         </Link>
       </div>
+      {/* 06/10/2026 : mention sous CE lien, et seulement s'il est réellement rémunéré (bon type). */}
+      <PaidLinkCaption platformId={p.id} href={p.affiliateUrl} className="mt-1.5 block text-[11px] text-muted underline hover:text-fg" />
     </div>
   );
 }

@@ -409,7 +409,8 @@ export default async function CryptoComparePage({ searchParams }: Props) {
           <Link href="/methodologie" className="underline hover:text-fg">
             méthodologie publique
           </Link>
-          . Cette page contient des liens d&apos;affiliation : voir notre{" "}
+          . Seuls les liens marqués « Publicité » sont rémunérés (affiliation
+          ou parrainage personnel du fondateur) : voir notre{" "}
           <Link href="/transparence" className="underline hover:text-fg">
             page transparence
           </Link>

@@ -40,9 +40,14 @@ import {
 import { track, trackAffiliateClick } from "@/lib/analytics";
 import type { FiscaliteInput, FiscaliteResult } from "@/lib/fiscalite";
 import { useFocusTrap } from "@/lib/use-focus-trap";
+import { waltioAffiliateUrl } from "@/lib/partner-links";
 
-const WALTIO_AFFILIATE_URL_POST_PDF =
-  "https://waltio.com?ref=cryptoreflex&utm_source=cryptoreflex&utm_medium=affiliate&utm_campaign=calculator-post-pdf";
+// 06/10/2026 : « waltio.com?ref=cryptoreflex » n'était pas tracé (le programme Waltio identifie l'affilié par a_aid).
+const WALTIO_AFFILIATE_URL_POST_PDF = waltioAffiliateUrl({
+  utm_source: "cryptoreflex",
+  utm_medium: "affiliate",
+  utm_campaign: "calculator-post-pdf",
+});
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
@@ -270,9 +275,11 @@ export default function PdfModal({
                 aria-hidden="true"
               />
               <p>
-                Votre email reste confidentiel. Utilisé uniquement pour cette
-                simulation et notre newsletter mensuelle. Désinscription en 1
-                clic, données jamais revendues.
+                {/* 06/10/2026 : « newsletter mensuelle » retiré — aucun rythme d'envoi n'existe. */}
+                Votre email reste confidentiel : il sert à vous envoyer votre
+                simulation et vous inscrit à la newsletter Cryptoreflex (sans
+                rythme d&apos;envoi fixe). Désinscription en 1 clic, données
+                jamais revendues.
               </p>
             </div>
           </>

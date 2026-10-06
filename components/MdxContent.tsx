@@ -15,7 +15,6 @@
 
 import { MDXRemote } from "next-mdx-remote/rsc";
 import type { ComponentProps, ReactNode } from "react";
-import Link from "next/link";
 import remarkGfm from "remark-gfm";
 import rehypeSlug from "rehype-slug";
 
@@ -32,110 +31,14 @@ import KeyTakeaways from "@/components/mdx/KeyTakeaways";
 import LessonTool from "@/components/academy/LessonTool";
 import FAQ from "@/components/mdx/FAQ";
 import HowToSchema from "@/components/mdx/HowToSchema";
-import GlossaryLink from "@/components/mdx/GlossaryLink";
+import MdxLink from "@/components/mdx/MdxLink";
 import ScrollableTable from "@/components/ui/ScrollableTable";
-import { getAllPlatforms } from "@/lib/platforms";
-import { getGlossaryEntry } from "@/lib/glossary";
 
 /* -------------------------------------------------------------------------- */
 /*  Components mappés → markdown HTML                                         */
+/*  (le rendu des liens `a`, mention « Publicité » comprise, est dans         */
+/*  components/mdx/MdxLink.tsx — 06/10/2026)                                  */
 /* -------------------------------------------------------------------------- */
-
-/**
- * Détection auto des liens d'affiliation pour le `rel="sponsored"` Google.
- * On extrait les hostnames de tous les `affiliateUrl` connus dans
- * `data/platforms.json` + `data/wallets.json`. Les éventuels `redirect.aff`
- * Cryptoreflex ne sont PAS auto-détectés ici (les CTAs internes passent par
- * <AffiliateLink/> qui pose `sponsored` explicitement).
- *
- * Calculé une seule fois au boot (Set immutable) — coût négligeable.
- */
-const AFFILIATE_HOSTNAMES: ReadonlySet<string> = (() => {
-  const set = new Set<string>();
-  for (const p of getAllPlatforms()) {
-    if (!p.affiliateUrl) continue;
-    try {
-      const u = new URL(p.affiliateUrl);
-      // On normalise (lowercase, sans port) pour matcher tous les variants.
-      set.add(u.hostname.toLowerCase());
-    } catch {
-      // affiliateUrl mal formé → on ignore (jamais en prod, mais defensif).
-    }
-  }
-  return set;
-})();
-
-function isAffiliateUrl(href: string): boolean {
-  try {
-    const u = new URL(href);
-    return AFFILIATE_HOSTNAMES.has(u.hostname.toLowerCase());
-  } catch {
-    return false;
-  }
-}
-
-/**
- * <MdxLink/> — rendu d'un lien dans un MDX d'article.
- *
- *  - Lien interne (`/blog/...`)         → <Link/> Next, prefetch automatique.
- *  - Lien externe générique             → <a target="_blank" rel="noopener nofollow">.
- *  - Lien externe vers domaine d'affilié → <a ... rel="noopener nofollow sponsored">
- *    (filet de sécurité automatique pour la conformité Google ad disclosure).
- *
- * Pour les CTAs sponsorisés inline, **préférer le composant <AffiliateLink/>
- * explicite** (déjà utilisé par les rédacteurs en amont) : il pose `sponsored`
- * de manière garantie, ajoute le tracking UTM, et inclut le wrapper visuel.
- * Cette détection auto par hostname est un *fallback* pour les liens markdown
- * bruts (`[Acheter sur Coinbase](https://www.coinbase.com/...)`) qui auraient
- * échappé à la migration éditoriale.
- */
-function MdxLink({ href, children, ...rest }: ComponentProps<"a">) {
-  if (!href) return <a {...rest}>{children}</a>;
-
-  // Lien vers le glossaire → infobulle de définition (sans quitter la leçon).
-  const glossaryMatch = /^\/outils\/glossaire-crypto#(.+)$/.exec(href);
-  if (glossaryMatch) {
-    const entry = getGlossaryEntry(glossaryMatch[1]);
-    if (entry) {
-      const def =
-        entry.definition.length > 180
-          ? `${entry.definition.slice(0, 180).trimEnd()}…`
-          : entry.definition;
-      return (
-        <GlossaryLink href={href} term={entry.term} definition={def}>
-          {children}
-        </GlossaryLink>
-      );
-    }
-  }
-
-  const isExternal = /^https?:\/\//i.test(href);
-  if (isExternal) {
-    const rel = isAffiliateUrl(href)
-      ? "noopener nofollow sponsored"
-      : "noopener nofollow";
-    return (
-      <a
-        href={href}
-        rel={rel}
-        target="_blank"
-        className="text-primary-glow underline decoration-primary/40 underline-offset-2 hover:decoration-primary"
-        {...rest}
-      >
-        {children}
-      </a>
-    );
-  }
-
-  return (
-    <Link
-      href={href}
-      className="text-primary-glow underline decoration-primary/40 underline-offset-2 hover:decoration-primary"
-    >
-      {children}
-    </Link>
-  );
-}
 
 const mdxComponents = {
   /* Composants custom Cryptoreflex --------------------------------------- */

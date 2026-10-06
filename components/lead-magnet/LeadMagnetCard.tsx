@@ -9,8 +9,8 @@
  *  - Le PDF se télécharge DIRECTEMENT via un lien `/api/lead-magnet/{id}`
  *    (302 vers le fichier statique). Aucun email requis, aucun blocage.
  *  - Sous le bouton, un champ email FACULTATIF permet de s'abonner à la
- *    newsletter pour être prévenu des mises à jour. Il ne conditionne JAMAIS
- *    l'accès au PDF.
+ *    newsletter. Il ne conditionne JAMAIS l'accès au PDF.
+ *    06/10/2026 : plus de « vous serez prévenu des mises à jour » (aucune édition n'est envoyée).
  *
  * UX :
  *  - Bouton principal = lien `<a>` (fonctionne sans JS, ouvre le PDF).
@@ -58,8 +58,8 @@ export default function LeadMagnetCard({
   // sans email — c'est l'action principale de la carte.
   const downloadHref = "/api/lead-magnet/" + id;
 
-  // Opt-in newsletter FACULTATIF : s'inscrire pour être prévenu des mises à
-  // jour. N'affecte pas le téléchargement (le PDF reste accessible sans).
+  // Opt-in newsletter FACULTATIF. N'affecte pas le téléchargement (le PDF
+  // reste accessible sans).
   async function onSubmitOptIn(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setErrorMsg("");
@@ -152,7 +152,7 @@ export default function LeadMagnetCard({
           aria-live="polite"
         >
           <CheckCircle2 className="mr-2 inline h-4 w-4" aria-hidden />
-          C'est noté — vous serez prévenu des mises à jour.
+          C'est noté — vous êtes inscrit à la newsletter Cryptoreflex.
         </div>
       ) : (
         <form onSubmit={onSubmitOptIn} className="mt-3 flex flex-col gap-2">
@@ -160,7 +160,7 @@ export default function LeadMagnetCard({
             htmlFor={"lm-email-" + id}
             className="text-[11px] leading-snug text-muted"
           >
-            Optionnel : laissez votre email pour être prévenu des mises à jour.
+            Optionnel : inscrivez-vous à la newsletter Cryptoreflex (sans rythme d&apos;envoi fixe).
           </label>
           <div className="flex gap-2">
             <input

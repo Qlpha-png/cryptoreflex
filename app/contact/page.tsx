@@ -77,7 +77,8 @@ const CONTACT_CARDS: ContactCard[] = [
     Icon: Briefcase,
     title: "Partenariats B2B",
     description:
-      "Sponsoring articles, display affiliate, lead magnets co-brandés (PSAN/fintech FR).",
+      // 06/10/2026 : aligné sur les 2 offres réellement proposées sur /sponsoring.
+      "Article sponsorisé ou encart sponsorisé sur le comparateur (plateformes agréées MiCA, fintech FR).",
     email: BRAND.partnersEmail,
     cta: { label: "Voir les offres sponsoring", href: "/sponsoring" },
   },
@@ -155,7 +156,7 @@ export default function ContactPage() {
               Contacter <span className="gradient-text">{BRAND.name}</span>
             </h1>
             <p className="mt-5 text-base sm:text-lg text-fg/75 max-w-2xl">
-              Choisis le canal adapté à votre demande. Réponse personnelle de
+              Choisissez le canal adapté à votre demande. Réponse personnelle de
               Kevin (fondateur solo) sous 5 jours ouvrés.
             </p>
           </div>
@@ -210,10 +211,10 @@ export default function ContactPage() {
         <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-16">
           <div className="text-center mb-8">
             <h2 className="text-2xl sm:text-3xl font-extrabold text-fg">
-              Ou utilise le formulaire
+              Ou utilisez le formulaire
             </h2>
             <p className="mt-2 text-fg/70">
-              Sélectionne le type de demande pour qu&apos;elle arrive directement
+              Sélectionnez le type de demande pour qu&apos;elle arrive directement
               à la bonne personne.
             </p>
           </div>

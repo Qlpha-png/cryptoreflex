@@ -36,9 +36,9 @@ const SimpleConfetti = dynamic(
  */
 
 export const metadata: Metadata = {
-  title: "Merci — vérifiez votre boîte mail",
+  title: "Merci — inscription enregistrée",
   description:
-    "Inscription confirmée. Téléchargez votre guide PDF crypto et continuez d'explorer Cryptoreflex.",
+    "Inscription enregistrée. Téléchargez votre guide PDF crypto et continuez d'explorer Cryptoreflex.",
   alternates: withHreflang(`${BRAND.url}/merci`),
   // CRITIQUE : page de conversion -> hors index
   robots: { index: false, follow: true, nocache: true },
@@ -93,13 +93,12 @@ export default function MerciPage() {
           </span>
 
           <h1 className="mt-6 text-3xl sm:text-5xl font-extrabold text-fg leading-tight">
-            Merci ! <span className="gradient-text">Vérifiez votre boîte mail.</span>
+            Merci ! <span className="gradient-text">Inscription enregistrée.</span>
           </h1>
 
           <p className="mt-5 text-base sm:text-lg text-fg/75 max-w-xl mx-auto">
-            Un email de confirmation vient de vous être envoyé. Cliquez sur le lien à
-            l&apos;intérieur pour activer votre inscription et garantir la réception
-            quotidienne de la newsletter.
+            Votre adresse est bien inscrite à la newsletter. Nous vous écrirons
+            quand une information compte, et vous pourrez vous désinscrire en un clic.
           </p>
 
           {/* Lead magnet en download immédiat — pas besoin d'attendre l'email */}

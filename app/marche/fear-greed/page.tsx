@@ -301,7 +301,7 @@ export default async function FearGreedPage() {
               <div>
                 <p className="text-sm text-fg/85 leading-relaxed">
                   Un graphique d'historique sur 30, 90 et 365 jours sera
-                  disponible prochainement (V2). En attendant, tu peux
+                  disponible prochainement (V2). En attendant, vous pouvez
                   consulter l'historique complet directement sur{" "}
                   <a
                     href="https://alternative.me/crypto/fear-and-greed-index/"

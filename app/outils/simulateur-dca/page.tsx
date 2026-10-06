@@ -20,6 +20,8 @@ import StructuredData from "@/components/StructuredData";
 import { breadcrumbSchema, faqSchema, graphSchema } from "@/lib/schema";
 import { generateWebApplicationSchema } from "@/lib/schema-tools";
 import { getPlatformById } from "@/lib/platforms";
+import { outboundRel } from "@/lib/partnerships";
+import PaidLinkCaption from "@/components/PaidLinkCaption";
 import RelatedPagesNav from "@/components/RelatedPagesNav";
 import { withHreflang } from "@/lib/seo-alternates";
 
@@ -197,17 +199,17 @@ export default function SimulateurDcaPage() {
                 <a
                   href={bitstack.affiliateUrl}
                   target="_blank"
-                  rel="sponsored nofollow noopener noreferrer"
+                  rel={outboundRel(bitstack.id, bitstack.affiliateUrl)}
                   className="btn-primary whitespace-nowrap"
                 >
                   Démarrer mon DCA
                   <ArrowRight className="h-4 w-4" />
                 </a>
               </div>
-              <p className="mt-3 text-xs text-muted">
-                Lien affilié — Cryptoreflex peut percevoir une commission, sans
-                surcoût pour vous. Notre comparatif reste indépendant.
-              </p>
+              {/* 06/10/2026 : « Lien affilié — commission » retiré : Bitstack n'est pas partenaire (lib/partnerships.ts).
+                  La mention n'apparaîtra que si le lien devient réellement rémunéré. */}
+              <PaidLinkCaption platformId={bitstack.id} href={bitstack.affiliateUrl} className="mt-3 block text-xs text-muted underline hover:text-fg" />
+              <p className="mt-3 text-xs text-muted">Notre comparatif reste indépendant.</p>
             </div>
           )}
 

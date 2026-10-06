@@ -101,7 +101,7 @@ const FAQ = [
   {
     question: "Faut-il une clé API pour utiliser ces endpoints ?",
     answer:
-      "Non. Tous les endpoints listés sont publics, sans authentification. Le rate limit edge (100 req/s par IP) protège l'origine sans friction pour les usages légitimes.",
+      "Non. Tous les endpoints listés sont publics, sans authentification. Merci de mettre les réponses en cache de votre côté plutôt que de les interroger en boucle.",
   },
   {
     question: "Quelle licence couvre les données ?",
@@ -131,7 +131,7 @@ const FAQ = [
   {
     question: "Y a-t-il un tier B2B avec plus de données ou un SLA ?",
     answer:
-      "Oui, en cours de finalisation. Pour un accès dédié (rate limit étendu, webhooks de mise à jour, données historiques, support prioritaire), contactez " +
+      "Pas pour l'instant. Pour un besoin particulier (données historiques, gros volume), écrivez à " +
       BRAND.partnersEmail +
       ".",
   },
@@ -507,12 +507,11 @@ data = r.json()`}</code>
           <div className="flex flex-col items-start gap-4 lg:flex-row lg:items-center lg:justify-between">
             <div>
               <h2 className="text-xl font-bold tracking-tight sm:text-2xl">
-                Besoin d'un accès B2B (rate limit étendu, données historiques, SLA) ?
+                Un besoin particulier (données historiques, gros volume) ?
               </h2>
               <p className="mt-2 max-w-2xl text-slate-300">
-                On finalise un tier dédié B2B avec webhooks de mise à jour, accès
-                historique et support prioritaire. Inscrivez-vous sur la liste
-                d'attente — premier tarif réservé.
+                Il n&apos;existe pas d&apos;offre professionnelle pour l&apos;instant.
+                Écrivez-nous : nous regarderons ce qu&apos;il est possible de faire.
               </p>
             </div>
             <a

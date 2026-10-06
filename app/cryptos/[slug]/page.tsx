@@ -94,6 +94,7 @@ import WhitepaperTldr from "@/components/crypto-detail/WhitepaperTldr";
 import DecentralizationScore from "@/components/crypto-detail/DecentralizationScore";
 import MobileStickyCTA from "@/components/MobileStickyCTA";
 import { getAllPlatforms, isAvailableFr } from "@/lib/platforms";
+import { isPaidLink } from "@/lib/partnerships";
 import RelatedPagesNav from "@/components/RelatedPagesNav";
 // FIX UX FLOW 2026-05-02 #7 — NextStepsGuide en fin de fiche crypto pour
 // éviter le cul-de-sac après 25 sections (audit UX expert).
@@ -459,6 +460,13 @@ export default async function CryptoPage({ params }: Props) {
       )
     )
     .find((p): p is NonNullable<typeof p> => Boolean(p));
+  // 06/10/2026 : la mention « liens d'affiliation / commission » du bas de fiche n'apparaît que si une plateforme
+  // présentée est réellement rémunérée (lib/partnerships.ts) — avant, elle s'affichait sur toutes les fiches.
+  const anyPaidPlatform = knownPlatforms.some(
+    (kp) =>
+      isPaidLink(kp.id, kp.affiliateUrl) &&
+      c.whereToBuy.some((name) => norm(kp.name) === norm(name) || norm(kp.id) === norm(name)),
+  );
 
   // BLOCK 11 fix (Agent /cryptos audit P0) : ajout cryptoFinancialProductSchema
   // pour signaler à Google que cette page traite d'un cryptoactif structuré
@@ -1196,10 +1204,11 @@ export default async function CryptoPage({ params }: Props) {
         <p className="mt-8 text-[11px] text-muted leading-relaxed">
           Données de prix CoinGecko (cache 5 min). Données éditoriales vérifiées
           le {new Date(FICHE_REVIEWED_DATE).toLocaleDateString("fr-FR")} par le
-          fondateur {BRAND.name} (Kevin Voisin). Cette page contient des liens
-          d&apos;affiliation : Cryptoreflex perçoit une commission si vous ouvrez
-          un compte chez l&apos;une des plateformes présentées, sans surcoût pour
-          vous et sans impact sur le classement. Pour le détail, voir notre{" "}
+          fondateur {BRAND.name} (Kevin Voisin).{" "}
+          {anyPaidPlatform
+            ? "Les liens marqués « Publicité » sont rémunérés (affiliation ou parrainage), sans surcoût pour vous et sans impact sur le classement."
+            : "Les liens vers les plateformes présentées mènent à leur site officiel."}{" "}
+          Pour le détail, voir notre{" "}
           <Link href="/methodologie" className="underline hover:text-fg">méthodologie</Link>{" "}
           et notre <Link href="/transparence" className="underline hover:text-fg">page transparence</Link>.
         </p>

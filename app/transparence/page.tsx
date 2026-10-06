@@ -95,7 +95,7 @@ export const metadata: Metadata = {
 // + la mention « Publicité » UNIQUEMENT sur les plateformes réellement
 // rémunérées). Cette page importe désormais PARTNERSHIPS depuis la lib.
 
-const PAGE_LAST_UPDATED = "2026-04-30";
+const PAGE_LAST_UPDATED = "2026-10-06";
 
 /* -------------------------------------------------------------------------- */
 /*  Page                                                                      */
@@ -178,6 +178,12 @@ export default function TransparencePage() {
   const referralPartnerships = trackedRows.filter(
     (r) => r.partnership.kind === "referral"
   );
+  // 06/10/2026 : le texte annonçait une commission « chaque fois que vous ouvrez un compte via l'un de nos liens »
+  // (donc aussi Coinbase, Kraken…). Les noms cités viennent désormais de lib/partnerships.ts.
+  const listFr = (names: string[]) =>
+    names.length <= 1 ? names.join("") : `${names.slice(0, -1).join(", ")} et ${names[names.length - 1]}`;
+  const affiliateNames = listFr(affiliatePartnerships.map((r) => r.name));
+  const referralNames = listFr(referralPartnerships.map((r) => r.name));
 
   const breadcrumbs = breadcrumbSchema([
     { name: "Accueil", url: "/" },
@@ -201,12 +207,16 @@ export default function TransparencePage() {
             <span className="gradient-text">nos partenariats</span>
           </h1>
           <p className="mt-5 text-lg text-fg/80 leading-relaxed">
-            {BRAND.name} est un comparateur indépendant financé par des liens
-            d'affiliation. Chaque fois que vous ouvrez un compte sur une
-            plateforme via l'un de nos liens, nous percevons une commission —
-            <strong className="text-fg"> sans aucun surcoût pour vous</strong>.
-            Cette page liste exhaustivement nos partenariats actifs, leur
-            statut réglementaire MiCA, et le type de rémunération perçu.
+            {BRAND.name} est un comparateur indépendant. La plupart de nos liens
+            mènent simplement au site officiel des plateformes et ne nous
+            rapportent rien. Seuls quelques liens sont rémunérés&nbsp;: les
+            programmes d&apos;affiliation de {affiliateNames} (commission versée
+            à {BRAND.name}) et les liens de parrainage personnels du fondateur
+            chez {referralNames}. Ces liens portent la mention « Publicité »,{" "}
+            <strong className="text-fg">sans aucun surcoût pour vous</strong>.
+            Aucune autre plateforme (Coinbase, Kraken…) ne nous verse quoi que
+            ce soit. Cette page liste exhaustivement ces relations, leur statut
+            réglementaire MiCA et le type de rémunération.
           </p>
           <p className="mt-3 text-sm text-muted">
             Dernière mise à jour :{" "}
@@ -267,8 +277,8 @@ export default function TransparencePage() {
             (via plateforme professionnelle Impact.com, Cellxpert ou programme
             d&apos;affiliation maison). Pour chaque ligne : statut MiCA, numéro
             d&apos;agrément AMF (le cas échéant), commission perçue, date
-            de mise en place. Mention « Publicité — lien affilié » obligatoire
-            sur chaque CTA pointant vers ces partenaires.
+            de mise en place. Mention « Publicité — Cryptoreflex perçoit une
+            commission » sous chaque lien pointant vers ces partenaires.
           </p>
 
           <div className="mt-6 overflow-x-auto rounded-2xl border border-border bg-surface/40">
@@ -355,32 +365,40 @@ export default function TransparencePage() {
               </h2>
               <div className="mt-3 space-y-3 text-fg/85 leading-relaxed text-sm sm:text-base">
                 <p>
-                  Quand vous cliquez sur un lien marqué « Publicité » et que
-                  vous ouvrez un compte chez la plateforme partenaire, votre
-                  navigateur transmet un identifiant unique (souvent un
-                  paramètre <code className="rounded bg-surface px-1 py-0.5 text-xs">?ref=CRYPTOREFLEX</code> ou un cookie d'attribution)
-                  à la plateforme. Si vous remplissez ensuite la condition
-                  prévue par le programme — premier dépôt, premier trade,
-                  achat hardware… — la plateforme nous reverse une commission
-                  qui peut être un montant fixe (ex&nbsp;: 10€ pour Bitpanda),
-                  un pourcentage des frais que vous payez (ex&nbsp;: 50% sur 3
-                  mois pour Coinbase), ou un pourcentage du panier (ex&nbsp;:
-                  10% sur les ventes Ledger).
+                  Quand vous cliquez sur un lien marqué « Publicité », l&apos;adresse
+                  contient un identifiant d&apos;affiliation ou de parrainage (ou la
+                  plateforme dépose un cookie d&apos;attribution). Si vous remplissez
+                  ensuite la condition prévue par le programme, une rémunération
+                  est versée&nbsp;:
+                </p>
+                <ul className="list-disc pl-5 space-y-1.5">
+                  <li>
+                    <strong>Affiliation ({affiliateNames})</strong>&nbsp;: une
+                    commission versée à {BRAND.name} sur l&apos;achat d&apos;un
+                    portefeuille matériel ou sur l&apos;abonnement souscrit
+                    (détail par partenaire dans le tableau ci-dessus).
+                  </li>
+                  <li>
+                    <strong>Parrainage ({referralNames})</strong>&nbsp;: la prime
+                    prévue par le programme de parrainage de la plateforme, versée
+                    au compte personnel du fondateur, pas à {BRAND.name}.
+                  </li>
+                  <li>
+                    <strong>Toutes les autres plateformes</strong> (Coinbase,
+                    Kraken, Bitstack…)&nbsp;: aucune rémunération. Le lien mène à
+                    leur site officiel et ne porte pas la mention « Publicité ».
+                  </li>
+                </ul>
+                <p>
+                  Cette rémunération est <strong>payée par la plateforme</strong>
+                  {" "}— jamais prélevée sur ce que vous déposez. Le prix que vous
+                  payez (frais, spread, prix d&apos;un Nano X) est le même que si
+                  vous alliez directement sur le site de la plateforme.
                 </p>
                 <p>
-                  Cette commission est <strong>payée par la plateforme,
-                  prélevée sur sa propre marge</strong> — jamais sur ce que
-                  vous déposez. Le tarif que vous payez (frais de trading,
-                  spread, prix d'un Nano X) est strictement identique à celui
-                  que vous obtiendriez en accédant à la plateforme directement
-                  sans passer par {BRAND.name}.
-                </p>
-                <p>
-                  Pour des raisons de transparence comptable et conformément
-                  aux obligations DGCCRF, l'ensemble des revenus d'affiliation
-                  perçus est consolidé dans un audit annuel public publié
-                  chaque janvier sur cette même page (section dédiée à venir
-                  janvier 2027 — site lancé en avril 2026).
+                  Nous prévoyons de publier sur cette page, en janvier 2027, le
+                  total des revenus perçus via ces liens en 2026 (site lancé en
+                  avril 2026).
                 </p>
               </div>
             </div>
@@ -401,7 +419,7 @@ export default function TransparencePage() {
             <BenefitCard
               Icon={Eye}
               title="Transparence en clair"
-              body="Chaque CTA affiche la mention « Publicité — Cryptoreflex perçoit une commission » et renvoie vers cette page. Aucun lien d'affiliation déguisé."
+              body="Chaque lien rémunéré affiche la mention « Publicité » (« Cryptoreflex perçoit une commission » ou « lien de parrainage personnel ») et renvoie vers cette page. Les autres liens n'en portent pas. Aucun lien d'affiliation déguisé."
             />
             <BenefitCard
               Icon={Scale}
@@ -487,9 +505,7 @@ export default function TransparencePage() {
                 >
                   signal.conso.gouv.fr
                 </a>
-                . Sanctions encourues&nbsp;: jusqu'à 6 mois d'emprisonnement et
-                300&nbsp;000&nbsp;€ d'amende (art. L121-1 du Code de la
-                consommation).
+                .
               </p>
             </div>
           </div>
@@ -550,24 +566,18 @@ export default function TransparencePage() {
                   apparente du caractère commercial de toute communication ;
                 </li>
                 <li>
-                  des <strong>articles 88 et 89 du règlement MiCA</strong> (UE)
-                  2023/1114 sur la communication commerciale relative aux
-                  cryptoactifs ;
+                  de l'<strong>article 20 de la loi n°2004-575 du 21 juin 2004</strong>
+                  {" "}pour la confiance dans l'économie numérique (LCEN) : toute
+                  publicité en ligne doit être clairement identifiable comme telle ;
                 </li>
                 <li>
-                  de la <strong>doctrine AMF</strong> Position-Recommandation
-                  DOC-2024-01 sur la promotion de cryptoactifs ;
-                </li>
-                <li>
-                  des <strong>recommandations DGCCRF</strong> en matière de
-                  pratiques commerciales trompeuses (Art. L121-1 du Code de
-                  la consommation modifié), dont la sanction maximale est de
-                  6 mois d'emprisonnement et 300 000€ d'amende, assortie
-                  d'une interdiction professionnelle de 5 ans.
+                  des <strong>articles L121-1 et suivants du Code de la
+                  consommation</strong>, qui interdisent les pratiques
+                  commerciales déloyales et trompeuses.
                 </li>
               </ul>
               <p className="mt-3 text-xs text-amber-50/70 leading-relaxed">
-                Pour signaler une mention manquante ou inexacte, écris à{" "}
+                Pour signaler une mention manquante ou inexacte, écrivez à{" "}
                 <a
                   href={`mailto:${BRAND.email}?subject=Transparence%20-%20signalement`}
                   className="underline hover:text-amber-100"

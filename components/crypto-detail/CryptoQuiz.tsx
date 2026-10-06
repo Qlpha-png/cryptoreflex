@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import {
-  Trophy,
+  GraduationCap,
   CheckCircle2,
   XCircle,
   ArrowRight,
@@ -28,7 +28,7 @@ interface Props {
 type GameState = "idle" | "playing" | "finished";
 
 /**
- * CryptoQuiz — quiz interactif "Connais-tu vraiment {crypto} ?".
+ * CryptoQuiz — quiz interactif "Connaissez-vous vraiment {crypto} ?".
  * Client Component. Render null si pas de quiz éditorial pour cette crypto.
  *
  * Flow : start → 8 questions avec feedback immédiat → score final +
@@ -85,9 +85,10 @@ export default function CryptoQuiz({ cryptoId, cryptoName, cryptoSymbol, quiz }:
   const finalMessage = (() => {
     const ratio = score / totalQuestions;
     if (ratio >= 0.875) {
+      // 06/10/2026 : « mieux que 95 % des investisseurs crypto FR » retiré — statistique inventée.
       return {
-        title: `Expert ${cryptoSymbol} !`,
-        sub: "Vous maîtrisez mieux que 95 % des investisseurs crypto FR. Bravo.",
+        title: `Très bon score sur ${cryptoSymbol} !`,
+        sub: `Vous maîtrisez les fondamentaux de ${cryptoName}. La fiche complète va plus loin.`,
         color: "text-accent-green",
       };
     }
@@ -124,8 +125,9 @@ export default function CryptoQuiz({ cryptoId, cryptoName, cryptoSymbol, quiz }:
       className="scroll-mt-24 rounded-3xl border border-amber-400/30 bg-gradient-to-br from-amber-500/5 via-background to-background p-6 sm:p-8"
     >
       <div className="flex items-start gap-3">
+        {/* 06/10/2026 : icône « quiz de connaissances » au lieu du trophée. */}
         <div className="shrink-0 grid place-items-center h-11 w-11 rounded-xl bg-amber-500/15 text-amber-300">
-          <Trophy className="h-5 w-5" />
+          <GraduationCap className="h-5 w-5" aria-hidden="true" />
         </div>
         <div className="flex-1 min-w-0">
           <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-fg">
@@ -284,9 +286,9 @@ export default function CryptoQuiz({ cryptoId, cryptoName, cryptoSymbol, quiz }:
           {score / totalQuestions >= 0.75 && (
             <div className="mt-4 rounded-xl border border-primary/30 bg-primary/5 p-4 text-left">
               <p className="text-sm text-fg/85">
-                <strong className="text-fg">Bravo !</strong> Recevez la newsletter
-                Cryptoreflex (3 min de lecture chaque matin) — actus crypto FR sans
-                hype, fiscalité, MiCA.
+                <strong className="text-fg">Bravo !</strong> La newsletter
+                Cryptoreflex parle de l&apos;essentiel de la crypto en français, sans
+                hype : fiscalité, MiCA, alertes plateformes.
               </p>
               <Link
                 href="/newsletter"

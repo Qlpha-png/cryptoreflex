@@ -25,7 +25,7 @@ export const metadata: Metadata = {
   // FIX 2026-05-09 : title.absolute car "À propos de Cryptoreflex" inclut
   // grammaticalement la marque → bypass template root `%s | Cryptoreflex`.
   title: { absolute: "À propos de Cryptoreflex — qui sommes-nous ?" },
-  description: `Découvrez la mission de ${BRAND.name}, la méthodologie de scoring et le fondateur Kevin Voisin. Site indépendant, financé uniquement par l'affiliation transparente.`,
+  description: `Découvrez la mission de ${BRAND.name}, la méthodologie de scoring et le fondateur Kevin Voisin. Site indépendant, financé par quelques liens rémunérés signalés et le soutien des lecteurs.`,
   alternates: withHreflang("/a-propos"),
   openGraph: {
     title: "À propos de Cryptoreflex",
@@ -176,7 +176,7 @@ export default function AProposPage() {
                 Nous croyons qu'un comparateur crypto utile doit&nbsp;:
               </p>
               <ul className="list-disc pl-5 space-y-1.5">
-                <li>tester réellement les plateformes (ouverture de compte, achat, retrait)&nbsp;;</li>
+                <li>relever les frais sur les grilles tarifaires officielles et dater chaque relevé&nbsp;;</li>
                 <li>vérifier le statut <strong>PSAN AMF</strong> et l'agrément <strong>MiCA</strong> chaque mois&nbsp;;</li>
                 <li>publier sa méthodologie de notation, à l'avance, identique pour toutes&nbsp;;</li>
                 <li>signaler clairement les liens d'affiliation et leur impact (zéro) sur les notes.</li>

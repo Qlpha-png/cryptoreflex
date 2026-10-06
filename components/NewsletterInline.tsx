@@ -67,18 +67,19 @@ const COPY_DEFAULTS: Record<
   string,
   { title: string; subtitle: string; ctaLabel: string }
 > = {
+  // 06/10/2026 : aucun rythme promis (quotidien, 7h, chaque mardi, hebdo…) — aucune édition n'est envoyée par le code.
   "bottom-article": {
-    title: "Vous avez aime cet article ?",
-    subtitle: "Recevez 3 infos crypto FR comme celle-ci, chaque matin a 7h.",
+    title: "Vous avez aimé cet article ?",
+    subtitle: "Recevez la newsletter : l'essentiel de la crypto en français, sans spam.",
     ctaLabel: "Recevoir la newsletter",
   },
   sidebar: {
-    title: "Newsletter quotidienne",
-    subtitle: "3 minutes, 7h du matin. Sans hype, sans pub.",
+    title: "Newsletter crypto FR",
+    subtitle: "L'essentiel de la crypto en français. Sans hype, sans pub.",
     ctaLabel: "M'abonner",
   },
   hero: {
-    title: "La crypto FR en 3 minutes, chaque matin",
+    title: "Recevoir la newsletter",
     subtitle: "Gratuit. Désinscription en 1 clic. Guide PDF offert.",
     ctaLabel: "Recevoir la newsletter",
   },
@@ -101,44 +102,44 @@ const CONTEXT_COPY: Record<
   fiscalite: {
     title: "Optimisez votre fisca crypto 2026",
     subtitle:
-      "Chaque mardi : un point fisca FR (PFU, Cerfa 2086, BNC pro) + alertes deadlines.",
-    ctaLabel: "Recevoir les analyses fisca",
+      "Les points de fiscalité FR qui comptent (PFU, Cerfa 2086, BNC pro) et les échéances à ne pas rater.",
+    ctaLabel: "Recevoir la newsletter",
   },
   securite: {
-    title: "Reste à l'abri des arnaques crypto",
+    title: "Restez à l'abri des arnaques crypto",
     subtitle:
-      "Alerte hebdo : nouveaux scams FR, hacks plateformes, bonnes pratiques wallet.",
-    ctaLabel: "Recevoir les alertes sécu",
+      "Nouvelles arnaques en France, piratages de plateformes, bonnes pratiques wallet.",
+    ctaLabel: "Recevoir la newsletter",
   },
   trading: {
     title: "Le récap trading crypto FR",
     subtitle:
-      "3 minutes le matin : niveaux clés BTC/ETH, news macro, alertes liquidations.",
-    ctaLabel: "Recevoir le récap trading",
+      "Niveaux clés BTC/ETH et actualité macro, expliqués sans jargon.",
+    ctaLabel: "Recevoir la newsletter",
   },
   debutant: {
     title: "Démarrez la crypto sans vous faire avoir",
     subtitle:
-      "1 leçon claire chaque jour pendant 7 jours, puis 3 actus crypto FR/jour.",
-    ctaLabel: "Démarrer la formation",
+      "Les bases expliquées simplement, et l'essentiel de l'actu crypto en français.",
+    ctaLabel: "Recevoir la newsletter",
   },
   actualites: {
-    title: "L'actu crypto FR en 3 minutes",
+    title: "L'essentiel de l'actu crypto FR",
     subtitle:
-      "Chaque matin 7h : régulation, marché, plateformes. Sans hype, sans pub.",
-    ctaLabel: "Recevoir l'actu",
+      "Régulation, marché, plateformes : ce qui compte vraiment, sans hype.",
+    ctaLabel: "Recevoir la newsletter",
   },
   defi: {
     title: "DeFi crypto, version pédagogique",
     subtitle:
-      "Chaque semaine : protocoles audités, rendements réels, risques expliqués.",
-    ctaLabel: "Recevoir les analyses DeFi",
+      "Protocoles audités, rendements réels, risques expliqués.",
+    ctaLabel: "Recevoir la newsletter",
   },
   regulation: {
     title: "MiCA & AMF : tout comprendre",
     subtitle:
       "Suivi des décisions régulateurs FR/UE et impact concret sur votre portefeuille.",
-    ctaLabel: "Suivre la régulation",
+    ctaLabel: "Recevoir la newsletter",
   },
 };
 
@@ -158,12 +159,12 @@ export default function NewsletterInline({
   const ctxArticle = context ? CONTEXT_COPY[context] : undefined;
   const ctxDefault = COPY_DEFAULTS[source];
   const resolvedTitle =
-    title ?? ctxArticle?.title ?? ctxDefault?.title ?? "La newsletter quotidienne crypto FR";
+    title ?? ctxArticle?.title ?? ctxDefault?.title ?? "La newsletter crypto FR";
   const resolvedSubtitle =
     subtitle ??
     ctxArticle?.subtitle ??
     ctxDefault?.subtitle ??
-    "3 infos crypto qui comptent, en 3 minutes, chaque matin.";
+    "L'essentiel de la crypto en français, sans spam.";
   const resolvedCtaLabel =
     ctaLabel ?? ctxArticle?.ctaLabel ?? ctxDefault?.ctaLabel ?? "S'abonner";
   const [email, setEmail] = useState("");
@@ -321,11 +322,12 @@ export default function NewsletterInline({
           <details className="mt-3 group">
             <summary className="cursor-pointer text-xs text-primary-soft hover:text-primary inline-flex items-center gap-1 list-none">
               <span className="group-open:rotate-90 transition-transform inline-block">→</span>
-              Voir un exemple du dernier email
+              {/* 06/10/2026 : présenté comme « le dernier email » alors qu'aucune édition n'est envoyée → exemple fictif assumé */}
+              Voir un exemple de format
             </summary>
             <div className="mt-2 rounded-lg border border-border bg-elevated/40 p-3 text-xs text-fg/70 leading-relaxed">
               <p className="font-semibold text-fg">[Cryptoreflex] Bitpanda décroche son agrément MiCA — 3 conséquences pour vous</p>
-              <p className="mt-1.5 italic text-muted">7 h 02 · Édition du jour</p>
+              <p className="mt-1.5 italic text-muted">Exemple fictif, pour illustrer le format</p>
               <p className="mt-2">
                 1/ <strong>Bitpanda Asset Management AG</strong> rejoint la liste des entités conformes à MiCA dans l'UE.
                 Ce que ça change concrètement…
@@ -360,7 +362,7 @@ export default function NewsletterInline({
             <CheckCircle2 className="h-3.5 w-3.5" />
             {mocked
               ? "Email noté — newsletter en cours de configuration."
-              : "Inscription confirmée — vérifiez votre boîte mail."}
+              : "Inscription enregistrée, merci !"}
           </p>
         )}
       </div>

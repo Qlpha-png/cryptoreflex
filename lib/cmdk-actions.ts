@@ -167,7 +167,7 @@ export const CMDK_ACTIONS: CmdkAction[] = [
   {
     id: "create-alert",
     label: "Créer une alerte prix…",
-    hint: "Reçois un email si une crypto franchit un seuil",
+    hint: "Recevez un e-mail si une crypto franchit un seuil",
     icon: Bell,
     keywords: [
       "alerte",
@@ -243,7 +243,7 @@ export const CMDK_ACTIONS: CmdkAction[] = [
   {
     id: "enable-push",
     label: "Activer les notifications push",
-    hint: "Reçois les alertes en temps réel sur ce navigateur",
+    hint: "Recevez les alertes en temps réel sur ce navigateur",
     icon: Send,
     keywords: [
       "push",
@@ -266,7 +266,7 @@ export const CMDK_ACTIONS: CmdkAction[] = [
   {
     id: "logout",
     label: "Se déconnecter",
-    hint: "Termine ta session sur cet appareil",
+    hint: "Terminez votre session sur cet appareil",
     icon: LogOut,
     keywords: [
       "logout",

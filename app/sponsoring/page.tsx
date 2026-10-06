@@ -6,7 +6,6 @@ import {
   Mail as MailIcon,
   Sparkles,
   Eye,
-  TrendingUp,
   Globe2,
   ShieldCheck,
   AlertTriangle,
@@ -24,6 +23,7 @@ import {
 import { BRAND } from "@/lib/brand";
 import { withHreflang } from "@/lib/seo-alternates";
 import { fitDescription, fitTitle } from "@/lib/seo-text";
+import { getSponsoringOffer } from "@/lib/sponsoring-offers";
 
 /**
  * /sponsoring — page commerciale B2B Cryptoreflex.
@@ -32,27 +32,31 @@ import { fitDescription, fitTitle } from "@/lib/seo-text";
  * ambassadeurs lancé en même temps a été retiré le 05/10/2026 (site gratuit).
  *
  * Choix produit :
- *  - 3 offres claires (V1 dispo, V2 M3+, V3 M4+) — pas de sur-vente.
- *  - Tarifs publics : article 800 €, comparateur 1 500 €/mois, newsletter 500 €.
- *  - Audience non gonflée : projection M6 = 6 000 visites/mois (à vérifier),
- *    snapshot officiel sur /impact (mise à jour mensuelle).
- *  - Sélection éditoriale stricte : pas de PSAN douteux, validation MiCA
+ *  - 2 offres claires — pas de sur-vente. Tarifs publics (lib/sponsoring-offers.ts, partagés avec le
+ *    formulaire) : article 800 €, encart comparateur 1 500 €/mois.
+ *  - 06/10/2026 : plus de projection d'audience (« ~6 000 visites/mois ») ni de renvoi vers /impact
+ *    (aucun chiffre mesuré n'y est publié) ; offre « newsletter » retirée — le code n'envoie aucune
+ *    édition de newsletter. L'encart comparateur ne vend plus la « position #1 » : le classement ne
+ *    s'achète pas (cf. engagement éditorial et /methodologie).
+ *  - Sélection éditoriale stricte : pas de plateforme douteuse, validation MiCA
  *    obligatoire, max 1 sponso/mois pour préserver la confiance lecteur.
- *  - Disclaimer AMF (art. 222-15) + ARPP + DDPP visible en haut & bas.
+ *  - Mention publicitaire visible en haut & bas : art. 20 de la loi pour la confiance dans l'économie
+ *    numérique (LCEN) + charte ARPP. (06/10/2026 : l'« art. 222-15 AMF » cité avant était faux — il vise
+ *    les émetteurs hors EEE, pas la publicité.)
  *
  * SEO : Schema Service + Offers + FAQ + Breadcrumb (graph).
  */
 
 export const metadata: Metadata = {
-  title: fitTitle("Sponsoring & placements B2B — articles, comparateur, newsletter"),
+  title: fitTitle("Sponsoring & placements B2B — articles et comparateur"),
   description: fitDescription(
-    "Plateforme agréée MiCA, fintech, outil crypto FR ? 3 formats sponsorisés tarifés (article 800 €, comparateur 1 500 €/mois, newsletter 500 €/encart). Validation MiCA obligatoire, contenu signalé sponsorisé.",
+    "Plateforme agréée MiCA, fintech, outil crypto FR ? Formats sponsorisés tarifés publiquement (article 800 €, encart comparateur 1 500 €/mois). Validation MiCA obligatoire, contenu signalé sponsorisé.",
   ),
   alternates: withHreflang(`${BRAND.url}/sponsoring`),
   openGraph: {
     title: "Sponsoriser un placement Cryptoreflex",
     description:
-      "Touchez les investisseurs FR qualifiés via du contenu éditorial, du placement comparateur premium ou de la newsletter — tarifs publics, MiCA-only.",
+      "Article sponsorisé et encart comparateur (hors classement) — tarifs publics, plateformes agréées MiCA uniquement. Audience en construction, sans chiffres gonflés.",
     url: `${BRAND.url}/sponsoring`,
     type: "website",
   },
@@ -68,13 +72,13 @@ const TRUST_STATS = [
     Icon: Sparkles,
     value: "Avril 2026",
     label: "Site lancé en transparence",
-    hint: "Audience FR en construction — snapshot mensuel sur /impact",
+    hint: "Audience FR encore modeste, en construction",
   },
   {
-    Icon: TrendingUp,
-    value: "~6 000",
-    label: "visites/mois (projection M6)",
-    hint: "Chiffre cible à vérifier — voir /impact pour le réel actuel",
+    Icon: ShieldCheck,
+    value: "MiCA",
+    label: "plateformes agréées uniquement",
+    hint: "Statut vérifié (registre de l'ESMA, liste blanche de l'AMF) avant tout devis",
   },
   {
     Icon: Eye,
@@ -91,24 +95,26 @@ const TRUST_STATS = [
 ];
 
 /* -------------------------------------------------------------------------- */
-/*  3 offres tarifées — V1 dispo / V2 M3+ / V3 M4+                            */
+/*  2 offres tarifées (prix : lib/sponsoring-offers.ts, partagés avec le form) */
 /* -------------------------------------------------------------------------- */
+
+const ARTICLE = getSponsoringOffer("article");
+const COMPARATEUR = getSponsoringOffer("comparateur");
 
 const TIERS: PricingTier[] = [
   {
-    id: "article",
-    name: "Article sponsorisé",
+    id: ARTICLE.id,
+    name: ARTICLE.name,
     badge: "V1 — disponible",
     Icon: FileText,
-    price: "800 €",
-    priceUnit: "/ article",
+    price: ARTICLE.price,
+    priceUnit: ARTICLE.priceUnit,
     availability: "Disponible dès aujourd'hui",
     description:
-      "Article 1 500 – 2 500 mots rédigé par le fondateur selon votre brief, optimisé SEO, signalé « Sponsorisé » en haut + en bas (art. 222-15 AMF).",
+      "Article 1 500 – 2 500 mots rédigé par le fondateur selon votre brief, optimisé SEO, signalé « Sponsorisé » en haut + en bas (art. 20 de la LCEN).",
     features: [
       "1 500 – 2 500 mots optimisés SEO",
       "Brief co-construit (1 visio 30 min)",
-      "1 mention dédiée dans la newsletter quotidienne",
       "Liens trackés UTM + reporting CTR mensuel",
       "Mise à jour 1×/an offerte",
       "Mention « Sponsorisé » obligatoire (charte ARPP)",
@@ -117,48 +123,30 @@ const TIERS: PricingTier[] = [
     ctaHref: "#contact",
     highlight: true,
   },
+  // 06/10/2026 : ne vend plus la « Position #1 » du comparatif (contraire à l'engagement « le sponsoring n'influence
+  // pas le classement ») ni un « bonus de bienvenue valorisé » ; « Ouverture juin 2026 » (date passée) → sur demande.
   {
-    id: "comparateur",
-    name: "Placement comparateur premium",
-    badge: "V2 — à partir du M3",
+    id: COMPARATEUR.id,
+    name: COMPARATEUR.name,
+    badge: "V2 — sur demande",
     Icon: LayoutGrid,
-    price: "1 500 €",
-    priceUnit: "/ mois",
-    availability: "Ouverture juin 2026",
+    price: COMPARATEUR.price,
+    priceUnit: COMPARATEUR.priceUnit,
+    availability: "Sur demande, après validation MiCA",
     description:
-      "Visibilité top sur /comparatif et chaque page /avis/[slug] de votre plateforme. Engagement 3 mois minimum, badge « Partenaire » + bonus de bienvenue mis en avant.",
+      "Encart signalé « Sponsorisé » sur /comparatif et sur la page /avis/[slug] de votre plateforme, à part du classement : votre rang et votre note ne changent pas. Engagement 3 mois minimum.",
     features: [
-      "Position #1 + carte premium /comparatif",
-      "Encart « Partenaire » sur votre /avis/[slug]",
-      "Badge bonus de bienvenue valorisé",
-      "Lien d'affiliation tracé UTM unique",
-      "Reporting clics + conversions mensuel",
+      "Encart « Sponsorisé » sur /comparatif, hors classement",
+      "Encart « Sponsorisé » sur votre /avis/[slug]",
+      "Lien tracé UTM unique",
+      "Reporting clics mensuel",
       "Engagement minimum 3 mois",
     ],
-    ctaLabel: "Pré-réserver M3",
-    ctaHref: "#contact",
-  },
-  {
-    id: "newsletter",
-    name: "Newsletter sponsoring",
-    badge: "V3 — à partir du M4",
-    Icon: MailIcon,
-    price: "500 €",
-    priceUnit: "/ encart",
-    availability: "Ouverture juillet 2026 (≥ 3 000 abonnés)",
-    description:
-      "Encart 200 mots dans la newsletter quotidienne. Lancement conditionné à 3 000 abonnés — point d'avancement public sur /impact.",
-    features: [
-      "Encart 200 mots + 1 visuel",
-      "Mention « Sponsor du jour » explicite",
-      "Lien UTM unique + stats ouverture / clics",
-      "Disponible quand ≥ 3 000 abonnés newsletter",
-      "Annulable jusqu'à 48 h avant l'envoi",
-    ],
-    ctaLabel: "Être notifié à l'ouverture",
+    ctaLabel: "Demander un devis",
     ctaHref: "#contact",
   },
 ];
+// 06/10/2026 : offre « Newsletter sponsoring » retirée — aucune édition de newsletter n'est envoyée.
 
 /* -------------------------------------------------------------------------- */
 /*  Conditions strictes                                                       */
@@ -170,7 +158,7 @@ const CONDITIONS = [
   "Validation MiCA obligatoire : nous vérifions votre statut sur le registre AMF avant signature de devis.",
   "Maximum 1 article sponsorisé par mois sur Cryptoreflex — pour préserver la valeur perçue par nos lecteurs.",
   "Contrôle éditorial préservé : nous gardons le droit de refuser un angle qui contredit notre charte (sécurité, fiscalité, transparence).",
-  "Mention « Sponsorisé » obligatoire en haut + bas conformément à l'art. 222-15 du règlement général AMF et à la charte ARPP.",
+  "Mention « Sponsorisé » obligatoire en haut + bas : l'art. 20 de la loi pour la confiance dans l'économie numérique (LCEN) impose que toute publicité en ligne soit clairement identifiable comme telle ; nous suivons aussi la charte ARPP.",
 ];
 
 /* -------------------------------------------------------------------------- */
@@ -181,7 +169,7 @@ const PROCESS_STEPS = [
   {
     n: 1,
     title: "Email ou formulaire",
-    text: `Envoie votre demande à ${BRAND.partnersEmail} ou via le formulaire en bas. Précise format souhaité, brief, deadline.`,
+    text: `Envoyez votre demande à ${BRAND.partnersEmail} ou via le formulaire en bas. Précisez le format souhaité, le brief et la deadline.`,
   },
   {
     n: 2,
@@ -196,7 +184,7 @@ const PROCESS_STEPS = [
   {
     n: 4,
     title: "Publication sous 14 j max",
-    text: "Mise en ligne sur Cryptoreflex + mention dans la newsletter quotidienne. Reporting envoyé à J+30 (clics, conversions, trafic).",
+    text: "Mise en ligne sur Cryptoreflex. Reporting envoyé à J+30 (clics, conversions, trafic).",
   },
 ];
 
@@ -211,19 +199,20 @@ const FAQS = [
   },
   {
     q: "Le sponsoring influence-t-il votre note ou votre verdict éditorial ?",
-    a: "Non. Notre méthodologie de scoring (frais, sécurité, UX, conformité MiCA, support FR) est appliquée de façon identique à tous les acteurs, sponsorisés ou non. Vous pouvez acheter un article sponsorisé tout en recevant une note 6,5/10 sur le comparateur — c'est déjà arrivé.",
+    // 06/10/2026 : « une note 6,5/10 … c'est déjà arrivé » retiré — les notes sont sur 5 et aucun sponsoring n'a encore été vendu (cf. /charte).
+    a: "Non. Notre méthodologie de scoring (frais, sécurité, UX, conformité MiCA, support FR) est appliquée de façon identique à tous les acteurs, sponsorisés ou non. Un sponsor peut recevoir une note basse : la note suit la grille publique, pas le contrat.",
   },
   {
     q: "Comment se passe la mention « sponsorisé » légalement ?",
-    a: "Mention obligatoire en haut d'article (badge « Sponsorisé » visible) + rappel en bas. Conforme à l'art. 222-15 du règlement général AMF, à la charte ARPP « Communication publicitaire numérique » et aux recommandations DDPP sur le contenu publicitaire en ligne. Pas de native ad cachée.",
+    a: "Mention obligatoire en haut d'article (badge « Sponsorisé » visible) + rappel en bas. L'art. 20 de la loi pour la confiance dans l'économie numérique (LCEN) impose que toute publicité en ligne soit clairement identifiable comme telle, et nous suivons la charte ARPP. Pas de native ad cachée.",
   },
   {
     q: "Quels sont vos chiffres d'audience réels aujourd'hui ?",
-    a: "Site lancé le 15 avril 2026 — l'audience est en construction. Le snapshot mensuel public est sur /impact (mis à jour le 26 de chaque mois). Projection à 6 mois : ~6 000 visites/mois. On préfère sous-promettre et tenir que de te vendre des chiffres gonflés.",
+    a: "Site lancé le 15 avril 2026 : l'audience est encore modeste et en construction. Nous ne publions ni projection ni chiffre arrondi : demandez-nous les chiffres réels du moment avant tout devis. On préfère sous-promettre et tenir que de vous vendre des chiffres gonflés.",
   },
   {
     q: "Puis-je désengager mon contrat en cours ?",
-    a: "Articles : non remboursable une fois la rédaction lancée (workflow déjà engagé). Comparateur premium : préavis 1 mois, prorata du mois en cours non remboursé. Newsletter : annulable jusqu'à 48 h avant l'envoi prévu. Conditions complètes dans le devis détaillé envoyé après votre demande.",
+    a: "Articles : non remboursable une fois la rédaction lancée (workflow déjà engagé). Encart comparateur : préavis 1 mois, prorata du mois en cours non remboursé. Conditions complètes dans le devis détaillé envoyé après votre demande.",
   },
 ];
 
@@ -243,11 +232,11 @@ function buildServiceSchema(): JsonLd {
       url: BRAND.url,
     },
     description:
-      "Articles sponsorisés, placement comparateur premium et encarts newsletter pour PSAN, fintech et outils crypto FR ciblant l'audience francophone post-MiCA.",
+      "Articles sponsorisés et encarts sponsorisés sur le comparateur (hors classement) pour plateformes agréées MiCA, fintech et outils crypto FR.",
     areaServed: { "@type": "Country", name: "France" },
     audience: {
       "@type": "BusinessAudience",
-      name: "PSAN, fintech crypto, outils crypto FR conformes MiCA",
+      name: "Plateformes agréées MiCA, fintech crypto, outils crypto FR",
     },
     url: `${BRAND.url}/sponsoring`,
     offers: TIERS.map((t) => ({
@@ -291,10 +280,10 @@ export default function SponsoringPage() {
           <div className="flex flex-col items-center text-center">
             <span className="badge-info">
               <FileText className="h-3.5 w-3.5" aria-hidden="true" />
-              Sponsoring B2B — PSAN & fintech crypto FR
+              Sponsoring B2B — plateformes MiCA & fintech crypto FR
             </span>
             <h1 className="mt-5 text-3xl sm:text-5xl lg:text-6xl font-extrabold text-fg leading-[1.1] max-w-3xl">
-              Touche une{" "}
+              Touchez une{" "}
               <span className="gradient-text">audience FR en construction</span>{" "}
               — sans gonflage de chiffres
             </h1>
@@ -302,25 +291,18 @@ export default function SponsoringPage() {
                 avant Hero "Touche 6 000+ investisseurs FR qualifiés" alors que
                 les 6 000 sont une PROJECTION M6, audience réelle non encore
                 atteinte. Risque DGCCRF L121-2 (pratique trompeuse B2B).
-                Maintenant : on assume l'audience en construction et on renvoie
-                vers /impact pour les chiffres réels actualisés. */}
+                06/10/2026 : plus de renvoi vers /impact (aucun chiffre mesuré n'y
+                est publié) — les chiffres réels du moment sont donnés sur demande. */}
             <p className="mt-5 text-base sm:text-lg text-fg/75 max-w-2xl">
-              Site lancé en avril 2026, audience FR encore modeste mais en
-              construction (snapshot public sur{" "}
-              <Link
-                href="/impact"
-                className="text-primary-soft underline hover:text-primary"
-              >
-                /impact
-              </Link>
-              , projection M6 = ~6 000 visites/mois). 3 formats tarifés, validation
-              MiCA obligatoire, mention « Sponsorisé » conforme art. 222-15 AMF.
+              Site lancé en avril 2026 : audience FR encore modeste, en construction
+              — nous ne publions pas de projection. 2 formats tarifés, validation
+              MiCA obligatoire, mention « Sponsorisé » conforme à l&apos;art. 20 de la LCEN.
               On préfère sous-promettre et tenir.
             </p>
 
             <div className="mt-7 flex flex-wrap justify-center gap-3">
               <a href="#offres" className="btn-primary">
-                Voir les 3 offres
+                Voir les offres
               </a>
               <a href="#contact" className="btn-ghost">
                 Devenir partenaire
@@ -364,7 +346,7 @@ export default function SponsoringPage() {
             Le sponsoring n&apos;influence ni notre note, ni notre verdict, ni
             le classement de nos comparatifs. Tout sponso est{" "}
             <strong className="text-warning-fg">
-              explicitement signalé conformément à l&apos;art. 222-15 AMF
+              explicitement signalé conformément à l&apos;art. 20 de la LCEN
             </strong>{" "}
             et à la charte ARPP. Maximum 1 article sponsorisé par mois.{" "}
             <Link
@@ -385,7 +367,7 @@ export default function SponsoringPage() {
       >
         <TieredPricing
           tiers={TIERS}
-          heading="3 offres tarifées publiquement"
+          heading="2 offres tarifées publiquement"
           subheading="Pas de devis opaque. Pas de frais cachés. Vous savez combien et quand."
         />
       </section>
@@ -468,7 +450,7 @@ export default function SponsoringPage() {
               className="inline-block h-4 w-4 mr-1 align-text-bottom"
               aria-hidden="true"
             />
-            Préfères un email direct ? {BRAND.partnersEmail}
+            Vous préférez un e-mail direct ? {BRAND.partnersEmail}
           </a>
         </div>
       </section>
@@ -528,10 +510,11 @@ export default function SponsoringPage() {
             />
             <span>
               <strong className="text-fg">Mention publicitaire —</strong> Tout
-              contenu sponsorisé est explicitement signalé conformément à
-              l&apos;art. 222-15 du règlement général AMF, à la charte ARPP
-              « Communication publicitaire numérique » et aux recommandations
-              DDPP. Aucune promotion de crypto-actif non régulé MiCA.
+              contenu sponsorisé est explicitement signalé : l&apos;art. 20 de la
+              loi pour la confiance dans l&apos;économie numérique (LCEN) impose que
+              toute publicité en ligne soit clairement identifiable comme telle, et
+              nous suivons la charte ARPP. Aucune promotion de crypto-actif non
+              régulé MiCA.
             </span>
           </p>
           <p className="flex items-start gap-2">

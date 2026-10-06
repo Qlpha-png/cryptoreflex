@@ -143,7 +143,7 @@ export const NAV_SECTIONS: NavSection[] = [
       { href: "/methodologie", label: "Notre méthode", desc: "Comment nous notons, publiquement" },
       { href: "/transparence", label: "Transparence", desc: "Qui nous rémunère, et comment" },
       { href: "/charte", label: "Charte éditoriale", desc: "Nos engagements" },
-      { href: "/newsletter", label: "Newsletter", desc: "Le brief crypto du matin" },
+      { href: "/newsletter", label: "Newsletter", desc: "L'essentiel de la crypto, sans spam" }, // 06/10/2026 : plus « du matin » (aucun envoi programmé)
       { href: "/soutenir", label: "Soutenir le site", desc: "Contribution libre, tout reste gratuit" },
       { href: "/api-publique", label: "API publique", desc: "Nos données, réutilisables" },
       { href: "/contact", label: "Contact", desc: "Une question ? Écrivez-nous" },

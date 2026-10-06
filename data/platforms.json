@@ -19,7 +19,7 @@
       "logo": "/logos/coinbase.svg",
       "tagline": "Pour qui c'est : débutants qui veulent la plateforme la plus régulée du marché",
       "websiteUrl": "https://coinbase.com",
-      "affiliateUrl": "https://coinbase.com?utm_source=cryptoreflex",
+      "affiliateUrl": "https://coinbase.com",
       "scoring": {
         "global": 4.6,
         "fees": 4.2,
@@ -113,8 +113,10 @@
         "validUntil": null
       },
       "ratings": {
-        "trustpilot": 1.6,
-        "trustpilotCount": 28500,
+        "trustpilot": 4,
+        "trustpilotCount": 23213,
+        "trustpilotUrl": "https://fr.trustpilot.com/review/coinbase.com",
+        "trustpilotVerified": "2026-10-05",
         "appStore": 4.7,
         "playStore": 4.6
       },
@@ -126,7 +128,6 @@
       ],
       "weaknesses": [
         "Achat instantané par carte cher (3,99 % + spread)",
-        "Trustpilot très bas malgré la régulation",
         "Support client souvent critiqué"
       ],
       "badge": "Le plus régulé",
@@ -138,7 +139,7 @@
       "logo": "/logos/binance.png",
       "tagline": "Pour qui c'est : traders cherchant le plus large catalogue crypto au monde",
       "websiteUrl": "https://binance.com",
-      "affiliateUrl": "https://www.binance.com/register?ref=CRYPTOREFLEX",
+      "affiliateUrl": "https://binance.com",
       "scoring": {
         "global": 3.6,
         "fees": 4.7,
@@ -218,8 +219,11 @@
         "validUntil": null
       },
       "ratings": {
-        "trustpilot": 2.5,
-        "trustpilotCount": 152000,
+        "trustpilot": null,
+        "trustpilotCount": null,
+        "trustpilotUrl": "https://fr.trustpilot.com/review/binance.com",
+        "trustpilotVerified": "2026-10-05",
+        "trustpilotNote": "note suspendue par Trustpilot (violation de ses conditions d'utilisation)",
         "appStore": 4.5,
         "playStore": 4.4
       },
@@ -338,8 +342,10 @@
         "validUntil": null
       },
       "ratings": {
-        "trustpilot": 4.3,
-        "trustpilotCount": 47000,
+        "trustpilot": 4.1,
+        "trustpilotCount": 15831,
+        "trustpilotUrl": "https://fr.trustpilot.com/review/www.bitpanda.com",
+        "trustpilotVerified": "2026-10-05",
         "appStore": 4.7,
         "playStore": 4.5
       },
@@ -363,7 +369,7 @@
       "logo": "/logos/kraken.png",
       "tagline": "Pour qui c'est : utilisateurs expérimentés valorisant sécurité et profondeur de marché",
       "websiteUrl": "https://kraken.com",
-      "affiliateUrl": "https://kraken.com?utm_source=cryptoreflex",
+      "affiliateUrl": "https://kraken.com",
       "scoring": {
         "global": 4.4,
         "fees": 3.4,
@@ -458,8 +464,10 @@
         "validUntil": null
       },
       "ratings": {
-        "trustpilot": 3.5,
-        "trustpilotCount": 9500,
+        "trustpilot": 3.2,
+        "trustpilotCount": 9066,
+        "trustpilotUrl": "https://fr.trustpilot.com/review/kraken.com",
+        "trustpilotVerified": "2026-10-05",
         "appStore": 4.6,
         "playStore": 4.5
       },
@@ -483,7 +491,7 @@
       "logo": "/logos/bitget.png",
       "tagline": "Pour qui c'est : traders dérivés et amateurs de copy trading",
       "websiteUrl": "https://bitget.com",
-      "affiliateUrl": "https://bitget.com?utm_source=cryptoreflex",
+      "affiliateUrl": "https://bitget.com",
       "scoring": {
         "global": 3.6,
         "fees": 4.5,
@@ -562,8 +570,10 @@
         "validUntil": null
       },
       "ratings": {
-        "trustpilot": 4.4,
-        "trustpilotCount": 32000,
+        "trustpilot": 1.7,
+        "trustpilotCount": 1699,
+        "trustpilotUrl": "https://fr.trustpilot.com/review/bitget.com",
+        "trustpilotVerified": "2026-10-05",
         "appStore": 4.6,
         "playStore": 4.5
       },
@@ -676,8 +686,10 @@
         "validUntil": null
       },
       "ratings": {
-        "trustpilot": 3.8,
-        "trustpilotCount": 28000,
+        "trustpilot": 4.6,
+        "trustpilotCount": 61083,
+        "trustpilotUrl": "https://fr.trustpilot.com/review/www.traderepublic.com",
+        "trustpilotVerified": "2026-10-05",
         "appStore": 4.6,
         "playStore": 4.5
       },
@@ -701,7 +713,7 @@
       "logo": "/logos/coinhouse.png",
       "tagline": "Pour qui c'est : Français cherchant un acteur 100% local avec accompagnement humain",
       "websiteUrl": "https://coinhouse.com",
-      "affiliateUrl": "https://coinhouse.com?utm_source=cryptoreflex",
+      "affiliateUrl": "https://coinhouse.com",
       "scoring": {
         "global": 4.3,
         "fees": 3.9,
@@ -792,8 +804,10 @@
         "validUntil": null
       },
       "ratings": {
-        "trustpilot": 4.4,
-        "trustpilotCount": 4800,
+        "trustpilot": 4.6,
+        "trustpilotCount": 3003,
+        "trustpilotUrl": "https://fr.trustpilot.com/review/coinhouse.com",
+        "trustpilotVerified": "2026-10-05",
         "appStore": 4.5,
         "playStore": 4.3
       },
@@ -816,8 +830,8 @@
       "name": "Bitstack",
       "logo": "/logos/bitstack.svg",
       "tagline": "Pour qui c'est : débutants voulant DCA Bitcoin automatiquement avec l'arrondi",
-      "websiteUrl": "https://bitstack.com",
-      "affiliateUrl": "https://bitstack.com?utm_source=cryptoreflex",
+      "websiteUrl": "https://www.bitstack-app.com",
+      "affiliateUrl": "https://www.bitstack-app.com",
       "scoring": {
         "global": 4.1,
         "fees": 3.5,
@@ -902,8 +916,10 @@
         "validUntil": null
       },
       "ratings": {
-        "trustpilot": 4.6,
-        "trustpilotCount": 3200,
+        "trustpilot": 4.2,
+        "trustpilotCount": 1398,
+        "trustpilotUrl": "https://fr.trustpilot.com/review/bitstack-app.com",
+        "trustpilotVerified": "2026-10-05",
         "appStore": 4.7,
         "playStore": 4.5
       },
@@ -927,7 +943,7 @@
       "logo": "/logos/swissborg.png",
       "tagline": "Pour qui c'est : européens cherchant best execution et yield programs",
       "websiteUrl": "https://swissborg.com",
-      "affiliateUrl": "https://swissborg.com?utm_source=cryptoreflex",
+      "affiliateUrl": "https://swissborg.com",
       "scoring": {
         "global": 4.4,
         "fees": 3.8,
@@ -1019,8 +1035,10 @@
         "validUntil": null
       },
       "ratings": {
-        "trustpilot": 4.5,
-        "trustpilotCount": 7800,
+        "trustpilot": 3,
+        "trustpilotCount": 1913,
+        "trustpilotUrl": "https://fr.trustpilot.com/review/swissborg.com",
+        "trustpilotVerified": "2026-10-05",
         "appStore": 4.7,
         "playStore": 4.6
       },
@@ -1044,7 +1062,7 @@
       "logo": "/logos/bybit.png",
       "tagline": "Pour qui c'est : traders dérivés cherchant profondeur de carnet et produits perp avancés",
       "websiteUrl": "https://www.bybit.com",
-      "affiliateUrl": "https://www.bybit.com?utm_source=cryptoreflex",
+      "affiliateUrl": "https://www.bybit.com",
       "scoring": {
         "global": 4.2,
         "fees": 4.4,
@@ -1137,8 +1155,10 @@
         "validUntil": null
       },
       "ratings": {
-        "trustpilot": 4.2,
-        "trustpilotCount": 18000,
+        "trustpilot": 2.5,
+        "trustpilotCount": 7744,
+        "trustpilotUrl": "https://fr.trustpilot.com/review/bybit.com",
+        "trustpilotVerified": "2026-10-05",
         "appStore": 4.6,
         "playStore": 4.4
       },
@@ -1162,7 +1182,7 @@
       "logo": "/logos/revolut.png",
       "tagline": "Pour qui c'est : utilisateurs de néobanque voulant acheter du crypto en 2 clics dans leur app du quotidien",
       "websiteUrl": "https://www.revolut.com",
-      "affiliateUrl": "https://www.revolut.com?utm_source=cryptoreflex",
+      "affiliateUrl": "https://www.revolut.com",
       "scoring": {
         "global": 4,
         "fees": 2.8,
@@ -1254,8 +1274,10 @@
         "validUntil": null
       },
       "ratings": {
-        "trustpilot": 4.2,
-        "trustpilotCount": 198000,
+        "trustpilot": 4.7,
+        "trustpilotCount": 468850,
+        "trustpilotUrl": "https://fr.trustpilot.com/review/www.revolut.com",
+        "trustpilotVerified": "2026-10-05",
         "appStore": 4.7,
         "playStore": 4.5
       },
@@ -1279,7 +1301,7 @@
       "logo": "/logos/okx.png",
       "tagline": "Pour qui c'est : traders avancés cherchant DEX intégré + dérivés conformes",
       "websiteUrl": "https://okx.com",
-      "affiliateUrl": "https://www.okx.com/join/CRYPTOREFLEX",
+      "affiliateUrl": "https://okx.com",
       "scoring": {
         "global": 4,
         "fees": 4.4,
@@ -1371,8 +1393,10 @@
         "validUntil": null
       },
       "ratings": {
-        "trustpilot": 3.8,
-        "trustpilotCount": 4200,
+        "trustpilot": 2.4,
+        "trustpilotCount": 1793,
+        "trustpilotUrl": "https://fr.trustpilot.com/review/okx.com",
+        "trustpilotVerified": "2026-10-05",
         "appStore": 4.6,
         "playStore": 4.5
       },
@@ -1385,7 +1409,7 @@
       "weaknesses": [
         "Support FR limité (chat oui, phone non)",
         "UX dense pour débutants — courbe d'apprentissage",
-        "Trustpilot moyen (3,8/5)"
+        "Note Trustpilot basse (2,4/5, relevé du 5 octobre 2026)"
       ],
       "badge": "Catalogue le plus large",
       "category": "exchange"
@@ -1396,7 +1420,7 @@
       "logo": "/logos/crypto-com.png",
       "tagline": "Pour qui c'est : utilisateurs qui veulent une carte crypto + Earn intégré + app mobile-first",
       "websiteUrl": "https://crypto.com",
-      "affiliateUrl": "https://crypto.com/app/CRYPTOREFLEX",
+      "affiliateUrl": "https://crypto.com",
       "scoring": {
         "global": 3.9,
         "fees": 3.5,
@@ -1489,8 +1513,10 @@
         "validUntil": null
       },
       "ratings": {
-        "trustpilot": 4,
-        "trustpilotCount": 27000,
+        "trustpilot": 1.9,
+        "trustpilotCount": 9457,
+        "trustpilotUrl": "https://fr.trustpilot.com/review/crypto.com",
+        "trustpilotVerified": "2026-10-05",
         "appStore": 4.5,
         "playStore": 4.3
       },
@@ -1514,7 +1540,7 @@
       "logo": "/logos/gemini.png",
       "tagline": "Pour qui c'est : profils prudents valorisant l'audit financier transparent",
       "websiteUrl": "https://gemini.com",
-      "affiliateUrl": "https://gemini.com/share/cryptoreflex",
+      "affiliateUrl": "https://gemini.com",
       "scoring": {
         "global": 3.6,
         "fees": 3.4,
@@ -1587,8 +1613,10 @@
         "validUntil": null
       },
       "ratings": {
-        "trustpilot": 3.5,
-        "trustpilotCount": 2800,
+        "trustpilot": 1.3,
+        "trustpilotCount": 1509,
+        "trustpilotUrl": "https://fr.trustpilot.com/review/gemini.com",
+        "trustpilotVerified": "2026-10-05",
         "appStore": 4.6,
         "playStore": 4.4
       },
@@ -1612,7 +1640,7 @@
       "logo": "/logos/bitstamp.png",
       "tagline": "Pour qui c'est : maximalistes BTC valorisant la longévité (depuis 2011) et la régulation EU",
       "websiteUrl": "https://bitstamp.net",
-      "affiliateUrl": "https://bitstamp.net/?ref=cryptoreflex",
+      "affiliateUrl": "https://bitstamp.net",
       "scoring": {
         "global": 4,
         "fees": 3.6,
@@ -1701,8 +1729,10 @@
         "validUntil": null
       },
       "ratings": {
-        "trustpilot": 4.1,
-        "trustpilotCount": 7800,
+        "trustpilot": 1.4,
+        "trustpilotCount": 1038,
+        "trustpilotUrl": "https://fr.trustpilot.com/review/bitstamp.net",
+        "trustpilotVerified": "2026-10-05",
         "appStore": 4.5,
         "playStore": 4.2
       },
@@ -1726,7 +1756,7 @@
       "logo": "/logos/bitvavo.png",
       "tagline": "Pour qui c'est : utilisateurs Bénélux/UE voulant frais bas + UX simple",
       "websiteUrl": "https://bitvavo.com",
-      "affiliateUrl": "https://bitvavo.com/invite?a=CRYPTOREFLEX",
+      "affiliateUrl": "https://bitvavo.com",
       "scoring": {
         "global": 4.2,
         "fees": 4.6,
@@ -1820,8 +1850,10 @@
         "validUntil": null
       },
       "ratings": {
-        "trustpilot": 4.3,
-        "trustpilotCount": 5400,
+        "trustpilot": 4.1,
+        "trustpilotCount": 22995,
+        "trustpilotUrl": "https://fr.trustpilot.com/review/bitvavo.com",
+        "trustpilotVerified": "2026-10-05",
         "appStore": 4.6,
         "playStore": 4.5
       },
@@ -1845,7 +1877,7 @@
       "logo": "/logos/etoro.png",
       "tagline": "Pour qui c'est : profils sociaux qui veulent copier les meilleurs traders + actions/crypto dans la même app",
       "websiteUrl": "https://etoro.com",
-      "affiliateUrl": "https://etoro.com?ref=cryptoreflex",
+      "affiliateUrl": "https://etoro.com",
       "scoring": {
         "global": 3.7,
         "fees": 2.8,
@@ -1935,8 +1967,10 @@
         "validUntil": null
       },
       "ratings": {
-        "trustpilot": 4.2,
-        "trustpilotCount": 26000,
+        "trustpilot": 4,
+        "trustpilotCount": 32137,
+        "trustpilotUrl": "https://fr.trustpilot.com/review/www.etoro.com",
+        "trustpilotVerified": "2026-10-05",
         "appStore": 4.4,
         "playStore": 4.3
       },
@@ -1960,7 +1994,7 @@
       "logo": "/logos/paymium.png",
       "tagline": "Pour qui c'est : maximalistes BTC qui veulent une plateforme française historique (depuis 2011)",
       "websiteUrl": "https://paymium.com",
-      "affiliateUrl": "https://paymium.com/page/affiliation/cryptoreflex",
+      "affiliateUrl": "https://paymium.com",
       "scoring": {
         "global": 3.6,
         "fees": 3.5,
@@ -2045,8 +2079,10 @@
         "validUntil": null
       },
       "ratings": {
-        "trustpilot": 3.7,
-        "trustpilotCount": 1100,
+        "trustpilot": 4.3,
+        "trustpilotCount": 133,
+        "trustpilotUrl": "https://fr.trustpilot.com/review/paymium.com",
+        "trustpilotVerified": "2026-10-05",
         "appStore": 3.9,
         "playStore": 3.8
       },
@@ -2070,7 +2106,7 @@
       "logo": null,
       "tagline": "Pour qui c'est : néobanque hybride compte courant + wallet self-custody crypto en France",
       "websiteUrl": "https://deblock.com",
-      "affiliateUrl": "https://deblock.com/r/cryptoreflex",
+      "affiliateUrl": "https://deblock.com",
       "scoring": {
         "global": 3.6,
         "fees": 2.2,
@@ -2155,8 +2191,10 @@
         "validUntil": null
       },
       "ratings": {
-        "trustpilot": 4.1,
-        "trustpilotCount": 320,
+        "trustpilot": 4.4,
+        "trustpilotCount": 8722,
+        "trustpilotUrl": "https://fr.trustpilot.com/review/deblock.com",
+        "trustpilotVerified": "2026-10-05",
         "appStore": 4.5,
         "playStore": 4.3
       },
@@ -2180,7 +2218,7 @@
       "logo": "/logos/nexo.png",
       "tagline": "Pour qui c'est : profils Earn cherchant les rendements stablecoin les plus élevés + carte cashback",
       "websiteUrl": "https://nexo.com",
-      "affiliateUrl": "https://nexo.com/?refId=cryptoreflex",
+      "affiliateUrl": "https://nexo.com",
       "scoring": {
         "global": 2.8,
         "fees": 2.2,
@@ -2259,8 +2297,10 @@
         "validUntil": null
       },
       "ratings": {
-        "trustpilot": 4.5,
-        "trustpilotCount": 16000,
+        "trustpilot": 4.4,
+        "trustpilotCount": 18770,
+        "trustpilotUrl": "https://fr.trustpilot.com/review/nexo.com",
+        "trustpilotVerified": "2026-10-05",
         "appStore": 4.6,
         "playStore": 4.5
       },
@@ -2284,7 +2324,7 @@
       "logo": null,
       "tagline": "Pour qui c'est : on-ramp ultra-simple pour acheter sa 1re crypto en CB sans créer de compte",
       "websiteUrl": "https://moonpay.com",
-      "affiliateUrl": "https://buy.moonpay.com?apiKey=cryptoreflex",
+      "affiliateUrl": "https://moonpay.com",
       "scoring": {
         "global": 3.2,
         "fees": 1,
@@ -2370,8 +2410,10 @@
         "validUntil": null
       },
       "ratings": {
-        "trustpilot": 4.4,
-        "trustpilotCount": 22000,
+        "trustpilot": 4.1,
+        "trustpilotCount": 115358,
+        "trustpilotUrl": "https://fr.trustpilot.com/review/moonpay.com",
+        "trustpilotVerified": "2026-10-05",
         "appStore": 4.7,
         "playStore": 4.5
       },
@@ -2395,7 +2437,7 @@
       "logo": null,
       "tagline": "Pour qui c'est : clients N26 voulant exposer une partie de leur compte à crypto sans changer d'app",
       "websiteUrl": "https://n26.com",
-      "affiliateUrl": "https://n26.com?utm_source=cryptoreflex",
+      "affiliateUrl": "https://n26.com",
       "scoring": {
         "global": 3.3,
         "fees": 1.5,
@@ -2478,8 +2520,11 @@
         "validUntil": null
       },
       "ratings": {
-        "trustpilot": 3,
-        "trustpilotCount": 14000,
+        "trustpilot": 4.2,
+        "trustpilotCount": 42998,
+        "trustpilotUrl": "https://fr.trustpilot.com/review/n26.com",
+        "trustpilotVerified": "2026-10-05",
+        "trustpilotNote": "note de N26 dans son ensemble, pas du seul service crypto",
         "appStore": 4.5,
         "playStore": 4.4
       },
@@ -2503,7 +2548,7 @@
       "logo": "/logos/21bitcoin.png",
       "tagline": "Pour qui c'est : maximalistes BTC qui veulent automatiser leur DCA hebdo/mensuel sans se poser de question",
       "websiteUrl": "https://21bitcoin.app",
-      "affiliateUrl": "https://21bitcoin.app/?ref=cryptoreflex",
+      "affiliateUrl": "https://21bitcoin.app",
       "scoring": {
         "global": 3.7,
         "fees": 2.9,
@@ -2582,8 +2627,10 @@
         "validUntil": null
       },
       "ratings": {
-        "trustpilot": 4.6,
-        "trustpilotCount": 800,
+        "trustpilot": 4.8,
+        "trustpilotCount": 1758,
+        "trustpilotUrl": "https://fr.trustpilot.com/review/21bitcoin.app",
+        "trustpilotVerified": "2026-10-05",
         "appStore": 4.7,
         "playStore": 4.5
       },
@@ -2607,7 +2654,7 @@
       "logo": "/logos/wirex.png",
       "tagline": "Pour qui c'est : utilisateurs voulant carte de débit crypto + cashback en BTC sur dépenses quotidiennes",
       "websiteUrl": "https://wirexapp.com",
-      "affiliateUrl": "https://wirexapp.com?refer=cryptoreflex",
+      "affiliateUrl": "https://wirexapp.com",
       "scoring": {
         "global": 2.6,
         "fees": 2.2,
@@ -2682,8 +2729,10 @@
         "validUntil": null
       },
       "ratings": {
-        "trustpilot": 3.4,
-        "trustpilotCount": 11000,
+        "trustpilot": 2.4,
+        "trustpilotCount": 17655,
+        "trustpilotUrl": "https://fr.trustpilot.com/review/wirexapp.com",
+        "trustpilotVerified": "2026-10-05",
         "appStore": 4.3,
         "playStore": 4
       },
@@ -2707,7 +2756,7 @@
       "logo": "/logos/young-platform.png",
       "tagline": "Pour qui c'est : débutants italiens / européens voulant gamification + UX ultra-simple",
       "websiteUrl": "https://youngplatform.com",
-      "affiliateUrl": "https://youngplatform.com?ref=cryptoreflex",
+      "affiliateUrl": "https://youngplatform.com",
       "scoring": {
         "global": 3.2,
         "fees": 1.5,
@@ -2794,8 +2843,10 @@
         "validUntil": null
       },
       "ratings": {
-        "trustpilot": 3.8,
-        "trustpilotCount": 1900,
+        "trustpilot": 4.4,
+        "trustpilotCount": 974,
+        "trustpilotUrl": "https://fr.trustpilot.com/review/youngplatform.com",
+        "trustpilotVerified": "2026-10-05",
         "appStore": 4.5,
         "playStore": 4.3
       },
@@ -2889,8 +2940,11 @@
         "validUntil": null
       },
       "ratings": {
-        "trustpilot": 1.3,
-        "trustpilotCount": 28000,
+        "trustpilot": 1.4,
+        "trustpilotCount": 41717,
+        "trustpilotUrl": "https://fr.trustpilot.com/review/www.paypal.com",
+        "trustpilotVerified": "2026-10-05",
+        "trustpilotNote": "note de PayPal dans son ensemble, pas du seul service crypto",
         "appStore": 4.6,
         "playStore": 4.5
       },
@@ -2914,7 +2968,7 @@
       "logo": "/logos/bitfinex.png",
       "tagline": "Pour qui c'est : traders professionnels valorisant la liquidité haute + dérivés (margin, perp)",
       "websiteUrl": "https://bitfinex.com",
-      "affiliateUrl": "https://bitfinex.com/?refcode=cryptoreflex",
+      "affiliateUrl": "https://bitfinex.com",
       "scoring": {
         "global": 3,
         "fees": 4.4,
@@ -2989,8 +3043,10 @@
         "validUntil": null
       },
       "ratings": {
-        "trustpilot": 3,
-        "trustpilotCount": 1700,
+        "trustpilot": 1.7,
+        "trustpilotCount": 336,
+        "trustpilotUrl": "https://fr.trustpilot.com/review/www.bitfinex.com",
+        "trustpilotVerified": "2026-10-05",
         "appStore": 4.3,
         "playStore": 4
       },
@@ -3014,7 +3070,7 @@
       "logo": "/logos/bsdex.png",
       "tagline": "Pour qui c'est : investisseurs allemands valorisant la régulation Boerse Stuttgart (place financière)",
       "websiteUrl": "https://bsdex.de",
-      "affiliateUrl": "https://bsdex.de?utm_source=cryptoreflex",
+      "affiliateUrl": "https://bsdex.de",
       "scoring": {
         "global": 3.2,
         "fees": 3.8,
@@ -3083,8 +3139,10 @@
         "validUntil": null
       },
       "ratings": {
-        "trustpilot": 3.6,
-        "trustpilotCount": 200,
+        "trustpilot": 3.2,
+        "trustpilotCount": 169,
+        "trustpilotUrl": "https://fr.trustpilot.com/review/bsdex.de",
+        "trustpilotVerified": "2026-10-05",
         "appStore": 4,
         "playStore": 3.8
       },
@@ -3108,7 +3166,7 @@
       "logo": null,
       "tagline": "Pour qui c'est : traders CFD valorisant l'effet de levier (avec risque) sur prix crypto sans détention",
       "websiteUrl": "https://plus500.com",
-      "affiliateUrl": "https://plus500.com?utm_source=cryptoreflex",
+      "affiliateUrl": "https://plus500.com",
       "scoring": {
         "global": 2.6,
         "fees": 2,
@@ -3179,8 +3237,10 @@
         "validUntil": null
       },
       "ratings": {
-        "trustpilot": 4,
-        "trustpilotCount": 12000,
+        "trustpilot": 4.2,
+        "trustpilotCount": 20034,
+        "trustpilotUrl": "https://fr.trustpilot.com/review/www.plus500.com",
+        "trustpilotVerified": "2026-10-05",
         "appStore": 4.4,
         "playStore": 4
       },
@@ -3204,7 +3264,7 @@
       "logo": null,
       "tagline": "Pour qui c'est : on-ramp simple pour 1er achat crypto avec retrait immédiat vers wallet",
       "websiteUrl": "https://anycoindirect.eu",
-      "affiliateUrl": "https://anycoindirect.eu?ref=cryptoreflex",
+      "affiliateUrl": "https://anycoindirect.eu",
       "scoring": {
         "global": 2.5,
         "fees": 1,
@@ -3275,8 +3335,11 @@
         "validUntil": null
       },
       "ratings": {
-        "trustpilot": 4.5,
-        "trustpilotCount": 6500,
+        "trustpilot": 4.1,
+        "trustpilotCount": 15650,
+        "trustpilotUrl": "https://fr.trustpilot.com/review/finst.com",
+        "trustpilotVerified": "2026-10-05",
+        "trustpilotNote": "profil Trustpilot de Finst : anycoindirect.eu redirige vers finst.com",
         "appStore": 4.4,
         "playStore": 4.2
       },
@@ -3300,7 +3363,7 @@
       "logo": "/logos/trading212.png",
       "tagline": "Pour qui c'est : investisseurs voulant actions + ETF + crypto sur 1 app gratuite (CySEC)",
       "websiteUrl": "https://trading212.com",
-      "affiliateUrl": "https://trading212.com/promocodes/cryptoreflex",
+      "affiliateUrl": "https://trading212.com",
       "scoring": {
         "global": 3.7,
         "fees": 4.5,
@@ -3386,7 +3449,9 @@
       },
       "ratings": {
         "trustpilot": 4.6,
-        "trustpilotCount": 38000,
+        "trustpilotCount": 104751,
+        "trustpilotUrl": "https://fr.trustpilot.com/review/trading212.com",
+        "trustpilotVerified": "2026-10-05",
         "appStore": 4.7,
         "playStore": 4.6
       },
@@ -3410,7 +3475,7 @@
       "logo": "/logos/stackin.png",
       "tagline": "Pour qui c'est : maximalistes BTC français voulant DCA hebdo/mensuel + retrait on-chain immédiat",
       "websiteUrl": "https://stackinsat.com",
-      "affiliateUrl": "https://stackinsat.com?utm_source=cryptoreflex",
+      "affiliateUrl": "https://stackinsat.com",
       "scoring": {
         "global": 2.8,
         "fees": 1.5,
@@ -3479,8 +3544,10 @@
         "validUntil": null
       },
       "ratings": {
-        "trustpilot": 4.8,
-        "trustpilotCount": 950,
+        "trustpilot": 4.7,
+        "trustpilotCount": 336,
+        "trustpilotUrl": "https://fr.trustpilot.com/review/stackinsat.com",
+        "trustpilotVerified": "2026-10-05",
         "appStore": 4.7,
         "playStore": 4.6
       },
@@ -3488,7 +3555,7 @@
       "strengths": [
         "DCA programmé hebdo/mensuel ultra simple",
         "Retrait on-chain BTC inclus",
-        "Service 100 % français + Trustpilot 4.8"
+        "Service 100 % français + Trustpilot 4,7/5 (relevé du 5 octobre 2026)"
       ],
       "weaknesses": [
         "BTC uniquement",
@@ -3504,7 +3571,7 @@
       "logo": null,
       "tagline": "Pour qui c'est : investisseurs français voulant acheter et staker leurs cryptos chez un acteur français agréé MiCA",
       "websiteUrl": "https://www.meria.com",
-      "affiliateUrl": "https://www.meria.com/?utm_source=cryptoreflex",
+      "affiliateUrl": "https://www.meria.com",
       "scoring": {
         "global": 3.2,
         "fees": 1.7,
@@ -3594,8 +3661,11 @@
         "validUntil": null
       },
       "ratings": {
-        "trustpilot": 4,
-        "trustpilotCount": 850,
+        "trustpilot": 4.5,
+        "trustpilotCount": 943,
+        "trustpilotUrl": "https://fr.trustpilot.com/review/www.meria.com",
+        "trustpilotVerified": "2026-10-05",
+        "trustpilotNote": "profil Trustpilot de Meria, nouveau nom de Just Mining",
         "appStore": 4.2,
         "playStore": 4
       },
@@ -3619,7 +3689,7 @@
       "logo": "/logos/feel-mining.png",
       "tagline": "Pour qui c'est : investisseurs FR voulant mining hardware ou cloud + masternodes en passive income",
       "websiteUrl": "https://feel-mining.com",
-      "affiliateUrl": "https://feel-mining.com?utm_source=cryptoreflex",
+      "affiliateUrl": "https://feel-mining.com",
       "scoring": {
         "global": 3.4,
         "fees": 3.3,
@@ -3707,8 +3777,10 @@
         "validUntil": null
       },
       "ratings": {
-        "trustpilot": 4.1,
-        "trustpilotCount": 720,
+        "trustpilot": 3.9,
+        "trustpilotCount": 623,
+        "trustpilotUrl": "https://fr.trustpilot.com/review/feel-mining.com",
+        "trustpilotVerified": "2026-10-05",
         "appStore": 4,
         "playStore": 3.9
       },

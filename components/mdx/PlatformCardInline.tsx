@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Star, ShieldCheck, Sparkles } from "lucide-react";
-import { getPlatformById, feeShort } from "@/lib/platforms";
+import { getPlatformById, feeShort, verifiedBonus } from "@/lib/platforms";
 import AffiliateLink from "./AffiliateLink";
 import PlatformLogo from "@/components/PlatformLogo";
 import { fmtFr } from "@/lib/format-fr";
@@ -67,7 +67,7 @@ export default function PlatformCardInline({
               MiCA
             </span>
           )}
-          {p.bonus.welcome && (
+          {verifiedBonus(p) && (
             <span className="inline-flex items-center gap-1 rounded-full bg-primary/15 px-2.5 py-1 font-semibold text-primary-glow">
               <Sparkles className="h-3.5 w-3.5" aria-hidden />
               Bonus
@@ -115,9 +115,9 @@ export default function PlatformCardInline({
         </div>
       )}
 
-      {p.bonus.welcome && (
+      {verifiedBonus(p) && (
         <div className="border-t border-border bg-primary/5 px-5 py-3 text-xs text-primary-glow">
-          <strong className="font-semibold">Bonus actuel :</strong> {p.bonus.welcome}
+          <strong className="font-semibold">Bonus actuel :</strong> {verifiedBonus(p)}
         </div>
       )}
     </div>

@@ -233,7 +233,7 @@ export default async function GainersLosersPage() {
               <p className="mt-1 text-sm text-fg/80 leading-relaxed">
                 Cache serveur de 5 minutes : la donnée n'est pas live à la
                 seconde, mais suffisante pour identifier les tendances de
-                journée. Pour du vrai temps réel, utilise un terminal pro.
+                journée. Pour du vrai temps réel, utilisez un terminal pro.
               </p>
             </div>
           </div>

@@ -63,7 +63,7 @@ const FAQ_ITEMS = [
   {
     question: "L'académie est-elle vraiment 100% gratuite ?",
     answer:
-      "Oui. Aucun paiement, aucun abonnement, aucune carte bancaire demandée. Cryptoreflex se rémunère via des liens d'affiliation transparents vers des plateformes crypto régulées MiCA. Vous pouvez tout consulter et valider les quiz sans rien payer.",
+      "Oui. Aucun paiement, aucun abonnement, aucune carte bancaire demandée. Le site est financé par quelques liens rémunérés, tous marqués « Publicité » : affiliation Ledger, Trezor et Waltio, et liens de parrainage personnels du fondateur chez Bitpanda et Trade Republic. Vous pouvez tout consulter et valider les quiz sans rien payer.",
   },
   {
     question: "Combien de temps faut-il pour terminer un parcours ?",
@@ -270,7 +270,7 @@ export default function AcademiePage() {
               Mettre en pratique pendant l&apos;apprentissage
             </h2>
             <p className="mt-1 text-sm text-muted">
-              L&apos;Académie te donne le cadre. Voici 3 ressources pratiques
+              L&apos;Académie vous donne le cadre. Voici 3 ressources pratiques
               pour ancrer la théorie tout de suite — sans inscription, sans
               paywall, sans conseil personnalisé.
             </p>
@@ -344,8 +344,8 @@ export default function AcademiePage() {
             Prêt à commencer ?
           </h2>
           <p className="mt-2 max-w-xl mx-auto text-sm text-fg/80">
-            Pas besoin de créer de compte. Démarre maintenant le parcours qui
-            te correspond.
+            Pas besoin de créer de compte. Démarrez maintenant le parcours qui
+            vous correspond.
           </p>
           <div className="mt-5 flex flex-wrap items-center justify-center gap-3">
             <Link

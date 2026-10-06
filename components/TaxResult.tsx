@@ -37,7 +37,7 @@ export default function TaxResult({ result, totalCessionsAnnee }: TaxResultProps
             id="tax-result-title"
             className="font-display font-bold text-xl text-white"
           >
-            Ton estimation fiscale
+            Votre estimation fiscale
           </h3>
           <p className="text-sm text-muted">
             Calcul indicatif basé sur l'article 150 VH bis du CGI
@@ -162,7 +162,7 @@ export default function TaxResult({ result, totalCessionsAnnee }: TaxResultProps
           className="btn-ghost opacity-60 cursor-not-allowed"
         >
           <Download className="h-4 w-4" aria-hidden="true" />
-          Télécharge le récap PDF
+          Téléchargez le récap PDF
           <span className="ml-1 text-xs text-muted font-normal">(bientôt)</span>
         </button>
         <a
@@ -176,7 +176,7 @@ export default function TaxResult({ result, totalCessionsAnnee }: TaxResultProps
       <p className="mt-4 flex items-start gap-2 text-xs text-muted">
         <AlertTriangle className="h-4 w-4 shrink-0 mt-0.5" aria-hidden="true" />
         <span>
-          Calcul indicatif. Vérifie vos déclarations avec un expert-comptable
+          Calcul indicatif. Vérifiez vos déclarations avec un expert-comptable
           ou directement auprès de l'administration fiscale.
         </span>
       </p>

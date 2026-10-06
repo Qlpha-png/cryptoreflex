@@ -164,8 +164,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     entry("/vs", "weekly", 0.75),
     // Hub /acheter créé 2026-06-13 (cluster 600 pages crypto×pays).
     entry("/acheter", "weekly", 0.8),
-    // Dashboard public d'impact (audit Trust 26-04).
-    entry("/impact", "weekly", 0.7),
+    // /impact retiré le 06/10/2026 : page en noindex tant qu'aucun chiffre mesuré n'y est publié.
     // /affiliations a été 301 vers /transparence (audit SEO 01/05/2026).
     entry("/transparence", "monthly", 0.5),
     entry("/mentions-legales", "yearly", 0.3),

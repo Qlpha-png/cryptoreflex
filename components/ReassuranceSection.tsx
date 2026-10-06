@@ -308,7 +308,7 @@ export default function ReassuranceSection() {
                 <details className="group/reg">
                   <summary
                     title={full}
-                    aria-label={`${full} — clique pour voir ce qui change pour vous`}
+                    aria-label={`${full} — cliquez pour voir ce qui change pour vous`}
                     className="list-none cursor-pointer inline-flex items-center gap-2 rounded-lg border border-border bg-background/60 px-3 py-2 transition hover:border-primary/50 hover:bg-elevated focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background min-h-[44px]"
                   >
                     <span className="font-mono text-xs font-bold text-fg tracking-wide">

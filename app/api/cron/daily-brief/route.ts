@@ -1,7 +1,8 @@
 /**
  * GET /api/cron/daily-brief
  * -------------------------
- * Génère le "Café Crypto 7h" — brief quotidien 600-1000 mots qui résume :
+ * Génère le "Café Crypto" — brief quotidien 600-1000 mots qui résume :
+ * (06/10/2026 : « 7h » retiré du titre et de la signature — le cron tourne à 7 h UTC, soit 8-9 h à Paris)
  *  1. Top 5 cryptos du jour avec variations 24h (CoinGecko)
  *  2. Tendance générale (Fear & Greed Index si disponible)
  *  3. 1-3 événements clés du jour (lit data/crypto-events.json)
@@ -231,7 +232,7 @@ function buildMdxContent(data: BriefData): string {
   const description = `Brief crypto du ${dateLong} — top movers, tendance générale, événements à venir et FAQ. Lecture 3 minutes.`;
 
   return `---
-title: "Café Crypto 7h — ${dateLong}"
+title: "Café Crypto — ${dateLong}"
 description: "${description.replace(/"/g, '\\"')}"
 date: "${data.date.toISOString()}"
 author: "kevin-voisin"
@@ -243,7 +244,7 @@ keywords: ["brief crypto", "actualité crypto FR", "marché crypto aujourd'hui",
 
 import { Callout } from "@/components/mdx/Callout";
 
-<Callout type="info" title="Café Crypto 7h">
+<Callout type="info" title="Café Crypto">
   Votre récap quotidien des marchés crypto en France, généré automatiquement à partir des données CoinGecko fiables. ${trendLabel} ce matin.
 </Callout>
 
@@ -286,7 +287,7 @@ ${data.faq.answer}
   Ce brief est une synthèse pédagogique automatisée des données de marché publiques (CoinGecko). Il ne constitue pas un conseil d'investissement. Cryptoreflex n'est pas prestataire de services sur crypto-actifs (CASP). Investir en crypto comporte un risque de perte en capital.
 </Callout>
 
-_Brief généré automatiquement le ${dateLong} à 7h00 (Europe/Paris). Source data : CoinGecko, Cryptoreflex éditorial. Disclaimer complet : [/transparence](${BRAND.url}/transparence)._
+_Brief généré automatiquement le ${dateLong}. Source data : CoinGecko, Cryptoreflex éditorial. Disclaimer complet : [/transparence](${BRAND.url}/transparence)._
 `;
 }
 

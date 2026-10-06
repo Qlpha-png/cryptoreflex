@@ -5,14 +5,11 @@ import { CheckCircle2, AlertCircle, Loader2, Send } from "lucide-react";
 import Link from "next/link";
 import { submitSponsoring, type FormResult } from "@/lib/partnership-forms";
 import { BRAND } from "@/lib/brand";
+import { SPONSORING_OFFERS, sponsoringOfferLabel } from "@/lib/sponsoring-offers";
 
-const OFFERS = [
-  "Article sponsorisé (1 500 €)",
-  "Display affiliate premium (500 €/mois)",
-  "Sponsor newsletter (300 €)",
-  "Pack 3 articles + 1 mois display (4 000 €)",
-  "Autre / sur-mesure",
-];
+// 06/10/2026 : mêmes offres et mêmes prix que la page /sponsoring (source unique lib/sponsoring-offers.ts) ;
+// plus de « Sponsor newsletter » (aucune édition envoyée), ni de pack / « display » jamais proposés sur la page.
+const OFFERS = [...SPONSORING_OFFERS.map(sponsoringOfferLabel), "Autre / sur-mesure"];
 
 const BUDGETS = [
   "< 500 €",
@@ -47,8 +44,8 @@ export default function SponsoringForm() {
         <CheckCircle2 className="h-10 w-10 text-success mx-auto" aria-hidden="true" />
         <h3 className="mt-3 text-xl font-bold text-white">Demande envoyée</h3>
         <p className="mt-2 text-sm text-white/75">
-          Merci ! Notre équipe partenariats vous répond sous 48h ouvrées avec un
-          devis détaillé et un planning de publication.
+          Merci ! Le fondateur vous répond personnellement sous 5 jours ouvrés
+          avec un devis détaillé et un planning de publication.
         </p>
         <button
           type="button"

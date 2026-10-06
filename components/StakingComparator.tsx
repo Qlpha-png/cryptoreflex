@@ -15,6 +15,7 @@ import {
 import type { StakingPair } from "@/lib/programmatic";
 import { getPlatformById, isAvailableFr } from "@/lib/platforms";
 import AffiliateLink from "@/components/AffiliateLink";
+import { isPaidLink } from "@/lib/partnerships";
 import { fmtFr, fmtNb } from "@/lib/format-fr";
 
 /* ------------------------------------------------------------------ */
@@ -275,8 +276,10 @@ function StakingCard({ pair }: { pair: StakingPair }) {
           >
             Staker sur {bestPlatform.name}
             <span className="sr-only">
-              {" "}
-              (publicité, lien d'affiliation, ouvre un nouvel onglet)
+              {/* 06/10/2026 : « publicité » annoncé seulement pour un lien réellement rémunéré (lib/partnerships.ts). */}
+              {isPaidLink(bestPlatform.id, bestPlatform.affiliateUrl)
+                ? " (publicité, lien rémunéré, ouvre un nouvel onglet)"
+                : " (site officiel, ouvre un nouvel onglet)"}
             </span>
             <ExternalLink className="h-4 w-4" aria-hidden="true" />
           </AffiliateLink>
@@ -630,7 +633,7 @@ export default function StakingComparator({ pairs }: Props) {
               Aucune crypto ne correspond à vos filtres.
             </p>
             <p className="mt-1 text-sm text-muted">
-              Essaie d'élargir le range APY, d'autoriser plus de risque ou de
+              Essayez d'élargir la fourchette d'APY, d'autoriser plus de risque ou de
               désélectionner certaines plateformes.
             </p>
             <button

@@ -121,7 +121,7 @@ export async function GET(
     return applicationError(
       404,
       "CRYPTO_NOT_FOUND",
-      `Aucune crypto trouvée avec l'id \`${id}\`. Vérifie le coingecko_id.`,
+      `Aucune crypto trouvée avec l'id \`${id}\`. Vérifiez le coingecko_id.`,
       request_id,
     );
   }

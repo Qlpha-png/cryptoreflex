@@ -151,7 +151,7 @@ export default function MethodologiePage() {
       <ul className="text-fg/85 leading-relaxed">
         <li><strong>Statut MiCA</strong> : vérifié <strong>chaque mois</strong> (registre de l&apos;ESMA, listes blanches de l&apos;AMF)</li>
         <li><strong>Frais</strong> : vérifiés <strong>chaque trimestre</strong></li>
-        <li><strong>Notes Trustpilot</strong> : actualisées <strong>chaque mois</strong></li>
+        <li><strong>Notes Trustpilot</strong> : relevées à la main sur la page Trustpilot de chaque plateforme ; la <strong>date du relevé</strong> est affichée à côté de chaque note</li>
         <li><strong>Bonus de bienvenue</strong> : vérifiés <strong>chaque mois</strong></li>
         <li><strong>Refonte complète d'une fiche</strong> : au minimum <strong>1 fois par an</strong></li>
       </ul>

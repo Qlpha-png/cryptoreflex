@@ -36,10 +36,10 @@ export const SCOPE_LABELS: Record<ApiKeyScope, string> = {
   "user:portfolio:read":
     "Lire votre portfolio agrégé (positions, PMP, plus-values réalisées).",
   "user:portfolio:write":
-    "Recalculer ton portfolio (force resync depuis tes exchanges).",
+    "Recalculer votre portfolio (force resync depuis vos exchanges).",
   "user:trades:read": "Lire votre historique de trades.",
   "user:trades:write": "Ajouter ou supprimer des trades manuels.",
-  "user:alerts:read": "Lire tes alertes prix.",
+  "user:alerts:read": "Lire vos alertes prix.",
   "user:alerts:write": "Créer, modifier, supprimer vos alertes.",
   "webhooks:manage":
     "Gérer vos webhooks (créer, modifier, supprimer, tester).",

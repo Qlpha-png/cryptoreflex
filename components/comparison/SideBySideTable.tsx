@@ -11,8 +11,8 @@
  */
 
 import { Check, Minus, X } from "lucide-react";
-import type { Platform } from "@/lib/platforms";
-import { fmtFr, fmtNb } from "@/lib/format-fr";
+import { type Platform, trustpilotText, verifiedBonus } from "@/lib/platforms";
+import { fmtDateFr, fmtFr, fmtNb } from "@/lib/format-fr";
 
 type Direction = "lower" | "higher" | "bool" | "none";
 
@@ -62,6 +62,12 @@ function determineWinner(row: Row): "a" | "b" | "tie" | "n/a" {
   return av > bv ? "a" : "b";
 }
 
+/** Note Trustpilot relevée, avec sa date ; « — » quand il n'y a pas de note publique. */
+function tpCell(p: Platform): string {
+  const t = trustpilotText(p.ratings);
+  return t ? `${t}, relevé le ${fmtDateFr(p.ratings.trustpilotVerified)}` : "—";
+}
+
 function buildRows(a: Platform, b: Platform): Row[] {
   return [
     // GROUP : SCORING
@@ -106,12 +112,14 @@ function buildRows(a: Platform, b: Platform): Row[] {
     { label: "Temps de réponse", a: a.support.responseTime, b: b.support.responseTime, direction: "none" },
 
     // GROUP : NOTES UTILISATEURS
-    { group: "Notes utilisateurs", label: "Trustpilot", a: `${fmtFr(a.ratings.trustpilot, 1)}/5 (${a.ratings.trustpilotCount.toLocaleString("fr-FR")} avis)`, b: `${fmtFr(b.ratings.trustpilot, 1)}/5 (${b.ratings.trustpilotCount.toLocaleString("fr-FR")} avis)`, aRaw: a.ratings.trustpilot, bRaw: b.ratings.trustpilot, direction: "higher" },
+    { group: "Notes utilisateurs", label: "Trustpilot", a: tpCell(a), b: tpCell(b), aRaw: a.ratings.trustpilot, bRaw: b.ratings.trustpilot, direction: "higher" },
     { label: "App Store", a: `${fmtFr(a.ratings.appStore, 1)}/5`, b: `${fmtFr(b.ratings.appStore, 1)}/5`, aRaw: a.ratings.appStore, bRaw: b.ratings.appStore, direction: "higher" },
     { label: "Play Store", a: `${fmtFr(a.ratings.playStore, 1)}/5`, b: `${fmtFr(b.ratings.playStore, 1)}/5`, aRaw: a.ratings.playStore, bRaw: b.ratings.playStore, direction: "higher" },
 
-    // GROUP : BONUS
-    { group: "Bonus de bienvenue", label: "Offre", a: a.bonus.welcome, b: b.bonus.welcome, direction: "none" },
+    // GROUP : BONUS (seulement si une offre est relevée — verifiedBonus)
+    ...(verifiedBonus(a) || verifiedBonus(b)
+      ? [{ group: "Bonus de bienvenue", label: "Offre", a: verifiedBonus(a) ?? "Aucune offre relevée", b: verifiedBonus(b) ?? "Aucune offre relevée", direction: "none" as const }]
+      : []),
   ];
 }
 

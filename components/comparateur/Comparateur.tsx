@@ -10,6 +10,7 @@ import Link from "next/link";
 import { ArrowRight, Check, Coins, CreditCard, ExternalLink, Flag, Info, Phone, MessageCircle, Plus, Sprout, X } from "lucide-react";
 import PlatformLogo from "@/components/PlatformLogo";
 import { costLabel, rowCost, sortRows, type Amount, type Goal, type Row } from "@/lib/comparateur";
+import { outboundRel } from "@/lib/partnerships";
 
 const GOALS: { id: Goal; label: string; hint: string; Icon: typeof Coins }[] = [
   { id: "prix", label: "Le moins cher", hint: "Classées du moins cher au plus cher", Icon: Coins },
@@ -221,7 +222,7 @@ export default function Comparateur({ rows, duelSlugs }: { rows: Row[]; duelSlug
                 <a
                   href={r.affiliateUrl}
                   target="_blank"
-                  rel="sponsored nofollow noopener noreferrer"
+                  rel={outboundRel(r.id, r.affiliateUrl)}
                   className="inline-flex items-center gap-0.5 underline hover:text-fg"
                 >
                   site officiel <ExternalLink className="h-3 w-3" aria-hidden="true" />

@@ -1,9 +1,9 @@
 "use client";
 
-import Link from "next/link";
 import { forwardRef, type AnchorHTMLAttributes, type ReactNode } from "react";
 import { trackAffiliateClick } from "@/lib/analytics";
-import { getAffiliationKind } from "@/lib/partnerships";
+import { isPaidLink } from "@/lib/partnerships";
+import PaidLinkCaption from "@/components/PaidLinkCaption";
 
 /**
  * AffiliateLink — wrapper standardisé pour TOUS les liens d'affiliation.
@@ -21,7 +21,8 @@ import { getAffiliationKind } from "@/lib/partnerships";
  *    override possible via la prop `ctaText`.
  *  - Conformité loi Influenceurs (n°2023-451 du 9 juin 2023) + DGCCRF :
  *    rend visible la mention « Publicité — Cryptoreflex perçoit une commission »
- *    sous chaque CTA, cliquable vers /transparence. La formulation reprend
+ *    (ou « lien de parrainage personnel ») sous chaque CTA RÉELLEMENT rémunéré
+ *    (lib/partnerships.ts ; rien pour les autres), cliquable vers /transparence. La formulation reprend
  *    explicitement le terme « Publicité » exigé par la loi pour qualifier
  *    une communication commerciale, ainsi que l'information de rémunération
  *    (Art. L121-1 du Code de la consommation modifié).
@@ -124,10 +125,10 @@ const AffiliateLink = forwardRef<HTMLAnchorElement, AffiliateLinkProps>(
     // "nofollow noopener" sans "sponsored" (lien externe neutre). Empêche de
     // présenter Coinbase/Kraken/… comme des liens affiliés alors qu'ils ne le
     // sont pas. Source de vérité : lib/partnerships.ts.
-    const affiliationKind = getAffiliationKind(platform);
-    const isPaidLink = affiliationKind !== null;
+    // 06/10/2026 : un lien interne (ex. /comparatif/frais pour une plateforme non autorisée) n'est jamais rémunéré.
+    const paid = isPaidLink(platform, href);
     const relParts: string[] = [];
-    if (isPaidLink) relParts.push("sponsored");
+    if (paid) relParts.push("sponsored");
     relParts.push("nofollow");
     if (target === "_blank") relParts.push("noopener");
     if (ugc) relParts.push("ugc");
@@ -171,17 +172,7 @@ const AffiliateLink = forwardRef<HTMLAnchorElement, AffiliateLinkProps>(
         </a>
         {/* Mention légale UNIQUEMENT sur les liens réellement rémunérés (audit F).
             Wording exact selon le type : commission éditeur vs parrainage perso. */}
-        {showCaption && isPaidLink && (
-          <Link
-            href="/transparence"
-            className="mt-1 block text-xs text-muted hover:text-fg underline underline-offset-2"
-            aria-label="En savoir plus sur nos liens rémunérés et nos partenariats"
-          >
-            {affiliationKind === "affiliate"
-              ? "Publicité — Cryptoreflex perçoit une commission"
-              : "Publicité — lien de parrainage personnel"}
-          </Link>
-        )}
+        {showCaption && <PaidLinkCaption platformId={platform} href={href} />}
       </>
     );
   }

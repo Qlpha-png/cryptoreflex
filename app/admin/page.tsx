@@ -305,7 +305,7 @@ export default async function AdminDashboard() {
               à toutes les features (Cerfa 2086 PDF, IA Q&amp;A 20/jour, portfolio 500, alertes 100).
             </li>
             <li>
-              Cron orchestrator : tourne automatiquement à <strong>7h Paris</strong> chaque
+              Cron orchestrator : tourne automatiquement à <strong>7 h UTC</strong> (9 h à Paris l&apos;été, 8 h l&apos;hiver) chaque
               jour (alerts + news + TA + events + daily brief).
             </li>
             <li>

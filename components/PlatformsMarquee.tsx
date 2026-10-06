@@ -83,7 +83,7 @@ export default function PlatformsMarquee({ limit }: PlatformsMarqueeProps) {
         </div>
 
         <p className="mt-4 text-center text-[11px] text-muted">
-          Survole ou utilise le bouton pause · Toutes nos plateformes sont régulées MiCA ou PSAN
+          Survolez ou utilisez le bouton pause · Toutes nos plateformes sont régulées MiCA ou PSAN
         </p>
       </div>
     </section>

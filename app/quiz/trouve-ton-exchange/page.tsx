@@ -34,7 +34,7 @@ const PAGE_PATH = "/quiz/trouve-ton-exchange";
 const PAGE_URL = `${BRAND.url}${PAGE_PATH}`;
 const TITLE = "Questionnaire : trouvez votre exchange crypto idéal en 60 sec";
 const DESCRIPTION =
-  "Réponds à 6 questions et compare les plateformes crypto selon votre profil (budget, fréquence, support FR, conformité MiCA). Outil pédagogique, sans recommandation personnalisée. 100 % gratuit, sans inscription.";
+  "Répondez à 6 questions et comparez les plateformes crypto selon votre profil (budget, fréquence, support FR, conformité MiCA). Outil pédagogique, sans recommandation personnalisée. 100 % gratuit, sans inscription.";
 
 export const metadata: Metadata = {
   title: fitTitle(TITLE),
@@ -78,9 +78,9 @@ const FAQ = [
       "Le score combine 6 critères pondérés selon vos réponses : sécurité, frais (spot, instant, retrait), UX, support FR, conformité MiCA, taille du catalogue. Toutes les pondérations sont documentées dans le fichier lib/quiz-scoring.ts (open code).",
   },
   {
-    question: "Les recommandations sont-elles biaisées par les liens d'affiliation ?",
+    question: "Les recommandations sont-elles biaisées par des liens rémunérés ?",
     answer:
-      "Non. Les liens d'affiliation existent (c'est notre modèle économique) mais ne modifient ni le scoring ni l'ordre des recommandations. Si une plateforme ne correspond pas à votre profil, on ne te la propose pas — même si elle nous rapporterait plus.",
+      "Non. Seuls quelques liens sont rémunérés, tous marqués « Publicité » (parrainage personnel du fondateur chez Bitpanda et Trade Republic, affiliation Ledger et Trezor) ; les autres mènent au site officiel de la plateforme. Ces liens ne modifient ni le scoring ni l'ordre des recommandations. Si une plateforme ne correspond pas à votre profil, nous ne vous la proposons pas, même si elle nous rapporterait quelque chose.",
   },
   {
     question: "Combien de temps prend le questionnaire ?",
@@ -169,7 +169,7 @@ export default function QuizTrouveTonExchangePage() {
             </h1>
             <p className="mt-3 max-w-2xl text-fg/80 text-base sm:text-lg">
               6 questions courtes — budget, fréquence, niveau, priorité,
-              staking, auto-custody. On te propose votre top 3 personnalisé
+              staking, auto-custody. Nous vous proposons votre top 3 personnalisé
               parmi {platforms.length} plateformes analysées.
             </p>
 
@@ -201,7 +201,7 @@ export default function QuizTrouveTonExchangePage() {
             />
             <Method
               title="Aucun biais sponsor"
-              description="Les liens d'affiliation existent mais ne modifient ni le scoring ni l'ordre des recommandations."
+              description="Les liens rémunérés, marqués « Publicité », ne modifient ni le scoring ni l'ordre des recommandations."
             />
             <Method
               title="Profil personnalisé"
@@ -244,11 +244,11 @@ export default function QuizTrouveTonExchangePage() {
           <aside className="mt-16 glass rounded-2xl p-6 sm:p-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div>
               <h2 className="text-lg font-bold text-fg">
-                Vous hésitez encore ? Lance l&apos;assistant &laquo;&nbsp;premier
+                Vous hésitez encore ? Lancez l&apos;assistant &laquo;&nbsp;premier
                 achat&nbsp;&raquo;
               </h2>
               <p className="mt-1 text-sm text-fg/70">
-                5 étapes guidées pour faire votre premier achat sans te tromper —
+                5 étapes guidées pour faire votre premier achat sans vous tromper —
                 montant, crypto, plateforme, méthode de paiement.
               </p>
             </div>

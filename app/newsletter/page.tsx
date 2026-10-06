@@ -9,7 +9,6 @@ import {
   TrendingUp,
   AlertTriangle,
   Calculator,
-  Quote,
   HelpCircle,
 } from "lucide-react";
 import NewsletterInline from "@/components/NewsletterInline";
@@ -22,19 +21,22 @@ import { withHreflang } from "@/lib/seo-alternates";
  * Pourquoi une page dédiée plutôt que juste les widgets ?
  *  - URL partageable (Twitter, biographies, footer email signature)
  *  - Cible SEO légère ("newsletter crypto FR", "crypto news france")
- *  - Conversion supérieure : pas de distraction, copy long-form, social proof
+ *  - Conversion supérieure : pas de distraction, copy long-form
  *  - Permet de A/B test la landing sans toucher la home
+ *
+ * 06/10/2026 : plus aucune promesse de rythme (« quotidienne », « 7h », « 3 infos/jour ») — aucune édition
+ * n'est envoyée par le code (cron daily-brief = page web seulement). Témoignages retirés : placeholders, pas de vrais avis.
  */
 
 export const metadata: Metadata = {
-  title: "Newsletter quotidienne crypto FR — 3 min/jour",
+  title: "Newsletter crypto FR — l'essentiel, sans spam",
   description:
-    "Recevez chaque matin à 7h les 3 infos crypto qui comptent pour un investisseur FR. MiCA, alertes plateformes, fiscalité. Gratuit, désinscription 1 clic.",
+    "La newsletter Cryptoreflex : l'essentiel de la crypto en français pour un investisseur — MiCA, fiscalité, alertes plateformes. Nous n'écrivons que quand une information compte. Gratuit, désinscription en 1 clic.",
   alternates: withHreflang(`${BRAND.url}/newsletter`),
   openGraph: {
-    title: "Newsletter Cryptoreflex — 3 infos crypto par jour",
+    title: "Newsletter Cryptoreflex — l'essentiel de la crypto en français",
     description:
-      "La newsletter quotidienne crypto en français. 3 minutes le matin. Sans hype, sans pub.",
+      "Nous n'écrivons que quand une information compte : MiCA, fiscalité, alerte plateforme. Sans hype, sans pub.",
     url: `${BRAND.url}/newsletter`,
     type: "website",
   },
@@ -42,78 +44,61 @@ export const metadata: Metadata = {
   // (avant : fallback global "Cryptoreflex — Tout pour investir...").
   twitter: {
     card: "summary_large_image",
-    title: "Newsletter Cryptoreflex — 3 infos crypto par jour",
+    title: "Newsletter Cryptoreflex — l'essentiel de la crypto en français",
     description:
-      "La newsletter quotidienne crypto en français. 3 minutes le matin. Sans hype, sans pub.",
+      "Nous n'écrivons que quand une information compte : MiCA, fiscalité, alerte plateforme. Sans hype, sans pub.",
   },
   robots: { index: true, follow: true },
 };
 
+// 06/10/2026 : « Ce que vous recevez » décrivait des envois comme s'ils existaient déjà ; aucune édition n'est envoyée
+// à ce jour. Formulation au futur : ce que nous enverrons, sans rythme promis, quand une information compte.
 const benefits = [
   {
     icon: Clock,
-    title: "3 minutes le matin",
-    text: "Format court : titre, contexte, ce que ça change pour vous. Pas de pavé indigeste.",
+    title: "Court et factuel",
+    text: "Chaque e-mail tiendra en quelques lignes : le fait, le contexte, ce que ça change pour vous.",
   },
   {
     icon: ShieldCheck,
     title: "Alertes plateformes",
-    text: "Statut MiCA/AMF, retrait de licence, hack, downtime — vous le savez avant Twitter.",
+    text: "Si une plateforme change de statut MiCA/AMF, perd sa licence ou se fait pirater, nous vous expliquerons ce que ça change pour vous.",
   },
   {
     icon: TrendingUp,
     title: "Marché en français clair",
-    text: "Décryptage Bitcoin/Ethereum/Solana sans le jargon trader. Compréhensible débutant.",
+    text: "Quand le marché bouge vraiment : un décryptage Bitcoin/Ethereum/Solana sans jargon, compréhensible par un débutant.",
   },
   {
     icon: Calculator,
     title: "Fiscalité FR",
-    text: "Mises à jour PFU 31,4%, BOFiP, formulaire 2086. Vous ne vous faites pas surprendre en avril.",
+    text: "Les changements qui comptent (PFU 31,4 %, BOFiP, formulaire 2086), pour ne pas être surpris au moment de déclarer.",
   },
   {
     icon: AlertTriangle,
     title: "Scams & arnaques",
-    text: "Plateformes douteuses, faux brokers, schemas de pump — on signale tôt.",
+    text: "Les arnaques repérées (faux brokers, plateformes douteuses, pumps) et comment les reconnaître.",
   },
   {
     icon: Sparkles,
     title: "Bonus inscription",
-    text: "Le guide PDF complet 'Les plateformes crypto régulées MiCA à utiliser en France 2026'.",
+    text: "Tout de suite : le guide PDF « Les plateformes crypto régulées MiCA à utiliser en France 2026 ».",
   },
 ];
 
-const testimonials = [
-  {
-    quote:
-      "Enfin une newsletter crypto en français qui ne survend pas le prochain shitcoin. Les 3 infos du matin, format parfait pour le café.",
-    name: "Julien M.",
-    role: "Investisseur particulier",
-  },
-  {
-    quote:
-      "Le guide PDF MiCA m'a clairement aidé à choisir entre Coinbase et Bitpanda. Pratique et neutre.",
-    name: "Sarah L.",
-    role: "Débutante",
-  },
-  {
-    quote:
-      "Je lis ça tous les jours dans le métro. C'est mon premier filtre avant d'aller voir Twitter.",
-    name: "Karim B.",
-    role: "Lecteur depuis le V0",
-  },
-];
-
+// 06/10/2026 : FAQ entièrement au vouvoiement ; « commissions … plateforme partenaire (Coinbase, Bitpanda) » était faux
+// (Coinbase n'est pas partenaire, Bitpanda est un parrainage personnel) → aligné sur lib/partnerships.ts.
 const faqs = [
   {
-    q: "C'est vraiment gratuit ?",
-    a: "Oui, 100% gratuit. La newsletter est financée par les commissions d'affiliation que touche Cryptoreflex quand un lecteur ouvre un compte sur une plateforme partenaire (Coinbase, Bitpanda, etc.). Vous ne payez rien.",
+    q: "Est-ce vraiment gratuit ?",
+    a: "Oui, 100 % gratuit. Le site est financé par quelques liens d'affiliation (Ledger, Trezor, Waltio) et par des codes de parrainage personnels du fondateur, tous signalés « Publicité ». Vous ne payez rien.",
   },
   {
-    q: "À quelle fréquence j'écris ?",
-    a: "Une édition par jour ouvré, envoyée vers 7h00 (heure de Paris). Pas de week-end, pas de pub déguisée, pas d'envois multiples.",
+    q: "À quelle fréquence recevrez-vous un e-mail ?",
+    a: "Pas de rythme fixe : nous n'écrivons que quand une information compte (MiCA, fiscalité, alerte plateforme). Pas de pub déguisée, pas d'envois en rafale.",
   },
   {
-    q: "Comment je me désinscris ?",
+    q: "Comment vous désinscrire ?",
     a: "Un lien de désinscription en 1 clic est présent en bas de chaque email. Pas de friction, pas de confirmation, pas de formulaire à rallonge.",
   },
   {
@@ -121,12 +106,12 @@ const faqs = [
     a: "Non. Cryptoreflex n'est ni un prestataire de services sur crypto-actifs (CASP) ni un conseiller financier. La newsletter délivre de l'information factuelle sur le marché crypto, pas des recommandations d'achat ou de vente.",
   },
   {
-    q: "Mes données sont-elles partagées ?",
+    q: "Vos données sont-elles partagées ?",
     a: "Jamais. Votre email reste hébergé chez Beehiiv (notre fournisseur d'envoi), conforme RGPD, et n'est jamais revendu, partagé ou loué à des tiers. Voir notre politique de confidentialité.",
   },
   {
-    q: "Je peux suggérer un sujet ?",
-    a: `Oui, réponds simplement à n'importe quel email — ou écris à ${BRAND.email}. On lit tout.`,
+    q: "Pouvez-vous suggérer un sujet ?",
+    a: `Oui : écrivez-nous à ${BRAND.email}. Nous lisons tout.`,
   },
 ];
 
@@ -143,13 +128,13 @@ export default function NewsletterPage() {
               Newsletter Cryptoreflex
             </span>
             <h1 className="mt-5 text-3xl sm:text-5xl lg:text-6xl font-extrabold text-fg leading-[1.1] max-w-3xl">
-              La crypto FR en{" "}
-              <span className="gradient-text">3 minutes</span>, chaque matin.
+              L&apos;essentiel de la crypto{" "}
+              <span className="gradient-text">en français</span>, sans spam.
             </h1>
             <p className="mt-5 text-base sm:text-lg text-fg/75 max-w-2xl">
-              3 infos crypto qui comptent vraiment pour un investisseur français.
-              Sans hype, sans pub déguisée, sans jargon trader. Reçue par 100% des lecteurs
-              avec leur café.
+              Ce qui compte vraiment pour un investisseur français : MiCA, fiscalité,
+              alertes plateformes. Sans hype, sans pub déguisée, sans jargon trader.
+              Nous n&apos;écrivons que quand une information compte.
             </p>
 
             <div className="mt-8 w-full max-w-xl">
@@ -165,7 +150,8 @@ export default function NewsletterPage() {
 
             <p className="mt-4 text-xs text-muted flex items-center gap-1.5">
               <ShieldCheck className="h-3.5 w-3.5 text-accent-green" />
-              Plus de 1 000 lecteurs FR — RGPD-compliant — désinscription 1 clic
+              {/* 06/10/2026 : « Plus de 1 000 lecteurs FR » retiré (aucun chiffre vérifié) */}
+              Gratuit — conforme RGPD — désinscription en 1 clic
             </p>
           </div>
         </div>
@@ -175,10 +161,10 @@ export default function NewsletterPage() {
       <section className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-16 lg:py-20">
         <div className="text-center mb-12">
           <h2 className="text-2xl sm:text-3xl font-extrabold text-fg">
-            Ce que vous recevez (et ce que vous <span className="text-danger-fg">ne recevez pas</span>)
+            Ce que nous vous enverrons, <span className="gradient-text">quand une information compte</span>
           </h2>
           <p className="mt-3 text-fg/70 max-w-2xl mx-auto">
-            Une newsletter qui respecte votre temps : 3 min, factuel, actionnable.
+            Pas de rythme fixe, pas d&apos;envoi pour remplir : un e-mail seulement quand il y a quelque chose d&apos;utile à vous dire.
           </p>
         </div>
 
@@ -195,40 +181,15 @@ export default function NewsletterPage() {
         </div>
       </section>
 
-      {/* TÉMOIGNAGES */}
-      <section className="border-y border-border bg-surface/40">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-16 lg:py-20">
-          <div className="text-center mb-10">
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-fg">
-              Ce qu'en disent les lecteurs
-            </h2>
-            <p className="mt-2 text-xs text-muted">
-              Témoignages de lecteurs (placeholder à remplacer par de vrais avis dès 50+ inscrits).
-            </p>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {testimonials.map((t) => (
-              <figure key={t.name} className="glass rounded-2xl p-5">
-                <Quote className="h-5 w-5 text-primary" aria-hidden />
-                <blockquote className="mt-3 text-sm text-fg/85 leading-relaxed">
-                  {t.quote}
-                </blockquote>
-                <figcaption className="mt-4 text-xs text-muted">
-                  <span className="font-medium text-fg">{t.name}</span> — {t.role}
-                </figcaption>
-              </figure>
-            ))}
-          </div>
-        </div>
-      </section>
+      {/* Section témoignages supprimée le 06/10/2026 : 3 avis placeholders (pas de vrais lecteurs). */}
 
       {/* CTA milieu */}
       <section className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-12">
         <NewsletterInline
           source="newsletter-page"
           variant="default"
-          title="Prêt à recevoir la prochaine édition ?"
-          subtitle="Demain matin à 7h, dans votre boîte."
+          title="Recevoir la newsletter"
+          subtitle="Gratuit, sans spam, désinscription en 1 clic."
           ctaLabel="S'abonner"
           leadMagnet
         />

@@ -361,7 +361,7 @@ export default function ROISimulator({
             Et si vous aviez investi en {cryptoName} ?
           </h2>
           <p className="mt-1 text-xs sm:text-sm text-muted leading-snug">
-            Choisis un montant, une date de départ et une stratégie — le calcul
+            Choisissez un montant, une date de départ et une stratégie — le calcul
             est instantané.
           </p>
         </div>
@@ -500,7 +500,7 @@ export default function ROISimulator({
         {error === "fetch" && !loading && (
           <p className="text-sm text-muted">
             Données indisponibles pour le moment. Réessayez dans quelques
-            secondes ou utilise notre{" "}
+            secondes ou utilisez notre{" "}
             <a
               href="/outils/simulateur-dca"
               className="text-primary-soft underline-offset-2 hover:underline"

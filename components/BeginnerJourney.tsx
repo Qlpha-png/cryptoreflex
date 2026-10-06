@@ -85,7 +85,7 @@ export default function BeginnerJourney() {
           <Link
             href="/quiz/plateforme"
             className="inline-flex items-center gap-1.5 text-sm font-semibold text-primary-soft hover:text-primary-glow transition-colors min-h-[36px]"
-            aria-label="Pas sûr·e par où commencer ? Réponds à 5 questions, on te dit l'étape 1"
+            aria-label="Pas sûr·e par où commencer ? Répondez à 5 questions, nous vous indiquons l'étape 1"
           >
             <Sparkles className="h-3.5 w-3.5" strokeWidth={1.75} aria-hidden="true" focusable="false" />
             Pas sûr·e par où commencer ? Questionnaire en 5 questions
@@ -224,15 +224,16 @@ export default function BeginnerJourney() {
         <div className="mt-12 rounded-2xl border border-primary/20 bg-primary/5 p-6 text-center">
           <p className="text-base font-semibold text-fg">Pas le temps de tout lire maintenant ?</p>
           <p className="mt-1 text-sm text-fg/70">
-            On t&apos;envoie le parcours complet en 7 emails — 1 par jour, 3 min de lecture.
+            {/* 06/10/2026 : « 7 emails — 1 par jour » retiré, aucune séquence débutant n'est envoyée par le code */}
+            Inscrivez-vous à la newsletter : l&apos;essentiel de la crypto en français, sans spam.
           </p>
           <Link
             href="#cat-informe"
             className="btn-primary mt-4 inline-flex"
-            aria-label="Recevoir le parcours débutant complet par email en 7 jours"
+            aria-label="S'inscrire à la newsletter Cryptoreflex"
           >
             <Sparkles className="h-4 w-4" strokeWidth={1.75} aria-hidden="true" focusable="false" />
-            Recevoir le parcours par email
+            Recevoir la newsletter
           </Link>
         </div>
       </div>

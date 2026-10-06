@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { ArrowRight } from "lucide-react";
 import { trackAffiliateClick } from "@/lib/analytics";
+import { isPaidLink, outboundRel } from "@/lib/partnerships";
 
 /**
  * Mobile sticky CTA — barre fixe bas d'écran, mono-CTA, pages transactionnelles.
@@ -77,6 +78,12 @@ export default function MobileStickyCTA({
 
   if (!visible) return null;
 
+  // 06/10/2026 : « sponsored » et mention « Publicité » seulement si le lien est réellement rémunéré
+  // (lib/partnerships.ts) ; un lien interne (/comparatif/frais) s'ouvre dans le même onglet.
+  const internal = href.startsWith("/");
+  const paid = isPaidLink(platformId, href);
+  const shownDisclaimer = paid ? `Publicité · ${disclaimer}` : disclaimer;
+
   return (
     // FIX BATCH 20 — bug régression BATCH 11 : MobileStickyCTA s'empilait
     // au même niveau que MobileBottomNav (tous deux fixed bottom-0 z-40).
@@ -100,13 +107,13 @@ export default function MobileStickyCTA({
             <p className="text-xs font-semibold text-fg/90 truncate">{title}</p>
           )}
           <p className="text-[10px] text-muted leading-tight truncate">
-            {disclaimer}
+            {shownDisclaimer}
           </p>
         </div>
         <a
           href={href}
-          target="_blank"
-          rel="sponsored nofollow noopener noreferrer"
+          target={internal ? undefined : "_blank"}
+          rel={internal ? undefined : outboundRel(platformId, href)}
           onClick={handleClick}
           className="inline-flex shrink-0 items-center justify-center gap-1.5
                      min-h-[44px] px-4 py-2.5 rounded-xl text-sm font-semibold

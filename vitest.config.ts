@@ -15,6 +15,9 @@ import path from "node:path";
  *   pnpm vitest run --coverage   # avec coverage
  */
 export default defineConfig({
+  // 06/10/2026 : tsconfig garde « jsx: preserve » (c'est Next qui compile le JSX) ; les tests qui rendent des
+  // composants React (tests/lib/paid-links.test.ts) ont besoin que Vite le transforme lui-même.
+  oxc: { jsx: { runtime: "automatic" } },
   test: {
     globals: true,
     environment: "node",

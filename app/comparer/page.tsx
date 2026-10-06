@@ -72,7 +72,7 @@ export default function ComparerHubPage() {
         </header>
 
         <p className="mt-6 text-sm text-muted">
-          Vous voulez comparer 3 ou 4 cryptos en même temps avec le prix live ? Utilise notre{" "}
+          Vous voulez comparer 3 ou 4 cryptos en même temps avec le prix live ? Utilisez notre{" "}
           <Link
             href="/cryptos/comparer"
             className="text-primary-soft underline hover:text-primary"

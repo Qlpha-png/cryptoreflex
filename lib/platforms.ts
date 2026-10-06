@@ -1,5 +1,6 @@
 import platformsData from "@/data/platforms.json";
 import walletsData from "@/data/wallets.json";
+import { getAffiliationKind } from "@/lib/partnerships";
 
 /** Fiabilité d'un coût du comparateur : publié en entier, majorant (marge publiée au plus), ou marge non chiffrée en plus. */
 export type CostKind = "exact" | "max" | "partiel";
@@ -122,8 +123,16 @@ export interface Platform {
     validUntil: string | null;
   };
   ratings: {
-    trustpilot: number;
-    trustpilotCount: number;
+    /** TrustScore affiché par Trustpilot ; null = aucune note publique (ex. note suspendue par Trustpilot). */
+    trustpilot: number | null;
+    /** Nombre total d'avis affiché par Trustpilot ; null quand la note est absente. */
+    trustpilotCount: number | null;
+    /** Page Trustpilot relevée (fr.trustpilot.com/review/<domaine>), null si aucune page fiable. */
+    trustpilotUrl: string | null;
+    /** Date du relevé (AAAA-MM-JJ), à afficher à côté de la note. */
+    trustpilotVerified: string;
+    /** Précision à afficher avec la note (profil d'une maison mère, d'une marque renommée, note suspendue…). */
+    trustpilotNote?: string;
     appStore: number;
     playStore: number;
   };
@@ -163,10 +172,58 @@ const withoutPromotion = (p: Platform): Platform =>
         bonus: { welcome: "Aucune offre : plateforme non autorisée en France", amount: null, currency: null, conditions: null, validUntil: null },
       };
 
-const PLATFORMS = data.platforms.map(withoutPromotion);
+/**
+ * 06/10/2026 : sans relation rémunérée réelle (lib/partnerships.ts), le lien sortant est le site officiel, sans
+ * paramètre de parrainage. data/platforms.json contenait des codes jamais souscrits (« ?ref=cryptoreflex »,
+ * « /join/CRYPTOREFLEX », « /invite?a=CRYPTOREFLEX »…) : ils laissaient croire à une affiliation et pouvaient
+ * créditer un compte tiers homonyme.
+ */
+export const withOfficialLink = <T extends { id: string; websiteUrl: string; affiliateUrl: string }>(p: T): T =>
+  getAffiliationKind(p.id) === null ? { ...p, affiliateUrl: p.websiteUrl } : p;
+
+/**
+ * Offre de bienvenue affichable, ou null. 06/10/2026 : 33 fiches sur 36 affichaient « Bonus actuel — voir conditions
+ * sur la plateforme » (et un badge « Bonus ») sans aucune offre relevée, y compris Kraken dont les données disent
+ * « pas de bonus de bienvenue ». Une offre n'est affichée que si son montant a été relevé (bonus.amount) ; sinon rien.
+ */
+export function verifiedBonus(p: Pick<Platform, "bonus">): string | null {
+  return p.bonus.amount != null ? p.bonus.welcome : null;
+}
+
+const PLATFORMS = data.platforms.map(withOfficialLink).map(withoutPromotion);
 
 /** Concatène exchanges/brokers + hardware wallets (source pour comparatifs cross-catégorie). */
-const ALL = [...PLATFORMS, ...wallets.platforms];
+const ALL = [...PLATFORMS, ...wallets.platforms.map(withOfficialLink)];
+
+/**
+ * Plateforme dont le lien d'affiliation / de parrainage RÉEL correspond à cette URL (même domaine, même chemin de
+ * départ, mêmes paramètres hors utm_*), ou undefined. Sert aux liens écrits à la main (MDX, encadrés) : une simple
+ * URL « bitpanda.com/fr » sans le code de parrainage ne rapporte rien et ne doit pas être signalée « Publicité ».
+ */
+export function findPaidPlatformByUrl(href: string): Platform | undefined {
+  let target: URL;
+  try {
+    target = new URL(href);
+  } catch {
+    return undefined;
+  }
+  const host = (u: URL) => u.hostname.toLowerCase().replace(/^www\./, "");
+  return ALL.find((p) => {
+    if (getAffiliationKind(p.id) === null) return false;
+    let aff: URL;
+    try {
+      aff = new URL(p.affiliateUrl);
+    } catch {
+      return false;
+    }
+    if (host(aff) !== host(target)) return false;
+    if (aff.pathname !== "/" && !target.pathname.startsWith(aff.pathname)) return false;
+    for (const [k, v] of aff.searchParams) {
+      if (!k.startsWith("utm_") && target.searchParams.get(k) !== v) return false;
+    }
+    return true;
+  });
+}
 
 /** Toutes les plateformes (exchanges + brokers + wallets) triées par score global décroissant. */
 export function getAllPlatforms(): Platform[] {
@@ -255,6 +312,17 @@ export function cardBuyPct(p: Platform): number {
   return p.fees.cardBuy ?? p.fees.instantBuy;
 }
 
+/**
+ * Note Trustpilot prête à afficher (« 4,0/5 (23 213 avis) »), ou null s'il n'y a pas de note publique.
+ * Les valeurs sont relevées à la main sur la page Trustpilot (ratings.trustpilotUrl) : toujours afficher
+ * la date du relevé (ratings.trustpilotVerified) à côté.
+ */
+export function trustpilotText(r: Platform["ratings"]): string | null {
+  if (r.trustpilot == null || r.trustpilotCount == null) return null;
+  const note = r.trustpilot.toLocaleString("fr-FR", { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+  return `${note}/5 (${r.trustpilotCount.toLocaleString("fr-FR")} avis)`;
+}
+
 export const platformsMeta = data._meta;
 
 /* -------------------------------------------------------------------------- */
@@ -272,12 +340,15 @@ export function pickSocialProof(p: Platform): {
   label: string;
   rating: number;
   count: number | null;
+  /** Date du relevé (AAAA-MM-JJ) quand la source en a une. */
+  verified?: string;
 } | null {
-  if (p.ratings.trustpilot >= 3.5 && p.ratings.trustpilotCount > 0) {
+  if (p.ratings.trustpilot != null && p.ratings.trustpilot >= 3.5 && (p.ratings.trustpilotCount ?? 0) > 0) {
     return {
       label: "Trustpilot",
       rating: p.ratings.trustpilot,
       count: p.ratings.trustpilotCount,
+      verified: p.ratings.trustpilotVerified,
     };
   }
   if (p.ratings.appStore >= 3.5) {

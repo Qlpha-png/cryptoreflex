@@ -526,8 +526,9 @@ export default function ComparatifFraisPage() {
             chaque ligne). Les frais &laquo; à vérifier &raquo; n&apos;ont pas pu
             être confirmés sur une grille officielle — confirmez-les avant de
             trader. Les frais évoluent ; consultez toujours la page tarifs
-            officielle. Cette page contient des liens d&apos;affiliation : voir
-            notre{" "}
+            officielle. Seuls les liens marqués « Publicité » sont rémunérés
+            (parrainage personnel du fondateur chez Bitpanda et Trade Republic,
+            affiliation Ledger, Trezor et Waltio) : voir notre{" "}
             <Link href="/transparence" className="underline hover:text-fg">page transparence</Link>.
           </span>
         </p>

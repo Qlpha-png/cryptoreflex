@@ -2,7 +2,8 @@ import Link from "next/link";
 import { ExternalLink, ShieldCheck, Star, Zap } from "lucide-react";
 import { getAllPlatforms, isAvailableFr, feeShort, type Platform } from "@/lib/platforms";
 import AffiliateLink from "@/components/AffiliateLink";
-import { getAffiliationKind } from "@/lib/partnerships";
+import PaidLinkCaption from "@/components/PaidLinkCaption";
+import { isPaidLink } from "@/lib/partnerships";
 
 interface Props {
   cryptoName: string;
@@ -57,7 +58,7 @@ export default function QuickBuyBox({
   // AU MOINS une des plateformes affichées est réellement rémunérée. Sinon le
   // disclaimer serait un claim trompeur (DGCCRF L.121-1) — la plupart des
   // plateformes ne sont pas affiliées (cf. lib/partnerships.ts).
-  const anyPaid = matched.some((p) => getAffiliationKind(p.id) !== null);
+  const anyPaid = matched.some((p) => isPaidLink(p.id, p.affiliateUrl));
 
   return (
     <aside
@@ -90,7 +91,7 @@ export default function QuickBuyBox({
       <p className="mt-3 text-[11px] text-muted/90 leading-relaxed">
         {anyPaid ? (
           <>
-            Certains de ces liens sont rémunérés (affiliation ou parrainage),
+            Les liens marqués « Publicité » sont rémunérés (affiliation ou parrainage),
             sans surcoût pour vous — cela ne change ni le classement, ni la note (
             <Link href="/transparence" className="underline hover:text-fg">
               détail
@@ -187,6 +188,12 @@ function QuickBuyRow({
         Acheter sur {platform.name}
         <ExternalLink className="h-3.5 w-3.5 arrow-spring" aria-hidden="true" />
       </AffiliateLink>
+      {/* 06/10/2026 : mention sous CE lien, et seulement s'il est réellement rémunéré (bon type). */}
+      <PaidLinkCaption
+        platformId={platform.id}
+        href={platform.affiliateUrl}
+        className="mt-1.5 block text-center text-[11px] text-muted underline hover:text-fg"
+      />
       <Link
         href={`/avis/${platform.id}`}
         className="mt-1.5 block text-center text-[11px] text-muted hover:text-fg"

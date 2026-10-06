@@ -19,7 +19,9 @@ import { ShieldCheck } from "lucide-react";
  *
  * Source réglementaire :
  *  - Loi Influenceurs n°2023-451 du 9 juin 2023 (identification commerciale)
- *  - Article 222-15 RG AMF (avertissement risque)
+ *  - Article 20 de la LCEN, loi n° 2004-575 (publicité en ligne clairement identifiée)
+ *  - Avertissement de risque : aucun article cité (l'« art. 222-15 RG AMF » cité
+ *    jusqu'au 05/10/2026 porte sur l'information périodique des émetteurs hors EEE)
  *  - Article L.321-1 CMF (statut éditeur web ≠ CIF/PSI/PSAN)
  */
 
@@ -54,7 +56,8 @@ export default function RegulatoryFooter({
           en cryptoactifs comporte un risque élevé de perte totale en capital.
           Les liens marqués{" "}
           <span className="text-fg/80">« Publicité »</span> sont des liens
-          d&apos;affiliation rémunérés sans surcoût pour vous. Détails sur{" "}
+          rémunérés (affiliation ou parrainage), sans surcoût pour vous ; les autres
+          ne le sont pas. Détails sur{" "}
           <Link
             href="/transparence"
             className="text-primary-soft hover:text-primary underline underline-offset-2"

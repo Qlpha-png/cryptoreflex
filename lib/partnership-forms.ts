@@ -183,18 +183,19 @@ export async function submitSponsoring(formData: FormData): Promise<FormResult> 
   // AUDIT 2026-10-02 : texte FIXE — la société / l'offre / le budget saisis ne
   // sont plus recopiés (vecteur de phishing vers une adresse non vérifiée,
   // ex. société « crypto-bonus.com ») + plafond par destinataire.
+  // 06/10/2026 : vouvoiement, délai aligné sur /sponsoring (5 jours ouvrés), « art. 222-15 AMF » (faux) → art. 20 LCEN.
   const rcpt = await confirmationRecipientLimiter(email);
   if (rcpt.ok) {
     const confirmHtml = `
       <h2>Merci pour votre intérêt</h2>
       <p>${BRAND.name} a bien reçu votre demande de sponsoring.</p>
-      <p>Notre équipe partenariats te répond <strong>sous 48 h ouvrées</strong> depuis ${BRAND.partnersEmail} avec :
-      un devis détaillé, un calendrier de publication, et la procédure de validation MiCA si l'offre concerne un PSAN.</p>
+      <p>Le fondateur vous répond personnellement <strong>sous 5 jours ouvrés</strong> depuis ${BRAND.partnersEmail} avec :
+      un devis détaillé, un calendrier de publication, et la procédure de validation MiCA si l'offre concerne une plateforme.</p>
       <p style="color:#888;font-size:12px">Si vous n'êtes pas à l'origine de cette demande, ignorez simplement cet email.</p>
       <hr>
       <p style="color:#888;font-size:12px">${BRAND.name} est un éditeur web indépendant — pas un prestataire de services sur crypto-actifs (CASP) ni un CIF.
-      Tout contenu sponsorisé est explicitement signalé conformément à l'art. 222-15 du règlement général AMF
-      et à la charte ARPP. ${BRAND.url}</p>
+      Tout contenu sponsorisé est explicitement signalé (art. 20 de la loi pour la confiance dans l'économie numérique)
+      et suit la charte ARPP. ${BRAND.url}</p>
     `;
     await sendEmail({
       to: email,

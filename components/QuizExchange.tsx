@@ -56,6 +56,8 @@ import {
   type QuizResult,
 } from "@/lib/quiz-scoring";
 import { track, trackAffiliateClick, trackNewsletterSignup } from "@/lib/analytics";
+import { outboundRel } from "@/lib/partnerships";
+import PaidLinkCaption from "@/components/PaidLinkCaption";
 import { fmtNb } from "@/lib/format-fr";
 
 /* -------------------------------------------------------------------------- */
@@ -631,7 +633,7 @@ function PlatformCard({
             <a
               href={platform.affiliateUrl}
               target="_blank"
-              rel="noopener noreferrer sponsored"
+              rel={outboundRel(platform.id, platform.affiliateUrl)}
               onClick={() =>
                 trackAffiliateClick(
                   platform.id,
@@ -661,6 +663,8 @@ function PlatformCard({
               <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
             </Link>
           </div>
+          {/* 06/10/2026 : mention « Publicité » seulement si ce lien est réellement rémunéré (lib/partnerships.ts). */}
+          <PaidLinkCaption platformId={platform.id} href={platform.affiliateUrl} className="mt-2 block text-xs text-muted underline hover:text-fg" />
         </div>
       </div>
     </li>
@@ -693,7 +697,7 @@ function LeadMagnetForm({
     const valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed);
     if (!valid) {
       setStatus("error");
-      setErrorMsg("Adresse email invalide. Vérifie le format (ex : prenom@email.com).");
+      setErrorMsg("Adresse email invalide. Vérifiez le format (ex : prenom@email.com).");
       return;
     }
 
@@ -770,13 +774,16 @@ function LeadMagnetForm({
             id="quiz-leadmagnet-title"
             className="text-xl sm:text-2xl font-extrabold text-fg leading-tight"
           >
-            Recevez votre recommandation perso{" "}
-            <span className="gradient-text">+ guide PDF</span> par email.
+            {/* 06/10/2026 : « On vous envoie votre résultat détaillé + le PDF Acheter sa première crypto » était faux :
+                le formulaire inscrit seulement à la newsletter (aucun e-mail de résultat) et ce PDF n'existe pas. */}
+            La newsletter{" "}
+            <span className="gradient-text">+ le guide PDF des plateformes</span>
           </h4>
           <p className="mt-2 text-sm text-fg/75 max-w-2xl">
-            On vous envoie votre résultat détaillé + le PDF &laquo;&nbsp;Acheter sa
-            première crypto en France 2026&nbsp;&raquo; (12 pages, méthode
-            pas-à-pas).
+            Inscrivez-vous à la newsletter Cryptoreflex (l&apos;essentiel de la
+            crypto en français, sans spam) et téléchargez aussitôt le guide
+            &laquo;&nbsp;Plateformes crypto 2026&nbsp;&raquo;. Votre résultat reste
+            affiché ci-dessus.
           </p>
 
           <form
@@ -814,7 +821,7 @@ function LeadMagnetForm({
               disabled={status === "loading"}
               className="btn-primary disabled:opacity-60 disabled:cursor-not-allowed shrink-0 min-h-[48px]"
             >
-              {status === "loading" ? "Envoi…" : "Recevoir ma reco"}
+              {status === "loading" ? "Envoi…" : "M'inscrire"}
               {status !== "loading" && (
                 <ArrowRight className="h-4 w-4" aria-hidden="true" />
               )}
@@ -825,8 +832,8 @@ function LeadMagnetForm({
             id="quiz-email-hint"
             className="mt-3 text-xs text-muted"
           >
-            Votre email est uniquement utilisé pour vous envoyer le résultat et la
-            newsletter quotidienne (3 min/jour).
+            Votre e-mail sert uniquement à la newsletter (sans spam,
+            désinscription en 1 clic).
           </p>
 
           {status === "error" && (
@@ -852,19 +859,17 @@ function LeadMagnetForm({
             </span>
           </div>
           <h4 className="text-xl sm:text-2xl font-extrabold text-fg">
-            {mocked ? "Email bien noté" : "Bienvenue ! Vérifiez votre boîte mail."}
+            {mocked ? "Email bien noté" : "Inscription enregistrée"}
           </h4>
           <p className="mt-2 text-sm text-fg/75 max-w-2xl">
             {mocked ? (
               <>
-                Newsletter en cours de configuration — on vous recontactera dès
-                que c&apos;est prêt. En attendant, téléchargez votre guide&nbsp;:
+                Votre adresse est notée. Téléchargez votre guide&nbsp;:
               </>
             ) : (
               <>
-                Un email de confirmation vient de t&apos;être envoyé à{" "}
-                <strong className="text-fg">{email}</strong>. Cliquez sur le lien
-                pour activer votre inscription et recevoir le guide PDF.
+                <strong className="text-fg">{email}</strong> est inscrite à la
+                newsletter. Téléchargez votre guide&nbsp;:
               </>
             )}
           </p>

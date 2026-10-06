@@ -267,7 +267,8 @@ function NewsCard({ item }: { item: CryptoNewsItem }) {
     <a
       href={item.url}
       target="_blank"
-      rel="noopener noreferrer sponsored"
+      // 06/10/2026 : article de presse, aucun lien rémunéré → pas de « sponsored » (déclaration fausse à Google).
+      rel="nofollow noopener noreferrer"
       className="group block rounded-xl border border-border bg-elevated/40 p-4 transition-colors hover:border-primary/40 hover:bg-elevated/60 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-surface"
     >
       <div className="flex items-start justify-between gap-3">

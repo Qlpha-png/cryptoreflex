@@ -21,6 +21,8 @@ import { BRAND } from "@/lib/brand";
 import StructuredData from "@/components/StructuredData";
 import AmfDisclaimer from "@/components/AmfDisclaimer";
 import MobileStickyCTA from "@/components/MobileStickyCTA";
+import PaidLinkCaption from "@/components/PaidLinkCaption";
+import { outboundRel } from "@/lib/partnerships";
 // FIX SEO 2026-05-02 #7 (audit interne) — sortir 21 pages /staking de
 // l'orphelinat (audit a confirmé 0 maillage interne avant ce commit).
 import RelatedPagesNav from "@/components/RelatedPagesNav";
@@ -273,13 +275,14 @@ export default function StakingDetailPage({ params }: Props) {
                       <a
                         href={p.affiliateUrl}
                         target="_blank"
-                        rel="noopener noreferrer sponsored"
+                        rel={outboundRel(p.id, p.affiliateUrl)}
                         className="btn-primary text-xs px-3 py-1.5"
                       >
                         Staker sur {p.name}
                         <ExternalLink className="h-3 w-3" />
                       </a>
                     </div>
+                    <PaidLinkCaption platformId={p.id} href={p.affiliateUrl} className="mt-1.5 block text-right text-[11px] text-muted underline hover:text-fg" />
                   </li>
                 ))}
               </ul>

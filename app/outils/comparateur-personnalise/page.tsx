@@ -78,9 +78,8 @@ export default function ComparateurPersonnalisePage() {
               "5 questions, résultat en 60 secondes",
               "Score personnalisé sur 9 axes par plateforme",
               "5 plateformes auditées et agréées MiCA",
-              "Reco affiliée transparente (loi Influenceurs)",
+              "Liens rémunérés signalés « Publicité » (loi Influenceurs)",
               "Aucune donnée stockée, calcul navigateur",
-              "Lead capture optionnel (récap par email)",
             ],
             keywords: [
               "quelle plateforme crypto choisir",

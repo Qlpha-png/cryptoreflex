@@ -44,8 +44,13 @@ export const MICA_PHASE2_DATE = new Date("2026-07-01T00:00:00.000Z");
 export const INFLUENCER_LAW_DATE = new Date("2023-06-09");
 
 /* -------------------------------------------------------------------------- */
-/*  AMF (Article 222-15 RG AMF + L321-1 CMF)                                  */
+/*  Avertissements risques + statut (L321-1 CMF : liste des services          */
+/*  d'investissement, dont le conseil en investissement au 5°)                */
 /* -------------------------------------------------------------------------- */
+
+// 05/10/2026 : l'« article 222-15 RG AMF » cité jusqu'ici comme base de ces
+// avertissements est retiré (il porte sur l'information périodique des émetteurs
+// hors EEE). Aucun article n'est cité pour l'avertissement de risque.
 
 /**
  * Disclaimer AMF version COMPACTE — utilisé en pied de page, dans les
@@ -86,8 +91,9 @@ export const NOT_PSAN_NOT_CIF_NOTICE =
   "Cryptoreflex ne détient jamais les fonds des utilisateurs, ne donne aucun conseil " +
   "personnalisé, et ne pratique pas la réception-transmission d'ordres. " +
   "Son activité se limite à la production de contenus éditoriaux (comparatifs, guides, " +
-  "outils gratuits) et à la promotion via liens d'affiliation de plateformes elles-mêmes " +
-  "agréées CASP au sens du règlement (UE) 2023/1114 (MiCA).";
+  "outils gratuits), complétés par quelques liens rémunérés signalés « Publicité » : affiliation " +
+  "Ledger, Trezor et Waltio, et liens de parrainage personnels du fondateur chez Bitpanda et " +
+  "Trade Republic, plateformes agréées CASP au sens du règlement (UE) 2023/1114 (MiCA).";
 
 /* -------------------------------------------------------------------------- */
 /*  MiCA Phase 2 — risques utilisateurs                                       */
@@ -143,8 +149,9 @@ export const INFLUENCER_LAW_CAPTION =
 export const INFLUENCER_LAW_DISCLAIMER =
   "Conformément à la loi n°2023-451 du 9 juin 2023 visant à encadrer l'influence " +
   "commerciale, Cryptoreflex identifie de manière claire et apparente le caractère " +
-  "commercial de chaque communication publicitaire. Tout lien d'affiliation est marqué " +
-  "« Publicité — Cryptoreflex perçoit une commission » directement sous le bouton " +
+  "commercial de chaque communication publicitaire. Tout lien rémunéré est marqué " +
+  "« Publicité — Cryptoreflex perçoit une commission » (affiliation) ou « Publicité — lien " +
+  "de parrainage personnel » (parrainage du fondateur) directement sous le lien " +
   "concerné, et renvoie vers la présente page de transparence. Aucune communication " +
   "commerciale n'est dissimulée dans un contenu éditorial sans cette mention.";
 

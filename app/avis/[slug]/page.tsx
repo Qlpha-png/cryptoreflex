@@ -16,7 +16,7 @@ import {
   MessageSquare,
   Ban,
 } from "lucide-react";
-import { cardBuyPct, getAllPlatforms, getPlatformById, isAvailableFr, type Platform, hasNoIncident } from "@/lib/platforms";
+import { cardBuyPct, getAllPlatforms, getPlatformById, isAvailableFr, type Platform, hasNoIncident, trustpilotText, verifiedBonus } from "@/lib/platforms";
 import {
   getPublishableReviewSlugs,
   getRelatedComparisons,
@@ -25,6 +25,7 @@ import {
 import { BRAND } from "@/lib/brand";
 import MobileStickyCTA from "@/components/MobileStickyCTA";
 import AffiliateLink from "@/components/AffiliateLink";
+import { getAffiliationKind, isPaidLink } from "@/lib/partnerships";
 import {
   breadcrumbSchema,
   faqSchema,
@@ -40,7 +41,7 @@ import RelatedPagesNav from "@/components/RelatedPagesNav";
 import NextStepsGuide from "@/components/NextStepsGuide";
 import PlatformLogo from "@/components/PlatformLogo";
 import { withHreflang } from "@/lib/seo-alternates";
-import { fmtFr, fmtNb } from "@/lib/format-fr";
+import { fmtDateFr, fmtFr, fmtNb } from "@/lib/format-fr";
 
 // FIX SEO 2026-06-11 — pattern blog/[slug] : SSG pur + dynamicParams=false.
 // Slug inconnu = vrai HTTP 404 (avant : soft-404 en 200, vérifié live).
@@ -233,9 +234,9 @@ function buildFaq(p: Platform): { q: string; a: string }[] {
 
   faq.push({
     q: `Quel bonus de bienvenue propose ${p.name} ?`,
-    a: p.bonus.amount
+    a: verifiedBonus(p)
       ? `${p.bonus.welcome}. Conditions : ${p.bonus.conditions}. Offre valable jusqu'au ${p.bonus.validUntil ?? "préavis"}.`
-      : `${p.bonus.welcome}. ${p.bonus.conditions ?? "Pas de conditions spécifiques."}`,
+      : `Cryptoreflex n'affiche une offre de bienvenue que lorsqu'il en a relevé le montant, et aucune n'est relevée pour ${p.name}. Ces offres changent souvent et ne sont pas toujours ouvertes en France : vérifiez sur le site officiel avant de vous inscrire, et ne choisissez pas une plateforme pour un bonus.`,
   });
 
   // Q6 — quel dépôt minimum / how to start
@@ -298,6 +299,16 @@ export default function ReviewPage({ params }: Props) {
   ]);
 
   const available = isAvailableFr(p);
+  // 06/10/2026 : /avis/kraken affichait « Publicité — Cryptoreflex perçoit une commission » alors que Kraken n'est
+  // pas partenaire. Mention et libellés suivent désormais lib/partnerships.ts : sans relation rémunérée, le bouton
+  // est un simple lien « Site officiel », sans aucune mention de rémunération.
+  const paidKind = available && isPaidLink(p.id, p.affiliateUrl) ? getAffiliationKind(p.id) : null;
+  const ctaLabel = (paidLabel: string, unavailableLabel: string) =>
+    !available ? unavailableLabel : paidKind ? paidLabel : `Site officiel de ${p.name}`;
+  // Note Trustpilot relevée à la main : toujours affichée avec sa date et un lien vers la page source.
+  const tp = trustpilotText(p.ratings);
+  const tpDate = fmtDateFr(p.ratings.trustpilotVerified);
+  const hasTpLine = !!p.ratings.trustpilotUrl && !!(tp || p.ratings.trustpilotNote);
   const v = p.fees.verified;
   const mt = v?.makerTakerApplies ?? true;
   const isWallet = p.category === "wallet";
@@ -395,7 +406,9 @@ export default function ReviewPage({ params }: Props) {
             </h1>
             <p className="mt-3 text-lg text-white/70">{p.tagline}</p>
 
-            <div className="mt-5 flex flex-wrap items-center gap-4">
+            {/* Pas de séparateur « · » entre les éléments : la ligne Trustpilot est longue et passe
+                à la ligne, ce qui laissait des points orphelins. L'espacement suffit. */}
+            <div className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-1.5">
               <div className="flex items-center gap-2">
                 <Stars n={p.scoring.global} />
                 <span className="font-mono text-sm tabular-nums">
@@ -403,13 +416,23 @@ export default function ReviewPage({ params }: Props) {
                   <span className="text-muted">/5</span>
                 </span>
               </div>
-              <span className="text-xs text-muted">·</span>
+              {hasTpLine && p.ratings.trustpilotUrl && (
+                <span className="text-xs text-muted">
+                  <a
+                    href={p.ratings.trustpilotUrl}
+                    target="_blank"
+                    rel="nofollow noopener noreferrer"
+                    className="underline decoration-dotted underline-offset-2 hover:text-white"
+                  >
+                    Trustpilot
+                  </a>
+                  {p.ratings.trustpilot != null && p.ratings.trustpilotCount != null
+                    ? ` ${fmtFr(p.ratings.trustpilot, 1)}/5 (${p.ratings.trustpilotCount.toLocaleString("fr-FR")} avis, relevé le ${tpDate})${p.ratings.trustpilotNote ? ` — ${p.ratings.trustpilotNote}` : ""}`
+                    : ` : ${p.ratings.trustpilotNote ?? "aucune note publique"}, relevé le ${tpDate}`}
+                </span>
+              )}
               <span className="text-xs text-muted">
-                Trustpilot {fmtNb(p.ratings.trustpilot)}/5 ({p.ratings.trustpilotCount.toLocaleString("fr-FR")} avis)
-              </span>
-              <span className="text-xs text-muted">·</span>
-              <span className="text-xs text-muted">
-                Vérifié le {new Date(p.mica.lastVerified).toLocaleDateString("fr-FR")}
+                Données vérifiées le {new Date(p.mica.lastVerified).toLocaleDateString("fr-FR")}
               </span>
             </div>
           </div>
@@ -445,16 +468,23 @@ export default function ReviewPage({ params }: Props) {
               href={available ? p.affiliateUrl : "/comparatif/frais"}
               platform={p.id}
               placement="avis-sidebar"
-              ctaText={available ? `Aller sur ${p.name}` : "Voir les plateformes autorisées"}
+              ctaText={ctaLabel(`Aller sur ${p.name}`, "Voir les plateformes autorisées")}
               showCaption={false}
               className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-primary to-primary-glow px-4 py-3 text-sm font-semibold text-background hover:opacity-90 transition"
             >
-              {available ? `Aller sur ${p.name}` : "Voir les plateformes autorisées"}
+              {ctaLabel(`Aller sur ${p.name}`, "Voir les plateformes autorisées")}
               <ExternalLink className="h-4 w-4" />
             </AffiliateLink>
-            <p className={available ? "mt-3 text-[11px] text-muted leading-relaxed" : "hidden"}>
-              Publicité — Cryptoreflex perçoit une commission si vous ouvrez un compte, sans surcoût pour vous. Cela ne change pas notre note (cf. <Link href="/methodologie" className="underline hover:text-white">méthodologie</Link> et <Link href="/transparence" className="underline hover:text-white">page transparence</Link>).
+            {available && (
+            <p className="mt-3 text-[11px] text-muted leading-relaxed">
+              {paidKind === "affiliate"
+                ? "Publicité — Cryptoreflex perçoit une commission si vous passez par ce lien, sans surcoût pour vous. "
+                : paidKind === "referral"
+                  ? "Publicité — lien de parrainage personnel du fondateur, sans surcoût pour vous. "
+                  : `Lien direct vers le site officiel de ${p.name}. `}
+              {paidKind ? "Cela ne change pas notre note" : "Notre note suit une méthodologie publique"} (cf. <Link href="/methodologie" className="underline hover:text-white">méthodologie</Link> et <Link href="/transparence" className="underline hover:text-white">page transparence</Link>).
             </p>
+            )}
           </aside>
         </header>
 
@@ -483,11 +513,10 @@ export default function ReviewPage({ params }: Props) {
               href={available ? p.affiliateUrl : "/comparatif/frais"}
               platform={p.id}
               placement="avis-verdict-express"
-              ctaText={available ? `Tester ${p.name}` : "Voir les plateformes autorisées"}
-              showCaption={false}
+              ctaText={ctaLabel(`Tester ${p.name}`, "Voir les plateformes autorisées")}
               className="inline-flex items-center gap-2 rounded-xl border border-primary/40 bg-primary/15 px-4 py-2 text-sm font-semibold text-primary-glow hover:bg-primary/25 transition-colors"
             >
-              {available ? `Tester ${p.name}` : "Voir les plateformes autorisées"}
+              {ctaLabel(`Tester ${p.name}`, "Voir les plateformes autorisées")}
               <ExternalLink className="h-4 w-4" />
             </AffiliateLink>
           </div>
@@ -774,17 +803,18 @@ export default function ReviewPage({ params }: Props) {
               {isWallet ? "Portefeuille matériel, hors champ MiCA" : available ? "Plateforme agréée MiCA" : "Non autorisée en France"} · vérifié le {new Date(p.mica.lastVerified).toLocaleDateString("fr-FR")}.
             </p>
           </div>
-          <AffiliateLink
-            href={available ? p.affiliateUrl : "/comparatif/frais"}
-            platform={p.id}
-            placement="avis-mid-content"
-            ctaText={available ? `Ouvrir un compte ${p.name}` : "Comparer les plateformes autorisées"}
-            showCaption={false}
-            className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-primary to-primary-glow px-4 py-2.5 text-sm font-semibold text-background hover:opacity-90 transition shrink-0"
-          >
-            {available ? `Ouvrir un compte ${p.name}` : "Comparer les plateformes autorisées"}
-            <ExternalLink className="h-4 w-4" />
-          </AffiliateLink>
+          <div className="shrink-0">
+            <AffiliateLink
+              href={available ? p.affiliateUrl : "/comparatif/frais"}
+              platform={p.id}
+              placement="avis-mid-content"
+              ctaText={ctaLabel(`Ouvrir un compte ${p.name}`, "Comparer les plateformes autorisées")}
+              className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-primary to-primary-glow px-4 py-2.5 text-sm font-semibold text-background hover:opacity-90 transition shrink-0"
+            >
+              {ctaLabel(`Ouvrir un compte ${p.name}`, "Comparer les plateformes autorisées")}
+              <ExternalLink className="h-4 w-4" />
+            </AffiliateLink>
+          </div>
         </section>
 
         {/* CRYPTOS & STAKING */}
@@ -852,7 +882,8 @@ export default function ReviewPage({ params }: Props) {
           </div>
         </section>
 
-        {/* BONUS */}
+        {/* BONUS : seulement une offre relevée (verifiedBonus) */}
+        {verifiedBonus(p) && (
         <section className="mt-12">
           <h2 className="text-2xl font-bold tracking-tight flex items-center gap-2">
             <Gift className="h-6 w-6 text-primary" />
@@ -872,6 +903,7 @@ export default function ReviewPage({ params }: Props) {
             )}
           </div>
         </section>
+        )}
 
         {/* POINTS FORTS / FAIBLES */}
         <section className="mt-12 grid gap-6 lg:grid-cols-2">
@@ -923,11 +955,10 @@ export default function ReviewPage({ params }: Props) {
               href={available ? p.affiliateUrl : "/comparatif/frais"}
               platform={p.id}
               placement="avis-verdict-final"
-              ctaText={available ? `S'inscrire sur ${p.name}` : "Voir les plateformes autorisées"}
-              showCaption={false}
+              ctaText={ctaLabel(`S'inscrire sur ${p.name}`, "Voir les plateformes autorisées")}
               className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-primary to-primary-glow px-5 py-3 text-sm font-semibold text-background hover:opacity-90 transition"
             >
-              {available ? `S'inscrire sur ${p.name}` : "Voir les plateformes autorisées"}
+              {ctaLabel(`S'inscrire sur ${p.name}`, "Voir les plateformes autorisées")}
               <ExternalLink className="h-4 w-4" />
             </AffiliateLink>
           </div>
@@ -1047,7 +1078,15 @@ export default function ReviewPage({ params }: Props) {
         {/* DISCLAIMER */}
         <section className="mt-12 rounded-xl border border-border bg-surface/50 p-5">
           <p className="text-xs text-muted leading-relaxed">
-            Cet avis est rédigé par l'équipe éditoriale {BRAND.name}. Données vérifiées le {new Date(p.mica.lastVerified).toLocaleDateString("fr-FR")} auprès des sources publiques (site officiel, registre AMF, Trustpilot). {BRAND.name} perçoit une commission via le lien d'inscription, sans surcoût ni biais sur la note attribuée — méthodologie publique sur <Link href="/methodologie" className="underline hover:text-white">/methodologie</Link>. Investir dans les cryptoactifs comporte un risque de perte en capital. Cette page ne constitue pas un conseil en investissement.
+            Cet avis est rédigé par l'équipe éditoriale {BRAND.name}. Données vérifiées le {new Date(p.mica.lastVerified).toLocaleDateString("fr-FR")} auprès des sources publiques (site officiel, registre AMF){hasTpLine ? `, note Trustpilot relevée le ${tpDate}` : ""}.{" "}
+            {paidKind === "affiliate"
+              ? `${BRAND.name} perçoit une commission via les liens vers ${p.name} marqués « Publicité », sans surcoût ni biais sur la note attribuée`
+              : paidKind === "referral"
+                ? `Les liens vers ${p.name} marqués « Publicité » sont des liens de parrainage personnel du fondateur, sans surcoût ni biais sur la note attribuée`
+                : available
+                  ? `Les liens vers ${p.name} mènent à son site officiel`
+                  : `${p.name} n'étant pas autorisée en France, cette page ne renvoie pas vers son site`}{" "}
+            — méthodologie publique sur <Link href="/methodologie" className="underline hover:text-white">/methodologie</Link>. Investir dans les cryptoactifs comporte un risque de perte en capital. Cette page ne constitue pas un conseil en investissement.
           </p>
         </section>
       </div>
@@ -1059,7 +1098,7 @@ export default function ReviewPage({ params }: Props) {
       <MobileStickyCTA
         platformId={p.id}
         title={p.name}
-        label={available ? `Aller sur ${p.name}` : "Voir les alternatives"}
+        label={ctaLabel(`Aller sur ${p.name}`, "Voir les alternatives")}
         href={available ? p.affiliateUrl : "/comparatif/frais"}
         surface="avis-page"
       />

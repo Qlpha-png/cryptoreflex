@@ -69,7 +69,7 @@ const FAQ_ITEMS = [
   {
     question: "Puis-je modifier le widget (couleurs, taille, langue) ?",
     answer:
-      "La taille (width / height) est libre — utilisez les attributs HTML standard de l'iframe. Pour les couleurs, le widget hérite du thème sombre de Cryptoreflex (or sur fond noir). Une version « light » et des couleurs personnalisables sont prévues pour la V2 — abonnez-vous à la newsletter pour être notifié.",
+      "La taille (width / height) est libre — utilisez les attributs HTML standard de l'iframe. Pour les couleurs, le widget hérite du thème sombre de Cryptoreflex (or sur fond noir). Une version « light » et des couleurs personnalisables sont prévues pour la V2 ; elles apparaîtront sur cette page.",
   },
   {
     question: "Quelle license s'applique ?",
@@ -98,9 +98,10 @@ const FAQ_ITEMS = [
       "Oui, partout où vous pouvez coller du HTML brut. Sur WordPress, utilisez le bloc « HTML personnalisé » ou un shortcode iframe. Sur Webflow, le composant Embed. Sur Shopify, dans une section « Custom Liquid ». Aucun plugin requis.",
   },
   {
-    question: "Comment être notifié des nouveaux widgets ?",
+    // 06/10/2026 : plus de « on annonce chaque nouveau widget » par newsletter (aucune édition n'est envoyée).
+    question: "Où trouver les nouveaux widgets ?",
     answer:
-      "Inscrivez-vous à la newsletter Cryptoreflex (lien en footer du site) — on annonce chaque nouveau widget embeddable. Notre roadmap inclut un widget heatmap marché, un widget watchlist, et un widget MiCA Compliance Badge pour les pages plateforme.",
+      "Sur cette page, qui recense tous les widgets intégrables disponibles. Notre feuille de route inclut un widget heatmap marché, un widget watchlist, et un widget MiCA Compliance Badge pour les pages plateforme.",
   },
 ];
 

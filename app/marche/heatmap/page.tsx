@@ -204,7 +204,7 @@ export default async function HeatmapPage() {
         {/* EMBED CTA — propose d'intégrer la heatmap sur un site tiers */}
         <section className="mt-10 rounded-2xl border border-primary/30 bg-primary/5 p-5 sm:p-6">
           <h2 className="text-lg sm:text-xl font-bold tracking-tight text-fg">
-            Embarque la heatmap sur ton site
+            Intégrez la heatmap sur votre site
           </h2>
           <p className="mt-2 text-sm text-fg/80 leading-relaxed">
             Une iframe, zéro maintenance — la heatmap top 20 live (SSE Binance)

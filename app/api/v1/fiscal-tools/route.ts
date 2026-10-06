@@ -10,13 +10,14 @@
 import { requireApiKey } from "@/lib/api-keys/auth";
 import { successResponse, applicationError } from "@/lib/api-keys/response";
 import fiscalToolsData from "@/data/fiscal-tools.json";
+import { withOfficialLink } from "@/lib/platforms";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 interface FiscalRaw {
   _meta?: { lastUpdated?: string };
-  tools?: Array<{ country?: string; [k: string]: unknown }>;
+  tools?: Array<{ id: string; websiteUrl: string; affiliateUrl: string; country?: string; [k: string]: unknown }>;
 }
 
 export async function GET(req: Request): Promise<Response> {
@@ -40,7 +41,8 @@ export async function GET(req: Request): Promise<Response> {
   }
 
   const raw = fiscalToolsData as unknown as FiscalRaw;
-  const all = raw.tools ?? [];
+  // 06/10/2026 : affiliateUrl = site officiel sans relation rémunérée réelle (lib/partnerships.ts).
+  const all = (raw.tools ?? []).map(withOfficialLink);
   const tools = country
     ? all.filter((t) => (t.country || "").toUpperCase() === country)
     : all;

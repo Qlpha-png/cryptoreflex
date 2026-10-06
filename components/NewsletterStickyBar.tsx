@@ -195,7 +195,8 @@ export default function NewsletterStickyBar() {
           <div className="flex items-center gap-2 text-fg">
             <Mail className="h-4 w-4 text-primary" aria-hidden="true" />
             <p className="text-sm font-semibold leading-tight">
-              Recevez la newsletter quotidienne
+              {/* 06/10/2026 : « quotidienne » et « 3 min par jour » retirés (aucune édition envoyée par le code) */}
+              Recevez la newsletter Cryptoreflex
             </p>
           </div>
           <button
@@ -244,7 +245,7 @@ export default function NewsletterStickyBar() {
         ) : (
           <p className="text-xs text-accent-green inline-flex items-center gap-1.5">
             <CheckCircle2 className="h-3.5 w-3.5" />
-            Inscription confirmée — vérifie ta boîte mail.
+            Inscription enregistrée, merci !
           </p>
         )}
 
@@ -259,7 +260,7 @@ export default function NewsletterStickyBar() {
         )}
 
         <p className="mt-1.5 text-[10px] text-muted leading-snug">
-          3 min par jour, gratuit, désabonnement en 1 clic. Conforme au RGPD (Beehiiv).
+          Gratuit, sans spam, désabonnement en 1 clic. Conforme au RGPD (Beehiiv).
         </p>
       </div>
     </div>

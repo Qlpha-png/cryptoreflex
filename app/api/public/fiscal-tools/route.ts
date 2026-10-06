@@ -13,6 +13,7 @@
 import { NextResponse } from "next/server";
 import fiscalToolsData from "@/data/fiscal-tools.json";
 import { BRAND } from "@/lib/brand";
+import { withOfficialLink } from "@/lib/platforms";
 
 export const dynamic = "force-static";
 export const revalidate = 86_400;
@@ -56,7 +57,8 @@ function buildPayload(): FiscalToolsPayload {
       disclaimer:
         "Information indicative — vérifier les tarifs et fonctionnalités sur le site officiel de chaque outil avant souscription. Cryptoreflex ne fournit pas de conseil fiscal.",
     },
-    tools: raw.tools ?? [],
+    // 06/10/2026 : affiliateUrl = site officiel sans relation rémunérée réelle (Koinly, CoinTracking).
+    tools: ((raw.tools as Array<{ id: string; websiteUrl: string; affiliateUrl: string }>) ?? []).map(withOfficialLink),
   };
 }
 

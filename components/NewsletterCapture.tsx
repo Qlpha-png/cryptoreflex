@@ -90,7 +90,7 @@ export default function NewsletterCapture() {
     const valid = EMAIL_REGEX.test(trimmed);
     if (!valid) {
       setStatus("error");
-      setErrorMsg("Adresse email invalide. Vérifie le format (ex : prenom@email.com).");
+      setErrorMsg("Adresse email invalide. Vérifiez le format (ex : prenom@email.com).");
       return;
     }
 
@@ -157,9 +157,10 @@ export default function NewsletterCapture() {
     },
     object: {
       "@type": "CreativeWork",
-      name: "Newsletter quotidienne crypto FR",
+      // 06/10/2026 : plus de « quotidienne / 3 minutes » — aucune édition n'est envoyée par le code.
+      name: "Newsletter crypto FR Cryptoreflex",
       description:
-        "Newsletter quotidienne (3 minutes) avec les 3 infos crypto qui comptent pour un investisseur français : statut MiCA, alertes plateformes, fiscalité.",
+        "L'essentiel de la crypto en français pour un investisseur : statut MiCA, alertes plateformes, fiscalité. Gratuit, sans spam.",
       provider: {
         "@type": "Organization",
         name: "Cryptoreflex",
@@ -195,10 +196,10 @@ export default function NewsletterCapture() {
                     id="newsletter-title"
                     className="text-2xl sm:text-3xl font-extrabold text-fg leading-tight"
                   >
-                    Le brief crypto FR <span className="gradient-text">en 3 minutes</span>
+                    L&apos;essentiel de la crypto <span className="gradient-text">en français</span>
                   </h2>
                   <p className="mt-2 text-fg/85 max-w-2xl">
-                    Chaque matin à 7h, les 3 infos qui comptent : statut MiCA, alertes plateformes, fiscalité.
+                    Nous n&apos;écrivons que quand une information compte : statut MiCA, alertes plateformes, fiscalité.
                   </p>
                 </div>
               </div>
@@ -207,11 +208,11 @@ export default function NewsletterCapture() {
               <ul className="mt-5 flex flex-wrap gap-x-5 gap-y-2 text-xs text-fg/75" role="list">
                 <li className="inline-flex items-center gap-1.5">
                   <CheckCircle2 className="h-3.5 w-3.5 text-accent-green" strokeWidth={2.5} aria-hidden="true" focusable="false" />
-                  Lundi → vendredi à 7h
+                  Gratuit
                 </li>
                 <li className="inline-flex items-center gap-1.5">
                   <CheckCircle2 className="h-3.5 w-3.5 text-accent-green" strokeWidth={2.5} aria-hidden="true" focusable="false" />
-                  3 infos max par jour
+                  Court et factuel
                 </li>
                 <li className="inline-flex items-center gap-1.5">
                   <CheckCircle2 className="h-3.5 w-3.5 text-accent-green" strokeWidth={2.5} aria-hidden="true" focusable="false" />
@@ -339,7 +340,7 @@ export default function NewsletterCapture() {
                 tabIndex={-1}
                 className="text-2xl sm:text-3xl font-extrabold text-fg leading-tight focus:outline-none"
               >
-                {mocked ? "Email bien noté" : "Bienvenue ! Vérifiez votre boîte mail."}
+                {mocked ? "Email bien noté" : "Bienvenue ! Votre inscription est enregistrée."}
               </h2>
 
               <p className="mt-3 text-fg/85 max-w-2xl">
@@ -352,9 +353,9 @@ export default function NewsletterCapture() {
                   </>
                 ) : (
                   <>
-                    Un email de confirmation vient de t&apos;être envoyé à{" "}
-                    <strong className="text-fg">{email}</strong>. Cliquez sur le
-                    lien pour activer votre inscription et recevoir votre guide PDF.
+                    Un e-mail de bienvenue vient de vous être envoyé à{" "}
+                    <strong className="text-fg">{email}</strong>. Votre guide PDF
+                    est aussi disponible tout de suite&nbsp;:
                   </>
                 )}
               </p>

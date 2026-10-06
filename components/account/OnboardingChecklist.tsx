@@ -83,10 +83,11 @@ const STEPS: Step[] = [
   },
   {
     id: "brief",
-    title: "Activez le Brief PRO hebdo",
-    benefit: "Alpha + on-chain, dimanche soir, 4 min de lecture",
-    cta: "M'abonner",
-    href: "/mon-compte#brief",
+    // 06/10/2026 : « Brief PRO hebdo, dimanche soir » n'existe pas (aucun envoi dans le code, ancre #brief absente)
+    title: "Recevoir la newsletter",
+    benefit: "L'essentiel de la crypto en français, sans spam",
+    cta: "M'inscrire",
+    href: "/newsletter",
     Icon: Mail,
   },
 ];

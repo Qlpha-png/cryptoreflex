@@ -9,7 +9,7 @@
  */
 
 import { BRAND } from "@/lib/brand";
-import { getAllPlatforms, getTopPlatforms, type Platform } from "@/lib/platforms";
+import { getAllPlatforms, getTopPlatforms, type Platform, verifiedBonus } from "@/lib/platforms";
 import { authorRef, getAuthorByIdOrDefault } from "@/lib/authors";
 import { generateSpeakableSchema } from "@/lib/schema-speakable";
 import { getActiveBrandUrls } from "@/lib/brand-mentions";
@@ -600,7 +600,7 @@ export function platformReviewSchema(p: Platform): JsonLd {
       priceCurrency: "EUR",
       price: "0",
       availability: "https://schema.org/InStock",
-      description: p.bonus.welcome,
+      description: verifiedBonus(p) ?? undefined,
     },
   };
 

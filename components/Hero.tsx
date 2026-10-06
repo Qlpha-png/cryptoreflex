@@ -160,10 +160,11 @@ export default function Hero({ prices, sparklines, updatedAt, fearGreed }: HeroP
             <Link
               href="#newsletter"
               className="inline-flex items-center gap-2 text-sm font-semibold text-muted hover:text-fg transition-colors"
-              aria-label="Recevoir le brief crypto FR par email"
+              aria-label="Recevoir la newsletter Cryptoreflex par e-mail"
             >
+              {/* 06/10/2026 : « Le brief de 7h, 3 infos » promettait un envoi que le code ne fait pas */}
               <Mail className="h-4 w-4" strokeWidth={1.75} aria-hidden="true" />
-              Le brief de 7h, 3 infos
+              Recevoir la newsletter
             </Link>
           </div>
 

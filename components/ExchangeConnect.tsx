@@ -235,7 +235,7 @@ export default function ExchangeConnect() {
           <Plug className="h-5 w-5 text-primary shrink-0 mt-0.5" />
           <div>
             <h3 className="font-bold text-fg text-sm">
-              Connecte ton compte Binance (read-only)
+              Connectez votre compte Binance (lecture seule)
             </h3>
             <p className="mt-1 text-xs text-fg/65 leading-relaxed">
               Connectez-vous à Cryptoreflex pour activer l&apos;import auto de vos
