@@ -21,7 +21,9 @@ const missing = (e: { code?: string; message?: string } | null) =>
   !!e && (e.code === "PGRST202" || e.code === "42883" || e.code === "42P01" || (/rc_(trade|gift|feed|react|referral|friend_d|friend_p|event)/.test(e.message ?? "") && /exist|schema cache|find/i.test(e.message ?? "")));
 
 export interface TradeRow { id: string; mine: boolean; code: string; pseudo: string; give: string; get: string; fin: TradeFin; gs: number | null; ts: number | null; status: string; at: string; done: string | null }
-export interface DrawCard { id: string; ed: string | null; fin: string | null }
+/** carte du dernier booster d'un ami (rc_draws.cards) : finition et numéro attribués par rc_apply depuis la migration B5 ;
+ *  serial absent (booster journalisé avant B5, ou carte non numérotée) : le jeu n'affiche aucun numéro */
+export interface DrawCard { id: string; ed: string | null; fin: string | null; serial?: number | null }
 export interface DrawRow { id: number; cards: DrawCard[]; at: string }
 export interface FeedRow { id: number; kind: string; card: string | null; data: Record<string, unknown>; at: string; me: boolean; actor: string | null; code: string | null; target: string | null; rx: number[]; mine: number | null }
 export interface TradeReq { give: string; get: string; fin: TradeFin; gs: number | null; ts: number | null }

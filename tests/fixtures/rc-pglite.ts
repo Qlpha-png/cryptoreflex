@@ -7,7 +7,7 @@ import { PGlite } from "@electric-sql/pglite";
 import { fromRcLoad, type GameDb, type Loaded } from "@/lib/reflex-cards/store";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
-export async function makeGameDb(o: { b3?: boolean; b4?: boolean } = {}): Promise<{ pg: PGlite; db: GameDb; legacyLoad: GameDb["load"] }> {
+export async function makeGameDb(o: { b3?: boolean; b4?: boolean; b5?: boolean } = {}): Promise<{ pg: PGlite; db: GameDb; legacyLoad: GameDb["load"] }> {
   const pg = new PGlite();
   await pg.exec(`create role anon; create role authenticated; create role service_role; create schema auth; create table auth.users (id uuid primary key);`);
   /* comme Supabase : toute nouvelle table, fonction ou séquence du schéma public est d'office accessible à anon, authenticated et
@@ -21,6 +21,8 @@ export async function makeGameDb(o: { b3?: boolean; b4?: boolean } = {}): Promis
   if (o.b3 !== false) await pg.exec(readFileSync("supabase/migrations/20261003_reflex_cards_b3_perf.sql", "utf8"));
   /* B4 (social entre amis) par défaut avec B3 ; { b4: false } = la base d'avant cette migration */
   if (o.b3 !== false && o.b4 !== false) await pg.exec(readFileSync("supabase/migrations/20261003_reflex_cards_b4_social.sql", "utf8"));
+  /* B5 (booster journalisé avec la vraie finition et le vrai numéro) par défaut avec B4 ; { b5: false } = la base d'avant */
+  if (o.b3 !== false && o.b4 !== false && o.b5 !== false) await pg.exec(readFileSync("supabase/migrations/20261006_reflex_cards_b5_draw_serials.sql", "utf8"));
   const q = async (s: string, p: unknown[]) => (await pg.query(s, p)).rows as any[];
   const iso = (r: any) => ({ ...r, ...(r.first_at ? { first_at: new Date(r.first_at).toISOString() } : {}), ...(r.at ? { at: new Date(r.at).toISOString() } : {}), ...(r.day ? { day: new Date(r.day).toISOString().slice(0, 10) } : {}) });
   /** l'ancienne lecture (7 requêtes), gardée pour comparer avec rc_load */
