@@ -408,6 +408,8 @@ describe("fil d'activité et réactions", () => {
     expect(notablePull([{ id: C1, ed: null, fin: null }, { id: C2, ed: null, fin: "holo" }])).toBeNull();
     if (U) expect(notablePull([{ id: C1, ed: null, fin: null }, { id: U, ed: null, fin: null }])?.id).toBe(U);
     if (L && U) expect(notablePull([{ id: U, ed: null, fin: null }, { id: L, ed: null, fin: null }])?.id).toBe(L);
+    /* à score égal, la dernière (booster trié du moins rare au plus rare) : la Légendaire Holo est annoncée, pas la Légendaire */
+    if (L) expect(notablePull([{ id: L, ed: null, fin: null }, { id: L, ed: null, fin: "holo" }])?.fin).toBe("holo");
     expect(notablePull([{ id: C1, ed: null, fin: "or", serial: 3 }])?.fin).toBe("or");
     expect(notablePull([{ id: C1, ed: "icon", fin: null }])?.ed).toBe("icon");
   });

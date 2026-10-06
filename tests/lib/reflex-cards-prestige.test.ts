@@ -7,7 +7,8 @@ import { describe, it, expect, vi } from "vitest";
 process.env.REFLEX_CARDS_UNIVERS = "true";
 process.env.NEXT_PUBLIC_REFLEX_CARDS_LAUNCH_DATE = "2026-10-02";
 vi.resetModules();
-const { prestigeOf, CARD } = await import("@/lib/reflex-cards/engine");
+const { prestigeOf, CARD, RULES, RAR } = await import("@/lib/reflex-cards/engine");
+const { GAME_TEMPLATE } = await import("@/lib/reflex-cards/game/template");
 
 const one = (r: string) => [...CARD.values()].find((c) => c.r === r && !c.fossil)!.id;
 const item = (id: string, ed: string | null = null, fin: string | null = null, serial: number | null = null) => ({ id, ed, fin, serial }) as Parameters<typeof prestigeOf>[0];
@@ -32,5 +33,37 @@ describe("Reflex Cards — prestige", () => {
     const ur = one("UR");
     expect(prestigeOf(item(ur, null, "ag", 1))).toBeGreaterThan(prestigeOf(item(ur, null, "ag", 2)));
     expect(prestigeOf(item(ur, null, "or", 25))).toBeGreaterThan(prestigeOf(item(ur, null, "ag", 1)));
+  });
+  it("la Holo ne fait jamais passer une carte devant le palier au-dessus (Kev 06/10 : une Légendaire avant toute Holo)", () => {
+    const ids = RAR.map(one);
+    for (let i = 0; i < RAR.length; i++) {
+      const holo = prestigeOf(item(ids[i], null, "holo"));
+      expect(holo, `${RAR[i]} Holo > ${RAR[i]} ordinaire`).toBeGreaterThan(prestigeOf(item(ids[i])));
+      if (i < RAR.length - 1) expect(holo, `${RAR[i]} Holo < ${RAR[i + 1]} ordinaire`).toBeLessThan(prestigeOf(item(ids[i + 1])));
+    }
+    const L = prestigeOf(item(one("L")));
+    expect(L).toBeGreaterThan(prestigeOf(item(one("UR"), null, "holo")));
+    expect(L).toBeGreaterThan(prestigeOf(item(one("SR"), null, "holo")));
+    /* la Légendaire Holo garde sa rareté réelle (pas de palier au-dessus ; la tasser la ferait passer sous des Argent plus courantes) */
+    expect(prestigeOf(item(one("L"), null, "holo"))).toBeCloseTo(-Math.log10(RULES.wRar.L * RULES.fin.holo.p), 9);
+  });
+  it("Argent, Or et Onyx gardent leur rareté réelle (−log10 part × chance, le n° départage)", () => {
+    for (const r of RAR) for (const [fin, serial] of [["ag", 7], ["or", 3], ["onyx", 1]] as const) {
+      const want = -Math.log10(RULES.wRar[r] * RULES.fin[fin].p) - serial / 1e4;
+      expect(prestigeOf(item(one(r), null, fin, serial)), `${r} ${fin}`).toBeCloseTo(want, 9);
+    }
+  });
+  it("le jeu (PRESTIGE du gabarit) et le serveur (prestigeOf) donnent la même valeur pour chaque rareté × finition et chaque édition", () => {
+    const src = GAME_TEMPLATE.match(/const PRESTIGE=it=>\{[\s\S]*?\};\n/)?.[0];
+    expect(src, "PRESTIGE introuvable dans le gabarit").toBeTruthy();
+    const P = new Function("W_RAR", "RAR", "RNK", "FIN", "ED", "discoveryNo", `${src}return PRESTIGE;`)(
+      RULES.wRar, RAR, (r: string) => RAR.indexOf(r as (typeof RAR)[number]), RULES.fin, RULES.ed, () => 0) as (it: unknown) => number;
+    for (const r of RAR) for (const [fin, serial] of [[null, null], ["holo", null], ["ag", 7], ["or", 3], ["onyx", 1]] as const) {
+      const id = one(r);
+      expect(P({ c: { id, r }, ed: null, fin, serial }), `${r} ${fin ?? "ordinaire"}`).toBeCloseTo(prestigeOf(item(id, null, fin, serial)), 9);
+    }
+    for (const ed of new Set([...Object.keys(RULES.ed), "relic", "trophy"])) {
+      expect(P({ c: { id: "bitcoin", r: "L" }, ed, fin: null, serial: null }), `édition ${ed}`).toBeCloseTo(prestigeOf(item("bitcoin", ed)), 9);
+    }
   });
 });

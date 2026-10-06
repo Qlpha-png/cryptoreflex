@@ -138,7 +138,8 @@ export function notablePull(items: { id: string; ed: string | null; fin: string 
     const c = CARD.get(it.id);
     if (!c) continue;
     const sc = Math.max(it.ed ? ED_SCORE[it.ed] ?? 0 : 0, !it.ed && it.fin ? FIN_SCORE[it.fin] ?? 0 : 0, !it.ed && c.r === "L" ? 50 : 0, !it.ed && c.r === "UR" ? 40 : 0);
-    if (sc > score) { score = sc; best = it; }
+    /* à score égal, la dernière : le booster est trié du moins rare au plus rare (Légendaire Holo annoncée plutôt que la Légendaire) */
+    if (sc > 0 && sc >= score) { score = sc; best = it; }
   }
   return best;
 }

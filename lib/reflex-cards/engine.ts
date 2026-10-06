@@ -155,7 +155,11 @@ const rarOf = (it: Item): Rar | null => (it.ed ? null : CARD.get(it.id)!.r);
 const baseRank = (it: Item) => (it.ed ? -1 : RNK(CARD.get(it.id)!.r));
 /* prestige = rareté RÉELLE d'un type de carte (−log10 de sa probabilité par carte tirée ; Kev 04/10 : « chaque rareté bien notée ») :
    Relique > Mythique > Équipe > Icône > … ; une Commune Onyx passe devant une Légendaire ordinaire, une Argent devant une Holo ;
-   à type égal, le plus petit numéro d'abord (n° 1 avant n° 2). Sert à l'ordre de révélation du booster. */
+   à type égal, le plus petit numéro d'abord (n° 1 avant n° 2). Sert à l'ordre de révélation du booster.
+   SAUF la Holo de Commune à Ultra rare (Kev 06/10 : « les Légendaires plus rares que les Holo ») : elle se place à mi-marche entre
+   sa rareté et la rareté au-dessus (moyenne géométrique des deux parts), donc au-dessus de la même carte sans Holo mais jamais
+   devant le palier supérieur (avant : ×25, elle sautait 1 à 3 paliers). La Légendaire Holo garde sa rareté réelle. Même règle que
+   PRESTIGE côté client (Reflex-Cards/src/v9/patch-v9.mjs, bloc HOLO SOUS LE PALIER SUPÉRIEUR). */
 let TIER_SHARE: Record<Rar, number> | null = null;
 const tierShare = (r: Rar): number => {
   if (!TIER_SHARE) {
@@ -165,9 +169,14 @@ const tierShare = (r: Rar): number => {
 };
 const ED_P: Record<string, number> = { relic: 1e-9, trophy: 0.03 };
 export function prestigeOf(it: Item): number {
+  const lg = (q: number) => -Math.log10(Math.max(q, 1e-15));
+  if (!it.ed && it.fin === "holo") {
+    const r = CARD.get(it.id)!.r, i = RNK(r);
+    if (i < RAR.length - 1) return (lg(tierShare(r)) + lg(tierShare(RAR[i + 1]))) / 2;
+  }
   const pe = it.ed ? ED_P[it.ed] ?? RULES.ed[it.ed]?.p : 0;
   const p = it.ed ? (pe && pe > 0 ? pe : 1e-3) : tierShare(CARD.get(it.id)!.r) * (it.fin ? RULES.fin[it.fin]?.p || 1 : 1);
-  return -Math.log10(Math.max(p, 1e-15)) - (it.serial ? it.serial / 1e4 : 0);
+  return lg(p) - (it.serial ? it.serial / 1e4 : 0);
 }
 const prestige = prestigeOf;
 function rollFin(rnd: Rnd): Fin | null {
