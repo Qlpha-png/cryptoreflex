@@ -6,7 +6,7 @@
  * Différence avec <Heatmap /> (statique top 100, layout grid uniforme) :
  *  - Source live : `useLivePrices()` → SSE Binance (fallback /api/prices REST).
  *  - Layout treemap pondéré par `marketCap` (algo squarified maison ~50 LOC).
- *  - Couleur HSL interpolée (transition CSS 600ms à chaque tick prix).
+ *  - Couleur interpolée par paliers (transition CSS 600ms à chaque tick prix).
  *  - Sparkline 7d optionnelle dans chaque tile (si `coins[i].sparkline7d`).
  *  - Slider time-frame (1h / 24h / 7j) — 24h utilise le delta SSE live, 1h et
  *    7j fallback sur les valeurs initiales (pas de stream sur ces périodes).
@@ -55,35 +55,117 @@ interface Props {
   heading?: string;
 }
 
-/* ─────────────────────── Couleurs HSL interpolées ─────────────────────── */
+/* ─────────────────────── Couleurs interpolées ─────────────────────── */
 
 /**
- * Couleur HSL en fonction de la variation %.
- * Échelle : -8 % (rouge intense H=0 S=70 L=42) → 0 (gris H=215 S=10 L=22) →
- * +8 % (vert intense H=145 S=70 L=38).
+ * Couleur de tuile en fonction de la variation %.
  *
- * Interpolation linéaire pour transition fluide via CSS `transition`.
+ * 06/10/2026 — l'ancienne échelle HSL (teinte fixe, saturation faible près
+ * de 0) donnait des tuiles neutres marron boueux, et le vert vif portait un
+ * texte blanc à 3,0-3,5:1. Désormais : gris propre entre −0,3 % et +0,3 %,
+ * puis interpolation RGB par paliers vers le rouge ou le vert (teinte fixe
+ * par signe, cf. audit 03/10/2026). Paliers calculés pour que le texte
+ * blanc (opaque) reste ≥ 5:1 sur toute l’échelle.
  */
-function hslForChange(value: number | null): string {
+const NEUTRAL_RGB: readonly [number, number, number] = [58, 64, 74];
+type ColorStop = readonly [number, readonly [number, number, number]];
+const RED_STOPS: readonly ColorStop[] = [
+  [0.3, NEUTRAL_RGB],
+  [1.5, [126, 59, 69]],
+  [4, [168, 50, 59]],
+  [8, [192, 42, 42]],
+];
+const GREEN_STOPS: readonly ColorStop[] = [
+  [0.3, NEUTRAL_RGB],
+  [1.5, [47, 100, 73]],
+  [4, [35, 116, 71]],
+  [8, [23, 128, 63]],
+];
+
+function colorForChange(value: number | null): string {
   if (value === null || Number.isNaN(value)) {
-    return "hsl(215, 10%, 22%)";
+    return `rgb(${NEUTRAL_RGB.join(", ")})`;
   }
-  // Clamp à [-8, +8] pour stabiliser les couleurs au-delà.
-  const v = Math.max(-8, Math.min(8, value));
-  // Teinte FIXE par signe : vert (145) pour une hausse, rouge (0) pour une baisse. Seules la
-  // saturation et la luminosité varient avec l'intensité. Audit 03/10/2026 : l'ancienne
-  // interpolation de la teinte (215 → 0) traversait le vert, et BTC à −2 % s'affichait vert.
-  const t = Math.abs(v) / 8;
-  const h = v >= 0 ? 145 : 0;
-  const s = 10 + (70 - 10) * t; // 10 → 70
-  const l = v >= 0 ? 22 + (38 - 22) * t : 22 + (42 - 22) * t;
-  return `hsl(${h}, ${s.toFixed(0)}%, ${l.toFixed(0)}%)`;
+  const a = Math.abs(value);
+  const stops = value >= 0 ? GREEN_STOPS : RED_STOPS;
+  let rgb: readonly number[] = stops[stops.length - 1][1];
+  if (a <= stops[0][0]) {
+    rgb = NEUTRAL_RGB;
+  } else {
+    for (let i = 1; i < stops.length; i++) {
+      const [v1, c1] = stops[i];
+      const [v0, c0] = stops[i - 1];
+      if (a <= v1) {
+        const t = (a - v0) / (v1 - v0);
+        rgb = c0.map((x, k) => Math.round(x + (c1[k] - x) * t));
+        break;
+      }
+    }
+  }
+  return `rgb(${rgb.join(", ")})`;
 }
 
-function textColorForChange(value: number | null): string {
-  if (value === null || Number.isNaN(value)) return "rgba(255,255,255,0.85)";
-  // Si l'intensité dépasse ~3 % on passe en blanc full pour rester lisible.
-  return Math.abs(value) >= 2 ? "#FFFFFF" : "rgba(255,255,255,0.85)";
+/* ─────────────────────── Typo des tuiles ─────────────────────── */
+
+/**
+ * 06/10/2026 — tailles choisies en PIXELS réels de la tuile (avant : en % de
+ * surface, d'où « 02 », « 75 » ou « -0,54 / % » sur mobile). On garde le plus
+ * grand palier où le ticker ET la variation tiennent en entier sur une ligne ;
+ * sinon le ticker seul ; sinon aucun texte (aria-label + infobulle restent).
+ */
+const TEXT_TIERS = [
+  { sym: 22, chg: 14 },
+  { sym: 16, chg: 12 },
+  { sym: 13, chg: 10 },
+  { sym: 11, chg: 10 },
+] as const;
+/** Ticker seul : plafonné à 13 px pour ne pas détonner entre petites tuiles. */
+const SYMBOL_ONLY_FROM = 2;
+/** Avance d'un caractère mono en em, marge de sécurité incluse (repli si la mesure échoue). */
+const MONO_CH = 0.64;
+/** Police des tuiles (ticker + variation), partagée avec la mesure canvas. */
+const MONO_STACK = "ui-monospace, Menlo, monospace";
+
+/**
+ * 06/10/2026 — avance RÉELLE de la police mono du système (Consolas ≈ 0,55 em,
+ * Menlo ≈ 0,60 em), mesurée une fois au canvas, + 4 % de marge. L'estimation
+ * fixe de 0,64 em faisait tomber 5 tuiles sur 60 en « ticker seul » à 1440 px.
+ */
+function measureMonoEm(): number {
+  try {
+    const ctx = document.createElement("canvas").getContext("2d");
+    if (!ctx) return MONO_CH;
+    ctx.font = `800 100px ${MONO_STACK}`;
+    const em = ctx.measureText("0000000000").width / 1000;
+    return em > 0.4 && em < 0.8 ? em * 1.04 : MONO_CH;
+  } catch {
+    return MONO_CH;
+  }
+}
+
+function pickTileText(
+  symbol: string,
+  changeText: string,
+  w: number,
+  h: number,
+  ch: number = MONO_CH,
+): { sym: number; chg: number; top: boolean } {
+  // le ticker a 0,02 em d'espacement de lettres en plus
+  const symCh = ch + 0.02;
+  for (let i = 0; i < TEXT_TIERS.length; i++) {
+    const t = TEXT_TIERS[i];
+    const fits =
+      symbol.length * t.sym * symCh <= w &&
+      changeText.length * t.chg * ch <= w &&
+      t.sym * 1.1 + 2 + t.chg * 1.15 <= h;
+    if (fits) return { sym: t.sym, chg: t.chg, top: i === 0 };
+  }
+  for (const t of TEXT_TIERS.slice(SYMBOL_ONLY_FROM)) {
+    if (symbol.length * t.sym * symCh <= w && t.sym * 1.1 <= h) {
+      return { sym: t.sym, chg: 0, top: false };
+    }
+  }
+  return { sym: 0, chg: 0, top: false };
 }
 
 /* ─────────────────────── Squarified treemap ─────────────────────── */
@@ -270,6 +352,10 @@ export default function LiveHeatmap({
     w: 1000,
     h: 560,
   });
+  // 06/10/2026 — texte masqué tant que la taille réelle n'est pas mesurée :
+  // calibré sur 1000×560 (rendu serveur), il serait rogné sur mobile.
+  const [measured, setMeasured] = useState(false);
+  const [monoEm, setMonoEm] = useState(MONO_CH);
 
   // On ne stream QUE les ids qui ont un mapping Binance (sinon
   // /api/prices/stream les drop silencieusement et on a la donnée seed).
@@ -284,11 +370,13 @@ export default function LiveHeatmap({
   useEffect(() => {
     const node = containerRef.current;
     if (!node) return;
+    setMonoEm(measureMonoEm());
     const ro = new ResizeObserver((entries) => {
       for (const entry of entries) {
         const { width, height } = entry.contentRect;
         if (width > 0 && height > 0) {
           setSize({ w: width, h: height });
+          setMeasured(true);
         }
       }
     });
@@ -319,6 +407,11 @@ export default function LiveHeatmap({
   }, [layout]);
 
   const periodLabel = period === "7d" ? "7 j" : period;
+  // 06/10/2026 — espacements réduits sur conteneur étroit (mobile) : 16 px
+  // perdus par tuile de 30 px, c'était la moitié de la place du texte.
+  const narrow = size.w < 640;
+  const gap = narrow ? 2 : 4;
+  const innerPad = narrow ? 2 : 4;
 
   return (
     <div>
@@ -397,18 +490,31 @@ export default function LiveHeatmap({
           }
           const price = live ? live.price : coin.currentPrice;
 
-          const bg = hslForChange(change);
-          const fg = textColorForChange(change);
+          const bg = colorForChange(change);
+          // 06/10/2026 — blanc pur partout (≥ 5:1 garanti par la palette).
+          const fg = "#FFFFFF";
           const hasPage = slugSet.has(coin.id);
+          const changeText = change === null ? "—" : formatPct(change);
           const cellLabel = `${coin.name} (${coin.symbol}), variation ${periodLabel} ${
             change === null ? "indisponible" : formatPct(change)
           }, prix ${formatUsd(price)}, capitalisation ${formatCompactUsd(coin.marketCap)}`;
 
-          // Heuristique typo : on adapte la taille de police à la surface du
-          // tile (calculée grossièrement en %² × surface viewport approx).
-          const tileAreaPct = tile.width * tile.height;
-          const big = tileAreaPct > 80;
-          const medium = tileAreaPct > 25;
+          // Taille réelle de la zone de texte en px (tuile − espacements).
+          const tileW = (tile.width / 100) * size.w;
+          // 06/10/2026 — petite tuile : marge intérieure de 1 px (le texte est
+          // centré), pour que la variation tienne sous le ticker.
+          const pad = tileW < 72 ? 1 : innerPad;
+          const availW = tileW - 2 * (gap + pad);
+          const availH = (tile.height / 100) * size.h - 2 * (gap + pad);
+          const text = measured
+            ? pickTileText(coin.symbol, changeText, availW, availH, monoEm)
+            : { sym: 0, chg: 0, top: false };
+          // Sparkline seulement si elle ne chevauche pas le texte centré.
+          const showSpark =
+            text.top &&
+            availH >= text.sym * 1.1 + 2 + text.chg * 1.15 + 44 &&
+            !!coin.sparkline7d &&
+            coin.sparkline7d.length > 1;
 
           const tileStyle: CSSProperties = {
             position: "absolute",
@@ -416,7 +522,7 @@ export default function LiveHeatmap({
             top: `${tile.y}%`,
             width: `${tile.width}%`,
             height: `${tile.height}%`,
-            padding: 4,
+            padding: gap,
             boxSizing: "border-box",
           };
 
@@ -434,16 +540,16 @@ export default function LiveHeatmap({
             alignItems: "center",
             justifyContent: "center",
             textAlign: "center",
-            padding: 4,
+            padding: pad,
             cursor: hasPage ? "pointer" : "default",
             outline: "none",
             overflow: "hidden",
           };
 
           const symbolStyle: CSSProperties = {
-            fontFamily: "ui-monospace, Menlo, monospace",
+            fontFamily: MONO_STACK,
             fontWeight: 800,
-            fontSize: big ? 22 : medium ? 14 : 11,
+            fontSize: text.sym,
             lineHeight: 1.1,
             letterSpacing: "0.02em",
             textTransform: "uppercase",
@@ -451,14 +557,19 @@ export default function LiveHeatmap({
             overflow: "hidden",
             textOverflow: "ellipsis",
             whiteSpace: "nowrap",
+            // Le reset global overflow-wrap:anywhere ne doit pas couper le ticker.
+            overflowWrap: "normal",
           };
 
           const changeStyle: CSSProperties = {
-            fontFamily: "ui-monospace, Menlo, monospace",
+            fontFamily: MONO_STACK,
             fontWeight: 600,
-            fontSize: big ? 14 : medium ? 11 : 9,
+            fontSize: text.chg,
+            lineHeight: 1.15,
             marginTop: 2,
-            opacity: 0.95,
+            fontVariantNumeric: "tabular-nums",
+            whiteSpace: "nowrap",
+            overflowWrap: "normal",
           };
 
           const sharedHandlers = {
@@ -472,12 +583,10 @@ export default function LiveHeatmap({
 
           const inner = (
             <>
-              <span style={symbolStyle}>{coin.symbol}</span>
-              <span style={changeStyle}>
-                {change === null ? "—" : formatPct(change)}
-              </span>
+              {text.sym > 0 && <span style={symbolStyle}>{coin.symbol}</span>}
+              {text.chg > 0 && <span style={changeStyle}>{changeText}</span>}
               {/* Sparkline 7d affichée uniquement sur les grandes tiles. */}
-              {big && coin.sparkline7d && coin.sparkline7d.length > 1 && (
+              {showSpark && coin.sparkline7d && (
                 <div
                   style={{
                     position: "absolute",
@@ -540,7 +649,7 @@ export default function LiveHeatmap({
 
       <p className="mt-3 text-[11px] text-muted">
         Données prix : Binance spot (SSE) avec fallback CoinGecko (REST). Couleur
-        interpolée HSL selon la variation {periodLabel}. Cliquez sur une crypto
+        interpolée selon la variation {periodLabel}. Cliquez sur une crypto
         pour ouvrir sa fiche.
       </p>
     </div>

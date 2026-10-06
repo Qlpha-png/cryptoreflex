@@ -3,7 +3,23 @@ import Link from "next/link";
 import { cryptoPagePath } from "@/lib/crypto-page-slug";
 import { TrendingUp, TrendingDown } from "lucide-react";
 import type { MarketCoin } from "@/lib/coingecko";
-import { formatCompactUsd, formatPct } from "@/lib/coingecko";
+import { formatPct } from "@/lib/coingecko";
+
+/**
+ * 06/10/2026 — prix en chiffres significatifs, LOCAL à ce composant :
+ * formatCompactUsd arrondissait les petites cryptos à « 0 $ », formatUsd
+ * sort jusqu'à 8 décimales (« 0,00629335 $ »). Ici : 0,0498 $ · 0,006293 $.
+ */
+function formatPrice(value: number): string {
+  if (!value || !Number.isFinite(value)) return "—";
+  const opts: Intl.NumberFormatOptions =
+    value >= 1000
+      ? { maximumFractionDigits: 0 }
+      : value >= 1
+        ? { minimumFractionDigits: 2, maximumFractionDigits: 2 }
+        : { maximumSignificantDigits: 4 };
+  return `${value.toLocaleString("fr-FR", opts)} $`;
+}
 
 interface Props {
   /** Liste pré-triée (gainers desc ou losers asc). */
@@ -50,7 +66,7 @@ export default function GainerLoserList({
 
   return (
     <section
-      className={`rounded-2xl border ${tone.ring} ${tone.bg} p-5 sm:p-6`}
+      className={`rounded-2xl border ${tone.ring} ${tone.bg} p-4 sm:p-6`}
       aria-label={title}
     >
       <header className="flex items-center gap-2 mb-4">
@@ -64,8 +80,11 @@ export default function GainerLoserList({
         <ol className="space-y-2">
           {coins.map((c, idx) => {
             const hasInternal = internalSlugs.includes(c.id);
+            // 06/10/2026 — grille 2×2 : ticker / nom à gauche, variation / prix
+            // à droite. Avant, ticker + nom + badge sur une ligne de ~75 px à
+            // 390 px : le reset overflow-wrap:anywhere coupait « ZR / O ».
             const Inner = (
-              <div className="flex items-center gap-3 rounded-xl border border-border bg-surface px-3 py-2.5 hover:border-primary/40 transition-colors">
+              <div className="flex items-center gap-2.5 sm:gap-3 rounded-xl border border-border bg-surface px-3 py-2.5 hover:border-primary/40 transition-colors">
                 <span
                   className="font-mono text-xs text-muted w-5 shrink-0 text-right"
                   aria-hidden="true"
@@ -79,22 +98,24 @@ export default function GainerLoserList({
                   size={28}
                 />
                 <div className="min-w-0 flex-1">
-                  <div className="flex items-baseline gap-2">
-                    <span className="font-mono font-bold text-sm text-fg">
-                      {c.symbol}
-                    </span>
-                    <span className="text-xs text-muted truncate">{c.name}</span>
+                  <div className="truncate font-mono font-bold text-sm text-fg">
+                    {c.symbol}
                   </div>
-                  <div className="text-[11px] text-muted font-mono">
-                    {formatCompactUsd(c.currentPrice)}
-                  </div>
+                  <div className="truncate text-xs text-muted">{c.name}</div>
                 </div>
-                <span
-                  className={`shrink-0 inline-flex items-center gap-1 rounded-lg ${tone.badgeBg} ${tone.text} font-mono font-bold text-sm px-2.5 py-1`}
-                  aria-label={`Variation 24h ${formatPct(c.priceChange24h)}`}
-                >
-                  {formatPct(c.priceChange24h)}
-                </span>
+                <div className="shrink-0 flex flex-col items-end gap-1">
+                  <span
+                    className={`inline-flex items-center whitespace-nowrap rounded-lg ${tone.badgeBg} ${tone.text} font-mono font-bold text-sm tabular-nums px-2.5 py-0.5`}
+                    aria-label={`Variation 24h ${formatPct(c.priceChange24h)}`}
+                  >
+                    {formatPct(c.priceChange24h)}
+                  </span>
+                  {/* Prix en chiffres significatifs (0,0123 $) : formatCompactUsd
+                      arrondissait les petites cryptos à « 0 $ ». */}
+                  <span className="whitespace-nowrap font-mono text-[11px] text-muted tabular-nums">
+                    {formatPrice(c.currentPrice)}
+                  </span>
+                </div>
               </div>
             );
             return (

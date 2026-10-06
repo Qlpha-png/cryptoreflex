@@ -43,8 +43,8 @@ const HeroPulseScrub = dynamic(() => import("@/components/hero/HeroPulseScrub"),
  *    mono, disclaimer AMF above-the-fold (loi Influenceurs 2023).
  *
  * Compliance : la ligne n'a ni axe, ni %, ni échelle — signature
- * visuelle, pas un graphique d'aide à la décision. La caption la
- * décrit factuellement.
+ * visuelle, pas un graphique d'aide à la décision. Le surtitre la
+ * décrit factuellement (sans légende de panne depuis le 06/10/2026).
  */
 
 interface HeroProps {
@@ -113,16 +113,28 @@ export default function Hero({ prices, sparklines, updatedAt, fearGreed }: HeroP
       {/* ── Contenu ── */}
       {/* max-md : la bande pulse est remontée de 64px (bottom-nav) — on
           réserve autant d'espace en plus pour que le chip prix ne touche
-          jamais le disclaimer (lisibilité compliance). */}
-      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-14 sm:pt-20 lg:pt-24 pb-[clamp(220px,34vh,360px)] max-md:pb-[calc(clamp(220px,34vh,360px)+64px)]">
+          jamais le disclaimer (lisibilité compliance).
+          z-[2] (06/10/2026) : sans lui, le voile .hero-scrim (z-index 1) se peignait PAR-DESSUS le titre et
+          le bouton (titre grisé, or #F5A524 rendu ≈ #A7741D). */}
+      <div className="relative z-[2] mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-14 sm:pt-20 lg:pt-24 pb-[clamp(220px,34vh,360px)] max-md:pb-[calc(clamp(220px,34vh,360px)+64px)]">
         <div className="max-w-4xl">
           {/* Eyebrow factuelle — annonce la signature */}
+          {/* Courbe de secours (donnée absente) : plus de légende « panne » sous le héros, et le surtitre ne
+              parle plus du Bitcoin, pour que le décor ne passe jamais pour la vraie courbe (06/10/2026). */}
           <p className="font-mono text-[11px] sm:text-xs uppercase tracking-[0.18em] text-muted animate-hero-fade-up">
-            <span className="text-primary-soft">Pouls du marché</span>
-            <span aria-hidden="true"> — </span>
-            {/* « données réelles » seulement quand la courbe l'est (audit 03/10/2026 : le titre
-                l'affirmait au-dessus de l'illustration de secours) */}
-            {head.isReal ? "BTC · 7 jours · données réelles" : "BTC · 7 jours"}
+            {head.isReal ? (
+              <>
+                <span className="text-primary-soft">Pouls du marché</span>
+                <span aria-hidden="true"> — </span>
+                BTC · 7 jours · données réelles
+              </>
+            ) : (
+              <>
+                <span className="text-primary-soft">La crypto en France</span>
+                <span aria-hidden="true"> — </span>
+                simple et vérifiée
+              </>
+            )}
           </p>
 
           {/* H1 monumental — 5 mots, échelle display enfin utilisée */}
@@ -180,16 +192,9 @@ export default function Hero({ prices, sparklines, updatedAt, fearGreed }: HeroP
             .
           </p>
         </div>
-
-        {/* FEEDBACK KEV 2026-06-12 — légende retirée quand la donnée est
-            réelle (la ligne parle d'elle-même). On garde UNIQUEMENT la
-            mention honnête du mode dégradé : le décor de secours ne doit
-            jamais passer pour de la vraie donnée. */}
-        {!head.isReal && (
-          <p className="hero-pulse-caption font-mono" aria-live="off">
-            Illustration — données de marché momentanément indisponibles.
-          </p>
-        )}
+        {/* Légende « Illustration — données de marché momentanément indisponibles » retirée (06/10/2026 :
+            un message de panne au 2e écran mobile). Le décor de secours reste honnête par le surtitre
+            ci-dessus, qui ne cite ni le Bitcoin ni « 7 jours » quand la courbe n'est pas réelle. */}
       </div>
     </section>
   );

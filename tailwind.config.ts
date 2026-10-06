@@ -18,6 +18,10 @@ const config: Config = {
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
     "./content/**/*.{md,mdx}",
+    // 06/10/2026 : lib/ manquait (46 classes jamais générées : dégradés des parcours /academie,
+    // pastilles du calendrier…). Le jeu Reflex Cards a son propre CSS : on l'exclut.
+    "./lib/**/*.{ts,tsx}",
+    "!./lib/reflex-cards/game/**",
   ],
   theme: {
     extend: {

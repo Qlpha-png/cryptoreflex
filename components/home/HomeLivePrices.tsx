@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useLivePrices } from "@/lib/hooks/useLivePrices";
@@ -40,6 +41,8 @@ const pctClass = (v: number) => {
 export default function HomeLivePrices({ coins }: { coins: HomeCoin[] }) {
   const { prices, lastUpdate, status } = useLivePrices(coins.map((c) => c.id));
   const live = lastUpdate !== null && Object.keys(prices).length > 0;
+  // Logos qui ne se chargent pas → initiales, jamais une colonne vide (audit du 06/10/2026).
+  const [broken, setBroken] = useState<Record<string, true>>({});
   return (
     <div>
       <ul className={`divide-y divide-border/60 rounded-2xl border border-border bg-surface ${live ? "" : "opacity-80"}`}>
@@ -50,8 +53,19 @@ export default function HomeLivePrices({ coins }: { coins: HomeCoin[] }) {
           return (
             <li key={c.id}>
               <Link href={c.href} className="flex items-center gap-3 px-4 py-3 hover:bg-elevated/40">
-                {c.image ? (
-                  <Image src={c.image} alt="" width={28} height={28} className="h-7 w-7 rounded-full" unoptimized />
+                {/* eager : ce sont les logos du bandeau du haut (déjà en cache) ; en lazy, la colonne restait vide
+                    tant que l'image n'était pas déclenchée (audit du 06/10/2026) */}
+                {c.image && !broken[c.id] ? (
+                  <Image
+                    src={c.image}
+                    alt=""
+                    width={28}
+                    height={28}
+                    className="h-7 w-7 rounded-full"
+                    unoptimized
+                    loading="eager"
+                    onError={() => setBroken((b) => ({ ...b, [c.id]: true }))}
+                  />
                 ) : (
                   <span aria-hidden="true" className="grid h-7 w-7 place-items-center rounded-full bg-elevated text-[10px] font-bold text-primary">
                     {c.symbol.slice(0, 3).toUpperCase()}
@@ -59,7 +73,8 @@ export default function HomeLivePrices({ coins }: { coins: HomeCoin[] }) {
                 )}
                 <span className="flex-1 min-w-0">
                   <span className="block truncate text-sm font-semibold text-fg">{c.name}</span>
-                  <span className="block text-xs uppercase text-fg/55">{c.symbol}</span>
+                  {/* fg/65 (06/10/2026) : fg/55 sous l'opacity-80 d'attente donnait 4,08:1, sous le seuil AA */}
+                  <span className="block text-xs uppercase text-fg/65">{c.symbol}</span>
                 </span>
                 <span className="text-right tabular-nums">
                   <span className="block text-sm font-semibold text-fg">{fmtPrice(price)}</span>

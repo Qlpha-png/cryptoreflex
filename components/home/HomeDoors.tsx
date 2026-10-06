@@ -17,7 +17,8 @@ interface Door {
   Icon: LucideIcon;
   title: string;
   text: string;
-  cta: { href: string; label: string; plain?: boolean };
+  /** primary : seul bouton plein de la section (06/10/2026 : 4 boutons or identiques = aucune hiérarchie). */
+  cta: { href: string; label: string; plain?: boolean; primary?: boolean };
   links: { href: string; label: string }[];
   children?: React.ReactNode;
 }
@@ -81,7 +82,7 @@ export default function HomeDoors() {
       Icon: Scale,
       title: "Acheter des cryptos",
       text: "Seulement des plateformes autorisées en France, avec leurs vrais frais.",
-      cta: { href: "/comparatif", label: "Comparer les plateformes" },
+      cta: { href: "/comparatif", label: "Comparer les plateformes", primary: true },
       links: [{ href: "/wizard/premier-achat", label: "Mon premier achat, pas à pas" }],
       children: <TopPlatforms />,
     },
@@ -141,16 +142,20 @@ export default function HomeDoors() {
             </div>
             <p className="mt-1.5 text-sm leading-relaxed text-fg/75">{d.text}</p>
             <div className="flex-1">{d.children}</div>
+            {/* un seul bouton plein (« Comparer les plateformes ») ; les autres portes en btn-ghost (06/10/2026).
+                Hauteur fixe 48 px (plein sans bordure = 44, contour = 46) ; xl:px-3 : en 4 colonnes,
+                « Comparer les plateformes » + flèche (204 px) passait sur 2 lignes avec px-5. */}
             {d.cta.plain ? (
-              <a href={d.cta.href} className="btn-primary mt-5 inline-flex w-full justify-center py-3 text-sm">
+              <a href={d.cta.href} className={`${d.cta.primary ? "btn-primary" : "btn-ghost"} mt-5 inline-flex h-12 w-full justify-center py-0 text-sm xl:px-3`}>
                 {d.cta.label} <ArrowRight className="h-4 w-4" aria-hidden="true" />
               </a>
             ) : (
-              <Link href={d.cta.href} className="btn-primary mt-5 inline-flex w-full justify-center py-3 text-sm">
+              <Link href={d.cta.href} className={`${d.cta.primary ? "btn-primary" : "btn-ghost"} mt-5 inline-flex h-12 w-full justify-center py-0 text-sm xl:px-3`}>
                 {d.cta.label} <ArrowRight className="h-4 w-4" aria-hidden="true" />
               </Link>
             )}
-            <ul className="mt-3 space-y-1.5 text-sm">
+            {/* place de 2 liens réservée dès 2 colonnes : boutons alignés d'une porte à l'autre (06/10/2026) */}
+            <ul className="mt-3 space-y-1.5 text-sm md:min-h-[2.875rem]">
               {d.links.map((l) => (
                 <li key={l.href}>
                   <Link href={l.href} className="text-primary-soft underline-offset-4 hover:text-primary hover:underline">

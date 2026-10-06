@@ -270,8 +270,12 @@ export default function NewsletterCapture() {
                     />
                   )}
                 </div>
+                {/* data-allow-invalid (06/10/2026) : sans lui, la règle globale form:has(input:invalid) mettait
+                    le bouton à opacity .55 tant que le champ est vide (ocre terne, 3,49:1, l'air désactivé).
+                    La saisie est déjà vérifiée au clic (message d'erreur). */}
                 <button
                   type="submit"
+                  data-allow-invalid
                   disabled={status === "loading"}
                   className="btn-primary btn-primary-shine disabled:opacity-60 disabled:cursor-not-allowed shrink-0"
                   aria-live="polite"

@@ -263,7 +263,8 @@ export default function NewsletterInline({
               <Mail className="h-4 w-4" />
             </span>
             <div className="min-w-0">
-              <h3 className="text-base font-bold text-fg leading-tight truncate">{resolvedTitle}</h3>
+              {/* plus de truncate (06/10/2026) : le titre était coupé (« La newsletter quotidienne crypt… ») */}
+              <h3 className="text-base font-bold text-fg leading-tight">{resolvedTitle}</h3>
               <p className="text-xs text-muted">{resolvedSubtitle}</p>
             </div>
           </div>
@@ -293,8 +294,11 @@ export default function NewsletterInline({
                        placeholder:text-muted focus:outline-none focus:border-primary/60
                        focus:ring-2 focus:ring-primary/30 disabled:opacity-50"
           />
+          {/* data-allow-invalid (06/10/2026) : sinon form:has(input:invalid) le grise à .55 tant que le champ
+              est vide (« S'abonner », « Recevoir les alertes sécu » à 3,49:1) ; la saisie est vérifiée au clic. */}
           <button
             type="submit"
+            data-allow-invalid
             disabled={status === "loading" || status === "success"}
             className="btn-primary text-sm py-2.5 px-4 disabled:opacity-60 disabled:cursor-not-allowed shrink-0"
           >

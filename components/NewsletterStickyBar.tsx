@@ -230,8 +230,11 @@ export default function NewsletterStickyBar() {
               aria-invalid={status === "error"}
               className="flex-1 min-w-0 rounded-lg bg-elevated border border-border px-3 py-2 text-sm text-fg placeholder:text-muted focus:outline-none focus:border-primary/60"
             />
+            {/* data-allow-invalid (06/10/2026) : bouton plein même champ vide (sinon grisé à .55 par
+                form:has(input:invalid)) ; la saisie est vérifiée au clic. */}
             <button
               type="submit"
+              data-allow-invalid
               disabled={status === "loading"}
               className="btn-primary text-sm py-2 px-3 shrink-0 disabled:opacity-60"
             >

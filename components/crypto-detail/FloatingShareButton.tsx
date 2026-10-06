@@ -16,9 +16,8 @@ interface FloatingShareButtonProps {
  * FloatingShareButton — Bouton circulaire flottant bottom-left avec menu
  * radial : copier le lien, X (Twitter), WhatsApp, Reddit, LinkedIn.
  *
- * Position : `fixed left-4 bottom-20 sm:bottom-6` — bottom 20 (= 80px) sur
- * mobile pour ne pas overlap MobileStickyCTA (h ~56-64px). Sur desktop
- * remonte à bottom-6.
+ * Position (06/10/2026) : dans le flux (pilule centrée en fin de fiche)
+ * sous xl ; `fixed left-4 bottom-6` en xl+ uniquement, dans la marge.
  *
  * A11y :
  *  - Bouton avec aria-expanded et aria-haspopup
@@ -148,16 +147,19 @@ export default function FloatingShareButton({
   return (
     <div
       ref={containerRef}
-      /* BATCH 38 — fix audit Mobile UX P0 : overlap avec MobileStickyCTA
-         (qui prend ~64-80px en bas mobile + safe-area iOS). On utilise le
-         calc CSS pour s'élever au-dessus du sticky CTA. */
-      className="fixed left-4 bottom-[calc(var(--mobile-bar-h,64px)+72px)] sm:bottom-6 z-40 print:hidden"
+      /* Design lot 0 (06/10/2026) — audit : le cercle fixe en bas à gauche
+         recouvrait le texte sur toute la fiche (mobile et < 1280 px, où le
+         contenu touche les bords). Désormais : bouton « Partager cette page »
+         DANS LE FLUX en fin de fiche sous xl ; flottant seulement en xl+,
+         où la marge latérale (≥ 96 px avec max-w-6xl) l'accueille sans
+         chevauchement. */
+      className="relative z-40 mx-auto mt-10 w-fit print:hidden xl:fixed xl:bottom-6 xl:left-4 xl:mx-0 xl:mt-0"
     >
-      {/* Toast "Lien copié" */}
+      {/* Toast "Lien copié" — au-dessus du bouton dans le flux, à droite en flottant */}
       <div
         aria-live="polite"
         className={[
-          "absolute left-14 bottom-1 whitespace-nowrap rounded-lg border border-success-border bg-success-soft px-3 py-1.5 text-xs font-semibold text-success-fg transition-all duration-200",
+          "absolute bottom-full left-1/2 mb-2 -translate-x-1/2 xl:bottom-1 xl:left-full xl:mb-0 xl:ml-2 xl:translate-x-0 whitespace-nowrap rounded-lg border border-success-border bg-success-soft px-3 py-1.5 text-xs font-semibold text-success-fg transition-all duration-200",
           copied
             ? "opacity-100 translate-y-0"
             : "opacity-0 translate-y-1 pointer-events-none",
@@ -229,14 +231,18 @@ export default function FloatingShareButton({
         }}
         aria-expanded={open}
         aria-haspopup="menu"
-        aria-label={open ? "Fermer le menu de partage" : "Partager cette page"}
-        className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-primary text-background shadow-glow-gold hover:bg-primary-glow focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background transition-transform active:scale-95"
+        /* 06/10/2026 — pilule libellée dans le flux, cercle 48 px en xl ;
+           le nom accessible vient du texte (sr-only en xl). */
+        className="inline-flex h-11 items-center justify-center gap-2 rounded-full bg-primary px-5 text-sm font-semibold text-background shadow-glow-gold hover:bg-primary-glow focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background transition-transform active:scale-95 xl:h-12 xl:w-12 xl:px-0"
       >
         {open ? (
           <X className="h-5 w-5" aria-hidden="true" />
         ) : (
           <Share2 className="h-5 w-5" aria-hidden="true" />
         )}
+        <span className="xl:sr-only">
+          {open ? "Fermer le menu de partage" : "Partager cette page"}
+        </span>
       </button>
     </div>
   );

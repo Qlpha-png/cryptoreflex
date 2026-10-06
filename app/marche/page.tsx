@@ -233,7 +233,7 @@ export default async function MarcheDashboardPage() {
 
           {/* ── Sentiment + Top movers ── */}
           <div className="mt-12 grid grid-cols-1 gap-6 lg:grid-cols-[1fr_1.4fr]">
-            <div className="glass-card rounded-2xl p-6">
+            <div className="glass-card rounded-2xl p-4 sm:p-6">
               <h2 className="text-lg font-bold text-fg">
                 Sentiment du marché
               </h2>
@@ -271,7 +271,7 @@ export default async function MarcheDashboardPage() {
               </div>
             </div>
 
-            <div className="glass-card rounded-2xl p-6">
+            <div className="glass-card rounded-2xl p-4 sm:p-6">
               <h2 className="text-lg font-bold text-fg">Top movers 24h</h2>
               <div className="mt-4 grid grid-cols-1 gap-6 sm:grid-cols-2">
                 <GainerLoserList
@@ -378,15 +378,18 @@ function StatCard({
       <dt className="text-[11px] uppercase tracking-wider text-muted font-semibold">
         {label}
       </dt>
-      <dd className="mt-1 flex items-baseline gap-2">
+      {/* 06/10/2026 — valeur et variation insécables ; si la carte est trop
+          étroite (mobile), la variation passe entière sous la valeur au lieu
+          de laisser « $ » orphelin sur une 3e ligne. */}
+      <dd className="mt-1 flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
         <span
-          className={`num-data text-xl font-bold ${ice ? "text-ice-fg" : "text-fg"}`}
+          className={`num-data whitespace-nowrap text-xl font-bold ${ice ? "text-ice-fg" : "text-fg"}`}
         >
           {value}
         </span>
         {typeof delta === "number" && (
           <span
-            className={`num-data text-xs ${
+            className={`num-data whitespace-nowrap text-xs ${
               delta >= 0 ? "text-success-fg" : "text-danger-fg"
             }`}
           >

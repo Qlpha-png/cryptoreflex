@@ -9,6 +9,7 @@ import {
   getRelatedArticles,
 } from "@/lib/mdx";
 import MdxContent from "@/components/MdxContent";
+import ArticleHero from "@/components/ui/ArticleHero";
 import AuthorCard from "@/components/AuthorCard";
 import { findLessonBySlug, getTrack } from "@/lib/academy-tracks";
 import AmfDisclaimer from "@/components/AmfDisclaimer";
@@ -458,13 +459,32 @@ export default async function BlogArticlePage({ params }: Props) {
                         className="group glass overflow-hidden rounded-2xl transition-transform hover:translate-y-[-2px]
                                    focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                       >
-                        <div
-                          className={`relative h-32 bg-gradient-to-br ${r.gradient}`}
-                        >
-                          <div className="absolute inset-0 bg-grid opacity-30" />
-                          <span className="absolute left-3 top-3 rounded-full bg-background/70 px-2.5 py-1 text-xs font-semibold backdrop-blur">
-                            {r.category}
-                          </span>
+                        {/* Design lot 0 (06/10/2026) — audit : aplats violet/teal
+                            vides. Vraie image de l'article = son OG image
+                            (même source que le héros et l'index du blog ; les
+                            `cover:` MDX pointent tous vers des fichiers absents).
+                            Dessous, ArticleHero (icône de catégorie + initiales)
+                            sert de repli pendant le chargement ou si l'image
+                            échoue. alt="" : le titre du lien suit juste après. */}
+                        <div className="relative aspect-[1200/630] overflow-hidden bg-elevated">
+                          <div className="absolute inset-0">
+                            <ArticleHero
+                              category={r.category}
+                              title={r.title}
+                              gradient={r.gradient}
+                              height="h-full"
+                            />
+                          </div>
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img
+                            src={`/blog/${r.slug}/opengraph-image?v=${r.lastUpdated || r.date}`}
+                            alt=""
+                            className="absolute inset-0 z-20 h-full w-full object-cover transition-transform duration-slow group-hover:scale-[1.03]"
+                            loading="lazy"
+                            decoding="async"
+                            width={1200}
+                            height={630}
+                          />
                         </div>
                         <div className="p-4">
                           <h3 className="font-semibold text-fg group-hover:text-primary-glow">

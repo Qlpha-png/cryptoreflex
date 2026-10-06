@@ -33,6 +33,7 @@ import LessonTool from "@/components/academy/LessonTool";
 import FAQ from "@/components/mdx/FAQ";
 import HowToSchema from "@/components/mdx/HowToSchema";
 import GlossaryLink from "@/components/mdx/GlossaryLink";
+import ScrollableTable from "@/components/ui/ScrollableTable";
 import { getAllPlatforms } from "@/lib/platforms";
 import { getGlossaryEntry } from "@/lib/glossary";
 
@@ -241,10 +242,19 @@ const mdxComponents = {
   // d'un parent qui aurait été gonflé. `min-w-[480px]` rend le scroll
   // horizontal explicite (au lieu de squeezer des cellules à 60px qui
   // wraperaient en illisible) sur mobile <480px.
+  // Design lot 0 (06/10/2026) — défilement signalé (dégradé de bord +
+  // rond chevron cliquable) via ScrollableTable ; `break-normal` annule le
+  // `overflow-wrap: anywhere` hérité du body qui coupait les mots en plein
+  // milieu dans les cellules ; `my-0` supprime les marges prose (2 × 28 px)
+  // qui laissaient une bande vide en haut et en bas, dans le cadre.
   table: (props: ComponentProps<"table">) => (
-    <div className="my-6 overflow-x-auto rounded-xl border border-border max-w-full">
-      <table className="w-full min-w-[480px] border-collapse text-sm" {...props} />
-    </div>
+    <ScrollableTable
+      className="my-6 max-w-full rounded-xl border border-border bg-surface"
+      fadeFrom="from-surface"
+      label="Tableau de l'article, défilant horizontalement"
+    >
+      <table className="my-0 w-full min-w-[480px] border-collapse text-sm break-normal" {...props} />
+    </ScrollableTable>
   ),
   thead: (props: ComponentProps<"thead">) => (
     <thead className="bg-elevated text-left text-xs uppercase tracking-wide text-white/70" {...props} />

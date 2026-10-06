@@ -114,13 +114,16 @@ export default function CryptoSources({ cryptoName, sources, className = "" }: P
         librement pour vérifier par vous-même — c&apos;est la base de notre
         méthodologie publique.
       </p>
-      <ul className="grid gap-2 sm:grid-cols-2">
+      {/* Design lot 0 (06/10/2026) — `grid-cols-1` explicite (minmax(0,1fr)) :
+          la colonne implicite prenait la largeur du libellé tronqué et
+          débordait de 60 px à 390 px. Libellés et notes passent à la ligne. */}
+      <ul className="grid grid-cols-1 gap-2 sm:grid-cols-2">
         {sorted.map((s, i) => {
           const Icon = ICON_MAP[s.type];
           const external = isExternal(s.url);
           const typeLabel = TYPE_LABEL[s.type];
           const linkClassName =
-            "group flex items-start gap-3 rounded-xl border border-border bg-background/60 p-3 hover:border-primary/40 hover:bg-elevated/60 transition-colors";
+            "group flex h-full items-start gap-3 rounded-xl border border-border bg-background/60 p-3 hover:border-primary/40 hover:bg-elevated/60 transition-colors";
           const inner = (
             <>
               <div className="shrink-0 grid place-items-center h-8 w-8 rounded-lg bg-primary/10 text-primary-soft">
@@ -132,7 +135,7 @@ export default function CryptoSources({ cryptoName, sources, className = "" }: P
                     {typeLabel}
                   </span>
                 </div>
-                <div className="mt-0.5 text-sm font-semibold text-fg truncate group-hover:text-primary-soft transition-colors">
+                <div className="mt-0.5 text-sm font-semibold text-fg break-words group-hover:text-primary-soft transition-colors">
                   {s.label}
                   {external && (
                     <ExternalLink
@@ -142,7 +145,7 @@ export default function CryptoSources({ cryptoName, sources, className = "" }: P
                   )}
                 </div>
                 {s.note && (
-                  <div className="mt-0.5 text-[11px] text-muted leading-snug truncate">
+                  <div className="mt-0.5 text-[11px] text-muted leading-snug break-words">
                     {s.note}
                   </div>
                 )}

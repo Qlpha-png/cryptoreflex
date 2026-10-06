@@ -14,6 +14,7 @@ import {
   XCircle,
   Phone,
   MessageSquare,
+  Ban,
 } from "lucide-react";
 import { cardBuyPct, getAllPlatforms, getPlatformById, isAvailableFr, type Platform, hasNoIncident } from "@/lib/platforms";
 import {
@@ -340,14 +341,24 @@ export default function ReviewPage({ params }: Props) {
 
         {/* Bandeau plateforme fermée au marché FR (ex : Gemini) */}
         {!available && (
-          <div className="mt-4 rounded-xl border border-red-400/40 bg-red-400/10 p-4 text-sm leading-relaxed text-red-200">
-            <strong className="font-semibold text-red-100">
-              {p.name} n&apos;est pas autorisée à servir les résidents français.
-            </strong>{" "}
-            {p.mica.status}. Depuis le 1er juillet 2026, seuls les prestataires agréés MiCA avec accès à la France peuvent y proposer des services sur crypto-actifs : nous ne proposons aucun lien vers {p.name}.{" "}
-            <Link href="/comparatif/frais" className="underline hover:text-white">
-              Voir les plateformes autorisées →
-            </Link>
+          <div
+            role="note"
+            className="mt-4 rounded-xl border border-red-400/40 bg-red-400/10 p-4 text-sm leading-relaxed text-red-200"
+          >
+            {/* 06/10/2026 : libellé court et visible, identique au badge des cartes de /avis. */}
+            <p className="mb-2 inline-flex items-center gap-1.5 rounded-full border border-red-400/40 bg-red-400/15 px-2.5 py-0.5 text-xs font-bold text-red-100">
+              <Ban className="h-3.5 w-3.5" aria-hidden="true" />
+              Non disponible en France
+            </p>
+            <p>
+              <strong className="font-semibold text-red-100">
+                {p.name} n&apos;est pas autorisée à servir les résidents français.
+              </strong>{" "}
+              {p.mica.status}. Depuis le 1er juillet 2026, seuls les prestataires agréés MiCA avec accès à la France peuvent y proposer des services sur crypto-actifs : nous ne proposons aucun lien vers {p.name}.{" "}
+              <Link href="/comparatif/frais" className="underline hover:text-white">
+                Voir les plateformes autorisées →
+              </Link>
+            </p>
           </div>
         )}
 

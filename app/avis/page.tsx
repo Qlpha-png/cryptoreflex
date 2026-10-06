@@ -8,9 +8,10 @@ import {
   Building2,
   Wallet,
   Sparkles,
+  Ban,
 } from "lucide-react";
 
-import { getAllPlatforms, type Platform } from "@/lib/platforms";
+import { getAllPlatforms, isAvailableFr, type Platform } from "@/lib/platforms";
 import { getPublishableReviewSlugs } from "@/lib/programmatic";
 import { BRAND } from "@/lib/brand";
 import StructuredData from "@/components/StructuredData";
@@ -91,7 +92,11 @@ const CATEGORY_ICONS: Record<Platform["category"], typeof Building2> = {
 
 export default function AvisHubPage() {
   const publishableSlugs = new Set(getPublishableReviewSlugs());
-  const all = getAllPlatforms().filter((p) => publishableSlugs.has(p.id));
+  // 06/10/2026 : les plateformes non autorisées en France (isAvailableFr) passent après les
+  // disponibles (tri stable : l'ordre par score est conservé dans chaque groupe).
+  const all = getAllPlatforms()
+    .filter((p) => publishableSlugs.has(p.id))
+    .sort((a, b) => Number(isAvailableFr(b)) - Number(isAvailableFr(a)));
 
   // Regroupement par catégorie pour l'affichage en sections.
   const byCategory: Record<Platform["category"], Platform[]> = {
@@ -166,10 +171,11 @@ export default function AvisHubPage() {
               Avis plateformes <span className="gradient-text">crypto</span>
             </h1>
             <p className="mt-3 text-lg text-fg/70">
-              Tous les exchanges, brokers et hardware wallets disponibles en
-              France, notés sur 6 critères pondérés (frais, sécurité, UX,
-              support FR, conformité MiCA, score global). Méthodologie publique,
-              vérification mensuelle.
+              Les exchanges, brokers et hardware wallets notés sur 6 critères
+              pondérés (frais, sécurité, UX, support FR, conformité MiCA, score
+              global). Méthodologie publique, vérification mensuelle. Les
+              plateformes non autorisées en France sont signalées et classées en
+              fin de liste.
             </p>
           </header>
 
@@ -202,6 +208,8 @@ export default function AvisHubPage() {
                 const list = byCategory[cat];
                 if (list.length === 0) return null;
                 const Icon = CATEGORY_ICONS[cat];
+                const dispo = list.filter(isAvailableFr);
+                const horsFr = list.filter((p) => !isAvailableFr(p));
                 return (
                   <section key={cat} id={cat}>
                     <header className="flex items-center gap-3 mb-6">
@@ -216,11 +224,32 @@ export default function AvisHubPage() {
                       </h2>
                     </header>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                      {list.map((p) => (
-                        <ReviewCard key={p.id} platform={p} />
-                      ))}
-                    </div>
+                    {dispo.length > 0 && (
+                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                        {dispo.map((p) => (
+                          <ReviewCard key={p.id} platform={p} />
+                        ))}
+                      </div>
+                    )}
+
+                    {/* 06/10/2026 : groupe séparé, après les plateformes disponibles.
+                        Jeton danger-fg (#FCA5A5) : red-200 (#FECACA) se lisait presque blanc. */}
+                    {horsFr.length > 0 && (
+                      <>
+                        <h3 className="mt-8 mb-4 flex items-center gap-2 text-sm font-semibold text-danger-fg">
+                          <Ban className="h-4 w-4" aria-hidden="true" />
+                          Non disponibles en France
+                          <span className="font-normal text-muted">
+                            ({horsFr.length})
+                          </span>
+                        </h3>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                          {horsFr.map((p) => (
+                            <ReviewCard key={p.id} platform={p} />
+                          ))}
+                        </div>
+                      </>
+                    )}
                   </section>
                 );
               }
@@ -258,14 +287,24 @@ export default function AvisHubPage() {
 
 function ReviewCard({ platform }: { platform: Platform }) {
   const { id, name, tagline, scoring, mica, badge } = platform;
+  // 06/10/2026 : plateforme non autorisée en France → badge rouge, et pas de pastille « MiCA »
+  // (Gemini reste agréée MiCA à Malte mais a quitté le marché français).
+  const available = isAvailableFr(platform);
   return (
     <Link
       href={`/avis/${id}`}
-      className="group rounded-2xl border border-border bg-surface p-5 hover:border-primary/40 transition-colors flex flex-col"
+      className={`group rounded-2xl border bg-surface p-5 transition-colors flex flex-col ${
+        available ? "border-border hover:border-primary/40" : "border-red-400/30 hover:border-red-400/60"
+      }`}
     >
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
-          {badge && (
+          {!available ? (
+            <span className="inline-flex items-center gap-1 rounded-full border border-red-400/40 bg-red-400/10 px-2 py-0.5 text-xs font-semibold text-red-200">
+              <Ban className="h-3 w-3" aria-hidden="true" />
+              Non disponible en France
+            </span>
+          ) : badge && (
             <span className="inline-flex items-center gap-1 rounded-full border border-primary/30 bg-primary/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-primary-soft">
               {badge}
             </span>
@@ -279,7 +318,7 @@ function ReviewCard({ platform }: { platform: Platform }) {
             </span>
           </div>
         </div>
-        {mica.micaCompliant && (
+        {available && mica.micaCompliant && (
           <span
             className="inline-flex items-center gap-1 rounded-md border border-accent-green/30 bg-accent-green/10 px-2 py-0.5 text-[10px] font-semibold text-accent-green shrink-0"
             title="Conforme MiCA"

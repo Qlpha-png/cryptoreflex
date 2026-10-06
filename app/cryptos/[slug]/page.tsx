@@ -55,6 +55,7 @@ import CryptoStats from "@/components/crypto-detail/CryptoStats";
 import AddToCompareButton from "@/components/crypto-detail/AddToCompareButton";
 import LastReviewedBadge from "@/components/crypto-detail/LastReviewedBadge";
 import CryptoSources from "@/components/crypto-detail/CryptoSources";
+import ScrollableTable from "@/components/ui/ScrollableTable";
 import { getWhitepaperTldrFor } from "@/lib/whitepaper-tldrs";
 // PERF 2026-10-02 — widgets client lazy : les `dynamic()` vivent dans un
 // module "use client" (components/crypto-detail/FicheLazyWidgets.tsx). Appelés
@@ -1215,7 +1216,8 @@ export default async function CryptoPage({ params }: Props) {
         />
       )}
 
-      {/* Polish UX 01/05/2026 — bouton de partage flottant (bottom-left). */}
+      {/* Polish UX 01/05/2026 — bouton de partage ; 06/10/2026 : dans le flux
+          sous xl (ne recouvre plus le texte), flottant dans la marge en xl+. */}
       <FloatingShareButton
         url={pageUrl}
         title={`${c.name} (${c.symbol}) — Cryptoreflex`}
@@ -1270,35 +1272,45 @@ function AnnualPerformance({ cryptoId, cryptoName }: { cryptoId: string; cryptoN
         Clôture, plus haut, plus bas et variation (ouverture→clôture) par année — USD,
         source Binance, indicatif.
       </p>
-      <div className="mt-4 overflow-x-auto">
-        <table className="w-full text-sm">
+      {/* Design lot 0 (06/10/2026) — à 390 px les nombres se coupaient en deux
+          lignes (« 17 17 / 6 $ ») : `break-normal` annule l'overflow-wrap
+          anywhere du body, `whitespace-nowrap` garde chiffres et en-têtes
+          entiers ; si trop large, ScrollableTable fait défiler avec un indice. */}
+      <ScrollableTable className="mt-4" label={`Performance annuelle de ${cryptoName}, tableau défilant`}>
+        <table className="w-full text-sm break-normal">
           <thead>
-            <tr className="text-left text-xs uppercase tracking-wider text-muted">
-              <th className="py-2 pr-4 font-semibold">Année</th>
-              <th className="py-2 pr-4 font-semibold">Clôture</th>
-              <th className="py-2 pr-4 font-semibold">Plus haut</th>
-              <th className="py-2 pr-4 font-semibold">Plus bas</th>
-              <th className="py-2 font-semibold">Variation</th>
+            <tr className="text-left text-xs uppercase tracking-wider text-muted whitespace-nowrap">
+              <th className="py-2 pr-3 sm:pr-4 font-semibold">Année</th>
+              <th className="py-2 pr-3 sm:pr-4 font-semibold">Clôture</th>
+              <th className="py-2 pr-3 sm:pr-4 font-semibold">Plus haut</th>
+              <th className="py-2 pr-3 sm:pr-4 font-semibold">Plus bas</th>
+              {/* « Var. » sous 640 px : l'en-tête complet était la colonne la
+                  plus large et faisait déborder le tableau à 390 px. */}
+              <th className="py-2 font-semibold">
+                <span aria-hidden="true" className="sm:hidden">Var.</span>
+                <span className="sr-only sm:not-sr-only">Variation</span>
+              </th>
             </tr>
           </thead>
           <tbody>
             {rows.map((r) => (
               <tr key={r.y} className="border-t border-border">
-                <td className="py-2 pr-4 font-semibold">
+                <td className="py-2 pr-3 sm:pr-4 font-semibold">
                   <Link href={`/historique-prix/${cryptoId}/${r.y}`} className="hover:text-primary-soft">
                     {r.y}
                   </Link>
+                  {/* 06/10/2026 — sous l'année sur mobile (au lieu d'élargir la colonne). */}
                   {r.m < 12 && (
-                    <span className="ml-1.5 text-[10px] font-normal text-muted whitespace-nowrap">
-                      en cours · {r.m} mois
+                    <span className="block text-[10px] font-normal leading-tight text-muted sm:ml-1.5 sm:inline sm:whitespace-nowrap">
+                      en cours · {r.m}&nbsp;mois
                     </span>
                   )}
                 </td>
-                <td className="py-2 pr-4 tabular-nums">{formatOhlcPrice(r.c)}</td>
-                <td className="py-2 pr-4 tabular-nums text-fg/70">{formatOhlcPrice(r.h)}</td>
-                <td className="py-2 pr-4 tabular-nums text-fg/70">{formatOhlcPrice(r.l)}</td>
+                <td className="py-2 pr-3 sm:pr-4 tabular-nums whitespace-nowrap">{formatOhlcPrice(r.c)}</td>
+                <td className="py-2 pr-3 sm:pr-4 tabular-nums whitespace-nowrap text-fg/70">{formatOhlcPrice(r.h)}</td>
+                <td className="py-2 pr-3 sm:pr-4 tabular-nums whitespace-nowrap text-fg/70">{formatOhlcPrice(r.l)}</td>
                 <td
-                  className={`py-2 font-bold tabular-nums ${
+                  className={`py-2 font-bold tabular-nums whitespace-nowrap ${
                     r.chg >= 0 ? "text-accent-green" : "text-danger-fg"
                   }`}
                 >
@@ -1309,7 +1321,7 @@ function AnnualPerformance({ cryptoId, cryptoName }: { cryptoId: string; cryptoN
             ))}
           </tbody>
         </table>
-      </div>
+      </ScrollableTable>
     </section>
   );
 }
