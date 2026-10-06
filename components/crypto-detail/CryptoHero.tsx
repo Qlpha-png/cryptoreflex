@@ -222,7 +222,7 @@ export default function CryptoHero({
                 },
               ]}
               className="mt-2 text-[11px] text-muted"
-              suffix=" — mises à jour toutes les 5 minutes."
+              suffix="."
             />
           )}
         </div>

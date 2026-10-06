@@ -207,9 +207,9 @@ export default async function HeatmapPage() {
             Intégrez la heatmap sur votre site
           </h2>
           <p className="mt-2 text-sm text-fg/80 leading-relaxed">
-            Une iframe, zéro maintenance — la heatmap top 20 live (SSE Binance)
-            directement sur votre blog, votre dashboard ou votre agrégateur. License
-            CC-BY 4.0 (attribution dofollow vers Cryptoreflex incluse).
+            Une iframe, zéro maintenance : la heatmap du top 20 directement sur votre blog,
+            votre tableau de bord ou votre agrégateur, avec un lien vers Cryptoreflex. Les
+            données de marché restent celles de leurs fournisseurs, cités dans le cadre.
           </p>
           <pre className="mt-3 overflow-x-auto rounded-lg border border-border bg-background/60 p-3 text-[11px] leading-relaxed text-white/85 font-mono whitespace-pre-wrap break-all">
 {`<iframe src="https://www.cryptoreflex.fr/embed/heatmap" width="100%" height="620" frameborder="0" loading="lazy" title="Heatmap crypto live — Cryptoreflex"></iframe>`}
