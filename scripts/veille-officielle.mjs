@@ -159,6 +159,8 @@ async function lf(api, chemin, corps) {
   try { json = JSON.parse(brut); } catch {}
   return { status: res.status, json, brut: propre(brut.slice(0, 240)) };
 }
+// « ABROGE_DIFF » = version en vigueur aujourd'hui dont la fin est déjà fixée (ex. art. 1736 : du 01/07/2026 au 01/01/2030, vu le 06/10/2026).
+const EN_VIGUEUR = new Set(["VIGUEUR", "ABROGE_DIFF"]);
 const versionsDe = (a) => (a?.articleVersions || []).map((v) => ({ id: v.id, etat: v.etat, debut: jour(v.dateDebut), fin: jour(v.dateFin) }));
 
 /** Version EN VIGUEUR d'un article (et versions à venir), à partir d'un identifiant connu ou du couple texte + numéro. */
@@ -179,7 +181,7 @@ async function articleEnVigueur(api, src) {
   }
   if (!a?.id) return { erreur: traces.join(" | ") };
   let versions = versionsDe(a);
-  const courante = versions.find((v) => v.etat === "VIGUEUR");
+  const courante = versions.find((v) => EN_VIGUEUR.has(v.etat));
   if (courante && courante.id !== a.id) {
     const r = await lf(api, "/consult/getArticle", { id: courante.id });
     traces.push(`getArticle(version en vigueur ${courante.id}) HTTP ${r.status}`);
@@ -219,7 +221,7 @@ async function veilleLegifrance() {
       log(`  versions : ${a.versions.map((v) => `${v.id}:${v.etat}:${v.debut}→${v.fin}`).join("  ") || "(aucune liste)"}`);
       log(`  extraits : ${extraits(a.texte) || a.texte.slice(0, 600)}`);
     }
-    if (a.etat && a.etat !== "VIGUEUR") warn("loi", `${src.cle} : la version lue (${a.id}) est à l'état ${a.etat}, pas « VIGUEUR »`);
+    if (a.etat && !EN_VIGUEUR.has(a.etat)) warn("loi", `${src.cle} : la version lue (${a.id}) est à l'état ${a.etat}, pas « VIGUEUR »`);
     const ref = ETAT.legifrance?.[src.cle];
     if (!ref) nouveau("loi", `${src.cle} : version ${a.id} en vigueur depuis le ${a.debut} (pas encore de référence)`);
     else {
