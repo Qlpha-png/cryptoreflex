@@ -1,4 +1,9 @@
 import { unstable_cache } from "next/cache";
+// 06/10/2026 — imports de TYPES seulement (effacés à la compilation) : les modules de sources
+// (CoinMarketCap, table de priorités, relais) sont chargés dynamiquement dans les fonctions serveur,
+// pour ne rien ajouter au code envoyé au navigateur par les composants clients qui importent ce fichier.
+import type { SourceName } from "@/lib/data-sources/priorities";
+import type { FieldSources } from "@/lib/data-sources/market-fields";
 
 export type CoinId = "bitcoin" | "ethereum" | "solana" | "binancecoin" | "ripple" | "cardano";
 
@@ -478,61 +483,82 @@ export interface GlobalMetrics {
   ethDominance: number;
   marketCapChange24h: number;
   activeCryptos: number;
+  /** 06/10/2026 — source réelle (« coinmarketcap », « coingecko » ou « top-sum ») pour l'attribution. */
+  source?: SourceName;
 }
 
 async function _fetchGlobalMetrics(): Promise<GlobalMetrics | null> {
-  // BATCH 51 — Migration : on derive les metriques globales depuis le top
-  // 200 CoinCap (gratuit illimite) au lieu de CoinGecko /global. Total
-  // market cap = somme des market caps. BTC dominance = btc.marketCap /
-  // total. Approximation : le top 200 represente >97% de la capitalisation
-  // totale (longue queue negligeable). Fallback CoinGecko ci-dessous.
-  try {
-    const { getTopMarket } = await import("@/lib/price-source");
-    const top200 = await getTopMarket(200);
-    if (top200.length >= 50) {
-      const totalMarketCap = top200.reduce((sum, c) => sum + (c.marketCap || 0), 0);
-      const totalVolume = top200.reduce((sum, c) => sum + (c.volume24h || 0), 0);
-      const btc = top200.find((c) => c.symbol === "BTC");
-      const eth = top200.find((c) => c.symbol === "ETH");
-      // change24h pondere = somme(change × marketCap) / totalMarketCap
-      const weightedChange =
-        totalMarketCap > 0
-          ? top200.reduce((sum, c) => sum + (c.change24h || 0) * (c.marketCap || 0), 0) / totalMarketCap
-          : 0;
-      return {
-        totalMarketCapUsd: totalMarketCap,
-        totalVolume24hUsd: totalVolume,
-        btcDominance: btc && totalMarketCap > 0 ? (btc.marketCap / totalMarketCap) * 100 : 0,
-        ethDominance: eth && totalMarketCap > 0 ? (eth.marketCap / totalMarketCap) * 100 : 0,
-        marketCapChange24h: weightedChange,
-        activeCryptos: top200.length, // approximation — on a 1500+ via CoinCap mais on tronque
-      };
-    }
-  } catch {
-    // Fallback CoinGecko
-  }
+  // 06/10/2026 — ordre de DATA_PRIORITIES.global (lib/data-sources/priorities.ts) : CoinMarketCap
+  // global-metrics (1 crédit / 30 min, vraie donnée globale) → CoinGecko /global → somme du top 200.
+  // Relais automatique + disjoncteur ; tout en panne → null comme avant.
+  const [{ resolveWithRelay }, cmc] = await Promise.all([
+    import("@/lib/data-sources/resolve"),
+    import("@/lib/coinmarketcap"),
+  ]);
+  const r = await resolveWithRelay<GlobalMetrics>(
+    "global",
+    {
+      coinmarketcap: cmc.cmcEnabled() ? () => cmc.cmcGlobalMetrics() : undefined,
+      coingecko: _fetchGlobalFromCoingecko,
+      "top-sum": _fetchGlobalFromTopSum,
+    },
+    {
+      label: "métriques globales",
+      channels: { coingecko: "coingecko-cle" },
+      validate: (g) =>
+        !(g.totalMarketCapUsd > 0) ? "capitalisation totale ≤ 0"
+        : !(g.btcDominance > 0 && g.btcDominance < 100) ? "dominance BTC hors de ]0 ; 100["
+        : !(g.ethDominance >= 0 && g.ethDominance < 100) ? "dominance ETH hors de [0 ; 100["
+        : null,
+    },
+  );
+  return r ? { ...r.value, source: r.source } : null;
+}
 
-  try {
-    // FIX P0 2026-05-06 — timeout 8s
-    const res = await fetch(`${COINGECKO_BASE}/global`, {
-      next: { revalidate: 1800, tags: [CG_TAGS.global] },
-      headers: cgHeaders(),
-      signal: AbortSignal.timeout(8000),
-    });
-    if (!res.ok) throw new Error(`CoinGecko global ${res.status}`);
-    const json = await res.json();
-    const d = json.data;
-    return {
-      totalMarketCapUsd: d.total_market_cap.usd,
-      totalVolume24hUsd: d.total_volume.usd,
-      btcDominance: d.market_cap_percentage.btc,
-      ethDominance: d.market_cap_percentage.eth,
-      marketCapChange24h: d.market_cap_change_percentage_24h_usd,
-      activeCryptos: d.active_cryptocurrencies,
-    };
-  } catch {
-    return null;
-  }
+/** BATCH 51 — métriques recalculées sur le top 200 (dernier relais). Lève une erreur si moins de 50 lignes. */
+async function _fetchGlobalFromTopSum(): Promise<GlobalMetrics | null> {
+  const { getTopMarket } = await import("@/lib/price-source");
+  const top200 = await getTopMarket(200);
+  if (top200.length < 50) throw new Error(`top 200 incomplet (${top200.length} lignes)`);
+  const totalMarketCap = top200.reduce((sum, c) => sum + (c.marketCap || 0), 0);
+  const totalVolume = top200.reduce((sum, c) => sum + (c.volume24h || 0), 0);
+  const btc = top200.find((c) => c.symbol === "BTC");
+  const eth = top200.find((c) => c.symbol === "ETH");
+  // change24h pondere = somme(change × marketCap) / totalMarketCap
+  const weightedChange =
+    totalMarketCap > 0
+      ? top200.reduce((sum, c) => sum + (c.change24h || 0) * (c.marketCap || 0), 0) / totalMarketCap
+      : 0;
+  return {
+    totalMarketCapUsd: totalMarketCap,
+    totalVolume24hUsd: totalVolume,
+    btcDominance: btc && totalMarketCap > 0 ? (btc.marketCap / totalMarketCap) * 100 : 0,
+    ethDominance: eth && totalMarketCap > 0 ? (eth.marketCap / totalMarketCap) * 100 : 0,
+    marketCapChange24h: weightedChange,
+    activeCryptos: top200.length, // approximation — on a 1500+ via CoinCap mais on tronque
+  };
+}
+
+/** CoinGecko /global (avec la clé Demo si présente). Lève une erreur sur réponse non 200. */
+async function _fetchGlobalFromCoingecko(): Promise<GlobalMetrics | null> {
+  // FIX P0 2026-05-06 — timeout 8s
+  const res = await fetch(`${COINGECKO_BASE}/global`, {
+    next: { revalidate: 1800, tags: [CG_TAGS.global] },
+    headers: cgHeaders(),
+    signal: AbortSignal.timeout(8000),
+  });
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  const json = await res.json();
+  const d = json?.data;
+  if (!d?.total_market_cap?.usd) throw new Error("réponse incomplète");
+  return {
+    totalMarketCapUsd: d.total_market_cap.usd,
+    totalVolume24hUsd: d.total_volume.usd,
+    btcDominance: d.market_cap_percentage.btc,
+    ethDominance: d.market_cap_percentage.eth,
+    marketCapChange24h: d.market_cap_change_percentage_24h_usd,
+    activeCryptos: d.active_cryptocurrencies,
+  };
 }
 
 export const fetchGlobalMetrics = unstable_cache(
@@ -551,6 +577,8 @@ export interface FearGreedData {
    * de momentum. Null si la valeur d'hier est indisponible.
    */
   deltaVsYesterday?: number | null;
+  /** 06/10/2026 — source réelle (« alternative-me » ou « coinmarketcap »). */
+  source?: SourceName;
 }
 
 const FEAR_GREED_FR: Record<string, string> = {
@@ -561,7 +589,42 @@ const FEAR_GREED_FR: Record<string, string> = {
   "Extreme Greed": "Cupidité extrême",
 };
 
+/**
+ * 06/10/2026 — ordre de DATA_PRIORITIES.fearGreed : alternative.me (inchangé) puis CoinMarketCap Fear & Greed
+ * (inclus dans l'offre Basic, inactif sans CMC_API_KEY) en relais. `source` indique l'origine réelle.
+ */
 export async function fetchFearGreed(): Promise<FearGreedData | null> {
+  const [{ resolveWithRelay }, cmc] = await Promise.all([
+    import("@/lib/data-sources/resolve"),
+    import("@/lib/coinmarketcap"),
+  ]);
+  const r = await resolveWithRelay<FearGreedData>(
+    "fearGreed",
+    {
+      "alternative-me": _fetchFearGreedAlternative,
+      coinmarketcap: cmc.cmcEnabled()
+        ? async () => {
+            const d = await cmc.cmcFearGreed();
+            if (!d) return null;
+            const key = Object.keys(FEAR_GREED_FR).find((k) => k.toLowerCase() === d.classification.toLowerCase());
+            return {
+              value: d.value,
+              classification: key ? FEAR_GREED_FR[key] : d.classification,
+              timestamp: new Date(d.timestamp).toISOString(),
+              deltaVsYesterday: null,
+            };
+          }
+        : undefined,
+    },
+    {
+      label: "peur & avidité",
+      validate: (d) => (Number.isFinite(d.value) && d.value >= 0 && d.value <= 100 ? null : `valeur hors de [0 ; 100] (${d.value})`),
+    },
+  );
+  return r ? { ...r.value, source: r.source } : null;
+}
+
+async function _fetchFearGreedAlternative(): Promise<FearGreedData | null> {
   try {
     // BATCH 29C — fetch limit=2 pour récupérer aujourd'hui + hier en 1 call.
     // Permet d'afficher le delta sentiment sans coût supplémentaire.
@@ -610,9 +673,169 @@ export interface MarketCoin {
   sparkline7d: number[];
   circulatingSupply: number;
   ath: number;
+  /** 06/10/2026 — source réelle de chaque champ (attribution, components/home/market-source.ts). */
+  sources?: FieldSources;
+  /** 06/10/2026 — heure du relevé servi (Data Cache) ; `stale` = relevé de plus de 45 min, « cours non à jour ». */
+  asOf?: string;
+  stale?: boolean;
 }
 
+/**
+ * 06/10/2026 — ordre de DATA_PRIORITIES.topMarket : CoinMarketCap (classement de 200 en cache 15 min) →
+ * CoinGecko /coins/markets (clé Demo, disjoncteur « coingecko-cle ») → agrégateur maison. Quand CMC fournit la
+ * liste, CoinGecko sert de COMPLÉMENT (courbe 7 j, ATH, logo, capitalisation quand CMC la met à 0), avec le même
+ * appel et le même cache qu'avant.
+ * Ids (correctif du vérificateur) : une ligne CMC prend l'id du site par la table vérifiée (data/cmc-id-map.json) ;
+ * sinon l'id CoinGecko de l'UNIQUE ligne du complément qui a exactement le même nom et le même symbole ; sinon
+ * « cmc-<n> », qui n'ouvre aucune fiche et ne reçoit aucun complément. Jamais le slug CMC.
+ * Tuiles : une ligne sans capitalisation (> 0) est écartée (jamais de tuile à 0) ; un logo vide est complété par le
+ * logo local de l'id (lib/crypto-logos.ts), jamais par symbole (homonymes).
+ */
 async function _fetchTopMarket(limit: number): Promise<MarketCoin[]> {
+  const [{ resolveWithRelay }, { checkList }, health, cmc] = await Promise.all([
+    import("@/lib/data-sources/resolve"),
+    import("@/lib/data-sources/sanity"),
+    import("@/lib/data-sources/health"),
+    import("@/lib/coinmarketcap"),
+  ]);
+  const minRows = Math.min(limit, 10);
+  const toCheck = (list: MarketCoin[]) =>
+    list.map((c) => ({ priceUsd: c.currentPrice, marketCap: c.marketCap, change24h: c.priceChange24h, symbol: c.symbol }));
+  const r = await resolveWithRelay<MarketCoin[]>(
+    "topMarket",
+    {
+      coinmarketcap: cmc.cmcEnabled()
+        ? async () => {
+            const rows = cmc.cmcRowsWithSiteIds(await cmc.cmcListingsTop()).slice(0, limit);
+            if (rows.length === 0) return null;
+            return rows.map((q) => ({
+              id: q.siteId ?? `${cmc.CMC_UNLINKED_PREFIX}${q.cmcId}`,
+              symbol: q.symbol,
+              name: q.name,
+              image: "",
+              currentPrice: q.priceUsd,
+              marketCap: q.marketCap ?? 0,
+              marketCapRank: q.rank ?? 0,
+              totalVolume: q.volume24h ?? 0,
+              priceChange1h: q.change1h,
+              priceChange24h: q.change24h ?? 0,
+              priceChange7d: q.change7d,
+              sparkline7d: [],
+              circulatingSupply: q.circulatingSupply ?? 0,
+              ath: 0,
+              sources: {
+                price: "coinmarketcap",
+                change1h: "coinmarketcap",
+                change24h: "coinmarketcap",
+                change7d: "coinmarketcap",
+                marketCap: "coinmarketcap",
+                rank: "coinmarketcap",
+                circulatingSupply: "coinmarketcap",
+                volume24h: "coinmarketcap",
+              },
+            }));
+          }
+        : undefined,
+      coingecko: () => _fetchTopMarketCoingecko(limit),
+      aggregator: () => _fetchTopMarketAggregator(limit),
+    },
+    {
+      label: `top ${limit}`,
+      validate: (list) => checkList(toCheck(list), minRows).reason,
+      channels: { coingecko: health.CHANNELS.coingeckoKey },
+    },
+  );
+  if (!r) return [];
+  let rows = r.value.filter((c) => c.currentPrice > 0);
+  if (r.source === "coinmarketcap") rows = await _complementCmcRows(rows, limit, cmc.CMC_UNLINKED_PREFIX);
+  return _finishTopRows(rows);
+}
+
+/** Clé de rapprochement STRICTE nom + symbole (casse ignorée, rien d'autre). */
+const _nameSymbolKey = (name: string, symbol: string) => `${name.trim().toLowerCase()}|${symbol.trim().toUpperCase()}`;
+
+/**
+ * Complément CoinGecko des lignes CMC (même appel /coins/markets et même cache qu'avant, disjoncteur
+ * « coingecko-cle »). Si CoinGecko est en panne ou mis de côté : courbes 7 j des lignes AVEC fiche via les
+ * instantanés de l'agrégateur (klines Binance), comme l'ancien secours.
+ */
+async function _complementCmcRows(rows: MarketCoin[], limit: number, unlinkedPrefix: string): Promise<MarketCoin[]> {
+  const health = await import("@/lib/data-sources/health");
+  const channel = health.CHANNELS.coingeckoKey;
+  let cg: MarketCoin[] = [];
+  if (health.isAvailable(channel)) {
+    try {
+      cg = await _fetchTopMarketCoingecko(limit);
+      health.recordSuccess(channel);
+    } catch (err) {
+      health.recordFailure(channel, `complément top ${limit} : ${err instanceof Error ? err.message : "erreur"}`);
+    }
+  }
+  if (cg.length > 0) {
+    const byId = new Map(cg.map((c) => [c.id, c]));
+    // null = plusieurs lignes CoinGecko avec le même nom et le même symbole → aucun rapprochement.
+    const byNameSymbol = new Map<string, MarketCoin | null>();
+    for (const c of cg) {
+      const k = _nameSymbolKey(c.name, c.symbol);
+      byNameSymbol.set(k, byNameSymbol.has(k) ? null : c);
+    }
+    // Ids déjà portés par une ligne : un rapprochement nom + symbole ne peut JAMAIS les reprendre (id en double).
+    const taken = new Set(rows.filter((c) => !c.id.startsWith(unlinkedPrefix)).map((c) => c.id));
+    return rows.map((c) => {
+      let row = c;
+      if (c.id.startsWith(unlinkedPrefix)) {
+        const m = byNameSymbol.get(_nameSymbolKey(c.name, c.symbol));
+        // sans correspondance exacte, unique et libre : affichée sans lien de fiche ni complément
+        if (!m || taken.has(m.id)) return c;
+        taken.add(m.id);
+        row = { ...c, id: m.id };
+      }
+      const g = byId.get(row.id);
+      if (!g) return row;
+      const sources: FieldSources = { ...row.sources };
+      if (g.sparkline7d.length) sources.sparkline7d = "coingecko";
+      if (g.ath > 0) sources.ath = "coingecko";
+      const fillCap = !(row.marketCap > 0) && g.marketCap > 0;
+      if (fillCap) {
+        sources.marketCap = "coingecko";
+        sources.circulatingSupply = "coingecko";
+      }
+      return {
+        ...row,
+        image: g.image || row.image,
+        sparkline7d: g.sparkline7d.length ? g.sparkline7d : row.sparkline7d,
+        ath: g.ath || row.ath,
+        marketCap: fillCap ? g.marketCap : row.marketCap,
+        circulatingSupply: fillCap ? g.circulatingSupply : row.circulatingSupply,
+        sources,
+      };
+    });
+  }
+  try {
+    const { getPriceSnapshot } = await import("@/lib/price-source");
+    return await Promise.all(
+      rows.map(async (c) => {
+        if (c.id.startsWith(unlinkedPrefix)) return c;
+        const snap = await getPriceSnapshot(c.id).catch(() => null);
+        const spark = snap?.sparkline7d ?? [];
+        return spark.length > 1 ? { ...c, sparkline7d: spark, sources: { ...c.sources, sparkline7d: "binance-klines" as SourceName } } : c;
+      }),
+    );
+  } catch {
+    return rows;
+  }
+}
+
+/** Jamais de tuile à 0 : lignes sans capitalisation écartées, logo vide complété par le logo local de l'id. */
+async function _finishTopRows(rows: MarketCoin[]): Promise<MarketCoin[]> {
+  const { getCryptoLogo } = await import("@/lib/crypto-logos");
+  return rows
+    .filter((c) => c.currentPrice > 0 && c.marketCap > 0)
+    .map((c) => (c.image ? c : { ...c, image: getCryptoLogo(c.id) ?? "" }));
+}
+
+/** Ancienne voie principale CoinGecko /coins/markets (clé Demo si présente). Lève une erreur si non 200. */
+async function _fetchTopMarketCoingecko(limit: number): Promise<MarketCoin[]> {
   // BATCH 51 — Migration aggregator maison. CoinCap retourne deja le top
   // par market cap, on l'utilise en priorite. Fallback CoinGecko si vide.
   // INVERSION 2026-06-12 — depuis que COINGECKO_API_KEY existe, l'appel
@@ -621,7 +844,7 @@ async function _fetchTopMarket(limit: number): Promise<MarketCoin[]> {
   // sparklines via Binance — bloqué depuis les IP Vercel → le hero Pouls
   // ne recevait jamais la vraie courbe en prod). Aggregator = secours.
   const url = `${COINGECKO_BASE}/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=${limit}&page=1&sparkline=true&price_change_percentage=1h,24h,7d`;
-  try {
+  {
     // FIX P0 2026-05-06 — timeout 8s
     const res = await fetch(url, {
       // OPTIM 2026-05-10 — TTL 600s → 1800s (10min → 30min). Top market
@@ -630,7 +853,7 @@ async function _fetchTopMarket(limit: number): Promise<MarketCoin[]> {
       headers: cgHeaders(),
       signal: AbortSignal.timeout(8000),
     });
-    if (!res.ok) throw new Error(`CoinGecko markets ${res.status}`);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const json = (await res.json()) as Array<{
       id: string;
       symbol: string;
@@ -662,16 +885,28 @@ async function _fetchTopMarket(limit: number): Promise<MarketCoin[]> {
       sparkline7d: c.sparkline_in_7d?.price ?? [],
       circulatingSupply: c.circulating_supply,
       ath: c.ath,
+      sources: {
+        price: "coingecko",
+        change1h: "coingecko",
+        change24h: "coingecko",
+        change7d: "coingecko",
+        marketCap: "coingecko",
+        rank: "coingecko",
+        circulatingSupply: "coingecko",
+        volume24h: "coingecko",
+        sparkline7d: "coingecko",
+      },
     }));
-  } catch {
-    // CG rate-limité/down → on tente l'aggregator ci-dessous.
   }
+}
 
-  // SECOURS — aggregator maison (prix corrects mais sans sparkline/1h)
-  try {
+/** SECOURS — aggregator maison (prix corrects mais sans sparkline/1h). Lève une erreur si la liste est trop courte. */
+async function _fetchTopMarketAggregator(limit: number): Promise<MarketCoin[]> {
+  {
     const { getTopMarket } = await import("@/lib/price-source");
     const top = await getTopMarket(limit);
-    if (top.length >= Math.min(limit, 10)) {
+    if (top.length < Math.min(limit, 10)) throw new Error(`liste trop courte (${top.length})`);
+    {
       // CoinCap n'expose pas sparkline 7d ni change 1h. On enrichit
       // optionnellement avec Binance klines (en parallele, best-effort).
       const { getPriceSnapshot } = await import("@/lib/price-source");
@@ -693,157 +928,88 @@ async function _fetchTopMarket(limit: number): Promise<MarketCoin[]> {
             sparkline7d: snap?.sparkline7d ?? [],
             circulatingSupply: c.marketCap > 0 && c.priceUsd > 0 ? c.marketCap / c.priceUsd : 0,
             ath: 0, // approximation : nous n'avons pas l'ATH historique
+            sources: {
+              ...(c.sources ?? {}),
+              ...(snap?.sparkline7d?.length ? { sparkline7d: "binance-klines" as SourceName } : {}),
+            },
           };
         }),
       );
       return enriched;
     }
-  } catch {
-    // aggregator down aussi — on rend [] : le wrapper fetchTopMarket
-    // servira STATIC_TOP_MARKET_FALLBACK sans mise en cache du vide.
   }
-  return [];
+  // aggregator down aussi : la relance lève une erreur, resolveWithRelay rend null → [] et le wrapper
+  // fetchTopMarket sert le dernier relevé réussi avec son heure (jamais de prix figés), sinon une liste vide.
+}
+
+/** Relevé du top mis en cache (Data Cache de Next), avec son heure. */
+export interface TopMarketEntry {
+  coins: MarketCoin[];
+  fetchedAt: string;
 }
 
 /**
- * BATCH 29 — fix bug "widget LIVE vide" (user feedback "rien de dynamique").
- * Avant : `_fetchTopMarket` retournait `[]` en cas d'échec → mis en cache 120s
- * → 2 min de hero LIVE vide pour tous les visiteurs. Désastre UX.
- *
- * Après : si la fonction retourne un array vide (échec ou rate-limit), on
- * NE CACHE PAS et on retente au prochain hit. Le hero affiche un fallback
- * statique en attendant (cf. STATIC_TOP_MARKET_FALLBACK).
+ * 06/10/2026 — PLUS DE FILET FIGÉ (l'ancien STATIC_TOP_MARKET_FALLBACK affichait des prix de mai 2026 comme cours
+ * actuels). Si toutes les sources tombent, l'appel mis en cache LÈVE une erreur : unstable_cache ne garde jamais
+ * l'échec et continue de servir le DERNIER RELEVÉ RÉUSSI (stale-while-revalidate du Data Cache, partagé entre
+ * instances ; Next 14.2 garde l'entrée périmée quand la revalidation échoue). fetchTopMarket marque alors ce relevé
+ * « stale » avec son heure. Sans aucun relevé : liste vide, et chaque page masque le bloc (« momentanément
+ * indisponibles »). Aucune écriture KV.
  */
 const _cachedFetchTopMarket = unstable_cache(
-  async (limit = 20) => _fetchTopMarket(limit),
-  ["coingecko-top-market-v2"],
-  // BATCH 50 — 120s -> 600s (10 min). Reduction x5 consumption.
-  // OPTIM 2026-05-10 — 600s -> 1800s (30 min). Reduction x3 supplémentaire.
+  async (limit = 20): Promise<TopMarketEntry> => {
+    const coins = await _fetchTopMarket(limit);
+    if (coins.length === 0) throw new Error(`top ${limit} : aucune source disponible`);
+    return { coins, fetchedAt: new Date().toISOString() };
+  },
+  // v3 : nouvelle forme { coins, fetchedAt } (l'ancienne clé contenait un tableau nu).
+  ["top-market-v3"],
+  // BATCH 50 — 120s -> 600s ; OPTIM 2026-05-10 — 600s -> 1800s (30 min).
   { revalidate: 1800, tags: [CG_TAGS.market] }
 );
 
+/**
+ * Au-delà, le relevé servi n'est plus « à jour » : il est affiché avec son heure (« cours non à jour »).
+ * 3 h et non 45 min (vérification du 06/10/2026) : en marche NORMALE, une page régénérée toutes les heures (accueil,
+ * revalidate 3600) reçoit le relevé du cache de 30 min tel qu'il était à la régénération précédente (unstable_cache
+ * rend l'entrée périmée et recalcule en arrière-plan) : jusqu'à ~1 h 30 d'âge sans aucune panne. Seul un âge au-delà de
+ * ce délai normal (cache 30 min + page 1 h + marge) signale vraiment des sources en panne.
+ */
+export const TOP_MARKET_STALE_AFTER_MS = 3 * 60 * 60_000;
+
+/** Dernier relevé réussi de CETTE instance (si le Data Cache lui-même ne répond pas). */
+const _lastTopMarket = new Map<number, TopMarketEntry>();
+
+export function markTopMarketAge(entry: TopMarketEntry, now: number = Date.now()): MarketCoin[] {
+  const age = now - Date.parse(entry.fetchedAt);
+  const stale = !(age < TOP_MARKET_STALE_AFTER_MS);
+  return entry.coins.map((c) => ({ ...c, asOf: entry.fetchedAt, stale }));
+}
+
 export async function fetchTopMarket(limit = 20): Promise<MarketCoin[]> {
-  const cached = await _cachedFetchTopMarket(limit);
-  if (cached.length > 0) return cached;
-  // Cache miss + API failure → bypass the cache by returning the static
-  // fallback. Le wrapper SSR Hero détectera `length === 0` (technique :
-  // notre fallback a length > 0 donc on couvre).
-  return STATIC_TOP_MARKET_FALLBACK.slice(0, limit);
+  let entry: TopMarketEntry | null = null;
+  try {
+    entry = await _cachedFetchTopMarket(limit);
+  } catch {
+    entry = _lastTopMarket.get(limit) ?? null;
+  }
+  if (!entry || !Array.isArray(entry.coins) || entry.coins.length === 0) return [];
+  _lastTopMarket.set(limit, entry);
+  return markTopMarketAge(entry);
 }
 
 /**
- * Snapshot statique des top 6 cryptos — fallback ULTIME quand CoinGecko ET
- * notre aggregator (Binance + CoinCap) sont tous down/rate-limited.
- *
- * FIX P2 2026-05-06 — DÉDUP avec lib/price-source.ts STATIC_FALLBACK.
- * Avant : 6 coins dupliqués avec prix obsolètes (BTC=95000) incohérents
- * avec price-source.ts (BTC=78500). 2 sources de vérité = bugs visuels
- * possibles si l'utilisateur voit BTC=95k sur le hero et BTC=78.5k sur
- * sa fiche bitcoin (les 2 fallbacks ne s'aligneront jamais).
- *
- * Maintenant : prix alignés sur price-source.ts (mai 2026). Idéalement,
- * on devrait dériver ce fallback runtime depuis price-source.STATIC_FALLBACK
- * (single source of truth) ; à faire dans BATCH 52 (auto-update via KV
- * snapshot du dernier fetch réussi). Pour l'instant : alignement manuel.
+ * Top du marché EN DIRECT seulement : un relevé ancien (« stale », > 45 min) est écarté. Pour les écrits datés du
+ * jour (brief quotidien) : mieux vaut aucun cours qu'un cours ancien présenté comme actuel.
  */
-const STATIC_TOP_MARKET_FALLBACK: MarketCoin[] = [
-  {
-    id: "bitcoin",
-    symbol: "BTC",
-    name: "Bitcoin",
-    image: "https://assets.coingecko.com/coins/images/1/large/bitcoin.png",
-    currentPrice: 63662,
-    marketCap: 1267000000000,
-    marketCapRank: 1,
-    totalVolume: 35000000000,
-    priceChange1h: 0,
-    priceChange24h: 0,
-    priceChange7d: 0,
-    sparkline7d: [],
-    circulatingSupply: 19800000,
-    ath: 108786,
-  },
-  {
-    id: "ethereum",
-    symbol: "ETH",
-    name: "Ethereum",
-    image: "https://assets.coingecko.com/coins/images/279/large/ethereum.png",
-    currentPrice: 1667,
-    marketCap: 201000000000,
-    marketCapRank: 2,
-    totalVolume: 18000000000,
-    priceChange1h: 0,
-    priceChange24h: 0,
-    priceChange7d: 0,
-    sparkline7d: [],
-    circulatingSupply: 121000000,
-    ath: 4878,
-  },
-  {
-    id: "tether",
-    symbol: "USDT",
-    name: "Tether",
-    image: "https://assets.coingecko.com/coins/images/325/large/Tether.png",
-    currentPrice: 1.0,
-    marketCap: 120000000000,
-    marketCapRank: 3,
-    totalVolume: 50000000000,
-    priceChange1h: 0,
-    priceChange24h: 0,
-    priceChange7d: 0,
-    sparkline7d: [],
-    circulatingSupply: 120000000000,
-    ath: 1.32,
-  },
-  {
-    id: "binancecoin",
-    symbol: "BNB",
-    name: "BNB",
-    image: "https://assets.coingecko.com/coins/images/825/large/bnb-icon2_2x.png",
-    currentPrice: 605,
-    marketCap: 90700000000,
-    marketCapRank: 4,
-    totalVolume: 1800000000,
-    priceChange1h: 0,
-    priceChange24h: 0,
-    priceChange7d: 0,
-    sparkline7d: [],
-    circulatingSupply: 145000000,
-    ath: 788,
-  },
-  {
-    id: "solana",
-    symbol: "SOL",
-    name: "Solana",
-    image: "https://assets.coingecko.com/coins/images/4128/large/solana.png",
-    currentPrice: 67,
-    marketCap: 31400000000,
-    marketCapRank: 5,
-    totalVolume: 3000000000,
-    priceChange1h: 0,
-    priceChange24h: 0,
-    priceChange7d: 0,
-    sparkline7d: [],
-    circulatingSupply: 470000000,
-    ath: 295,
-  },
-  {
-    id: "ripple",
-    symbol: "XRP",
-    name: "XRP",
-    image: "https://assets.coingecko.com/coins/images/44/large/xrp-symbol-white-128.png",
-    currentPrice: 1.13,
-    marketCap: 62000000000,
-    marketCapRank: 6,
-    totalVolume: 2500000000,
-    priceChange1h: 0,
-    priceChange24h: 0,
-    priceChange7d: 0,
-    sparkline7d: [],
-    circulatingSupply: 57000000000,
-    ath: 3.84,
-  },
-];
+export async function fetchFreshTopMarket(limit = 20): Promise<MarketCoin[]> {
+  return (await fetchTopMarket(limit)).filter((m) => m.stale !== true);
+}
+
+/** Tests uniquement. */
+export function __resetTopMarketMemoryForTests(): void {
+  _lastTopMarket.clear();
+}
 
 export function formatCompactUsd(value: number | null | undefined): string {
   // Donnée manquante / nulle / invalide → fallback explicite (pas de "0,0 $US" trompeur)
@@ -894,6 +1060,51 @@ export interface CoinDetail {
   atl: number;
   atlDate: string | null;
   sparkline7d: number[];
+  /** 06/10/2026 — source réelle de chaque champ (attribution). */
+  sources?: FieldSources;
+}
+
+/**
+ * 06/10/2026 — capitalisation, rang et offre d'une fiche selon DATA_PRIORITIES : la valeur de l'instantané
+ * gagne quand elle vient de CoinMarketCap (1re source) ; sinon CoinGecko / CoinPaprika (`other`) ; sinon
+ * l'instantané (place de marché, estimation). Renvoie aussi la source réelle de chaque champ.
+ */
+export function _mergeSnapFields(
+  snap: {
+    marketCap: number;
+    priceUsd: number;
+    marketCapRank?: number;
+    circulatingSupply?: number | null;
+    sparkline7d?: number[];
+    sources?: FieldSources;
+  },
+  other: { marketCap?: number | null; rank?: number | null; supply?: number | null } | null,
+  otherSource: SourceName | null,
+): { marketCap: number; marketCapRank: number; circulatingSupply: number; sources: FieldSources } {
+  const sources: FieldSources = { ...(snap.sources ?? {}) };
+  const pos = (v: number | null | undefined): v is number => typeof v === "number" && Number.isFinite(v) && v > 0;
+  let marketCap = snap.marketCap;
+  if (sources.marketCap !== "coinmarketcap" && pos(other?.marketCap) && otherSource) {
+    marketCap = other!.marketCap as number;
+    sources.marketCap = otherSource;
+  }
+  let marketCapRank = snap.marketCapRank ?? 0;
+  if (sources.rank !== "coinmarketcap" && pos(other?.rank) && otherSource) {
+    marketCapRank = other!.rank as number;
+    sources.rank = otherSource;
+  }
+  let circulatingSupply = pos(snap.circulatingSupply)
+    ? snap.circulatingSupply
+    : snap.marketCap > 0 && snap.priceUsd > 0
+      ? snap.marketCap / snap.priceUsd
+      : 0;
+  if (sources.circulatingSupply !== "coinmarketcap" && pos(other?.supply) && otherSource) {
+    circulatingSupply = other!.supply as number;
+    sources.circulatingSupply = otherSource;
+  }
+  if (otherSource) sources.ath = otherSource;
+  if (otherSource === "coingecko" && !(snap.sparkline7d && snap.sparkline7d.length > 1)) sources.sparkline7d = "coingecko";
+  return { marketCap, marketCapRank, circulatingSupply, sources };
 }
 
 /**
@@ -1158,10 +1369,8 @@ async function _fetchCoinDetail(
             currentPrice: snap.priceUsd, // garde le live du provider rapide
             priceChange24h: snap.change24h,
             priceChange7d: snap.change7d,
-            marketCap: c.market_cap ?? 0,
-            marketCapRank: c.market_cap_rank ?? 0,
+            ..._mergeSnapFields(snap, { marketCap: c.market_cap, rank: c.market_cap_rank, supply: c.circulating_supply }, "coingecko"),
             totalVolume: snap.volume24h,
-            circulatingSupply: c.circulating_supply ?? 0,
             totalSupply: c.total_supply,
             maxSupply: c.max_supply,
             ath: c.ath ?? 0,
@@ -1226,10 +1435,8 @@ async function _fetchCoinDetail(
             currentPrice: snap.priceUsd,
             priceChange24h: snap.change24h,
             priceChange7d: snap.change7d,
-            marketCap: cFb.market_cap ?? 0,
-            marketCapRank: cFb.market_cap_rank ?? 0,
+            ..._mergeSnapFields(snap, { marketCap: cFb.market_cap, rank: cFb.market_cap_rank, supply: cFb.circulating_supply }, "coingecko"),
             totalVolume: snap.volume24h,
-            circulatingSupply: cFb.circulating_supply ?? 0,
             totalSupply: cFb.total_supply,
             maxSupply: cFb.max_supply,
             ath: cFb.ath ?? 0,
@@ -1270,10 +1477,8 @@ async function _fetchCoinDetail(
                 currentPrice: snap.priceUsd,
                 priceChange24h: snap.change24h,
                 priceChange7d: snap.change7d,
-                marketCap: ticker.quotes.USD.market_cap,
-                marketCapRank: ticker.rank ?? 0,
+                ..._mergeSnapFields(snap, { marketCap: ticker.quotes.USD.market_cap, rank: ticker.rank, supply: ticker.circulating_supply }, "coinpaprika"),
                 totalVolume: snap.volume24h,
-                circulatingSupply: ticker.circulating_supply ?? 0,
                 totalSupply: ticker.total_supply ?? null,
                 maxSupply: ticker.max_supply ?? null,
                 ath: ticker.quotes.USD.ath_price ?? 0,
@@ -1303,10 +1508,9 @@ async function _fetchCoinDetail(
         currentPrice: snap.priceUsd,
         priceChange24h: snap.change24h,
         priceChange7d: snap.change7d,
-        marketCap: snap.marketCap,
-        marketCapRank: 0, // approximation — non critique sur fiche detail
+        // 06/10/2026 — rang/offre de CoinMarketCap s'il les a fournis (avant : rang 0, offre = cap ÷ prix).
+        ..._mergeSnapFields(snap, null, null),
         totalVolume: snap.volume24h,
-        circulatingSupply: snap.marketCap > 0 && snap.priceUsd > 0 ? snap.marketCap / snap.priceUsd : 0,
         totalSupply: null,
         maxSupply: null,
         ath: 0,

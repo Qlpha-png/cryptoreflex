@@ -42,6 +42,7 @@ import {
   type MarketCoin,
 } from "@/lib/coingecko";
 import { useLivePrices } from "@/lib/hooks/useLivePrices";
+import DataSourceLine from "@/components/DataSourceLine";
 import { ALLOWED_PRICE_STREAM_IDS } from "@/lib/binance-mapping";
 
 type Period = "1h" | "24h" | "7d";
@@ -647,11 +648,13 @@ export default function LiveHeatmap({
         })}
       </div>
 
-      <p className="mt-3 text-[11px] text-muted">
-        Données prix : Binance spot (SSE) avec fallback CoinGecko (REST). Couleur
-        interpolée selon la variation {periodLabel}. Cliquez sur une crypto
-        pour ouvrir sa fiche.
-      </p>
+      {/* 06/10/2026 — sources réellement servies (champ `sources`), plus de « CoinGecko » en dur. */}
+      <DataSourceLine
+        items={coins}
+        className="mt-3 text-[11px] text-muted"
+        prefix="Prix en direct : flux Binance spot dans votre navigateur ; au chargement :"
+        suffix={<>{" "}· Couleur interpolée selon la variation {periodLabel}. Cliquez sur une crypto pour ouvrir sa fiche.</>}
+      />
     </div>
   );
 }

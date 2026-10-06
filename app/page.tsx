@@ -74,7 +74,8 @@ export default async function HomePage() {
     if (c.id === "bitcoin" || c.id === "ethereum" || c.id === "solana") heroSparklines[c.id] = c.sparkline7d ?? [];
   }
 
-  // Source réelle des cours (CoinGecko, secours ou relevé statique) : attribution affichée à côté des prix (06/10/2026).
+  // Source réelle des cours, LUE dans le champ `sources` de chaque ligne (CoinMarketCap, CoinGecko, places de
+  // marché…) avec l'heure du relevé : attribution affichée à côté des prix (06/10/2026).
   const priceSource = detectMarketSource(market);
 
   // Données structurées : les 3 plateformes affichées dans la porte « Acheter » (autorisées en France uniquement).
@@ -90,10 +91,11 @@ export default async function HomePage() {
             ? { mcapUsd: globalMetrics.totalMarketCapUsd, mcapChange24h: globalMetrics.marketCapChange24h, btcDominance: globalMetrics.btcDominance }
             : null
         }
-        fearGreed={fearGreed ? { value: fearGreed.value, label: fearGreed.classification } : null}
+        fearGreed={fearGreed ? { value: fearGreed.value, label: fearGreed.classification, source: fearGreed.source ?? null } : null}
         priceSource={priceSource}
       />
-      <Hero prices={prices} sparklines={heroSparklines} updatedAt={new Date().toISOString()} fearGreed={fearGreed?.value ?? null} />
+      {/* Heure RÉELLE du relevé servi (Data Cache), pas l'heure du rendu : un dernier relevé ancien n'est pas « en direct ». */}
+      <Hero prices={prices} sparklines={heroSparklines} updatedAt={market[0]?.asOf ?? new Date().toISOString()} fearGreed={fearGreed?.value ?? null} />
       <HomeDoors />
       <HomeMarketToday market={market} priceSource={priceSource} />
       <HomeTrustLine />

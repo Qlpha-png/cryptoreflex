@@ -121,13 +121,20 @@ describe("Équipe fictive, labels auto-déclarés, délais et phrases non prouv�
 });
 
 describe("Attribution des cours, dates, signatures, générateur", () => {
-  it("l'attribution cite le flux Binance et CoinGecko, quelle que soit la source du rendu serveur", () => {
-    for (const s of ["coingecko", "secours", "statique"] as const) {
-      const l = priceSourceLabel(s);
+  it("l'attribution cite le flux Binance ET la source qui a vraiment servi au chargement, avec son lien", () => {
+    const cases = [
+      ["coingecko", "CoinGecko", "https://www.coingecko.com/"],
+      ["coinmarketcap", "CoinMarketCap", "https://coinmarketcap.com/"],
+      ["kraken", "Kraken", "https://www.kraken.com/"],
+    ] as const;
+    for (const [primary, label, href] of cases) {
+      const l = priceSourceLabel({ primary, others: [], asOf: null, stale: false });
       expect(l?.text).toMatch(/Binance/);
-      expect(l?.link?.label).toBe("CoinGecko");
+      expect(l?.link).toEqual({ label, href });
     }
-    expect(priceSourceLabel("statique")?.note).toMatch(/non à jour/);
+    // Dernier relevé ancien : l'heure est donnée et le libellé dit « cours non à jour ».
+    const old = priceSourceLabel({ primary: "coinmarketcap", others: [], asOf: "2026-10-06T19:40:00.000Z", stale: true });
+    expect(old?.note).toMatch(/dernier relevé le 6 octobre à 21:40 \(cours non à jour\)/);
     expect(priceSourceLabel(null)).toBeNull();
   });
   it("« 1er » pour le premier jour du mois", () => {

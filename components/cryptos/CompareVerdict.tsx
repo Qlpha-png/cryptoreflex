@@ -24,6 +24,7 @@ import {
 import type { AnyCrypto } from "@/lib/cryptos";
 import type { CoinDetail } from "@/lib/coingecko";
 import { fmtFr } from "@/lib/format-fr";
+import { fieldSourcesLabel } from "@/lib/data-sources/attribution";
 
 interface Verdict {
   profile: string;
@@ -45,6 +46,9 @@ export default function CompareVerdict({ cryptos, details }: Props) {
 
   const verdicts = computeVerdicts(cryptos, details);
   if (verdicts.length === 0) return null;
+  // 06/10/2026 — source RÉELLE de la capitalisation (CoinDetail.sources.marketCap), plus de « CoinGecko » en dur.
+  const capSources = fieldSourcesLabel(details.map((d) => ({ sources: d?.sources ?? null })), "marketCap");
+  const capLabel = capSources ? `capitalisation ${capSources}` : "capitalisation";
 
   return (
     <section
@@ -56,7 +60,7 @@ export default function CompareVerdict({ cryptos, details }: Props) {
           Verdict en 3 profils
         </h2>
         <p className="mt-1 text-xs text-muted">
-          Synthèse fondée uniquement sur les données (capitalisation CoinGecko, score Cryptoreflex,
+          Synthèse fondée uniquement sur les données ({capLabel}, score Cryptoreflex,
           âge). Pas un conseil en investissement.
         </p>
       </header>

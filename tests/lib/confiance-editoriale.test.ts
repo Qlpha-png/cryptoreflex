@@ -235,15 +235,24 @@ describe("accueil : attributions et date des vérifications", () => {
     if (iso[0] !== iso[iso.length - 1]) expect(verificationWindow(real)).toMatch(/^entre le /);
   });
 
-  it("source des cours déduite des données réellement servies", () => {
+  it("source des cours LUE dans le champ `sources` (plus de déduction d'après la forme des données)", () => {
     expect(detectMarketSource([])).toBeNull();
-    expect(detectMarketSource([{ priceChange1h: 0.42, priceChange24h: -1.2 }, { priceChange1h: null, priceChange24h: 0.3 }])).toBe("coingecko");
-    expect(detectMarketSource([{ priceChange1h: null, priceChange24h: 2.1 }, { priceChange1h: null, priceChange24h: -0.4 }])).toBe("secours");
-    expect(detectMarketSource([{ priceChange1h: 0, priceChange24h: 0 }, { priceChange1h: 0, priceChange24h: 0 }])).toBe("statique");
-    expect(priceSourceLabel("coingecko")?.link?.label).toBe("CoinGecko");
-    // Correcteur final : le navigateur réécrit les cours (flux Binance) ; le libellé cite toutes les sources possibles.
-    expect(priceSourceLabel("secours")?.text).toMatch(/Binance/);
-    expect(priceSourceLabel("secours")?.link?.label).toBe("CoinGecko");
+    // Des cours CMC AVEC variation 1 h ne sont plus étiquetés « CoinGecko » (ancienne déduction par la forme).
+    const cmc = detectMarketSource([
+      { sources: { price: "coinmarketcap", change1h: "coinmarketcap" } },
+      { sources: { price: "coinmarketcap" } },
+      { sources: { price: "coingecko" } },
+    ]);
+    expect(cmc?.primary).toBe("coinmarketcap");
+    expect(cmc?.others).toEqual(["coingecko"]);
+    expect(priceSourceLabel(cmc)?.link).toEqual({ label: "CoinMarketCap", href: "https://coinmarketcap.com/" });
+    expect(priceSourceLabel(cmc)?.note).toMatch(/et CoinGecko/);
+    const cg = detectMarketSource([{ sources: { price: "coingecko" } }]);
+    expect(priceSourceLabel(cg)?.link?.label).toBe("CoinGecko");
+    // Correcteur final : le navigateur réécrit les cours (flux Binance) ; le libellé le dit toujours.
+    expect(priceSourceLabel(cg)?.text).toMatch(/Binance/);
+    // Aucune source déclarée : rien n'est cité (jamais une source fausse).
+    expect(detectMarketSource([{}, {}])).toBeNull();
   });
 
   it("bandeau : « Source : alternative.me » collé à l'indice et attribution CoinGecko, liens hors focus dans la copie décorative", () => {
@@ -252,12 +261,12 @@ describe("accueil : attributions et date des vérifications", () => {
         coins: [{ id: "bitcoin", symbol: "BTC", name: "Bitcoin", image: "", price: 100, change24h: 1 }],
         globalMetrics: null,
         fearGreed: { value: 73, label: "Cupidité" },
-        priceSource: "coingecko",
+        priceSource: { primary: "coingecko", others: [], asOf: null, stale: false },
       }),
     );
     const visible = text(html);
     expect(visible).toMatch(/73 · Cupidité Source : alternative\.me/);
-    expect(visible).toContain("Cours : flux public de Binance dans votre navigateur, CoinGecko");
+    expect(visible).toContain("Cours : flux public de Binance dans votre navigateur ; au chargement : CoinGecko");
     expect(html.match(/href="https:\/\/alternative\.me\/crypto\/fear-and-greed-index\/"/g)?.length).toBe(2);
     expect(html.match(/tabindex="-1"/gi)?.length).toBe(2);
   });

@@ -16,6 +16,7 @@ import FearGreedGauge from "@/components/FearGreedGauge";
 import EmptyState from "@/components/ui/EmptyState";
 import { withHreflang } from "@/lib/seo-alternates";
 import { fitDescription, fitTitle } from "@/lib/seo-text";
+import FearGreedSource from "@/components/FearGreedSource";
 
 /**
  * /marche/fear-greed — Page dédiée à l'index Fear & Greed Bitcoin.
@@ -175,7 +176,7 @@ export default async function FearGreedPage() {
                   year: "numeric",
                 })}
               </time>{" "}
-              · Source : alternative.me · Cache serveur 1 h
+              · <FearGreedSource source={fg.source} /> · Cache serveur 1 h
             </p>
           </section>
         )}

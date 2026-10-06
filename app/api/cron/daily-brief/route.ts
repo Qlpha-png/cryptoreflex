@@ -23,7 +23,7 @@ import { NextRequest, NextResponse } from "next/server";
 import fs from "node:fs/promises";
 import path from "node:path";
 import { verifyBearer } from "@/lib/auth";
-import { fetchTopMarket } from "@/lib/coingecko";
+import { fetchFreshTopMarket } from "@/lib/coingecko";
 import { getAllUpcomingEvents } from "@/lib/crypto-events";
 import { BRAND, STATS, fmtCount } from "@/lib/brand";
 import { cryptoPagePath } from "@/lib/crypto-page-slug";
@@ -144,7 +144,9 @@ interface BriefData {
 }
 
 async function buildBriefData(): Promise<BriefData> {
-  const market = await fetchTopMarket(20);
+  // 06/10/2026 — jamais de brief sur un relevé ancien (« stale ») ni sans cours : plus de prix figés en secours.
+  const market = await fetchFreshTopMarket(20);
+  if (market.length === 0) throw new Error("cours du jour indisponibles : brief non généré");
   // Top 5 par variation absolue (positive ou négative) pour donner du dynamisme
   const sorted = [...market].sort(
     (a, b) => Math.abs(b.priceChange24h) - Math.abs(a.priceChange24h),

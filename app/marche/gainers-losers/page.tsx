@@ -36,7 +36,7 @@ const LIMIT_PER_LIST = 10;
 export const metadata: Metadata = {
   title: fitTitle("Top Gainers & Losers crypto 24h — Qui monte, qui chute aujourd'hui"),
   description:
-    "Top 10 cryptos qui montent et top 10 qui chutent sur 24h. Données CoinGecko mises à jour toutes les 5 minutes. Identifie les mouvements forts du marché en un coup d'œil.",
+    "Top 10 cryptos qui montent et top 10 qui chutent sur 24h. Données CoinMarketCap et CoinGecko. Identifie les mouvements forts du marché en un coup d'œil.",
   alternates: withHreflang(PAGE_URL),
   openGraph: {
     title: "Top Gainers & Losers crypto — 24h",
@@ -86,7 +86,7 @@ export default async function GainersLosersPage() {
     "@id": `${PAGE_URL}#webpage`,
     name: "Top Gainers & Losers crypto — Variations 24h",
     description:
-      "Top 10 cryptos en hausse et top 10 cryptos en baisse sur 24h. Source CoinGecko, cache 5 min.",
+      "Top 10 cryptos en hausse et top 10 cryptos en baisse sur 24h. Sources CoinMarketCap et CoinGecko.",
     url: PAGE_URL,
     inLanguage: "fr-FR",
     isPartOf: { "@id": `${BRAND.url}/#website` },
@@ -141,7 +141,7 @@ export default async function GainersLosersPage() {
           <p className="mt-3 text-base text-muted max-w-2xl">
             Les 10 cryptos qui ont le plus monté et les 10 qui ont le plus chuté
             sur les dernières 24 heures, parmi le top 100 par capitalisation.
-            Données CoinGecko, rafraîchies toutes les 5 minutes.
+            Données CoinMarketCap, avec CoinGecko en relais.
           </p>
         </header>
 
@@ -241,7 +241,7 @@ export default async function GainersLosersPage() {
 
         {/* Mentions */}
         <p className="mt-8 text-[11px] text-muted leading-relaxed">
-          Données de marché fournies par CoinGecko (cache serveur 5 min). Cette
+          Données de marché fournies par CoinMarketCap, avec CoinGecko en relais (heure du relevé indiquée). Cette
           page est purement informative et ne constitue pas un conseil en
           investissement. Investir dans les cryptomonnaies comporte un risque
           de perte en capital. Voir notre{" "}

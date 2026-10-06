@@ -11,6 +11,7 @@ import {
 } from "react";
 import Link from "next/link";
 import { cryptoPagePath } from "@/lib/crypto-page-slug";
+import DataSourceLine from "@/components/DataSourceLine";
 import {
   formatCompactUsd,
   formatPct,
@@ -374,18 +375,12 @@ export default function Heatmap({ coins, internalSlugs }: Props) {
           })()}
       </div>
 
-      <p className="mt-6 text-[11px] text-muted">
-        Données :{" "}
-        <a
-          href="https://www.coingecko.com"
-          rel="noopener noreferrer"
-          className="hover:text-fg underline"
-        >
-          CoinGecko
-        </a>{" "}
-        · Couleurs : vert = hausse, rouge = baisse
-        sur la période sélectionnée.
-      </p>
+      {/* 06/10/2026 — sources réellement servies (champ `sources`), plus de « CoinGecko » en dur. */}
+      <DataSourceLine
+        items={liveCoins}
+        className="mt-6 text-[11px] text-muted"
+        suffix={<>{" "}· Couleurs : vert = hausse, rouge = baisse sur la période sélectionnée.</>}
+      />
     </div>
   );
 }

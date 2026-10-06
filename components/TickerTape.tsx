@@ -8,6 +8,7 @@ import { useLivePrices } from "@/lib/hooks/useLivePrices";
 import { fmtFr } from "@/lib/format-fr";
 import FearGreedSource from "@/components/FearGreedSource";
 import { priceSourceLabel, type MarketSource } from "@/components/home/market-source";
+import type { SourceName } from "@/lib/data-sources/priorities";
 
 /**
  * TickerTape — bandeau marché "terminal" fin (DA Obsidian, sprint 1b).
@@ -47,7 +48,8 @@ export interface TickerGlobals {
 interface Props {
   coins: TickerCoin[];
   globalMetrics: TickerGlobals | null;
-  fearGreed: { value: number; label: string } | null;
+  /** `source` : source réelle de l'indice (alternative.me, ou CoinMarketCap en relais). */
+  fearGreed: { value: number; label: string; source?: SourceName | null } | null;
   /** Source réelle des cours au chargement (components/home/market-source.ts) : attribution affichée dans le bandeau. */
   priceSource?: MarketSource | null;
 }
@@ -103,7 +105,7 @@ export default function TickerTape({ coins, globalMetrics, fearGreed, priceSourc
           </span>
           <span className="text-muted">· {fearGreed.label}</span>
           {/* Attribution collée à la donnée (conditions d'alternative.me, 06/10/2026). */}
-          <FearGreedSource className="text-muted" focusable={!dup} />
+          <FearGreedSource className="text-muted" focusable={!dup} source={fearGreed.source} />
         </TapeCell>,
       );
     }

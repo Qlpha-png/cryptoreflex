@@ -59,6 +59,11 @@ export interface ProviderPriceData {
   marketCap?: number;
   /** Sparkline 7d horaire — uniquement Binance. Vide ailleurs. */
   sparkline7d?: number[];
+  /** 06/10/2026 — champs des agrégateurs (CoinMarketCap) : null = non fourni. */
+  change1h?: number | null;
+  change7d?: number | null;
+  circulatingSupply?: number | null;
+  rank?: number | null;
   /** Source-specific metadata (debug, audit). */
   meta?: Record<string, unknown>;
 }
@@ -72,6 +77,7 @@ export type PriceProviderName =
   | "kraken"
   | "coinbase"
   | "kucoin"
+  | "coinmarketcap"
   | "dexscreener"
   | "cryptocompare"
   | "coingecko"

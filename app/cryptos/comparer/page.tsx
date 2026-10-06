@@ -233,7 +233,7 @@ export default async function CryptoComparePage({ searchParams }: Props) {
             </h1>
             <p className="mt-3 text-sm sm:text-base text-muted">
               Choisissez parmi nos <strong className="text-fg">{STATS.cryptosCurated} fiches éditoriales</strong>{" "}
-              (top 10 + 90 hidden gems, sur {STATS.cryptos} cryptos au total). Prix CoinGecko temps réel, données
+              (top 10 + 90 hidden gems, sur {STATS.cryptos} cryptos au total). Prix de marché relevés (CoinGecko, CoinMarketCap), données
               éditoriales vérifiées par {BRAND.name}.
             </p>
           </header>
@@ -333,7 +333,7 @@ export default async function CryptoComparePage({ searchParams }: Props) {
           </h1>
           <p className="mt-3 text-sm sm:text-base text-muted">
             Comparatif côte à côte de {cryptos.length} cryptos issues de notre
-            base de {STATS.cryptosCurated} fiches éditoriales premium. Prix CoinGecko (cache 5 min), données
+            base de {STATS.cryptosCurated} fiches éditoriales premium. Prix de marché relevés (CoinGecko, CoinMarketCap), données
             éditoriales vérifiées par {BRAND.name}.
           </p>
         </header>
@@ -403,7 +403,7 @@ export default async function CryptoComparePage({ searchParams }: Props) {
         </div>
 
         <p className="mt-6 text-[11px] text-muted leading-relaxed">
-          Les prix et capitalisations proviennent de CoinGecko (cache 5 min).
+          Les prix et capitalisations proviennent de CoinGecko et de CoinMarketCap.
           Les scores éditoriaux (fiabilité, beginner-friendly, décentralisation)
           sont calculés par {BRAND.name} selon une{" "}
           <Link href="/methodologie" className="underline hover:text-fg">

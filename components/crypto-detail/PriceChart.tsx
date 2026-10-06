@@ -10,6 +10,8 @@ import {
   type PointerEvent as ReactPointerEvent,
 } from "react";
 import { Activity } from "lucide-react";
+import { sourceInfo } from "@/lib/data-sources/attribution";
+import type { SourceName } from "@/lib/data-sources/priorities";
 
 /**
  * PriceChart — graphique prix multi-période (7j / 30j / 1an), SVG inline.
@@ -63,6 +65,7 @@ export default function PriceChart({
 }: Props) {
   const [period, setPeriod] = useState<Period>(7);
   const [points, setPoints] = useState<HistoricalPoint[] | null>(null);
+  const [seriesSource, setSeriesSource] = useState<SourceName | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [hoverIdx, setHoverIdx] = useState<number | null>(null);
@@ -81,9 +84,10 @@ export default function PriceChart({
     })
       .then(async (r) => {
         if (!r.ok) throw new Error(`HTTP ${r.status}`);
-        const data = (await r.json()) as { points: HistoricalPoint[] };
+        const data = (await r.json()) as { points: HistoricalPoint[]; source?: SourceName | null };
         if (cancelled) return;
         setPoints(Array.isArray(data.points) ? data.points : []);
+        setSeriesSource(data.source ?? null);
       })
       .catch(() => {
         if (cancelled) return;
@@ -291,7 +295,7 @@ export default function PriceChart({
       </div>
 
       <p className="mt-3 text-[11px] text-muted">
-        Données : CoinGecko, devise {currency.toUpperCase()}, cache 1h.
+        {sourceInfo(seriesSource) ? `Données : ${sourceInfo(seriesSource)!.label}, ` : ""}devise {currency.toUpperCase()}, cache 1h.
       </p>
     </section>
   );

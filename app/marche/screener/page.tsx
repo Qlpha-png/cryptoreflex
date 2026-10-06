@@ -27,7 +27,7 @@ const PAGE_PATH = "/marche/screener";
 const PAGE_URL = `${BRAND.url}${PAGE_PATH}`;
 const TITLE = "Screener crypto — top 100 triable en direct";
 const DESCRIPTION =
-  "Screener du top 100 crypto par capitalisation : prix, variations 24h/7j, market cap, volume et sparkline 7 jours. Tri par colonne, recherche instantanée. Données CoinGecko.";
+  "Screener du top 100 crypto par capitalisation : prix, variations 24h/7j, market cap, volume et sparkline 7 jours. Tri par colonne, recherche instantanée. Données CoinMarketCap et CoinGecko.";
 
 export const metadata: Metadata = {
   title: TITLE,
@@ -106,7 +106,7 @@ export default async function ScreenerPage() {
             </p>
           </div>
           <span className="live-dot inline-flex items-center text-xs font-semibold text-success-fg">
-            Données CoinGecko
+            Données de marché datées
           </span>
         </header>
 
@@ -118,13 +118,13 @@ export default async function ScreenerPage() {
           ) : (
             <EmptyState
               title="Données marché momentanément indisponibles"
-              description="CoinGecko ne répond pas. Réessayez dans quelques instants."
+              description="Nos sources de cours ne répondent pas. Réessayez dans quelques instants."
             />
           )}
         </div>
 
         <p className="mt-6 text-xs text-muted">
-          Données CoinGecko. La variation 7 jours et les sparklines peuvent
+          Données CoinMarketCap, avec CoinGecko en relais. La variation 7 jours et les sparklines peuvent
           être momentanément indisponibles pour certains actifs.
           Aucune donnée de cette page ne constitue un conseil en
           investissement.

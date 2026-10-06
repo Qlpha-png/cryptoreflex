@@ -11,6 +11,7 @@
 
 import { unstable_cache } from "next/cache";
 import { cgHeaders } from "@/lib/coingecko";
+import type { SourceName } from "@/lib/data-sources/priorities";
 
 const COINGECKO_BASE = "https://api.coingecko.com/api/v3";
 
@@ -558,14 +559,20 @@ async function _fetchHistoricalRange(
  * Seuil de validité : 30 points utilisables (1 mois de daily) avant de passer
  * au fallback suivant. Sortie triée par `t` croissant.
  */
+/** Série + source réelle (06/10/2026 : le graphique de la fiche cite la source qui a vraiment servi). */
+export interface HistoricalSeries {
+  points: HistoricalPoint[];
+  source: SourceName | null;
+}
+
 async function _fetchHistoricalPrices(
   coinId: string,
   days: number,
-): Promise<HistoricalPoint[]> {
+): Promise<HistoricalSeries> {
   // ---- Source 1 : Binance (1200/min, 40× CG Demo) ----
   const binancePoints = await _fetchFromBinance(coinId, days);
   if (binancePoints.length >= 30) {
-    return binancePoints;
+    return { points: binancePoints, source: "binance-klines" };
   }
   if (binancePoints.length > 0) {
     console.warn(
@@ -578,7 +585,7 @@ async function _fetchHistoricalPrices(
   if (ccSymbol && process.env.CRYPTOCOMPARE_API_KEY) {
     const ccPoints = await _fetchFromCryptoCompare(ccSymbol, days);
     if (ccPoints.length >= 30) {
-      return ccPoints;
+      return { points: ccPoints, source: "cryptocompare" };
     }
     console.warn(
       `[historical-prices] CC returned ${ccPoints.length} pts for ${coinId} → fallback CG`,
@@ -586,7 +593,7 @@ async function _fetchHistoricalPrices(
   }
 
   // ---- Source 3 : CoinGecko (fallback final) ----
-  return _fetchFromCoinGecko(coinId, days);
+  return { points: await _fetchFromCoinGecko(coinId, days), source: "coingecko" };
 }
 
 /**
@@ -685,23 +692,30 @@ async function _fetchFromCoinGecko(
  */
 const EMPTY_HISTORY = "EMPTY_HISTORY";
 const _fetchHistoricalPricesCached = unstable_cache(
-  async (coinId: string, days: number): Promise<HistoricalPoint[]> => {
-    const pts = await _fetchHistoricalPrices(coinId, days);
-    if (pts.length === 0) throw new Error(EMPTY_HISTORY);
-    return pts;
+  async (coinId: string, days: number): Promise<HistoricalSeries> => {
+    const s = await _fetchHistoricalPrices(coinId, days);
+    if (s.points.length === 0) throw new Error(EMPTY_HISTORY);
+    return s;
   },
-  ["coingecko-historical-v5-nonempty"],
+  // v6 : forme { points, source } (v5 contenait un tableau nu).
+  ["coingecko-historical-v6-source"],
   { revalidate: 3600, tags: ["coingecko-historical"] }
 );
 
 /** Série quotidienne (EUR) d'une crypto sur `days` jours ; [] si aucune source ne répond — jamais mis en cache dans ce cas. */
 export async function fetchHistoricalPrices(coinId: string, days: number): Promise<HistoricalPoint[]> {
+  return (await fetchHistoricalSeries(coinId, days)).points;
+}
+
+/** Comme fetchHistoricalPrices, avec la source réelle de la série (null si aucune source n'a répondu). */
+export async function fetchHistoricalSeries(coinId: string, days: number): Promise<HistoricalSeries> {
   try {
-    return await _fetchHistoricalPricesCached(coinId, days);
+    const s = await _fetchHistoricalPricesCached(coinId, days);
+    return { points: Array.isArray(s?.points) ? s.points : [], source: s?.source ?? null };
   } catch (err) {
-    if (err instanceof Error && err.message === EMPTY_HISTORY) return [];
+    if (err instanceof Error && err.message === EMPTY_HISTORY) return { points: [], source: null };
     console.warn("[historical-prices] cache/fetch failed:", err instanceof Error ? err.message : err);
-    return [];
+    return { points: [], source: null };
   }
 }
 

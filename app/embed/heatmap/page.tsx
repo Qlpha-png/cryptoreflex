@@ -116,7 +116,7 @@ export default async function EmbedHeatmapPage() {
           flexWrap: "wrap",
         }}
       >
-        <span>Licence CC-BY 4.0 · Données Binance + CoinGecko</span>
+        <span>Données : CoinMarketCap, CoinGecko, Binance</span>
         <a
           href={`${BRAND.url}/marche/heatmap?utm_source=embed&utm_medium=iframe&utm_campaign=heatmap`}
           target="_top"

@@ -52,7 +52,7 @@ const PAGE_PATH = "/marche";
 const PAGE_URL = `${BRAND.url}${PAGE_PATH}`;
 const TITLE = "Marché crypto en direct : heatmap, sentiment";
 const DESCRIPTION =
-  "Tableau de bord du marché crypto temps réel : heatmap top 60, indice Fear & Greed, plus gros gagnants/perdants 24h, market cap globale et dominance BTC. Données CoinGecko et alternative.me.";
+  "Tableau de bord du marché crypto temps réel : heatmap top 60, indice Fear & Greed, plus gros gagnants/perdants 24h, market cap globale et dominance BTC. Données CoinMarketCap et CoinGecko, indice alternative.me.";
 
 export const metadata: Metadata = {
   title: TITLE,
@@ -184,7 +184,7 @@ export default async function MarcheDashboardPage() {
               </p>
             </div>
             <span className="live-dot inline-flex items-center text-xs font-semibold text-success-fg">
-              Données live CoinGecko
+              Données de marché datées
             </span>
           </header>
 
@@ -244,6 +244,7 @@ export default async function MarcheDashboardPage() {
                       value={fearGreed.value}
                       classification={fearGreed.classification}
                       size={260}
+                      source={fearGreed.source}
                     />
                   </div>
                   {typeof fearGreed.deltaVsYesterday === "number" && (

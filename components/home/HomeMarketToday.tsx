@@ -26,7 +26,8 @@ export default async function HomeMarketToday({
   priceSource?: MarketSource | null;
 }) {
   const sourceLabel = priceSourceLabel(priceSource);
-  const coins = market.slice(0, 5).map((m) => ({
+  // 06/10/2026 — une ligne CMC sans fiche (« cmc-<n> ») n'a pas de page : jamais dans ces 5 liens.
+  const coins = market.filter((m) => !m.id.startsWith("cmc-")).slice(0, 5).map((m) => ({
     id: m.id,
     symbol: m.symbol,
     name: m.name,

@@ -1,0 +1,2903 @@
+{
+ "_lisezMoi": "Correspondance id du site (= id CoinGecko) -> id numérique CoinMarketCap. Générée le 2026-10-06 par correspondance STRICTE (slug + symbole, ou nom exact + symbole avec candidat unique ; jamais par symbole seul). Toute fiche absente d'ici n'est jamais demandée à CMC : CoinGecko prend le relais. Testée par tests/lib/coinmarketcap.test.ts.",
+ "_total": 612,
+ "map": {
+  "0x": {
+   "id": 1896,
+   "symbol": "ZRX"
+  },
+  "1inch": {
+   "id": 8104,
+   "symbol": "1INCH"
+  },
+  "a7a5": {
+   "id": 36549,
+   "symbol": "A7A5"
+  },
+  "aave": {
+   "id": 7278,
+   "symbol": "AAVE"
+  },
+  "across-protocol": {
+   "id": 22620,
+   "symbol": "ACX"
+  },
+  "acurast": {
+   "id": 36492,
+   "symbol": "ACU"
+  },
+  "adi-token": {
+   "id": 38185,
+   "symbol": "ADI"
+  },
+  "aegis-yusd": {
+   "id": 35976,
+   "symbol": "YUSD"
+  },
+  "aergo": {
+   "id": 3637,
+   "symbol": "AERGO"
+  },
+  "aerodrome-finance": {
+   "id": 29270,
+   "symbol": "AERO"
+  },
+  "aethir": {
+   "id": 30083,
+   "symbol": "ATH"
+  },
+  "aevo-exchange": {
+   "id": 29676,
+   "symbol": "AEVO"
+  },
+  "affine": {
+   "id": 39987,
+   "symbol": "SN120"
+  },
+  "agentfun-ai": {
+   "id": 34319,
+   "symbol": "AGENTFUN"
+  },
+  "agora-dollar": {
+   "id": 32864,
+   "symbol": "AUSD"
+  },
+  "ai-companions": {
+   "id": 32968,
+   "symbol": "AIC"
+  },
+  "ai-powered-finance": {
+   "id": 39401,
+   "symbol": "AIPF"
+  },
+  "ai-rig-complex": {
+   "id": 34926,
+   "symbol": "ARC"
+  },
+  "aioz-network": {
+   "id": 9104,
+   "symbol": "AIOZ"
+  },
+  "aixbt": {
+   "id": 34103,
+   "symbol": "AIXBT"
+  },
+  "akash-network": {
+   "id": 7431,
+   "symbol": "AKT"
+  },
+  "alchemist-ai": {
+   "id": 34880,
+   "symbol": "ALCH"
+  },
+  "alchemy-pay": {
+   "id": 6958,
+   "symbol": "ACH"
+  },
+  "aleo": {
+   "id": 32193,
+   "symbol": "ALEO"
+  },
+  "algorand": {
+   "id": 4030,
+   "symbol": "ALGO"
+  },
+  "altlayer": {
+   "id": 29073,
+   "symbol": "ALT"
+  },
+  "amp-token": {
+   "id": 6945,
+   "symbol": "AMP"
+  },
+  "anime": {
+   "id": 35319,
+   "symbol": "ANIME"
+  },
+  "ankr": {
+   "id": 3783,
+   "symbol": "ANKR"
+  },
+  "anvil": {
+   "id": 38683,
+   "symbol": "ANVL"
+  },
+  "ape-and-pepe": {
+   "id": 27048,
+   "symbol": "APEPE"
+  },
+  "apecoin": {
+   "id": 18876,
+   "symbol": "APE"
+  },
+  "apenft": {
+   "id": 9816,
+   "symbol": "NFT"
+  },
+  "api3": {
+   "id": 7737,
+   "symbol": "API3"
+  },
+  "apriori": {
+   "id": 38569,
+   "symbol": "APR"
+  },
+  "apro": {
+   "id": 38757,
+   "symbol": "AT"
+  },
+  "aptos": {
+   "id": 21794,
+   "symbol": "APT"
+  },
+  "arbitrum": {
+   "id": 11841,
+   "symbol": "ARB"
+  },
+  "arcblock": {
+   "id": 2545,
+   "symbol": "ABT"
+  },
+  "ardor": {
+   "id": 1320,
+   "symbol": "ARDR"
+  },
+  "ark": {
+   "id": 1586,
+   "symbol": "ARK"
+  },
+  "arkham": {
+   "id": 27565,
+   "symbol": "ARKM"
+  },
+  "arweave": {
+   "id": 5632,
+   "symbol": "AR"
+  },
+  "astar": {
+   "id": 12885,
+   "symbol": "ASTR"
+  },
+  "aster-2": {
+   "id": 36341,
+   "symbol": "ASTER"
+  },
+  "asteroid-shiba": {
+   "id": 39880,
+   "symbol": "ASTEROID"
+  },
+  "astherus-usdf": {
+   "id": 35437,
+   "symbol": "USDF"
+  },
+  "atomone": {
+   "id": 38878,
+   "symbol": "ATONE"
+  },
+  "atoshi": {
+   "id": 36310,
+   "symbol": "ATOS"
+  },
+  "audiera": {
+   "id": 38837,
+   "symbol": "BEAT"
+  },
+  "audius": {
+   "id": 7455,
+   "symbol": "AUDIO"
+  },
+  "auki-labs": {
+   "id": 32889,
+   "symbol": "AUKI"
+  },
+  "aura-on-sol": {
+   "id": 31843,
+   "symbol": "AURA"
+  },
+  "autonomi": {
+   "id": 35793,
+   "symbol": "ANT"
+  },
+  "avalanche-2": {
+   "id": 5805,
+   "symbol": "AVAX"
+  },
+  "avantis": {
+   "id": 38299,
+   "symbol": "AVNT"
+  },
+  "axelar": {
+   "id": 17799,
+   "symbol": "AXL"
+  },
+  "axie-infinity": {
+   "id": 6783,
+   "symbol": "AXS"
+  },
+  "aztec": {
+   "id": 39521,
+   "symbol": "AZTEC"
+  },
+  "b3": {
+   "id": 35690,
+   "symbol": "B3"
+  },
+  "baby-doge-coin": {
+   "id": 10407,
+   "symbol": "BABYDOGE"
+  },
+  "babylon": {
+   "id": 32198,
+   "symbol": "BABY"
+  },
+  "backpack": {
+   "id": 39686,
+   "symbol": "BP"
+  },
+  "banana-for-scale-2": {
+   "id": 34118,
+   "symbol": "BANANAS31"
+  },
+  "bancor": {
+   "id": 1727,
+   "symbol": "BNT"
+  },
+  "band-protocol": {
+   "id": 4679,
+   "symbol": "BAND"
+  },
+  "bankercoin-2": {
+   "id": 37545,
+   "symbol": "BNKR"
+  },
+  "bas": {
+   "id": 37387,
+   "symbol": "BAS"
+  },
+  "based-brett": {
+   "id": 29743,
+   "symbol": "BRETT"
+  },
+  "basic-attention-token": {
+   "id": 1697,
+   "symbol": "BAT"
+  },
+  "bc-token": {
+   "id": 35067,
+   "symbol": "BC"
+  },
+  "beam-2": {
+   "id": 28298,
+   "symbol": "BEAM"
+  },
+  "bedrock-token": {
+   "id": 36063,
+   "symbol": "BR"
+  },
+  "beldex": {
+   "id": 3987,
+   "symbol": "BDX"
+  },
+  "berachain-bera": {
+   "id": 24647,
+   "symbol": "BERA"
+  },
+  "bfusd": {
+   "id": 37760,
+   "symbol": "BFUSD"
+  },
+  "bianrensheng": {
+   "id": 38590,
+   "symbol": "币安人生"
+  },
+  "big-time": {
+   "id": 28230,
+   "symbol": "BIGTIME"
+  },
+  "billions-network": {
+   "id": 39545,
+   "symbol": "BILL"
+  },
+  "bim-2": {
+   "id": 24877,
+   "symbol": "BIM"
+  },
+  "binance-usd": {
+   "id": 4687,
+   "symbol": "BUSD"
+  },
+  "binancecoin": {
+   "id": 1839,
+   "symbol": "BNB"
+  },
+  "binaryx": {
+   "id": 9891,
+   "symbol": "BNX"
+  },
+  "bio-protocol": {
+   "id": 34812,
+   "symbol": "BIO"
+  },
+  "bitcastle-token": {
+   "id": 38872,
+   "symbol": "BCE"
+  },
+  "bitcoin": {
+   "id": 1,
+   "symbol": "BTC"
+  },
+  "bitcoin-cash": {
+   "id": 1831,
+   "symbol": "BCH"
+  },
+  "bitcoin-cash-sv": {
+   "id": 3602,
+   "symbol": "BSV"
+  },
+  "bitdca": {
+   "id": 35637,
+   "symbol": "BDCA"
+  },
+  "bitget-token": {
+   "id": 11092,
+   "symbol": "BGB"
+  },
+  "bitget-wrapped-btc": {
+   "id": 39908,
+   "symbol": "BGBTC"
+  },
+  "bitkub-coin": {
+   "id": 16093,
+   "symbol": "KUB"
+  },
+  "bitmart-token": {
+   "id": 2933,
+   "symbol": "BMX"
+  },
+  "bittensor": {
+   "id": 22974,
+   "symbol": "TAO"
+  },
+  "bittorrent": {
+   "id": 16086,
+   "symbol": "BTT"
+  },
+  "bitway": {
+   "id": 39158,
+   "symbol": "BTW"
+  },
+  "bityuan": {
+   "id": 6224,
+   "symbol": "BTY"
+  },
+  "block-street": {
+   "id": 38889,
+   "symbol": "BSB"
+  },
+  "blockstack": {
+   "id": 4847,
+   "symbol": "STX"
+  },
+  "blur": {
+   "id": 23121,
+   "symbol": "BLUR"
+  },
+  "bnb48-club-token": {
+   "id": 7184,
+   "symbol": "KOGE"
+  },
+  "bonk": {
+   "id": 23095,
+   "symbol": "BONK"
+  },
+  "book-of-meme": {
+   "id": 29870,
+   "symbol": "BOME"
+  },
+  "bora": {
+   "id": 3801,
+   "symbol": "BORA"
+  },
+  "botxcoin": {
+   "id": 3873,
+   "symbol": "BOTX"
+  },
+  "brevis": {
+   "id": 39159,
+   "symbol": "BREV"
+  },
+  "brz": {
+   "id": 4139,
+   "symbol": "BRZ"
+  },
+  "btse-token": {
+   "id": 5305,
+   "symbol": "BTSE"
+  },
+  "build-on": {
+   "id": 36532,
+   "symbol": "B"
+  },
+  "burnedfi": {
+   "id": 30460,
+   "symbol": "BURN"
+  },
+  "canton-network": {
+   "id": 37263,
+   "symbol": "CC"
+  },
+  "cardano": {
+   "id": 2010,
+   "symbol": "ADA"
+  },
+  "cartesi": {
+   "id": 5444,
+   "symbol": "CTSI"
+  },
+  "carv": {
+   "id": 33372,
+   "symbol": "CARV"
+  },
+  "cash-4": {
+   "id": 38760,
+   "symbol": "CASH"
+  },
+  "cat-in-a-dogs-world": {
+   "id": 30126,
+   "symbol": "MEW"
+  },
+  "catizen": {
+   "id": 32966,
+   "symbol": "CATI"
+  },
+  "celestia": {
+   "id": 22861,
+   "symbol": "TIA"
+  },
+  "celium": {
+   "id": 36902,
+   "symbol": "SN51"
+  },
+  "celo": {
+   "id": 5567,
+   "symbol": "CELO"
+  },
+  "centrifuge-2": {
+   "id": 6748,
+   "symbol": "CFG"
+  },
+  "certik": {
+   "id": 4807,
+   "symbol": "CTK"
+  },
+  "cetus-protocol": {
+   "id": 25114,
+   "symbol": "CETUS"
+  },
+  "chain-2": {
+   "id": 18679,
+   "symbol": "XCN"
+  },
+  "chaingpt": {
+   "id": 23756,
+   "symbol": "CGPT"
+  },
+  "chainlink": {
+   "id": 1975,
+   "symbol": "LINK"
+  },
+  "chainopera-ai": {
+   "id": 38489,
+   "symbol": "COAI"
+  },
+  "cheems-token": {
+   "id": 33280,
+   "symbol": "CHEEMS"
+  },
+  "chex-token": {
+   "id": 8534,
+   "symbol": "CHEX"
+  },
+  "chia": {
+   "id": 9258,
+   "symbol": "XCH"
+  },
+  "chiliz": {
+   "id": 4066,
+   "symbol": "CHZ"
+  },
+  "chip-2": {
+   "id": 39870,
+   "symbol": "CHIP"
+  },
+  "chutes": {
+   "id": 36873,
+   "symbol": "SN64"
+  },
+  "circle-internet-group-ondo-tokenized-stock": {
+   "id": 38056,
+   "symbol": "CRCLON"
+  },
+  "circle-xstock": {
+   "id": 37005,
+   "symbol": "CRCLX"
+  },
+  "clearpool": {
+   "id": 12573,
+   "symbol": "CPOOL"
+  },
+  "collector-crypt": {
+   "id": 38283,
+   "symbol": "CARDS"
+  },
+  "comedian": {
+   "id": 33881,
+   "symbol": "BAN"
+  },
+  "commonwealth-2": {
+   "id": 39858,
+   "symbol": "CWU"
+  },
+  "compound-governance-token": {
+   "id": 5692,
+   "symbol": "COMP"
+  },
+  "concordium": {
+   "id": 18031,
+   "symbol": "CCD"
+  },
+  "conflux-token": {
+   "id": 7334,
+   "symbol": "CFX"
+  },
+  "constellation-labs": {
+   "id": 2868,
+   "symbol": "DAG"
+  },
+  "constitutiondao": {
+   "id": 14806,
+   "symbol": "PEOPLE"
+  },
+  "convex-finance": {
+   "id": 9903,
+   "symbol": "CVX"
+  },
+  "coredaoorg": {
+   "id": 23254,
+   "symbol": "CORE"
+  },
+  "cosmos": {
+   "id": 3794,
+   "symbol": "ATOM"
+  },
+  "coti": {
+   "id": 3992,
+   "symbol": "COTI"
+  },
+  "cow-protocol": {
+   "id": 19269,
+   "symbol": "COW"
+  },
+  "creditcoin-2": {
+   "id": 5198,
+   "symbol": "CTC"
+  },
+  "crvusd": {
+   "id": 24927,
+   "symbol": "CRVUSD"
+  },
+  "crypto-com-chain": {
+   "id": 3635,
+   "symbol": "CRO"
+  },
+  "curve-dao-token": {
+   "id": 6538,
+   "symbol": "CRV"
+  },
+  "cyberconnect": {
+   "id": 24781,
+   "symbol": "CYBER"
+  },
+  "cysic": {
+   "id": 39071,
+   "symbol": "CYS"
+  },
+  "dacxi": {
+   "id": 10372,
+   "symbol": "DXI"
+  },
+  "dai": {
+   "id": 4943,
+   "symbol": "DAI"
+  },
+  "dash": {
+   "id": 131,
+   "symbol": "DASH"
+  },
+  "debridge": {
+   "id": 31528,
+   "symbol": "DBR"
+  },
+  "decentraland": {
+   "id": 1966,
+   "symbol": "MANA"
+  },
+  "decred": {
+   "id": 1168,
+   "symbol": "DCR"
+  },
+  "deep": {
+   "id": 33391,
+   "symbol": "DEEP"
+  },
+  "degen-base": {
+   "id": 30096,
+   "symbol": "DEGEN"
+  },
+  "derive": {
+   "id": 35014,
+   "symbol": "DRV"
+  },
+  "deso": {
+   "id": 10442,
+   "symbol": "DESO"
+  },
+  "dexe": {
+   "id": 7326,
+   "symbol": "DEXE"
+  },
+  "diem": {
+   "id": 38186,
+   "symbol": "DIEM"
+  },
+  "digibyte": {
+   "id": 109,
+   "symbol": "DGB"
+  },
+  "dog-go-to-the-moon-rune": {
+   "id": 30933,
+   "symbol": "DOG"
+  },
+  "dogecoin": {
+   "id": 74,
+   "symbol": "DOGE"
+  },
+  "dogelon-mars": {
+   "id": 9436,
+   "symbol": "ELON"
+  },
+  "dogs-2": {
+   "id": 32698,
+   "symbol": "DOGS"
+  },
+  "dogwifcoin": {
+   "id": 28752,
+   "symbol": "WIF"
+  },
+  "dola-usd": {
+   "id": 19191,
+   "symbol": "DOLA"
+  },
+  "doublezero": {
+   "id": 38515,
+   "symbol": "2Z"
+  },
+  "dovu-2": {
+   "id": 30677,
+   "symbol": "DOVU"
+  },
+  "dual": {
+   "id": 39819,
+   "symbol": "DUAL"
+  },
+  "dusk-network": {
+   "id": 4092,
+   "symbol": "DUSK"
+  },
+  "dydx-chain": {
+   "id": 28324,
+   "symbol": "DYDX"
+  },
+  "ecash": {
+   "id": 10791,
+   "symbol": "XEC"
+  },
+  "ecomi": {
+   "id": 19075,
+   "symbol": "OMI"
+  },
+  "edgex": {
+   "id": 39720,
+   "symbol": "EDGE"
+  },
+  "edu-coin": {
+   "id": 24613,
+   "symbol": "EDU"
+  },
+  "eigenlayer": {
+   "id": 30494,
+   "symbol": "EIGEN"
+  },
+  "elrond-erd-2": {
+   "id": 6892,
+   "symbol": "EGLD"
+  },
+  "energy-web-token": {
+   "id": 5268,
+   "symbol": "EWT"
+  },
+  "enjincoin": {
+   "id": 2130,
+   "symbol": "ENJ"
+  },
+  "espresso": {
+   "id": 39548,
+   "symbol": "ESP"
+  },
+  "ethena": {
+   "id": 30171,
+   "symbol": "ENA"
+  },
+  "ethena-usde": {
+   "id": 29470,
+   "symbol": "USDE"
+  },
+  "ether-fi": {
+   "id": 29814,
+   "symbol": "ETHFI"
+  },
+  "ethereum": {
+   "id": 1027,
+   "symbol": "ETH"
+  },
+  "ethereum-classic": {
+   "id": 1321,
+   "symbol": "ETC"
+  },
+  "ethereum-name-service": {
+   "id": 13855,
+   "symbol": "ENS"
+  },
+  "ethereum-pow-iou": {
+   "id": 21296,
+   "symbol": "ETHW"
+  },
+  "ethgas-2": {
+   "id": 39379,
+   "symbol": "GWEI"
+  },
+  "euler": {
+   "id": 14280,
+   "symbol": "EUL"
+  },
+  "eurite": {
+   "id": 32644,
+   "symbol": "EURI"
+  },
+  "euro-coin": {
+   "id": 20641,
+   "symbol": "EURC"
+  },
+  "everipedia": {
+   "id": 2930,
+   "symbol": "IQ"
+  },
+  "everything": {
+   "id": 39394,
+   "symbol": "EV"
+  },
+  "falcon-finance": {
+   "id": 35721,
+   "symbol": "USDF"
+  },
+  "falcon-finance-ff": {
+   "id": 38482,
+   "symbol": "FF"
+  },
+  "fartcoin": {
+   "id": 33597,
+   "symbol": "FARTCOIN"
+  },
+  "fetch-ai": {
+   "id": 3773,
+   "symbol": "FET"
+  },
+  "fidelity-digital-dollar": {
+   "id": 39549,
+   "symbol": "FIDD"
+  },
+  "figure-heloc": {
+   "id": 39361,
+   "symbol": "FIGR_HELOC"
+  },
+  "filecoin": {
+   "id": 2280,
+   "symbol": "FIL"
+  },
+  "first-digital-usd": {
+   "id": 26081,
+   "symbol": "FDUSD"
+  },
+  "flare-networks": {
+   "id": 7950,
+   "symbol": "FLR"
+  },
+  "floki": {
+   "id": 10804,
+   "symbol": "FLOKI"
+  },
+  "flow": {
+   "id": 4558,
+   "symbol": "FLOW"
+  },
+  "flying-tulip": {
+   "id": 38544,
+   "symbol": "FT"
+  },
+  "fogo": {
+   "id": 38356,
+   "symbol": "FOGO"
+  },
+  "four": {
+   "id": 23635,
+   "symbol": "FORM"
+  },
+  "fractal-bitcoin": {
+   "id": 32941,
+   "symbol": "FB"
+  },
+  "frankencoin": {
+   "id": 31379,
+   "symbol": "ZCHF"
+  },
+  "frax": {
+   "id": 6952,
+   "symbol": "FRAX"
+  },
+  "frax-usd": {
+   "id": 36039,
+   "symbol": "FRXUSD"
+  },
+  "g-token": {
+   "id": 32120,
+   "symbol": "G"
+  },
+  "gala": {
+   "id": 7080,
+   "symbol": "GALA"
+  },
+  "gas": {
+   "id": 1785,
+   "symbol": "GAS"
+  },
+  "gatechain-token": {
+   "id": 4269,
+   "symbol": "GT"
+  },
+  "gemini-dollar": {
+   "id": 3306,
+   "symbol": "GUSD"
+  },
+  "genius-3": {
+   "id": 39841,
+   "symbol": "GENIUS"
+  },
+  "gensyn": {
+   "id": 39883,
+   "symbol": "AI"
+  },
+  "geodnet": {
+   "id": 20969,
+   "symbol": "GEOD"
+  },
+  "gho": {
+   "id": 23508,
+   "symbol": "GHO"
+  },
+  "giggle-fund": {
+   "id": 38470,
+   "symbol": "GIGGLE"
+  },
+  "glidr": {
+   "id": 37615,
+   "symbol": "GLIDR"
+  },
+  "global-dollar": {
+   "id": 33793,
+   "symbol": "USDG"
+  },
+  "gmt-token": {
+   "id": 10180,
+   "symbol": "GOMINING"
+  },
+  "gmx": {
+   "id": 11857,
+   "symbol": "GMX"
+  },
+  "gnosis": {
+   "id": 1659,
+   "symbol": "GNO"
+  },
+  "gohome": {
+   "id": 35701,
+   "symbol": "GOHOME"
+  },
+  "golem": {
+   "id": 1455,
+   "symbol": "GLM"
+  },
+  "goplus-security": {
+   "id": 35268,
+   "symbol": "GPS"
+  },
+  "gradients": {
+   "id": 36892,
+   "symbol": "SN56"
+  },
+  "grass": {
+   "id": 32956,
+   "symbol": "GRASS"
+  },
+  "gunz": {
+   "id": 36156,
+   "symbol": "GUN"
+  },
+  "gusd": {
+   "id": 38330,
+   "symbol": "GUSD"
+  },
+  "harmony": {
+   "id": 3945,
+   "symbol": "ONE"
+  },
+  "hashkey-ecopoints": {
+   "id": 33849,
+   "symbol": "HSK"
+  },
+  "hastra-prime": {
+   "id": 40545,
+   "symbol": "PRIME"
+  },
+  "havven": {
+   "id": 2586,
+   "symbol": "SNX"
+  },
+  "hedera-hashgraph": {
+   "id": 4642,
+   "symbol": "HBAR"
+  },
+  "helio-protocol-hay": {
+   "id": 21330,
+   "symbol": "LISUSD"
+  },
+  "helium": {
+   "id": 5665,
+   "symbol": "HNT"
+  },
+  "hermez-network-token": {
+   "id": 7424,
+   "symbol": "HEZ"
+  },
+  "hippius": {
+   "id": 39986,
+   "symbol": "SN75"
+  },
+  "hive": {
+   "id": 5370,
+   "symbol": "HIVE"
+  },
+  "hive_dollar": {
+   "id": 5375,
+   "symbol": "HBD"
+  },
+  "hivemapper": {
+   "id": 22850,
+   "symbol": "HONEY"
+  },
+  "holotoken": {
+   "id": 2682,
+   "symbol": "HOT"
+  },
+  "holoworld": {
+   "id": 38309,
+   "symbol": "HOLO"
+  },
+  "htx-dao": {
+   "id": 29160,
+   "symbol": "HTX"
+  },
+  "huma-finance": {
+   "id": 36576,
+   "symbol": "HUMA"
+  },
+  "humanity": {
+   "id": 36922,
+   "symbol": "H"
+  },
+  "hyperlane": {
+   "id": 36281,
+   "symbol": "HYPER"
+  },
+  "hyperliquid": {
+   "id": 32196,
+   "symbol": "HYPE"
+  },
+  "icon": {
+   "id": 2099,
+   "symbol": "ICX"
+  },
+  "iexec-rlc": {
+   "id": 1637,
+   "symbol": "RLC"
+  },
+  "illuvium": {
+   "id": 8719,
+   "symbol": "ILV"
+  },
+  "immutable-x": {
+   "id": 10603,
+   "symbol": "IMX"
+  },
+  "injective-protocol": {
+   "id": 7226,
+   "symbol": "INJ"
+  },
+  "instadapp": {
+   "id": 10508,
+   "symbol": "FLUID"
+  },
+  "internet-computer": {
+   "id": 8916,
+   "symbol": "ICP"
+  },
+  "io": {
+   "id": 29835,
+   "symbol": "IO"
+  },
+  "iostoken": {
+   "id": 2405,
+   "symbol": "IOST"
+  },
+  "iota": {
+   "id": 1720,
+   "symbol": "IOTA"
+  },
+  "iota-2": {
+   "id": 36904,
+   "symbol": "SN9"
+  },
+  "iotex": {
+   "id": 2777,
+   "symbol": "IOTX"
+  },
+  "irys": {
+   "id": 38978,
+   "symbol": "IRYS"
+  },
+  "janction": {
+   "id": 38909,
+   "symbol": "JCT"
+  },
+  "jasmycoin": {
+   "id": 8425,
+   "symbol": "JASMY"
+  },
+  "jelly-my-jelly": {
+   "id": 35537,
+   "symbol": "JELLYJELLY"
+  },
+  "jito-governance-token": {
+   "id": 28541,
+   "symbol": "JTO"
+  },
+  "jupiter-exchange-solana": {
+   "id": 29210,
+   "symbol": "JUP"
+  },
+  "just": {
+   "id": 5488,
+   "symbol": "JST"
+  },
+  "kaia": {
+   "id": 32880,
+   "symbol": "KAIA"
+  },
+  "kaio": {
+   "id": 39903,
+   "symbol": "KAIO"
+  },
+  "kaito": {
+   "id": 35763,
+   "symbol": "KAITO"
+  },
+  "kamino": {
+   "id": 30986,
+   "symbol": "KMNO"
+  },
+  "kaspa": {
+   "id": 20396,
+   "symbol": "KAS"
+  },
+  "kava": {
+   "id": 4846,
+   "symbol": "KAVA"
+  },
+  "keeta": {
+   "id": 36066,
+   "symbol": "KTA"
+  },
+  "kgen": {
+   "id": 38554,
+   "symbol": "KGEN"
+  },
+  "kinesis-gold": {
+   "id": 24382,
+   "symbol": "KAU"
+  },
+  "kinetiq": {
+   "id": 39070,
+   "symbol": "KNTQ"
+  },
+  "kite-2": {
+   "id": 38828,
+   "symbol": "KITE"
+  },
+  "kucoin-shares": {
+   "id": 2087,
+   "symbol": "KCS"
+  },
+  "kusama": {
+   "id": 5034,
+   "symbol": "KSM"
+  },
+  "lab": {
+   "id": 33223,
+   "symbol": "LAB"
+  },
+  "lagrange": {
+   "id": 36510,
+   "symbol": "LA"
+  },
+  "law-blocks": {
+   "id": 20964,
+   "symbol": "LBT"
+  },
+  "layerzero": {
+   "id": 26997,
+   "symbol": "ZRO"
+  },
+  "lcx": {
+   "id": 4950,
+   "symbol": "LCX"
+  },
+  "leo-token": {
+   "id": 3957,
+   "symbol": "LEO"
+  },
+  "lido-dao": {
+   "id": 8000,
+   "symbol": "LDO"
+  },
+  "lighter": {
+   "id": 39125,
+   "symbol": "LIT"
+  },
+  "linea": {
+   "id": 27657,
+   "symbol": "LINEA"
+  },
+  "liquity": {
+   "id": 7429,
+   "symbol": "LQTY"
+  },
+  "liquity-usd": {
+   "id": 9566,
+   "symbol": "LUSD"
+  },
+  "lisk": {
+   "id": 1214,
+   "symbol": "LSK"
+  },
+  "lista": {
+   "id": 21533,
+   "symbol": "LISTA"
+  },
+  "litecoin": {
+   "id": 2,
+   "symbol": "LTC"
+  },
+  "livepeer": {
+   "id": 3640,
+   "symbol": "LPT"
+  },
+  "loaded-lions": {
+   "id": 35954,
+   "symbol": "LION"
+  },
+  "lombard-protocol": {
+   "id": 38408,
+   "symbol": "BARD"
+  },
+  "luxxcoin": {
+   "id": 38840,
+   "symbol": "LUX"
+  },
+  "magic-eden": {
+   "id": 32197,
+   "symbol": "ME"
+  },
+  "magma-finance": {
+   "id": 39121,
+   "symbol": "MAGMA"
+  },
+  "maker": {
+   "id": 1518,
+   "symbol": "MKR"
+  },
+  "manadia": {
+   "id": 40017,
+   "symbol": "UMXM"
+  },
+  "mango-markets": {
+   "id": 11171,
+   "symbol": "MNGO"
+  },
+  "manta-network": {
+   "id": 13631,
+   "symbol": "MANTA"
+  },
+  "mantle": {
+   "id": 27075,
+   "symbol": "MNT"
+  },
+  "mask-network": {
+   "id": 8536,
+   "symbol": "MASK"
+  },
+  "mass-vehicle-ledger": {
+   "id": 2982,
+   "symbol": "MVL"
+  },
+  "matrixdock-gold": {
+   "id": 34212,
+   "symbol": "XAUM"
+  },
+  "meet48": {
+   "id": 36775,
+   "symbol": "IDOL"
+  },
+  "megaeth": {
+   "id": 38770,
+   "symbol": "MEGA"
+  },
+  "megausd": {
+   "id": 38774,
+   "symbol": "USDM"
+  },
+  "melania-meme": {
+   "id": 35347,
+   "symbol": "MELANIA"
+  },
+  "memecoin-2": {
+   "id": 28301,
+   "symbol": "MEME"
+  },
+  "memecore": {
+   "id": 35491,
+   "symbol": "M"
+  },
+  "merlin-chain": {
+   "id": 30712,
+   "symbol": "MERL"
+  },
+  "metal": {
+   "id": 1788,
+   "symbol": "MTL"
+  },
+  "metal-blockchain": {
+   "id": 21769,
+   "symbol": "METAL"
+  },
+  "metamask-usd": {
+   "id": 38167,
+   "symbol": "MUSD"
+  },
+  "meteora": {
+   "id": 38353,
+   "symbol": "MET"
+  },
+  "metis-token": {
+   "id": 9640,
+   "symbol": "METIS"
+  },
+  "microstrategy-xstock": {
+   "id": 37003,
+   "symbol": "MSTRX"
+  },
+  "midnight-3": {
+   "id": 39064,
+   "symbol": "NIGHT"
+  },
+  "milk-alliance": {
+   "id": 5266,
+   "symbol": "MLK"
+  },
+  "mimblewimblecoin": {
+   "id": 5031,
+   "symbol": "MWC"
+  },
+  "mina-protocol": {
+   "id": 8646,
+   "symbol": "MINA"
+  },
+  "mindwavedao": {
+   "id": 36302,
+   "symbol": "NILA"
+  },
+  "mocaverse": {
+   "id": 31526,
+   "symbol": "MOCA"
+  },
+  "mog-coin": {
+   "id": 27659,
+   "symbol": "MOG"
+  },
+  "momentum-3": {
+   "id": 38231,
+   "symbol": "MMT"
+  },
+  "monad": {
+   "id": 30495,
+   "symbol": "MON"
+  },
+  "monero": {
+   "id": 328,
+   "symbol": "XMR"
+  },
+  "moonbirds": {
+   "id": 19765,
+   "symbol": "BIRB"
+  },
+  "moonriver": {
+   "id": 9285,
+   "symbol": "MOVR"
+  },
+  "morpho": {
+   "id": 34104,
+   "symbol": "MORPHO"
+  },
+  "movement": {
+   "id": 32452,
+   "symbol": "MOVE"
+  },
+  "mx-token": {
+   "id": 4041,
+   "symbol": "MX"
+  },
+  "myx-finance": {
+   "id": 36410,
+   "symbol": "MYX"
+  },
+  "nano": {
+   "id": 1567,
+   "symbol": "XNO"
+  },
+  "near": {
+   "id": 6535,
+   "symbol": "NEAR"
+  },
+  "neiro-3": {
+   "id": 32521,
+   "symbol": "NEIRO"
+  },
+  "neo": {
+   "id": 1376,
+   "symbol": "NEO"
+  },
+  "nervos-network": {
+   "id": 4948,
+   "symbol": "CKB"
+  },
+  "newton-project": {
+   "id": 3871,
+   "symbol": "AB"
+  },
+  "nexo": {
+   "id": 2694,
+   "symbol": "NEXO"
+  },
+  "nexpace": {
+   "id": 36044,
+   "symbol": "NXPC"
+  },
+  "nillion": {
+   "id": 35702,
+   "symbol": "NIL"
+  },
+  "nockchain": {
+   "id": 38767,
+   "symbol": "NOCK"
+  },
+  "non-playable-coin": {
+   "id": 27960,
+   "symbol": "NPC"
+  },
+  "nosana": {
+   "id": 16612,
+   "symbol": "NOS"
+  },
+  "notcoin": {
+   "id": 28850,
+   "symbol": "NOT"
+  },
+  "numeraire": {
+   "id": 1732,
+   "symbol": "NMR"
+  },
+  "oasis-network": {
+   "id": 7653,
+   "symbol": "ROSE"
+  },
+  "ocean-protocol": {
+   "id": 3911,
+   "symbol": "OCEAN"
+  },
+  "octra": {
+   "id": 39914,
+   "symbol": "OCT"
+  },
+  "official-trump": {
+   "id": 35336,
+   "symbol": "TRUMP"
+  },
+  "okb": {
+   "id": 3897,
+   "symbol": "OKB"
+  },
+  "olympus": {
+   "id": 9067,
+   "symbol": "OHM"
+  },
+  "ondo-finance": {
+   "id": 21159,
+   "symbol": "ONDO"
+  },
+  "ondo-u-s-dollar-token": {
+   "id": 38273,
+   "symbol": "USDON"
+  },
+  "ondo-us-dollar-yield": {
+   "id": 29256,
+   "symbol": "USDY"
+  },
+  "ong": {
+   "id": 3217,
+   "symbol": "ONG"
+  },
+  "ontology": {
+   "id": 2566,
+   "symbol": "ONT"
+  },
+  "openeden-open-dollar": {
+   "id": 36067,
+   "symbol": "USDO"
+  },
+  "opengradient": {
+   "id": 39800,
+   "symbol": "OPG"
+  },
+  "openledger-2": {
+   "id": 37456,
+   "symbol": "OPEN"
+  },
+  "opinion": {
+   "id": 39564,
+   "symbol": "OPN"
+  },
+  "optimism": {
+   "id": 11840,
+   "symbol": "OP"
+  },
+  "orbs": {
+   "id": 3835,
+   "symbol": "ORBS"
+  },
+  "orca": {
+   "id": 11165,
+   "symbol": "ORCA"
+  },
+  "ordinals": {
+   "id": 25028,
+   "symbol": "ORDI"
+  },
+  "ore": {
+   "id": 32782,
+   "symbol": "ORE"
+  },
+  "origintrail": {
+   "id": 2467,
+   "symbol": "TRAC"
+  },
+  "orizon": {
+   "id": 37649,
+   "symbol": "ORI"
+  },
+  "ozone-chain": {
+   "id": 28076,
+   "symbol": "OZO"
+  },
+  "pancakeswap-token": {
+   "id": 7186,
+   "symbol": "CAKE"
+  },
+  "pax-gold": {
+   "id": 4705,
+   "symbol": "PAXG"
+  },
+  "paxos-standard": {
+   "id": 3330,
+   "symbol": "USDP"
+  },
+  "pay-coin": {
+   "id": 5275,
+   "symbol": "PCI"
+  },
+  "paypal-usd": {
+   "id": 27772,
+   "symbol": "PYUSD"
+  },
+  "peanut-the-squirrel": {
+   "id": 33788,
+   "symbol": "PNUT"
+  },
+  "peaq-2": {
+   "id": 14588,
+   "symbol": "PEAQ"
+  },
+  "pendle": {
+   "id": 9481,
+   "symbol": "PENDLE"
+  },
+  "pepe": {
+   "id": 24478,
+   "symbol": "PEPE"
+  },
+  "perle": {
+   "id": 39797,
+   "symbol": "PRL"
+  },
+  "pha": {
+   "id": 6841,
+   "symbol": "PHA"
+  },
+  "pharos-network": {
+   "id": 39682,
+   "symbol": "PROS"
+  },
+  "pi-network": {
+   "id": 35697,
+   "symbol": "PI"
+  },
+  "pieverse": {
+   "id": 38849,
+   "symbol": "PIEVERSE"
+  },
+  "pirate-chain": {
+   "id": 3951,
+   "symbol": "ARRR"
+  },
+  "plasma": {
+   "id": 36645,
+   "symbol": "XPL"
+  },
+  "playsout": {
+   "id": 37534,
+   "symbol": "PLAY"
+  },
+  "plume": {
+   "id": 35364,
+   "symbol": "PLUME"
+  },
+  "polkadot": {
+   "id": 6636,
+   "symbol": "DOT"
+  },
+  "polygon-ecosystem-token": {
+   "id": 28321,
+   "symbol": "POL"
+  },
+  "polymesh": {
+   "id": 20362,
+   "symbol": "POLYX"
+  },
+  "popcat": {
+   "id": 28782,
+   "symbol": "POPCAT"
+  },
+  "power-ledger": {
+   "id": 2132,
+   "symbol": "POWR"
+  },
+  "precious-metals-usd": {
+   "id": 39662,
+   "symbol": "PMUSD"
+  },
+  "project-galaxy": {
+   "id": 11877,
+   "symbol": "GAL"
+  },
+  "prometeus": {
+   "id": 4120,
+   "symbol": "PROM"
+  },
+  "proton": {
+   "id": 5350,
+   "symbol": "XPR"
+  },
+  "pudgy-penguins": {
+   "id": 34466,
+   "symbol": "PENGU"
+  },
+  "pump-fun": {
+   "id": 36507,
+   "symbol": "PUMP"
+  },
+  "pumpcade": {
+   "id": 39844,
+   "symbol": "PUMPCADE"
+  },
+  "pumpmeme": {
+   "id": 37614,
+   "symbol": "PM"
+  },
+  "purr-2": {
+   "id": 34332,
+   "symbol": "PURR"
+  },
+  "pyth-network": {
+   "id": 28177,
+   "symbol": "PYTH"
+  },
+  "pythia": {
+   "id": 35216,
+   "symbol": "PYTHIA"
+  },
+  "qtum": {
+   "id": 1684,
+   "symbol": "QTUM"
+  },
+  "quack-ai": {
+   "id": 38236,
+   "symbol": "Q"
+  },
+  "quai-network": {
+   "id": 22354,
+   "symbol": "QUAI"
+  },
+  "quant-network": {
+   "id": 3155,
+   "symbol": "QNT"
+  },
+  "quantixai": {
+   "id": 30651,
+   "symbol": "QFI"
+  },
+  "quantum-resistant-ledger": {
+   "id": 1712,
+   "symbol": "QRL"
+  },
+  "qubic-network": {
+   "id": 29169,
+   "symbol": "QUBIC"
+  },
+  "railgun": {
+   "id": 10854,
+   "symbol": "RAIL"
+  },
+  "rain": {
+   "id": 38341,
+   "symbol": "RAIN"
+  },
+  "ravedao": {
+   "id": 38967,
+   "symbol": "RAVE"
+  },
+  "ravencoin": {
+   "id": 2577,
+   "symbol": "RVN"
+  },
+  "raydium": {
+   "id": 8526,
+   "symbol": "RAY"
+  },
+  "reallink": {
+   "id": 14721,
+   "symbol": "REAL"
+  },
+  "redstone-oracles": {
+   "id": 21707,
+   "symbol": "RED"
+  },
+  "render-token": {
+   "id": 5690,
+   "symbol": "RENDER"
+  },
+  "renzo": {
+   "id": 30843,
+   "symbol": "REZ"
+  },
+  "request-network": {
+   "id": 2071,
+   "symbol": "REQ"
+  },
+  "researchcoin": {
+   "id": 27054,
+   "symbol": "RSC"
+  },
+  "reserve-rights-token": {
+   "id": 3964,
+   "symbol": "RSR"
+  },
+  "ribbita-by-virtuals": {
+   "id": 36743,
+   "symbol": "TIBBIR"
+  },
+  "rif-token": {
+   "id": 3701,
+   "symbol": "RIF"
+  },
+  "ripple": {
+   "id": 52,
+   "symbol": "XRP"
+  },
+  "ripple-usd": {
+   "id": 34387,
+   "symbol": "RLUSD"
+  },
+  "river": {
+   "id": 38417,
+   "symbol": "RIVER"
+  },
+  "robo-token-2": {
+   "id": 39595,
+   "symbol": "ROBO"
+  },
+  "rocket-pool": {
+   "id": 2943,
+   "symbol": "RPL"
+  },
+  "rollbit-coin": {
+   "id": 15271,
+   "symbol": "RLB"
+  },
+  "ronin": {
+   "id": 14101,
+   "symbol": "RON"
+  },
+  "rujira": {
+   "id": 39910,
+   "symbol": "RUJI"
+  },
+  "safe": {
+   "id": 21585,
+   "symbol": "SAFE"
+  },
+  "safepal": {
+   "id": 8119,
+   "symbol": "SFP"
+  },
+  "sahara-ai": {
+   "id": 36671,
+   "symbol": "SAHARA"
+  },
+  "sats-ordinals": {
+   "id": 28194,
+   "symbol": "SATS"
+  },
+  "score": {
+   "id": 36901,
+   "symbol": "SN44"
+  },
+  "secret": {
+   "id": 5604,
+   "symbol": "SCRT"
+  },
+  "seeker": {
+   "id": 39377,
+   "symbol": "SKR"
+  },
+  "sei-network": {
+   "id": 23149,
+   "symbol": "SEI"
+  },
+  "sentient": {
+   "id": 38868,
+   "symbol": "SENT"
+  },
+  "shiba-inu": {
+   "id": 5994,
+   "symbol": "SHIB"
+  },
+  "shuffle-2": {
+   "id": 29960,
+   "symbol": "SHFL"
+  },
+  "siacoin": {
+   "id": 1042,
+   "symbol": "SC"
+  },
+  "sign-global": {
+   "id": 35600,
+   "symbol": "SIGN"
+  },
+  "singularry": {
+   "id": 39417,
+   "symbol": "SINGULARRY"
+  },
+  "skale": {
+   "id": 5691,
+   "symbol": "SKL"
+  },
+  "sky": {
+   "id": 33038,
+   "symbol": "SKY"
+  },
+  "skyai": {
+   "id": 36300,
+   "symbol": "SKYAI"
+  },
+  "smooth-love-potion": {
+   "id": 5824,
+   "symbol": "SLP"
+  },
+  "snek": {
+   "id": 25264,
+   "symbol": "SNEK"
+  },
+  "snowbank": {
+   "id": 14027,
+   "symbol": "SB"
+  },
+  "societe-generale-forge-eurcv": {
+   "id": 32796,
+   "symbol": "EURCV"
+  },
+  "solana": {
+   "id": 5426,
+   "symbol": "SOL"
+  },
+  "somnia": {
+   "id": 37637,
+   "symbol": "SOMI"
+  },
+  "songbird": {
+   "id": 12186,
+   "symbol": "SGB"
+  },
+  "sonic-3": {
+   "id": 32684,
+   "symbol": "S"
+  },
+  "soon-2": {
+   "id": 36542,
+   "symbol": "SOON"
+  },
+  "sophon": {
+   "id": 32087,
+   "symbol": "SOPH"
+  },
+  "sosovalue": {
+   "id": 35818,
+   "symbol": "SOSO"
+  },
+  "sp500-xstock": {
+   "id": 37006,
+   "symbol": "SPYX"
+  },
+  "space-and-time": {
+   "id": 36405,
+   "symbol": "SXT"
+  },
+  "spark-2": {
+   "id": 36569,
+   "symbol": "SPK"
+  },
+  "spell-token": {
+   "id": 11289,
+   "symbol": "SPELL"
+  },
+  "spx6900": {
+   "id": 28081,
+   "symbol": "SPX"
+  },
+  "ssv-network": {
+   "id": 12999,
+   "symbol": "SSV"
+  },
+  "stable-2": {
+   "id": 38892,
+   "symbol": "STABLE"
+  },
+  "staked-frax-usd": {
+   "id": 36038,
+   "symbol": "SFRXUSD"
+  },
+  "standx-dusd": {
+   "id": 36762,
+   "symbol": "DUSD"
+  },
+  "stargate-finance": {
+   "id": 18934,
+   "symbol": "STG"
+  },
+  "starknet": {
+   "id": 22691,
+   "symbol": "STRK"
+  },
+  "stasis-eurs": {
+   "id": 2989,
+   "symbol": "EURS"
+  },
+  "status": {
+   "id": 1759,
+   "symbol": "SNT"
+  },
+  "stau": {
+   "id": 37584,
+   "symbol": "STAU"
+  },
+  "steem": {
+   "id": 1230,
+   "symbol": "STEEM"
+  },
+  "stellar": {
+   "id": 512,
+   "symbol": "XLM"
+  },
+  "stepn": {
+   "id": 18069,
+   "symbol": "GMT"
+  },
+  "ston-2": {
+   "id": 27311,
+   "symbol": "STON"
+  },
+  "storj": {
+   "id": 1772,
+   "symbol": "STORJ"
+  },
+  "stp-network": {
+   "id": 4006,
+   "symbol": "AWE"
+  },
+  "straitsx-xusd": {
+   "id": 32372,
+   "symbol": "XUSD"
+  },
+  "strategy-pp-variable-xstock": {
+   "id": 39711,
+   "symbol": "STRCX"
+  },
+  "stratis": {
+   "id": 1343,
+   "symbol": "STRAX"
+  },
+  "subsquid": {
+   "id": 12894,
+   "symbol": "SQD"
+  },
+  "succinct": {
+   "id": 37593,
+   "symbol": "PROVE"
+  },
+  "sui": {
+   "id": 20947,
+   "symbol": "SUI"
+  },
+  "sun-token": {
+   "id": 10529,
+   "symbol": "SUN"
+  },
+  "superfarm": {
+   "id": 8290,
+   "symbol": "SUPER"
+  },
+  "superfortune": {
+   "id": 38984,
+   "symbol": "GUA"
+  },
+  "sushi": {
+   "id": 6758,
+   "symbol": "SUSHI"
+  },
+  "swftcoin": {
+   "id": 2341,
+   "symbol": "SWFTC"
+  },
+  "swissborg": {
+   "id": 2499,
+   "symbol": "BORG"
+  },
+  "syrup": {
+   "id": 33824,
+   "symbol": "SYRUP"
+  },
+  "tagger": {
+   "id": 34958,
+   "symbol": "TAG"
+  },
+  "targon": {
+   "id": 36912,
+   "symbol": "SN4"
+  },
+  "telcoin": {
+   "id": 2394,
+   "symbol": "TEL"
+  },
+  "tellor": {
+   "id": 4944,
+   "symbol": "TRB"
+  },
+  "templar": {
+   "id": 36893,
+   "symbol": "SN3"
+  },
+  "terra-luna": {
+   "id": 4172,
+   "symbol": "LUNC"
+  },
+  "terra-luna-2": {
+   "id": 20314,
+   "symbol": "LUNA"
+  },
+  "terrausd": {
+   "id": 7129,
+   "symbol": "USTC"
+  },
+  "tesla-xstock": {
+   "id": 37004,
+   "symbol": "TSLAX"
+  },
+  "tether": {
+   "id": 825,
+   "symbol": "USDT"
+  },
+  "tether-gold": {
+   "id": 5176,
+   "symbol": "XAUT"
+  },
+  "tezos": {
+   "id": 2011,
+   "symbol": "XTZ"
+  },
+  "the-graph": {
+   "id": 6719,
+   "symbol": "GRT"
+  },
+  "the-innovation-game": {
+   "id": 34102,
+   "symbol": "TIG"
+  },
+  "the-open-network": {
+   "id": 11419,
+   "symbol": "GRAM"
+  },
+  "the-sandbox": {
+   "id": 6210,
+   "symbol": "SAND"
+  },
+  "the9bit": {
+   "id": 39323,
+   "symbol": "9BIT"
+  },
+  "theta-fuel": {
+   "id": 3822,
+   "symbol": "TFUEL"
+  },
+  "theta-token": {
+   "id": 2416,
+   "symbol": "THETA"
+  },
+  "thorchain": {
+   "id": 4157,
+   "symbol": "RUNE"
+  },
+  "threshold-network-token": {
+   "id": 17751,
+   "symbol": "T"
+  },
+  "tokenised-gbp": {
+   "id": 38935,
+   "symbol": "TGBP"
+  },
+  "tornado-cash": {
+   "id": 8049,
+   "symbol": "TORN"
+  },
+  "toshi": {
+   "id": 27750,
+   "symbol": "TOSHI"
+  },
+  "tria": {
+   "id": 39382,
+   "symbol": "TRIA"
+  },
+  "tron": {
+   "id": 1958,
+   "symbol": "TRX"
+  },
+  "tronbank": {
+   "id": 39177,
+   "symbol": "TBK"
+  },
+  "true-usd": {
+   "id": 2563,
+   "symbol": "TUSD"
+  },
+  "trust-wallet-token": {
+   "id": 5964,
+   "symbol": "TWT"
+  },
+  "turbo": {
+   "id": 24911,
+   "symbol": "TURBO"
+  },
+  "tx": {
+   "id": 39660,
+   "symbol": "TX"
+  },
+  "uchain-2": {
+   "id": 38187,
+   "symbol": "UCN"
+  },
+  "ultima": {
+   "id": 28293,
+   "symbol": "ULTIMA"
+  },
+  "uma": {
+   "id": 5617,
+   "symbol": "UMA"
+  },
+  "undeads-games": {
+   "id": 29933,
+   "symbol": "UDS"
+  },
+  "unibase": {
+   "id": 38339,
+   "symbol": "UB"
+  },
+  "unifai-network": {
+   "id": 38841,
+   "symbol": "UAI"
+  },
+  "unipoly": {
+   "id": 28735,
+   "symbol": "UNP"
+  },
+  "uniswap": {
+   "id": 7083,
+   "symbol": "UNI"
+  },
+  "united-stables": {
+   "id": 39120,
+   "symbol": "U"
+  },
+  "uquid-coin": {
+   "id": 2273,
+   "symbol": "UQC"
+  },
+  "usa": {
+   "id": 38386,
+   "symbol": "USAT"
+  },
+  "usd-coin": {
+   "id": 3408,
+   "symbol": "USDC"
+  },
+  "usd1-wlfi": {
+   "id": 36148,
+   "symbol": "USD1"
+  },
+  "usdai": {
+   "id": 38562,
+   "symbol": "USDAI"
+  },
+  "usdd": {
+   "id": 19891,
+   "symbol": "USDD"
+  },
+  "usdgo": {
+   "id": 39683,
+   "symbol": "USDGO"
+  },
+  "usds": {
+   "id": 33039,
+   "symbol": "USDS"
+  },
+  "useless-3": {
+   "id": 36828,
+   "symbol": "USELESS"
+  },
+  "usual": {
+   "id": 33979,
+   "symbol": "USUAL"
+  },
+  "usual-usd": {
+   "id": 32307,
+   "symbol": "USD0"
+  },
+  "utya": {
+   "id": 35932,
+   "symbol": "UTYA"
+  },
+  "vana": {
+   "id": 34619,
+   "symbol": "VANA"
+  },
+  "vaulta": {
+   "id": 36462,
+   "symbol": "A"
+  },
+  "vechain": {
+   "id": 3077,
+   "symbol": "VET"
+  },
+  "velo": {
+   "id": 7127,
+   "symbol": "VELO"
+  },
+  "velvet": {
+   "id": 37298,
+   "symbol": "VELVET"
+  },
+  "venice-token": {
+   "id": 35509,
+   "symbol": "VVV"
+  },
+  "venom": {
+   "id": 22059,
+   "symbol": "VENOM"
+  },
+  "venus": {
+   "id": 7288,
+   "symbol": "XVS"
+  },
+  "verge": {
+   "id": 693,
+   "symbol": "XVG"
+  },
+  "verus-coin": {
+   "id": 5049,
+   "symbol": "VRSC"
+  },
+  "vethor-token": {
+   "id": 3012,
+   "symbol": "VTHO"
+  },
+  "vicicoin": {
+   "id": 28656,
+   "symbol": "VCNT"
+  },
+  "victoria-vr": {
+   "id": 14822,
+   "symbol": "VR"
+  },
+  "virtual-protocol": {
+   "id": 29420,
+   "symbol": "VIRTUAL"
+  },
+  "vision-3": {
+   "id": 37322,
+   "symbol": "VSN"
+  },
+  "vvs-finance": {
+   "id": 14519,
+   "symbol": "VVS"
+  },
+  "walrus-2": {
+   "id": 36119,
+   "symbol": "WAL"
+  },
+  "waves": {
+   "id": 1274,
+   "symbol": "WAVES"
+  },
+  "wax": {
+   "id": 2300,
+   "symbol": "WAXP"
+  },
+  "wefi": {
+   "id": 34261,
+   "symbol": "WFI"
+  },
+  "wemix-token": {
+   "id": 7548,
+   "symbol": "WEMIX"
+  },
+  "whitebit": {
+   "id": 21353,
+   "symbol": "WBT"
+  },
+  "wiki-cat": {
+   "id": 20700,
+   "symbol": "WKC"
+  },
+  "woo-network": {
+   "id": 7501,
+   "symbol": "WOO"
+  },
+  "world-liberty-financial": {
+   "id": 33251,
+   "symbol": "WLFI"
+  },
+  "world-mobile-token": {
+   "id": 13769,
+   "symbol": "WMTX"
+  },
+  "worldcoin-wld": {
+   "id": 13502,
+   "symbol": "WLD"
+  },
+  "wormhole": {
+   "id": 29587,
+   "symbol": "W"
+  },
+  "would": {
+   "id": 35837,
+   "symbol": "WOULD"
+  },
+  "xdce-crowd-sale": {
+   "id": 2634,
+   "symbol": "XDC"
+  },
+  "xphere": {
+   "id": 36056,
+   "symbol": "XP"
+  },
+  "xyo-network": {
+   "id": 2765,
+   "symbol": "XYO"
+  },
+  "yearn-finance": {
+   "id": 5864,
+   "symbol": "YFI"
+  },
+  "yield-guild-games": {
+   "id": 10688,
+   "symbol": "YGG"
+  },
+  "ylds": {
+   "id": 40091,
+   "symbol": "YLDS"
+  },
+  "yzy": {
+   "id": 38151,
+   "symbol": "YZY"
+  },
+  "zama": {
+   "id": 39332,
+   "symbol": "ZAMA"
+  },
+  "zano": {
+   "id": 4691,
+   "symbol": "ZANO"
+  },
+  "zcash": {
+   "id": 1437,
+   "symbol": "ZEC"
+  },
+  "zebec-network": {
+   "id": 30636,
+   "symbol": "ZBCN"
+  },
+  "zelcash": {
+   "id": 3029,
+   "symbol": "FLUX"
+  },
+  "zencash": {
+   "id": 1698,
+   "symbol": "ZEN"
+  },
+  "zerebro": {
+   "id": 34083,
+   "symbol": "ZEREBRO"
+  },
+  "zero-gravity": {
+   "id": 38337,
+   "symbol": "0G"
+  },
+  "zerobase": {
+   "id": 38427,
+   "symbol": "ZBT"
+  },
+  "zetachain": {
+   "id": 21259,
+   "symbol": "ZETA"
+  },
+  "zignaly": {
+   "id": 9260,
+   "symbol": "ZIG"
+  },
+  "zilliqa": {
+   "id": 2469,
+   "symbol": "ZIL"
+  },
+  "zksync": {
+   "id": 24091,
+   "symbol": "ZK"
+  },
+  "zora": {
+   "id": 35931,
+   "symbol": "ZORA"
+  }
+ },
+ "exclus": [
+  "aelf",
+  "aintivirus",
+  "alloy-tether",
+  "alphabet-class-a-ondo-tokenized-stock",
+  "america-party-5",
+  "apes-2-2",
+  "apex-4",
+  "apex-token-2",
+  "apollo-diversified-credit-securitize-fund",
+  "apxusd",
+  "apyusd",
+  "auction",
+  "avant-usd",
+  "backed-cspx-core-s-p-500",
+  "basedhype",
+  "baseline",
+  "blackrock-usd-institutional-digital-liquidity-fund",
+  "blast",
+  "blockchain-capital",
+  "cap-usd",
+  "casper-network",
+  "changenow",
+  "coinex-token",
+  "cross-2",
+  "crown-brlv",
+  "cygnus-finance-global-usd",
+  "dai-on-pulsechain",
+  "dkargo",
+  "dmt-nat",
+  "ebtc-2",
+  "escoin-token",
+  "eutbl",
+  "exod",
+  "f-x-protocol-fxusd",
+  "felix-feusd",
+  "fidelity-digital-interest-token",
+  "flock-2",
+  "frax-share",
+  "fx-usd-saving",
+  "gekko",
+  "greyhunt",
+  "grx-chain",
+  "hash-2",
+  "hashnote-usyc",
+  "home",
+  "impossible-cloud-network-token",
+  "infinifi-locked-iusd-1week",
+  "infinifi-usd",
+  "ini",
+  "invesco-qqq-etf-ondo-tokenized-etf",
+  "ishares-bitcoin-trust-ondo-tokenized",
+  "ishares-silver-trust-ondo-tokenized-stock",
+  "islamic-coin",
+  "janus-henderson-anemoy-aaa-clo-fund",
+  "janus-henderson-anemoy-treasury-fund",
+  "jupusd",
+  "jusd",
+  "just-a-frog",
+  "kinesis-silver",
+  "latam-residential-sstl",
+  "lido-earn-eth",
+  "liquity-bold-2",
+  "lovebit",
+  "mag7-ssi",
+  "maga-bitcoin",
+  "main-street-usd",
+  "main-street-yield",
+  "mantra",
+  "mantra-dao",
+  "mbg-by-multibank-group",
+  "meme-horse",
+  "memetern",
+  "meta-2-2",
+  "metronome-synth-usd",
+  "micron-technology-ondo-tokenized-stock",
+  "midas-fasanara-global",
+  "midas-mf-one",
+  "midas-mtbill",
+  "mnee-usd-stablecoin",
+  "monerium-eur-money-2",
+  "moo-deng",
+  "mustang",
+  "na-post-settlement-legal-financing-receivables",
+  "naoris",
+  "neet",
+  "nirvana-ana-2",
+  "nkyc-token",
+  "noon-usn",
+  "novachargex-coin",
+  "nusd-2",
+  "nvidia-ondo-tokenized-stock",
+  "nvidia-xstock",
+  "nxm",
+  "official-fo",
+  "omni-network",
+  "onyc",
+  "ousg",
+  "ozapay",
+  "palladium-network",
+  "palm-usd",
+  "pleasing-gold",
+  "prize-protocol",
+  "proprietary-trading-network",
+  "puff-the-dragon",
+  "pundi-x-2",
+  "re-protocol-reusd",
+  "rekt-4",
+  "resupply-usd",
+  "rosa-inu",
+  "royal-dollar",
+  "ryze",
+  "satoshi-stablecoin",
+  "saturn-dollar",
+  "securitize-tokenized-aaa-clo-fund",
+  "seda-2",
+  "sierra-2",
+  "siren-2",
+  "small-thing",
+  "spdr-s-p-500-etf-ondo-tokenized-etf",
+  "spiko-digital-assets-cash-carry-fund-euro-share-class",
+  "spiko-us-t-bills-money-market-fund",
+  "storx",
+  "story-2",
+  "strategic-oil-supply-2",
+  "superstate-short-duration-us-government-securities-fund-ustb",
+  "swop-2",
+  "sygnum-fiusd-liquidity-fund",
+  "tac",
+  "tcy",
+  "tdccp",
+  "temple",
+  "the-grays-currency",
+  "theo-short-duration-us-treasury-fund",
+  "tokamak-network",
+  "tokenize-xchange",
+  "tokenlon",
+  "tradable-apac-diversified-finance-provider-sstn",
+  "tradable-eu-latam-pos-financing-sstl",
+  "tradable-latam-bnpl-sstn",
+  "tradable-latam-fintech-sstn",
+  "tradable-latam-middle-market-lender-sstl",
+  "tradable-na-legal-receivables-ssl",
+  "tradable-na-neobank-sstl",
+  "tradable-na-rent-financing-platform-sstn",
+  "tradable-na-third-party-online-merchant-sstn",
+  "tradable-north-america-pos-lender-sstn",
+  "tradable-singapore-fintech-ssl",
+  "tradable-singapore-fintech-ssl-2",
+  "troll-2",
+  "unit-plasma",
+  "unit-pump",
+  "unity-usd",
+  "unitywallet-token",
+  "usda-2",
+  "usda-3",
+  "usdkg",
+  "usdtb",
+  "usdu",
+  "usdx",
+  "ustbl-tokenized-u-s-treasury-bill",
+  "usx",
+  "vaneck-treasury-fund",
+  "whiteheart",
+  "wojak-5",
+  "xdai",
+  "xtusd",
+  "yooldo-games"
+ ],
+ "_controlePrix": "Contrôle exhaustif du 06/10/2026 : pour CHAQUE correspondance, prix CMC (API publique sans clé) comparé au prix CoinGecko (API publique sans clé) de l'id du site. Tolérance 5 %. Hors tolérance → retirée (voir _ecartesPrix). Ajouts manuels (_manuels) : désignés par slug CMC + symbole, nom cohérent, prix à ±5 %.",
+ "_manuels": {
+  "apecoin": {
+   "cmcSlug": "apecoin-ape",
+   "cmcNom": "ApeCoin",
+   "ecartPrixPct": 0,
+   "motif": "remplace 7257"
+  },
+  "world-liberty-financial": {
+   "cmcSlug": "world-liberty-financial-wlfi",
+   "cmcNom": "World Liberty Financial",
+   "ecartPrixPct": 0.1,
+   "motif": "remplace 33023"
+  },
+  "the-open-network": {
+   "cmcSlug": "gram",
+   "cmcNom": "Gram (prev. Toncoin)",
+   "ecartPrixPct": -0.3,
+   "motif": "ajout"
+  },
+  "leo-token": {
+   "cmcSlug": "unus-sed-leo",
+   "cmcNom": "UNUS SED LEO",
+   "ecartPrixPct": -0.1,
+   "motif": "ajout"
+  },
+  "usd1-wlfi": {
+   "cmcSlug": "usd1",
+   "cmcNom": "World Liberty Financial USD",
+   "ecartPrixPct": 0,
+   "motif": "ajout"
+  },
+  "gatechain-token": {
+   "cmcSlug": "gatetoken",
+   "cmcNom": "GateToken",
+   "ecartPrixPct": 0,
+   "motif": "ajout"
+  },
+  "jupiter-exchange-solana": {
+   "cmcSlug": "jupiter-ag",
+   "cmcNom": "Jupiter",
+   "ecartPrixPct": 0,
+   "motif": "ajout"
+  },
+  "pi-network": {
+   "cmcSlug": "pi",
+   "cmcNom": "Pi",
+   "ecartPrixPct": 0,
+   "motif": "ajout"
+  },
+  "bittorrent": {
+   "cmcSlug": "bittorrent-new",
+   "cmcNom": "BitTorrent [New]",
+   "ecartPrixPct": 0.1,
+   "motif": "ajout"
+  },
+  "eigenlayer": {
+   "cmcSlug": "eigencloud",
+   "cmcNom": "EigenCloud",
+   "ecartPrixPct": -0.1,
+   "motif": "ajout"
+  },
+  "gmt-token": {
+   "cmcSlug": "gomining-token",
+   "cmcNom": "GoМining",
+   "ecartPrixPct": 0.1,
+   "motif": "ajout"
+  },
+  "mina-protocol": {
+   "cmcSlug": "mina",
+   "cmcNom": "Mina",
+   "ecartPrixPct": -0.1,
+   "motif": "ajout"
+  },
+  "deep": {
+   "cmcSlug": "deepbook-protocol",
+   "cmcNom": "DeepBook Protocol",
+   "ecartPrixPct": 0,
+   "motif": "ajout"
+  },
+  "beam-2": {
+   "cmcSlug": "onbeam",
+   "cmcNom": "Beam",
+   "ecartPrixPct": 0,
+   "motif": "ajout"
+  },
+  "stp-network": {
+   "cmcSlug": "awe-network",
+   "cmcNom": "AWE",
+   "ecartPrixPct": 0,
+   "motif": "ajout"
+  },
+  "genius-3": {
+   "cmcSlug": "genius-terminal",
+   "cmcNom": "Genius Terminal",
+   "ecartPrixPct": 0,
+   "motif": "ajout"
+  },
+  "htx-dao": {
+   "cmcSlug": "htx",
+   "cmcNom": "HTX",
+   "ecartPrixPct": 0,
+   "motif": "ajout"
+  },
+  "pha": {
+   "cmcSlug": "phala-network",
+   "cmcNom": "Phala Network",
+   "ecartPrixPct": 0,
+   "motif": "ajout"
+  },
+  "bas": {
+   "cmcSlug": "bnb-attestation-service",
+   "cmcNom": "BAS",
+   "ecartPrixPct": 0.1,
+   "motif": "ajout"
+  },
+  "threshold-network-token": {
+   "cmcSlug": "threshold",
+   "cmcNom": "Threshold",
+   "ecartPrixPct": 0,
+   "motif": "ajout"
+  },
+  "sushi": {
+   "cmcSlug": "sushiswap",
+   "cmcNom": "SushiSwap",
+   "ecartPrixPct": 0,
+   "motif": "ajout"
+  },
+  "xyo-network": {
+   "cmcSlug": "xyo",
+   "cmcNom": "XYO",
+   "ecartPrixPct": 0,
+   "motif": "ajout"
+  },
+  "zignaly": {
+   "cmcSlug": "zigcoin",
+   "cmcNom": "ZIG Finance",
+   "ecartPrixPct": -0.2,
+   "motif": "ajout"
+  },
+  "g-token": {
+   "cmcSlug": "gravity-token",
+   "cmcNom": "Gravity",
+   "ecartPrixPct": 0,
+   "motif": "ajout"
+  },
+  "popcat": {
+   "cmcSlug": "popcat-sol",
+   "cmcNom": "Popcat (SOL)",
+   "ecartPrixPct": -0.1,
+   "motif": "ajout"
+  },
+  "holoworld": {
+   "cmcSlug": "holoworld-ai",
+   "cmcNom": "Holoworld AI",
+   "ecartPrixPct": 0,
+   "motif": "ajout"
+  },
+  "tesla-xstock": {
+   "cmcSlug": "tesla-tokenized-stock-xstock",
+   "cmcNom": "Tesla tokenized stock (xStock)",
+   "ecartPrixPct": 0,
+   "motif": "ajout"
+  },
+  "circle-xstock": {
+   "cmcSlug": "circle-tokenized-stock-xstock",
+   "cmcNom": "Circle tokenized stock (xStock)",
+   "ecartPrixPct": -0.1,
+   "motif": "ajout"
+  },
+  "sp500-xstock": {
+   "cmcSlug": "sp500-tokenized-stock-xstock",
+   "cmcNom": "SP500 tokenized ETF (xStock)",
+   "ecartPrixPct": -0.1,
+   "motif": "ajout"
+  },
+  "microstrategy-xstock": {
+   "cmcSlug": "microstrategy-tokenized-stock-xstock",
+   "cmcNom": "MicroStrategy tokenized stock (xStock)",
+   "ecartPrixPct": 0.1,
+   "motif": "ajout"
+  },
+  "strategy-pp-variable-xstock": {
+   "cmcSlug": "strategy-pp-variable-tokenized-stock-xstock",
+   "cmcNom": "Strategy PP Variable tokenized stock (xStock)",
+   "ecartPrixPct": -3.5,
+   "motif": "ajout"
+  },
+  "circle-internet-group-ondo-tokenized-stock": {
+   "cmcSlug": "circle-internet-group-tokenized-stock-ondo",
+   "cmcNom": "Circle Internet Group Tokenized Stock (Ondo)",
+   "ecartPrixPct": 0,
+   "motif": "ajout"
+  },
+  "cheems-token": {
+   "cmcSlug": "cheems-pet",
+   "cmcNom": "Cheems (cheems.pet)",
+   "ecartPrixPct": 0.1,
+   "motif": "ajout"
+  },
+  "helio-protocol-hay": {
+   "cmcSlug": "lisusd",
+   "cmcNom": "lisUSD",
+   "ecartPrixPct": 0,
+   "motif": "ajout"
+  },
+  "ondo-u-s-dollar-token": {
+   "cmcSlug": "us-dollar-tokenized-currency-ondo",
+   "cmcNom": "U.S. Dollar Tokenized Currency (Ondo)",
+   "ecartPrixPct": 0,
+   "motif": "ajout"
+  }
+ },
+ "_ecartesPrix": {
+  "aelf": {
+   "cmcId": 2299,
+   "cmcSlug": "aelf",
+   "ecartPrixPct": -17.9
+  },
+  "aintivirus": {
+   "cmcId": 35589,
+   "cmcSlug": "aintivirus",
+   "ecartPrixPct": 2628.7
+  },
+  "blast": {
+   "cmcId": 28480,
+   "cmcSlug": "blast",
+   "ecartPrixPct": 62.1
+  },
+  "coinex-token": {
+   "cmcId": 2941,
+   "cmcSlug": "coinex-token",
+   "ecartPrixPct": 3752.3
+  },
+  "dkargo": {
+   "cmcId": 5908,
+   "cmcSlug": "dkargo",
+   "ecartPrixPct": -7.4
+  },
+  "flock-2": {
+   "cmcId": 35474,
+   "cmcSlug": "flock",
+   "ecartPrixPct": -100
+  },
+  "hash-2": {
+   "cmcId": 19960,
+   "cmcSlug": "provenance-blockchain",
+   "ecartPrixPct": -12.9
+  },
+  "islamic-coin": {
+   "cmcId": 26220,
+   "cmcSlug": "islamic-coin",
+   "ecartPrixPct": 703.8
+  },
+  "kinesis-silver": {
+   "cmcId": 24439,
+   "cmcSlug": "silver",
+   "ecartPrixPct": -50.9
+  },
+  "liquity-bold-2": {
+   "cmcId": 38953,
+   "cmcSlug": "bold-solana",
+   "ecartPrixPct": -100
+  },
+  "lovebit": {
+   "cmcId": 31886,
+   "cmcSlug": "lovebit",
+   "ecartPrixPct": -5.7
+  },
+  "omni-network": {
+   "cmcId": 30315,
+   "cmcSlug": "omni-network",
+   "ecartPrixPct": 3873.7
+  },
+  "siren-2": {
+   "cmcId": 35766,
+   "cmcSlug": "siren-bsc",
+   "ecartPrixPct": 8.7
+  }
+ }
+}

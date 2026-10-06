@@ -49,7 +49,7 @@ const PAGE_URL = `${BRAND.url}/marche/heatmap`;
 export const metadata: Metadata = {
   title: "Heatmap crypto temps réel — Top 100 marché 2026",
   description:
-    "Visualisez en un coup d'œil les variations 24h du top 100 crypto. Heatmap interactive, vert/rouge, données live CoinGecko. 100 % gratuit.",
+    "Visualisez en un coup d'œil les variations 24h du top 100 crypto. Heatmap interactive, vert/rouge, données CoinMarketCap et CoinGecko. 100 % gratuit.",
   alternates: withHreflang(PAGE_URL),
   openGraph: {
     title: "Heatmap crypto temps réel — Top 100",
@@ -139,7 +139,7 @@ export default async function HeatmapPage() {
           <p className="mt-3 text-base text-muted max-w-2xl">
             Visualisez en un coup d'œil quelles cryptos montent ou chutent
             aujourd'hui. Carrés colorés vert (hausse) / rouge (baisse), classés
-            par capitalisation. Données CoinGecko, prix rafraîchis en continu côté navigateur.
+            par capitalisation. Données CoinMarketCap et CoinGecko ; prix mis à jour dans le navigateur.
           </p>
         </header>
 
@@ -224,7 +224,7 @@ export default async function HeatmapPage() {
 
         {/* MENTIONS */}
         <p className="mt-8 text-[11px] text-muted leading-relaxed">
-          Données de marché fournies par CoinGecko (cache serveur 2 min). Cette
+          Données de marché fournies par CoinMarketCap, avec CoinGecko en relais (heure du relevé indiquée). Cette
           page est purement informative et ne constitue pas un conseil en
           investissement. Investir dans les cryptomonnaies comporte un risque de
           perte en capital. Voir notre{" "}

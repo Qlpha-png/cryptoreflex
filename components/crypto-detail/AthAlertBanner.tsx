@@ -1,10 +1,15 @@
 import { Sparkles, TrendingUp } from "lucide-react";
+import { sourceInfo } from "@/lib/data-sources/attribution";
+import type { SourceName } from "@/lib/data-sources/priorities";
 
 interface Props {
   cryptoName: string;
   symbol: string;
   currentPrice: number;
   ath: number;
+  /** 06/10/2026 — sources réelles (CoinDetail.sources.price / .ath) ; absentes = aucune source citée. */
+  priceSource?: SourceName | null;
+  athSource?: SourceName | null;
 }
 
 /**
@@ -28,7 +33,17 @@ export default function AthAlertBanner({
   symbol,
   currentPrice,
   ath,
+  priceSource = null,
+  athSource = null,
 }: Props) {
+  const priceLabel = sourceInfo(priceSource)?.label;
+  const athLabel = sourceInfo(athSource)?.label;
+  const sourceNote =
+    priceLabel && athLabel && priceLabel !== athLabel
+      ? ` (prix : ${priceLabel} ; sommet : ${athLabel})`
+      : priceLabel || athLabel
+        ? ` (${priceLabel ?? athLabel})`
+        : "";
   if (!Number.isFinite(currentPrice) || !Number.isFinite(ath) || ath <= 0) {
     return null;
   }
@@ -78,7 +93,7 @@ export default function AthAlertBanner({
       <div className="flex-1 min-w-0">
         <p className="text-sm sm:text-base font-bold leading-tight">{title}</p>
         <p className="mt-0.5 text-[12px] sm:text-[13px] opacity-90 font-mono">
-          {badge} · prix actuel calculé en USD (CoinGecko)
+          {badge} · prix actuel calculé en USD{sourceNote}
         </p>
       </div>
       {/* BATCH 38 — fix audit Bug Hunter : lien /historique n'existe pas

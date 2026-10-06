@@ -603,6 +603,8 @@ export default async function CryptoPage({ params }: Props) {
               symbol={c.symbol}
               currentPrice={detail.currentPrice}
               ath={detail.ath}
+              priceSource={detail.sources?.price ?? null}
+              athSource={detail.sources?.ath ?? null}
             />
           </div>
         )}
@@ -628,6 +630,7 @@ export default async function CryptoPage({ params }: Props) {
               name={c.name}
               priceUsd={detail.currentPrice}
               usdToEur={fx.eur}
+              priceSource={detail.sources?.price ?? null}
             />
           </div>
         )}
@@ -1202,7 +1205,7 @@ export default async function CryptoPage({ params }: Props) {
             "recommandées" → "présentées" pour alignement wording compliance
             (phase 2 — pas de signal d'achat personnalisé). */}
         <p className="mt-8 text-[11px] text-muted leading-relaxed">
-          Données de prix CoinGecko (cache 5 min). Données éditoriales vérifiées
+          Données de prix : plateformes d'échange, CoinMarketCap et CoinGecko, selon disponibilité. Données éditoriales vérifiées
           le {new Date(FICHE_REVIEWED_DATE).toLocaleDateString("fr-FR")} par le
           fondateur {BRAND.name} (Kevin Voisin).{" "}
           {anyPaidPlatform

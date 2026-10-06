@@ -3,6 +3,8 @@
 import { useState, useMemo, useCallback } from "react";
 import { ArrowRightLeft, Calculator } from "lucide-react";
 import { FX_FALLBACK } from "@/lib/fx-fallback";
+import { sourceInfo } from "@/lib/data-sources/attribution";
+import type { SourceName } from "@/lib/data-sources/priorities";
 
 interface Props {
   /** Symbole de la crypto (ex: BTC). */
@@ -10,7 +12,7 @@ interface Props {
   /** Nom complet (ex: Bitcoin) — utilisé en label. */
   name: string;
   /**
-   * Prix de référence en USD (depuis CoinGecko, server-side).
+   * Prix de référence en USD (fiche, côté serveur ; sa source réelle est `priceSource`).
    * On l'utilise comme prix initial. Pour la conversion EUR on applique le taux
    * USD→EUR fourni en prop par la page (taux du jour, lib/fx.ts ; à défaut le dernier taux BCE connu).
    */
@@ -20,6 +22,8 @@ interface Props {
    * Le composant accepte un override depuis la fiche pour précision.
    */
   usdToEur?: number;
+  /** 06/10/2026 — source réelle du prix (CoinDetail.sources.price) ; absente = aucune source citée. */
+  priceSource?: SourceName | null;
 }
 
 type Direction = "crypto-to-fiat" | "fiat-to-crypto";
@@ -48,7 +52,9 @@ export default function PairConverter({
   name,
   priceUsd,
   usdToEur = FX_FALLBACK.eur,
+  priceSource = null,
 }: Props) {
+  const priceLabel = sourceInfo(priceSource)?.label;
   const [direction, setDirection] = useState<Direction>("fiat-to-crypto");
   const [fiat, setFiat] = useState<Fiat>("EUR");
   const [cryptoAmount, setCryptoAmount] = useState<string>("1");
@@ -237,7 +243,7 @@ export default function PairConverter({
             {formatFiatAmount(fiatRate, fiat)}
           </span>
           {" — "}
-          <span className="text-muted/80">prix indicatif (CoinGecko)</span>
+          <span className="text-muted/80">prix indicatif{priceLabel ? ` (${priceLabel})` : ""}</span>
         </span>
         <span className="font-mono">
           {direction === "fiat-to-crypto" ? (

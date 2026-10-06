@@ -16,7 +16,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import {
-  fetchHistoricalPrices,
+  fetchHistoricalSeries,
   COIN_IDS,
   HISTORICAL_SUPPORTED_IDS,
 } from "@/lib/historical-prices";
@@ -79,7 +79,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "coin not supported" }, { status: 400 });
   }
 
-  const points = await fetchHistoricalPrices(coin, days);
+  const { points, source } = await fetchHistoricalSeries(coin, days);
 
   // FIX P0 audit-fonctionnel-live-final #2 : détecte un dataset "amputé".
   // Heuristique : on attend ~1 point par jour. Si on a < 75 % du nombre
@@ -112,6 +112,8 @@ export async function GET(req: NextRequest) {
   return NextResponse.json(
     {
       points,
+      // 06/10/2026 — source réelle de la série (« binance-klines », « cryptocompare », « coingecko »), pour l'attribution.
+      source,
       coin,
       days,
       clamped,

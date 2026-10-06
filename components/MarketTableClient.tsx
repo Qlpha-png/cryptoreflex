@@ -12,6 +12,7 @@ import {
 } from "@/lib/coingecko";
 import WatchlistButton from "@/components/WatchlistButton";
 import CryptoLogo from "@/components/ui/CryptoLogo";
+import DataSourceLine from "@/components/DataSourceLine";
 
 /**
  * MarketTableClient — version Client de la table marché.
@@ -102,7 +103,7 @@ export default function MarketTableClient({ coins, limit, internalSlugs }: Props
             </h2>
             <p className="mt-2 text-sm text-fg/65">
               {/* Audit UX F6 : sous-titre vulgarisé pour débutants */}
-              Capitalisation, volume, variations en temps réel via CoinGecko.
+              Capitalisation, volume et variations, sources citées sous le tableau.
               <span className="hidden sm:inline">{" "}Repère les cryptos en hausse <span className="text-accent-green font-semibold">(vert)</span> ou en baisse <span className="text-danger-fg font-semibold">(rouge)</span> sur 24h.</span>
             </p>
           </div>
@@ -242,12 +243,8 @@ export default function MarketTableClient({ coins, limit, internalSlugs }: Props
           </div>
         </div>
 
-        <p className="mt-3 text-[11px] text-muted text-right">
-          Données :{" "}
-          <a href="https://www.coingecko.com" className="hover:text-fg underline">
-            CoinGecko
-          </a>
-        </p>
+        {/* 06/10/2026 — sources réellement servies (champ `sources`), plus de lien CoinGecko en dur. */}
+        <DataSourceLine items={coins} className="mt-3 text-[11px] text-muted text-right" />
       </div>
     </section>
   );

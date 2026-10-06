@@ -14,6 +14,8 @@
 
 import FearGreedSource from "@/components/FearGreedSource";
 
+import type { SourceName } from "@/lib/data-sources/priorities";
+
 interface Props {
   /** Score 0-100. */
   value: number;
@@ -27,6 +29,8 @@ interface Props {
    * immédiatement sous la jauge.
    */
   showSource?: boolean;
+  /** Source réelle de l'indice (06/10/2026 : alternative.me, ou CoinMarketCap en relais). */
+  source?: SourceName | null;
 }
 
 export default function FearGreedGauge({
@@ -34,6 +38,7 @@ export default function FearGreedGauge({
   classification,
   size = 360,
   showSource = true,
+  source = null,
 }: Props) {
   // Clamp 0..100
   const v = Math.max(0, Math.min(100, value));
@@ -178,7 +183,7 @@ export default function FearGreedGauge({
       >
         {classification}
       </div>
-      {showSource && <FearGreedSource className="mt-2 text-xs text-muted" />}
+      {showSource && <FearGreedSource className="mt-2 text-xs text-muted" source={source} />}
     </div>
   );
 }

@@ -7,6 +7,7 @@ import { getCategoryTheme } from "@/lib/category-theme";
 import AnimatedStat from "./AnimatedStat";
 import MiniOrderBook from "./MiniOrderBook";
 import PriceFreshnessBadge from "@/components/ui/PriceFreshnessBadge";
+import DataSourceLine from "@/components/DataSourceLine";
 
 /**
  * Whitelist des symbols qui ont une paire SPOT USDT liquide sur Binance
@@ -206,9 +207,24 @@ export default function CryptoHero({
         <div className="spotlight-card rounded-2xl border border-border/60 bg-surface/60 backdrop-blur-md p-4 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.04)]">
           <div className="text-xs uppercase tracking-wider text-muted mb-2">7 derniers jours</div>
           <Sparkline points={detail?.sparkline7d ?? []} positive={positive7d} width={240} height={70} />
-          <p className="mt-2 text-[11px] text-muted">
-            Données CoinGecko — mises à jour toutes les 5 minutes.
-          </p>
+          {/* 06/10/2026 — source RÉELLE de la courbe et du prix (CoinDetail.sources), plus de « CoinGecko » en dur. */}
+          {detail?.sources?.price && (
+            <DataSourceLine
+              items={[
+                {
+                  sources: {
+                    price: detail.sources.price,
+                    sparkline7d: detail.sources.sparkline7d,
+                    // le rang affiché plus haut (« Rang #… mondial ») et la capitalisation ont leur propre source
+                    ...(detail.marketCapRank ? { rank: detail.sources.rank } : {}),
+                    marketCap: detail.sources.marketCap,
+                  },
+                },
+              ]}
+              className="mt-2 text-[11px] text-muted"
+              suffix=" — mises à jour toutes les 5 minutes."
+            />
+          )}
         </div>
         {/* INNOVATION BATCH 15 — Mini Order Book live Binance.
             Affiché uniquement pour les paires SPOT USDT liquides (top ~40
