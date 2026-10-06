@@ -13,6 +13,12 @@ import typography from "@tailwindcss/typography";
  *  - Radii nommés (sm/md/lg/xl/2xl/3xl) alignés 6/10/14/18/24/32
  *  - Motion tokens (duration.fast/normal/slow + easings nommés)
  */
+
+/** Couleur opaque en canaux « R G B » : accepte l'opacité Tailwind (bg-primary/10 → rgb(var(--c-primary) / 0.1)). */
+const c = (nom: string) => `rgb(var(--c-${nom}) / <alpha-value>)`;
+/** Couleur complète (rgba en phase legacy) : pas d'opacité /NN possible. */
+const plein = (nom: string) => `var(--c-${nom})`;
+
 const config: Config = {
   content: [
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
@@ -28,74 +34,128 @@ const config: Config = {
       // ---------------------------------------------------------------
       // COLORS
       // ---------------------------------------------------------------
+      // Valeurs dans app/styles/tokens.css, GÉNÉRÉ par scripts/design/tokens.source.mjs (source unique ; lot A1 du
+      // plan de migration : phase « legacy » = valeurs actuelles, rendu identique au pixel). Format canaux « R G B » :
+      // c("x") = rgb(var(--c-x) / <alpha-value>), indispensable aux 3 642 classes à opacité (bg-primary/10…) ; sans
+      // <alpha-value>, elles disparaîtraient SANS erreur de build (test : tests/lib/design-tokens-alpha.test.ts).
+      // plein("x") = var(--c-x), couleur complète (rgba) : *-soft et *-border des couleurs d'état. Un /NN sur elles
+      // est ignoré par Tailwind (la classe garde l'opacité de la variable) : ne pas en écrire.
+      // Ordre des clés : les noms existants d'abord, dans leur ordre d'origine ; les nouveaux noms À LA FIN.
       colors: {
         // Anthracite chaud — inspiré CoinGecko/Phantom/Bitpanda premium
-        background: "#0B0D10",
-        surface: "#16191F",
-        elevated: "#1F242C",
-        border: "#262B33",
+        background: c("background"),
+        surface: c("surface"),
+        elevated: c("elevated"),
+        border: c("border"),
 
         // Identité Cryptoreflex : GOLD désaturé
-        // Premium, lisible AA en dark, différenciant vs le bleu Cointribune
-        primary: "#F5A524",
-        "primary-glow": "#FBBF24",
-        "primary-soft": "#FCD34D",
+        primary: c("primary"),
+        "primary-glow": c("primary-glow"),
+        "primary-soft": c("primary-soft"),
 
-        // Accents data — sobres, pas fluo (kept for backward compat)
+        // Accents data (compatibilité) : green = success et rose = danger (valeurs identiques), cyan à part.
         accent: {
-          cyan: "#0E7490",
-          green: "#22C55E",
-          rose: "#EF4444",
+          cyan: c("accent-cyan"),
+          green: c("success"),
+          rose: c("danger"),
         },
 
-        // DA OBSIDIAN 2026-06-11 — accent FROID "glacier" pour la data
-        // (chiffres live, sparklines, liens data). Duo signature avec le
-        // gold : or = brand/CTA, glacier = données. C'est la grammaire des
-        // exchanges pro (un accent chaud + un froid), ce qui évite le
-        // "tout jaune" pointé par Kev. Distinct du token sémantique `info`
-        // (réservé aux alertes/notices) même si les teintes sont voisines.
+        // DA OBSIDIAN 2026-06-11 — accent FROID "glacier" pour la data (chiffres live, sparklines, liens data).
+        // Distinct du token sémantique `info` (réservé aux alertes/notices) même si les teintes sont voisines.
         ice: {
-          DEFAULT: "#38BDF8",
-          fg: "#7DD3FC",
-          soft: "rgba(56, 189, 248, 0.10)",
-          border: "rgba(56, 189, 248, 0.35)",
+          DEFAULT: c("ice"),
+          fg: c("ice-fg"),
+          soft: plein("ice-soft"),
+          border: plein("ice-border"),
         },
 
         // Texte
-        fg: "#F4F5F7",
-        // muted : foncé de #9BA3AF → #B0B7C3 pour passer WCAG AA (4.5:1)
-        // sur background (#0B0D10), surface (#16191F), elevated (#1F242C).
-        // Contrast vs #0B0D10 ≈ 8.94:1 ; vs #16191F ≈ 7.81:1 ; vs #1F242C ≈ 6.83:1.
-        muted: "#B0B7C3",
+        fg: c("fg"),
+        // muted : #B0B7C3 (WCAG AA sur background, surface, elevated). --color-muted de globals.css en est
+        // désormais l'alias (il valait l'ancienne valeur, reprise par le jeton fg-4).
+        muted: c("muted"),
 
         // -----------------------------------------------------------
         // SEMANTIC COLOR TOKENS — utiliser PRIORITAIREMENT ces tokens
         // au lieu de accent-green/accent-rose/amber-* dans les composants.
         // -----------------------------------------------------------
         success: {
-          DEFAULT: "#22C55E",
-          fg: "#86EFAC",
-          soft: "rgba(34, 197, 94, 0.10)",
-          border: "rgba(34, 197, 94, 0.40)",
+          DEFAULT: c("success"),
+          fg: c("success-fg"),
+          soft: plein("success-soft"),
+          border: plein("success-border"),
         },
         warning: {
-          DEFAULT: "#F59E0B",
-          fg: "#FCD34D",
-          soft: "rgba(245, 158, 11, 0.10)",
-          border: "rgba(245, 158, 11, 0.40)",
+          DEFAULT: c("warning"),
+          fg: c("warning-fg"),
+          soft: plein("warning-soft"),
+          border: plein("warning-border"),
         },
         danger: {
-          DEFAULT: "#EF4444",
-          fg: "#FCA5A5",
-          soft: "rgba(239, 68, 68, 0.10)",
-          border: "rgba(239, 68, 68, 0.40)",
+          DEFAULT: c("danger"),
+          fg: c("danger-fg"),
+          soft: plein("danger-soft"),
+          border: plein("danger-border"),
         },
         info: {
-          DEFAULT: "#0EA5E9",
-          fg: "#7DD3FC",
-          soft: "rgba(14, 165, 233, 0.10)",
-          border: "rgba(14, 165, 233, 0.40)",
+          DEFAULT: c("info"),
+          fg: c("info-fg"),
+          soft: plein("info-soft"),
+          border: plein("info-border"),
         },
+
+        // -----------------------------------------------------------
+        // NOUVEAUX NOMS (lot A1), valeurs legacy : aucune classe ne les utilise encore.
+        // fg-max, scrim, on-gold = cibles mécaniques du lot A4 (blanc et noir en dur), identiques au pixel.
+        // Les autres prennent leurs vraies valeurs C+ au lot B2. « gold » n'a PAS de nom Tailwind : text-gold,
+        // border-gold/40 et from-gold/10 sont déjà écrits (sans effet aujourd'hui) dans 3 pages d'outils.
+        // -----------------------------------------------------------
+        "fg-max": c("fg-max"),
+        scrim: c("scrim"),
+        "on-gold": c("on-gold"),
+        "fg-2": c("fg-2"),
+        "fg-4": c("fg-4"),
+        sunken: c("sunken"),
+        "heat-flat": c("heat-flat"),
+        "border-strong": c("border-strong"),
+        "border-input": c("border-input"),
+        "primary-hover": c("primary-hover"),
+        "gold-soft": c("gold-soft"),
+        action: c("action"),
+        "action-hover": c("action-hover"),
+        "on-action": c("on-action"),
+        "action-chip": c("action-chip"),
+        "on-action-chip": c("on-action-chip"),
+        link: c("link"),
+        "link-line": c("link-line"),
+        "link-hover": c("link-hover"),
+        up: c("up"),
+        down: c("down"),
+        flat: c("flat"),
+        "chart-line": c("chart-line"),
+        "chart-ref": c("chart-ref"),
+        focus: c("focus"),
+        "logo-accent": c("logo-accent"),
+        "logo-reflet": c("logo-reflet"),
+        "logo-plate": c("logo-plate"),
+        "on-plate": c("on-plate"),
+        "plate-ink": c("plate-ink"),
+        "scroll-shadow": c("scroll-shadow"),
+        "r-c": c("r-c"),
+        "r-pc": c("r-pc"),
+        "r-r": c("r-r"),
+        "r-sr": c("r-sr"),
+        "r-ur": c("r-ur"),
+        "r-l": c("r-l"),
+        "r-c-text": c("r-c-text"),
+        "r-pc-text": c("r-pc-text"),
+        "r-r-text": c("r-r-text"),
+        "r-sr-text": c("r-sr-text"),
+        "r-ur-text": c("r-ur-text"),
+        "r-l-text": c("r-l-text"),
+        "ed-icon": c("ed-icon"),
+        "ed-myth": c("ed-myth"),
+        "ed-relic": c("ed-relic"),
       },
 
       // ---------------------------------------------------------------

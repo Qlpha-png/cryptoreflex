@@ -1,0 +1,32 @@
+{
+ "_note": "Empreintes sha256 du jeu (banc design, lot A0). Mise à jour : BANC_MAJ_EMPREINTES=1 (changement VOLONTAIRE du jeu uniquement).",
+ "empreintes": {
+  "gabarit": "fefecfd27b11055d253fc06d8e0970b6b05a30d9ab3d18bf80c1ee2efa46d4f0",
+  "page-jour-1": "5733ec4b02615395f1447d00e0b631d042d831135b54561052b6dfa83dca0b04",
+  "page-jour-8": "1ae29ab1123d536b2e4d92808ccbbd54a403b5f27c95afd5677971e4ba3c25f4",
+  "page-jour-30": "df6ee99bd0b543ac52716a16603853ded360fcaeea93798b31ab5135d8926667",
+  "page-jour-46": "2316df2810061853cac213c2cedb6080476e53a69a3234e47fde161c9b4760aa",
+  "page-jour-90": "f07030e15e15ebb5380532930d9e803abf11bf5a28db81ac8b2e2b3488c8afab",
+  "page-jour-8-prochaine-partie": "1657c8aa3014ef00fabe1050978bebadac4282c2d129530a6dde2456105ce7b5",
+  "page-jour-1-comptes": "2703acae6d9f9d769b6688fdac964fce1a775ba37ea12226c4ac2f0eec0e5c37",
+  "fichier:components/reflex-cards/card-extras.css": "6493c407dc01b461a85c8d9affc0b42bb445740c9a8b43782ab13e5bd6a8c4c0",
+  "fichier:components/reflex-cards/reflex-cards.css": "2aba59156cb8e128848a5fa98ffbda38f5e532b3463798aa118bf2b136b7cd4d",
+  "fichier:lib/reflex-cards/game/template.ts": "ee2dff1c1af3f142efcaff3e5621284c61ea1a1889127b0d4c3d944c11fb436c",
+  "fichier:lib/reflex-cards/og-card.ts": "d6381ef0f9e7133f0f9f35af5c5966435658c2538958d7ca41048fdb77b248a2",
+  "fichier:lib/reflex-cards/render.ts": "14ab122085d295aba4047419be69f5fecdad1f47c0b74146044844b2e0276c09",
+  "fichier:public/reflex-cards/fonts/barlow-condensed-600-latin-ext.woff2": "aef7edf54f79a5329fbca9c065b56dcec3852c680d58cf89a9ef2db6940ca4b3",
+  "fichier:public/reflex-cards/fonts/barlow-condensed-600-latin.woff2": "215a93c696f442034a46fbb382958f753fda60e30490683aeea6b235fcbb2b66",
+  "fichier:public/reflex-cards/fonts/barlow-condensed-700-latin-ext.woff2": "9d351bd9222bfab90f943850f8039aa73cdb40e0a6cfe4127308a48bef59d5f5",
+  "fichier:public/reflex-cards/fonts/barlow-condensed-700-latin.woff2": "3787a5a419171630e6890cfa47c4da067474d005cd0ff8dc11ec090fdc3ee2b8",
+  "fichier:public/reflex-cards/fonts/barlow-condensed-800-latin-ext.woff2": "22539b785b3cbcee08e0722ff37fa16a18e71e4482d9078f7da79da1258e7614",
+  "fichier:public/reflex-cards/fonts/barlow-condensed-800-latin.woff2": "2515494e8cc2ca07c86ea78766cfa104b796aa6ed5d66821c01d51dbb0b52bce",
+  "fichier:public/reflex-cards/fonts/cinzel-600-latin-ext.woff2": "8fc2606f8ae6c569f444e138dba052d9a6e3f0657f9031796503bbb94eced600",
+  "fichier:public/reflex-cards/fonts/cinzel-600-latin.woff2": "09941fb1c169c38fd414536b37690057fc01b3117a5c63dd6571186540c8f370",
+  "fichier:public/reflex-cards/fonts/fonts.css": "cc181c7f55197bfce1ee7582ea4866eef807653a5cc5de727807a93ce8dc1567",
+  "fichier:public/reflex-cards/fonts/jetbrains-mono-500-latin-ext.woff2": "db5ff4db83e580426280e9337a58dc57d3a83784a1b03ad80914651594441d52",
+  "fichier:public/reflex-cards/fonts/jetbrains-mono-500-latin.woff2": "83c005d49d8a6a50474c73a5a36ac0468076e9c4a29da7bdb14995d80560a5be",
+  "fichier:public/reflex-cards/fonts/space-grotesk-400-latin-ext.woff2": "952dddb45d2f96f71cbf3b7f510b24379afc3c89ea02fcf89d377b45d62c0166",
+  "fichier:public/reflex-cards/fonts/space-grotesk-400-latin.woff2": "0640890476fc1198ab4de571fb658de443c4d85b66466ec09534a8737ab1ce9d",
+  "fichier:public/reflex-cards/guilloche.svg": "b7ac6d1dfc1371b2ebb041e751aac5ed190e0c4f2e9787f9db9b567c29f2ad69"
+ }
+}

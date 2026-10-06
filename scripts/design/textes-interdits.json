@@ -1,0 +1,17 @@
+{
+ "_note": "Textes interdits du lot C0 « Vérité d'abord » (confiance-profonde A-L0-1, A-C0-5, A-C0-7, A-C0-8, A-C0-10, A-C0-11). Une seule source : lue par tests/lib/design-textes-interdits.test.ts (code et contenu, cliquet qui ne peut que baisser) et par scripts/design/captures.mjs (texte RENDU des pages de l'échantillon). « ou » : source = fichiers du dépôt, rendu = texte affiché, les-deux. Tant que C0 n'est pas livré, le plafond du test est le compte actuel ; la cible est 0.",
+ "motifs": [
+  { "id": "equipe-editoriale", "motif": "équipe éditoriale", "drapeaux": "i", "ou": "les-deux", "source": "A-C0-5 : une seule personne écrit le site" },
+  { "id": "redaction-collective", "motif": "La rédaction Cryptoreflex|l['’]équipe Cryptoreflex", "drapeaux": "i", "ou": "les-deux", "source": "A-C0-5" },
+  { "id": "tester-bouton", "motif": "\\bTester\\b|Prêt à tester", "drapeaux": "", "ou": "les-deux", "source": "A-C0-10 : « Tester » sans test réel devient « Site officiel de… »" },
+  { "id": "superlatifs", "motif": "plus sécurisée? au monde|le plus grand exchange au monde|la plus régulée (du marché|au monde)|le plus régulé|plus sécurisée?\\b|sécurité maximale", "drapeaux": "i", "ou": "les-deux", "source": "A-C0-11 (liste blanche : « les plus fréquentes » et équivalents, non visés par le motif)" },
+  { "id": "sans-surcout", "motif": "sans surcoût|0 ?€ pour vous", "drapeaux": "i", "ou": "les-deux", "source": "A-C0-8 : non sourcé" },
+  { "id": "cnil-conforme", "motif": "CNIL conforme|conforme CNIL", "drapeaux": "i", "ou": "les-deux", "source": "A-L0-1" },
+  { "id": "transparence-absolue", "motif": "Transparence absolue", "drapeaux": "i", "ou": "les-deux", "source": "A-C0-8" },
+  { "id": "abonnes-95", "motif": "95 ?% de (leurs|nos) abonnés", "drapeaux": "i", "ou": "les-deux", "source": "A-C0-8" },
+  { "id": "plateformes-approche", "motif": "plateformes nous ont approchés", "drapeaux": "i", "ou": "les-deux", "source": "A-C0-8 (sauf preuve)" },
+  { "id": "donnees-fournies", "motif": "dans les données fournies", "drapeaux": "i", "ou": "les-deux", "source": "A-L0-1 : reste de génération automatique" },
+  { "id": "delai-en-dur", "motif": "sous \\d+ ?(h|heures|jours)\\b", "drapeaux": "i", "ou": "source", "source": "A-C0-7 : un seul délai, lu depuis une constante" },
+  { "id": "date-non-rendue", "motif": "\\{date\\}|\\{\\{\\s*date\\s*\\}\\}", "drapeaux": "", "ou": "rendu", "source": "A-L0-1 : gabarit non rempli à l'affichage" }
+ ]
+}

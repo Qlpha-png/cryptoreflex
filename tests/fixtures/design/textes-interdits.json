@@ -1,0 +1,16 @@
+{
+ "_note": "Plafonds des textes interdits de C0 (banc design, lot A0) : cible 0, ne peuvent que baisser. Zone : app, components, lib, data, content. Exception du 06/10/2026 : equipe-editoriale passe de 7 à 8 après le lot C0, qui a ajouté des NÉGATIONS légitimes (bio « il n'y a pas d'équipe éditoriale », commentaire daté de la correction, alias des anciens articles dans lib/authors.ts) ; plus aucune occurrence affirmative.",
+ "plafonds": {
+  "equipe-editoriale": 8,
+  "redaction-collective": 450,
+  "tester-bouton": 10,
+  "superlatifs": 21,
+  "sans-surcout": 34,
+  "cnil-conforme": 3,
+  "transparence-absolue": 1,
+  "abonnes-95": 1,
+  "plateformes-approche": 0,
+  "donnees-fournies": 0,
+  "delai-en-dur": 13
+ }
+}

@@ -1,3 +1,6 @@
+/* Jetons de couleur --c-* (canaux « R G B »), GÉNÉRÉS par scripts/design/tokens.source.mjs (lot A1). */
+@import "./styles/tokens.css";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -27,26 +30,26 @@
 
   /* ----------------------------------------------------------------
    * DESIGN TOKENS — exposés en CSS vars pour SVG / Canvas / JS.
-   * Source de vérité = tailwind.config.ts. Garder synchronisé.
-   * Doc complète : plan/code/design-system.md
+   * Lot A1 : ALIAS des jetons --c-* de app/styles/tokens.css (source unique : scripts/design/tokens.source.mjs).
+   * Plus de valeur recopiée ici : --color-muted valait l'ancien gris (désynchronisé de muted), repris par --c-fg-4.
    * ---------------------------------------------------------------- */
-  --color-bg: #0b0d10;
-  --color-surface: #16191f;
-  --color-elevated: #1f242c;
-  --color-border: #262b33;
-  --color-fg: #f4f5f7;
-  --color-muted: #9ba3af;
+  --color-bg: rgb(var(--c-background));
+  --color-surface: rgb(var(--c-surface));
+  --color-elevated: rgb(var(--c-elevated));
+  --color-border: rgb(var(--c-border));
+  --color-fg: rgb(var(--c-fg));
+  --color-muted: rgb(var(--c-muted));
 
-  --color-primary: #f5a524;
-  --color-primary-glow: #fbbf24;
+  --color-primary: rgb(var(--c-primary));
+  --color-primary-glow: rgb(var(--c-primary-glow));
 
-  --color-success: #22c55e;
-  --color-warning: #f59e0b;
-  --color-danger: #ef4444;
-  --color-info: #0ea5e9;
-  /* DA OBSIDIAN 2026-06-11 — accent froid "glacier" (data). Cf. tailwind.config.ts */
-  --color-ice: #38bdf8;
-  --color-ice-fg: #7dd3fc;
+  --color-success: rgb(var(--c-success));
+  --color-warning: rgb(var(--c-warning));
+  --color-danger: rgb(var(--c-danger));
+  --color-info: rgb(var(--c-info));
+  /* DA OBSIDIAN 2026-06-11 — accent froid "glacier" (data). */
+  --color-ice: rgb(var(--c-ice));
+  --color-ice-fg: rgb(var(--c-ice-fg));
 
   /* Motion tokens */
   --duration-fast: 120ms;
@@ -702,7 +705,8 @@ body {
   font-size: 10px;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: var(--color-muted);
+  /* A1 : ancienne valeur de --color-muted (devenu l'alias de muted), rendu inchangé */
+  color: rgb(var(--c-fg-4));
 }
 .hero-pulse-chip-dot {
   width: 5px;
@@ -876,7 +880,8 @@ body {
   font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 0.18em;
-  color: var(--color-muted);
+  /* A1 : ancienne valeur de --color-muted (devenu l'alias de muted), rendu inchangé */
+  color: rgb(var(--c-fg-4));
 }
 .section-eyebrow strong {
   font-weight: 600;

@@ -1,0 +1,87 @@
+/* =====================================================================
+   Cryptoreflex — jetons de couleur (phase « legacy » : valeurs actuelles du site, rendu identique)
+   GÉNÉRÉ par scripts/design/tokens.source.mjs : ne pas modifier à la main.
+   Régénérer : node scripts/design/tokens.source.mjs --phase legacy
+   Format canaux « R G B » : rgb(var(--c-x) / <alpha-value>) dans tailwind.config.ts.
+   Exceptions (couleur complète, pas d'opacité /NN) : *-soft et *-border des couleurs d'état.
+   ===================================================================== */
+
+:root {
+  --c-background: 11 13 16; /* Fond de page */
+  --c-surface: 22 25 31; /* Cartes, panneaux */
+  --c-elevated: 31 36 44; /* Menus, popovers */
+  --c-border: 38 43 51; /* Filets */
+  --c-fg: 244 245 247; /* Texte principal */
+  --c-muted: 176 183 195; /* Texte secondaire (aussi --color-muted depuis A1 : fin de la désynchronisation) */
+  --c-primary: 245 165 36; /* Or de marque */
+  --c-primary-glow: 251 191 36; /* Or clair (163/205 usages en texte) */
+  --c-primary-soft: 252 211 77; /* Or pâle (654/673 usages en texte) */
+  --c-accent-cyan: 14 116 144; /* accent-cyan (accent-green = success, accent-rose = danger : valeurs identiques) */
+  --c-ice: 56 189 248; /* Glacier : données */
+  --c-ice-fg: 125 211 252; /* Glacier : texte */
+  --c-ice-soft: rgba(56, 189, 248, 0.10); /* Glacier : fond doux (couleur complète) */
+  --c-ice-border: rgba(56, 189, 248, 0.35); /* Glacier : bordure (couleur complète) */
+  --c-success: 34 197 94; /* Succès (et accent-green) */
+  --c-success-fg: 134 239 172; /* Succès : texte clair */
+  --c-success-soft: rgba(34, 197, 94, 0.10); /* Succès : fond doux (couleur complète) */
+  --c-success-border: rgba(34, 197, 94, 0.40); /* Succès : bordure (couleur complète) */
+  --c-warning: 245 158 11; /* Alerte */
+  --c-warning-fg: 252 211 77; /* Alerte : texte clair */
+  --c-warning-soft: rgba(245, 158, 11, 0.10); /* Alerte : fond doux (couleur complète) */
+  --c-warning-border: rgba(245, 158, 11, 0.40); /* Alerte : bordure (couleur complète) */
+  --c-danger: 239 68 68; /* Danger (et accent-rose) */
+  --c-danger-fg: 252 165 165; /* Danger : texte clair */
+  --c-danger-soft: rgba(239, 68, 68, 0.10); /* Danger : fond doux (couleur complète) */
+  --c-danger-border: rgba(239, 68, 68, 0.40); /* Danger : bordure (couleur complète) */
+  --c-info: 14 165 233; /* Info */
+  --c-info-fg: 125 211 252; /* Info : texte clair */
+  --c-info-soft: rgba(14, 165, 233, 0.10); /* Info : fond doux (couleur complète) */
+  --c-info-border: rgba(14, 165, 233, 0.40); /* Info : bordure (couleur complète) */
+  --c-fg-max: 255 255 255; /* Blanc pur : cible mécanique du blanc en dur (A4) ; = fg en C+ */
+  --c-scrim: 0 0 0; /* Voiles : cible mécanique du noir en dur (A4) */
+  --c-on-gold: 0 0 0; /* Texte sur aplat or : cible mécanique du noir en dur sur or (A4) */
+  --c-fg-4: 155 163 175; /* Mentions, surtitres : ancienne valeur de --color-muted (.section-eyebrow, .hero-pulse-chip-live) */
+  --c-fg-2: 244 245 247; /* Corps de texte (aujourd'hui = fg) */
+  --c-sunken: 11 13 16; /* Bandes, champs (aujourd'hui = background) */
+  --c-heat-flat: 38 43 51; /* Case neutre de la carte des hausses (approchée : border) */
+  --c-border-strong: 42 47 58; /* Filets appuyés (valeur du pouce de défilement de globals.css) */
+  --c-border-input: 38 43 51; /* Contour des champs (aujourd'hui = border, < 3:1 : corrigé en B2) */
+  --c-primary-hover: 251 191 36; /* Or au survol (= primary-glow) */
+  --c-gold: 245 165 36; /* Or de marque en aplat. PAS de nom Tailwind en A1 : text-gold, border-gold/40, from-gold/10 existent déjà (morts) dans 3 pages d'outils */
+  --c-gold-soft: 34 28 18; /* Fond doux or (≈ bg-primary/10 sur background) */
+  --c-action: 245 165 36; /* Bouton principal (.btn-primary : bg-primary) */
+  --c-action-hover: 251 191 36; /* Bouton principal au survol (hover:bg-primary-glow) */
+  --c-on-action: 11 13 16; /* Texte du bouton principal (text-background) */
+  --c-action-chip: 11 13 16; /* Pastille-flèche du bouton principal (approchée) */
+  --c-on-action-chip: 245 165 36; /* Flèche dans la pastille (approchée) */
+  --c-link: 252 211 77; /* Texte de lien (aujourd'hui surtout text-primary-soft) */
+  --c-link-line: 245 165 36; /* Soulignement de lien (approchée) */
+  --c-link-hover: 251 191 36; /* Lien au survol (approchée) */
+  --c-up: 34 197 94; /* Hausse (= success) */
+  --c-down: 239 68 68; /* Baisse (= danger) */
+  --c-flat: 176 183 195; /* Variation nulle (= muted) */
+  --c-chart-line: 176 183 195; /* Mini-courbe : trait neutre (approchée : muted) */
+  --c-chart-ref: 155 163 175; /* Mini-courbe : référence (approchée : fg-4) */
+  --c-focus: 245 165 36; /* Anneau de focus (focus-visible:ring-primary) */
+  --c-logo-accent: 245 165 36; /* « reflex » du mot-symbole */
+  --c-logo-reflet: 245 165 36; /* Reflets de l'emblème */
+  --c-logo-plate: 244 245 247; /* Plaque des logos (approchée : fg) */
+  --c-on-plate: 11 13 16; /* Monogramme sur la plaque (approchée : background) */
+  --c-plate-ink: 11 13 16; /* Plaque encre des logos blancs (approchée : background) */
+  --c-scroll-shadow: 0 0 0; /* Ombre de défilement horizontal */
+  --c-r-c: 154 163 178; /* Commune (aplat) */
+  --c-r-pc: 52 211 153; /* Peu commune (aplat) */
+  --c-r-r: 56 189 248; /* Rare (aplat) */
+  --c-r-sr: 167 139 250; /* Super rare (aplat) */
+  --c-r-ur: 251 146 60; /* Ultra rare (aplat) */
+  --c-r-l: 245 181 42; /* Légendaire (aplat) */
+  --c-r-c-text: 154 163 178; /* Commune (texte) */
+  --c-r-pc-text: 52 211 153; /* Peu commune (texte) */
+  --c-r-r-text: 56 189 248; /* Rare (texte) */
+  --c-r-sr-text: 167 139 250; /* Super rare (texte) */
+  --c-r-ur-text: 251 146 60; /* Ultra rare (texte) */
+  --c-r-l-text: 245 181 42; /* Légendaire (texte) */
+  --c-ed-icon: 232 212 154; /* Édition Icônes (texte) */
+  --c-ed-myth: 255 45 111; /* Édition Mythiques (texte) */
+  --c-ed-relic: 247 215 116; /* Édition Reliques (texte) */
+}

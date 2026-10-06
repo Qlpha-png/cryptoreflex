@@ -204,7 +204,7 @@ export default function CryptoNewsAggregator({
             className={`hidden sm:inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[10px] font-mono font-bold uppercase tracking-wider ml-1 min-h-[24px] cursor-pointer transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
               autoRefreshPaused
                 ? "border-border bg-elevated/60 text-muted hover:text-fg"
-                : "border-success-border bg-success-soft text-success-fg hover:bg-success-soft/80"
+                : "border-success-border bg-success-soft text-success-fg hover:bg-success/80"
             }`}
           >
             <span

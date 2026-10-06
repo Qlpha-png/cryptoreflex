@@ -36,6 +36,8 @@ const NOT_IN_MENU = new Set([
   "api", "admin", "auteur", "connexion", "inscription", "mot-de-passe-oublie", "merci", "offline", "embed", "go", "lp",
   "pro", "pro-plus", "cgv-abonnement", "partenariats", "affiliations", "pack-declaration-crypto-2026", "recherche",
   "labs", "wizard", "impact", "sitemap-articles.xml", "sitemap-index.xml", "sitemap-news.xml",
+  // Feuilles de style du système de design (lot A1 : app/styles/tokens.css) : aucune page, pas une rubrique.
+  "styles",
 ]);
 
 describe("menu à source unique (lib/nav.ts)", () => {
