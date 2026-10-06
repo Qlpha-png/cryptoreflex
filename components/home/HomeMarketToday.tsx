@@ -5,6 +5,7 @@ import { cryptoPagePath } from "@/lib/crypto-page-slug";
 import { getCryptoLogo, getCryptoLogoFromSymbol } from "@/lib/crypto-logos";
 import { getAllNewsSummaries } from "@/lib/news-mdx";
 import HomeLivePrices from "./HomeLivePrices";
+import { priceSourceLabel, type MarketSource } from "./market-source";
 
 /**
  * « Le marché aujourd'hui » : 5 cours en direct + les 3 dernières actus crypto (accueil, Kev 04/10/2026).
@@ -16,7 +17,15 @@ const DAY = 86_400_000;
 const fmtDate = (iso: string) =>
   new Date(iso).toLocaleDateString("fr-FR", { day: "numeric", month: "long", timeZone: "Europe/Paris" });
 
-export default async function HomeMarketToday({ market }: { market: MarketCoin[] }) {
+export default async function HomeMarketToday({
+  market,
+  priceSource = null,
+}: {
+  market: MarketCoin[];
+  /** Source réelle des cours (06/10/2026) : attribution collée aux prix. */
+  priceSource?: MarketSource | null;
+}) {
+  const sourceLabel = priceSourceLabel(priceSource);
   const coins = market.slice(0, 5).map((m) => ({
     id: m.id,
     symbol: m.symbol,
@@ -46,7 +55,28 @@ export default async function HomeMarketToday({ market }: { market: MarketCoin[]
 
       <div className="mt-5 grid gap-6 lg:grid-cols-2">
         {coins.length > 0 ? (
-          <HomeLivePrices coins={coins} />
+          <div>
+            <HomeLivePrices coins={coins} />
+            {sourceLabel && (
+              <p className="mt-1 text-xs text-fg/60">
+                {sourceLabel.text}
+                {sourceLabel.link && (
+                  <>
+                    {" "}
+                    <a
+                      href={sourceLabel.link.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="underline underline-offset-2 hover:text-fg"
+                    >
+                      {sourceLabel.link.label}
+                    </a>
+                  </>
+                )}
+                {sourceLabel.note && ` ${sourceLabel.note}`}
+              </p>
+            )}
+          </div>
         ) : (
           <p className="rounded-2xl border border-border bg-surface p-5 text-sm text-fg/75">
             Les cours ne sont pas disponibles pour le moment.{" "}

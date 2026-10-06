@@ -106,14 +106,14 @@
         "Spread broker élevé sur achat in-app (1-2%)",
         "Stax/Flex coûteux (>250 €) face à concurrence open source"
       ],
-      "badge": "Leader hardware wallet",
+      "badge": "Portefeuille matériel",
       "category": "wallet"
     },
     {
       "id": "trezor",
       "name": "Trezor",
       "logo": "/logos/partners/trezor.svg",
-      "tagline": "Pour qui c'est : maximalistes Bitcoin et puristes open source cherchant transparence totale",
+      "tagline": "Pour qui c'est : maximalistes Bitcoin et puristes open source qui veulent un code ouvert",
       "websiteUrl": "https://trezor.io",
       "affiliateUrl": "https://affil.trezor.io/aff_c?offer_id=137&aff_id=141576",
       "scoring": {
@@ -190,18 +190,17 @@
         "appStore": 4.4,
         "playStore": 4.1
       },
-      "idealFor": "Bitcoiners et utilisateurs orientés open source acceptant un catalogue plus restreint en échange d'une transparence totale du code",
+      "idealFor": "Bitcoiners et utilisateurs orientés open source acceptant un catalogue plus restreint en échange d'un code ouvert",
       "strengths": [
         "Firmware 100% open source (auditable par la communauté)",
-        "Trezor Safe 5 avec écran tactile couleur + élément sécurisé EAL6+",
-        "Support natif CoinJoin (vie privée Bitcoin)"
+        "Trezor Safe 5 avec écran tactile couleur + élément sécurisé EAL6+"
       ],
       "weaknesses": [
         "Pas de Bluetooth (uniquement USB-C)",
         "Catalogue plus restreint (1800 vs 5500 chez Ledger)",
         "Pas de staking natif dans Trezor Suite"
       ],
-      "badge": "Référence open source",
+      "badge": "Code open source",
       "category": "wallet"
     }
   ]

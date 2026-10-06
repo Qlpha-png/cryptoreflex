@@ -3,7 +3,8 @@ import walletsData from "@/data/wallets.json";
 import { getAffiliationKind } from "@/lib/partnerships";
 
 /** Fiabilité d'un coût du comparateur : publié en entier, majorant (marge publiée au plus), ou marge non chiffrée en plus. */
-export type CostKind = "exact" | "max" | "partiel";
+/** exact ; max = « au plus » ; partiel = + marge non publiée ; max-partiel = « au plus », + marge non publiée. */
+export type CostKind = "exact" | "max" | "partiel" | "max-partiel";
 
 /**
  * Accès téléphonique au support : numéro publié ; appel ou rappel sans numéro (depuis l'appli, sur rendez-vous…) ;
@@ -161,8 +162,16 @@ export interface Platform {
     trustpilotVerified: string;
     /** Précision à afficher avec la note (profil d'une maison mère, d'une marque renommée, note suspendue…). */
     trustpilotNote?: string;
+    /**
+     * Notes App Store / Play Store : valeurs brutes SANS source ni date (06/10/2026 : Coinbase affichée 4,7 contre
+     * 4,56 relevé sur l'API iTunes FR, Just Mining et Feel Mining sans application sur l'App Store FR). Elles ne sont
+     * affichées nulle part tant que appStoreVerified / playStoreVerified (date AAAA-MM-JJ du relevé) n'existent pas :
+     * passer par storeRating().
+     */
     appStore: number;
     playStore: number;
+    appStoreVerified?: string;
+    playStoreVerified?: string;
   };
   idealFor: string;
   strengths: string[];
@@ -381,9 +390,190 @@ export function frenchHelpRank(s: Support): number {
   return s.frenchPhone === true ? 2 : s.frenchChat === true ? 1 : 0;
 }
 
-/** Coût d'un achat payé par carte bancaire (surcoût du dépôt par carte compris quand la grille le publie). */
-export function cardBuyPct(p: Platform): number {
-  return p.fees.cardBuy ?? p.fees.instantBuy;
+
+/**
+ * Coût relevé d'un achat de 1 000 € (fees.cost, relevé daté et sourcé), ou la raison de son absence.
+ *  - ok : montant en euros, avec sa fiabilité (exact / au plus / marge non publiée en plus) ;
+ *  - non-publie : la plateforme ne publie pas ce coût ;
+ *  - pas-de-carte : pas d'achat par carte pour un résident français ;
+ *  - non-releve : aucun relevé fees.cost pour cette plateforme.
+ */
+export type PurchaseCost =
+  | { status: "ok"; eur: number; kind: CostKind; date: string; source: string }
+  | { status: "non-publie"; date: string; source: string }
+  | { status: "pas-de-carte"; date: string; source: string }
+  | { status: "non-releve" };
+
+/**
+ * Coût COMPLET d'un achat de 1 000 € payé par carte : frais d'achat + frais du moyen de paiement (fees.cost.card).
+ * Audit du 06/10/2026 (A-C0-4) : /avis/kraken affichait « Achat par carte 10,00 € » (cost.c1000, achat depuis le solde
+ * en euros) alors que le relevé par carte donne 47,75 € (1 % + 3,75 % + 0,25 €). Jamais de repli sur instantBuy, qui
+ * n'inclut pas le surcoût de la carte : sans relevé, « Non relevé ».
+ */
+export function cardCost1000(p: Platform): PurchaseCost {
+  const c = p.fees.cost;
+  if (!c) return { status: "non-releve" };
+  if (c.card === null) return { status: "pas-de-carte", date: c.date, source: c.source };
+  if (c.card.c1000 == null) return { status: "non-publie", date: c.date, source: c.source };
+  return { status: "ok", eur: c.card.c1000, kind: c.card.kind, date: c.date, source: c.source };
+}
+
+/**
+ * true quand le relevé chiffre réellement le surcoût d'un paiement par carte : coût carte relevé ET différent du coût
+ * depuis le solde. Passe finale (06/10/2026) : la tuile « Achat par carte, frais de carte compris » affichait pour
+ * Bitpanda, Revolut, Deblock et Trading 212 un coût carte simplement égal au coût depuis le solde, sans aucun relevé
+ * des frais de carte. Dans ce cas, le libellé dit « frais de carte non relevés ».
+ */
+export function cardFeeMeasured(p: Pick<Platform, "fees">): boolean {
+  const c = p.fees.cost;
+  if (!c || !c.card || c.card.c1000 == null) return false;
+  return c.c1000 == null || c.card.c1000 !== c.c1000;
+}
+
+/** Libellé de la tuile « achat par carte » : « frais de carte compris » seulement quand ils sont chiffrés. */
+export function cardCostLabel(p: Pick<Platform, "fees">): string {
+  return cardFeeMeasured(p) ? "Achat par carte, frais de carte compris" : "Achat par carte (frais de carte non relevés)";
+}
+
+/** Coût d'un achat de 1 000 € par le chemin décrit dans fees.cost.path (achat depuis le solde, après un virement). */
+export function simpleCost1000(p: Platform): PurchaseCost & { path: string | null } {
+  const c = p.fees.cost;
+  if (!c) return { status: "non-releve", path: null };
+  if (c.c1000 == null) return { status: "non-publie", date: c.date, source: c.source, path: c.path };
+  return { status: "ok", eur: c.c1000, kind: c.kind, date: c.date, source: c.source, path: c.path };
+}
+
+const eurFr = (n: number) =>
+  `${n.toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €`;
+
+/** « 47,75 € + marge non publiée », « au plus 29,50 € », « au plus 40,00 € + marge non publiée », « 12,50 € », « Non publié », « Pas d'achat par carte », « Non relevé ». */
+export function purchaseCostText(c: PurchaseCost): string {
+  switch (c.status) {
+    case "ok":
+      if (c.kind === "max") return `au plus ${eurFr(c.eur)}`;
+      if (c.kind === "partiel") return `${eurFr(c.eur)} + marge non publiée`;
+      if (c.kind === "max-partiel") return `au plus ${eurFr(c.eur)} + marge non publiée`;
+      return eurFr(c.eur);
+    case "non-publie":
+      return "Non publié";
+    case "pas-de-carte":
+      return "Pas d'achat par carte";
+    default:
+      return "Non relevé";
+  }
+}
+
+/**
+ * Coût d'un achat payé par carte bancaire, en % de 1 000 € (frais du moyen de paiement compris), ou null.
+ * Priorité au relevé fees.cost.card. null quand ce relevé dit « non publié » ou « pas d'achat par carte » : correcteur
+ * final du 06/10/2026, /cryptos/[slug]/acheter-en-france affichait encore 3,99 % pour Coinbase alors que la page d'aide
+ * relevée le 05/10/2026 ne chiffre pas ce coût. Sans relevé fees.cost : fees.cardBuy, jamais instantBuy (sans la carte).
+ */
+export function cardBuyPct(p: Platform): number | null {
+  const c = cardCost1000(p);
+  /* Passe finale (06/10/2026) : pas de pourcentage « par carte » quand le surcoût de la carte n'est pas chiffré. */
+  if (c.status === "ok") return cardFeeMeasured(p) ? Math.round(c.eur * 10) / 100 : null;
+  if (c.status === "non-releve") return p.fees.cardBuy ?? null;
+  return null;
+}
+
+const lowerFirst = (s: string) => s.charAt(0).toLowerCase() + s.slice(1);
+const nbFr = (n: number, d = 2) => n.toLocaleString("fr-FR", { maximumFractionDigits: d });
+const noteFr = (n: number) => n.toLocaleString("fr-FR", { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+const dateFr = (iso: string) => {
+  const d = new Date(iso);
+  return Number.isNaN(d.getTime())
+    ? iso
+    : d.toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric", timeZone: "Europe/Paris" });
+};
+
+/** Phrase sur le coût d'un achat par carte (relevé fees.cost.card, jamais instantBuy). */
+export function cardCostSentence(p: Pick<Platform, "name" | "fees">): string {
+  const c = cardCost1000(p as Platform);
+  switch (c.status) {
+    case "ok":
+      if (!cardFeeMeasured(p)) {
+        return `Un achat de 1 000 € payé par carte coûte ${purchaseCostText(c)} de frais d'achat ; d'éventuels frais de paiement par carte ne sont pas chiffrés dans notre relevé du ${dateFr(c.date)}.`;
+      }
+      return `Un achat de 1 000 € payé par carte coûte ${purchaseCostText(c)} (frais d'achat et frais de paiement par carte compris, relevé du ${dateFr(c.date)}).`;
+    case "non-publie":
+      return `${p.name} ne publie pas le coût complet d'un achat par carte.`;
+    case "pas-de-carte":
+      return `${p.name} ne propose pas d'achat par carte aux résidents français.`;
+    default:
+      return "Le coût d'un achat par carte n'est pas relevé dans nos données.";
+  }
+}
+
+/**
+ * « Résumé à partir des données ci-dessus » de /avis/[slug] — A-C0-3 (audit du 06/10/2026).
+ * Remplace les 4 « verdicts » rédigés par du code (« statistiquement difficile à battre », « position d'équilibriste »,
+ * « sans honte »…) qui revenaient d'un avis à l'autre et s'appuyaient sur des données non sourcées. Le résumé ne reprend
+ * que des données de la méthodologie, du registre MiCA, des frais relevés et du catalogue, sans adjectif. Il ne lit ni
+ * support.* ni security.* (relevés en cours dans une autre session).
+ */
+export function buildPlatformSummary(p: Platform): { headline: string; facts: string[]; ideal: string; avoid: string } {
+  const headline = `${p.name} obtient ${noteFr(p.scoring.global)}/5 selon notre méthodologie publique.`;
+
+  /* 05/10/2026 : une plateforme non autorisée en France ne reçoit aucun verdict d'usage. */
+  if (p.category !== "wallet" && !isAvailableFr(p)) {
+    return {
+      headline,
+      facts: [
+        `${p.name} ne figure pas parmi les plateformes crypto agréées MiCA avec accès à la France lors de notre vérification du ${dateFr(p.mica.lastVerified)}. Statut relevé : ${lowerFirst(p.mica.status).replace(/\.$/, "")}. Nous ne donnons donc aucun verdict d'usage : comparez plutôt les plateformes agréées MiCA avec accès à la France.`,
+      ],
+      ideal: "Aucun profil en France dans nos données.",
+      avoid: "Vous résidez en France.",
+    };
+  }
+
+  const s = p.scoring;
+  // Les portefeuilles (data/wallets.json) n'ont pas toutes les sous-notes : on n'affiche que celles qui existent.
+  const subs = (
+    [
+      ["frais", s.fees],
+      ["sécurité", s.security],
+      ["conformité MiCA", s.mica],
+      ["expérience utilisateur", s.ux],
+      ["support", s.support],
+      ["catalogue et services", s.catalogue],
+    ] as const
+  ).filter(([, v]) => typeof v === "number");
+  const facts: string[] = [`Sous-notes de la méthodologie : ${subs.map(([k, v]) => `${k} ${noteFr(v as number)}/5`).join(", ")}.`];
+  if (p.category === "wallet") {
+    facts.push(`${p.name} est un portefeuille matériel : vous conservez vous-même vos clés, hors du champ de l'agrément MiCA.`);
+  } else {
+    facts.push(
+      `Statut réglementaire : ${lowerFirst(p.mica.status)}, vérifié le ${dateFr(p.mica.lastVerified)}${p.mica.registerSource ? ` (${p.mica.registerSource})` : ""}.`,
+    );
+    const simple = simpleCost1000(p);
+    if (simple.status !== "non-releve") {
+      facts.push(
+        `Achat de 1 000 € (${lowerFirst(simple.path ?? "")}) : ${lowerFirst(purchaseCostText(simple))}. Payé par carte : ${lowerFirst(purchaseCostText(cardCost1000(p)))}. Frais relevés le ${dateFr(simple.date)}.`,
+      );
+    } else if (p.fees.verified?.makerTakerApplies ?? true) {
+      facts.push(`Frais du marché spot : ${nbFr(p.fees.spotMaker)} % en maker et ${nbFr(p.fees.spotTaker)} % en taker. Coût complet d'un achat par carte : non relevé.`);
+    } else {
+      facts.push("Coût d'un achat de 1 000 € : non relevé.");
+    }
+  }
+  facts.push(
+    `Catalogue : ${nbFr(p.cryptos.totalCount, 0)} cryptomonnaie${p.cryptos.totalCount > 1 ? "s" : ""} dans nos données${p.cryptos.stakingAvailable ? `, staking proposé (${p.cryptos.stakingCryptos.length} crypto${p.cryptos.stakingCryptos.length > 1 ? "s" : ""} recensée${p.cryptos.stakingCryptos.length > 1 ? "s" : ""} dans nos données, liste non exhaustive)` : ", pas de staking"}.`,
+  );
+
+  const avoid = p.weaknesses[0] ? `Point faible principal : ${p.weaknesses[0].replace(/\.$/, "")}.` : "Aucun point faible relevé dans nos données.";
+  return { headline, facts, ideal: p.idealFor, avoid };
+}
+
+/**
+ * Note App Store / Play Store affichable, ou null. Aucune note n'a de source ni de date au 06/10/2026 et les contrôles
+ * ont montré des valeurs fausses : rien n'est affiché tant que le champ de relevé (appStoreVerified / playStoreVerified)
+ * n'existe pas.
+ */
+export function storeRating(p: Pick<Platform, "ratings">, store: "appStore" | "playStore"): { rating: number; verified: string } | null {
+  const verified = store === "appStore" ? p.ratings.appStoreVerified : p.ratings.playStoreVerified;
+  if (!verified) return null;
+  return { rating: p.ratings[store], verified };
 }
 
 /**
@@ -425,11 +615,14 @@ export function pickSocialProof(p: Platform): {
       verified: p.ratings.trustpilotVerified,
     };
   }
-  if (p.ratings.appStore >= 3.5) {
+  // Repli App Store seulement si la note a été relevée et datée (storeRating) : aucune ne l'est au 06/10/2026.
+  const app = storeRating(p, "appStore");
+  if (app && app.rating >= 3.5) {
     return {
       label: "App Store",
-      rating: p.ratings.appStore,
+      rating: app.rating,
       count: null,
+      verified: app.verified,
     };
   }
   return null;

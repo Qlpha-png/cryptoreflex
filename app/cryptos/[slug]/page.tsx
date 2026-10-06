@@ -1386,7 +1386,7 @@ function HiddenGemSections({ gem }: { gem: HiddenGem }) {
           Risques détaillés
         </h2>
         <p className="mt-2 text-sm text-fg/80">
-          Ces risques sont publics et identifiés par notre équipe. Ils ne disparaîtront pas
+          Ces risques sont publics et identifiés par Cryptoreflex. Ils ne disparaîtront pas
           parce que le prix monte : ils définissent le scénario baissier réaliste.
         </p>
         <ul className="mt-4 space-y-2">

@@ -118,10 +118,10 @@ const QUESTIONS: Question[] = [
     title: "Qu'est-ce qui compte le plus pour vous ?",
     subtitle: "Une seule réponse — c'est elle qui pèsera le plus dans le score.",
     options: [
-      { value: "security", label: "Sécurité maximale", hint: "Régulation MiCA, cold storage" },
-      { value: "fees", label: "Frais les plus bas", hint: "Optimiser le coût total" },
+      { value: "security", label: "La sécurité d'abord", hint: "Régulation MiCA, cold storage" },
+      { value: "fees", label: "Des frais bas", hint: "Optimiser le coût total" },
       { value: "ux", label: "Interface ultra simple", hint: "Pas envie de me prendre la tête" },
-      { value: "catalog", label: "Catalogue le plus large", hint: "Accès à beaucoup d'altcoins" },
+      { value: "catalog", label: "Un grand catalogue", hint: "Accès à beaucoup d'altcoins" },
     ],
   },
   {
@@ -550,7 +550,7 @@ function ResultView({
             <RefreshCcw className="h-4 w-4" aria-hidden="true" />
             Refaire le questionnaire
           </div>
-          <div className="mt-1 font-bold text-fg">Tester d&apos;autres réponses</div>
+          <div className="mt-1 font-bold text-fg">Essayer d&apos;autres réponses</div>
           <div className="mt-1 text-xs text-muted">
             Comparez la reco selon votre profil.
           </div>

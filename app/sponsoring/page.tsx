@@ -24,6 +24,7 @@ import { BRAND } from "@/lib/brand";
 import { withHreflang } from "@/lib/seo-alternates";
 import { fitDescription, fitTitle } from "@/lib/seo-text";
 import { getSponsoringOffer } from "@/lib/sponsoring-offers";
+import { DELAI_REPONSE } from "@/lib/engagements";
 
 /**
  * /sponsoring — page commerciale B2B Cryptoreflex.
@@ -173,7 +174,7 @@ const PROCESS_STEPS = [
   },
   {
     n: 2,
-    title: "Devis sous 5 jours ouvrés",
+    title: `Devis sous ${DELAI_REPONSE}`,
     text: "Réponse personnelle de Kevin (fondateur solo) avec devis détaillé, validation MiCA et créneau de publication confirmé.",
   },
   {
@@ -436,7 +437,7 @@ export default function SponsoringPage() {
             Devenir partenaire
           </h2>
           <p className="mt-2 text-fg/70">
-            Réponse personnelle sous 5 jours ouvrés avec devis et planning.
+            Réponse personnelle sous {DELAI_REPONSE} avec devis et planning.
             Validation MiCA faite avant signature.
           </p>
         </div>
@@ -524,7 +525,7 @@ export default function SponsoringPage() {
             />
             <span>
               <strong className="text-fg">RGPD —</strong> Données soumises
-              transmises uniquement à l&apos;équipe partenariats {BRAND.name}.
+              transmises uniquement à Kevin Voisin, éditeur de {BRAND.name}.
               Conservation 24 mois max. Aucun partage tiers. Droits
               d&apos;accès / suppression via{" "}
               <Link

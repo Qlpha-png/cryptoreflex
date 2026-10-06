@@ -1,0 +1,802 @@
+{
+  "_meta": {
+    "description": "Journal public des corrections de Cryptoreflex (page /corrections). Une entrée par correction factuelle : date, page, avant, après, nature. Le champ slug (articles /blog) alimente la mention « Corrigé le … » en bas de l'article. Le champ commit renvoie au commit du dépôt public.",
+    "regle": "Toute correction d'un fait publié (chiffre, lien rémunéré, statut, référence juridique, date) ajoute une entrée ici, dans le même commit. Les entrées du 06/10/2026 sont rétroactives : elles décrivent le commit 8d378104 et les corrections éditoriales faites le même jour.",
+    "depot": "https://github.com/Qlpha-png/cryptoreflex"
+  },
+  "corrections": [
+    {
+      "date": "2026-10-06",
+      "page": "/a-propos",
+      "avant": "« Le site est financé uniquement par l'affiliation : si vous ouvrez un compte via un de nos liens, la plateforme nous reverse une commission — sans surcoût pour vous. »",
+      "après": "Trois cas distincts : commission versée à Cryptoreflex pour les affiliations (Ledger, Trezor, Waltio) ; prime de parrainage versée au fondateur si le filleul remplit la condition du programme (Bitpanda, Trade Republic) ; aucune rémunération pour toutes les autres plateformes.",
+      "nature": "Rémunération décrite à tort : aucune plateforme d'achat ne verse de commission d'affiliation à Cryptoreflex ; deux (Bitpanda, Trade Republic) versent une prime de parrainage au fondateur, éditeur du site."
+    },
+    {
+      "date": "2026-10-06",
+      "page": "/a-propos",
+      "avant": "« Kevin Voisin — Fondateur & rédacteur en chef »",
+      "après": "« Kevin Voisin — Fondateur et seul rédacteur »",
+      "nature": "Équipe inexistante : Cryptoreflex est tenu par une seule personne."
+    },
+    {
+      "date": "2026-10-06",
+      "page": "/actualites",
+      "avant": "« Les analyses sont rédigées par notre équipe éditoriale à partir de sources publiques »",
+      "après": "« Les actualités et analyses sont produites par Cryptoreflex à partir de sources publiques » ; Cryptoreflex n'a pas d'équipe éditoriale.",
+      "nature": "Équipe éditoriale inexistante."
+    },
+    {
+      "date": "2026-10-06",
+      "page": "/auteur/redaction-cryptoreflex",
+      "avant": "« La rédaction Cryptoreflex » ; « L'équipe éditoriale de Cryptoreflex […] sous la supervision de Kevin Voisin »",
+      "après": "Signature « Cryptoreflex » ; Kevin Voisin, fondateur et seul rédacteur, il n'y a pas d'équipe éditoriale.",
+      "nature": "Équipe éditoriale inexistante."
+    },
+    {
+      "date": "2026-10-06",
+      "page": "/charte",
+      "avant": "« loi du 9 juin 2023 sur les influenceurs commerciaux (article 5 : transparence des partenariats, article 6 : interdiction de promouvoir des produits crypto risqués sans avertissement légal clair) »",
+      "après": "Loi n° 2023-451 du 9 juin 2023, version en vigueur lue sur Légifrance : article 4 (promotion des crypto-actifs interdite aux influenceurs, sauf exceptions) et article 5-2 (mention « publicité » ou « collaboration commerciale »).",
+      "nature": "Référence juridique fausse : l'article 6 porte sur la responsabilité des influenceurs qui vendent des produits."
+    },
+    {
+      "date": "2026-10-06",
+      "page": "/charte",
+      "avant": "« Cryptoreflex est un éditeur de presse en ligne pédagogique »",
+      "après": "« Cryptoreflex est un éditeur de site web pédagogique »",
+      "nature": "Statut non justifié."
+    },
+    {
+      "date": "2026-10-06",
+      "page": "/charte",
+      "avant": "« statistiquement, ces produits font perdre de l'argent à 95 % de leurs abonnés »",
+      "après": "Phrase retirée.",
+      "nature": "Statistique sans source."
+    },
+    {
+      "date": "2026-10-06",
+      "page": "/charte",
+      "avant": "Deux lignes « Pas CASP » ; exemple « Corrigé le [date du jour] » qui ressemblait à une vraie correction.",
+      "après": "Une seule ligne « Pas CASP » ; l'exemple est remplacé par un lien vers ce journal des corrections.",
+      "nature": "Doublon et exemple trompeur."
+    },
+    {
+      "date": "2026-10-06",
+      "page": "/charte",
+      "avant": "« Aucun lien rémunéré ne pousse vers une plateforme de trading. »",
+      "après": "« Les seuls liens rémunérés vers des plateformes d'achat sont 2 codes de parrainage personnels du fondateur (Bitpanda, Trade Republic). »",
+      "nature": "Affirmation fausse sur les liens rémunérés.",
+      "commit": "8d378104"
+    },
+    {
+      "date": "2026-10-06",
+      "page": "/charte",
+      "avant": "« on envoie un follow-up dans la newsletter du vendredi suivant »",
+      "après": "Promesse retirée.",
+      "nature": "Promesse non tenue : aucune édition de la newsletter n'est envoyée.",
+      "commit": "8d378104"
+    },
+    {
+      "date": "2026-10-06",
+      "page": "/a-propos",
+      "avant": "« tester réellement les plateformes (ouverture de compte, achat, retrait) »",
+      "après": "« relever les frais sur les grilles tarifaires officielles et dater chaque relevé »",
+      "nature": "Méthode décrite à tort : aucune note ne repose sur un test personnel.",
+      "commit": "8d378104"
+    },
+    {
+      "date": "2026-10-06",
+      "page": "/mentions-legales",
+      "avant": "« Nous percevons une commission lorsqu'un utilisateur s'inscrit à un service via ces liens »",
+      "après": "Liens d'affiliation (Ledger, Trezor, Waltio) et liens de parrainage personnels du fondateur (Bitpanda, Trade Republic), signalés « Publicité » ; les autres liens ne sont pas rémunérés.",
+      "nature": "Rémunération décrite trop largement.",
+      "commit": "8d378104"
+    },
+    {
+      "date": "2026-10-06",
+      "page": "/mentions-legales",
+      "avant": "« Dernière mise à jour : 25 avril 2026 »",
+      "après": "« Dernière mise à jour : 6 octobre 2026 »",
+      "nature": "Date de mise à jour fausse : la page avait été modifiée depuis."
+    },
+    {
+      "date": "2026-10-06",
+      "page": "/methodologie",
+      "avant": "« Notes Trustpilot : actualisées chaque mois »",
+      "après": "« relevées à la main sur la page Trustpilot de chaque plateforme ; la date du relevé est affichée à côté de chaque note »",
+      "nature": "Promesse non tenue remplacée par la pratique réelle.",
+      "commit": "8d378104"
+    },
+    {
+      "date": "2026-10-06",
+      "page": "/methodologie",
+      "avant": "« Aucun score ne dérive jamais de la formule » ; « Chaque fiche plateforme indique […] la source de chaque sous-note » ; « Mise à jour : 6 mai 2026 »",
+      "après": "La page signale que certaines notes publiées s'écartent encore de la formule et que les sous-notes n'ont pas de source individuelle publiée ; date de mise à jour : 6 octobre 2026.",
+      "nature": "Affirmations contredites par les données publiées."
+    },
+    {
+      "date": "2026-10-06",
+      "page": "/transparence",
+      "avant": "« Chaque fois que vous ouvrez un compte sur une plateforme via l'un de nos liens, nous percevons une commission » ; « un pourcentage des frais que vous payez (ex : 50% sur 3 mois…) »",
+      "après": "Seuls les liens marqués « Publicité » sont rémunérés (affiliation Ledger, Trezor, Waltio ; parrainage personnel Bitpanda, Trade Republic) ; Coinbase, Kraken et les autres ne versent rien.",
+      "nature": "Rémunération décrite à tort.",
+      "commit": "8d378104"
+    },
+    {
+      "date": "2026-10-06",
+      "page": "/sponsoring",
+      "avant": "« Mention « Sponsorisé » obligatoire […] conformément à l'art. 222-15 du règlement général AMF »",
+      "après": "Mention publicitaire fondée sur l'article 20 de la loi n° 2004-575 (LCEN) ; référence à l'article 222-15 retirée, aussi de l'avertissement AMF affiché sur d'autres pages.",
+      "nature": "Référence juridique fausse : l'article 222-15 du règlement général de l'AMF ne porte pas sur la publicité.",
+      "commit": "8d378104"
+    },
+    {
+      "date": "2026-10-06",
+      "page": "/avis",
+      "avant": "Notes Trustpilot affichées sans date de relevé, certaines périmées.",
+      "après": "Notes Trustpilot de 36 plateformes relevées à la main et datées (relevé du 5 octobre 2026) ; note de Binance suspendue.",
+      "nature": "Notes non datées et périmées.",
+      "commit": "8d378104"
+    },
+    {
+      "date": "2026-10-06",
+      "page": "/avis",
+      "avant": "Liens vers les plateformes munis de paramètres de suivi ou de parrainage (ex. « binance.com/register?ref=CRYPTOREFLEX »).",
+      "après": "Lien direct vers le site officiel ; la mention « Publicité » n'apparaît que sur les liens réellement rémunérés.",
+      "nature": "Liens présentés comme rémunérés à tort.",
+      "commit": "8d378104"
+    },
+    {
+      "date": "2026-10-06",
+      "page": "/avis",
+      "avant": "Offres de bienvenue affichées sans montant relevé.",
+      "après": "Une offre de bienvenue n'est affichée que si son montant a été relevé (aucune à ce jour).",
+      "nature": "Montants non vérifiés.",
+      "commit": "8d378104"
+    },
+    {
+      "date": "2026-10-06",
+      "page": "/impact",
+      "avant": "Statistiques d'impact affichées sans mesure.",
+      "après": "Statistiques retirées ; page retirée de l'index des moteurs tant qu'aucun chiffre mesuré n'y est publié.",
+      "nature": "Statistiques fictives.",
+      "commit": "8d378104"
+    },
+    {
+      "date": "2026-10-06",
+      "page": "/newsletter",
+      "avant": "Témoignages de lecteurs ; rythme d'envoi et envois thématiques promis.",
+      "après": "Témoignages et promesses d'envoi retirés.",
+      "nature": "Témoignages inventés et promesse non tenue.",
+      "commit": "8d378104"
+    },
+    {
+      "date": "2026-10-06",
+      "page": "/",
+      "avant": "« RGPD · CNIL conforme » sous le formulaire d'inscription ; « Statuts des plateformes vérifiés […] le 5 octobre 2026 » (date la plus récente présentée comme valable pour toutes).",
+      "après": "Mention « CNIL conforme » retirée (affirmation sans justificatif) ; la date des vérifications indique la plage réelle des relevés.",
+      "nature": "Label auto-décerné et date trompeuse."
+    },
+    {
+      "date": "2026-10-06",
+      "page": "/blog/acheter-bnb-france-2026-guide",
+      "slug": "acheter-bnb-france-2026-guide",
+      "avant": "« Les liens vers Coinbase et Bitpanda sont des codes de parrainage personnels du fondateur Kevin Voisin »",
+      "après": "« Coinbase, Kraken et les autres plateformes citées ne nous rémunèrent pas : leurs liens mènent à leur site officiel ou à nos fiches. »",
+      "nature": "Lien rémunéré mal décrit : Coinbase ne rémunère ni Cryptoreflex ni son fondateur.",
+      "commit": "8d378104"
+    },
+    {
+      "date": "2026-10-06",
+      "page": "/blog/acheter-cardano-ada-france-2026-guide",
+      "slug": "acheter-cardano-ada-france-2026-guide",
+      "avant": "« Les liens vers Coinbase et Bitpanda sont des codes de parrainage personnels du fondateur Kevin Voisin »",
+      "après": "« Coinbase, Kraken et les autres plateformes citées ne nous rémunèrent pas : leurs liens mènent à leur site officiel ou à nos fiches. »",
+      "nature": "Lien rémunéré mal décrit : Coinbase ne rémunère ni Cryptoreflex ni son fondateur.",
+      "commit": "8d378104"
+    },
+    {
+      "date": "2026-10-06",
+      "page": "/blog/acheter-ethereum-eth-france-2026-guide",
+      "slug": "acheter-ethereum-eth-france-2026-guide",
+      "avant": "« Les liens vers Coinbase et Bitpanda sont des codes de parrainage personnels du fondateur Kevin Voisin »",
+      "après": "« Coinbase, Kraken et les autres plateformes citées ne nous rémunèrent pas : leurs liens mènent à leur site officiel ou à nos fiches. »",
+      "nature": "Lien rémunéré mal décrit : Coinbase ne rémunère ni Cryptoreflex ni son fondateur.",
+      "commit": "8d378104"
+    },
+    {
+      "date": "2026-10-06",
+      "page": "/blog/acheter-solana-sol-france-2026-guide",
+      "slug": "acheter-solana-sol-france-2026-guide",
+      "avant": "« Les liens vers Coinbase et Bitpanda sont des codes de parrainage personnels du fondateur Kevin Voisin »",
+      "après": "« Coinbase, Kraken et les autres plateformes citées ne nous rémunèrent pas : leurs liens mènent à leur site officiel ou à nos fiches. »",
+      "nature": "Lien rémunéré mal décrit : Coinbase ne rémunère ni Cryptoreflex ni son fondateur.",
+      "commit": "8d378104"
+    },
+    {
+      "date": "2026-10-06",
+      "page": "/blog/acheter-usdc-usdt-france-2026-stablecoins",
+      "slug": "acheter-usdc-usdt-france-2026-stablecoins",
+      "avant": "« Les liens vers Coinbase et Bitpanda sont des codes de parrainage personnels du fondateur Kevin Voisin »",
+      "après": "« Coinbase, Kraken et les autres plateformes citées ne nous rémunèrent pas : leurs liens mènent à leur site officiel ou à nos fiches. »",
+      "nature": "Lien rémunéré mal décrit : Coinbase ne rémunère ni Cryptoreflex ni son fondateur.",
+      "commit": "8d378104"
+    },
+    {
+      "date": "2026-10-06",
+      "page": "/blog/acheter-xrp-france-2026-guide",
+      "slug": "acheter-xrp-france-2026-guide",
+      "avant": "« Les liens vers Coinbase et Bitpanda sont des codes de parrainage personnels du fondateur Kevin Voisin »",
+      "après": "« Coinbase, Kraken et les autres plateformes citées ne nous rémunèrent pas : leurs liens mènent à leur site officiel ou à nos fiches. »",
+      "nature": "Lien rémunéré mal décrit : Coinbase ne rémunère ni Cryptoreflex ni son fondateur.",
+      "commit": "8d378104"
+    },
+    {
+      "date": "2026-10-06",
+      "page": "/blog/comment-acheter-bitcoin-france-2026-guide-debutant",
+      "slug": "comment-acheter-bitcoin-france-2026-guide-debutant",
+      "avant": "« Les liens vers Coinbase, Bitpanda et Trade Republic sont des codes de parrainage personnels du fondateur Kevin Voisin »",
+      "après": "« Coinbase, Kraken et les autres plateformes citées ne nous rémunèrent pas : leurs liens mènent à leur site officiel ou à nos fiches. »",
+      "nature": "Lien rémunéré mal décrit : Coinbase ne rémunère ni Cryptoreflex ni son fondateur.",
+      "commit": "8d378104"
+    },
+    {
+      "date": "2026-10-06",
+      "page": "/blog/mica-phase-2-juillet-2026-ce-qui-change",
+      "slug": "mica-phase-2-juillet-2026-ce-qui-change",
+      "avant": "« Les liens vers Coinbase, Bitpanda et Trade Republic sont des codes de parrainage personnels du fondateur Kevin Voisin »",
+      "après": "« Coinbase, Kraken et les autres plateformes citées ne nous rémunèrent pas : leurs liens mènent à leur site officiel ou à nos fiches. »",
+      "nature": "Lien rémunéré mal décrit : Coinbase ne rémunère ni Cryptoreflex ni son fondateur.",
+      "commit": "8d378104"
+    },
+    {
+      "date": "2026-10-06",
+      "page": "/blog/plateformes-crypto-risque-mica-phase-2-alternatives",
+      "slug": "plateformes-crypto-risque-mica-phase-2-alternatives",
+      "avant": "« Les liens vers Coinbase et Bitpanda sont des codes de parrainage personnels du fondateur Kevin Voisin »",
+      "après": "« Coinbase, Kraken et les autres plateformes citées ne nous rémunèrent pas. »",
+      "nature": "Lien rémunéré mal décrit : Coinbase ne rémunère ni Cryptoreflex ni son fondateur.",
+      "commit": "8d378104"
+    },
+    {
+      "date": "2026-10-06",
+      "page": "/blog/premier-achat-crypto-france-2026-guide-step-by-step",
+      "slug": "premier-achat-crypto-france-2026-guide-step-by-step",
+      "avant": "« Les liens vers Bitpanda, Coinbase et Trade Republic sont des codes de parrainage personnels du fondateur Kevin Voisin »",
+      "après": "« Coinbase, Kraken et les autres plateformes citées ne nous rémunèrent pas : leurs liens mènent à leur site officiel ou à nos fiches. »",
+      "nature": "Lien rémunéré mal décrit : Coinbase ne rémunère ni Cryptoreflex ni son fondateur.",
+      "commit": "8d378104"
+    },
+    {
+      "date": "2026-10-06",
+      "page": "/blog/psan-vs-casp-statut-mica-plateformes-crypto",
+      "slug": "psan-vs-casp-statut-mica-plateformes-crypto",
+      "avant": "« les liens vers Coinbase et Bitpanda sont des codes de parrainage personnels du fondateur Kevin Voisin »",
+      "après": "« Coinbase, Kraken et les autres plateformes citées ne nous rémunèrent pas : leurs liens mènent à leur site officiel ou à nos fiches. »",
+      "nature": "Lien rémunéré mal décrit : Coinbase ne rémunère ni Cryptoreflex ni son fondateur.",
+      "commit": "8d378104"
+    },
+    {
+      "date": "2026-10-06",
+      "page": "/blog/stablecoins-euro-mica-compliant-comparatif-2026",
+      "slug": "stablecoins-euro-mica-compliant-comparatif-2026",
+      "avant": "« Les liens vers Coinbase et Bitpanda cités dans cet article sont des codes de parrainage personnels du fondateur Kevin Voisin »",
+      "après": "« Coinbase, Bitstack et les autres plateformes citées ne nous rémunèrent pas : leurs liens mènent à leur site officiel ou à nos fiches. »",
+      "nature": "Lien rémunéré mal décrit : Coinbase ne rémunère ni Cryptoreflex ni son fondateur.",
+      "commit": "8d378104"
+    },
+    {
+      "date": "2026-10-06",
+      "page": "/blog/trade-republic-crypto-avis-2026",
+      "slug": "trade-republic-crypto-avis-2026",
+      "avant": "« Découvrir Bitpanda » vers bitpanda.com/?ref=cryptoreflex",
+      "après": "Lien de parrainage personnel du fondateur, signalé « Publicité — lien de parrainage personnel ».",
+      "nature": "Code de parrainage Bitpanda faux.",
+      "commit": "8d378104"
+    },
+    {
+      "date": "2026-10-06",
+      "page": "/blog/alternative-binance-france-post-mica",
+      "slug": "alternative-binance-france-post-mica",
+      "avant": "Lien « Télécharger Bitstack » vers bitstack.com",
+      "après": "Lien vers bitstack-app.com, le site officiel de Bitstack",
+      "nature": "Mauvaise adresse : bitstack.com appartient à une autre société.",
+      "commit": "8d378104"
+    },
+    {
+      "date": "2026-10-06",
+      "page": "/blog/binance-avis-france-2026",
+      "slug": "binance-avis-france-2026",
+      "avant": "Lien « Bitstack » vers bitstack.com",
+      "après": "Lien vers bitstack-app.com, le site officiel de Bitstack",
+      "nature": "Mauvaise adresse : bitstack.com appartient à une autre société.",
+      "commit": "8d378104"
+    },
+    {
+      "date": "2026-10-06",
+      "page": "/blog/meilleure-plateforme-crypto-debutant-france-2026",
+      "slug": "meilleure-plateforme-crypto-debutant-france-2026",
+      "avant": "Lien « Télécharger Bitstack » vers bitstack.com ; « Bonus Coinbase Earn pour apprendre en gagnant »",
+      "après": "Lien vers bitstack-app.com, le site officiel de Bitstack ; mention de bonus retirée",
+      "nature": "Mauvaise adresse (bitstack.com appartient à une autre société) et bonus non vérifié.",
+      "commit": "8d378104"
+    },
+    {
+      "date": "2026-10-06",
+      "page": "/blog/coinbase-avis-france-2026",
+      "slug": "coinbase-avis-france-2026",
+      "avant": "« Liens partenaires rémunérés » ; note Trustpilot ancienne, sans date de relevé.",
+      "après": "« Coinbase ne rémunère pas Cryptoreflex : aucun lien de cet avis n'est rémunéré. » ; note Trustpilot relevée et datée (5 octobre 2026).",
+      "nature": "Rémunération annoncée à tort et note Trustpilot non datée.",
+      "commit": "8d378104"
+    },
+    {
+      "date": "2026-10-06",
+      "page": "/blog/crypto-com-avis-france-2026",
+      "slug": "crypto-com-avis-france-2026",
+      "avant": "« Liens partenaires rémunérés présents. »",
+      "après": "« Crypto.com ne rémunère pas Cryptoreflex : aucun lien de cet avis n'est rémunéré. »",
+      "nature": "Rémunération annoncée à tort.",
+      "commit": "8d378104"
+    },
+    {
+      "date": "2026-10-06",
+      "page": "/blog/staking-eth-vs-sol-vs-ada-2026",
+      "slug": "staking-eth-vs-sol-vs-ada-2026",
+      "avant": "Lien Kraken avec la mention « Lien d'affiliation. […] Cryptoreflex perçoit une commission si vous ouvrez un compte. »",
+      "après": "Lien direct vers kraken.com, sans mention de commission",
+      "nature": "Rémunération annoncée à tort : Kraken ne rémunère pas Cryptoreflex.",
+      "commit": "8d378104"
+    },
+    {
+      "date": "2026-10-06",
+      "page": "/blog/bitcoin-vs-ethereum-differences-debutant-2026",
+      "slug": "bitcoin-vs-ethereum-differences-debutant-2026",
+      "avant": "Lien Bitpanda avec la mention « Lien d'affiliation. […] Cryptoreflex perçoit une commission si vous ouvrez un compte. »",
+      "après": "Lien signalé « Publicité — lien de parrainage personnel »",
+      "nature": "Type de rémunération faux : le lien Bitpanda est un parrainage personnel du fondateur, pas une affiliation payée à Cryptoreflex.",
+      "commit": "8d378104"
+    },
+    {
+      "date": "2026-10-06",
+      "page": "/blog/defi-pour-debutants-savoir-avant-commencer-2026",
+      "slug": "defi-pour-debutants-savoir-avant-commencer-2026",
+      "avant": "Lien Bitpanda avec la mention « Lien d'affiliation. […] Cryptoreflex perçoit une commission si vous ouvrez un compte. »",
+      "après": "Lien signalé « Publicité — lien de parrainage personnel »",
+      "nature": "Type de rémunération faux : le lien Bitpanda est un parrainage personnel du fondateur, pas une affiliation payée à Cryptoreflex.",
+      "commit": "8d378104"
+    },
+    {
+      "date": "2026-10-06",
+      "page": "/blog/bitcoin-guide-complet-debutant-2026",
+      "slug": "bitcoin-guide-complet-debutant-2026",
+      "avant": "Liens Bitpanda avec la mention « Lien affilié — […] soutient le site. »",
+      "après": "Liens signalés « Publicité — lien de parrainage personnel »",
+      "nature": "Type de rémunération faux : le lien Bitpanda est un parrainage personnel du fondateur, pas une affiliation payée à Cryptoreflex.",
+      "commit": "8d378104"
+    },
+    {
+      "date": "2026-10-06",
+      "page": "/avis/kraken",
+      "avant": "« Achat par carte (CB) : 10,00 € » pour 1 000 €.",
+      "après": "Achat par carte, frais de carte compris : 47,75 € pour 1 000 €, plus une marge non publiée (1 % + dépôt par carte à 3,75 % + 0,25 €, grille relevée le 5 octobre 2026).",
+      "nature": "Le montant affiché était celui d'un achat depuis le solde en euros, sans les frais de la carte."
+    },
+    {
+      "date": "2026-10-06",
+      "page": "/avis",
+      "avant": "Tuile « Achat par carte (CB) » calculée sur le coût d'un achat depuis le solde ou sur les frais d'achat instantané, sans les frais de la carte.",
+      "après": "Coût par carte lu dans le relevé daté des frais de carte ; « Non relevé », « Non publié » ou « Pas d'achat par carte » quand ce relevé n'existe pas.",
+      "nature": "Coût de la carte sous-estimé ou inventé sur plusieurs fiches."
+    },
+    {
+      "date": "2026-10-06",
+      "page": "/avis/coinbase",
+      "avant": "« Achat instantané par carte cher (3,99 % + spread) » ; « carte 3,99 % » dans les frais vérifiés.",
+      "après": "Coût de l'achat simple et par carte non chiffré publiquement par Coinbase (page d'aide relevée le 5 octobre 2026).",
+      "nature": "Chiffre d'un ancien relevé, contredit par la page officielle relevée le 5 octobre 2026. Corrigé aussi sur /cryptos/[crypto]/acheter-en-france."
+    },
+    {
+      "date": "2026-10-06",
+      "page": "/avis",
+      "avant": "Verdicts rédigés par du code et répétés d'un avis à l'autre (« statistiquement difficile à battre », « position d'équilibriste »…).",
+      "après": "« Résumé à partir des données ci-dessus » : note, sous-notes, statut MiCA daté, frais relevés et catalogue.",
+      "nature": "Jugements sans source."
+    },
+    {
+      "date": "2026-10-06",
+      "page": "/avis",
+      "avant": "« Vérification effectuée par notre équipe » ; « Cet avis est rédigé par l'équipe éditoriale Cryptoreflex ».",
+      "après": "« Vérification effectuée par Cryptoreflex » ; « Cette fiche est générée à partir de nos données ; Kevin Voisin, éditeur de Cryptoreflex, en est responsable. »",
+      "nature": "Équipe inexistante, et fiche présentée comme rédigée alors qu'elle est générée à partir des données."
+    },
+    {
+      "date": "2026-10-06",
+      "page": "/comparatif",
+      "avant": "« Comparatif rédigé par l'équipe éditoriale Cryptoreflex » ; « vérifiés trimestriellement ».",
+      "après": "« Comparatif généré à partir de nos données ; Kevin Voisin, éditeur de Cryptoreflex, en est responsable. » ; dates réelles du statut MiCA et du relevé des frais.",
+      "nature": "Équipe inexistante et fréquence de vérification non tenue."
+    },
+    {
+      "date": "2026-10-06",
+      "page": "/comparatif",
+      "avant": "Notes App Store et Play Store affichées sans source ni date (ex. Coinbase 4,7 sur l'App Store).",
+      "après": "Notes des magasins d'applications retirées tant qu'elles ne sont pas relevées et datées.",
+      "nature": "Notes non sourcées : l'App Store affichait 4,56 pour Coinbase (47 960 notes) le 6 octobre 2026."
+    },
+    {
+      "date": "2026-10-06",
+      "page": "/avis",
+      "avant": "Badges, accroches, « Idéal pour » et points forts superlatifs (ex. « Le plus régulé », « Plus sécurisé », « Champion européen », « la plateforme la plus régulée », « Catalogue le plus large au monde »).",
+      "après": "Badges retirés ou réécrits ; accroches, profils et points forts reformulés en termes vérifiables.",
+      "nature": "Superlatifs non démontrés."
+    },
+    {
+      "date": "2026-10-06",
+      "page": "/blog",
+      "avant": "Superlatifs non démontrés dans une vingtaine d'articles (ex. « sécurité maximale », « le plus régulé au monde », « plus gros exchange », « la plus auditée »).",
+      "après": "Formulations factuelles, ou passage retiré.",
+      "nature": "Superlatifs non démontrés."
+    },
+    {
+      "date": "2026-10-06",
+      "page": "/blog/kraken-avis-france-2026",
+      "slug": "kraken-avis-france-2026",
+      "avant": "« Achat par carte : 1 % + frais du moyen de paiement (non chiffrés sur la grille) »",
+      "après": "« 1 % + dépôt par carte à 3,75 % + 0,25 €, soit 47,75 € pour 1 000 € (grille relevée le 5 octobre 2026) »",
+      "nature": "Frais de la carte présentés comme non chiffrés alors que la grille officielle les publie."
+    },
+    {
+      "date": "2026-10-06",
+      "page": "/blog/crypto-com-avis-france-2026",
+      "slug": "crypto-com-avis-france-2026",
+      "avant": "« Achat par carte bancaire : +2,99 % supplémentaires »",
+      "après": "« Achat par carte bancaire : jusqu'à 4 % (grille officielle de l'appli Crypto.com pour l'EEE, du 19/05/2026) »",
+      "nature": "Frais de carte périmés."
+    },
+    {
+      "date": "2026-10-06",
+      "page": "/blog/crypto-com-avis-france-2026",
+      "slug": "crypto-com-avis-france-2026",
+      "avant": "« Comment on note : 14 critères »",
+      "après": "« 6 critères pondérés »",
+      "nature": "Nombre de critères faux : la méthodologie en compte 6."
+    },
+    {
+      "date": "2026-10-06",
+      "page": "/blog/coinbase-avis-france-2026",
+      "slug": "coinbase-avis-france-2026",
+      "avant": "« 14 critères, méthodologie publique style UFC-Que Choisir, scoring transparent »",
+      "après": "« 6 critères pondérés, méthodologie publique »",
+      "nature": "Nombre de critères faux (la méthodologie en compte 6) et comparaison sans fondement."
+    },
+    {
+      "date": "2026-10-06",
+      "page": "/blog/meilleure-plateforme-crypto-debutant-france-2026",
+      "slug": "meilleure-plateforme-crypto-debutant-france-2026",
+      "avant": "Notes du tableau : Bitpanda 5/5, Coinhouse 5/5, Bitstack 4,5/5, Trade Republic 4/5, Coinbase 4/5, Revolut 3,5/5 ; « 10 critères pondérés » ; « application notée 4,7/5 ».",
+      "après": "Notes publiées sur les avis : Coinbase 4,6/5, Bitpanda 4,4/5, Coinhouse 4,3/5, Trade Republic 4,3/5, Bitstack 4,1/5, Revolut 4/5 ; 6 critères pondérés ; note d'application retirée.",
+      "nature": "Notes différentes de celles des avis, et nombre de critères faux."
+    },
+    {
+      "date": "2026-10-06",
+      "page": "/blog/meilleure-plateforme-crypto-debutant-france-2026",
+      "slug": "meilleure-plateforme-crypto-debutant-france-2026",
+      "avant": "Bitpanda (lien de parrainage du fondateur) en tête, « notre n°1 », « un seul nom à retenir : Bitpanda », alors que Coinbase avait la meilleure note.",
+      "après": "Classement trié par note globale : Coinbase (4,6/5), Bitpanda (4,4/5), Coinhouse et Trade Republic (4,3/5, ex aequo), Bitstack (4,1/5), Revolut (4/5).",
+      "nature": "Ordre du classement sans critère écrit, favorable à un lien de parrainage du fondateur."
+    },
+    {
+      "date": "2026-10-06",
+      "page": "/blog/meilleure-plateforme-crypto-debutant-france-2026",
+      "slug": "meilleure-plateforme-crypto-debutant-france-2026",
+      "avant": "Bitstack : « 1,49 % (dégressif jusqu'à 0,49 %) » ; Coinbase : « carte 3,99 % » ; Trade Republic : « Pas de retrait crypto vers un wallet externe ».",
+      "après": "Bitstack : 1,50 % sous 250 € d'achats dans le mois, 1,25 % jusqu'à 1 000 €, puis 1 %, plus une marge de 0 à 1 % ; Coinbase : achat simple non chiffré publiquement ; Trade Republic : point retiré (envoi vers un portefeuille externe possible d'après sa page crypto officielle).",
+      "nature": "Frais et fonctions périmés."
+    },
+    {
+      "date": "2026-10-06",
+      "page": "/blog/meilleure-plateforme-crypto-debutant-france-2026",
+      "slug": "meilleure-plateforme-crypto-debutant-france-2026",
+      "avant": "Encadré Bitpanda : « Inscription gratuite en moins de 10 minutes. Bonus de bienvenue selon offre en cours. »",
+      "après": "« Compte en euros intégré, plans d'épargne dès 1 €. »",
+      "nature": "Promesses non vérifiées sous un lien de parrainage."
+    },
+    {
+      "date": "2026-10-06",
+      "page": "/",
+      "avant": "Badge « RGPD · CNIL » dans le pied de page de toutes les pages.",
+      "après": "Badge retiré.",
+      "nature": "Label de conformité auto-déclaré, sans certification ni avis de la CNIL."
+    },
+    {
+      "date": "2026-10-06",
+      "page": "/charte",
+      "avant": "« Plusieurs plateformes nous ont approchés pour « améliorer leur score » »",
+      "après": "Phrase retirée.",
+      "nature": "Affirmation sans trace écrite."
+    },
+    {
+      "date": "2026-10-06",
+      "page": "/methodologie",
+      "avant": "Critère « expérience utilisateur » décrit avec la « qualité des notes Trustpilot, App Store, Play Store ».",
+      "après": "Critère décrit sans ces notes, qui n'entrent pas dans le calcul.",
+      "nature": "Description inexacte de la notation."
+    },
+    {
+      "date": "2026-10-06",
+      "page": "/cryptos",
+      "avant": "« identifiés par notre équipe »",
+      "après": "« identifiés par Cryptoreflex »",
+      "nature": "Équipe inexistante."
+    },
+    {
+      "date": "2026-10-06",
+      "page": "/sponsoring",
+      "avant": "« l'équipe partenariats »",
+      "après": "« Kevin Voisin, éditeur de Cryptoreflex »",
+      "nature": "Équipe inexistante."
+    },
+    {
+      "date": "2026-10-06",
+      "page": "/comparatif/binance-vs-coinbase",
+      "avant": "« Binance reste préférable sur certains profils précis » ; « Choisissez Binance si vous tradez régulièrement en spot ».",
+      "après": "Aucune recommandation pour Binance, non autorisée en France depuis le 1er juillet 2026 ; règle appliquée à tous les duels avec une plateforme non autorisée en France.",
+      "nature": "Recommandation d'une plateforme non autorisée en France."
+    },
+    {
+      "date": "2026-10-06",
+      "page": "/comparatif",
+      "avant": "Section « Expérience utilisateur » : « Notes d'app mobile, Trustpilot et taille du catalogue […] un investisseur passif accordera plus de poids à l'app ».",
+      "après": "« Sous-note UX de notre méthodologie, note Trustpilot (datée) et taille du catalogue. »",
+      "nature": "Description d'un tableau qui n'affiche plus les notes des magasins d'applications."
+    },
+    {
+      "date": "2026-10-06",
+      "page": "/avis",
+      "avant": "Tuile « Achat par carte, frais de carte compris » pour Bitpanda (9,90 €), Revolut (14,90 €), Deblock (19,90 €) et Trading 212 (0 €), et ligne du même nom dans les duels.",
+      "après": "« Achat par carte (frais de carte non relevés) » quand le relevé ne chiffre pas le surcoût de la carte ; ces montants ne désignent plus de gagnant dans les duels.",
+      "nature": "Frais de carte présentés comme compris sans aucun relevé."
+    },
+    {
+      "date": "2026-10-06",
+      "page": "/top",
+      "avant": "« Instant : 3,99 % » pour Coinbase (et le taux instantBuy de chaque plateforme).",
+      "après": "« Achat simple de 1 000 € » : coût relevé de chaque plateforme, ou « Non publié » (Coinbase ne chiffre pas l'achat simple, page d'aide relevée le 5 octobre 2026).",
+      "nature": "Taux non publié par la plateforme."
+    },
+    {
+      "date": "2026-10-06",
+      "page": "/comparatif/frais",
+      "avant": "« Achat débutant le + cher » calculé sur un taux d'achat instantané non relevé (OKX 4 %, Coinbase 3,99 %).",
+      "après": "« Achat simple le + cher (relevé) » calculé sur le coût relevé d'un achat de 1 000 € (fees.cost).",
+      "nature": "Classement fondé sur des taux non publiés."
+    },
+    {
+      "date": "2026-10-06",
+      "page": "/blog/bitcoin-guide-complet-debutant-2026",
+      "slug": "bitcoin-guide-complet-debutant-2026",
+      "avant": "« Pourquoi Bitpanda est notre n°1 pour les débutants » ; « Bitpanda offre le meilleur compromis » ; deux encadrés « Notre choix débutants 2026 » (« parfait pour les débutants ») ; « DCA automatique à partir de 25 €/mois ».",
+      "après": "Présentation factuelle de Bitpanda ; réponse de la FAQ alignée sur les notes de la méthodologie (Coinbase 4,6/5, Bitpanda 4,4/5) ; montant minimum retiré (contradictoire avec un autre article).",
+      "nature": "Classement en faveur d'un lien de parrainage, contraire aux notes publiées."
+    },
+    {
+      "date": "2026-10-06",
+      "page": "/blog/alternative-binance-france-post-mica",
+      "slug": "alternative-binance-france-post-mica",
+      "avant": "« Bitpanda offre le meilleur catalogue MiCA-compliant » ; Trade Republic « imbattable pour la centralisation » ; « Bitpanda est le meilleur choix global ».",
+      "après": "Descriptions factuelles (catalogue d'environ 480 cryptos, crypto, actions et ETF dans la même application).",
+      "nature": "Superlatifs sans source en faveur de deux liens de parrainage."
+    },
+    {
+      "date": "2026-10-06",
+      "page": "/blog/cold-wallet-vs-hot-wallet-guide-complet-2026",
+      "slug": "cold-wallet-vs-hot-wallet-guide-complet-2026",
+      "avant": "« Le Ledger Nano S Plus à ~80 € est le meilleur ratio sécurité/prix. » ; « la meilleure UX mobile » et « Ledger reste le choix par défaut » (FAQ) ; « les deux leaders ».",
+      "après": "« Le Ledger Nano S Plus (environ 80 €) est le modèle d'entrée de gamme de Ledger. » ; FAQ factuelle (catalogue, staking, Bluetooth) ; « les deux marques ».",
+      "nature": "Superlatifs sans source en faveur de liens d'affiliation (Ledger, Trezor)."
+    },
+    {
+      "date": "2026-10-06",
+      "page": "/blog/ledger-vs-trezor-duel-objectif-2026-par-profil",
+      "slug": "ledger-vs-trezor-duel-objectif-2026-par-profil",
+      "avant": "« Ledger : ~7 millions d'appareils vendus, leader mondial, ~80 % de part de marché FR. » ; « leader hardware wallet en 2026 » ; « les deux acteurs historiques et incontournables » ; « UX la plus simple » ; « le choix se fait entre les deux leaders ».",
+      "après": "« Ledger : ~7 millions d'appareils vendus. » ; superlatifs retirés.",
+      "nature": "Statistique et superlatifs sans source sur deux partenaires affiliés."
+    },
+    {
+      "date": "2026-10-06",
+      "page": "/blog/meilleure-plateforme-crypto-debutant-france-2026",
+      "slug": "meilleure-plateforme-crypto-debutant-france-2026",
+      "avant": "Coinbase, point faible : « Support principalement par email. »",
+      "après": "« Chat d'assistance : langue non précisée sur la page officielle d'assistance. » (cohérent avec le tableau : téléphone en français 9 h-18 h).",
+      "nature": "Description du support contredite par la page officielle d'assistance."
+    },
+    {
+      "date": "2026-10-06",
+      "page": "/cryptos/bitcoin",
+      "avant": "Point fort : « Réseau le plus sécurisé au monde ».",
+      "après": "« Réseau sécurisé par la preuve de travail depuis 2009 ».",
+      "nature": "Superlatif sans source."
+    },
+    {
+      "date": "2026-10-06",
+      "page": "/cryptos/bnb",
+      "avant": "« La crypto de Binance, le plus grand exchange au monde »",
+      "après": "« La crypto de l'écosystème Binance »",
+      "nature": "Superlatif sans source sur une plateforme non autorisée en France."
+    },
+    {
+      "date": "2026-10-06",
+      "page": "/cryptos",
+      "avant": "Avertissement des fiches générées : « recoupe toujours avec les sources officielles » ; « Nos fiches premium (top 100) sont, elles, vérifiées à la main. »",
+      "après": "« recoupez toujours avec les sources officielles » ; promesse de vérification à la main retirée.",
+      "nature": "Tutoiement et promesse non prouvée."
+    },
+    {
+      "date": "2026-10-06",
+      "page": "/methodologie",
+      "avant": "« Statut MiCA : vérifié chaque mois » ; « Frais : vérifiés chaque trimestre » ; « Bonus de bienvenue : vérifiés chaque mois » ; « Refonte complète d'une fiche : au minimum 1 fois par an » ; « mise à jour mensuelle ».",
+      "après": "Dates réelles des derniers relevés (statut MiCA et frais), calculées à partir des données ; « Bonus de bienvenue : aucun relevé daté à ce jour » ; aucune fréquence promise.",
+      "nature": "Fréquences de mise à jour non tenues."
+    },
+    {
+      "date": "2026-10-06",
+      "page": "/a-propos",
+      "avant": "« vérifier le statut PSAN AMF et l'agrément MiCA chaque mois » ; « Les notes sont mises à jour à fréquence fixe (statut MiCA mensuel, frais trimestriels, refonte annuelle complète). »",
+      "après": "Vérification de l'agrément MiCA sur les registres officiels, datée sur chaque fiche ; aucune fréquence promise.",
+      "nature": "Fréquences de mise à jour non tenues ; régime PSAN terminé le 1er juillet 2026."
+    },
+    {
+      "date": "2026-10-06",
+      "page": "/charte",
+      "avant": "« mis à jour mensuellement » ; « Audit complet rejoué chaque trimestre. »",
+      "après": "« avec la date des derniers relevés » ; « la date de vérification est affichée sur chaque fiche ».",
+      "nature": "Fréquences de mise à jour non tenues."
+    },
+    {
+      "date": "2026-10-06",
+      "page": "/transparence",
+      "avant": "« La rémunération éventuelle (10 €/filleul Bitpanda, 15 €/filleul Trade Republic, etc.) » ; « 15 € au parrain + 200 € d'actions au filleul » ; carte « 0€ pour vous : le prix payé est exactement celui de la plateforme ».",
+      "après": "Prime « fixée par le programme de parrainage de chaque plateforme », sans montant ; carte « Sans surcoût pour vous » : frais de la grille publique, commission ou prime versée par la plateforme.",
+      "nature": "Montants sans source ni date."
+    },
+    {
+      "date": "2026-10-06",
+      "page": "/contact",
+      "avant": "Six délais différents selon les pages : 24 h, 48 h, 48 h ouvrées (/mentions-legales, formulaire de contact), 5 jours ouvrés (/contact, /accessibilite, /sponsoring), 7 jours, 7 jours ouvrés.",
+      "après": "Délai unique de réponse et de correction : 7 jours, sur toutes les pages, les formulaires et les e-mails.",
+      "nature": "Engagements contradictoires."
+    },
+    {
+      "date": "2026-10-06",
+      "page": "/analyses-techniques",
+      "avant": "Fiche auteur « Kevin Voisin » en bas des analyses techniques quotidiennes.",
+      "après": "« Publiée automatiquement. » (les analyses sont produites par un programme).",
+      "nature": "Signature inexacte : contenu publié automatiquement."
+    },
+    {
+      "date": "2026-10-06",
+      "page": "/actualites",
+      "avant": "Fiche auteur « Cryptoreflex » et signature « Par La rédaction Cryptoreflex » sur les actualités et les brèves.",
+      "après": "« Publiée automatiquement à partir de [source] », avec le lien vers la source citée.",
+      "nature": "Signature inexacte : contenu publié automatiquement."
+    },
+    {
+      "date": "2026-10-06",
+      "page": "/blog",
+      "avant": "Articles de fond signés « Cryptoreflex » (ex-« La rédaction Cryptoreflex », « Équipe éditoriale »).",
+      "après": "Tous les articles de fond sont signés Kevin Voisin, fondateur et seul rédacteur.",
+      "nature": "Signature d'une équipe inexistante."
+    },
+    {
+      "date": "2026-10-06",
+      "page": "/blog/comment-acheter-bitcoin-france-2026-guide-debutant",
+      "slug": "comment-acheter-bitcoin-france-2026-guide-debutant",
+      "avant": "Intertitre « Bitpanda — la plus simple ».",
+      "après": "« Bitpanda — interface en français ».",
+      "nature": "Superlatif sans source en faveur d'un lien de parrainage."
+    },
+    {
+      "date": "2026-10-06",
+      "page": "/blog/ledger-live-tout-ce-qu-on-peut-faire-2026",
+      "slug": "ledger-live-tout-ce-qu-on-peut-faire-2026",
+      "avant": "« c'est l'outil le plus complet du marché pour gérer son patrimoine crypto sans céder ses clés. »",
+      "après": "« c'est un outil complet pour gérer son patrimoine crypto sans céder ses clés. »",
+      "nature": "Superlatif sans source en faveur d'un partenaire affilié."
+    },
+    {
+      "date": "2026-10-06",
+      "page": "/blog/premier-achat-crypto-france-2026-guide-step-by-step",
+      "slug": "premier-achat-crypto-france-2026-guide-step-by-step",
+      "avant": "« Vous voulez la plateforme la plus simple à prendre en main → Bitpanda. »",
+      "après": "« Vous voulez une interface en français et des achats programmés → par exemple Bitpanda. »",
+      "nature": "Superlatif sans source en faveur d'un lien de parrainage."
+    },
+    {
+      "date": "2026-10-06",
+      "page": "/blog/waltio-vs-koinly-vs-accointing-comparatif-2026",
+      "slug": "waltio-vs-koinly-vs-accointing-comparatif-2026",
+      "avant": "« Deux outils dominent le marché en 2026 : Waltio (français, leader FR) et Koinly (suédo-britannique, leader monde). »",
+      "après": "« Ce comparatif porte sur deux outils : Waltio (français) et Koinly (suédo-britannique). »",
+      "nature": "Classement sans source en faveur d'un lien d'affiliation (Waltio)."
+    },
+    {
+      "date": "2026-10-06",
+      "page": "/blog/ledger-vs-trezor-duel-objectif-2026-par-profil",
+      "slug": "ledger-vs-trezor-duel-objectif-2026-par-profil",
+      "avant": "« Mode CoinJoin : Oui (avec Wasabi/JoinMarket intégrés) » ; « Trezor Suite gagne sur la vie privée Bitcoin (CoinJoin natif) » ; « CoinJoin natif dans Trezor Suite ».",
+      "après": "Le coinjoin n'est plus disponible dans Trezor Suite depuis le 1er juin 2024 (arrêt du coordinateur zkSNACKs, page officielle trezor.io).",
+      "nature": "Fonctionnalité retirée présentée comme disponible."
+    },
+    {
+      "date": "2026-10-06",
+      "page": "/comparatif/ledger-vs-trezor",
+      "avant": "Point fort de Trezor : « Support natif CoinJoin (vie privée Bitcoin) ».",
+      "après": "Point fort retiré.",
+      "nature": "Fonctionnalité retirée de Trezor Suite le 1er juin 2024."
+    },
+    {
+      "date": "2026-10-06",
+      "page": "/blog/bitcoin-guide-complet-debutant-2026",
+      "slug": "bitcoin-guide-complet-debutant-2026",
+      "avant": "« Notre plateforme recommandée 2026 pour les débutants français reste Bitpanda » ; tableau noté sur 10 (Bitpanda 9,5/10 devant Coinbase 9/10) avec des frais anciens (Coinbase « 1,49 % à 3,99 % », Kraken « 0,16 % à 1,5 % »).",
+      "après": "Renvoi neutre vers le comparatif ; tableau classé par la note globale publiée (Coinbase 4,6/5, Bitpanda 4,4/5, Kraken 4,4/5, Trade Republic 4,3/5) avec le coût relevé le 5 octobre 2026 d'un achat de 1 000 €.",
+      "nature": "Classement en faveur d'un lien de parrainage et frais périmés."
+    },
+    {
+      "date": "2026-10-06",
+      "page": "/blog/bitcoin-guide-complet-debutant-2026",
+      "slug": "bitcoin-guide-complet-debutant-2026",
+      "avant": "« statistiquement la meilleure stratégie pour 95 % des particuliers » ; « le minimum est généralement de 25 €/mois ».",
+      "après": "Description du DCA sans statistique ; minimum renvoyé aux conditions de chaque plateforme.",
+      "nature": "Statistique et montant sans source."
+    },
+    {
+      "date": "2026-10-06",
+      "page": "/blog/alternative-binance-france-post-mica",
+      "slug": "alternative-binance-france-post-mica",
+      "avant": "Notes sur 10 propres à l'article (Bitpanda 9,5/10 « Meilleure alternative globale », Coinbase 9,2/10, Kraken 8,9/10, Coinhouse 8,5/10, Trade Republic 8,3/10, Bitstack 8,0/10) ; « Choix recommandé ».",
+      "après": "Note globale publiée selon notre méthodologie (Coinbase 4,6/5, Bitpanda 4,4/5, Kraken 4,4/5, Coinhouse 4,3/5, Trade Republic 4,3/5, Bitstack 4,1/5) ; « Plateformes à comparer ».",
+      "nature": "Notes sans méthode et superlatifs en faveur de liens de parrainage."
+    },
+    {
+      "date": "2026-10-06",
+      "page": "/blog/wallet-air-gap-vs-bluetooth-securite-2026",
+      "slug": "wallet-air-gap-vs-bluetooth-securite-2026",
+      "avant": "« Pour 95 % des utilisateurs », « le meilleur compromis », « plus de 80 % des ventes hardware wallet en France » (Ledger, partenaire affilié).",
+      "après": "« la plupart des utilisateurs », « un bon compromis » ; statistique de ventes retirée.",
+      "nature": "Statistiques et superlatifs sans source sur un partenaire affilié."
+    },
+    {
+      "date": "2026-10-06",
+      "page": "/blog/ledger-live-tout-ce-qu-on-peut-faire-2026",
+      "slug": "ledger-live-tout-ce-qu-on-peut-faire-2026",
+      "avant": "« Ledger reste le choix par défaut pour les portefeuilles multi-chaînes » ; « Pour 95 % des utilisateurs ».",
+      "après": "Phrases retirées ou reformulées sans superlatif ni statistique.",
+      "nature": "Superlatif et statistique sans source sur un partenaire affilié."
+    },
+    {
+      "date": "2026-10-06",
+      "page": "/transparence",
+      "avant": "« Les statuts MiCA affichés sur Cryptoreflex sont vérifiés chaque mois ».",
+      "après": "« vérifiés, avec la date de chaque vérification ».",
+      "nature": "Fréquence promise sans calendrier réel."
+    },
+    {
+      "date": "2026-10-06",
+      "page": "/sponsoring",
+      "avant": "« Devis sous 5 jours ouvrés ».",
+      "après": "Délai unique du site (7 jours).",
+      "nature": "Délai contradictoire sur la même page."
+    },
+    {
+      "date": "2026-10-06",
+      "page": "/outils/glossaire-crypto",
+      "avant": "« nous publions chaque ajout sous 48 h ».",
+      "après": "« nous l'ajoutons après vérification ».",
+      "nature": "Délai promis non tenable."
+    }
+  ]
+}

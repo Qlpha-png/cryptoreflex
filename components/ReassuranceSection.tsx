@@ -10,6 +10,7 @@ import {
   FileCheck,
   Database,
 } from "lucide-react";
+import { DELAI_REPONSE } from "@/lib/engagements";
 
 /**
  * ReassuranceSection — REFONTE BATCH 35c (user feedback "c'est sensé etre
@@ -345,7 +346,7 @@ export default function ReassuranceSection() {
               <div className="text-xs text-muted leading-snug max-w-2xl">
                 Scoring ouvert (40% sécurité, 30% frais réels, 20% UX/support FR,
                 10% profondeur). Si une plateforme nous paie, c&apos;est marqué dessus.
-                Trouvé une erreur ? On corrige sous 48h.
+                Trouvé une erreur ? Réponse sous {DELAI_REPONSE}.
               </div>
             </div>
           </div>

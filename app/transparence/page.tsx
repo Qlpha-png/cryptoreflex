@@ -31,6 +31,8 @@ import {
 } from "@/lib/legal-disclaimers";
 import { withHreflang } from "@/lib/seo-alternates";
 import { fitDescription } from "@/lib/seo-text";
+import { PAGE_UPDATED } from "@/lib/engagements";
+import { DELAI_REPONSE } from "@/lib/engagements";
 
 /* -------------------------------------------------------------------------- */
 /*  Metadata SEO                                                              */
@@ -42,7 +44,7 @@ const PAGE_URL = `${BRAND.url}${PAGE_PATH}`;
 export const metadata: Metadata = {
   title: "Transparence et partenariats",
   description: fitDescription(
-    "Liste exhaustive de nos partenariats d'affiliation, statut MiCA/CASP de chaque plateforme, type de rémunération perçue et engagement éditorial. Conformité loi Influenceurs juin 2023.",
+    "Liste exhaustive de nos partenariats d'affiliation, statut MiCA/CASP de chaque plateforme, type de rémunération perçue et engagement éditorial. Loi Influenceurs n° 2023-451.",
   ),
   alternates: withHreflang(PAGE_URL),
   openGraph: {
@@ -95,7 +97,7 @@ export const metadata: Metadata = {
 // + la mention « Publicité » UNIQUEMENT sur les plateformes réellement
 // rémunérées). Cette page importe désormais PARTNERSHIPS depuis la lib.
 
-const PAGE_LAST_UPDATED = "2026-10-06";
+const PAGE_LAST_UPDATED = PAGE_UPDATED["/transparence"];
 
 /* -------------------------------------------------------------------------- */
 /*  Page                                                                      */
@@ -200,11 +202,12 @@ export default function TransparencePage() {
         <header className="max-w-3xl">
           <span className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-semibold text-primary-glow">
             <Sparkles className="h-3.5 w-3.5" />
-            Conformité loi Influenceurs (n°2023-451 du 9 juin 2023)
+            Loi Influenceurs (n° 2023-451 du 9 juin 2023)
           </span>
+          {/* 06/10/2026 : « Transparence absolue » (superlatif) et « Conformité loi Influenceurs » (auto-déclaré) retirés. */}
           <h1 className="mt-4 text-4xl sm:text-5xl font-extrabold tracking-tight text-fg">
-            Transparence absolue sur{" "}
-            <span className="gradient-text">nos partenariats</span>
+            Qui nous rémunère, et{" "}
+            <span className="gradient-text">comment</span>
           </h1>
           <p className="mt-5 text-lg text-fg/80 leading-relaxed">
             {BRAND.name} est un comparateur indépendant. La plupart de nos liens
@@ -225,7 +228,12 @@ export default function TransparencePage() {
               month: "long",
               year: "numeric",
             })}
-            . Les modifications sont historisées dans Git (audit trail public).
+            . Les modifications sont historisées dans Git (audit trail public) et
+            les corrections listées dans le{" "}
+            <Link href="/corrections" className="text-primary-soft underline hover:text-primary">
+              journal des corrections
+            </Link>
+            .
           </p>
         </header>
 
@@ -322,9 +330,9 @@ export default function TransparencePage() {
             <strong className="text-fg">⚠ Pas un partenariat commercial.</strong>{" "}
             Ces codes sont les liens de parrainage personnels que Kevin Voisin
             (fondateur, en tant que client particulier des plateformes) a
-            générés depuis son compte. La rémunération éventuelle (10 €/filleul
-            Bitpanda, 15 €/filleul Trade Republic, etc.) est versée au compte
-            personnel de Kevin Voisin en tant que filleul historique —{" "}
+            générés depuis son compte. La prime éventuelle, fixée par le programme
+            de parrainage de chaque plateforme, est versée au compte personnel de
+            Kevin Voisin en tant que parrain —{" "}
             <strong className="text-fg">pas à {BRAND.name} en tant qu&apos;éditeur</strong>.
             Inscrits ici par souci de transparence loyale (loi Influenceurs
             n°2023-451).
@@ -413,8 +421,8 @@ export default function TransparencePage() {
           <div className="mt-6 grid md:grid-cols-3 gap-4">
             <BenefitCard
               Icon={CheckCircle2}
-              title="0€ pour vous"
-              body="Le prix payé est exactement celui de la plateforme. La commission est prélevée sur la marge du partenaire, jamais sur votre dépôt ou vos frais."
+              title="Sans surcoût pour vous"
+              body="Les frais appliqués sont ceux de la grille publique de la plateforme. La commission ou la prime de parrainage est versée par la plateforme : elle n'est pas prélevée sur votre dépôt."
             />
             <BenefitCard
               Icon={Eye}
@@ -490,7 +498,7 @@ export default function TransparencePage() {
             <Sparkles className="h-6 w-6 text-primary-glow shrink-0 mt-1" />
             <div>
               <h2 className="text-2xl font-bold text-fg">
-                Conformité loi Influenceurs (juin 2023)
+                Loi Influenceurs (n° 2023-451 du 9 juin 2023)
               </h2>
               <p className="mt-3 text-sm sm:text-base text-fg/85 leading-relaxed">
                 {INFLUENCER_LAW_DISCLAIMER}
@@ -523,8 +531,8 @@ export default function TransparencePage() {
             <MicaCountdown variant="card" />
           </div>
           <p className="mt-4 text-xs text-muted">
-            Les statuts MiCA affichés sur Cryptoreflex sont vérifiés
-            chaque mois sur les{" "}
+            Les statuts MiCA affichés sur Cryptoreflex sont vérifiés,
+            avec la date de chaque vérification, sur les{" "}
             <a
               href="https://www.amf-france.org/fr/espace-epargnants/proteger-son-epargne/listes-blanches-autorisations"
               target="_blank"
@@ -562,8 +570,9 @@ export default function TransparencePage() {
                 <li>
                   de la <strong>loi n°2023-451 du 9 juin 2023</strong> visant
                   à encadrer l'influence commerciale (« loi Influenceurs »),
-                  en particulier l'obligation d'identification claire et
-                  apparente du caractère commercial de toute communication ;
+                  en particulier son article 5-2 : l'intention commerciale doit
+                  être indiquée par une mention claire, lisible et compréhensible
+                  (version en vigueur relue sur Légifrance le 6 octobre 2026) ;
                 </li>
                 <li>
                   de l'<strong>article 20 de la loi n°2004-575 du 21 juin 2004</strong>
@@ -584,8 +593,9 @@ export default function TransparencePage() {
                 >
                   {BRAND.email}
                 </a>
-                . Correction sous 7 jours ouvrés (engagement personnel — pas
-                d&apos;équipe légale dédiée, juste Kevin solo).
+                . Réponse sous {DELAI_REPONSE}&nbsp;; si la mention est confirmée manquante ou inexacte, elle est corrigée
+                dans le même délai et inscrite au journal des corrections (pas d&apos;équipe légale : Kevin Voisin
+                édite seul le site).
               </p>
             </div>
           </div>

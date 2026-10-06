@@ -14,7 +14,13 @@ import {
   getListicle,
   type Listicle,
 } from "@/lib/listicles";
-import type { Platform } from "@/lib/platforms";
+import { purchaseCostText, simpleCost1000, type Platform } from "@/lib/platforms";
+
+/* Passe finale (06/10/2026) : la puce affichait « Instant : {instantBuy} % » (Coinbase 3,99 %), un taux que la page
+   d'aide de Coinbase relevée le 05/10/2026 ne publie pas. Elle affiche le coût relevé de l'achat simple (fees.cost). */
+function simpleBuyText(p: Platform): string {
+  return purchaseCostText(simpleCost1000(p));
+}
 import type { AnyCrypto } from "@/lib/cryptos";
 import { BRAND } from "@/lib/brand";
 import StructuredData from "@/components/StructuredData";
@@ -260,7 +266,7 @@ function PlatformItem({
             </li>
             <li className="flex items-center gap-1.5">
               <Sparkles className="h-3.5 w-3.5 text-accent-cyan shrink-0" />
-              Spot taker : {fmtNb(platform.fees.spotTaker)}% · Instant : {fmtNb(platform.fees.instantBuy)}%
+              Spot taker : {fmtNb(platform.fees.spotTaker)}% · Achat simple de 1 000 € : {simpleBuyText(platform)}
             </li>
           </ul>
 

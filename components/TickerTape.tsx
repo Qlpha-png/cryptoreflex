@@ -6,6 +6,8 @@ import { formatUsd, formatCompactUsd } from "@/lib/coingecko";
 import CryptoLogo from "@/components/ui/CryptoLogo";
 import { useLivePrices } from "@/lib/hooks/useLivePrices";
 import { fmtFr } from "@/lib/format-fr";
+import FearGreedSource from "@/components/FearGreedSource";
+import { priceSourceLabel, type MarketSource } from "@/components/home/market-source";
 
 /**
  * TickerTape — bandeau marché "terminal" fin (DA Obsidian, sprint 1b).
@@ -46,9 +48,11 @@ interface Props {
   coins: TickerCoin[];
   globalMetrics: TickerGlobals | null;
   fearGreed: { value: number; label: string } | null;
+  /** Source réelle des cours au chargement (components/home/market-source.ts) : attribution affichée dans le bandeau. */
+  priceSource?: MarketSource | null;
 }
 
-export default function TickerTape({ coins, globalMetrics, fearGreed }: Props) {
+export default function TickerTape({ coins, globalMetrics, fearGreed, priceSource = null }: Props) {
   const [list, setList] = useState<TickerCoin[]>(coins);
   const [paused, setPaused] = useState(false);
   const { prices: live } = useLivePrices(coins.map((c) => c.id));
@@ -66,40 +70,66 @@ export default function TickerTape({ coins, globalMetrics, fearGreed }: Props) {
   }, [live]);
 
   // Une "cellule" métrique globale intercalée entre les blocs de coins.
-  const globalCells: React.ReactNode[] = [];
-  if (globalMetrics) {
-    globalCells.push(
-      <TapeCell key="mcap" label="MCap globale">
-        <span className="num-data text-fg">{formatCompactUsd(globalMetrics.mcapUsd)}</span>
-        <Delta value={globalMetrics.mcapChange24h} />
-      </TapeCell>,
-      <TapeCell key="dom" label="Dominance BTC">
-        <span className="num-data text-ice-fg">
-          {fmtFr(globalMetrics.btcDominance, 1)}%
-        </span>
-      </TapeCell>,
-    );
-  }
-  if (fearGreed) {
-    globalCells.push(
-      <TapeCell key="fg" label="Fear & Greed">
-        <span
-          className={`num-data ${
-            fearGreed.value >= 55
-              ? "text-success-fg"
-              : fearGreed.value <= 45
-                ? "text-danger-fg"
-                : "text-fg"
-          }`}
-        >
-          {fearGreed.value}
-        </span>
-        <span className="text-muted">· {fearGreed.label}</span>
-      </TapeCell>,
-    );
-  }
+  // 06/10/2026 : `dup` = copie décorative (aria-hidden) de la piste : ses liens d'attribution ne prennent pas le focus.
+  const renderGlobalCells = (dup: boolean): React.ReactNode[] => {
+    const globalCells: React.ReactNode[] = [];
+    const priceLabel = priceSourceLabel(priceSource);
+    if (globalMetrics) {
+      globalCells.push(
+        <TapeCell key="mcap" label="MCap globale">
+          <span className="num-data text-fg">{formatCompactUsd(globalMetrics.mcapUsd)}</span>
+          <Delta value={globalMetrics.mcapChange24h} />
+        </TapeCell>,
+        <TapeCell key="dom" label="Dominance BTC">
+          <span className="num-data text-ice-fg">
+            {fmtFr(globalMetrics.btcDominance, 1)}%
+          </span>
+        </TapeCell>,
+      );
+    }
+    if (fearGreed) {
+      globalCells.push(
+        <TapeCell key="fg" label="Fear & Greed">
+          <span
+            className={`num-data ${
+              fearGreed.value >= 55
+                ? "text-success-fg"
+                : fearGreed.value <= 45
+                  ? "text-danger-fg"
+                  : "text-fg"
+            }`}
+          >
+            {fearGreed.value}
+          </span>
+          <span className="text-muted">· {fearGreed.label}</span>
+          {/* Attribution collée à la donnée (conditions d'alternative.me, 06/10/2026). */}
+          <FearGreedSource className="text-muted" focusable={!dup} />
+        </TapeCell>,
+      );
+    }
+    if (priceLabel) {
+      // Attribution des cours (CoinGecko quand il a servi ; sinon la source de secours, dite telle quelle).
+      globalCells.push(
+        <TapeCell key="src" label={priceLabel.text}>
+          {priceLabel.link && (
+            <a
+              href={priceLabel.link.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              tabIndex={dup ? -1 : undefined}
+              className="text-muted underline underline-offset-2 hover:text-fg"
+            >
+              {priceLabel.link.label}
+            </a>
+          )}
+          {priceLabel.note && <span className="text-muted">{priceLabel.note}</span>}
+        </TapeCell>,
+      );
+    }
+    return globalCells;
+  };
 
-  const track = (
+  const renderTrack = (dup: boolean) => (
     <>
       {list.map((coin) => {
         const up = coin.change24h >= 0;
@@ -130,7 +160,7 @@ export default function TickerTape({ coins, globalMetrics, fearGreed }: Props) {
           </div>
         );
       })}
-      {globalCells}
+      {renderGlobalCells(dup)}
     </>
   );
 
@@ -150,8 +180,8 @@ export default function TickerTape({ coins, globalMetrics, fearGreed }: Props) {
         } group-hover/tape:[animation-play-state:paused] group-focus-within/tape:[animation-play-state:paused]`}
       >
         {/* Piste dupliquée pour la boucle infinie (translateX -50%) */}
-        {track}
-        {track && <div aria-hidden="true" className="flex items-center">{track}</div>}
+        {renderTrack(false)}
+        <div aria-hidden="true" className="flex items-center">{renderTrack(true)}</div>
       </div>
 
       <div className="pointer-events-none absolute inset-y-0 left-0 w-16 bg-gradient-to-r from-background to-transparent" />

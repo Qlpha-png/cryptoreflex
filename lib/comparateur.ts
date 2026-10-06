@@ -102,7 +102,7 @@ export function rowCost(r: Row, amount: Amount, goal: Goal): { fee: number | nul
 }
 
 /** groupe de classement : 0 coût publié (exact ou au plus), 1 marge non publiée en plus, 2 coût non publié, 3 pas de carte */
-const group = (c: { fee: number | null; kind: CostKind } | null) => (!c ? 3 : c.fee == null ? 2 : c.kind === "partiel" ? 1 : 0);
+const group = (c: { fee: number | null; kind: CostKind } | null) => (!c ? 3 : c.fee == null ? 2 : c.kind === "partiel" || c.kind === "max-partiel" ? 1 : 0);
 
 /**
  * Tri et filtre selon l'objectif :
@@ -132,5 +132,5 @@ export const euros = (n: number) => `${n.toLocaleString("fr-FR", { minimumFracti
 /** Libellé d'un coût : « 2,50 € » ; « au plus 2,50 € » ; « 1,00 € + marge non publiée » ; « Non publié ». */
 export function costLabel(c: { fee: number | null; kind: CostKind }): { main: string; prefix: string | null; suffix: string | null } {
   if (c.fee == null) return { main: "Non publié", prefix: null, suffix: null };
-  return { main: euros(c.fee), prefix: c.kind === "max" ? "au plus" : null, suffix: c.kind === "partiel" ? "+ marge non publiée" : null };
+  return { main: euros(c.fee), prefix: c.kind === "max" || c.kind === "max-partiel" ? "au plus" : null, suffix: c.kind === "partiel" || c.kind === "max-partiel" ? "+ marge non publiée" : null };
 }

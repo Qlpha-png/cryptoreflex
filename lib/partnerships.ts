@@ -56,14 +56,14 @@ export const PARTNERSHIPS: Record<string, PartnershipMeta> = {
   // === CODES DE PARRAINAGE PERSONNELS (rémunèrent Kevin Voisin, pas l'éditeur) ===
   bitpanda: {
     revenue:
-      "Code parrainage personnel — Tell-a-Friend Bitpanda (10 € au parrain et au filleul)",
+      "Code parrainage personnel — programme Tell-a-Friend de Bitpanda (prime fixée par les conditions du programme)",
     since: "2026-04-25",
     status: "live",
     kind: "referral",
   },
   "trade-republic": {
     revenue:
-      "Code parrainage personnel — Programme in-app Trade Republic (15 € au parrain + 200 € d'actions au filleul)",
+      "Code parrainage personnel — programme de parrainage de Trade Republic, dans l'application (prime fixée par les conditions du programme)",
     since: "2026-04-25",
     status: "live",
     kind: "referral",

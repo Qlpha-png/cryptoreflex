@@ -294,7 +294,10 @@ export default function NewsletterCapture() {
                     Le « +250 inscrits cette semaine » écrit en dur a été retiré (audit 03/10/2026). */}
                 <span className="inline-flex items-center gap-1">
                   <Lock className="h-3 w-3 text-emerald-400" strokeWidth={2.5} aria-hidden="true" focusable="false" />
-                  RGPD · CNIL conforme
+                  {/* 06/10/2026 : « RGPD · CNIL conforme » retiré (conformité auto-déclarée, sans justificatif). */}
+                  <a href="/confidentialite" className="underline underline-offset-2 hover:text-fg">
+                    Vos données : politique de confidentialité
+                  </a>
                 </span>
                 <span aria-hidden="true">·</span>
                 <span className="inline-flex items-center gap-1">

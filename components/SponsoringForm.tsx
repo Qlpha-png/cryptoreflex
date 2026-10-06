@@ -6,6 +6,7 @@ import Link from "next/link";
 import { submitSponsoring, type FormResult } from "@/lib/partnership-forms";
 import { BRAND } from "@/lib/brand";
 import { SPONSORING_OFFERS, sponsoringOfferLabel } from "@/lib/sponsoring-offers";
+import { DELAI_REPONSE } from "@/lib/engagements";
 
 // 06/10/2026 : mêmes offres et mêmes prix que la page /sponsoring (source unique lib/sponsoring-offers.ts) ;
 // plus de « Sponsor newsletter » (aucune édition envoyée), ni de pack / « display » jamais proposés sur la page.
@@ -44,7 +45,7 @@ export default function SponsoringForm() {
         <CheckCircle2 className="h-10 w-10 text-success mx-auto" aria-hidden="true" />
         <h3 className="mt-3 text-xl font-bold text-white">Demande envoyée</h3>
         <p className="mt-2 text-sm text-white/75">
-          Merci ! Le fondateur vous répond personnellement sous 5 jours ouvrés
+          Merci ! Le fondateur vous répond personnellement sous {DELAI_REPONSE}
           avec un devis détaillé et un planning de publication.
         </p>
         <button
@@ -193,7 +194,7 @@ export default function SponsoringForm() {
           />
           <label htmlFor="sp-consent" className="text-xs text-white/70 leading-relaxed">
             J&apos;accepte que les informations soumises soient transmises à
-            l&apos;équipe partenariats de {BRAND.name} dans le seul but d&apos;étudier
+            Kevin Voisin, éditeur de {BRAND.name}, dans le seul but d&apos;étudier
             cette demande commerciale. Conservation 24 mois max. Droits RGPD via{" "}
             <Link href="/confidentialite" className="text-primary-soft underline hover:text-primary">
               notre politique

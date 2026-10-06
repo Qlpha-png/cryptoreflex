@@ -219,7 +219,7 @@ export default function GlossaireCryptoPage() {
             <p className="mt-2 text-sm text-muted max-w-xl mx-auto">
               Le vocabulaire crypto évolue chaque semaine. Si un terme est
               absent ou si une définition mérite une mise à jour, faites-nous
-              signe — nous publions chaque ajout sous 48 h.
+              signe : nous l'ajoutons après vérification.
             </p>
             <Link
               href="/contact"

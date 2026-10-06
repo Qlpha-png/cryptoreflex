@@ -36,11 +36,15 @@ import {
 } from "@/lib/schema";
 import { BRAND } from "@/lib/brand";
 import { withHreflang } from "@/lib/seo-alternates";
+import { PAGE_PUBLISHED, PAGE_UPDATED, formatDateFr } from "@/lib/engagements";
+import { DELAI_REPONSE } from "@/lib/engagements";
 
 const PAGE_PATH = "/charte";
 const PAGE_URL = `${BRAND.url}${PAGE_PATH}`;
-const PUBLISHED_DATE = "2026-05-07";
-const LAST_UPDATED = "2026-05-07";
+// 06/10/2026 : la page affichait « Mise à jour : 7 mai 2026 » alors que son contenu avait changé depuis
+// (dernière modification réelle : 06/10/2026). Dates centralisées dans lib/engagements.ts.
+const PUBLISHED_DATE = PAGE_PUBLISHED["/charte"];
+const LAST_UPDATED = PAGE_UPDATED["/charte"];
 
 export const metadata: Metadata = {
   // FIX 2026-05-09 : retiré "— Cryptoreflex" de metadata.title pour
@@ -75,9 +79,9 @@ const jsonLd: JsonLd = graphSchema([
     slug: "charte",
     title: "Charte éthique éditoriale Cryptoreflex",
     description:
-      "Engagements éditoriaux publics : pédagogie neutre, pas de conseils financiers, transparence totale sur les revenus, sources publiques.",
+      "Engagements éditoriaux publics : pédagogie neutre, pas de conseils financiers, liste publique des liens rémunérés, sources publiques.",
     excerpt:
-      "Pédagogie neutre, sources publiques, séparation stricte information / conseil, transparence totale.",
+      "Pédagogie neutre, sources publiques, séparation stricte information / conseil, liens rémunérés signalés.",
     category: "Transparence éditoriale",
     tags: [
       "charte",
@@ -107,7 +111,7 @@ const WE_DO: Array<{ title: string; detail: string }> = [
   {
     title: "On publie une méthodologie de scoring publique",
     detail:
-      "Les notes des plateformes sont calculées via 6 critères pondérés, documentés sur /methodologie, mis à jour mensuellement. Les datasets sont sous licence CC-BY 4.0, réutilisables via /api-publique.",
+      "Les notes des plateformes sont calculées via 6 critères pondérés, documentés sur /methodologie, avec la date des derniers relevés. Les datasets sont sous licence CC-BY 4.0, réutilisables via /api-publique.",
   },
   {
     title: "On déclare TOUS les liens d'affiliation",
@@ -118,7 +122,9 @@ const WE_DO: Array<{ title: string; detail: string }> = [
   {
     title: "On corrige nos erreurs publiquement",
     detail:
-      "Toute erreur factuelle signalée est corrigée sous 48 h, avec une mention en bas d'article (« Corrigé le {date} : {nature de la correction} »). Pas de correction silencieuse. Vous pouvez nous écrire à contact@cryptoreflex.fr.",
+      // 06/10/2026 : le gabarit « {date} » s'affichait tel quel ; chaque correction est désormais inscrite dans
+      // data/corrections.json et listée sur /corrections. Délai unique (décision D4 de Kev) : lib/engagements.ts, DELAI_REPONSE.
+      `Réponse à chaque signalement sous ${DELAI_REPONSE}. Toute erreur factuelle confirmée est corrigée dans le même délai, avec une mention « Corrigé le [date] : [nature de la correction] » en bas de l'article et une ligne dans le journal public des corrections (/corrections). Pas de correction silencieuse. Vous pouvez nous écrire à contact@cryptoreflex.fr.`,
   },
   {
     title: "On garde le contrôle éditorial total",
@@ -128,7 +134,7 @@ const WE_DO: Array<{ title: string; detail: string }> = [
   {
     title: "On vérifie les claims réglementaires",
     detail:
-      "Agrément MiCA, autorité et accès à la France → vérifiés sur les registres officiels (ESMA, listes blanches de l'AMF) avant publication. Audit complet rejoué chaque trimestre.",
+      "Agrément MiCA, autorité et accès à la France → vérifiés sur les registres officiels (ESMA, listes blanches de l'AMF) avant publication ; la date de vérification est affichée sur chaque fiche.",
   },
 ];
 
@@ -146,7 +152,8 @@ const WE_DONT: Array<{ title: string; detail: string }> = [
   {
     title: "On ne fait pas de signaux de trading",
     detail:
-      "Pas de canal Telegram « entrée long BTC 95k $ », pas de groupe payant « pump détecté », pas d'alerte d'achat/vente. Si vous cherchez ça, on n'est pas le bon site (et statistiquement, ces produits font perdre de l'argent à 95 % de leurs abonnés).",
+      // 06/10/2026 : « ces produits font perdre de l'argent à 95 % de leurs abonnés » retiré (statistique sans source).
+      "Pas de canal Telegram « entrée long BTC 95k $ », pas de groupe payant « pump détecté », pas d'alerte d'achat/vente. Si vous cherchez ça, on n'est pas le bon site.",
   },
   {
     title: "On ne relaye pas les coups de pub d'influenceurs",
@@ -162,7 +169,8 @@ const WE_DONT: Array<{ title: string; detail: string }> = [
   {
     title: "On n'accepte pas d'argent contre une bonne note",
     detail:
-      "Plusieurs plateformes nous ont approchés pour « améliorer leur score ». La réponse est non, à chaque fois. Notre score est calculé via la méthodologie publique, pas négociable. Si vous voyez un site crypto FR qui surnote tout : fuyez aussi.",
+      // 06/10/2026 : phrase sur des plateformes qui auraient demandé à « améliorer leur score » retirée (aucune trace écrite produite).
+      "Aucune note ne se vend ni ne se négocie. Si vous voyez un site crypto FR qui surnote tout : fuyez aussi.",
   },
 ];
 
@@ -202,18 +210,8 @@ export default function ChartePage() {
               ça. Ce que vous lisez ci-dessous est notre contrat moral avec vous.
             </p>
             <p className="mt-3 text-xs text-muted">
-              Publié le{" "}
-              {new Date(PUBLISHED_DATE).toLocaleDateString("fr-FR", {
-                day: "numeric",
-                month: "long",
-                year: "numeric",
-              })}
-              . Mise à jour : {new Date(LAST_UPDATED).toLocaleDateString("fr-FR", {
-                day: "numeric",
-                month: "long",
-                year: "numeric",
-              })}
-              . Révision annuelle minimum, ou à chaque changement réglementaire majeur.
+              Publié le {formatDateFr(PUBLISHED_DATE)}. Mise à jour : {formatDateFr(LAST_UPDATED)}.
+              Révision annuelle minimum, ou à chaque changement réglementaire majeur.
             </p>
           </header>
 
@@ -290,11 +288,13 @@ export default function ChartePage() {
               Notre statut juridique
             </h2>
             <p className="mt-4 text-sm text-fg/80 leading-relaxed">
-              {BRAND.name} est un <strong>éditeur de presse en ligne pédagogique</strong>{" "}
+              {/* 06/10/2026 : « éditeur de presse en ligne » retiré (statut non justifié). */}
+              {BRAND.name} est un <strong>éditeur de site web pédagogique</strong>{" "}
               indépendant, géré par Kevin Voisin (entrepreneur individuel
-              français). Le site n&apos;est :
+              français), seul rédacteur du site. Le site n&apos;est :
             </p>
             <ul className="mt-4 space-y-2 text-sm text-fg/80">
+              {/* 06/10/2026 : doublon « Pas CASP » fusionné (la 2e ligne citait aussi un « article 60 MiCA » hors sujet). */}
               <li className="flex gap-2">
                 <XCircle className="h-4 w-4 text-accent-rose shrink-0 mt-0.5" />
                 <span>
@@ -302,14 +302,6 @@ export default function ChartePage() {
                   crypto-actifs agréé MiCA, qui a remplacé le PSAN le 1er juillet
                   2026) — on ne reçoit, ne conserve, ne
                   transmet aucun ordre, aucun fonds.
-                </span>
-              </li>
-              <li className="flex gap-2">
-                <XCircle className="h-4 w-4 text-accent-rose shrink-0 mt-0.5" />
-                <span>
-                  <strong>Pas CASP</strong> (Crypto-Asset Service Provider sous
-                  MiCA) — même logique, on ne fournit aucun service crypto au
-                  sens de l&apos;article 60 MiCA.
                 </span>
               </li>
               <li className="flex gap-2">
@@ -348,14 +340,31 @@ export default function ChartePage() {
                 </span>
               </li>
             </ul>
+            {/* 06/10/2026 : « article 6 : interdiction de promouvoir des produits crypto risqués » était faux.
+                Version en vigueur relue sur Légifrance le 06/10/2026 (JORFTEXT000047663185) : art. 4, V, 4°
+                (crypto-actifs, modifié par la loi n° 2025-391 du 30 avril 2025) ; art. 5-2 (mentions
+                « publicité » ou « collaboration commerciale », ordonnance n° 2024-978 du 6 novembre 2024) ;
+                l'art. 6 vise la responsabilité des influenceurs qui vendent des produits. */}
             <p className="mt-4 text-sm text-fg/80 leading-relaxed">
-              Notre activité est encadrée par la{" "}
-              <strong>loi du 9 juin 2023 sur les influenceurs commerciaux</strong>{" "}
-              (article 5 : transparence des partenariats, article 6 : interdiction
-              de promouvoir des produits crypto risqués sans avertissement légal
-              clair) et le{" "}
-              <strong>Règlement UE 2023/1114 (MiCA)</strong> qui définit ce
-              qu&apos;est ou n&apos;est PAS un service crypto.
+              Nous appliquons la{" "}
+              <a
+                href="https://www.legifrance.gouv.fr/loda/id/JORFTEXT000047663185"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-primary-soft underline hover:text-primary"
+              >
+                loi n° 2023-451 du 9 juin 2023
+              </a>{" "}
+              visant à encadrer l&apos;influence commerciale et à lutter contre les
+              dérives des influenceurs sur les réseaux sociaux&nbsp;: son{" "}
+              <strong>article 4</strong> interdit aux influenceurs la promotion des
+              crypto-actifs, sauf exceptions (notamment les services d&apos;un
+              annonceur agréé ou autorisé au titre de MiCA)&nbsp;; son{" "}
+              <strong>article 5-2</strong> prévoit que l&apos;intention commerciale
+              soit indiquée, par exemple par la mention «&nbsp;publicité&nbsp;» ou
+              «&nbsp;collaboration commerciale&nbsp;». Le{" "}
+              <strong>règlement (UE) 2023/1114 (MiCA)</strong> définit ce
+              qu&apos;est ou n&apos;est pas un service sur crypto-actifs.
             </p>
           </section>
 
@@ -386,18 +395,23 @@ export default function ChartePage() {
                 avec l&apos;URL concernée + la nature de l&apos;erreur factuelle.
               </li>
               <li>
-                On vérifie sous 48 h. Si l&apos;erreur est confirmée, on la
+                On vérifie le signalement. Si l&apos;erreur est confirmée, on la
                 corrige dans la foulée.
               </li>
+              {/* 06/10/2026 : l'exemple affichait la date du jour (new Date()) et ressemblait à une vraie correction. */}
               <li>
                 Une mention apparaît en bas de l&apos;article : « <em>Corrigé le
-                {" "}{new Date().toLocaleDateString("fr-FR")} : [nature de la
-                correction]</em> ». Pas de retouche silencieuse, jamais.
+                [date] : [nature de la correction]</em> », et la correction est
+                inscrite dans le{" "}
+                <Link href="/corrections" className="text-primary-soft underline hover:text-primary">
+                  journal des corrections
+                </Link>{" "}
+                (date, page, avant, après). Aucune correction de fait n&apos;est silencieuse.
               </li>
               <li>
-                Si la correction est mineure (typo, lien cassé), on corrige
-                discrètement. Si elle est substantielle (chiffre, statut MiCA,
-                interprétation fiscale), on met une mention voyante.
+                Une coquille ou un lien cassé est corrigé sans entrée au journal.
+                Toute correction de fait (chiffre, statut MiCA, interprétation
+                fiscale) est inscrite au journal et signalée en bas de l&apos;article.
                 {/* 06/10/2026 : « follow-up dans la newsletter du vendredi suivant » retiré (aucune édition envoyée). */}
               </li>
             </ol>
@@ -447,6 +461,23 @@ export default function ChartePage() {
                 </p>
                 <span className="mt-2 inline-flex items-center gap-1 text-xs text-primary-soft group-hover:text-primary">
                   Voir la liste
+                  <ArrowRight className="h-3 w-3" aria-hidden="true" />
+                </span>
+              </Link>
+              <Link
+                href="/corrections"
+                className="group rounded-xl border border-border bg-elevated/40 p-4 hover:border-primary/40 hover:bg-elevated transition-colors"
+              >
+                <div className="flex items-center gap-2">
+                  <AlertTriangle className="h-4 w-4 text-primary-soft" />
+                  <h3 className="font-semibold text-fg">Journal des corrections</h3>
+                </div>
+                <p className="mt-1 text-xs text-fg/70">
+                  Chaque erreur corrigée : date, page, texte avant et après,
+                  nature de l&apos;erreur.
+                </p>
+                <span className="mt-2 inline-flex items-center gap-1 text-xs text-primary-soft group-hover:text-primary">
+                  Voir le journal
                   <ArrowRight className="h-3 w-3" aria-hidden="true" />
                 </span>
               </Link>

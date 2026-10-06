@@ -10,9 +10,15 @@ import {
   type JsonLd,
 } from "@/lib/schema";
 import { withHreflang } from "@/lib/seo-alternates";
+import { PAGE_PUBLISHED, PAGE_UPDATED, formatDateFr } from "@/lib/engagements";
+import { DELAI_REPONSE } from "@/lib/engagements";
+import { verificationWindow } from "@/components/home/HomeTrustLine";
+import { getExchangePlatforms } from "@/lib/platforms";
 
-const PUBLISHED_DATE = "2026-04-25";
-const LAST_UPDATED = "2026-05-06";
+// 06/10/2026 : la page affichait « Mise à jour : 6 mai 2026 » alors que son contenu avait changé depuis
+// (dernière modification réelle : 06/10/2026). Dates centralisées dans lib/engagements.ts.
+const PUBLISHED_DATE = PAGE_PUBLISHED["/methodologie"];
+const LAST_UPDATED = PAGE_UPDATED["/methodologie"];
 
 export const metadata: Metadata = {
   title: "Notre méthodologie",
@@ -21,13 +27,17 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Méthodologie publique Cryptoreflex",
     description:
-      "6 critères pondérés, mise à jour mensuelle, sources publiques. Tout est réutilisable sous licence CC-BY 4.0 via /api-publique.",
+      "6 critères pondérés, dates des relevés publiées, sources publiques. Tout est réutilisable sous licence CC-BY 4.0 via /api-publique.",
     url: `${BRAND.url}/methodologie`,
     type: "article",
   },
 };
 
 const baseUrl = BRAND.url;
+
+/** Plages réelles des relevés (plateformes d'échange) : « entre le 2 et le 5 octobre 2026 », « le 5 octobre 2026 ». */
+const MICA_WINDOW = verificationWindow(getExchangePlatforms().map((p) => p.mica?.lastVerified));
+const FEES_WINDOW = verificationWindow(getExchangePlatforms().map((p) => p.fees.verified?.date));
 
 const breadcrumb = breadcrumbSchema([
   { name: "Accueil", url: baseUrl + "/" },
@@ -38,7 +48,7 @@ const article = articleSchema({
   slug: "methodologie",
   title: "Notre méthodologie publique",
   description:
-    "6 critères pondérés (frais 20 %, sécurité 25 %, MiCA 20 %, UX 15 %, support FR 10 %, catalogue 10 %), mise à jour mensuelle, sources publiques. Données réutilisables sous licence CC-BY 4.0.",
+    "6 critères pondérés (frais 20 %, sécurité 25 %, MiCA 20 %, UX 15 %, support FR 10 %, catalogue 10 %), dates des relevés publiées, sources publiques. Données réutilisables sous licence CC-BY 4.0.",
   date: PUBLISHED_DATE,
   dateModified: LAST_UPDATED,
   category: "Transparence éditoriale",
@@ -60,7 +70,7 @@ const CRITERIA = [
   { name: "Frais réels", weight: 20, what: "Frais maker/taker spot, achat instantané, retrait fiat SEPA, retrait crypto, spread typique. Calcul d'un coût total par transaction type pour 1000€." },
   { name: "Sécurité", weight: 25, what: "Cold storage %, assurance des fonds, MFA obligatoire, audits de sécurité tiers, historique d'incidents et de remboursements." },
   { name: "Conformité MiCA", weight: 20, what: "Agrément MiCA (CASP) et accès à la France, autorité qui l'a délivré, ancienneté de l'agrément, restrictions imposées." },
-  { name: "Expérience utilisateur", weight: 15, what: "Onboarding, ergonomie de l'app, qualité des notes Trustpilot, App Store, Play Store." },
+  { name: "Expérience utilisateur", weight: 15, what: "Inscription, ergonomie de l'application, parcours d'achat (appréciation éditoriale)." },
   { name: "Support en français", weight: 10, what: "Chat et téléphone en français, délai de réponse annoncé, qualité documentaire FR. Canaux relevés et datés sur la page officielle d'assistance de chaque plateforme ; une valeur non vérifiée est affichée comme telle." },
   { name: "Catalogue & services", weight: 10, what: "Nombre de cryptos, staking disponible, méthodes de paiement, plans d'épargne, services additionnels (carte, lending)." },
 ];
@@ -71,22 +81,17 @@ export default function MethodologiePage() {
       <StructuredData id="methodologie-jsonld" data={jsonLd} />
       <h1 className="text-4xl font-extrabold tracking-tight text-fg">Notre méthodologie</h1>
       <p className="text-sm text-muted">
-        Comment {BRAND.name} évalue les plateformes crypto. Mise à jour :{" "}
-        {new Date(LAST_UPDATED).toLocaleDateString("fr-FR", {
-          day: "numeric",
-          month: "long",
-          year: "numeric",
-        })}
-        .
+        Comment {BRAND.name} évalue les plateformes crypto. Mise à jour : {formatDateFr(LAST_UPDATED)}.
       </p>
 
+      {/* 06/10/2026 : « inspirée des pratiques de comparateurs indépendants type UFC-Que Choisir » retiré
+          (Que Choisir achète et teste en laboratoire ; Cryptoreflex fait de la recherche documentaire). */}
       <p className="mt-8 text-fg/85 leading-relaxed">
         Pour permettre aux lecteurs de comparer objectivement les plateformes crypto, le fondateur
         Kevin Voisin a construit une méthodologie de scoring publique, identique pour toutes les
-        plateformes (qu&apos;elles soient affiliées ou non avec {BRAND.name}). Elle est inspirée
-        des pratiques de comparateurs indépendants type UFC-Que Choisir, adaptée au marché crypto
-        français. Le projet est solo et indépendant — la méthodologie est documentée pour qu&apos;un
-        tiers puisse vérifier ou contester chaque note.
+        plateformes (qu&apos;elles soient affiliées ou non avec {BRAND.name}), adaptée au marché crypto
+        français. Le projet est solo et indépendant : Kevin Voisin en est le seul rédacteur. La
+        méthodologie est documentée pour qu&apos;un tiers puisse vérifier ou contester chaque note.
       </p>
 
       <h2 className="mt-12 text-2xl font-bold text-fg">Les 6 critères et leurs pondérations</h2>
@@ -117,18 +122,28 @@ export default function MethodologiePage() {
       <p className="text-fg/85 leading-relaxed">
         Exemple de calcul (modèle générique) : si une plateforme obtient
         Frais 3,0/5 (×20 %) + Sécurité 4,7/5 (×25 %) + MiCA 4,9/5 (×20 %) + UX 4,6/5 (×15 %) + Support 4,2/5 (×10 %) + Catalogue 5,0/5 (×10 %), son score consolidé est <strong>4,4/5</strong>.
-        Le calcul est public, déterministe et recalculé automatiquement
-        (cf. <code className="text-primary-soft">scripts/compute-platform-scores.mjs</code>) à chaque mise à jour
-        d&apos;une sous-note. Aucun score ne dérive jamais de la formule.
+        La formule est publique et déterministe ; le script{" "}
+        <code className="text-primary-soft">scripts/compute-platform-scores.mjs</code> l&apos;applique.
       </p>
+      {/* 06/10/2026 (audit confiance, G1 et I7) : « Aucun score ne dérive jamais de la formule » et « Chaque fiche
+          plateforme indique […] la source de chaque sous-note » étaient contredits par les données publiées
+          (data/platforms.json : ajustements décrits dans _meta.scoringNote ; aucune sous-note n'a de source).
+          Le choix de la règle définitive (publier l'ajustement ou revenir à la formule pure) appartient à Kev. */}
       <p className="text-sm text-muted leading-relaxed">
-        Note de transparence (avril 2026) : le site étant récent, certaines sous-notes restent en
-        cours de validation. Chaque fiche plateforme indique la date de dernière vérification et
-        la source de chaque sous-note. Si vous repérez une note injustifiée, écrivez à{" "}
+        Note de transparence (6 octobre 2026) : certaines notes publiées s&apos;écartent encore du
+        résultat de cette formule, à la suite d&apos;ajustements de la note de frais et de la note de
+        conformité MiCA faits lors des revérifications des frais et des statuts. Leur mise en cohérence
+        est en cours ; chaque note modifiée sera inscrite au{" "}
+        <Link href="/corrections" className="text-primary-soft hover:underline">
+          journal des corrections
+        </Link>
+        . Les sous-notes n&apos;ont pas encore de source individuelle publiée ; les fiches indiquent
+        les dates des relevés disponibles (frais, statut MiCA). Si vous repérez une note
+        injustifiée, écrivez à{" "}
         <a href={`mailto:${BRAND.email}`} className="text-primary-soft hover:underline">
           {BRAND.email}
-        </a>{" "}
-        — correction sous 7 jours.
+        </a>
+        . Réponse sous {DELAI_REPONSE}&nbsp;; si l&apos;erreur est confirmée, elle est corrigée dans le même délai et inscrite au journal.
       </p>
 
       <h3 className="mt-8 text-xl font-bold text-fg">Comment on calcule le score Catalogue ?</h3>
@@ -146,15 +161,20 @@ export default function MethodologiePage() {
 
       <h2 className="mt-12 text-2xl font-bold text-fg flex items-center gap-2">
         <RefreshCw className="h-6 w-6" />
-        Fréquence de mise à jour
+        Dates des derniers relevés
       </h2>
+      {/* Passe finale (06/10/2026) : « chaque mois », « chaque trimestre », « bonus vérifiés chaque mois » et « refonte
+          annuelle » n'étaient pas tenus. Les dates affichées sont celles des relevés réels (champs lastVerified et
+          fees.verified.date de data/platforms.json), recalculées à chaque build. */}
       <ul className="text-fg/85 leading-relaxed">
-        <li><strong>Statut MiCA</strong> : vérifié <strong>chaque mois</strong> (registre de l&apos;ESMA, listes blanches de l&apos;AMF)</li>
-        <li><strong>Frais</strong> : vérifiés <strong>chaque trimestre</strong></li>
+        <li><strong>Statut MiCA</strong> : relevé {MICA_WINDOW ?? "à une date non renseignée"} sur le registre MiCA de l&apos;ESMA et les listes blanches de l&apos;AMF ; la date est affichée sur chaque fiche</li>
+        <li><strong>Frais</strong> : relevés {FEES_WINDOW ?? "à une date non renseignée"} sur la grille officielle de chaque plateforme ; la date et la source sont affichées sur chaque avis</li>
         <li><strong>Notes Trustpilot</strong> : relevées à la main sur la page Trustpilot de chaque plateforme ; la <strong>date du relevé</strong> est affichée à côté de chaque note</li>
-        <li><strong>Bonus de bienvenue</strong> : vérifiés <strong>chaque mois</strong></li>
-        <li><strong>Refonte complète d'une fiche</strong> : au minimum <strong>1 fois par an</strong></li>
+        <li><strong>Bonus de bienvenue</strong> : aucun relevé daté à ce jour</li>
       </ul>
+      <p className="text-sm text-muted leading-relaxed">
+        Aucune fréquence de mise à jour n&apos;est promise : seules les dates ci-dessus font foi.
+      </p>
 
       <h2 className="mt-12 text-2xl font-bold text-fg flex items-center gap-2">
         <ListChecks className="h-6 w-6" />
@@ -261,7 +281,11 @@ export default function MethodologiePage() {
       <p className="text-fg/85 leading-relaxed">
         Si vous repérez une donnée obsolète, une note injustifiée ou un manque sur une fiche,
         écrivez-nous : <a href={`mailto:${BRAND.email}`} className="text-primary-soft hover:underline">{BRAND.email}</a>.
-        Nous corrigeons sous 7 jours et publions la correction de manière transparente.
+        Réponse sous {DELAI_REPONSE}&nbsp;; si l&apos;erreur est confirmée, nous la corrigeons dans le même délai et publions la correction dans le{" "}
+        <Link href="/corrections" className="text-primary-soft hover:underline">
+          journal des corrections
+        </Link>
+        .
       </p>
     </article>
   );

@@ -165,7 +165,7 @@ export default async function FearGreedPage() {
           />
         ) : (
           <section className="glass rounded-3xl p-6 sm:p-10" aria-label="Jauge Fear & Greed">
-            <FearGreedGauge value={fg.value} classification={fg.classification} />
+            <FearGreedGauge value={fg.value} classification={fg.classification} showSource={false} />
             <p className="mt-4 text-center text-xs text-muted">
               Dernière mise à jour :{" "}
               <time dateTime={fg.timestamp}>

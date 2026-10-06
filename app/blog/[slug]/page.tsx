@@ -13,6 +13,7 @@ import ArticleHero from "@/components/ui/ArticleHero";
 import AuthorCard from "@/components/AuthorCard";
 import { findLessonBySlug, getTrack } from "@/lib/academy-tracks";
 import AmfDisclaimer from "@/components/AmfDisclaimer";
+import CorrectionNotice from "@/components/CorrectionNotice";
 import StructuredData from "@/components/StructuredData";
 import NewsletterInline from "@/components/NewsletterInline";
 import PopularArticles from "@/components/blog/PopularArticles";
@@ -35,6 +36,7 @@ import {
 import {
   authorPersonSchema,
   getAuthorByIdOrDefault,
+  articleAuthorId,
 } from "@/lib/authors";
 import { fitDescription, fitTitle } from "@/lib/seo-text";
 
@@ -66,7 +68,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!article) return { title: "Article introuvable" };
 
   const url = `${BRAND.url}/blog/${article.slug}`;
-  const author = getAuthorByIdOrDefault(article.author);
+  const author = getAuthorByIdOrDefault(articleAuthorId(article.author));
 
   // AUDIT 2026-05-03 — preference metaTitle/metaDescription pour SERP (<60/<155
   // chars) avec fallback titre/description complet pour le rendu page.
@@ -229,7 +231,7 @@ export default async function BlogArticlePage({ params }: Props) {
   const article = await getArticleBySlug(params.slug);
   if (!article) notFound();
 
-  const author = getAuthorByIdOrDefault(article.author);
+  const author = getAuthorByIdOrDefault(articleAuthorId(article.author));
   const related = await getRelatedArticles(article.slug, 3);
 
   // Maillage bidirectionnel : si cet article est une leçon de l'académie, on
@@ -377,7 +379,7 @@ export default async function BlogArticlePage({ params }: Props) {
 
                 <div className="mt-6">
                   <AuthorCard
-                    authorId={article.author}
+                    authorId={articleAuthorId(article.author)}
                     variant="compact"
                     date={article.date}
                     dateModified={article.lastUpdated}
@@ -442,8 +444,12 @@ export default async function BlogArticlePage({ params }: Props) {
                 <AmfDisclaimer variant="comparatif" />
               </div>
 
+              {/* « Corrigé le … » (06/10/2026) : corrections publiées dans data/corrections.json pour ce slug ;
+                  ne rend rien si l'article n'a aucune correction. Avant la signature, comme le promet /charte. */}
+              <CorrectionNotice slug={article.slug} />
+
               {/* Author full */}
-              <AuthorCard authorId={article.author} variant="full" />
+              <AuthorCard authorId={articleAuthorId(article.author)} variant="full" />
 
               {/* Articles similaires */}
               {related.length > 0 && (

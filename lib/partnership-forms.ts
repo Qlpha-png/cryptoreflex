@@ -23,6 +23,7 @@ import { sendEmail } from "@/lib/email/client";
 import { isValidEmail } from "@/lib/newsletter";
 import { createRateLimiter, createRecipientLimiter } from "@/lib/rate-limit";
 import { BRAND } from "@/lib/brand";
+import { DELAI_REPONSE } from "@/lib/engagements";
 
 /* -------------------------------------------------------------------------- */
 /*  Types                                                                     */
@@ -189,7 +190,7 @@ export async function submitSponsoring(formData: FormData): Promise<FormResult> 
     const confirmHtml = `
       <h2>Merci pour votre intérêt</h2>
       <p>${BRAND.name} a bien reçu votre demande de sponsoring.</p>
-      <p>Le fondateur vous répond personnellement <strong>sous 5 jours ouvrés</strong> depuis ${BRAND.partnersEmail} avec :
+      <p>Le fondateur vous répond personnellement <strong>sous ${DELAI_REPONSE}</strong> depuis ${BRAND.partnersEmail} avec :
       un devis détaillé, un calendrier de publication, et la procédure de validation MiCA si l'offre concerne une plateforme.</p>
       <p style="color:#888;font-size:12px">Si vous n'êtes pas à l'origine de cette demande, ignorez simplement cet email.</p>
       <hr>

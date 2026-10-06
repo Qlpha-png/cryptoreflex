@@ -92,6 +92,17 @@ export function resolveAuthorId(idOrName?: unknown): string {
   return byName ? byName.id : DEFAULT_AUTHOR_ID;
 }
 
+/**
+ * D3 (décision de Kev, 06/10/2026) : les articles de fond (content/articles, /blog, /academie) sont tous signés
+ * Kevin Voisin, fondateur et seul rédacteur, quel que soit le champ author historique du frontmatter (« La rédaction
+ * Cryptoreflex », « Équipe éditoriale »…). Les actualités et analyses techniques publiées automatiquement ne portent
+ * pas de fiche auteur (components/AutoPublishedLine.tsx).
+ */
+export const ARTICLE_AUTHOR_ID = DEFAULT_AUTHOR_ID;
+export function articleAuthorId(_frontmatterAuthor?: unknown): string {
+  return ARTICLE_AUTHOR_ID;
+}
+
 export function getAuthorByIdOrDefault(id?: unknown): Author {
   return getAuthorById(resolveAuthorId(id)) as Author;
 }
@@ -130,8 +141,14 @@ export type JsonLd = Record<string, unknown>;
  *  - en standalone sur la page auteur,
  *  - référencé via `{ "@id": ... }` depuis Article / Review.
  */
+/** La signature « Cryptoreflex » n'est pas une personne : elle renvoie à l'organisation (correcteur final, 06/10/2026). */
+const isSiteSignature = (author: Author) => author.id === "redaction-cryptoreflex";
+
 export function authorPersonSchema(author: Author): JsonLd {
   const url = authorUrl(author);
+  if (isSiteSignature(author)) {
+    return { "@context": "https://schema.org", "@type": "Organization", "@id": ORGANIZATION_ID, name: author.name, url, description: author.shortBio };
+  }
   return {
     "@context": "https://schema.org",
     "@type": "Person",
@@ -150,6 +167,7 @@ export function authorPersonSchema(author: Author): JsonLd {
 
 /** Référence courte à un auteur (à inclure dans Article.author, Review.author…). */
 export function authorRef(author: Author): JsonLd {
+  if (isSiteSignature(author)) return { "@type": "Organization", "@id": ORGANIZATION_ID, name: author.name };
   return {
     "@type": "Person",
     "@id": `${authorUrl(author)}#person`,

@@ -15,7 +15,7 @@ import {
 import { ALL_CRYPTOS, getCrypto } from "@/lib/programmatic";
 import { getCryptoBySlug, type AnyCrypto } from "@/lib/cryptos";
 import { getCryptoFiche } from "@/lib/cryptos-db";
-import { getAllPlatforms, isAvailableFr, getPlatformById, type Platform, cardBuyPct } from "@/lib/platforms";
+import { getAllPlatforms, isAvailableFr, getPlatformById, type Platform, cardBuyPct, cardCost1000, cardCostSentence, purchaseCostText } from "@/lib/platforms";
 import { BRAND } from "@/lib/brand";
 import StructuredData from "@/components/StructuredData";
 import AmfDisclaimer from "@/components/AmfDisclaimer";
@@ -115,8 +115,9 @@ const rangeFr = (xs: number[]) => {
   return lo === hi ? pctFr(lo) : `${pctFr(lo).replace(" %", "")} – ${pctFr(hi)}`;
 };
 
-function feesEstimate(p: Platform, amount: number): { instant: number; spot: number } {
-  const instant = (amount * cardBuyPct(p)) / 100;
+function feesEstimate(p: Platform, amount: number): { instant: number | null; spot: number } {
+  const pct = cardBuyPct(p);
+  const instant = pct == null ? null : (amount * pct) / 100;
   const spot = (amount * afterSepaPct(p)) / 100;
   return { instant, spot };
 }
@@ -149,6 +150,7 @@ export default async function AcheterEnFrancePage({ params }: Props) {
 
   const platforms = platformsForCrypto(meta.symbol).slice(0, 5);
   const best = platforms[0];
+  const bestCardPct = best ? cardBuyPct(best) : null;
 
   const breadcrumbs = breadcrumbSchema([
     { name: "Accueil", url: BRAND.url },
@@ -164,7 +166,7 @@ export default async function AcheterEnFrancePage({ params }: Props) {
     {
       question: `Quelles plateformes proposent l'achat de ${meta.name} en France ?`,
       answer: best
-        ? `Dans notre comparatif, ${best.name} ressort avec un score global ${fmtNb(best.scoring.global)}/5 sur la combinaison frais + sécurité + statut MiCA (${best.tagline}). Un achat payé par carte y coûte environ ${pctFr(cardBuyPct(best))}, et ${pctFr(afterSepaPct(best))} après un virement SEPA. Comparez avec les autres options du comparatif selon votre profil — Cryptoreflex ne donne pas de signal d'achat personnalisé.`
+        ? `Dans notre comparatif, ${best.name} ressort avec un score global ${fmtNb(best.scoring.global)}/5 sur la combinaison frais + sécurité + statut MiCA (${best.tagline}). ${bestCardPct == null ? `${cardCostSentence(best)} Après un virement SEPA, un achat y coûte environ ${pctFr(afterSepaPct(best))}.` : `Un achat payé par carte y coûte environ ${pctFr(bestCardPct)}, et ${pctFr(afterSepaPct(best))} après un virement SEPA.`} Comparez avec les autres options du comparatif selon votre profil — Cryptoreflex ne donne pas de signal d'achat personnalisé.`
         : `En France, plusieurs plateformes agréées MiCA proposent ${meta.name} : Coinbase, Bitpanda, Kraken, Bitstack ou Coinhouse. Comparez le coût d'un achat par carte et celui d'un achat après virement, selon votre usage.`,
     },
     {
@@ -177,10 +179,12 @@ export default async function AcheterEnFrancePage({ params }: Props) {
     },
     {
       question: `Achat instantané (CB) ou virement SEPA pour ${meta.symbol} ?`,
-      answer: best
-        ? cardBuyPct(best) > afterSepaPct(best)
-          ? `La carte est instantanée mais plus chère : sur ${best.name}, un achat de 1 000 € coûte ${fmtFr(cardBuyPct(best) * 10, 2)} € par carte contre ${fmtFr(afterSepaPct(best) * 10, 2)} € après un virement SEPA (1 à 24 h). Pour les montants importants, privilégiez le virement.`
-          : `Sur ${best.name}, un achat coûte ${pctFr(cardBuyPct(best))} par carte comme après un virement SEPA : la carte est simplement plus rapide.`
+      answer: best && bestCardPct == null
+        ? `La carte est instantanée mais généralement plus chère qu'un achat après virement SEPA. ${cardCostSentence(best)} Pour les montants importants, privilégiez le virement.`
+        : best && bestCardPct != null
+        ? bestCardPct > afterSepaPct(best)
+          ? `La carte est instantanée mais plus chère : sur ${best.name}, un achat de 1 000 € coûte ${fmtFr(bestCardPct * 10, 2)} € par carte contre ${fmtFr(afterSepaPct(best) * 10, 2)} € après un virement SEPA (1 à 24 h). Pour les montants importants, privilégiez le virement.`
+          : `Sur ${best.name}, un achat coûte ${pctFr(bestCardPct)} par carte comme après un virement SEPA : la carte est simplement plus rapide.`
         : `La carte est instantanée mais généralement plus chère qu'un achat après virement SEPA. Pour les montants importants, privilégiez le virement.`,
     },
     {
@@ -299,7 +303,7 @@ export default async function AcheterEnFrancePage({ params }: Props) {
                           <div>
                             <dt className="text-muted">Achat 1 000 € (CB)</dt>
                             <dd className="mt-1 font-mono font-semibold text-fg">
-                              {fmtFr(fees.instant, 2)} € de frais
+                              {fees.instant == null ? purchaseCostText(cardCost1000(p)) : `${fmtFr(fees.instant, 2)} € de frais`}
                             </dd>
                           </div>
                           <div>
@@ -359,7 +363,7 @@ export default async function AcheterEnFrancePage({ params }: Props) {
                 Icon={CreditCard}
                 title="Carte bancaire (CB)"
                 speed="Instantané"
-                fees={rangeFr(platforms.map(cardBuyPct))}
+                fees={rangeFr(platforms.map(cardBuyPct).filter((x): x is number => x != null))}
                 pros={["Achat en 5 secondes", "Pas besoin d'IBAN configuré"]}
                 cons={["Frais élevés", "Plafond carte journalier"]}
               />

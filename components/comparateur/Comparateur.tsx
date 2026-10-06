@@ -350,5 +350,5 @@ function cell(c: ReturnType<typeof rowCost>): string {
   if (!c) return "Pas de carte";
   if (c.fee == null) return "Non publié";
   const l = costLabel(c);
-  return `${l.prefix ? l.prefix + " " : ""}${l.main}${c.kind === "partiel" ? " + marge" : ""}`;
+  return `${l.prefix ? l.prefix + " " : ""}${l.main}${c.kind === "partiel" || c.kind === "max-partiel" ? " + marge" : ""}`;
 }

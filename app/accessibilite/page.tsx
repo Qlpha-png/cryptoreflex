@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { BRAND } from "@/lib/brand";
 import { withHreflang } from "@/lib/seo-alternates";
+import { DELAI_REPONSE } from "@/lib/engagements";
 
 /**
  * /accessibilite — Déclaration d'accessibilité (RGAA 4.1 + EAA 2025).
@@ -191,7 +192,7 @@ export default function AccessibilitePage() {
           {BRAND.email}
         </a>{" "}
         en précisant la page concernée et la nature du blocage. Nous nous
-        engageons à répondre sous 5 jours ouvrés et à proposer une alternative
+        engageons à répondre sous {DELAI_REPONSE} et à proposer une alternative
         si la correction immédiate n&apos;est pas possible.
       </p>
 

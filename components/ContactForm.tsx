@@ -5,6 +5,7 @@ import { CheckCircle2, AlertCircle, Loader2, Send } from "lucide-react";
 import Link from "next/link";
 import { submitContact, type FormResult } from "@/lib/partnership-forms";
 import { BRAND } from "@/lib/brand";
+import { DELAI_REPONSE } from "@/lib/engagements";
 
 interface ContactFormProps {
   /** Type pré-sélectionné (override). */
@@ -37,8 +38,7 @@ export default function ContactForm({ defaultType = "general" }: ContactFormProp
         <CheckCircle2 className="h-10 w-10 text-success mx-auto" aria-hidden="true" />
         <h3 className="mt-3 text-xl font-bold text-white">Message envoyé</h3>
         <p className="mt-2 text-sm text-white/75">
-          Merci. Nous vous répondons sous 48h ouvrées (réponses presse :
-          généralement plus rapide).
+          Merci. Kevin Voisin vous répond sous {DELAI_REPONSE}.
         </p>
         <button
           type="button"
@@ -139,7 +139,7 @@ export default function ContactForm({ defaultType = "general" }: ContactFormProp
             aria-invalid={result?.ok === false}
             aria-describedby={result?.ok === false ? "ct-form-error" : undefined}
             className="w-full rounded-lg bg-elevated/60 border border-border px-3 py-2.5 text-white placeholder:text-muted focus:outline-none focus-visible:ring-2 focus-visible:ring-primary aria-[invalid=true]:border-danger aria-[invalid=true]:ring-danger"
-            placeholder="Détaillez votre demande, on vous répond dans les 48h ouvrées."
+            placeholder={`Détaillez votre demande : réponse sous ${DELAI_REPONSE}.`}
           />
         </div>
 
@@ -153,8 +153,9 @@ export default function ContactForm({ defaultType = "general" }: ContactFormProp
             className="mt-1 h-4 w-4 rounded border-border bg-elevated/60 text-primary focus-visible:ring-2 focus-visible:ring-primary"
           />
           <label htmlFor="ct-consent" className="text-xs text-white/70 leading-relaxed">
+            {/* 06/10/2026 : « l'équipe Cryptoreflex » était faux (une seule personne). Formulaire propre à /contact. */}
             J&apos;accepte que mon email et mon message soient envoyés à
-            l&apos;équipe {BRAND.name}. Conservation 12 mois max. Suppression sur
+            Kevin Voisin, éditeur de {BRAND.name}. Conservation 12 mois max. Suppression sur
             demande à <span className="text-fg">{BRAND.email}</span>. Voir{" "}
             <Link href="/confidentialite" className="text-primary-soft underline hover:text-primary">
               politique RGPD

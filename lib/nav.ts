@@ -145,6 +145,9 @@ export const NAV_SECTIONS: NavSection[] = [
       { href: "/charte", label: "Charte éditoriale", desc: "Nos engagements" },
       { href: "/newsletter", label: "Newsletter", desc: "L'essentiel de la crypto, sans spam" }, // 06/10/2026 : plus « du matin » (aucun envoi programmé)
       { href: "/soutenir", label: "Soutenir le site", desc: "Contribution libre, tout reste gratuit" },
+      // 06/10/2026 : journal public des corrections (data/corrections.json). Placé après les 6 premiers liens pour ne
+      // rien chasser du pied de page (MAX_LINKS = 6) ; le pied de page l'affiche via FOOTER_LEGAL.
+      { href: "/corrections", label: "Corrections", desc: "Les erreurs corrigées, datées" },
       { href: "/api-publique", label: "API publique", desc: "Nos données, réutilisables" },
       { href: "/contact", label: "Contact", desc: "Une question ? Écrivez-nous" },
     ],
@@ -200,6 +203,7 @@ export const FOOTER_LEGAL: NavLink[] = [
   { href: "/cgu", label: "Conditions d'utilisation" },
   { href: "/accessibilite", label: "Accessibilité" },
   { href: "/transparence", label: "Affiliation" },
+  { href: "/corrections", label: "Corrections" },
   { href: "/sponsoring", label: "Sponsoring" },
   { href: "/ressources-libres", label: "Données libres" },
   { href: "/embeds", label: "Widgets" },

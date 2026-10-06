@@ -16,6 +16,7 @@ import {
 } from "@/lib/schema";
 import { BRAND } from "@/lib/brand";
 import { withHreflang } from "@/lib/seo-alternates";
+import { DELAI_REPONSE } from "@/lib/engagements";
 
 /**
  * /contact — page contact (2 voies : général / partenariats B2B).
@@ -37,12 +38,12 @@ export const metadata: Metadata = {
   // grammaticalement nécessaire — bypass template root `%s | Cryptoreflex`.
   title: { absolute: "Contacter Cryptoreflex — questions et partenariats" },
   description:
-    "Une question, un retour ou une opportunité de partenariat B2B ? Réponse personnelle de Kevin sous 5 jours ouvrés.",
+    `Une question, un retour ou une opportunité de partenariat B2B ? Réponse personnelle de Kevin sous ${DELAI_REPONSE}.`,
   alternates: withHreflang(`${BRAND.url}/contact`),
   openGraph: {
     title: "Contacter Cryptoreflex",
     description:
-      "2 canaux : général et partenariats B2B. Réponse personnelle sous 5 jours ouvrés.",
+      `2 canaux : général et partenariats B2B. Réponse personnelle sous ${DELAI_REPONSE}.`,
     url: `${BRAND.url}/contact`,
     type: "website",
   },
@@ -52,7 +53,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Contacter Cryptoreflex",
     description:
-      "2 canaux : général et partenariats B2B. Réponse personnelle sous 5 jours ouvrés.",
+      `2 canaux : général et partenariats B2B. Réponse personnelle sous ${DELAI_REPONSE}.`,
   },
   robots: { index: true, follow: true },
 };
@@ -157,7 +158,7 @@ export default function ContactPage() {
             </h1>
             <p className="mt-5 text-base sm:text-lg text-fg/75 max-w-2xl">
               Choisissez le canal adapté à votre demande. Réponse personnelle de
-              Kevin (fondateur solo) sous 5 jours ouvrés.
+              Kevin (fondateur solo) sous {DELAI_REPONSE}.
             </p>
           </div>
         </div>
@@ -214,8 +215,9 @@ export default function ContactPage() {
               Ou utilisez le formulaire
             </h2>
             <p className="mt-2 text-fg/70">
+              {/* 06/10/2026 : « à la bonne personne » laissait croire à une équipe. */}
               Sélectionnez le type de demande pour qu&apos;elle arrive directement
-              à la bonne personne.
+              dans la bonne boîte de réception.
             </p>
           </div>
           <ContactForm />

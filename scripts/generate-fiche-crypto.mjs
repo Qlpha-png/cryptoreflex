@@ -28,6 +28,7 @@
 
 import { promises as fs } from "node:fs";
 import path from "node:path";
+import { countTutoiement, countVouvoiement } from "./lib/tutoiement.mjs";
 
 /* -------------------------------------------------------------------------- */
 /*  Configuration                                                             */
@@ -493,16 +494,16 @@ Mission : rediger une fiche d'analyse complete et structuree d'une crypto, quali
 
 REGLES STRICTES :
 - 100% francais, accents corrects (a e e e c o u i)
-- TUTOIEMENT OBLIGATOIRE PARTOUT : utilise "tu/te/toi/ton/tes" dans CHAQUE section
+- VOUVOIEMENT OBLIGATOIRE PARTOUT : utilise "vous/votre/vos" dans CHAQUE section
   (thesis, howItWorks, tokenomics, metrics narrative, risks, frEuStatus, disclaimer).
-  JAMAIS "vous" ni "on" impersonnel. JAMAIS "les utilisateurs", privilégie "tu" / "les détenteurs comme toi".
-  Minimum 5 occurrences "tu/te/toi/ton/tes" dans le corps de la fiche.
+  JAMAIS "tu/te/toi/ton/tes" ni "on" impersonnel. JAMAIS "les utilisateurs", privilégie "vous" / "les détenteurs comme vous".
+  Minimum 5 occurrences "vous/votre/vos" dans le corps de la fiche.
   Exemples obligatoires :
-    - "Si tu détiens du SOL..." (pas "Les détenteurs de SOL...")
-    - "Tu dois être conscient que..." (pas "Il faut être conscient...")
-    - "Pour staker tes SOL, tu peux utiliser..."
-    - "Voici ce que tu dois savoir sur les frais..."
-    - "Si tu es résident fiscal français..."
+    - "Si vous détenez du SOL..." (pas "Les détenteurs de SOL...")
+    - "Vous devez être conscient que..." (pas "Il faut être conscient...")
+    - "Pour staker vos SOL, vous pouvez utiliser..."
+    - "Voici ce que vous devez savoir sur les frais..."
+    - "Si vous êtes résident fiscal français..."
 - Aucun jargon non explique (definir les termes techniques en parentheses)
 - Factuel, neutre, pedagogique. Aucune promesse d'enrichissement, aucun FOMO
 - Disclaimer YMYL en fin (champ "disclaimer" du JSON)
@@ -522,9 +523,9 @@ REGLES STRICTES :
 OUTPUT FORMAT JSON STRICT :
 {
   "tldr": "3 phrases ultra-concises (max 280 caracteres total) — l'essentiel pour comprendre le projet en 30s",
-  "thesis": "200-400 mots OBLIGATOIRE (minimum 200 mots reels — n'envoie pas de thesis plus courte). Pourquoi ce projet existe, qu'est-ce qu'il resout, sa proposition de valeur unique. Pedagogique, sans jargon. Utilise 'tu' au moins 1x pour parler au lecteur.",
-  "howItWorks": "300-500 mots OBLIGATOIRE (minimum 300 mots). Comment ca marche techniquement, accessible debutant. Consensus, architecture, innovations cles. Utilise 'tu' au moins 1x.",
-  "tokenomics": "300-500 mots OBLIGATOIRE (minimum 300 mots). Supply, distribution, vesting, utilite du token, mecanismes inflation/burn. Cite les chiffres factuels. Utilise 'tu' au moins 1x ('si tu detiens', 'tes tokens').",
+  "thesis": "200-400 mots OBLIGATOIRE (minimum 200 mots reels — n'envoie pas de thesis plus courte). Pourquoi ce projet existe, qu'est-ce qu'il resout, sa proposition de valeur unique. Pedagogique, sans jargon. Utilise 'vous' au moins 1x pour parler au lecteur.",
+  "howItWorks": "300-500 mots OBLIGATOIRE (minimum 300 mots). Comment ca marche techniquement, accessible debutant. Consensus, architecture, innovations cles. Utilise 'vous' au moins 1x.",
+  "tokenomics": "300-500 mots OBLIGATOIRE (minimum 300 mots). Supply, distribution, vesting, utilite du token, mecanismes inflation/burn. Cite les chiffres factuels. Utilise 'vous' au moins 1x ('si vous detenez', 'vos tokens').",
   "metrics": {
     "narrative": "150-250 mots — Lecture commentee des metriques live (prix, mcap, ATH/ATL, evolution 24h/7d/30d/1y). Met en perspective sans speculation.",
     "keyFigures": [
@@ -551,7 +552,7 @@ OUTPUT FORMAT JSON STRICT :
   "risks": [
     {"category": "technical|regulatory|market|team|adoption", "severity": "low|medium|high|critical", "description": "40-80 mots"}
   ],
-  "frEuStatus": "200-300 mots OBLIGATOIRE (minimum 200 mots). Statut FR/EU specifique. Utilise 'tu' systematiquement ('si tu es resident fiscal', 'tu peux acheter', 'tu dois declarer'). Mentionne PSAN exchanges, MiCA, Cerfa 2086, particularites legales FR.",
+  "frEuStatus": "200-300 mots OBLIGATOIRE (minimum 200 mots). Statut FR/EU specifique. Utilise 'vous' systematiquement ('si vous etes resident fiscal', 'vous pouvez acheter', 'vous devez declarer'). Mentionne PSAN exchanges, MiCA, Cerfa 2086, particularites legales FR.",
   "furtherReading": [
     {"type": "academy|external", "title": "Titre", "url_or_slug": "/academy/slug ou https://..."}
   ],
@@ -709,10 +710,10 @@ Genere la fiche complete en JSON strict. Exigences (audit regle des 3 v3) :
    - frEuStatus : 250-350 mots. Exchanges PSAN concrets nommes (Coinhouse, Coinbase France, etc.), statut MiCA, fiscalite Cerfa 2086 + 3916bis, PFU / flat tax 31,4 % sur les plus-values depuis le 1er janvier 2026 (12,8 % IR + 18,6 % prelevements sociaux) — n'ecris JAMAIS "30 %" comme taux courant, staking imposable BNC, airdrops imposables a reception
    - risks : MINIMUM 5 risques avec categories distinctes (technical, regulatory, market, team, adoption). Hacks passes = risk technique specifique avec date.
 
-4. **Tutoiement OBLIGATOIRE PARTOUT**
-   - Min 8 occurrences "tu/te/toi/ton/tes" dans le corps
-   - Chaque section longue doit avoir au moins 1 "tu" (thesis, howItWorks, tokenomics, frEuStatus, disclaimer)
-   - Exemples : "Si tu detiens", "Pour staker tes tokens", "Tu dois declarer", "Si tu es resident FR"
+4. **Vouvoiement OBLIGATOIRE PARTOUT**
+   - Min 8 occurrences "vous/votre/vos" dans le corps, aucun "tu/te/toi/ton/tes"
+   - Chaque section longue doit avoir au moins 1 "vous" (thesis, howItWorks, tokenomics, frEuStatus, disclaimer)
+   - Exemples : "Si vous detenez", "Pour staker vos tokens", "Vous devez declarer", "Si vous etes resident FR"
 
 5. **Quality score >= 50** (cf. rawData.qualityScore) : si <50, le LLM peut ajouter des disclaimers supplementaires sur fiabilite
 
@@ -920,10 +921,10 @@ function countMatches(text, regex) {
  * Audit règle des 3 sur une fiche LLM-générée.
  * Retourne un score 0-100 + flags des problèmes détectés.
  *
- * Critère 1 — TUTOIEMENT (voix Cryptoreflex)
- *   - Compte tu/te/toi/ton/tes/tien dans le corps
- *   - Pénalise "vous/votre" (impersonnel)
- *   - Min 5 occurrences tu pour pass
+ * Critère 1 — VOUVOIEMENT (voix Cryptoreflex depuis le 06/10/2026 ; la clé « tutoiement » est gardée pour l'historique)
+ *   - Compte vous/votre/vos dans le corps
+ *   - Pénalise tu/te/toi/ton/tes
+ *   - Min 5 occurrences vous pour pass
  *
  * Critère 2 — PERSONNALISATION (pas de générique)
  *   - Mentions name/symbol ≥3 dans thesis+howItWorks+tokenomics
@@ -955,15 +956,15 @@ function auditRegleDes3(parsed, rawData) {
   ].join("\n\n");
 
   // === Critère 1 : Tutoiement ===
-  // Match standalone tu/te/toi/ton/tes/t' (avec word boundaries)
-  const tuCount = countMatches(corpus, /\b(tu|te|toi|ton|tes|t')\b/gi);
-  const vousCount = countMatches(corpus, /\b(vous|votre|vos)\b/gi);
+  // Passe finale (06/10/2026) : frontières Unicode (scripts/lib/tutoiement.mjs) ; \b ASCII comptait « êtes », « côte »…
+  const tuCount = countTutoiement(corpus);
+  const vousCount = countVouvoiement(corpus);
   const tutoiementScore = Math.min(
     100,
-    Math.max(0, tuCount * 5 - vousCount * 10),
+    Math.max(0, vousCount * 5 - tuCount * 10),
   );
-  if (tuCount < 5) issues.push(`tutoiement insuffisant (${tuCount} occurrences, min 5)`);
-  if (vousCount > 2) issues.push(`vouvoiement détecté (${vousCount} occurrences)`);
+  if (vousCount < 5) issues.push(`vouvoiement insuffisant (${vousCount} occurrences, min 5)`);
+  if (tuCount > 2) issues.push(`tutoiement détecté (${tuCount} occurrences)`);
 
   // === Critère 2 : Personnalisation ===
   const nameSymbolMentions =

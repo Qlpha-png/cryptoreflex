@@ -13,7 +13,7 @@ import {
   Ban,
 } from "lucide-react";
 
-import { getExchangePlatforms, isAvailableFr, getAvailablePlatformCount } from "@/lib/platforms";
+import { getExchangePlatforms, isAvailableFr, getAvailablePlatformCount, purchaseCostText, simpleCost1000 } from "@/lib/platforms";
 import { getReviewHref } from "@/lib/programmatic";
 import { BRAND } from "@/lib/brand";
 import { withHreflang } from "@/lib/seo-alternates";
@@ -84,11 +84,21 @@ interface FeesRow {
   spotMaker: number;
   spotTaker: number;
   instantBuy: number;
+  /** Coût relevé d'un achat simple de 1 000 € (fees.cost), null si non relevé ou non publié. */
+  simpleEur: number | null;
+  simpleText: string;
   spread: string;
   sepaFee: number | string;
   globalScore: number;
   feesScore: number;
   v?: Verified;
+}
+
+/* Passe finale (06/10/2026) : « Achat débutant le + cher » se calculait sur instantBuy (Coinbase 3,99 %, OKX 4 %),
+   des taux que les grilles relevées le 05/10/2026 ne publient pas. Le classement lit désormais le coût relevé (fees.cost). */
+function simpleRow(p: ReturnType<typeof getExchangePlatforms>[number]): { simpleEur: number | null; simpleText: string } {
+  const c = simpleCost1000(p);
+  return { simpleEur: c.status === "ok" ? c.eur : null, simpleText: purchaseCostText(c) };
 }
 
 function buildRows(): FeesRow[] {
@@ -103,6 +113,7 @@ function buildRows(): FeesRow[] {
     spotMaker: p.fees.spotMaker,
     spotTaker: p.fees.spotTaker,
     instantBuy: p.fees.instantBuy,
+    ...simpleRow(p),
     spread: p.fees.spread,
     sepaFee: p.fees.withdrawalFiatSepa,
     globalScore: p.scoring.global,
@@ -169,13 +180,14 @@ export default function ComparatifFraisPage() {
     .sort((a, b) => realCost(a) - realCost(b));
 
   const cheapestTrade = active[0];
-  const dearestBuy = [...active].sort((a, b) => b.instantBuy - a.instantBuy)[0];
+  const dearestBuy = [...active]
+    .filter((r) => r.simpleEur != null)
+    .sort((a, b) => (b.simpleEur as number) - (a.simpleEur as number))[0];
   const verifiedCount = all.filter((r) => r.v?.verdict === "fiable").length;
 
   // Exemple chiffré sur 1 000 € (frais directs, hors spread caché).
   const amount = 1000;
   const cheapTradeFee = (amount * cheapestTrade.spotTaker) / 100;
-  const dearBuyFee = (amount * dearestBuy.instantBuy) / 100;
 
   const schemas = graphSchema([
     breadcrumbSchema([
@@ -254,9 +266,9 @@ export default function ComparatifFraisPage() {
             icon={<Trophy className="h-4 w-4" />}
           />
           <Stat
-            label="Achat débutant le + cher"
+            label="Achat simple le + cher (relevé)"
             value={dearestBuy.name}
-            sub={`${fmtPct(dearestBuy.instantBuy)} par achat simple`}
+            sub={`${dearestBuy.simpleText} pour 1 000 €`}
             tone="amber"
             icon={<AlertTriangle className="h-4 w-4" />}
           />
@@ -279,11 +291,10 @@ export default function ComparatifFraisPage() {
             chez <strong className="text-fg">{cheapestTrade.name}</strong>, vous
             payez <strong className="text-accent-green">{eur(cheapTradeFee)} €</strong>{" "}
             de frais ({fmtPct(cheapestTrade.spotTaker)}). En{" "}
-            <strong className="text-fg">achat simple / carte</strong> chez{" "}
+            <strong className="text-fg">achat simple</strong> chez{" "}
             <strong className="text-fg">{dearestBuy.name}</strong>, c&apos;est{" "}
-            <strong className="text-amber-300">{eur(dearBuyFee)} €</strong>{" "}
-            ({fmtPct(dearestBuy.instantBuy)})
-            {" "}— <span className="text-muted">sans compter le spread caché.</span>{" "}
+            <strong className="text-amber-300">{dearestBuy.simpleText}</strong>{" "}
+            (coût relevé le plus élevé de notre base).{" "}
             Même crypto, même montant : l&apos;écart vient de <em>comment</em> vous achetez.
           </p>
         </section>

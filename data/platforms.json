@@ -17,7 +17,7 @@
       "id": "coinbase",
       "name": "Coinbase",
       "logo": "/logos/coinbase.svg",
-      "tagline": "Pour qui c'est : débutants qui veulent la plateforme la plus régulée du marché",
+      "tagline": "Pour qui c'est : débutants qui veulent une plateforme agréée MiCA (CSSF, Luxembourg)",
       "websiteUrl": "https://coinbase.com",
       "affiliateUrl": "https://coinbase.com",
       "scoring": {
@@ -52,9 +52,9 @@
           "source": "https://www.coinbase.com/blog/were-lowering-fees-for-many-active-traders-on-coinbase-advanced",
           "model": "exchange",
           "makerTakerApplies": true,
-          "realCostPct": "0,25/0,50 % (Advanced, palier d'entrée UE) · carte 3,99 %",
+          "realCostPct": "0,25/0,50 % (Advanced, palier d'entrée UE) · achat simple et carte : non chiffrés par Coinbase",
           "verdict": "fiable",
-          "note": "Coinbase Advanced, palier d'entrée en Europe : 0,25 % maker / 0,50 % taker depuis le 16/09/2026 (billet officiel de Coinbase). L'appli « Acheter » simple coûte bien plus cher (carte 3,99 % + spread, relevé du 13/06/2026). Retrait SEPA gratuit (dépôt 0,15 €)."
+          "note": "Coinbase Advanced, palier d'entrée en Europe : 0,25 % maker / 0,50 % taker depuis le 16/09/2026 (billet officiel de Coinbase). L'appli « Acheter » simple n'est pas chiffrée sur la page d'aide de Coinbase (relevé du 05/10/2026). Retrait SEPA gratuit (dépôt 0,15 €)."
         },
         "cardBuy": 3.99,
         "cost": {
@@ -127,24 +127,24 @@
         "appStore": 4.7,
         "playStore": 4.6
       },
-      "idealFor": "Débutants prudents qui veulent la plateforme la plus régulée et cotée en Bourse",
+      "idealFor": "Débutants qui veulent une plateforme agréée MiCA dont la maison mère est cotée en Bourse",
       "strengths": [
         "Cotée NASDAQ + agrément MiCA complet",
-        "Interface ultra simple",
+        "Interface simple",
         "Coinbase Earn (gagner crypto en apprenant)"
       ],
       "weaknesses": [
-        "Achat instantané par carte cher (3,99 % + spread)",
+        "Coût de l'achat simple et par carte non chiffré publiquement par Coinbase (page d'aide relevée le 05/10/2026)",
         "Support client souvent critiqué"
       ],
-      "badge": "Le plus régulé",
+      "badge": null,
       "category": "exchange"
     },
     {
       "id": "binance",
       "name": "Binance",
       "logo": "/logos/binance.png",
-      "tagline": "Pour qui c'est : traders cherchant le plus large catalogue crypto au monde",
+      "tagline": "Pour qui c'est : aucun profil en France (services crypto fermés depuis le 1er juillet 2026)",
       "websiteUrl": "https://binance.com",
       "affiliateUrl": "https://binance.com",
       "scoring": {
@@ -243,8 +243,8 @@
       },
       "idealFor": "Traders intermédiaires et avancés cherchant frais bas et large catalogue",
       "strengths": [
-        "Frais spot parmi les plus bas (0,1%)",
-        "Catalogue le plus large au monde (380+)",
+        "Frais spot de 0,1 %",
+        "Catalogue de plus de 380 cryptos",
         "Liquidité inégalée"
       ],
       "weaknesses": [
@@ -252,7 +252,7 @@
         "Historique réglementaire chargé (SEC, DOJ)",
         "Support client lent"
       ],
-      "badge": "Frais les plus bas",
+      "badge": null,
       "category": "exchange"
     },
     {
@@ -381,7 +381,7 @@
         "Frais cachés dans le spread",
         "Pas de trading avancé/levier"
       ],
-      "badge": "Champion européen",
+      "badge": "Courtier multi-actifs",
       "category": "broker"
     },
     {
@@ -511,7 +511,7 @@
         "Frais Instant Buy élevés",
         "Taker de 0,80 % au premier palier de Kraken Pro"
       ],
-      "badge": "Plus sécurisé",
+      "badge": null,
       "category": "exchange"
     },
     {
@@ -612,16 +612,16 @@
       },
       "idealFor": "Traders intermédiaires/avancés intéressés par dérivés et copy trading",
       "strengths": [
-        "Copy trading leader du marché",
+        "Copy trading intégré",
         "Catalogue altcoins très large (800+)",
-        "Frais futures parmi les plus bas"
+        "Contrats à terme (futures)"
       ],
       "weaknesses": [
         "Services fermés aux résidents français depuis le 31/03/2026 (positions liquidées)",
         "Pas d'enregistrement AMF direct",
         "Réputation historique sur dérivés"
       ],
-      "badge": "Top copy trading",
+      "badge": "Copy trading",
       "category": "exchange"
     },
     {
@@ -744,7 +744,7 @@
         "Catalogue crypto limité (50)",
         "Pas de DeFi"
       ],
-      "badge": "Meilleur tout-en-un",
+      "badge": "Crypto, actions et ETF",
       "category": "broker"
     },
     {
@@ -974,11 +974,11 @@
         "appStore": 4.7,
         "playStore": 4.5
       },
-      "idealFor": "Débutants total voulant épargner en BTC via arrondi automatique",
+      "idealFor": "Débutants complets voulant épargner en BTC via arrondi automatique",
       "strengths": [
         "DCA automatique via arrondi sur achats CB",
         "PSAN français + agrément MiCA",
-        "Onboarding ultra simple"
+        "Inscription simple"
       ],
       "weaknesses": [
         "Bitcoin uniquement",
@@ -1229,7 +1229,7 @@
       },
       "idealFor": "Traders avancés cherchant produits dérivés avec profondeur carnet et options crypto",
       "strengths": [
-        "Profondeur de carnet sur perp BTC/ETH parmi les meilleures",
+        "Contrats perpétuels BTC/ETH",
         "Frais spot de 0,25 % (maker et taker, Bybit EU)",
         "Plateforme options crypto complète"
       ],
@@ -1238,7 +1238,7 @@
         "Régulation MiCA via Autriche (jeune)",
         "Interface dense pour débutants"
       ],
-      "badge": "Top dérivés",
+      "badge": null,
       "category": "exchange"
     },
     {
@@ -1364,7 +1364,7 @@
         "Retraits crypto réservés à Revolut X",
         "Support client souvent critiqué sur escalade"
       ],
-      "badge": "Best néobanque",
+      "badge": "Néobanque",
       "category": "broker"
     },
     {
@@ -1406,9 +1406,9 @@
           "source": "https://www.okx.com/en-eu/fees",
           "model": "exchange",
           "makerTakerApplies": true,
-          "realCostPct": "0,10/0,20 % (compte spot) · 0,08/0,10 % (compte spot et dérivés) · carte via tiers 3-6 %",
+          "realCostPct": "0,10/0,20 % (compte spot) · 0,08/0,10 % (compte spot et dérivés)",
           "verdict": "fiable",
-          "note": "Grille OKX Europe (officielle) : utilisateur régulier à 0,10 % maker / 0,20 % taker sur un compte spot seul, 0,08 % / 0,10 % sur un compte spot et dérivés. Achat par carte via des tiers (MoonPay, Banxa) : 3 à 6 %. SEPA gratuit."
+          "note": "Grille OKX Europe (officielle) : utilisateur régulier à 0,10 % maker / 0,20 % taker sur un compte spot seul, 0,08 % / 0,10 % sur un compte spot et dérivés. Achat par carte : aucun coût chiffré sur cette page (contrôle du 06/10/2026). SEPA gratuit."
         },
         "cost": {
           "path": "Appli OKX : Buy, payé avec le solde en euros",
@@ -1416,11 +1416,11 @@
           "c1000": 10,
           "kind": "max",
           "card": {
-            "c100": 2.99,
-            "c1000": 29.9,
-            "kind": "max"
+            "c100": null,
+            "c1000": null,
+            "kind": "partiel"
           },
-          "note": "Marge de 1 % au plus. Mode avancé : 0,20 %.",
+          "note": "Marge de 1 % au plus. Mode avancé : 0,20 %. Carte : aucun coût chiffré sur les pages OKX citées (contrôle du 06/10/2026).",
           "date": "2026-10-05",
           "source": "https://www.okx.com/en-eu/help/how-do-i-buy-crypto-with-my-cash-balance-eea"
         }
@@ -1490,7 +1490,7 @@
         "UX dense pour débutants — courbe d'apprentissage",
         "Note Trustpilot basse (2,4/5, relevé du 5 octobre 2026)"
       ],
-      "badge": "Catalogue le plus large",
+      "badge": null,
       "category": "exchange"
     },
     {
@@ -1545,7 +1545,7 @@
           "card": {
             "c100": 4,
             "c1000": 40,
-            "kind": "partiel"
+            "kind": "max-partiel"
           },
           "note": "Par carte : jusqu'à 4 %.",
           "date": "2026-10-05",
@@ -1610,7 +1610,7 @@
       },
       "idealFor": "Utilisateurs mobile-first voulant carte de débit crypto + Earn intégré",
       "strengths": [
-        "App mobile parmi les meilleures du marché",
+        "Application mobile complète",
         "Carte Visa crypto avec cashback CRO",
         "Earn (intérêts crypto) très simple à activer"
       ],
@@ -1619,7 +1619,7 @@
         "Carte exige souvent stake CRO pour bénéfices",
         "Langue du chat non précisée, pas de numéro d'assistance générale pour l'Europe"
       ],
-      "badge": "Best app mobile",
+      "badge": "Appli et carte crypto",
       "category": "exchange"
     },
     {
@@ -1726,7 +1726,7 @@
         "Support par formulaire et e-mail uniquement",
         "Frais maker/taker plus élevés que la moyenne"
       ],
-      "badge": "Le plus audité",
+      "badge": null,
       "category": "exchange"
     },
     {
@@ -1837,7 +1837,7 @@
       },
       "idealFor": "Maximalistes BTC voulant un exchange historique régulé EU avec support Lightning Network",
       "strengths": [
-        "Exchange le plus ancien du marché (depuis 2011)",
+        "Exchange en activité depuis 2011",
         "Support Bitcoin Lightning Network natif",
         "Régulé Luxembourg (CSSF) + MiCA + NYDFS"
       ],
@@ -1846,7 +1846,7 @@
         "Pas de numéro en France (numéro européen au Luxembourg), langues non précisées",
         "Frais SEPA retrait élevés (3 €)"
       ],
-      "badge": "Le plus historique",
+      "badge": "Depuis 2011",
       "category": "exchange"
     },
     {
@@ -1960,7 +1960,7 @@
         "appStore": 4.6,
         "playStore": 4.5
       },
-      "idealFor": "Utilisateurs voulant frais ultra-bas + UX moderne dans un cadre régulé Pays-Bas",
+      "idealFor": "Utilisateurs voulant frais bas et une UX moderne dans un cadre régulé aux Pays-Bas",
       "strengths": [
         "Frais maker/taker très bas (0,15 / 0,25 %)",
         "Pas de frais SEPA dépôt/retrait",
@@ -1971,14 +1971,14 @@
         "Pas d'assistance téléphonique, langue du chat non précisée",
         "Catalogue 200 cryptos (vs 350 OKX/Binance)"
       ],
-      "badge": "Best frais bas",
+      "badge": "Frais bas",
       "category": "exchange"
     },
     {
       "id": "etoro",
       "name": "eToro",
       "logo": "/logos/etoro.png",
-      "tagline": "Pour qui c'est : profils sociaux qui veulent copier les meilleurs traders + actions/crypto dans la même app",
+      "tagline": "Pour qui c'est : profils sociaux qui veulent copier d'autres investisseurs + actions/crypto dans la même app",
       "websiteUrl": "https://etoro.com",
       "affiliateUrl": "https://etoro.com",
       "scoring": {
@@ -2081,7 +2081,7 @@
         "appStore": 4.4,
         "playStore": 4.3
       },
-      "idealFor": "Débutants qui veulent copier les meilleurs traders + diversifier crypto + actions dans la même app",
+      "idealFor": "Débutants qui veulent copier d'autres investisseurs (copy trading) et réunir crypto et actions dans la même app",
       "strengths": [
         "Copy Trading (suivre auto les top traders)",
         "App tout-en-un crypto + actions + ETF + matières premières",
@@ -2092,7 +2092,7 @@
         "Transfert de crypto vers le portefeuille eToro Money : 2 %",
         "Pas de wallet self-custody"
       ],
-      "badge": "Best copy trading",
+      "badge": "Copy trading",
       "category": "broker"
     },
     {
@@ -2199,8 +2199,8 @@
       },
       "idealFor": "Maximalistes BTC français voulant une plateforme historique avec support Lightning",
       "strengths": [
-        "Plateforme française la plus ancienne (depuis 2011)",
-        "PSAN AMF n°1 (premier inscrit)",
+        "Plateforme française en activité depuis 2011",
+        "Ancien enregistrement PSAN auprès de l'AMF",
         "Support Bitcoin Lightning + 100 % cold storage"
       ],
       "weaknesses": [
@@ -2331,7 +2331,7 @@
       "id": "nexo",
       "name": "Nexo",
       "logo": "/logos/nexo.png",
-      "tagline": "Pour qui c'est : profils Earn cherchant les rendements stablecoin les plus élevés + carte cashback",
+      "tagline": "Pour qui c'est : profils Earn cherchant un rendement sur stablecoins + carte cashback",
       "websiteUrl": "https://nexo.com",
       "affiliateUrl": "https://nexo.com",
       "scoring": {
@@ -2426,9 +2426,9 @@
         "appStore": 4.6,
         "playStore": 4.5
       },
-      "idealFor": "Holders cherchant les rendements Earn stablecoin les plus élevés + carte cashback Mastercard",
+      "idealFor": "Détenteurs cherchant des rendements Earn sur stablecoins et une carte Mastercard avec cashback",
       "strengths": [
-        "APY Earn parmi les plus élevés du marché UE (jusqu'à 14 % stablecoin sur tier Platinum)",
+        "Rendements Earn annoncés jusqu'à 14 % sur stablecoins (niveau Platinum)",
         "Pas de frais maker/taker spot",
         "Carte Mastercard avec cashback NEXO jusqu'à 2 %"
       ],
@@ -2437,14 +2437,14 @@
         "Tiers (Bronze/Silver/Gold/Platinum) basés sur stake NEXO — opaque",
         "Frais retrait crypto variables et parfois élevés"
       ],
-      "badge": "Best yield stablecoin",
+      "badge": "Rendement stablecoins",
       "category": "broker"
     },
     {
       "id": "moonpay",
       "name": "MoonPay",
       "logo": null,
-      "tagline": "Pour qui c'est : on-ramp ultra-simple pour acheter sa 1re crypto en CB sans créer de compte",
+      "tagline": "Pour qui c'est : on-ramp simple pour acheter sa 1re crypto en CB sans créer de compte",
       "websiteUrl": "https://moonpay.com",
       "affiliateUrl": "https://moonpay.com",
       "scoring": {
@@ -2546,10 +2546,10 @@
         "appStore": 4.7,
         "playStore": 4.5
       },
-      "idealFor": "Achat crypto on-ramp ultra rapide pour user qui ne veut pas créer de compte exchange",
+      "idealFor": "Achat de crypto rapide, sans créer de compte sur un exchange",
       "strengths": [
         "Achat crypto en 30 secondes sans création de compte",
-        "UX d'achat la plus simple du marché",
+        "Parcours d'achat simple",
         "Intégré nativement dans plein de wallets (MetaMask, Trust, Phantom)"
       ],
       "weaknesses": [
@@ -2557,7 +2557,7 @@
         "Centre d'aide en anglais, langue des réponses non précisée",
         "Pas adapté à un usage récurrent — on-ramp uniquement"
       ],
-      "badge": "Best on-ramp",
+      "badge": "On-ramp",
       "category": "broker"
     },
     {
@@ -2901,7 +2901,7 @@
       "id": "young-platform",
       "name": "Young Platform",
       "logo": "/logos/young-platform.png",
-      "tagline": "Pour qui c'est : débutants italiens / européens voulant gamification + UX ultra-simple",
+      "tagline": "Pour qui c'est : débutants italiens / européens voulant gamification et UX simple",
       "websiteUrl": "https://youngplatform.com",
       "affiliateUrl": "https://youngplatform.com",
       "scoring": {
@@ -3019,7 +3019,7 @@
       "id": "paypal-crypto",
       "name": "PayPal Crypto",
       "logo": "/logos/paypal-crypto.png",
-      "tagline": "Pour qui c'est : 600M utilisateurs PayPal qui veulent acheter crypto sans changer d'app",
+      "tagline": "Pour qui c'est : utilisateurs PayPal qui veulent acheter de la crypto sans changer d'appli",
       "websiteUrl": "https://paypal.com/crypto",
       "affiliateUrl": "https://paypal.com/crypto",
       "scoring": {
@@ -3105,7 +3105,7 @@
       },
       "idealFor": "Clients PayPal voulant acheter BTC/ETH/LTC/BCH avec leur solde PayPal en 30 secondes",
       "strengths": [
-        "Achat ultra-simple via app PayPal existante",
+        "Achat simple depuis l'appli PayPal existante",
         "Custody assurée par PayPal",
         "Service grand public éprouvé"
       ],
@@ -3114,7 +3114,7 @@
         "Frais élevés : 1,5 à 2,2 % selon le montant, plus un spread de change de 0,5 à 2,5 %",
         "Trustpilot PayPal global très bas"
       ],
-      "badge": "Best on-ramp PayPal",
+      "badge": "Achat via PayPal",
       "category": "broker"
     },
     {
@@ -3209,7 +3209,7 @@
         "appStore": 4.3,
         "playStore": 4
       },
-      "idealFor": "Traders pros voulant la plus grande liquidité spot + accès dérivés (margin, perp swaps)",
+      "idealFor": "Traders expérimentés voulant un carnet spot et des produits à marge",
       "strengths": [
         "Liquidité haute sur paires majeures",
         "Frais de trading à 0 % (maker et taker, depuis le 17/12/2025)",
@@ -3425,7 +3425,7 @@
         "Risque effet de levier élevé (perte rapide possible)",
         "Spread variable parfois élevé"
       ],
-      "badge": "Best CFD crypto",
+      "badge": "CFD crypto",
       "category": "broker"
     },
     {
@@ -3650,7 +3650,7 @@
         "Catalogue crypto direct limité",
         "Pas tous les ETF crypto disponibles"
       ],
-      "badge": "Best multi-actifs",
+      "badge": "Multi-actifs",
       "category": "broker"
     },
     {
@@ -3741,7 +3741,7 @@
       },
       "idealFor": "Maximalistes BTC français voulant DCA automatique + retrait on-chain immédiat vers cold wallet",
       "strengths": [
-        "DCA programmé hebdo/mensuel ultra simple",
+        "DCA programmé hebdomadaire ou mensuel",
         "Retrait on-chain BTC inclus",
         "Service 100 % français + Trustpilot 4,7/5 (relevé du 5 octobre 2026)"
       ],

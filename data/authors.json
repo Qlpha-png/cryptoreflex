@@ -3,9 +3,9 @@
     {
       "id": "kevin-voisin",
       "name": "Kevin Voisin",
-      "role": "Fondateur & rédacteur en chef",
-      "shortBio": "Fondateur de Cryptoreflex — investisseur particulier en cryptomonnaies depuis 2019, spécialisé dans la régulation française (PSAN, MiCA) et la fiscalité crypto.",
-      "bio": "Kevin Voisin est le fondateur de Cryptoreflex.fr. Investisseur particulier en cryptomonnaies depuis 2019, Après plusieurs années à voir des comparateurs anglo-saxons recopier les mêmes classements sponsorisés sans jamais vérifier les frais réels ni le statut MiCA, il a lancé Cryptoreflex en 2026 avec une promesse simple : une méthodologie publique, des frais relevés sur les grilles officielles et des statuts vérifiés sur les registres, et une indépendance financière vis-à-vis des plateformes notées.",
+      "role": "Fondateur et seul rédacteur",
+      "shortBio": "Fondateur et seul rédacteur de Cryptoreflex — investisseur particulier en cryptomonnaies depuis 2019, spécialisé dans la régulation française (PSAN, MiCA) et la fiscalité crypto.",
+      "bio": "Kevin Voisin est le fondateur et le seul rédacteur de Cryptoreflex.fr : il n'y a pas d'équipe éditoriale. Investisseur particulier en cryptomonnaies depuis 2019, il a lancé Cryptoreflex en 2026 avec une promesse simple : une méthodologie publique, des frais relevés sur les grilles officielles, des statuts vérifiés sur les registres et une indépendance financière vis-à-vis des plateformes notées.",
       "expertise": [
         "Plateformes crypto FR",
         "Fiscalité crypto France (flat tax, formulaire 2086)",
@@ -16,7 +16,7 @@
       "yearsExperience": 5,
       "credentials": [
         "Investisseur particulier en cryptoactifs depuis 2019",
-        "Auteur de la méthodologie de scoring Cryptoreflex (6 critères, 100% public)",
+        "Auteur de la méthodologie de scoring Cryptoreflex (6 critères pondérés, grille publiée)",
         "Veille mensuelle des publications AMF & ESMA"
       ],
       "social": {
@@ -27,20 +27,20 @@
     },
     {
       "id": "redaction-cryptoreflex",
-      "name": "La rédaction Cryptoreflex",
-      "role": "Rédaction & veille éditoriale",
-      "shortBio": "L'équipe éditoriale de Cryptoreflex : actualité crypto, analyses de marché et veille réglementaire (MiCA, fiscalité française), sous la supervision de Kevin Voisin.",
-      "bio": "La rédaction Cryptoreflex regroupe le travail éditorial du site : brèves d'actualité, analyses techniques quotidiennes et synthèses de marché. Les contenus de données de marché sont assistés par automatisation puis relus selon la charte éditoriale Cryptoreflex (sourcing, neutralité, vérification des chiffres). La supervision éditoriale est assurée par Kevin Voisin, fondateur du site.",
+      "name": "Cryptoreflex",
+      "role": "Signature du site",
+      "shortBio": "Nom du site sur les actualités et les analyses techniques publiées automatiquement à partir de sources publiques. Les articles de fond sont signés Kevin Voisin, fondateur et seul rédacteur (pas d'équipe éditoriale).",
+      "bio": "Les actualités, les brèves et les analyses techniques quotidiennes de Cryptoreflex sont publiées automatiquement par des programmes, à partir de sources publiques : chaque actualité indique en bas de page la source dont elle est tirée. Ces contenus ne portent pas de signature personnelle. Les articles de fond sont signés Kevin Voisin, fondateur et seul rédacteur du site : il n'y a pas d'équipe éditoriale.",
       "expertise": [
         "Actualité crypto France",
         "Analyse technique de marché",
         "Veille réglementaire MiCA",
         "Fiscalité crypto France"
       ],
-      "yearsExperience": 1,
+      "yearsExperience": 0,
       "credentials": [
-        "Charte éditoriale publique (sourcing, vérification des chiffres)",
-        "Supervision éditoriale : Kevin Voisin"
+        "Charte éditoriale publique",
+        "Éditeur : Kevin Voisin, fondateur et seul rédacteur"
       ],
       "social": {
         "email": "contact@cryptoreflex.fr"

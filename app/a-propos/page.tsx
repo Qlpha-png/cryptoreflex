@@ -20,12 +20,35 @@ import {
 import { authorPersonSchema, getAuthorByIdOrDefault } from "@/lib/authors";
 import { BRAND } from "@/lib/brand";
 import { withHreflang } from "@/lib/seo-alternates";
+import { PARTNERSHIPS, type PartnershipKind } from "@/lib/partnerships";
+import { getPlatformById } from "@/lib/platforms";
+import { pageUpdatedFr } from "@/lib/engagements";
+import { DELAI_REPONSE } from "@/lib/engagements";
+
+/**
+ * 06/10/2026 (audit confiance, A-C0-6) : « la plateforme nous reverse une commission » était faux. Les noms cités
+ * viennent de lib/partnerships.ts (relations « live ») : affiliation = commission à Cryptoreflex ; parrainage =
+ * prime au fondateur si le filleul remplit la condition ; toutes les autres plateformes = aucune rémunération.
+ */
+function partnerNames(kind: PartnershipKind): string {
+  const names = Object.entries(PARTNERSHIPS)
+    .filter(([, p]) => p.status === "live" && p.kind === kind)
+    .map(
+      ([id]) =>
+        getPlatformById(id)?.name ??
+        id
+          .split("-")
+          .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+          .join(" "),
+    );
+  return names.length <= 1 ? names.join("") : `${names.slice(0, -1).join(", ")} et ${names[names.length - 1]}`;
+}
 
 export const metadata: Metadata = {
   // FIX 2026-05-09 : title.absolute car "À propos de Cryptoreflex" inclut
   // grammaticalement la marque → bypass template root `%s | Cryptoreflex`.
   title: { absolute: "À propos de Cryptoreflex — qui sommes-nous ?" },
-  description: `Découvrez la mission de ${BRAND.name}, la méthodologie de scoring et le fondateur Kevin Voisin. Site indépendant, financé par quelques liens rémunérés signalés et le soutien des lecteurs.`,
+  description: `Découvrez la mission de ${BRAND.name}, la méthodologie de notation et le fondateur, Kevin Voisin, seul rédacteur du site. Site indépendant : quelques liens rémunérés, tous signalés « Publicité ».`,
   alternates: withHreflang("/a-propos"),
   openGraph: {
     title: "À propos de Cryptoreflex",
@@ -38,6 +61,8 @@ export const metadata: Metadata = {
 
 export default function AProposPage() {
   const founder = getAuthorByIdOrDefault("kevin-voisin");
+  const affiliateNames = partnerNames("affiliate");
+  const referralNames = partnerNames("referral");
 
   return (
     <>
@@ -70,6 +95,7 @@ export default function AProposPage() {
               accessibles aux résidents français. Méthodologie publique, données vérifiées,
               transparence sur les liens d'affiliation.
             </p>
+            <p className="mt-3 text-xs text-muted">Mise à jour : {pageUpdatedFr("/a-propos")}.</p>
           </header>
 
           {/* Fondateur */}
@@ -177,7 +203,7 @@ export default function AProposPage() {
               </p>
               <ul className="list-disc pl-5 space-y-1.5">
                 <li>relever les frais sur les grilles tarifaires officielles et dater chaque relevé&nbsp;;</li>
-                <li>vérifier le statut <strong>PSAN AMF</strong> et l'agrément <strong>MiCA</strong> chaque mois&nbsp;;</li>
+                <li>vérifier l'agrément <strong>MiCA</strong> sur les registres officiels (ESMA, liste blanche de l'AMF) et dater chaque vérification&nbsp;;</li>
                 <li>publier sa méthodologie de notation, à l'avance, identique pour toutes&nbsp;;</li>
                 <li>signaler clairement les liens d'affiliation et leur impact (zéro) sur les notes.</li>
               </ul>
@@ -194,8 +220,8 @@ export default function AProposPage() {
               Chaque plateforme est notée sur <strong>6 critères pondérés</strong> :
               frais réels (20%), sécurité (25%), conformité MiCA/PSAN (20%),
               expérience utilisateur (15%), support FR (10%), catalogue & services (10%).
-              Les notes sont mises à jour à fréquence fixe (statut MiCA mensuel, frais
-              trimestriels, refonte annuelle complète).
+              Chaque fiche affiche la date de ses relevés (frais, statut MiCA)&nbsp;: aucune
+              fréquence de mise à jour n'est promise.
             </p>
             <Link
               href="/methodologie"
@@ -215,22 +241,43 @@ export default function AProposPage() {
             <div className="mt-4 space-y-4 text-fg/85 leading-relaxed">
               <p>
                 {BRAND.name} <strong>n'appartient à aucune plateforme crypto</strong>,
-                aucun fonds d'investissement et aucun groupe média. Le site est financé
-                <strong> uniquement par l'affiliation</strong> : si vous ouvrez un
-                compte via un de nos liens, la plateforme nous reverse une commission —{" "}
-                <strong>sans surcoût pour vous</strong>.
+                aucun fonds d'investissement et aucun groupe média. Voici exactement qui
+                gagne de l'argent, et quand&nbsp;:
               </p>
+              <ul className="list-disc pl-5 space-y-2">
+                <li>
+                  <strong>Affiliation ({affiliateNames})</strong>&nbsp;: si vous achetez
+                  ou vous abonnez via un lien marqué «&nbsp;Publicité&nbsp;», le partenaire
+                  verse une commission à {BRAND.name}.
+                </li>
+                <li>
+                  <strong>Parrainage personnel ({referralNames})</strong>&nbsp;: ces liens
+                  sont les codes de parrainage du fondateur, Kevin Voisin, en tant que
+                  client. La plateforme lui verse la prime prévue par son programme si le
+                  filleul remplit la condition. Kevin Voisin éditant seul le site, cette prime revient à l&apos;éditeur de {BRAND.name}.
+                </li>
+                <li>
+                  <strong>Toutes les autres plateformes</strong> (Coinbase, Kraken…)&nbsp;:
+                  aucune rémunération. Le lien mène à leur site officiel et ne porte pas la
+                  mention «&nbsp;Publicité&nbsp;».
+                </li>
+              </ul>
               <p>
-                Cette commission <strong>n'influence pas les notes</strong>. Plusieurs
-                plateformes mieux classées que nos partenaires affiliés en témoignent
-                (cf.{" "}
+                Les liens rémunérés sont signalés «&nbsp;Publicité&nbsp;»,{" "}
+                <strong>sans surcoût pour vous</strong>. Ils{" "}
+                <strong>n'influencent pas les notes</strong>&nbsp;: toutes les plateformes
+                sont notées avec la même{" "}
                 <Link href="/methodologie" className="text-primary-soft hover:underline">
-                  notre méthodologie
+                  méthodologie publique
                 </Link>
-                ). Quand un partenariat existe, il est signalé en clair sur la fiche, et
-                le détail de notre rémunération est publié sur la page{" "}
+                , qu'un lien rémunéré existe ou non. Le détail de chaque relation est
+                publié sur la page{" "}
                 <Link href="/transparence" className="text-primary-soft hover:underline">
                   Transparence et partenariats
+                </Link>
+                . Vous pouvez aussi{" "}
+                <Link href="/soutenir" className="text-primary-soft hover:underline">
+                  soutenir le site par une contribution libre
                 </Link>
                 .
               </p>
@@ -249,7 +296,14 @@ export default function AProposPage() {
             <h2 className="text-xl font-bold text-fg">Une question, une correction&nbsp;?</h2>
             <p className="mt-2 text-fg/80">
               Une donnée obsolète, une note injustifiée, une plateforme qui manque&nbsp;?
-              Écrivez-nous, on corrige sous 7 jours.
+              Écrivez-nous&nbsp;: réponse sous {DELAI_REPONSE}&nbsp;; si l&apos;erreur est confirmée, elle est corrigée dans le même délai et inscrite au journal des corrections.
+            </p>
+            <p className="mt-2 text-sm text-fg/70">
+              Les corrections déjà faites sont listées dans le{" "}
+              <Link href="/corrections" className="text-primary-soft underline hover:text-primary">
+                journal des corrections
+              </Link>
+              .
             </p>
             <Link
               href={`mailto:${BRAND.email}`}

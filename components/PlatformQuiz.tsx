@@ -105,10 +105,10 @@ const QUESTIONS: Question[] = [
     title: "Combien comptez-vous investir au début ?",
     subtitle: "Cela influence la pertinence des dépôts minimums et la sécurité.",
     options: [
-      { value: "tiny", label: "< 100 €", hint: "Tester sans engagement" },
+      { value: "tiny", label: "< 100 €", hint: "Petit montant pour commencer" },
       { value: "small", label: "100 – 1 000 €", hint: "Premier vrai capital" },
       { value: "medium", label: "1 000 – 10 000 €", hint: "Investissement sérieux" },
-      { value: "large", label: "> 10 000 €", hint: "Patrimoine — sécurité maximale" },
+      { value: "large", label: "> 10 000 €", hint: "Patrimoine — la sécurité d'abord" },
     ],
   },
   {
@@ -133,7 +133,7 @@ const QUESTIONS: Question[] = [
       "Choisissez 1 ou 2 critères. Pondération : 1ère priorité × 2, 2ème × 1.",
     options: [
       { value: "fees", label: "Frais bas", hint: "Optimiser le coût total" },
-      { value: "security", label: "Sécurité maximale", hint: "Cold storage, assurance, MiCA" },
+      { value: "security", label: "La sécurité d'abord", hint: "Cold storage, assurance, MiCA" },
       { value: "support_fr", label: "Support en français", hint: "Chat / téléphone FR" },
       { value: "catalog", label: "Catalogue large", hint: "Accès à beaucoup d'altcoins" },
     ],
@@ -783,7 +783,7 @@ function ResultView({
             <RefreshCcw className="h-4 w-4" aria-hidden="true" />
             Refaire le questionnaire
           </div>
-          <div className="mt-1 font-bold text-fg">Tester d'autres réponses</div>
+          <div className="mt-1 font-bold text-fg">Essayer d'autres réponses</div>
           <div className="mt-1 text-xs text-muted">
             Comparez la reco selon votre profil.
           </div>

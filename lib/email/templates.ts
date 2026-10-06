@@ -16,6 +16,7 @@
 
 import { wrapEmail, renderButton } from "./components";
 import { EMAIL_TOKENS as T } from "./tokens";
+import { DELAI_REPONSE } from "@/lib/engagements";
 
 const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL || "https://www.cryptoreflex.fr";
@@ -287,7 +288,7 @@ portfolio 500 positions (vs 10 Free), alertes prix 100 par email (vs 3), watchli
     <td width="40" valign="top" style="padding:10px 0;font-size:20px;line-height:1;color:${T.colors.primary};">④</td>
     <td valign="top" style="padding:10px 0;font-size:14px;line-height:1.5;color:${T.colors.text};">
       <strong>Posez votre première question fiscale</strong><br>
-      <span style="color:${T.colors.textMuted};font-size:13px;">Répondez simplement à cet email — réponse argumentée sous 48&nbsp;h.</span>
+      <span style="color:${T.colors.textMuted};font-size:13px;">Répondez simplement à cet email — réponse argumentée sous ${DELAI_REPONSE}.</span>
     </td>
   </tr>
 </table>
@@ -324,7 +325,7 @@ Lien sécurisé valide 1&nbsp;heure. Pas besoin de mot de passe.
 Une question&nbsp;? Répondez simplement à cet email.
 </p>
 <p style="margin:0;font-size:13px;line-height:1.55;color:${T.colors.textMuted};">
-C'est une vraie boîte mail surveillée. Réponse sous 24&nbsp;h ouvrées, par un humain.
+C'est une vraie boîte mail surveillée. Réponse sous ${DELAI_REPONSE}, par un humain.
 </p>
 `;
 
@@ -347,7 +348,7 @@ ${opts.magicLink}
 3. Activez une alerte prix
 4. Posez votre première question fiscale (répondez à cet email)
 
-Une question ? Répondez simplement à ce message — réponse sous 24 h.
+Une question ? Répondez simplement à ce message — réponse sous ${DELAI_REPONSE}.
 
 —
 Cryptoreflex EI · SIREN 103 352 621
@@ -475,7 +476,7 @@ Pas de panique — ça arrive régulièrement. Causes les plus fréquentes :
 </div>
 
 <p style="margin:24px 0 0;font-size:13px;color:${T.colors.textMuted};line-height:1.55;text-align:center;">
-Besoin d'aide ? Répondez à ce message — on traite sous 24&nbsp;h ouvrées.
+Besoin d'aide ? Répondez à ce message — réponse sous ${DELAI_REPONSE}.
 </p>
 `;
 

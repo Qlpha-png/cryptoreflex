@@ -58,7 +58,8 @@ export default function BriefHero({ brief }: { brief: NewsSummary }) {
 
       {/* Signature + CTA */}
       <div className="mt-7 flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-border/60 pt-5 text-sm text-muted">
-        <span className="font-semibold text-fg/85">Par {brief.author}</span>
+        {/* D3 (06/10/2026) : brève publiée automatiquement, pas de signature « Par … ». */}
+        <span className="text-fg/70">Publiée automatiquement</span>
         <span className="text-border" aria-hidden="true">·</span>
         <span className="inline-flex items-center gap-1">
           <Clock className="h-3.5 w-3.5" aria-hidden="true" />

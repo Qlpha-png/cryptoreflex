@@ -116,7 +116,7 @@ export default function PlatformCard({ platform, placement, index = 0 }: Props) 
         <span
           className={`absolute -top-3 right-4 sm:right-6 rounded-full px-3 py-1 text-xs font-bold uppercase tracking-wide text-primary-soft z-10
                       bg-surface/95 backdrop-blur-sm ring-1 ring-primary/40 shadow-[0_4px_14px_-4px_rgba(245,165,36,0.25)]
-                      ${badge.toLowerCase().includes("recommand") || badge.toLowerCase().includes("plus régulé") ? "badge-pulse-strong" : ""}`}
+                      ${badge.toLowerCase().includes("recommand") ? "badge-pulse-strong" : ""}`}
         >
           {badge}
         </span>

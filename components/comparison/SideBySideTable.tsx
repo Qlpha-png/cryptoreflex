@@ -121,8 +121,7 @@ function buildRows(a: Platform, b: Platform): Row[] {
 
     // GROUP : NOTES UTILISATEURS
     { group: "Notes utilisateurs", label: "Trustpilot", a: tpCell(a), b: tpCell(b), aRaw: a.ratings.trustpilot, bRaw: b.ratings.trustpilot, direction: "higher" },
-    { label: "App Store", a: `${fmtFr(a.ratings.appStore, 1)}/5`, b: `${fmtFr(b.ratings.appStore, 1)}/5`, aRaw: a.ratings.appStore, bRaw: b.ratings.appStore, direction: "higher" },
-    { label: "Play Store", a: `${fmtFr(a.ratings.playStore, 1)}/5`, b: `${fmtFr(b.ratings.playStore, 1)}/5`, aRaw: a.ratings.playStore, bRaw: b.ratings.playStore, direction: "higher" },
+    // App Store / Play Store : retirées le 06/10/2026, aucune note n'a de source ni de date (cf. storeRating, lib/platforms.ts).
 
     // GROUP : BONUS (seulement si une offre est relevée — verifiedBonus)
     ...(verifiedBonus(a) || verifiedBonus(b)

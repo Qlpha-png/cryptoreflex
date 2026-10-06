@@ -19,6 +19,7 @@ import { ArrowLeft, Clock } from "lucide-react";
 
 import MdxContent from "@/components/MdxContent";
 import AuthorCard from "@/components/AuthorCard";
+import { articleAuthorId } from "@/lib/authors";
 import ProgressTracker from "@/components/academy/ProgressTracker";
 import LessonNavigator from "@/components/academy/LessonNavigator";
 import LessonToc from "@/components/academy/LessonToc";
@@ -190,7 +191,7 @@ export default async function LessonPage({ params }: Props) {
 
             {/* Encart auteur E-E-A-T (P0-#11) — pédagogue responsable
                 de la leçon. Reprend l'auteur de l'article MDX sous-jacent. */}
-            <AuthorCard authorId={article.author} variant="full" />
+            <AuthorCard authorId={articleAuthorId(article.author)} variant="full" />
 
             {/* Navigation prev/next + mark complete */}
             <LessonNavigator

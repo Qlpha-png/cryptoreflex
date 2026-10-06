@@ -17,12 +17,19 @@ import {
   Ban,
 } from "lucide-react";
 import {
-  cardBuyPct,
+  buildPlatformSummary,
+  cardCost1000,
+  cardCostSentence,
+  cardCostLabel,
+  cardFeeMeasured,
   getAllPlatforms,
   getPlatformById,
   isAvailableFr,
   type Platform,
+  type PurchaseCost,
   hasNoIncident,
+  purchaseCostText,
+  simpleCost1000,
   supportChatLabel,
   supportDelayLabel,
   supportPhoneLabel,
@@ -146,47 +153,31 @@ function Stars({ n }: { n: number }) {
   );
 }
 
-/* ------------------------------------------------------------------
- * Verdicts contextuels — varient selon le profil de la plateforme.
- * Évite d'avoir 15 pages avec le même paragraphe générique.
- * ------------------------------------------------------------------ */
+/* Résumé à partir des données (A-C0-3) et phrase « carte » : lib/platforms.ts (buildPlatformSummary,
+   cardCostSentence), testés dans tests/lib/platform-truth.test.ts. */
 
-function buildVerdict(p: Platform): { headline: string; recommendation: string; ideal: string; avoid: string } {
-  const isExchange = p.category === "exchange";
-  const cheap = p.scoring.fees >= 4.3;
-  const safe = p.scoring.security >= 4.6;
-  const french = p.support.frenchPhone === true;
-
-  let headline = `${p.name} obtient ${fmtNb(p.scoring.global)}/5 dans notre méthodologie 2026.`;
-  let recommendation: string;
-
-  /* 05/10/2026 : une plateforme non autorisée en France ne reçoit aucun verdict d'usage (avant : « difficile à battre »
-     sur /avis/binance, sous le bandeau rouge « n'est pas autorisée »). */
-  if (p.category !== "wallet" && !isAvailableFr(p)) {
-    return {
-      headline,
-      recommendation: `${p.name} n'est pas autorisée à servir les résidents français (${p.mica.status.charAt(0).toLowerCase()}${p.mica.status.slice(1)}). Nous ne donnons donc aucun verdict d'usage : comparez plutôt les plateformes agréées MiCA avec accès à la France.`,
-      ideal: "Aucun profil en France : la plateforme n'y est pas autorisée.",
-      avoid: "Vous résidez en France.",
-    };
-  }
-
-  if (cheap && isExchange) {
-    recommendation = `Si votre priorité est de comprimer chaque centime de frais — typiquement parce que vous tradez du spot mensuellement ou que vous DCA-ez sur des positions importantes — ${p.name} est statistiquement difficile à battre. Les ${fmtNb(p.fees.spotMaker)}% maker / ${fmtNb(p.fees.spotTaker)}% taker en font l'une des structures les plus agressives du marché européen MiCA, mais cette compression de coûts s'accompagne d'une interface qui ne pardonne pas grand-chose à un débutant pressé.`;
-  } else if (safe && french) {
-    recommendation = `${p.name} se distingue d'abord par ce que ${fmtNb(p.security.coldStoragePct)}% de stockage à froid couplé à un support téléphonique en français révèlent : un acteur qui priorise la rétention de l'utilisateur prudent plutôt que la conversion à tout prix. C'est un choix structurant. Le revers est mécanique : qui dit infrastructure de sécurité institutionnelle dit frais qui ne rivalisent pas avec ceux des plateformes les moins chères.`;
-  } else if (p.cryptos.totalCount < 100) {
-    recommendation = `${p.name} fait un pari clair : moins de cryptos (${p.cryptos.totalCount} listées), mais une expérience qu'on peut tendre à un parent ou à un collègue sans honte. Si vous cherchez à acheter Bitcoin, Ethereum et 3-4 majors sans jamais ouvrir un onglet trading, le fonctionnement est exactement calibré pour ça. Si vous voulez chasser la prochaine alt à 100M$ de capi, il faudra regarder ailleurs.`;
-  } else {
-    recommendation = `${p.name} occupe une position d'équilibriste : assez large (${p.cryptos.totalCount} cryptos) pour ne pas vous limiter, assez régulé pour respecter MiCA, mais sans le tranchant tarifaire des leaders frais ni la simplicité radicale des brokers grand public. C'est typiquement un choix par défaut intelligent — pas le meilleur sur un seul axe, mais probablement dans le top 3 sur 4 axes.`;
-  }
-
-  const ideal = p.idealFor;
-  const avoid = p.weaknesses[0]
-    ? `Point faible principal : ${p.weaknesses[0].replace(/\.$/, "")}. Si c'est rédhibitoire pour vous, regardez plutôt nos ${p.scoring.fees < 4 ? "alternatives à frais réduits" : "alternatives plus simples"}.`
-    : "Aucun point rédhibitoire identifié à ce jour.";
-
-  return { headline, recommendation, ideal, avoid };
+/** Tuile de coût pour 1 000 € : montant relevé, ou la raison de son absence. */
+function CostTile({ label, cost, normalCase = false }: { label: string; cost: PurchaseCost; normalCase?: boolean }) {
+  return (
+    <div className="rounded-xl border border-border bg-elevated p-4">
+      <div className={normalCase ? "text-xs text-muted" : "text-xs uppercase tracking-wide text-muted"}>{label}</div>
+      <div className="mt-1 text-2xl font-bold text-white tabular-nums">
+        {cost.status === "ok" ? (
+          <>
+            {(cost.kind === "max" || cost.kind === "max-partiel") && <span className="mr-1 text-sm font-semibold text-fg/70">au plus</span>}
+            {fmtFr(cost.eur, 2)} €
+          </>
+        ) : (
+          <span className="text-base">{purchaseCostText(cost)}</span>
+        )}
+      </div>
+      <div className="mt-1 text-xs text-fg/60">
+        sur 1 000 €
+        {cost.status === "ok" && (cost.kind === "partiel" || cost.kind === "max-partiel") ? ", plus une marge non publiée" : ""}
+        {cost.status !== "non-releve" ? ` · relevé le ${fmtDateFr(cost.date)}` : ""}
+      </div>
+    </div>
+  );
 }
 
 /* ------------------------------------------------------------------
@@ -205,14 +196,14 @@ function buildFaq(p: Platform): { q: string; a: string }[] {
       p.category === "wallet"
         ? `${p.name} est un portefeuille matériel : vous conservez vous-même vos clés, il n'a donc pas besoin d'agrément MiCA. Les achats proposés dans son application passent par des prestataires partenaires.`
         : isAvailableFr(p)
-          ? `Oui. ${p.name} figure au registre MiCA de l'ESMA : ${p.mica.status}${p.mica.amfRegistration ? ` (agrément AMF n° ${p.mica.amfRegistration})` : ""}${p.mica.legalEntity ? `, via ${p.mica.legalEntity}` : ""}. Vérification effectuée par notre équipe le ${frDate(p.mica.lastVerified)}.`
-          : `Non. ${p.mica.status}. Depuis le 1er juillet 2026, fin de la période transitoire MiCA, seuls les prestataires agréés avec accès à la France peuvent y fournir des services sur crypto-actifs. Vérification effectuée par notre équipe le ${frDate(p.mica.lastVerified)}.`,
+          ? `Oui. ${p.name} figure au registre MiCA de l'ESMA : ${p.mica.status}${p.mica.amfRegistration ? ` (agrément AMF n° ${p.mica.amfRegistration})` : ""}${p.mica.legalEntity ? `, via ${p.mica.legalEntity}` : ""}. Vérification effectuée par Cryptoreflex le ${frDate(p.mica.lastVerified)}.`
+          : `Non. ${p.mica.status}. Depuis le 1er juillet 2026, fin de la période transitoire MiCA, seuls les prestataires agréés avec accès à la France peuvent y fournir des services sur crypto-actifs. Vérification effectuée par Cryptoreflex le ${frDate(p.mica.lastVerified)}.`,
   });
 
   faq.push({
     q: `Quels sont les frais réels sur ${p.name} ?`,
     a: `${(p.fees.verified?.makerTakerApplies ?? true)
-      ? `Sur le marché spot, vous payez ${fmtNb(p.fees.spotMaker)} % en maker et ${fmtNb(p.fees.spotTaker)} % en taker. Un achat payé par carte coûte ${fmtNb(cardBuyPct(p))} %.`
+      ? `Sur le marché spot, vous payez ${fmtNb(p.fees.spotMaker)} % en maker et ${fmtNb(p.fees.spotTaker)} % en taker. ${cardCostSentence(p)}`
       : `${p.name} est un courtier : vous payez un frais d'achat unique, sans maker ni taker. Coût réel relevé : ${p.fees.verified?.realCostPct ?? `${fmtNb(p.fees.instantBuy)} %`}.`} Le retrait SEPA est facturé ${typeof p.fees.withdrawalFiatSepa === "number" ? (p.fees.withdrawalFiatSepa === 0 ? "0 € (gratuit)" : `${fmtNb(p.fees.withdrawalFiatSepa)} €`) : p.fees.withdrawalFiatSepa}. Spread : ${p.fees.spread}.`,
   });
 
@@ -252,9 +243,12 @@ function buildFaq(p: Platform): { q: string; a: string }[] {
   });
 
   // Q6 — quel dépôt minimum / how to start
+  // Correcteur final (06/10/2026) : sans achat par carte (fees.cost.card = null, relevé daté), on ne promet pas la carte.
+  const noCard = cardCost1000(p).status === "pas-de-carte";
+  const depositMethods = noCard ? p.deposit.methods.filter((m) => m !== "CB") : p.deposit.methods;
   faq.push({
     q: `Quel est le dépôt minimum sur ${p.name} et comment recharger ?`,
-    a: `Le dépôt minimum est de ${p.deposit.minEur}€. Vous pouvez recharger votre compte par ${p.deposit.methods.slice(0, 4).join(", ")}${p.deposit.methods.length > 4 ? "…" : ""}. Le SEPA est généralement le moins cher (souvent gratuit) mais peut prendre 24-48h ; la carte bancaire est instantanée mais facturée ${fmtNb(cardBuyPct(p))} %.`,
+    a: `Le dépôt minimum est de ${p.deposit.minEur}€. Vous pouvez recharger votre compte par ${depositMethods.slice(0, 4).join(", ")}${depositMethods.length > 4 ? "…" : ""}. Le SEPA est généralement le moins cher (souvent gratuit) mais peut prendre 24 à 48 h${noCard ? "" : " ; la carte bancaire est instantanée"}. ${cardCostSentence(p)}`,
   });
 
   // Q7 — comparatif avec un concurrent direct (signal SEO + intent commercial)
@@ -263,7 +257,7 @@ function buildFaq(p: Platform): { q: string; a: string }[] {
   if (p.name !== competitor) {
     faq.push({
       q: `${p.name} ou ${competitor} : lequel choisir en 2026 ?`,
-      a: `Tout dépend de votre priorité. ${p.name} se distingue par ${p.strengths[0]?.toLowerCase() ?? "son positionnement"}, là où ${competitor} mise sur ${competitor === "Coinbase" ? "la régulation maximale et l'UX simple" : "la sécurité (aucun piratage majeur, preuve de réserves auditée)"}. Notre comparatif détaillé tranche selon votre profil.`,
+      a: `Tout dépend de votre priorité. ${p.name} se distingue par ${p.strengths[0]?.toLowerCase() ?? "son positionnement"}, là où ${competitor} mise sur ${competitor === "Coinbase" ? "une interface simple, avec un agrément MiCA délivré au Luxembourg" :"la sécurité (aucun piratage majeur, preuve de réserves auditée)"}. Notre comparatif détaillé tranche selon votre profil.`,
     });
   }
 
@@ -278,8 +272,10 @@ export default function ReviewPage({ params }: Props) {
   const p = getPlatformById(params.slug);
   if (!p) notFound();
 
-  const verdict = buildVerdict(p);
+  const summary = buildPlatformSummary(p);
   const faq = buildFaq(p);
+  const cardCost = cardCost1000(p);
+  const simpleCost = simpleCost1000(p);
   const relatedComparisons = getRelatedComparisons(p.id, 4);
   const otherPlatforms = getAllPlatforms()
     .filter((x) => x.id !== p.id)
@@ -452,7 +448,7 @@ export default function ReviewPage({ params }: Props) {
           {/* Carte CTA latérale */}
           <aside className="rounded-2xl border border-border bg-surface p-5 sticky top-24">
             <div className="text-xs uppercase tracking-wide text-muted">
-              {available ? `Tester ${p.name}` : "Non autorisée en France"}
+              {available ? `Ouvrir le site de ${p.name}` : "Non autorisée en France"}
             </div>
             {/*
               MiCA badge JUSTE au-dessus du CTA = trust signal au moment exact
@@ -525,10 +521,10 @@ export default function ReviewPage({ params }: Props) {
               href={available ? p.affiliateUrl : "/comparatif/frais"}
               platform={p.id}
               placement="avis-verdict-express"
-              ctaText={ctaLabel(`Tester ${p.name}`, "Voir les plateformes autorisées")}
+              ctaText={ctaLabel(`Site officiel de ${p.name}`, "Voir les plateformes autorisées")}
               className="inline-flex items-center gap-2 rounded-xl border border-primary/40 bg-primary/15 px-4 py-2 text-sm font-semibold text-primary-glow hover:bg-primary/25 transition-colors"
             >
-              {ctaLabel(`Tester ${p.name}`, "Voir les plateformes autorisées")}
+              {ctaLabel(`Site officiel de ${p.name}`, "Voir les plateformes autorisées")}
               <ExternalLink className="h-4 w-4" />
             </AffiliateLink>
           </div>
@@ -548,10 +544,10 @@ export default function ReviewPage({ params }: Props) {
                 </div>
                 <ul className="mt-3 space-y-2 text-sm text-white/85">
                   {p.scoring.fees >= 4.4 && (
-                    <li className="flex gap-2"><span className="text-accent-green">•</span> Vous chassez les frais les plus bas du marché.</li>
+                    <li className="flex gap-2"><span className="text-accent-green">•</span> Les frais sont votre premier critère (sous-note frais : {fmtFr(p.scoring.fees, 1)}/5).</li>
                   )}
                   {p.scoring.security >= 4.7 && (
-                    <li className="flex gap-2"><span className="text-accent-green">•</span> La sécurité (cold storage, audits) prime sur tout le reste.</li>
+                    <li className="flex gap-2"><span className="text-accent-green">•</span> La sécurité est votre premier critère (sous-note sécurité : {fmtFr(p.scoring.security, 1)}/5).</li>
                   )}
                   {p.scoring.ux >= 4.5 && (
                     <li className="flex gap-2"><span className="text-accent-green">•</span> Vous démarrez et voulez une interface qui ne vous perd pas.</li>
@@ -628,14 +624,13 @@ export default function ReviewPage({ params }: Props) {
 
           {!isWallet && (mt ? (
             <>
-              <div className="mt-5 grid gap-3 sm:grid-cols-3">
-                <div className="rounded-xl border border-border bg-elevated p-4">
-                  <div className="text-xs uppercase tracking-wide text-muted">Achat par carte (CB)</div>
-                  <div className="mt-1 text-2xl font-bold text-white tabular-nums">
-                    {fmtFr((1000 * cardBuyPct(p) / 100), 2)} €
-                  </div>
-                  <div className="mt-1 text-xs text-fg/60">{fmtNb(cardBuyPct(p))} % sur 1 000 €</div>
-                </div>
+              {/* 06/10/2026 (A-C0-4) : la tuile « carte » lit fees.cost.card (coût complet : frais d'achat + frais de
+                  paiement par carte) ; le coût depuis le solde garde le libellé de son chemin (fees.cost.path). */}
+              <div className="mt-5 grid gap-3 sm:grid-cols-2">
+                {simpleCost.status !== "non-releve" && (
+                  <CostTile label={simpleCost.path ?? "Achat simple"} cost={simpleCost} normalCase />
+                )}
+                <CostTile label={cardCostLabel(p)} cost={cardCost} />
                 <div className="rounded-xl border border-border bg-elevated p-4">
                   <div className="text-xs uppercase tracking-wide text-muted">Ordre limité (taker)</div>
                   <div className="mt-1 text-2xl font-bold text-white tabular-nums">
@@ -652,19 +647,24 @@ export default function ReviewPage({ params }: Props) {
                 </div>
               </div>
               <p className="mt-4 text-xs text-muted leading-relaxed">
-                <strong className="text-fg/80">Lecture :</strong> sur un achat de 1 000 € payé par carte, vous payez environ <strong className="text-white">{fmtFr((1000 * cardBuyPct(p) / 100), 2)} €</strong> de frais. Après un virement, un ordre limité maker ramène ce coût à <strong className="text-white">{fmtFr((1000 * p.fees.spotMaker / 100), 2)} €</strong> — soit une économie de {fmtFr(((cardBuyPct(p) - p.fees.spotMaker) * 10), 2)} € (<strong>{Math.round((1 - p.fees.spotMaker / Math.max(cardBuyPct(p), 0.01)) * 100)} %</strong>). Spread observé en plus : {p.fees.spread}.
+                <strong className="text-fg/80">Lecture :</strong> {cardCostSentence(p)} Après un virement, un ordre limité maker sur le marché spot coûte <strong className="text-white">{fmtFr((1000 * p.fees.spotMaker / 100), 2)} €</strong> pour 1 000 €. Spread observé en plus : {p.fees.spread}.
               </p>
             </>
           ) : (
             <>
-              <div className="mt-5 grid gap-3 sm:grid-cols-2">
-                <div className="rounded-xl border border-border bg-elevated p-4">
-                  <div className="text-xs uppercase tracking-wide text-muted">Frais d&apos;achat (courtier)</div>
-                  <div className="mt-1 text-2xl font-bold text-white tabular-nums">
-                    {fmtFr((1000 * p.fees.instantBuy / 100), 2)} €
+              <div className="mt-5 grid gap-3 sm:grid-cols-3">
+                {simpleCost.status !== "non-releve" ? (
+                  <CostTile label={simpleCost.path ?? "Achat simple"} cost={simpleCost} normalCase />
+                ) : (
+                  <div className="rounded-xl border border-border bg-elevated p-4">
+                    <div className="text-xs uppercase tracking-wide text-muted">Frais d&apos;achat (courtier)</div>
+                    <div className="mt-1 text-2xl font-bold text-white tabular-nums">
+                      {fmtFr((1000 * p.fees.instantBuy / 100), 2)} €
+                    </div>
+                    <div className="mt-1 text-xs text-fg/60">{fmtNb(p.fees.instantBuy)} % sur 1 000 €, hors frais de paiement par carte</div>
                   </div>
-                  <div className="mt-1 text-xs text-fg/60">{fmtNb(p.fees.instantBuy)}% sur 1 000 €</div>
-                </div>
+                )}
+                <CostTile label={cardCostLabel(p)} cost={cardCost} />
                 <div className="rounded-xl border border-border bg-elevated p-4">
                   <div className="text-xs uppercase tracking-wide text-muted">Retrait SEPA</div>
                   <div className="mt-1 text-2xl font-bold text-white tabular-nums">
@@ -733,8 +733,8 @@ export default function ReviewPage({ params }: Props) {
                 )}
                 {!isWallet && (
                   <tr>
-                    <td className="px-4 py-3 text-muted">Achat par carte (CB)</td>
-                    <td className="px-4 py-3 text-right font-mono tabular-nums">{fmtNb(cardBuyPct(p))} %</td>
+                    <td className="px-4 py-3 text-muted">{cardFeeMeasured(p) ? "Achat par carte de 1 000 €, frais de carte compris" : "Achat par carte de 1 000 € (frais de carte non relevés)"}</td>
+                    <td className="px-4 py-3 text-right font-mono tabular-nums">{purchaseCostText(cardCost)}</td>
                   </tr>
                 )}
                 <tr>
@@ -811,7 +811,7 @@ export default function ReviewPage({ params }: Props) {
         <section className="mt-10 rounded-2xl border border-primary/30 bg-primary/5 p-5 sm:p-6 flex flex-col sm:flex-row items-start sm:items-center gap-4 justify-between">
           <div>
             <div className="text-base font-bold text-white">
-              {available ? `Prêt à tester ${p.name} ?` : "Cherchez une plateforme autorisée en France"}
+              {available ? `Ouvrir le site de ${p.name}` : "Cherchez une plateforme autorisée en France"}
             </div>
             <p className="mt-1 text-sm text-white/70 max-w-xl">
               {isWallet ? "Portefeuille matériel, hors champ MiCA" : available ? "Plateforme agréée MiCA" : "Non autorisée en France"} · vérifié le {new Date(p.mica.lastVerified).toLocaleDateString("fr-FR")}.
@@ -838,12 +838,8 @@ export default function ReviewPage({ params }: Props) {
             Catalogue crypto et staking
           </h2>
           <p className="mt-3 text-white/80 leading-relaxed">
-            {p.name} liste {p.cryptos.totalCount} cryptomonnaies en avril 2026.{" "}
-            {p.cryptos.totalCount > 200
-              ? `C'est un catalogue large qui couvre Bitcoin et Ethereum, l'intégralité du top 50 par capitalisation, et descend dans les altcoins de cap moyenne. Pour un trader qui chasse les rotations sectorielles (DePIN, RWA, IA), c'est suffisant.`
-              : p.cryptos.totalCount > 80
-                ? `C'est un catalogue intermédiaire : tous les majors, l'essentiel du top 50, mais des trous dès qu'on descend en cap moyenne. Conviendra parfaitement à un investisseur long terme.`
-                : `C'est un catalogue volontairement resserré sur les majors. Vous y trouverez Bitcoin, Ethereum et l'essentiel du top 20, mais pas les altcoins de niche. C'est un choix éditorial cohérent avec un positionnement grand public.`}
+            {p.name} liste {fmtFr(p.cryptos.totalCount, 0)} cryptomonnaie{p.cryptos.totalCount > 1 ? "s" : ""} selon nos données.{" "}
+            {`Vérifiez sur le site de ${p.name} qu'une crypto précise y est proposée avant d'ouvrir un compte.`}
           </p>
           {p.cryptos.stakingAvailable ? (
             <div className="mt-5 rounded-xl border border-border bg-surface p-5">
@@ -977,19 +973,26 @@ export default function ReviewPage({ params }: Props) {
           </div>
         </section>
 
-        {/* VERDICT */}
+        {/* RÉSUMÉ À PARTIR DES DONNÉES — A-C0-3 (06/10/2026) : remplace le « Verdict Cryptoreflex » rédigé par du code. */}
         <section className="mt-12 rounded-2xl border border-primary/30 bg-primary/5 p-6">
-          <h2 className="text-2xl font-bold tracking-tight">Verdict Cryptoreflex</h2>
-          <p className="mt-3 text-base text-white/85 leading-relaxed">{verdict.headline}</p>
-          <p className="mt-4 text-sm text-white/80 leading-relaxed">{verdict.recommendation}</p>
+          <h2 className="text-2xl font-bold tracking-tight">Résumé à partir des données ci-dessus</h2>
+          <p className="mt-3 text-base text-white/85 leading-relaxed">{summary.headline}</p>
+          <ul className="mt-4 space-y-2 text-sm text-white/80 leading-relaxed">
+            {summary.facts.map((f) => (
+              <li key={f} className="flex gap-2">
+                <span className="text-primary-glow shrink-0">·</span>
+                <span>{f}</span>
+              </li>
+            ))}
+          </ul>
           <div className="mt-5 grid gap-3 sm:grid-cols-2">
             <div>
               <div className="text-xs uppercase tracking-wide text-muted">Idéal pour</div>
-              <div className="mt-1 text-sm text-white/90">{verdict.ideal}</div>
+              <div className="mt-1 text-sm text-white/90">{summary.ideal}</div>
             </div>
             <div>
               <div className="text-xs uppercase tracking-wide text-muted">À éviter si</div>
-              <div className="mt-1 text-sm text-white/90">{verdict.avoid}</div>
+              <div className="mt-1 text-sm text-white/90">{summary.avoid}</div>
             </div>
           </div>
           <div className="mt-6">
@@ -1120,7 +1123,7 @@ export default function ReviewPage({ params }: Props) {
         {/* DISCLAIMER */}
         <section className="mt-12 rounded-xl border border-border bg-surface/50 p-5">
           <p className="text-xs text-muted leading-relaxed">
-            Cet avis est rédigé par l'équipe éditoriale {BRAND.name}. Données vérifiées le {new Date(p.mica.lastVerified).toLocaleDateString("fr-FR")} auprès des sources publiques (site officiel, registre AMF){hasTpLine ? `, note Trustpilot relevée le ${tpDate}` : ""}.{" "}
+            Cette fiche est générée à partir de nos données ; Kevin Voisin, éditeur de {BRAND.name}, en est responsable. Données vérifiées le {new Date(p.mica.lastVerified).toLocaleDateString("fr-FR")} auprès des sources publiques (site officiel, registre AMF){hasTpLine ? `, note Trustpilot relevée le ${tpDate}` : ""}.{" "}
             {paidKind === "affiliate"
               ? `${BRAND.name} perçoit une commission via les liens vers ${p.name} marqués « Publicité », sans surcoût ni biais sur la note attribuée`
               : paidKind === "referral"

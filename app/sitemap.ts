@@ -156,6 +156,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     entry("/methodologie", "monthly", 0.5),
     // Charte éthique éditoriale — ajout 2026-05-07 (signal E-E-A-T).
     entry("/charte", "yearly", 0.6),
+    // Journal des corrections — ajout 2026-10-06 (data/corrections.json, promesse « pas de correction silencieuse »).
+    entry("/corrections", "weekly", 0.4),
     entry("/a-propos", "monthly", 0.6),
     // FIX SEO 2026-05-06 — hubs indexables jamais soumis auparavant.
     entry("/cryptos", "weekly", 0.85),

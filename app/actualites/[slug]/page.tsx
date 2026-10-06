@@ -24,13 +24,12 @@ import {
 import { formatRelativeFr } from "@/lib/news-aggregator";
 import StructuredData from "@/components/StructuredData";
 import MdxContent from "@/components/MdxContent";
-import AuthorCard from "@/components/AuthorCard";
+import AutoPublishedLine from "@/components/AutoPublishedLine";
 import RelatedNews from "@/components/news/RelatedNews";
 import { SentimentBadge } from "@/components/news/NewsCard";
 import NewsletterInline from "@/components/NewsletterInline";
 import RelatedPagesNav from "@/components/RelatedPagesNav";
 import NextStepsGuide from "@/components/NextStepsGuide";
-import { DEFAULT_AUTHOR_ID } from "@/lib/authors";
 import { fitDescription, fitTitle } from "@/lib/seo-text";
 
 /**
@@ -102,7 +101,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       siteName: BRAND.name,
       images: [{ url: ogImage, width: 1200, height: 630 }],
       publishedTime: news.date,
-      authors: [news.author ?? "Cryptoreflex"],
+      /* D3 (06/10/2026) : contenu publié automatiquement, signé du nom du site (jamais « La rédaction »). */
+      authors: [BRAND.name],
       section: NEWS_CATEGORY_LABELS[news.category],
     },
     twitter: {
@@ -155,7 +155,7 @@ export default async function NewsDetailPage({ params }: PageProps) {
     dateModified: news.date,
     author: {
       "@type": "Organization",
-      name: news.author ?? "Cryptoreflex",
+      name: BRAND.name,
       url: BRAND.url,
     },
     publisher: {
@@ -351,10 +351,9 @@ export default async function NewsDetailPage({ params }: PageProps) {
           </aside>
         )}
 
-        {/* Encart auteur E-E-A-T (P0-#11) — éditorialement responsable
-            de la sélection / réécriture de cette news. Le frontmatter peut
-            indiquer un id explicite ; sinon fallback sur l'auteur par défaut. */}
-        <AuthorCard authorId={DEFAULT_AUTHOR_ID} variant="full" />
+        {/* D3 (décision de Kev, 06/10/2026) : actualité publiée automatiquement → pas de fiche auteur, une ligne
+            discrète avec la source lue dans le frontmatter. */}
+        <AutoPublishedLine frontmatter={{ source: news.source, sourceUrl: news.sourceUrl, sources: news.isBrief ? news.sources : undefined }} />
 
         {/* NEWSLETTER CTA */}
         <div className="mt-10">

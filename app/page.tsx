@@ -18,6 +18,7 @@ import Hero from "@/components/Hero";
 import HomeDoors from "@/components/home/HomeDoors";
 import HomeMarketToday from "@/components/home/HomeMarketToday";
 import HomeTrustLine from "@/components/home/HomeTrustLine";
+import { detectMarketSource } from "@/components/home/market-source";
 import StructuredData from "@/components/StructuredData";
 import { BRAND, STATS } from "@/lib/brand";
 import { withHreflang } from "@/lib/seo-alternates";
@@ -73,6 +74,9 @@ export default async function HomePage() {
     if (c.id === "bitcoin" || c.id === "ethereum" || c.id === "solana") heroSparklines[c.id] = c.sparkline7d ?? [];
   }
 
+  // Source réelle des cours (CoinGecko, secours ou relevé statique) : attribution affichée à côté des prix (06/10/2026).
+  const priceSource = detectMarketSource(market);
+
   // Données structurées : les 3 plateformes affichées dans la porte « Acheter » (autorisées en France uniquement).
   const homeSchema = graphSchema([topPlatformsItemListSchema(3)]);
 
@@ -87,10 +91,11 @@ export default async function HomePage() {
             : null
         }
         fearGreed={fearGreed ? { value: fearGreed.value, label: fearGreed.classification } : null}
+        priceSource={priceSource}
       />
       <Hero prices={prices} sparklines={heroSparklines} updatedAt={new Date().toISOString()} fearGreed={fearGreed?.value ?? null} />
       <HomeDoors />
-      <HomeMarketToday market={market} />
+      <HomeMarketToday market={market} priceSource={priceSource} />
       <HomeTrustLine />
       {/* une seule newsletter sur l'accueil (le formulaire porte son titre et l'ancre #newsletter) */}
       <NewsletterCapture />

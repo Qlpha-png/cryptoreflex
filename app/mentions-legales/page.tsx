@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { BRAND } from "@/lib/brand";
+import { pageUpdatedFr } from "@/lib/engagements";
+import { DELAI_REPONSE } from "@/lib/engagements";
 
 export const metadata: Metadata = {
   title: "Mentions légales",
@@ -14,7 +16,8 @@ export default function MentionsLegalesPage() {
   return (
     <article className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-16 prose prose-invert">
       <h1 className="text-4xl font-extrabold tracking-tight text-fg">Mentions légales</h1>
-      <p className="text-sm text-muted">Dernière mise à jour : 25 avril 2026</p>
+      {/* 06/10/2026 : « 25 avril 2026 » était faux (contenu modifié depuis, dernière fois le 06/10/2026). */}
+      <p className="text-sm text-muted">Dernière mise à jour : {pageUpdatedFr("/mentions-legales")}</p>
 
       <h2 className="mt-10 text-2xl font-bold text-fg">1. Éditeur du site</h2>
       <ul className="text-fg/85 leading-relaxed">
@@ -27,7 +30,7 @@ export default function MentionsLegalesPage() {
         <li><strong>Activité principale</strong> : Portails Internet (NAF 63.12Z) — édition de contenus éditoriaux et comparateurs en ligne</li>
         <li><strong>Régime de TVA</strong> : Franchise en base de TVA (article 293 B du CGI) — TVA non applicable</li>
         <li><strong>Date d'immatriculation au RNE (INPI)</strong> : 15 avril 2026</li>
-        <li><strong>Adresse postale du siège social</strong> : disponible publiquement via l'<a href="https://annuaire-entreprises.data.gouv.fr/entreprise/103352621" target="_blank" rel="noopener noreferrer" className="text-primary-soft hover:underline">Annuaire des Entreprises (data.gouv.fr)</a> et l'<a href="https://www.infogreffe.fr/" target="_blank" rel="noopener noreferrer" className="text-primary-soft hover:underline">extrait Kbis InfoGreffe</a> via le SIREN 103 352 621. Pour toute communication écrite : adresser à <a href={`mailto:${BRAND.email}`} className="text-primary-soft hover:underline">{BRAND.email}</a> (réponse sous 48h ouvrées) — un courrier peut être renvoyé sur demande.</li>
+        <li><strong>Adresse postale du siège social</strong> : disponible publiquement via l'<a href="https://annuaire-entreprises.data.gouv.fr/entreprise/103352621" target="_blank" rel="noopener noreferrer" className="text-primary-soft hover:underline">Annuaire des Entreprises (data.gouv.fr)</a> et l'<a href="https://www.infogreffe.fr/" target="_blank" rel="noopener noreferrer" className="text-primary-soft hover:underline">extrait Kbis InfoGreffe</a> via le SIREN 103 352 621. Pour toute communication écrite : adresser à <a href={`mailto:${BRAND.email}`} className="text-primary-soft hover:underline">{BRAND.email}</a> (réponse sous {DELAI_REPONSE}) — un courrier peut être renvoyé sur demande.</li>
         <li><strong>Directeur de la publication</strong> : Kevin VOISIN</li>
         <li><strong>Contact</strong> : <a href={`mailto:${BRAND.email}`} className="text-primary-soft hover:underline">{BRAND.email}</a></li>
       </ul>
@@ -80,9 +83,10 @@ export default function MentionsLegalesPage() {
 
       <h2 className="mt-10 text-2xl font-bold text-fg">6. Données personnelles</h2>
       <p className="text-fg/85 leading-relaxed">
-        Le traitement de vos données personnelles est régi par notre{" "}
+        {/* 06/10/2026 : « conforme au RGPD » (conformité auto-déclarée) remplacé par un fait vérifiable. */}
+        Le traitement de vos données personnelles est décrit dans notre{" "}
         <a href="/confidentialite" className="text-primary-soft hover:underline">Politique de confidentialité</a>,
-        conforme au Règlement Général sur la Protection des Données (RGPD).
+        établie en application du Règlement général sur la protection des données (RGPD).
       </p>
 
       <h2 className="mt-10 text-2xl font-bold text-fg">7. Droit applicable</h2>
@@ -92,6 +96,10 @@ export default function MentionsLegalesPage() {
         aux utilisateurs. En cas de litige et après une tentative de résolution amiable
         (contact <a href={`mailto:${BRAND.email}`} className="text-primary-soft hover:underline">{BRAND.email}</a>),
         les juridictions françaises sont compétentes.
+      </p>
+      <p className="mt-10 text-sm text-muted leading-relaxed">
+        Les erreurs corrigées sur le site sont listées, avec leur date, dans le{" "}
+        <a href="/corrections" className="text-primary-soft hover:underline">journal des corrections</a>.
       </p>
     </article>
   );

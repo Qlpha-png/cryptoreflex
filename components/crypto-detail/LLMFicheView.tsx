@@ -182,13 +182,9 @@ export function LLMFicheView({ fiche, knownIds }: { fiche: CryptoFicheRow; known
           <Bot className="size-4 shrink-0 mt-0.5" aria-hidden="true" />
           <span>
             <strong>Fiche générée automatiquement</strong> à partir de sources publiques,
-            non vérifiée éditorialement une à une. Des chiffres ou faits peuvent être inexacts —
-            recoupe toujours avec les sources officielles (site du projet, CoinGecko) avant toute
-            décision. Nos{" "}
-            <Link href="/cryptos" className="underline hover:text-white">
-              fiches premium (top 100)
-            </Link>{" "}
-            sont, elles, vérifiées à la main.
+            non vérifiée éditorialement une à une. Des chiffres ou faits peuvent être inexacts :
+            recoupez toujours avec les sources officielles (site du projet, CoinGecko) avant toute
+            décision.
           </span>
         </p>
       </header>

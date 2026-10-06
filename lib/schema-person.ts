@@ -81,7 +81,7 @@ export function founderPersonSchema(author: Author): JsonLd {
      */
     hasOccupation: {
       "@type": "Occupation",
-      name: "Fondateur & rédacteur en chef Cryptoreflex",
+      name: "Fondateur et seul rédacteur de Cryptoreflex",
       occupationLocation: { "@type": "Country", name: "France" },
       skills: author.expertise.join(", "),
       experienceRequirements: `${author.yearsExperience}+ ans d'investissement particulier en cryptomonnaies`,

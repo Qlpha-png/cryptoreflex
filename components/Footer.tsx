@@ -104,10 +104,6 @@ export default async function Footer() {
             <ShieldCheck className="h-2.5 w-2.5" strokeWidth={2.5} aria-hidden="true" focusable="false" />
             MiCA · info publique
           </span>
-          <span className="inline-flex items-center gap-1 rounded-full border border-emerald-500/30 bg-emerald-500/5 px-2 py-0.5 text-[10px] font-mono font-bold text-emerald-300/90 uppercase tracking-wider">
-            <Lock className="h-2.5 w-2.5" strokeWidth={2.5} aria-hidden="true" focusable="false" />
-            RGPD · CNIL
-          </span>
           <span className="inline-flex items-center gap-1 rounded-full border border-accent-cyan/30 bg-accent-cyan/5 px-2 py-0.5 text-[10px] font-mono font-bold text-accent-cyan uppercase tracking-wider">
             <Sparkles className="h-2.5 w-2.5" strokeWidth={2.5} aria-hidden="true" focusable="false" />
             Méthodologie publique
@@ -219,8 +215,6 @@ export default async function Footer() {
             <ShieldCheck className="h-3 w-3" strokeWidth={2} aria-hidden="true" focusable="false" />
             HTTPS uniquement
           </span>
-          <span aria-hidden="true">·</span>
-          <span>RGPD · CNIL</span>
           <span aria-hidden="true">·</span>
           <span className="inline-flex items-center gap-1">
             <Sparkles className="h-3 w-3" strokeWidth={2} aria-hidden="true" focusable="false" />

@@ -18,14 +18,17 @@
  */
 
 import {
-  cardBuyPct,
+  cardCost1000,
   frenchHelpLabel,
   isAvailableFr,
+  purchaseCostText,
   type Platform,
   supportChatLabel,
   supportPhoneLabel,
   trustpilotText,
 } from "@/lib/platforms";
+
+const lowerFirst = (s: string) => s.charAt(0).toLowerCase() + s.slice(1);
 import type { ComparisonEntry } from "@/lib/comparisons";
 import type { FaqItem } from "@/lib/schema";
 import type { ProfileVerdict } from "@/components/comparison/VerdictByProfile";
@@ -147,7 +150,7 @@ function defaultFaq(a: Platform, b: Platform): FaqItem[] {
   return [
     {
       question: `${a.name} ou ${b.name} : laquelle est la moins chère en frais ?`,
-      answer: `Sur les frais spot maker, ${a.name} affiche ${fmtPct(a.fees.spotMaker)} contre ${fmtPct(b.fees.spotMaker)} pour ${b.name}. Sur l'achat instantané CB, ${a.name} prélève ${fmtPct(a.fees.instantBuy)} et ${b.name} ${fmtPct(b.fees.instantBuy)}. À volume égal, l'écart annuel peut atteindre plusieurs centaines d'euros pour un trader régulier — c'est la première variable à arbitrer si vous tradez plus que vous ne HODLez.`,
+      answer: `Sur les frais spot maker, ${a.name} affiche ${fmtPct(a.fees.spotMaker)} contre ${fmtPct(b.fees.spotMaker)} pour ${b.name}. Pour un achat de 1 000 € payé par carte (coût complet, frais de paiement compris), ${a.name} : ${lowerFirst(purchaseCostText(cardCost1000(a)))} ; ${b.name} : ${lowerFirst(purchaseCostText(cardCost1000(b)))}. À volume égal, l'écart annuel peut atteindre plusieurs centaines d'euros pour un trader régulier — c'est la première variable à arbitrer si vous tradez plus que vous ne HODLez.`,
     },
     {
       question: `${a.name} et ${b.name} sont-elles régulées MiCA en France ?`,
@@ -172,6 +175,35 @@ function defaultFaq(a: Platform, b: Platform): FaqItem[] {
  * Helper : 4 verdicts profil par défaut, déterminés depuis les scorings.
  */
 function defaultProfiles(a: Platform, b: Platform): ProfileVerdict[] {
+  return guardUnauthorizedProfiles(a, b, scoredProfiles(a, b));
+}
+
+/**
+ * Passe finale (06/10/2026) : une plateforme non autorisée en France (registre MiCA de l'ESMA, liste blanche de l'AMF)
+ * n'est jamais désignée gagnante d'un profil. Sur /comparatif/binance-vs-coinbase, le profil « trader actif » désignait
+ * Binance (frais taker plus bas), alors que Binance a cessé ses services en France le 1er juillet 2026.
+ */
+export function guardUnauthorizedProfiles(a: Platform, b: Platform, profiles: ProfileVerdict[]): ProfileVerdict[] {
+  const okA = isAvailableFr(a);
+  const okB = isAvailableFr(b);
+  if (okA && okB) return profiles;
+  if (!okA && !okB) {
+    return profiles.map((p) => ({
+      ...p,
+      winner: "tie" as const,
+      reasoning: `Ni ${a.name} ni ${b.name} n'est autorisée en France : aucune recommandation, quel que soit le profil.`,
+    }));
+  }
+  const ok = okA ? a : b;
+  const ko = okA ? b : a;
+  return profiles.map((p) => ({
+    ...p,
+    winner: okA ? ("a" as const) : ("b" as const),
+    reasoning: `${ko.name} n'est pas autorisée en France : aucune recommandation. Pour un résident français, seule ${ok.name} peut être utilisée.`,
+  }));
+}
+
+function scoredProfiles(a: Platform, b: Platform): ProfileVerdict[] {
   const beginnerWinner = a.scoring.ux > b.scoring.ux ? "a" : a.scoring.ux < b.scoring.ux ? "b" : "tie";
   const longTermWinner = a.scoring.mica + a.scoring.security > b.scoring.mica + b.scoring.security ? "a" : "b";
   const traderWinner = a.fees.spotTaker < b.fees.spotTaker ? "a" : a.fees.spotTaker > b.fees.spotTaker ? "b" : "tie";
@@ -185,7 +217,7 @@ function defaultProfiles(a: Platform, b: Platform): ProfileVerdict[] {
     {
       profile: "debutant",
       winner: beginnerWinner,
-      reasoning: `Pour un premier achat crypto, l'UX prime sur tout. ${beginnerWinner === "a" ? a.name : beginnerWinner === "b" ? b.name : "Les deux"} affiche${beginnerWinner === "tie" ? "nt" : ""} la meilleure note d'expérience utilisateur (${beginnerWinner === "a" ? fmtScore(a.scoring.ux) : beginnerWinner === "b" ? fmtScore(b.scoring.ux) : `${fmtScore(a.scoring.ux)} vs ${fmtScore(b.scoring.ux)}`}). L'onboarding KYC est fluide, l'app mobile reste lisible, et le parcours d'achat tient en moins de 2 minutes.`,
+      reasoning: `Pour un premier achat crypto, l'UX prime sur tout. ${beginnerWinner === "a" ? a.name : beginnerWinner === "b" ? b.name : "Les deux"} affiche${beginnerWinner === "tie" ? "nt" : ""} la note d'expérience utilisateur la plus haute des deux (${beginnerWinner === "a" ? fmtScore(a.scoring.ux) : beginnerWinner === "b" ? fmtScore(b.scoring.ux) : `${fmtScore(a.scoring.ux)} vs ${fmtScore(b.scoring.ux)}`}), selon notre méthodologie publique.`,
     },
     {
       profile: "long_terme",
@@ -228,7 +260,7 @@ const OVERRIDES: Record<string, SlugOverride> = {
     pick: (a, b) =>
       `Pour épargner du Bitcoin sans y penser : ${b.name} (arrondi sur achats CB). Pour diversifier crypto + actions + métaux dans une seule app régulée : ${a.name}.`,
     finalVerdict: (a, b) =>
-      `${b.name} et ${a.name} ne jouent pas exactement dans la même catégorie : ${b.name} est un produit ultra-spécialisé (DCA BTC automatique via arrondi sur achats carte bancaire), idéal pour le débutant total qui veut "se forcer" à épargner sans changer ses habitudes. ${a.name} est un broker européen complet (480 cryptos + actions fractionnées + ETF + métaux précieux) avec agrément MiCA via BaFin, qui s'adresse à un investisseur prêt à diversifier sciemment. Verdict : ${b.name} pour démarrer, ${a.name} pour grandir. Beaucoup d'utilisateurs cumulent les deux (DCA passif sur ${b.name}, allocation active sur ${a.name}).`,
+      `${b.name} et ${a.name} ne jouent pas exactement dans la même catégorie : ${b.name} est un produit ultra-spécialisé (DCA BTC automatique via arrondi sur achats carte bancaire), idéal pour le débutant total qui veut "se forcer" à épargner sans changer ses habitudes. ${a.name} est un broker européen complet (480 cryptos + actions fractionnées + ETF + métaux précieux) avec un agrément MiCA (${a.mica.authority ?? a.mica.status}), qui s'adresse à un investisseur prêt à diversifier sciemment. Verdict : ${b.name} pour démarrer, ${a.name} pour grandir. Beaucoup d'utilisateurs cumulent les deux (DCA passif sur ${b.name}, allocation active sur ${a.name}).`,
     faq: defaultFaq,
     profiles: defaultProfiles,
   },
@@ -236,9 +268,12 @@ const OVERRIDES: Record<string, SlugOverride> = {
   "ledger-vs-trezor": {
     angle: "Hardware wallet propriétaire vs open source",
     pick: (a, b) =>
-      `Pour un catalogue large + UX mobile (Bluetooth) : ${a.name}. Pour la transparence open source maximale et un focus Bitcoin : ${b.name}.`,
+      `Pour un catalogue large et un usage mobile (Bluetooth) : ${a.name}. Pour un firmware open source et un usage centré sur Bitcoin : ${b.name}.`,
+    /* Passe finale (06/10/2026) : « excellent support natif de CoinJoin » était faux. Page officielle trezor.io/learn
+       (« What is coinjoin? », lue le 06/10/2026) : le coordinateur zkSNACKs utilisé par Trezor a cessé son service le
+       1er juin 2024 ; plus aucun coinjoin ne peut être lancé depuis Trezor Suite. Superlatifs retirés. */
     finalVerdict: (a, b) =>
-      `Le choix se résume à un arbitrage idéologique : ${a.name} offre plus de cryptos supportées (5500+ vs 1800), une connexion Bluetooth chiffrée pratique en mobilité (Nano X, Stax) et une intégration Ledger Live polie. ${b.name} mise sur la transparence totale (firmware 100 % open source, auditable ligne par ligne), un excellent support natif de CoinJoin pour la vie privée Bitcoin, et un design plus minimaliste avec le Trezor Safe 5. Pour un détenteur multi-chaînes (Solana, Cardano, Polkadot…), ${a.name} est plus polyvalent. Pour un bitcoiner pur ou un utilisateur qui exige la vérifiabilité du code, ${b.name} reste la référence morale du secteur.`,
+      `Le choix se résume à un arbitrage de principe : ${a.name} prend en charge plus de cryptos (5500+ vs 1800), propose une connexion Bluetooth chiffrée pratique en mobilité (Nano X, Stax) et l'application Ledger Live. ${b.name} publie le code de son firmware en open source (auditable par n'importe qui) et propose un design plus minimaliste avec le Trezor Safe 5. Le coinjoin n'est plus disponible dans Trezor Suite depuis le 1er juin 2024 (arrêt du coordinateur zkSNACKs). Pour un détenteur multi-chaînes (Solana, Cardano, Polkadot…), ${a.name} est plus polyvalent. Pour un utilisateur centré sur Bitcoin ou qui exige un code vérifiable, ${b.name} répond mieux à ce besoin.`,
     faq: (a, b) => [
       {
         question: `${a.name} ou ${b.name} : lequel est plus sécurisé ?`,
@@ -269,17 +304,17 @@ const OVERRIDES: Record<string, SlugOverride> = {
     pick: (a, b) =>
       `Pour qui veut un acteur jamais piraté avec perte de fonds clients depuis 2011 : ${b.name}.`,
     finalVerdict: (a, b) =>
-      `${b.name} (${fmtPct(b.fees.spotMaker)} maker / ${fmtPct(b.fees.spotTaker)} taker au premier palier) est l'une des plateformes les plus sûres du marché : aucun vol de fonds clients par piratage depuis 2011 à notre connaissance, preuve de réserves auditée. ${a.name} propose un catalogue plus large (${a.cryptos.totalCount} cryptos contre ${b.cryptos.totalCount}) et des frais plus bas (${fmtPct(a.fees.spotMaker)} / ${fmtPct(a.fees.spotTaker)}).`,
+      `${b.name} (${fmtPct(b.fees.spotMaker)} maker / ${fmtPct(b.fees.spotTaker)} taker au premier palier) : aucun vol de fonds clients par piratage depuis 2011 à notre connaissance, preuve de réserves auditée. ${a.name} propose un catalogue plus large (${a.cryptos.totalCount} cryptos contre ${b.cryptos.totalCount}) et des frais plus bas (${fmtPct(a.fees.spotMaker)} / ${fmtPct(a.fees.spotTaker)}).`,
     faq: defaultFaq,
     profiles: defaultProfiles,
   },
 
   "coinbase-vs-bitpanda": {
-    angle: "Géant US régulé NASDAQ vs champion européen MiCA + diversification",
+    angle: "Plateforme américaine cotée au NASDAQ vs courtier européen agréé MiCA + diversification",
     pick: (a, b) =>
-      `Pour un Européen qui veut crypto + actions + or dans une seule app régulée : ${a.name}. Pour la sécurité d'une plateforme cotée NASDAQ et la marque la plus connue : ${b.name}.`,
+      `Pour un Européen qui veut crypto + actions + or dans une seule app régulée : ${a.name}. Pour une plateforme dont la maison mère est cotée au NASDAQ : ${b.name}.`,
     finalVerdict: (a, b) =>
-      `${a.name} est notre choix par défaut pour un investisseur européen long terme : agrément MiCA double (BaFin Allemagne + AMF France), 480 cryptos, plans d'épargne automatiques, et surtout la diversification multi-actifs (crypto + actions fractionnées + ETF + métaux précieux) — un atout structurel face à un pure-player crypto. ${b.name} reste imbattable sur deux dimensions : la confiance institutionnelle (cotée NASDAQ, communique des bilans audités tous les trimestres) et la pédagogie débutant (Coinbase Learn, programme Earn). Si vous voulez UNIQUEMENT du crypto et la marque la plus rassurante : ${b.name}. Si vous voulez bâtir un patrimoine diversifié dans une seule app : ${a.name}.`,
+      `${a.name} est notre choix par défaut pour un investisseur européen long terme : agrément MiCA (${a.mica.authority ?? a.mica.status}), 480 cryptos, plans d'épargne automatiques, et surtout la diversification multi-actifs (crypto + actions fractionnées + ETF + métaux précieux) — un atout structurel face à un pure-player crypto. ${b.name} se distingue sur deux points : sa maison mère est cotée au NASDAQ et publie des comptes trimestriels, et elle propose des contenus pédagogiques (Coinbase Learn). Si vous voulez UNIQUEMENT de la crypto : ${b.name}. Si vous voulez bâtir un patrimoine diversifié dans une seule app : ${a.name}.`,
     faq: defaultFaq,
     profiles: defaultProfiles,
   },
@@ -306,10 +341,13 @@ const OVERRIDES: Record<string, SlugOverride> = {
 
   "bitpanda-vs-coinhouse": {
     angle: "Broker européen vs PSAN 100 % français avec accompagnement humain",
+    /* Passe finale (06/10/2026) : le verdict attribuait à Coinhouse « 1,49 / 1,99 % spot, 2,49 % instant » et à Bitpanda
+       des « frais 5x moins chers (0,15 / 0,25 %) » (mode Fusion seul), en faveur d'un lien de parrainage. Les frais sont
+       désormais lus dans fees.verified (grilles officielles relevées le 5 octobre 2026), sans classement. */
     pick: (a, b) =>
-      `Pour un acteur 100 % français avec bureau Paris et support téléphonique : ${b.name}. Pour le meilleur rapport frais/catalogue européen : ${a.name}.`,
+      `Pour un acteur français basé à Paris, avec un support téléphonique : ${b.name}. Pour un catalogue plus large (${a.cryptos.totalCount} cryptos contre ${b.cryptos.totalCount}) et des actions, ETF et métaux dans la même application : ${a.name}.`,
     finalVerdict: (a, b) =>
-      `${b.name} et ${a.name} ciblent tous les deux le marché français mais avec deux philosophies opposées. ${b.name} est le 1er PSAN enregistré en France (E2020-001), basé à Paris, avec support téléphonique en français et conseil patrimonial humain — un atout fort pour qui veut un interlocuteur identifié et la fiscalité simplifiée. Le prix : des frais parmi les plus élevés du marché (1,49 / 1,99 % spot, 2,49 % instant) et un catalogue limité (60 cryptos). ${a.name} offre frais 5x moins chers (0,15 / 0,25 %), catalogue 8x plus large (480 cryptos) et la diversification crypto + actions + métaux. Recommandation : ${b.name} si vous valorisez le contact humain et l'ancrage local au point de payer 5x plus cher en frais ; ${a.name} sinon.`,
+      `${b.name} et ${a.name} ciblent tous les deux le marché français, avec deux approches différentes. ${b.name} est une société française basée à Paris (1er PSAN enregistré en France, E2020-001), agréée MiCA (${b.mica.authority ?? b.mica.status}), avec un support téléphonique en français. ${a.name} est agréée MiCA (${a.mica.authority ?? a.mica.status}) et ajoute actions, ETF et métaux précieux à un catalogue de ${a.cryptos.totalCount} cryptos, contre ${b.cryptos.totalCount} chez ${b.name}. Frais relevés sur les grilles officielles${b.fees.verified?.date ? ` (${fmtDateFr(b.fees.verified.date)})` : ""} : ${b.name}, ${b.fees.verified?.realCostPct ?? "non relevés"} ; ${a.name}, ${a.fees.verified?.realCostPct ?? "non relevés"}. Pour un achat de Bitcoin payé depuis le solde en euros, les deux grilles sont proches ; elles diffèrent selon la crypto et le moyen de paiement. Le choix se joue surtout sur le contact humain et l'ancrage local (${b.name}) ou sur la largeur du catalogue et la diversification (${a.name}).`,
     faq: defaultFaq,
     profiles: defaultProfiles,
   },
@@ -319,7 +357,7 @@ const OVERRIDES: Record<string, SlugOverride> = {
     pick: (a, b) =>
       `Pour un broker tout-en-un avec catalogue crypto large et métaux précieux : ${a.name}. Pour des plans d'épargne crypto + ETF + actions dès 1 € : ${b.name}.`,
     finalVerdict: (a, b) =>
-      `${a.name} et ${b.name} jouent dans la même catégorie "broker européen multi-actifs régulé MiCA" — choix difficile. ${a.name} prend l'avantage sur le catalogue crypto (environ 480 contre 50) et propose métaux précieux + index crypto, idéal pour qui considère le crypto comme une classe d'actifs parmi d'autres dans une stratégie patrimoniale active. ${b.name} brille par sa simplicité et son ratio frais/UX : plans d'épargne automatiques crypto / ETF / actions dès 1 €, interface mobile parmi les meilleures du marché, 1 € par ordre ponctuel (plus un écart de prix intégré non publié). Depuis novembre 2025, ${b.name} permet aussi d'envoyer ses cryptos vers un portefeuille externe, comme un wallet hardware. Verdict : ${a.name} pour la flexibilité, ${b.name} pour la passivité.`,
+      `${a.name} et ${b.name} jouent dans la même catégorie "broker européen multi-actifs régulé MiCA" — choix difficile. ${a.name} prend l'avantage sur le catalogue crypto (environ 480 contre 50) et propose métaux précieux + index crypto, idéal pour qui considère le crypto comme une classe d'actifs parmi d'autres dans une stratégie patrimoniale active. ${b.name} brille par sa simplicité et son ratio frais/UX : plans d'épargne automatiques crypto / ETF / actions dès 1 €, 1 € par ordre ponctuel (plus un écart de prix intégré non publié). Depuis novembre 2025, ${b.name} permet aussi d'envoyer ses cryptos vers un portefeuille externe, comme un wallet hardware. Verdict : ${a.name} pour la flexibilité, ${b.name} pour la passivité.`,
     faq: defaultFaq,
     profiles: defaultProfiles,
   },
@@ -329,7 +367,7 @@ const OVERRIDES: Record<string, SlugOverride> = {
     pick: (a, b) =>
       `Pour maximiser le yield (Earn jusqu'à 20 % APR) et le best execution multi-exchange : ${b.name}. Pour la diversification multi-actifs crypto + actions + ETF + métaux : ${a.name}.`,
     finalVerdict: (a, b) =>
-      `${b.name} se distingue par son Smart Engine (best execution sur plusieurs exchanges, ce qui lisse spreads et slippage) et par un programme Earn parmi les plus généreux du marché (jusqu'à 20 % APR sur certains assets via le token BORG). ${a.name} compense par la diversification : 480 cryptos + actions fractionnées + ETF + métaux précieux dans une seule interface, agrément BaFin + AMF, plans d'épargne automatiques. Pour un détenteur crypto pur cherchant à faire fructifier son capital : ${b.name}. Pour bâtir un portefeuille diversifié multi-classes d'actifs : ${a.name}. Frais comparables (~1 % chez les deux), différence se joue donc sur les fonctionnalités.`,
+      `${b.name} se distingue par son Smart Engine (best execution sur plusieurs exchanges, ce qui lisse spreads et slippage) et par un programme Earn (jusqu'à 20 % APR sur certains assets via le token BORG). ${a.name} compense par la diversification : 480 cryptos + actions fractionnées + ETF + métaux précieux dans une seule interface, agrément MiCA (${a.mica.authority ?? a.mica.status}), plans d'épargne automatiques. Pour un détenteur crypto pur cherchant à faire fructifier son capital : ${b.name}. Pour bâtir un portefeuille diversifié multi-classes d'actifs : ${a.name}. Frais comparables (~1 % chez les deux), différence se joue donc sur les fonctionnalités.`,
     faq: defaultFaq,
     profiles: defaultProfiles,
   },
@@ -337,9 +375,9 @@ const OVERRIDES: Record<string, SlugOverride> = {
   "coinbase-vs-kraken": {
     angle: "Marque grand public NASDAQ vs sécurité historique + Proof-of-Reserves",
     pick: (a, b) =>
-      `Pour la marque la plus rassurante et la pédagogie débutant : ${a.name}. Pour la sécurité et la preuve de réserves auditée : ${b.name}.`,
+      `Pour une maison mère cotée au NASDAQ et des contenus pédagogiques pour débutants : ${a.name}. Pour la preuve de réserves auditée : ${b.name}.`,
     finalVerdict: (a, b) =>
-      `${a.name} et ${b.name} sont les deux exchanges les plus matures du marché — fondés respectivement en 2012 et 2011, jamais hackés directement (incident ${a.name} 2024 = data breach via support tiers, fonds clients non touchés). ${a.name} a l'avantage de la marque grand public (cotée NASDAQ, plus connue auprès du non-initié) et de la pédagogie (Coinbase Earn, Coinbase Learn). ${b.name} brille par sa preuve de réserves auditée. Côté frais, au premier palier, ${a.name} Advanced est à ${fmtPct(a.fees.spotMaker)} maker / ${fmtPct(a.fees.spotTaker)} taker contre ${fmtPct(b.fees.spotMaker)} / ${fmtPct(b.fees.spotTaker)} chez ${b.name} Pro. Verdict : ${b.name} pour qui priorise la sécurité et le support en français ; ${a.name} pour qui débute et veut la marque la plus connue.`,
+      `${a.name} et ${b.name} ont été fondés respectivement en 2012 et 2011, jamais hackés directement (incident ${a.name} 2024 = data breach via support tiers, fonds clients non touchés). ${a.name} a l'avantage de la marque grand public (cotée NASDAQ, plus connue auprès du non-initié) et de la pédagogie (Coinbase Earn, Coinbase Learn). ${b.name} met en avant sa preuve de réserves auditée. Côté frais, au premier palier, ${a.name} Advanced est à ${fmtPct(a.fees.spotMaker)} maker / ${fmtPct(a.fees.spotTaker)} taker contre ${fmtPct(b.fees.spotMaker)} / ${fmtPct(b.fees.spotTaker)} chez ${b.name} Pro. Verdict : ${b.name} pour qui veut une preuve de réserves auditée ; ${a.name} pour qui débute et veut une maison mère cotée en Bourse.`,
     faq: defaultFaq,
     profiles: defaultProfiles,
   },
@@ -409,7 +447,7 @@ export function buildComparisonCopy(
     fees.gapPct > 0
       ? `Sur le coût réel d'un achat, ${fees.winner.name} (${fmtPct(fees.winner.fees.spotMaker)} maker / ${fmtPct(fees.winner.fees.spotTaker)} taker) devance ${fees.loser.name} (${fmtPct(fees.loser.fees.spotMaker)} / ${fmtPct(fees.loser.fees.spotTaker)}). Sur un volume mensuel de 5 000 €, l'écart de ${fees.gap} représente ${fmtFr(fees.gapPct * 50, 2)} € de frais évités chaque mois, soit ${fmtFr(fees.gapPct * 600, 0)} € par an.`
       : `Sur le coût réel d'un achat, ${a.name} et ${b.name} sont à égalité (${fmtPct(a.fees.spotMaker)} / ${fmtPct(a.fees.spotTaker)} contre ${fmtPct(b.fees.spotMaker)} / ${fmtPct(b.fees.spotTaker)}) : les frais ne départagent pas ces deux plateformes.`,
-    `Côté achat payé par carte bancaire, ${a.name} prélève ${fmtPct(cardBuyPct(a))} et ${b.name} ${fmtPct(cardBuyPct(b))}. Spread : ${a.name} ${a.fees.spread}, ${b.name} ${b.fees.spread}. Conseil pratique : pour des achats de plus de 100 €, un virement SEPA suivi d'un achat en mode « spot » ou « advanced » coûte nettement moins cher.`,
+    `Côté achat de 1 000 € payé par carte bancaire (coût complet, frais de paiement compris), ${a.name} : ${lowerFirst(purchaseCostText(cardCost1000(a)))} ; ${b.name} : ${lowerFirst(purchaseCostText(cardCost1000(b)))}. Spread : ${a.name} ${a.fees.spread}, ${b.name} ${b.fees.spread}. Conseil pratique : pour des achats de plus de 100 €, un virement SEPA suivi d'un achat en mode « spot » ou « advanced » coûte nettement moins cher.`,
   ];
 
   const securityAnalysis = [
@@ -423,8 +461,8 @@ export function buildComparisonCopy(
   ];
 
   const uxAnalysis = [
-    `${ux.winner.name} affiche la meilleure note UX (${fmtScore(ux.winner.scoring.ux)} vs ${fmtScore(ux.loser.scoring.ux)}). Cela se vérifie dans 3 dimensions : la fluidité de l'onboarding KYC (passage de l'inscription à la première transaction en moins de 10 minutes en moyenne), la lisibilité de l'app mobile (notes ${ux.winner.ratings.appStore}/5 App Store, ${ux.winner.ratings.playStore}/5 Play Store), et la qualité du parcours d'achat.`,
-    `${ux.loser.name} reste tout à fait utilisable (${fmtScore(ux.loser.scoring.ux)} : ${ux.loser.ratings.appStore}/5 App Store, ${ux.loser.ratings.playStore}/5 Play Store), mais peut paraître plus dense sur certains parcours — typique des plateformes qui privilégient la profondeur fonctionnelle (trading avancé, dérivés) au détriment de la simplicité. Le verdict UX dépend donc fortement de votre profil : un débutant total privilégiera ${ux.winner.name}, un trader expérimenté valorisera la richesse fonctionnelle de ${ux.loser.name}.`,
+    `${ux.winner.name} a la note UX la plus haute des deux (${fmtScore(ux.winner.scoring.ux)} vs ${fmtScore(ux.loser.scoring.ux)}) selon notre méthodologie publique : onboarding, ergonomie de l'application et parcours d'achat.`,
+    `${ux.loser.name} obtient ${fmtScore(ux.loser.scoring.ux)} sur ce critère et peut paraître plus dense sur certains parcours — typique des plateformes qui privilégient la profondeur fonctionnelle (trading avancé, dérivés) au détriment de la simplicité. Le verdict UX dépend donc fortement de votre profil : un débutant total privilégiera ${ux.winner.name}, un trader expérimenté valorisera la richesse fonctionnelle de ${ux.loser.name}.`,
   ];
 
   const supportAnalysis = [

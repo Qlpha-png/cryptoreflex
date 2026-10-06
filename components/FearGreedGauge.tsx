@@ -12,6 +12,8 @@
  * `prefers-reduced-motion` : aucune animation utilisée → conformité naturelle.
  */
 
+import FearGreedSource from "@/components/FearGreedSource";
+
 interface Props {
   /** Score 0-100. */
   value: number;
@@ -19,12 +21,19 @@ interface Props {
   classification: string;
   /** Taille du SVG en px (largeur). Hauteur calculée = width / 2 + 60 (padding label). */
   size?: number;
+  /**
+   * Attribution « Source : alternative.me » sous la jauge (06/10/2026 : obligatoire juste à côté de la donnée,
+   * conditions d'alternative.me ; /marche l'affichait sans source). false seulement si la page l'affiche déjà
+   * immédiatement sous la jauge.
+   */
+  showSource?: boolean;
 }
 
 export default function FearGreedGauge({
   value,
   classification,
   size = 360,
+  showSource = true,
 }: Props) {
   // Clamp 0..100
   const v = Math.max(0, Math.min(100, value));
@@ -169,6 +178,7 @@ export default function FearGreedGauge({
       >
         {classification}
       </div>
+      {showSource && <FearGreedSource className="mt-2 text-xs text-muted" />}
     </div>
   );
 }

@@ -17,7 +17,7 @@ import {
   authorPersonSchema,
   getAllAuthors,
   getAuthorById,
-  DEFAULT_AUTHOR_ID,
+  articleAuthorId,
 } from "@/lib/authors";
 import {
   breadcrumbSchema,
@@ -61,25 +61,7 @@ export function generateMetadata({ params }: Props): Metadata {
   };
 }
 
-/**
- * Mappe le champ `author` (string libre du frontmatter MDX) vers un id auteur.
- * Stratégie : on accepte soit un id direct (kebab-case présent dans authors.json),
- * soit on retombe sur `DEFAULT_AUTHOR_ID` (Kevin Voisin / Cryptoreflex).
- *
- * Quand on aura plusieurs rédacteurs, il suffira d'ajouter un champ `aliases`
- * à l'auteur dans data/authors.json, puis d'étendre cette résolution.
- */
-function resolveAuthorId(rawAuthor: string | undefined): string {
-  if (!rawAuthor) return DEFAULT_AUTHOR_ID;
-  const slug = rawAuthor
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[̀-ͯ]/g, "")
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-|-$/g, "");
-  // Si le slug correspond à un auteur connu → on l'utilise. Sinon → défaut.
-  return getAllAuthors().some((a) => a.id === slug) ? slug : DEFAULT_AUTHOR_ID;
-}
+/* D3 (06/10/2026) : les articles de fond sont tous signés Kevin Voisin (lib/authors.ts, articleAuthorId). */
 
 export default async function AuthorPage({ params }: Props) {
   const author = getAuthorById(params.slug);
@@ -87,7 +69,7 @@ export default async function AuthorPage({ params }: Props) {
 
   const allArticles = await getAllArticleSummaries();
   const authorArticles: ArticleSummary[] = allArticles
-    .filter((a) => resolveAuthorId(a.author) === author.id)
+    .filter((a) => articleAuthorId(a.author) === author.id)
     .sort((a, b) => +new Date(b.date) - +new Date(a.date));
 
   return (
@@ -199,12 +181,14 @@ export default async function AuthorPage({ params }: Props) {
                     <span>{c}</span>
                   </li>
                 ))}
-                <li className="flex items-start gap-2 text-fg/85">
-                  <ShieldCheck className="h-4 w-4 mt-1 shrink-0 text-primary-soft" />
-                  <span>
-                    {author.yearsExperience}+ ans dans l'écosystème crypto français
-                  </span>
-                </li>
+                {author.yearsExperience > 0 && (
+                  <li className="flex items-start gap-2 text-fg/85">
+                    <ShieldCheck className="h-4 w-4 mt-1 shrink-0 text-primary-soft" />
+                    <span>
+                      {author.yearsExperience}+ ans dans l'écosystème crypto français
+                    </span>
+                  </li>
+                )}
               </ul>
             </section>
           )}

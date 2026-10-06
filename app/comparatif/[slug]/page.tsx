@@ -15,11 +15,13 @@ import {
   Equal,
 } from "lucide-react";
 import {
-  cardBuyPct,
+  cardCost1000,
   getPlatformById,
   isAvailableFr,
+  cardFeeMeasured,
   type Platform,
   hasNoIncident,
+  purchaseCostText,
   supportChatLabel,
   supportDelayLabel,
   supportPhoneLabel,
@@ -42,6 +44,7 @@ import NextStepsGuide from "@/components/NextStepsGuide";
 import { withHreflang } from "@/lib/seo-alternates";
 import { fitTitle } from "@/lib/seo-text";
 import { fmtDateFr, fmtFr, fmtNb } from "@/lib/format-fr";
+import { buildDuelVerdict } from "@/lib/comparison-verdict";
 
 // FIX SEO 2026-06-11 — pattern blog/[slug] : SSG pur + dynamicParams=false.
 // Slug inconnu = vrai HTTP 404 (avant : soft-404 en 200, vérifié live).
@@ -138,6 +141,30 @@ interface CompareRow {
   note?: string;
 }
 
+/**
+ * Ligne « achat par carte » : coût COMPLET relevé pour 1 000 € (fees.cost.card : frais d'achat + frais de paiement par
+ * carte). A-C0-4 (06/10/2026) : la ligne comparait « 3,99 % (Coinbase) » à « 1 % (Kraken) », un coût complet à un
+ * coût partiel. Pas de gagnant si l'un des deux coûts manque ou n'est qu'un minimum (marge non publiée).
+ */
+function cardRow(a: Platform, b: Platform): CompareRow {
+  const ca = cardCost1000(a);
+  const cb = cardCost1000(b);
+  const comparable = ca.status === "ok" && cb.status === "ok" && ca.kind !== "partiel" && cb.kind !== "partiel";
+  /* Passe finale (06/10/2026) : « frais de carte compris » n'est affiché que si le relevé chiffre réellement le surcoût
+     de la carte (cardFeeMeasured) ; sinon la valeur est suivie de « frais de carte non relevés » et ne désigne pas de gagnant. */
+  const mA = cardFeeMeasured(a);
+  const mB = cardFeeMeasured(b);
+  const show = (c: ReturnType<typeof cardCost1000>, measured: boolean) =>
+    c.status === "ok" && !measured ? `${purchaseCostText(c)} (frais de carte non relevés)` : purchaseCostText(c);
+  return {
+    label: "Achat par carte de 1 000 €",
+    aDisplay: show(ca, mA),
+    bDisplay: show(cb, mB),
+    hint: comparable && mA && mB ? winner(ca.eur, cb.eur, true) : "na",
+    note: "Frais d'achat, et frais de paiement par carte quand la grille de la plateforme les chiffre (date du relevé sur chaque avis).",
+  };
+}
+
 function buildRows(a: Platform, b: Platform): { fees: CompareRow[]; security: CompareRow[]; ux: CompareRow[]; support: CompareRow[] } {
   const fees: CompareRow[] = [
     {
@@ -159,12 +186,7 @@ function buildRows(a: Platform, b: Platform): { fees: CompareRow[]; security: Co
       bDisplay: `${fmtNb(b.fees.spotTaker)}%`,
       hint: winner(a.fees.spotTaker, b.fees.spotTaker, true),
     },
-    {
-      label: "Achat par carte (CB)",
-      aDisplay: `${fmtNb(cardBuyPct(a))} %`,
-      bDisplay: `${fmtNb(cardBuyPct(b))} %`,
-      hint: winner(cardBuyPct(a), cardBuyPct(b), true),
-    },
+    cardRow(a, b),
     {
       label: "Spread",
       aDisplay: a.fees.spread,
@@ -224,8 +246,7 @@ function buildRows(a: Platform, b: Platform): { fees: CompareRow[]; security: Co
 
   const ux: CompareRow[] = [
     { label: "Score UX", aDisplay: `${fmtNb(a.scoring.ux)}/5`, bDisplay: `${fmtNb(b.scoring.ux)}/5`, hint: winner(a.scoring.ux, b.scoring.ux) },
-    { label: "Note App Store", aDisplay: `${fmtNb(a.ratings.appStore)}/5`, bDisplay: `${fmtNb(b.ratings.appStore)}/5`, hint: winner(a.ratings.appStore, b.ratings.appStore) },
-    { label: "Note Play Store", aDisplay: `${fmtNb(a.ratings.playStore)}/5`, bDisplay: `${fmtNb(b.ratings.playStore)}/5`, hint: winner(a.ratings.playStore, b.ratings.playStore) },
+    // Notes App Store / Play Store retirées le 06/10/2026 : aucune source ni date, valeurs fausses (cf. storeRating).
     trustpilotRow(a, b),
     { label: "Cryptos listées", aDisplay: `${a.cryptos.totalCount}`, bDisplay: `${b.cryptos.totalCount}`, hint: winner(a.cryptos.totalCount, b.cryptos.totalCount) },
   ];
@@ -246,48 +267,7 @@ function buildRows(a: Platform, b: Platform): { fees: CompareRow[]; security: Co
  * Verdict — varie selon les profils croisés (anti-template)
  * ------------------------------------------------------------------ */
 
-function buildVerdict(a: Platform, b: Platform): { intro: string; pickA: string; pickB: string; tradeoff: string } {
-  const aFeesAdv = a.scoring.fees - b.scoring.fees;
-  const aSecAdv = a.scoring.security - b.scoring.security;
-  const aUxAdv = a.scoring.ux - b.scoring.ux;
-
-  let intro: string;
-  if (Math.abs(a.scoring.global - b.scoring.global) < 0.2) {
-    intro = `${a.name} et ${b.name} obtiennent quasiment le même score global (${fmtNb(a.scoring.global)} contre ${fmtNb(b.scoring.global)}). C'est une comparaison où le bon choix dépend strictement de vos priorités personnelles, pas d'une supériorité objective de l'un sur l'autre. Trois angles permettent de trancher : le coût réel sur votre profil de trading, l'importance de l'expérience mobile, et la place que vous accordez à un support en français.`;
-  } else if (a.scoring.global > b.scoring.global) {
-    intro = `${a.name} (${fmtNb(a.scoring.global)}/5) devance ${b.name} (${fmtNb(b.scoring.global)}/5) dans notre méthodologie globale, mais l'écart cache des spécialisations. ${b.name} reste préférable sur certains profils précis qu'on détaille plus bas — ce comparatif ne se résume pas à "le meilleur score gagne".`;
-  } else {
-    intro = `${b.name} (${fmtNb(b.scoring.global)}/5) devance ${a.name} (${fmtNb(a.scoring.global)}/5) dans notre méthodologie globale, mais l'écart cache des spécialisations. ${a.name} reste préférable sur certains profils précis qu'on détaille plus bas — ce comparatif ne se résume pas à "le meilleur score gagne".`;
-  }
-
-  const pickA =
-    aFeesAdv > 0.3
-      ? `Choisissez ${a.name} si vous tradez régulièrement en spot — vous économisez du capital à chaque opération sur les frais (${fmtNb(a.fees.spotMaker)}% vs ${fmtNb(b.fees.spotMaker)}% en maker). Sur 12 mois et 10 000€ de volume, l'écart devient mécanique.`
-      : aSecAdv > 0.3
-        ? `Choisissez ${a.name} si la sécurité est votre priorité non-négociable. ${fmtNb(a.security.coldStoragePct)}% en cold storage et un score MiCA ${fmtNb(a.scoring.mica)}/5 placent la barre haut.`
-        : aUxAdv > 0.3
-          ? `Choisissez ${a.name} si l'expérience utilisateur est déterminante — l'app mobile note ${fmtNb(a.ratings.appStore)}/5 sur l'App Store et l'onboarding est calibré grand public.`
-          : `Choisissez ${a.name} si vous valorisez : ${a.strengths[0].toLowerCase()}. C'est le critère où l'écart est le plus net face à ${b.name}.`;
-
-  const pickB =
-    aFeesAdv < -0.3
-      ? `Choisissez ${b.name} si vous tradez régulièrement en spot — vous économisez du capital à chaque opération sur les frais (${fmtNb(b.fees.spotMaker)}% vs ${fmtNb(a.fees.spotMaker)}% en maker). Sur 12 mois et 10 000€ de volume, l'écart devient mécanique.`
-      : aSecAdv < -0.3
-        ? `Choisissez ${b.name} si la sécurité est votre priorité non-négociable. ${fmtNb(b.security.coldStoragePct)}% en cold storage et un score MiCA ${fmtNb(b.scoring.mica)}/5 placent la barre haut.`
-        : aUxAdv < -0.3
-          ? `Choisissez ${b.name} si l'expérience utilisateur est déterminante — l'app mobile note ${fmtNb(b.ratings.appStore)}/5 sur l'App Store et l'onboarding est calibré grand public.`
-          : `Choisissez ${b.name} si vous valorisez : ${b.strengths[0].toLowerCase()}. C'est le critère où l'écart est le plus net face à ${a.name}.`;
-
-  const tradeoff = `Le vrai trade-off entre ${a.name} et ${b.name} se joue sur ${
-    Math.abs(aFeesAdv) > Math.abs(aUxAdv) && Math.abs(aFeesAdv) > Math.abs(aSecAdv)
-      ? "le coût total de possession (frais cumulés sur 12 mois)"
-      : Math.abs(aSecAdv) > Math.abs(aUxAdv)
-        ? "le profil de sécurité et la conformité MiCA"
-        : "l'expérience mobile et la simplicité d'usage"
-  }. Une fois ce critère arbitré, le reste devient secondaire.`;
-
-  return { intro, pickA, pickB, tradeoff };
-}
+/* Passe finale (06/10/2026) : verdict déplacé dans lib/comparison-verdict.ts (testé), avec la garde isAvailableFr. */
 
 /* ------------------------------------------------------------------
  * Page
@@ -302,7 +282,7 @@ export default function ComparisonPage({ params }: Props) {
   if (!a || !b) notFound();
 
   const rows = buildRows(a, b);
-  const verdict = buildVerdict(a, b);
+  const verdict = buildDuelVerdict(a, b);
 
   // Plateforme gagnante par score global → CTA mobile sticky (égalité → a).
   const okA = isAvailableFr(a);
@@ -429,7 +409,7 @@ export default function ComparisonPage({ params }: Props) {
                       rel={outboundRel(plat.id, plat.affiliateUrl)}
                       className="mt-2 inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-primary to-primary-glow px-4 py-2.5 text-sm font-semibold text-background hover:opacity-90 transition"
                     >
-                      Tester {plat.name}
+                      Site officiel de {plat.name}
                       <ExternalLink className="h-4 w-4" />
                     </a>
                     <PaidLinkCaption platformId={plat.id} href={plat.affiliateUrl} className="text-center text-[11px] text-muted underline hover:text-white" />
@@ -460,7 +440,7 @@ export default function ComparisonPage({ params }: Props) {
           [
             { title: "Frais", icon: Wallet, rows: rows.fees, intro: `Sur les frais, ${a.name} affiche ${fmtNb(a.fees.spotMaker)}% en maker contre ${fmtNb(b.fees.spotMaker)}% pour ${b.name}. La différence paraît mineure jusqu'à ce qu'on la projette sur 10 000€ de volume mensuel — auquel cas elle devient le critère dominant pour un trader actif.` },
             { title: "Sécurité & MiCA", icon: ShieldCheck, rows: rows.security, intro: `${a.category !== "wallet" && b.category !== "wallet" && isAvailableFr(a) && isAvailableFr(b) ? "Les deux plateformes sont agréées MiCA avec accès à la France. " : ""}La granularité de la comparaison se joue sur le pourcentage de cold storage, l'existence d'une assurance dédiée et l'historique d'incidents.` },
-            { title: "Expérience utilisateur", icon: Coins, rows: rows.ux, intro: `Notes d'app mobile, Trustpilot et taille du catalogue. Ces métriques ne pèsent pas pareil selon votre profil — un investisseur passif accordera plus de poids à l'app, un trader actif au catalogue.` },
+            { title: "Expérience utilisateur", icon: Coins, rows: rows.ux, intro: `Sous-note UX de notre méthodologie, note Trustpilot (datée) et taille du catalogue. Ces métriques ne pèsent pas pareil selon votre profil : un investisseur passif regardera surtout la simplicité, un trader actif le catalogue.` },
             { title: "Support client", icon: HeadphonesIcon, rows: rows.support, intro: `En cas de problème (vérification d'identité bloquée, retrait en attente, suspicion de fraude), savoir comment joindre la plateforme compte. Canaux relevés sur les pages officielles d'assistance ; un délai n'est indiqué que si la plateforme l'annonce elle-même.` },
           ] as const
         ).map((section) => (
@@ -590,7 +570,7 @@ export default function ComparisonPage({ params }: Props) {
           <div className="mt-6 grid gap-4 sm:grid-cols-2">
             <div className="rounded-xl border border-border bg-surface p-4">
               <div className="text-xs uppercase tracking-wide text-primary-glow">
-                Choisir {a.name}
+                {okA ? `Choisir ${a.name}` : a.name}
               </div>
               <p className="mt-2 text-sm text-white/85 leading-relaxed">{verdict.pickA}</p>
               {okA ? (
@@ -613,7 +593,7 @@ export default function ComparisonPage({ params }: Props) {
             </div>
             <div className="rounded-xl border border-border bg-surface p-4">
               <div className="text-xs uppercase tracking-wide text-primary-glow">
-                Choisir {b.name}
+                {okB ? `Choisir ${b.name}` : b.name}
               </div>
               <p className="mt-2 text-sm text-white/85 leading-relaxed">{verdict.pickB}</p>
               {okB ? (
@@ -673,7 +653,7 @@ export default function ComparisonPage({ params }: Props) {
         {/* DISCLAIMER */}
         <section className="mt-12 rounded-xl border border-border bg-surface/50 p-5">
           <p className="text-xs text-muted leading-relaxed">
-            Comparatif rédigé par l'équipe éditoriale {BRAND.name}. Les frais et données réglementaires sont vérifiés trimestriellement (dernière vérif : {new Date(a.mica.lastVerified).toLocaleDateString("fr-FR")}). {(okA && isPaidLink(a.id, a.affiliateUrl)) || (okB && isPaidLink(b.id, b.affiliateUrl))
+            Comparatif généré à partir de nos données ; Kevin Voisin, éditeur de {BRAND.name}, en est responsable. Statut MiCA vérifié le {new Date(a.mica.lastVerified).toLocaleDateString("fr-FR")}{a.fees.cost?.date ? `, frais relevés le ${new Date(a.fees.cost.date).toLocaleDateString("fr-FR")}` : ""}. {(okA && isPaidLink(a.id, a.affiliateUrl)) || (okB && isPaidLink(b.id, b.affiliateUrl))
               ? "Les liens marqués « Publicité » sont rémunérés (affiliation ou parrainage), sans surcoût pour vous, ce qui n'influence pas l'attribution du verdict"
               : "Les liens vers les plateformes mènent à leur site officiel ; le verdict suit notre méthodologie"}{" "}
             — voir <Link href="/methodologie" className="underline hover:text-white">/methodologie</Link> et <Link href="/transparence" className="underline hover:text-white">/transparence</Link>. Investir dans les cryptoactifs présente un risque de perte en capital. Ce comparatif n'est pas un conseil en investissement.

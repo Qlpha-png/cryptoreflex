@@ -232,7 +232,8 @@ export default async function ActualitesPage({ searchParams }: PageProps) {
           >
             <Info className="h-4 w-4 shrink-0 mt-0.5" aria-hidden="true" />
             <span>
-              Les analyses sont rédigées par notre équipe éditoriale à partir de
+              {/* 06/10/2026 : « rédigées par notre équipe éditoriale » était faux (une seule personne, Kevin Voisin). */}
+              Les actualités et analyses sont produites par Cryptoreflex à partir de
               sources publiques (médias spécialisés, communiqués officiels).
               Sources citées en bas de chaque article. Ces contenus sont
               informatifs et ne constituent pas un conseil en investissement.

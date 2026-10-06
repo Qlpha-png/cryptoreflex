@@ -240,7 +240,8 @@ describe("articles MDX : liens et annonces de rémunération exacts", () => {
   walk(dir);
   const read = (f: string) => fs.readFileSync(f, "utf8");
 
-  it("aucun faux code de parrainage (« ?ref=cryptoreflex », « ?ref=affiliate », utm_campaign vers un non-partenaire)", () => {
+  // Lit tous les MDX de content/ : 5 s ne suffisent pas quand la machine est chargée (3 échecs sur 3 en suite complète).
+  it("aucun faux code de parrainage (« ?ref=cryptoreflex », « ?ref=affiliate », utm_campaign vers un non-partenaire)", { timeout: 60_000 }, () => {
     const offenders = files.filter((f) => /ref=(cryptoreflex|affiliate)\b|kraken\.com\/\?utm_/i.test(read(f)));
     expect(offenders.map((f) => path.basename(f))).toEqual([]);
   });
