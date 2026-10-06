@@ -1,6 +1,6 @@
 {
   "_lisezmoi": "État de référence relu et accepté des sources officielles (voir data/veille/sources.json). Réécrit par « node scripts/veille-officielle.mjs --enregistrer » : à ne lancer qu'après avoir mis le site à jour.",
-  "_enregistre": "2026-10-05",
+  "_enregistre": "2026-10-06",
   "legifrance": {
     "CGI art. 150 VH bis": {
       "id": "LEGIARTI000050366751",
@@ -56,6 +56,13 @@
       "id": "LEGIARTI000054358875",
       "debut": "2026-07-01",
       "differees": []
+    },
+    "CGI art. 1736": {
+      "id": "LEGIARTI000054373979",
+      "debut": "2026-07-01",
+      "differees": [
+        "LEGIARTI000047006062@2030-01-01"
+      ]
     }
   },
   "bofip": {
@@ -1242,24 +1249,24 @@
       },
       "https://feel-mining.com/feel-mining-platinum": {
         "mode": "navigateur",
-        "jetons": "c6b81ae9690af3b8",
+        "jetons": "10be3001291a0714",
         "liste": [
           "0,25%",
           "0,5%",
           "0,75%",
           "1%",
-          "1,42€",
+          "1,48€",
           "1,5%",
           "11,92€",
-          "12,07€",
+          "12,06€",
           "13,00€",
-          "14,26€",
+          "14,20€",
           "14,90€",
           "14,99€",
           "143,00€",
-          "15,28€",
+          "15,32€",
           "178,80€",
-          "2,81€",
+          "2,80€",
           "20%",
           "33%",
           "50%",
