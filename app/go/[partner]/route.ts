@@ -32,6 +32,12 @@ import { NextRequest, NextResponse } from "next/server";
 import { getPartner } from "@/data/partners";
 import { getKv } from "@/lib/kv";
 import { acceptsUtm } from "@/lib/partner-links";
+import { createRateLimiter } from "@/lib/rate-limit";
+import { getClientIp } from "@/lib/ip";
+
+/** 06/10/2026 (quota Upstash) : limiteur MÉMOIRE (aucune commande KV) — au-delà de 20 clics par minute et par adresse,
+ *  le clic n'est plus compté dans le KV (4 commandes par clic). La redirection, elle, a toujours lieu. */
+const clickCountLimiter = createRateLimiter({ limit: 20, windowMs: 60_000, key: "go-click-count" });
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -111,7 +117,7 @@ export async function GET(
   const pos = sp.get("pos") ?? "default";
 
   const userAgent = req.headers.get("user-agent") ?? "";
-  if (!isPrefetch(req) && !BOT_UA.test(userAgent)) {
+  if (!isPrefetch(req) && !BOT_UA.test(userAgent) && (await clickCountLimiter(getClientIp(req))).ok) {
     const safeCtx = safeSegment(ctx, "direct");
     const safePos = safeSegment(pos, "default");
     // console.warn (et non .log) : survit au removeConsole de next.config.js.

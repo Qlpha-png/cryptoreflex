@@ -13,6 +13,8 @@
 
 import { NextResponse } from "next/server";
 import { verifyBearer } from "@/lib/auth";
+import { isKvCircuitOpen, kvRestConfig } from "@/lib/kv";
+import { STATIC_DETAILS_META_KEY } from "@/lib/static-details-store";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -65,11 +67,14 @@ export async function GET(req: Request): Promise<NextResponse> {
   // le fallback 6h utilisé quand le cron GH Actions skip (gaps 65-246 min).
   // FIX 2026-05-14 (Phase 3) — extrait `fetchedAt` du wrapper pour observer
   // l'âge réel des données ticker (utile pour debug stale UX).
-  const kvUrl = process.env.KV_REST_API_URL;
-  const kvToken = process.env.KV_REST_API_TOKEN;
-  if (kvUrl && kvToken) {
+  // 06/10/2026 : `kvStaticDetails` lit la clé meta des 32 seaux (quelques octets) au lieu du lot de 3,1 Mo, que ce
+  // diagnostic relisait après chaque passage de l'écrivain GitHub.
+  const kvCfg = kvRestConfig();
+  const kvUrl = kvCfg?.url;
+  const kvToken = kvCfg?.token;
+  if (kvUrl && kvToken && !isKvCircuitOpen()) {
     for (const [name, key] of [
-      ["kvStaticDetails", "cg-static-details:v1"],
+      ["kvStaticDetails", STATIC_DETAILS_META_KEY],
       ["kvTickerPrices", "cg-ticker-prices:v1"],
       ["kvTickerPricesStale", "cg-ticker-prices:stale:v1"],
     ] as const) {
@@ -94,10 +99,12 @@ export async function GET(req: Request): Promise<NextResponse> {
             const inner = wrapped
               ? ((parsed as { prices: Record<string, unknown> }).prices ?? {})
               : parsed;
-            const fetchedAt = wrapped
+            // clé meta des seaux : { v, fetchedAt, count, buckets }
+            const isMeta = typeof (parsed as { count?: unknown }).count === "number";
+            const fetchedAt = wrapped || isMeta
               ? ((parsed as { fetchedAt?: string }).fetchedAt ?? null)
               : null;
-            const keysCount = Object.keys(inner).length;
+            const keysCount = isMeta ? (parsed as { count: number }).count : Object.keys(inner).length;
             const ageMs = fetchedAt ? Math.max(0, Date.now() - Date.parse(fetchedAt)) : null;
             checks[name] = {
               keysCount,
@@ -117,7 +124,7 @@ export async function GET(req: Request): Promise<NextResponse> {
       }
     }
   } else {
-    checks.kv = { mocked: true };
+    checks.kv = kvCfg ? { circuitOpen: true } : { mocked: true };
   }
 
   return NextResponse.json({

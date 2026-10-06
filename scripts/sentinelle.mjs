@@ -130,14 +130,23 @@ async function checkFreshness() {
   const kvToken = process.env.KV_REST_API_TOKEN;
   if (kvUrl && kvToken) {
     try {
-      const r = await fetch(`${kvUrl}/get/${encodeURIComponent("cg-ticker-prices:stale:v1")}`, { headers: { Authorization: `Bearer ${kvToken}` }, signal: AbortSignal.timeout(10_000) });
-      const j = await r.json();
-      const payload = typeof j.result === "string" ? JSON.parse(j.result) : j.result;
+      /* 06/10/2026 (quota Upstash) : la clé stale n'est plus écrite qu'une fois par heure ; on lit d'abord la clé live
+         (TTL 12 min, écrite toutes les 10 min) et la clé stale seulement si la live a expiré. */
+      const readKey = async (key) => {
+        const r = await fetch(`${kvUrl}/get/${encodeURIComponent(key)}`, { headers: { Authorization: `Bearer ${kvToken}` }, signal: AbortSignal.timeout(10_000) });
+        const j = await r.json();
+        return { r, j, payload: typeof j.result === "string" ? JSON.parse(j.result) : j.result };
+      };
+      let { r, j, payload } = await readKey("cg-ticker-prices:v1");
+      const fromLive = !!payload?.fetchedAt;
+      if (!j.error && r.ok && !fromLive) ({ r, j, payload } = await readKey("cg-ticker-prices:stale:v1"));
       const age = payload?.fetchedAt ? (Date.now() - Date.parse(payload.fetchedAt)) / 60_000 : null;
       // 06/10/2026 : un refus d'Upstash (quota « max requests limit exceeded ») passait pour « aucun relevé »
       if (j.error || !r.ok) fail("fraîcheur", `prix du bandeau : lecture du cache refusée par Upstash (HTTP ${r.status}${j.error ? ` : ${String(j.error).slice(0, 160)}` : ""})`);
       else if (age == null) fail("fraîcheur", "prix du bandeau : aucun relevé en cache");
-      else if (age > 30) fail("fraîcheur", `prix du bandeau vieux de ${Math.round(age)} min (tâche Vercel des prix en panne ?)`);
+      else if (fromLive && age > 30) fail("fraîcheur", `prix du bandeau vieux de ${Math.round(age)} min (tâche Vercel des prix en panne ?)`);
+      else if (!fromLive && age > 75) fail("fraîcheur", `prix du bandeau : relevé live expiré, secours vieux de ${Math.round(age)} min (tâche Vercel des prix en panne ?)`);
+      else if (!fromLive) warn("fraîcheur", `prix du bandeau : relevé live expiré (un passage de la tâche Vercel manqué ?), secours de ${Math.round(age)} min`);
       else ok("fraîcheur", `prix du bandeau relevés il y a ${Math.round(age)} min`);
     } catch (e) {
       warn("fraîcheur", `cache des prix illisible : ${e.message}`);
@@ -276,7 +285,8 @@ async function checkOrchestrator() {
     if (!t?.at) warn("robots", "alertes de prix : pas encore de trace de passage");
     else {
       const min = (Date.now() - Date.parse(t.at)) / 60_000;
-      if (min > 60) fail("robots", `alertes de prix : dernière vérification il y a ${Math.round(min)} min (prévue toutes les 15 min)`);
+      /* 06/10/2026 (quota Upstash) : la trace n'est plus écrite qu'une fois par heure (et à chaque envoi ou erreur) → 90 min */
+      if (min > 90) fail("robots", `alertes de prix : dernière trace il y a ${Math.round(min)} min (vérification toutes les 15 min, trace horaire)`);
       else if (t.errors > 0) warn("robots", `alertes de prix : ${t.errors} erreur(s) au dernier passage`);
       else ok("robots", `alertes de prix vérifiées il y a ${Math.round(min)} min (${t.checked} alertes)`);
     }

@@ -1,19 +1,19 @@
 name: Refresh static-details KV (4×/jour, depuis GH IP)
 
-# Pré-charge en KV cg-static-details:v1 les 780 fiches crypto (ATH, ATL,
-# supply, sparkline 7d) depuis l'IP GitHub Actions — qui n'est PAS bannie
-# par CoinGecko (contrairement au serveur Coolify).
+# ÉCRIVAIN UNIQUE des détails des fiches (ATH, ATL, offre, mini-graphique 7 jours) depuis l'IP GitHub Actions — qui
+# n'est PAS bannie par CoinGecko.
 #
-# RÉSOUT : KV vide intermittent qui obligeait à run le script manuel
-# `populate-all-cryptos-kv.mjs` depuis ma machine locale.
+# 06/10/2026 (quota Upstash épuisé) : écrit 32 seaux `cg-static-details:v2:bNN` (~100 Ko, en cache côté site) en UNE
+# commande MSET, relit les seaux (UNE commande MGET) seulement si un appel CoinGecko échoue, puis invalide l'étiquette
+# `kv-static-details` du site. Le cron Vercel `refresh-static-details` et l'étape de l'orchestrateur (doublons) sont
+# retirés : ce workflow est le seul écrivain.
 #
-# Schedule : 4×/jour = 06h, 12h, 18h, 00h UTC (TTL KV 8h → 1h marge).
+# Schedule : 4×/jour = 06h, 12h, 18h, 00h UTC. Un seau de plus de 48 h est ignoré par le site (repli CoinGecko).
 #
 # Coût : ~120 runs/mois × ~30s = ~60 min/mois sous le free tier (illim. public).
 
 on:
   schedule:
-    # Toutes les 6h pile (TTL KV = 8h → 2h marge si run rate)
     - cron: "0 */6 * * *"
   workflow_dispatch:
 
@@ -45,6 +45,8 @@ jobs:
           # secret (existant pour d'autres workflows). Mapping direct.
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          # Invalidation de l'étiquette kv-static-details sur le site après écriture.
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
         run: |
           node scripts/populate-all-cryptos-kv.mjs
 
@@ -53,7 +55,7 @@ jobs:
           CRON_SECRET: ${{ secrets.CRON_SECRET }}
         run: |
           # Dépôt public = logs publics : on n'affiche QUE le code HTTP,
-          # jamais le contenu du diagnostic.
+          # jamais le contenu du diagnostic. Le diagnostic ne lit plus que la clé meta (quelques octets).
           code=$(curl -s -o /dev/null -w "%{http_code}" --max-time 10 \
             -H "Authorization: Bearer $CRON_SECRET" \
             "https://www.cryptoreflex.fr/api/diag/api-usage")

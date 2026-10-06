@@ -5,7 +5,7 @@
  *   - Données live : price, marketCap, volume24h, change 24h/7d, sparkline 7d
  *   - Données historiques : ATH, ATL avec dates
  *   - Supply : circulating, total, max
- *   - Source : KV-backed (cg-static-details:v1) → ~50ms latence
+ *   - Source : KV-backed (cg-static-details:v2, 32 seaux en cache) → ~50ms latence
  *
  * Auth : scope `public:read`
  *
@@ -29,6 +29,7 @@
 
 import { requireApiKey } from "@/lib/api-keys/auth";
 import { successResponse, applicationError } from "@/lib/api-keys/response";
+import { readStaticDetailFor } from "@/lib/static-details-store";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -73,32 +74,9 @@ export async function GET(
     );
   }
 
-  // Lecture KV en priorité (couvre 777/777 fiches publiées).
-  const kvUrl = process.env.KV_REST_API_URL;
-  const kvToken = process.env.KV_REST_API_TOKEN;
-  let row: CGMarketsRow | null = null;
-
-  if (kvUrl && kvToken) {
-    try {
-      const r = await fetch(
-        `${kvUrl.replace(/\/$/, "")}/get/${encodeURIComponent("cg-static-details:v1")}`,
-        {
-          headers: { Authorization: `Bearer ${kvToken}`, accept: "application/json" },
-          signal: AbortSignal.timeout(3000),
-          next: { revalidate: 60 },
-        },
-      );
-      if (r.ok) {
-        const data = (await r.json()) as { result?: string | null };
-        if (typeof data.result === "string") {
-          const cached = JSON.parse(data.result) as Record<string, CGMarketsRow>;
-          row = cached[id] ?? null;
-        }
-      }
-    } catch {
-      // KV indispo — fallback CG live ci-dessous
-    }
-  }
+  // Lecture KV en priorité (couvre 777/777 fiches publiées). 06/10/2026 : un seau de ~100 Ko en cache
+  // (lib/static-details-store) au lieu du lot de 3,1 Mo jamais mis en cache.
+  let row: CGMarketsRow | null = await readStaticDetailFor<CGMarketsRow>(id).catch(() => null);
 
   // Fallback CG live (1 seul id, cached 4h)
   if (!row) {

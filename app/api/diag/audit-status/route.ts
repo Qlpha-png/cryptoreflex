@@ -66,7 +66,8 @@ export async function GET(req: Request): Promise<NextResponse> {
       );
       if (r.ok) {
         const data = (await r.json()) as { result?: string[] };
-        const keys = data.result ?? [];
+        // audit:missing:v2 = la clé JSON unique du nouvel audit (06/10/2026), pas une crypto suivie
+        const keys = (data.result ?? []).filter((k) => k !== "audit:missing:v2");
         out.missingTrackingKeysCount = keys.length;
         out.missingTrackingSample = keys.slice(0, 10).map((k) =>
           k.replace("audit:missing:", ""),

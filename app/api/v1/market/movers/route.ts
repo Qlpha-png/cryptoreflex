@@ -1,7 +1,7 @@
 /**
  * GET /api/v1/market/movers
  *
- * Top gainers, losers, volume spikes 24h depuis KV cg-static-details:v1.
+ * Top gainers, losers, volume spikes 24h depuis KV cg-static-details:v2 (32 seaux en cache).
  *
  * Query : limit (défaut 10, max 50)
  * Auth : scope `public:read`
@@ -9,6 +9,7 @@
 
 import { requireApiKey } from "@/lib/api-keys/auth";
 import { successResponse, applicationError } from "@/lib/api-keys/response";
+import { readAllStaticDetails } from "@/lib/static-details-store";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -42,25 +43,12 @@ export async function GET(req: Request): Promise<Response> {
     limit = Math.floor(n);
   }
 
-  const kvUrl = process.env.KV_REST_API_URL;
-  const kvToken = process.env.KV_REST_API_TOKEN;
-  if (!kvUrl || !kvToken) {
-    return applicationError(503, "KV_UNAVAILABLE", "KV non configuré.", request_id);
+  // 06/10/2026 : 32 seaux de ~100 Ko en cache (lib/static-details-store) au lieu du lot de 3,1 Mo jamais mis en cache.
+  const all32 = await readAllStaticDetails<CGRow>().catch(() => ({ rows: {} as Record<string, CGRow>, available: false }));
+  if (!all32.available) {
+    return applicationError(503, "KV_UNAVAILABLE", "Données de marché indisponibles (KV).", request_id);
   }
-
-  let cached: Record<string, CGRow> = {};
-  try {
-    const r = await fetch(
-      `${kvUrl.replace(/\/$/, "")}/get/${encodeURIComponent("cg-static-details:v1")}`,
-      { headers: { Authorization: `Bearer ${kvToken}` }, signal: AbortSignal.timeout(3000), next: { revalidate: 60 } },
-    );
-    if (r.ok) {
-      const data = (await r.json()) as { result?: string };
-      if (typeof data.result === "string") cached = JSON.parse(data.result);
-    }
-  } catch {
-    // fall through
-  }
+  const cached: Record<string, CGRow> = all32.rows;
 
   const all = Object.values(cached).filter((c) => c?.id && c.total_volume > 0);
 

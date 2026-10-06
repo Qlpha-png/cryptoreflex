@@ -22,12 +22,14 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
+import { revalidateTag } from "next/cache";
 import * as Sentry from "@sentry/nextjs";
 
 import { verifyBearer } from "@/lib/auth";
 import {
   KV_TICKER_LIVE_TTL_SECONDS,
   KV_TICKER_STALE_TTL_SECONDS,
+  KV_TICKER_TAG,
   type TickerEntry,
   writeTickerCacheBoth,
 } from "@/lib/kv-ticker";
@@ -119,7 +121,18 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
 
   // Écrit live (TTL 12 min) + stale (TTL 6 h) en parallèle. Si l'une échoue
   // mais l'autre passe, le fallback partiel reste fonctionnel.
-  const writeResult = await writeTickerCacheBoth(record);
+  // 06/10/2026 : la clé stale n'est écrite qu'une fois par heure (?stale=1 la force) ; les lectures sont en cache
+  // 300 s / 3 600 s, invalidées ici après écriture pour garder la fraîcheur du cron.
+  const writeResult = await writeTickerCacheBoth(record, {
+    forceStale: req.nextUrl.searchParams.get("stale") === "1",
+  });
+  if (writeResult.live || writeResult.stale) {
+    try {
+      revalidateTag(KV_TICKER_TAG);
+    } catch {
+      /* hors contexte Next (tests) */
+    }
+  }
   if (!writeResult.live && !writeResult.stale) {
     Sentry.captureMessage("refresh-ticker-prices KV write failed (both keys)", "error");
     return NextResponse.json(
@@ -133,7 +146,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       { status: 500 },
     );
   }
-  if (!writeResult.live || !writeResult.stale) {
+  if (!writeResult.live || (!writeResult.stale && !writeResult.staleSkipped)) {
     Sentry.captureMessage(
       `refresh-ticker-prices partial KV write: live=${writeResult.live} stale=${writeResult.stale}`,
       "warning",

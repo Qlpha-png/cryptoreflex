@@ -2,13 +2,14 @@
  * GET /api/v1/technical/{id}
  *
  * Indicateurs techniques pour une crypto (RSI, MA, MACD, Bollinger, S/R).
- * Source : sparkline 7d depuis KV cg-static-details:v1 (168 points horaires).
+ * Source : sparkline 7d depuis KV cg-static-details:v2 (168 points horaires).
  *
  * Auth : scope `public:read`
  */
 
 import { requireApiKey } from "@/lib/api-keys/auth";
 import { successResponse, applicationError } from "@/lib/api-keys/response";
+import { readStaticDetailFor } from "@/lib/static-details-store";
 import {
   calcAllIndicators,
   calcVolatility,
@@ -41,26 +42,8 @@ export async function GET(
   }
 
   // Lecture KV (sparkline 7d disponible)
-  const kvUrl = process.env.KV_REST_API_URL;
-  const kvToken = process.env.KV_REST_API_TOKEN;
-  let row: CGRow | null = null;
-  if (kvUrl && kvToken) {
-    try {
-      const r = await fetch(
-        `${kvUrl.replace(/\/$/, "")}/get/${encodeURIComponent("cg-static-details:v1")}`,
-        { headers: { Authorization: `Bearer ${kvToken}` }, signal: AbortSignal.timeout(3000), next: { revalidate: 60 } },
-      );
-      if (r.ok) {
-        const data = (await r.json()) as { result?: string };
-        if (typeof data.result === "string") {
-          const cached = JSON.parse(data.result) as Record<string, CGRow>;
-          row = cached[id] ?? null;
-        }
-      }
-    } catch {
-      // fallback CG below
-    }
-  }
+  // 06/10/2026 : un seau de ~100 Ko en cache (lib/static-details-store) au lieu du lot de 3,1 Mo.
+  const row: CGRow | null = await readStaticDetailFor<CGRow>(id).catch(() => null);
 
   if (!row?.sparkline_in_7d?.price?.length) {
     return applicationError(

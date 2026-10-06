@@ -33,6 +33,7 @@ import * as Sentry from "@sentry/nextjs";
 import { verifyBearer } from "@/lib/auth";
 import { createSupabaseServiceRoleClient } from "@/lib/supabase/server";
 import { getKv } from "@/lib/kv";
+import { AUDIT_MISSING_KEY, AUDIT_MISSING_TTL_S, loadMissingTracking, updateMissingTracking } from "@/lib/audit-missing-tracking";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -60,7 +61,7 @@ const STALE_AGE_MS = 30 * 24 * 3600 * 1000;
  *
  * Reset auto : si CG retourne l'ID à un run, KV.del(missing_since) → reset.
  */
-const KV_PREFIX_MISSING = "audit:missing:";
+/* 06/10/2026 : ancien préfixe par crypto (« audit:missing:<id> »), remplacé par la clé unique AUDIT_MISSING_KEY. */
 const STAGE_3_FLAG_RUNS = 7;       // après 7 runs absent → needs_review
 const STAGE_4_ALERT_RUNS = 14;     // après 14 runs absent → Sentry critical
 
@@ -228,14 +229,21 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
   const stage4Ids: string[] = [];
   const stage3Ids: string[] = [];
 
-  for (const id of delisted) {
-    const kvKey = `${KV_PREFIX_MISSING}${id}`;
-    const tracking = (await kv.get<{ missingSince: string; runCount: number }>(kvKey)) ?? null;
-    const newRunCount = (tracking?.runCount ?? 0) + 1;
-    const missingSince = tracking?.missingSince ?? new Date().toISOString();
+  // 06/10/2026 (quota Upstash) : une seule clé JSON (1 GET + 1 SET par passage, lib/audit-missing-tracking.ts) au lieu
+  // d'un GET par crypto présente en base et d'un GET + SET par crypto absente. Migration des anciennes clés
+  // « audit:missing:<id> » par une MGET au premier passage.
+  const prevTracking = await loadMissingTracking(kv, delisted);
+  const { next: nextTracking, reset: resetCount } = updateMissingTracking(
+    prevTracking,
+    delisted,
+    (id) => cgIds.has(id),
+    new Date().toISOString(),
+  );
+  // Persist updated tracking (TTL 30j auto-cleanup)
+  await kv.set(AUDIT_MISSING_KEY, nextTracking, { ex: AUDIT_MISSING_TTL_S });
 
-    // Persist updated tracking (TTL 30j auto-cleanup)
-    await kv.set(kvKey, { missingSince, runCount: newRunCount }, { ex: 30 * 86400 });
+  for (const id of delisted) {
+    const newRunCount = nextTracking[id]?.runCount ?? 1;
 
     if (newRunCount === 1) stage1Count++;
     else if (newRunCount < STAGE_3_FLAG_RUNS) stage2Count++;
@@ -248,23 +256,8 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     }
   }
 
-  // Reset KV pour les IDs qui sont revenus en CG (cleanup)
-  let resetCount = 0;
-  // (cleanup paresseux : on ne lit pas tout le KV ici, on attend que les
-  // entrées TTL 30j expirent naturellement OU qu'un autre run les retrouve)
-  // Pour reset explicite, parcourir kv.keys(prefix) — surcoût KV élevé,
-  // pas critique car TTL 30j fait le job. On reset juste si on a déjà
-  // tracking ET que cgIds.has(id) maintenant (= ID revenu).
-  for (const id of dbIds) {
-    if (cgIds.has(id)) {
-      const kvKey = `${KV_PREFIX_MISSING}${id}`;
-      const tracking = await kv.get(kvKey);
-      if (tracking) {
-        await kv.del(kvKey);
-        resetCount++;
-      }
-    }
-  }
+  // Reset des IDs revenus chez CoinGecko : fait par updateMissingTracking (ils sortent de la clé unique ; resetCount
+  // = ceux qui étaient suivis et sont revenus). Les anciennes clés par crypto expirent seules (TTL 30 j).
 
   // 5b. Flag stage 3 (7+ runs missing) → needs_review (mais reste publié)
   let flagged = 0;

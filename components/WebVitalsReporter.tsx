@@ -17,14 +17,27 @@
  * Transport : navigator.sendBeacon prioritaire (survit au unload, queue OS),
  * fallback fetch keepalive si Beacon API indisponible (Safari < 12 etc.).
  *
- * Sampling : 100% pour démarrer (volume site V1 est faible). À ajuster via
- * SAMPLE_RATE si le quota Upstash explose.
+ * Sampling : 06/10/2026 (quota Upstash épuisé) — 10 % des pages vues, tirage une fois par page, domaine de production
+ * seulement, ni navigateur piloté ni robot (lib/web-vitals-sampling.ts). Avant : 100 %, robots et serveurs locaux compris.
  */
 
 import { useReportWebVitals } from "next/web-vitals";
+import { shouldReportVitals } from "@/lib/web-vitals-sampling";
 
 const ENDPOINT = "/api/analytics/vitals";
-const SAMPLE_RATE = 1.0;
+
+/** Tirage une seule fois par chargement de page (module client) : une page tirée envoie toutes ses mesures. */
+let pageSampled: boolean | null = null;
+function pageIsSampled(): boolean {
+  if (pageSampled !== null) return pageSampled;
+  if (typeof window === "undefined" || typeof navigator === "undefined") return false;
+  pageSampled = shouldReportVitals({
+    hostname: window.location.hostname,
+    userAgent: navigator.userAgent || "",
+    webdriver: navigator.webdriver === true,
+  });
+  return pageSampled;
+}
 
 interface WebVitalMetric {
   name: string;
@@ -61,7 +74,7 @@ function postBeacon(payload: string): void {
 export default function WebVitalsReporter(): null {
   useReportWebVitals((metric: WebVitalMetric) => {
     // Sampling client-side avant tout calcul/network.
-    if (Math.random() > SAMPLE_RATE) return;
+    if (!pageIsSampled()) return;
 
     // Whitelist pour éviter d'envoyer des métriques exotiques (TTFB est
     // déjà dans la whitelist côté serveur, mais Next peut un jour exposer

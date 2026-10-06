@@ -26,6 +26,7 @@
 
 import { requireApiKey } from "@/lib/api-keys/auth";
 import { successResponse, applicationError } from "@/lib/api-keys/response";
+import { readStaticDetailFor } from "@/lib/static-details-store";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -68,35 +69,11 @@ export async function GET(req: Request): Promise<Response> {
   let symbol = id.toUpperCase().slice(0, 8);
   let name = id;
 
-  const kvUrl = process.env.KV_REST_API_URL;
-  const kvToken = process.env.KV_REST_API_TOKEN;
-  if (kvUrl && kvToken) {
-    try {
-      const r = await fetch(
-        `${kvUrl.replace(/\/$/, "")}/get/${encodeURIComponent("cg-static-details:v1")}`,
-        {
-          headers: { Authorization: `Bearer ${kvToken}` },
-          signal: AbortSignal.timeout(3000),
-          next: { revalidate: 60 },
-        },
-      );
-      if (r.ok) {
-        const data = (await r.json()) as { result?: string | null };
-        if (typeof data.result === "string") {
-          const cached = JSON.parse(data.result) as Record<
-            string,
-            { symbol?: string; name?: string }
-          >;
-          const row = cached[id];
-          if (row) {
-            symbol = row.symbol?.toUpperCase() ?? symbol;
-            name = row.name ?? name;
-          }
-        }
-      }
-    } catch {
-      // KV indispo, on continue avec l'id
-    }
+  // 06/10/2026 : un seau de ~100 Ko en cache (lib/static-details-store) au lieu du lot de 3,1 Mo.
+  const row = await readStaticDetailFor<{ symbol?: string; name?: string }>(id).catch(() => null);
+  if (row) {
+    symbol = row.symbol?.toUpperCase() ?? symbol;
+    name = row.name ?? name;
   }
 
   // Délègue à fetchCryptoNews (lib existante)

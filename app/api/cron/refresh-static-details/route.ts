@@ -32,7 +32,8 @@ import { verifyBearer } from "@/lib/auth";
 import { getKv } from "@/lib/kv";
 import topCryptosData from "@/data/top-cryptos.json";
 import hiddenGemsData from "@/data/hidden-gems.json";
-import { KV_STATIC_DETAILS_KEY } from "@/lib/coingecko";
+import { revalidateTag } from "next/cache";
+import { STATIC_DETAILS_TAG, writeStaticDetailsBuckets } from "@/lib/static-details-store";
 import { getPublishedCoingeckoIds } from "@/lib/cryptos-db";
 
 export const runtime = "nodejs";
@@ -40,7 +41,8 @@ export const dynamic = "force-dynamic";
 export const maxDuration = 60;
 
 const COINGECKO_BASE = "https://api.coingecko.com/api/v3";
-/** TTL KV : 8h. Cron tourne toutes les 6h, +2h de marge si cron skip. */
+/** Ancienne TTL de la clé v1 (8 h), renvoyée pour information : les seaux v2 n'expirent pas, le lecteur ignore un seau
+ *  de plus de 48 h (lib/static-details-store.ts). */
 const KV_TTL_SECONDS = 8 * 3600;
 
 interface CGMarketsRow {
@@ -190,7 +192,14 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
         level: "warning",
       });
     }
-    await kv.set(KV_STATIC_DETAILS_KEY, record, { ex: KV_TTL_SECONDS });
+    // 06/10/2026 : plus aucune Vercel Cron ni étape d'orchestrateur n'appelle cette route (doublon de l'écrivain GitHub).
+    // Appelée à la main, elle écrit les mêmes 32 seaux v2 (UNE commande MSET) puis invalide le cache de données.
+    await writeStaticDetailsBuckets(record);
+    try {
+      revalidateTag(STATIC_DETAILS_TAG);
+    } catch {
+      /* hors contexte Next (tests) */
+    }
     stored = fetched;
   } catch (err) {
     Sentry.captureException(err);

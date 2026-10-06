@@ -1,15 +1,12 @@
-name: Refresh ticker prices KV (every 10 min)
+name: Refresh ticker prices KV (manuel uniquement)
 
-# Pré-charge top 50 cryptos en KV via cron CG /coins/markets — découple
-# /api/prices du rate limit CG live. KV TTL 6min, donc 10min cron = 4min
-# de marge si retry GH Actions slow.
-#
-# Coût GH Actions : ~144 runs/jour × ~15s = ~36 min/jour = 1080 min/mois.
-# Sous le free tier 2000 min/mois (32% utilisation).
+# 06/10/2026 (quota Upstash épuisé) : le schedule `*/10` est RETIRÉ. Il appelait la même route que la Vercel Cron
+# `/api/cron/refresh-ticker-prices` (vercel.json, toutes les 10 min) : jusqu'à 288 écritures KV par jour en double, et
+# CoinGecko était de toute façon appelé depuis Vercel dans les deux cas (GitHub ne faisait que déclencher la route).
+# Lancement manuel conservé en secours (?stale=1 force l'écriture de la clé
+# stale, sinon écrite une fois par heure).
 
 on:
-  schedule:
-    - cron: "*/10 * * * *"
   workflow_dispatch:
 
 permissions:
@@ -36,7 +33,7 @@ jobs:
               --max-time 60 \
               -w "%{http_code}" \
               -o /tmp/response.json \
-              "https://www.cryptoreflex.fr/api/cron/refresh-ticker-prices" || echo "000")
+              "https://www.cryptoreflex.fr/api/cron/refresh-ticker-prices?stale=1" || echo "000")
             echo "Attempt $attempt: HTTP $HTTP_CODE"
             cat /tmp/response.json 2>/dev/null || true
             echo
@@ -52,5 +49,5 @@ jobs:
           # 3 fois fail = CG bani sérieusement. On log mais on ne fail PAS le workflow
           # (sinon notif GitHub spam pour un problème externe transient).
           echo "⚠️ CG ban persistant après 3 tentatives — KV non rafraîchi cette fois."
-          echo "Pas critique car KV cg-static-details:v1 reste peuplé (TTL 8h) + daily cron."
+          echo "Pas critique : la Vercel Cron réessaie toutes les 10 min."
           exit 0

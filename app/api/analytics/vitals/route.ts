@@ -23,6 +23,7 @@ import { NextResponse } from "next/server";
 import { getKv } from "@/lib/kv";
 import { createRateLimiter } from "@/lib/rate-limit";
 import { getClientIp } from "@/lib/ip";
+import { VITALS_BOT_UA } from "@/lib/web-vitals-sampling";
 
 export const runtime = "edge";
 
@@ -77,6 +78,10 @@ function p75(values: number[]): number {
 const limiter = createRateLimiter({ limit: 60, windowMs: 60_000, key: "vitals" });
 
 export async function POST(req: Request): Promise<Response> {
+  // 06/10/2026 (quota Upstash) : un robot ou un navigateur piloté qui contourne le filtre client n'écrit rien.
+  if (VITALS_BOT_UA.test(req.headers.get("user-agent") ?? "")) {
+    return new Response(null, { status: 204 });
+  }
   const rl = await limiter(getClientIp(req));
   if (!rl.ok) {
     return NextResponse.json(
@@ -124,16 +129,10 @@ export async function POST(req: Request): Promise<Response> {
   try {
     const len = await kv.lpush(samplesKey, sample);
 
-    // Trim soft : si on dépasse MAX_SAMPLES, on supprime les surplus en queue.
-    // On ne dispose pas de LTRIM natif dans le wrapper minimal — on emule en
-    // re-lisant et en retirant les "vieux". Comme ça arrive 1×/MAX_SAMPLES,
-    // le coût amorti est négligeable.
+    // Trim soft : au-delà de MAX_SAMPLES + 50, UNE commande LTRIM garde les MAX_SAMPLES plus récents.
+    // 06/10/2026 : remplace LRANGE complet + un LREM par élément (≈ 52 commandes et ~150 Ko toutes les 50 mesures).
     if (len > MAX_SAMPLES + 50) {
-      const all = await kv.lrange<VitalSample>(samplesKey, 0, -1);
-      const toRemove = all.slice(MAX_SAMPLES);
-      for (const old of toRemove) {
-        await kv.lrem(samplesKey, 0, old);
-      }
+      await kv.ltrim(samplesKey, 0, MAX_SAMPLES - 1);
     }
 
     // Recalcul p75 toutes les RECOMPUTE_EVERY valeurs (amorti).

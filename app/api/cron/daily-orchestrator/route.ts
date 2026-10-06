@@ -65,12 +65,9 @@ const PER_JOB_TIMEOUT_MS = 90_000;
  */
 const SUB_CRONS = [
   { name: "refresh-prices", path: "/api/cron/refresh-prices", critical: false },
-  // FIX 2026-05-10 v11+ — pré-charge ATH/ATL/sparkline/supply en KV pour
-  // les 100 fiches éditoriales statiques. 1 fetch CG /coins/markets en
-  // batch couvre les 100 IDs d'un coup (TTL 8h, refresh 1×/jour suffit).
-  // Découple les pages user du rate-limit CG live (serveur Coolify
-  // régulièrement IP-banni par CG free).
-  { name: "refresh-static-details", path: "/api/cron/refresh-static-details", critical: false },
+  // 06/10/2026 — « refresh-static-details » RETIRÉ : doublon de l'écrivain unique GitHub
+  // (.github/workflows/refresh-static-details-kv.yml, 32 seaux KV), qui écrivait 3,1 Mo de plus par passage
+  // (quota Upstash épuisé le 06/10/2026). La route reste appelable à la main.
   // OPTIM 2026-05-10 — pré-charge top 50 ticker prices en KV (TTL 6min).
   // Ticker home + autocomplete + portfolio lisent KV → 0 cascade live.
   // 2 fetches CG/jour ici (vs ~100/jour avant via cascade live miss).

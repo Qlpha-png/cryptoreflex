@@ -85,7 +85,7 @@ describe("createRecipientLimiter", () => {
     expect(ttls[0]).toBe(86_400);
   });
 
-  it("fail-open (avec warning) si le KV est en panne", async () => {
+  it("KV en panne : repli sur un compteur mémoire (06/10/2026 : plus de fail-open)", async () => {
     const warn = vi.spyOn(console, "warn").mockImplementation(() => undefined);
     const broken: CounterStore = {
       incr: async () => {
@@ -94,9 +94,10 @@ describe("createRecipientLimiter", () => {
     };
     const limiter = createRecipientLimiter({ limit: 1, windowSec: 60, key: "t4", store: broken });
     expect(await limiter("a@b.fr")).toEqual({ ok: true });
-    expect(await limiter("a@b.fr")).toEqual({ ok: true });
+    expect(await limiter("a@b.fr")).toEqual({ ok: false, retryAfter: 60 });
+    expect(await limiter("autre@b.fr")).toEqual({ ok: true });
     expect(warn).toHaveBeenCalled();
-    expect(String(warn.mock.calls[0]?.[0])).toContain("fail-open");
+    expect(String(warn.mock.calls[0]?.[0])).toContain("repli mémoire");
   });
 });
 

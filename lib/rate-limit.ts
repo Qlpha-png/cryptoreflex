@@ -47,7 +47,7 @@
  *   }
  */
 
-import { getKv } from "@/lib/kv";
+import { getKv, isKvCircuitOpen, KvUnavailableError, kvRestConfig, noteKvError, recordKvUsage } from "@/lib/kv";
 
 export interface RateLimitOk {
   ok: true;
@@ -85,42 +85,73 @@ interface Entry {
 /*  Fallback in-memory (legacy behavior, utilisé quand KV mocked)             */
 /* -------------------------------------------------------------------------- */
 
-/** Stores in-memory partagés par namespace (dans le même process). */
-const _memoryStores = new Map<string, Map<string, Entry>>();
+/**
+ * 06/10/2026 — limiteur mémoire de l'instance, à FENÊTRE GLISSANTE (compteur pondéré : fenêtre précédente × part
+ * restante + fenêtre courante), BORNÉ en taille. C'est le limiteur par défaut de toutes les routes (RATE_LIMIT_USE_KV
+ * absente en production) et le REPLI des limiteurs KV quand le KV est saturé ou en panne (au lieu de tout laisser passer).
+ * Taille bornée : au-delà de MEMORY_MAX_KEYS adresses par espace, les moins récemment vues sont oubliées (une rafale
+ * d'adresses uniques ne fait pas gonfler la mémoire de la lambda).
+ */
+interface SlidingEntry {
+  prevCount: number;
+  currCount: number;
+  currStart: number;
+}
 
-function memoryRateLimit(
+export const MEMORY_MAX_KEYS = 10_000;
+
+/** Stores in-memory partagés par namespace (dans le même process). */
+const _memoryStores = new Map<string, Map<string, SlidingEntry>>();
+
+export function memoryRateLimit(
   namespace: string,
   ip: string,
   limit: number,
   windowMs: number,
+  now: number = Date.now(),
 ): RateLimitResult {
   let store = _memoryStores.get(namespace);
   if (!store) {
-    store = new Map<string, Entry>();
+    store = new Map<string, SlidingEntry>();
     _memoryStores.set(namespace, store);
   }
 
-  const now = Date.now();
+  const windowStart = Math.floor(now / windowMs) * windowMs;
+  const entry = store.get(ip) ?? { prevCount: 0, currCount: 0, currStart: windowStart };
+  if (entry.currStart !== windowStart) {
+    entry.prevCount = windowStart - entry.currStart === windowMs ? entry.currCount : 0;
+    entry.currCount = 0;
+    entry.currStart = windowStart;
+  }
+  // ré-insertion : l'ordre de la Map devient l'ordre « moins récemment vu d'abord »
+  store.delete(ip);
+  store.set(ip, entry);
+  while (store.size > MEMORY_MAX_KEYS) {
+    const oldest = store.keys().next().value as string | undefined;
+    if (oldest === undefined) break;
+    store.delete(oldest);
+  }
 
-  // GC opportuniste : si la map gonfle (bot scan, etc.), on purge les expirées.
-  if (store.size > 5000) {
-    for (const [k, v] of store.entries()) {
-      if (v.resetAt < now) store.delete(k);
+  const elapsed = now - windowStart;
+  const weight = 1 - elapsed / windowMs;
+  const estimate = entry.prevCount * weight + entry.currCount;
+  if (estimate >= limit) {
+    // attente jusqu'à ce que l'estimation repasse sous la limite
+    let waitMs = windowStart + windowMs - now;
+    if (entry.currCount < limit && entry.prevCount > 0) {
+      waitMs = Math.min(waitMs, windowMs * (1 - (limit - entry.currCount) / entry.prevCount) - elapsed);
     }
+    return { ok: false, retryAfter: Math.max(1, Math.ceil(waitMs / 1000)) };
   }
 
-  const entry = store.get(ip);
-  if (!entry || entry.resetAt < now) {
-    store.set(ip, { count: 1, resetAt: now + windowMs });
-    return { ok: true };
-  }
-
-  if (entry.count >= limit) {
-    return { ok: false, retryAfter: Math.max(1, Math.ceil((entry.resetAt - now) / 1000)) };
-  }
-
-  entry.count += 1;
+  entry.currCount += 1;
   return { ok: true };
+}
+
+/** Tests : vide les compteurs mémoire. */
+export function resetMemoryRateLimitForTests(): void {
+  _memoryStores.clear();
+  _fallbackCounterStore = null;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -175,10 +206,15 @@ async function kvRateLimit(
 
     return { ok: true };
   } catch (err) {
-    // En cas de panne KV, on reste tolérant : on laisse passer la requête plutôt
-    // que de bloquer la prod. Log côté serveur pour alerter.
-    console.warn("[rate-limit] KV error, fail-open:", err);
-    return { ok: true };
+    // 06/10/2026 : panne ou quota KV épuisé → REPLI sur le limiteur mémoire de l'instance (moins strict car non
+    // partagé entre lambdas, mais plus jamais « tout passe »).
+    if (!(err instanceof KvUnavailableError)) {
+      console.warn(
+        "[rate-limit] KV indisponible, repli mémoire :",
+        err instanceof Error ? err.message.slice(0, 200) : String(err),
+      );
+    }
+    return memoryRateLimit(namespace, ip, limit, windowMs);
   }
 }
 
@@ -216,7 +252,7 @@ export function createRateLimiter(
       return memoryRateLimit(namespace, ip, limit, windowMs);
     }
     const kv = getKv();
-    if (kv.mocked) {
+    if (kv.mocked || isKvCircuitOpen()) {
       return memoryRateLimit(namespace, ip, limit, windowMs);
     }
     return kvRateLimit(namespace, ip, limit, windowMs);
@@ -240,8 +276,9 @@ export function createRateLimiter(
  *    (le TTL est posé à la création uniquement → fenêtre fixe, qu'un
  *    attaquant ne peut pas prolonger en insistant).
  *  - Sinon → Map en mémoire (dev / preview, non distribuée).
- *  - Panne KV → fail-open avec warning (on ne bloque jamais la connexion
- *    d'un utilisateur parce que le KV est indisponible).
+ *  - Panne KV ou quota épuisé → repli sur un compteur mémoire de l'instance
+ *    (06/10/2026 ; avant : fail-open, tout passait). Les limites restent
+ *    tenues par instance ; un utilisateur légitime n'est pas plus bloqué.
  *
  * Note : le contrat `KvClient` (lib/kv.ts) n'expose pas INCR ; on parle
  * directement à l'API REST Upstash (même URL/token que lib/kv.ts) plutôt
@@ -267,6 +304,11 @@ export function createMemoryCounterStore(now: () => number = Date.now): CounterS
         for (const [k, v] of store.entries()) {
           if (v.resetAt <= t) store.delete(k);
         }
+        // borne dure (06/10/2026) : les plus anciennes entrées d'abord
+        for (const k of store.keys()) {
+          if (store.size <= MEMORY_MAX_KEYS) break;
+          store.delete(k);
+        }
       }
       const entry = store.get(key);
       if (!entry || entry.resetAt <= t) {
@@ -291,6 +333,7 @@ export function createUpstashCounterStore(
   const base = url.replace(/\/$/, "");
   return {
     async incr(key: string, ttlSec: number): Promise<number> {
+      if (isKvCircuitOpen()) throw new KvUnavailableError();
       const res = await fetchImpl(`${base}/multi-exec`, {
         method: "POST",
         headers: {
@@ -305,11 +348,25 @@ export function createUpstashCounterStore(
         cache: "no-store",
         signal: AbortSignal.timeout(3000),
       });
+      const text = await res.text().catch(() => "");
+      recordKvUsage({ commands: 2, bytes: text.length });
       if (!res.ok) {
+        noteKvError(text);
         throw new Error(`[rate-limit] Upstash multi-exec ${res.status}`);
       }
-      const json = (await res.json()) as unknown;
+      let json: unknown = null;
+      try {
+        json = JSON.parse(text) as unknown;
+      } catch {
+        /* réponse illisible : traitée comme inattendue ci-dessous */
+      }
+      if (json && typeof json === "object" && !Array.isArray(json) && typeof (json as { error?: unknown }).error === "string") {
+        noteKvError((json as { error: string }).error);
+      }
       const incr = Array.isArray(json) ? (json[1] as { result?: unknown; error?: unknown } | undefined) : undefined;
+      if (Array.isArray(json)) {
+        for (const r of json as { error?: unknown }[]) if (typeof r?.error === "string") noteKvError(r.error);
+      }
       if (!incr || incr.error || typeof incr.result !== "number") {
         throw new Error("[rate-limit] réponse multi-exec inattendue");
       }
@@ -319,15 +376,19 @@ export function createUpstashCounterStore(
 }
 
 let _defaultCounterStore: CounterStore | null = null;
+/** Repli mémoire des compteurs par destinataire quand le KV est en panne ou saturé (une seule Map par instance). */
+let _fallbackCounterStore: CounterStore | null = null;
+function getFallbackCounterStore(): CounterStore {
+  return (_fallbackCounterStore ??= createMemoryCounterStore());
+}
 
 /** KV configuré → Upstash ; sinon mémoire. Singleton (compteurs partagés entre routes). */
 function getDefaultCounterStore(): CounterStore {
   if (_defaultCounterStore) return _defaultCounterStore;
-  const url = process.env.KV_REST_API_URL;
-  const token = process.env.KV_REST_API_TOKEN;
+  const cfg = kvRestConfig();
   _defaultCounterStore =
-    url && token && !getKv().mocked
-      ? createUpstashCounterStore(url, token)
+    cfg && !getKv().mocked
+      ? createUpstashCounterStore(cfg.url, cfg.token)
       : createMemoryCounterStore();
   return _defaultCounterStore;
 }
@@ -394,21 +455,28 @@ export function createRecipientLimiter(
 ): (email: string) => Promise<RateLimitResult> {
   const { limit, windowSec, key } = opts;
   return async function recipientLimit(email: string): Promise<RateLimitResult> {
+    const verdict = (count: number): RateLimitResult =>
+      // TTL restant inconnu sans RTT supplémentaire : borne haute = fenêtre.
+      count > limit ? { ok: false, retryAfter: windowSec } : { ok: true };
+    let counterKey: string | null = null;
     try {
       const store = opts.store ?? getDefaultCounterStore();
-      const hash = await sha256Hex(canonicalEmailForLimit(email));
-      const count = await store.incr(`rl:rcpt:${key}:${hash}`, windowSec);
-      if (count > limit) {
-        // TTL restant inconnu sans RTT supplémentaire : borne haute = fenêtre.
-        return { ok: false, retryAfter: windowSec };
-      }
-      return { ok: true };
+      counterKey = `rl:rcpt:${key}:${await sha256Hex(canonicalEmailForLimit(email))}`;
+      return verdict(await store.incr(counterKey, windowSec));
     } catch (err) {
-      console.warn(
-        `[rate-limit] compteur destinataire "${key}" indisponible, fail-open:`,
-        err instanceof Error ? err.message : String(err),
-      );
-      return { ok: true };
+      // 06/10/2026 : plus de « fail-open » — repli sur un compteur mémoire de l'instance (KV saturé ou en panne).
+      if (!(err instanceof KvUnavailableError)) {
+        console.warn(
+          `[rate-limit] compteur destinataire "${key}" indisponible, repli mémoire :`,
+          err instanceof Error ? err.message : String(err),
+        );
+      }
+      try {
+        counterKey ??= `rl:rcpt:${key}:${await sha256Hex(canonicalEmailForLimit(email))}`;
+        return verdict(await getFallbackCounterStore().incr(counterKey, windowSec));
+      } catch {
+        return { ok: true }; // ne peut arriver qu'en cas de bug de hachage : on ne bloque jamais une connexion
+      }
     }
   };
 }

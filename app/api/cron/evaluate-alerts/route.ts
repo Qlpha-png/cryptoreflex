@@ -22,7 +22,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import * as Sentry from "@sentry/nextjs";
-import { evaluateAndFire } from "@/lib/alerts";
+import { evaluateAndFire, shouldWriteAlertsTrace } from "@/lib/alerts";
 import { verifyBearer } from "@/lib/auth";
 import { getKv } from "@/lib/kv";
 
@@ -77,10 +77,14 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     console.info(
       `[cron-eval-end] session=${sessionId} checked=${report.checked} fired=${report.fired} skipped=${report.skipped} errors=${report.errors.length} durationMs=${report.durationMs}`,
     );
-    /* trace du passage pour la sentinelle (heure, nombres seulement : aucune adresse ni alerte) */
-    await getKv()
-      .set("cron:evaluate-alerts:last", { at: new Date().toISOString(), checked: report.checked, fired: report.fired, errors: report.errors.length }, { ex: 2 * 86_400 })
-      .catch((e: unknown) => console.warn("[cron-eval] trace KV impossible", e));
+    /* trace du passage pour la sentinelle (heure, nombres seulement : aucune adresse ni alerte) ;
+       06/10/2026 : une fois par heure, ou dès qu'une alerte part ou qu'une erreur survient (shouldWriteAlertsTrace) */
+    const traceNow = new Date();
+    if (shouldWriteAlertsTrace(traceNow, report)) {
+      await getKv()
+        .set("cron:evaluate-alerts:last", { at: traceNow.toISOString(), checked: report.checked, fired: report.fired, errors: report.errors.length }, { ex: 2 * 86_400 })
+        .catch((e: unknown) => console.warn("[cron-eval] trace KV impossible", e));
+    }
     return NextResponse.json(
       { ok: true, sessionId, ...report },
       { status: 200, headers: { "Cache-Control": "no-store" } },

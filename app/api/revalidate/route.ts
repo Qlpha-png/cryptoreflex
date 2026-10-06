@@ -61,6 +61,10 @@ const ALLOWED_TAGS = new Set([
   "coingecko:market",
   "coingecko:global",
   "coingecko:portfolio",
+  // 06/10/2026 (quota Upstash) : seaux KV des détails de fiches, invalidés par l'écrivain GitHub après chaque MSET
+  // (scripts/populate-all-cryptos-kv.mjs), et cache du bandeau de prix.
+  "kv-static-details",
+  "kv-ticker-prices",
 ]);
 
 /**

@@ -342,9 +342,9 @@ export async function getAlertsByEmail(email: string): Promise<PriceAlert[]> {
   const keys = await kv.keys(KV_KEY_BY_ID_PATTERN);
   if (!keys.length) return [];
 
+  // 06/10/2026 (quota Upstash) : UNE commande MGET par tranche de 500 clés au lieu d'un GET par alerte.
   const out: PriceAlert[] = [];
-  for (const key of keys) {
-    const a = await kv.get<PriceAlert>(key);
+  for (const a of await mgetInChunks<PriceAlert>(kv, keys)) {
     if (a && a.email === normalized) out.push(a);
   }
   // Tri : actives d'abord, puis par date de création desc.
@@ -418,6 +418,22 @@ export interface EvaluationReport {
 const FIRED_MARKER_PREFIX = "alerts:fired:";
 const FIRED_MARKER_TTL_SEC = 86_400; // 24h
 
+/**
+ * 06/10/2026 (quota Upstash) : la trace `cron:evaluate-alerts:last` (lue par la sentinelle) n'est plus écrite à chaque
+ * passage (97 par jour) mais une fois par heure (passage de la première quinzaine de minutes), et à chaque passage qui a
+ * envoyé une alerte ou rencontré une erreur. La sentinelle tolère 90 min (scripts/sentinelle.mjs).
+ */
+export function shouldWriteAlertsTrace(now: Date, report: Pick<EvaluationReport, "fired" | "errors">): boolean {
+  return now.getUTCMinutes() < 15 || report.fired > 0 || report.errors.length > 0;
+}
+
+/** MGET par tranches (une commande par tranche de `size` clés), résultats dans l'ordre des clés. */
+async function mgetInChunks<T>(kv: ReturnType<typeof getKv>, keys: string[], size = 500): Promise<(T | null)[]> {
+  const out: (T | null)[] = [];
+  for (let i = 0; i < keys.length; i += size) out.push(...(await kv.mget<T>(keys.slice(i, i + size))));
+  return out;
+}
+
 /** Budget d'un job push (lookup user Supabase + envois bornés à PUSH_SEND_TIMEOUT_MS). */
 const PUSH_JOB_TIMEOUT_MS = PUSH_SEND_TIMEOUT_MS + 3000;
 
@@ -452,21 +468,23 @@ export async function evaluateAndFire(
     return report;
   }
 
-  // Grouper les alertes actives par cryptoId
+  // Grouper les alertes actives par cryptoId.
+  // 06/10/2026 (quota Upstash) : UNE commande MGET (par tranche de 500 clés) au lieu d'un GET par alerte.
+  let fetched: (PriceAlert | null)[] = [];
+  try {
+    fetched = await mgetInChunks<PriceAlert>(kv, allKeys);
+  } catch (err) {
+    report.errors.push(`mget alerts failed: ${err instanceof Error ? err.message : String(err)}`);
+    report.durationMs = Date.now() - startedAt;
+    return report;
+  }
+  if (isAborted()) {
+    report.errors.push("aborted during keys scan");
+    report.durationMs = Date.now() - startedAt;
+    return report;
+  }
   const byCrypto = new Map<string, PriceAlert[]>();
-  for (const key of allKeys) {
-    if (isAborted()) {
-      report.errors.push("aborted during keys scan");
-      report.durationMs = Date.now() - startedAt;
-      return report;
-    }
-    let alert: PriceAlert | null = null;
-    try {
-      alert = await kv.get<PriceAlert>(key);
-    } catch (err) {
-      report.errors.push(`get ${key} failed: ${err instanceof Error ? err.message : String(err)}`);
-      continue;
-    }
+  for (const alert of fetched) {
     if (!alert || alert.status !== "active") continue;
     report.checked++;
 

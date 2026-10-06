@@ -25,6 +25,24 @@
  *   existant : tous les readers actuels la lisent déjà, on ne casse rien.
  */
 
+import { isKvCircuitOpen, kvRestCall, kvRestConfig } from "@/lib/kv";
+
+/*
+ * 06/10/2026 — quota Upstash épuisé : la lecture « live » est mise en cache 300 s (au lieu de 30 s) et la lecture
+ * « stale » 3 600 s (au lieu de 60 s) ; le cron invalide l'étiquette `kv-ticker-prices` après chaque écriture, donc la
+ * fraîcheur reste celle du cron (10 min). La clé stale n'est plus écrite qu'une fois par heure (TTL 6 h). Le schedule
+ * GitHub en doublon du cron Vercel est retiré (.github/workflows/refresh-ticker-prices.yml). Disjoncteur de lib/kv.ts :
+ * quota épuisé → aucune commande, source « none » (l'appelant passe à sa cascade).
+ */
+export const KV_TICKER_TAG = "kv-ticker-prices";
+export const KV_TICKER_LIVE_REVALIDATE_S = 300;
+export const KV_TICKER_STALE_REVALIDATE_S = 3600;
+
+/** La clé stale (TTL 6 h) n'est écrite qu'au passage de la première dizaine de minutes de chaque heure (cron toutes les 10 min). */
+export function shouldWriteStaleTicker(now: Date = new Date()): boolean {
+  return now.getUTCMinutes() < 10;
+}
+
 export const KV_TICKER_LIVE_KEY = "cg-ticker-prices:v1";
 export const KV_TICKER_STALE_KEY = "cg-ticker-prices:stale:v1";
 
@@ -75,10 +93,6 @@ export interface TickerCacheReadResult {
   fetchedAt: string | null;
 }
 
-interface UpstashGetResponse {
-  result?: string | null;
-}
-
 /**
  * Normalise un payload KV potentiellement legacy (Record direct) ou nouveau
  * (TickerCachePayload wrap). Retourne `{ prices, fetchedAt }`.
@@ -118,73 +132,40 @@ function normalizePayload(
  *   du fallback cascade live ou downgrade UX).
  */
 export async function readTickerCache(): Promise<TickerCacheReadResult> {
-  const kvUrl = process.env.KV_REST_API_URL;
-  const kvToken = process.env.KV_REST_API_TOKEN;
-
-  if (!kvUrl || !kvToken) {
+  const cfg = kvRestConfig();
+  if (!cfg || isKvCircuitOpen()) {
     return { record: {}, source: "none", isStale: false, fetchedAt: null };
   }
 
-  const baseUrl = kvUrl.replace(/\/$/, "");
   const headers = {
-    Authorization: `Bearer ${kvToken}`,
+    Authorization: `Bearer ${cfg.token}`,
     accept: "application/json",
   };
 
-  // 1. Try live (TTL 12 min, chaud après chaque run cron)
-  try {
-    const liveRes = await fetch(
-      `${baseUrl}/get/${encodeURIComponent(KV_TICKER_LIVE_KEY)}`,
-      {
-        headers,
-        signal: AbortSignal.timeout(2500),
-        next: { revalidate: 30, tags: ["kv-ticker-prices"] },
-      },
-    );
-    if (liveRes.ok) {
-      const data = (await liveRes.json()) as UpstashGetResponse;
-      if (typeof data.result === "string" && data.result.length > 0) {
-        const normalized = normalizePayload(JSON.parse(data.result));
-        if (normalized) {
-          return {
-            record: normalized.prices,
-            source: "live",
-            isStale: false,
-            fetchedAt: normalized.fetchedAt,
-          };
-        }
-      }
+  const readKey = async (key: string, revalidate: number) => {
+    try {
+      const raw = await kvRestCall<string | null>(
+        `${cfg.url}/get/${encodeURIComponent(key)}`,
+        { headers, signal: AbortSignal.timeout(2500), next: { revalidate, tags: [KV_TICKER_TAG] } },
+        { cached: true },
+      );
+      return typeof raw === "string" && raw.length > 0 ? normalizePayload(JSON.parse(raw)) : null;
+    } catch {
+      return null;
     }
-  } catch {
-    // Continue vers stale
+  };
+
+  // 1. Try live (TTL 12 min, chaud après chaque run cron ; cache 300 s invalidé par le cron)
+  const live = await readKey(KV_TICKER_LIVE_KEY, KV_TICKER_LIVE_REVALIDATE_S);
+  if (live) {
+    return { record: live.prices, source: "live", isStale: false, fetchedAt: live.fetchedAt };
   }
 
-  // 2. Fallback stale (TTL 6 h, couvre gaps GH Actions cron)
-  try {
-    const staleRes = await fetch(
-      `${baseUrl}/get/${encodeURIComponent(KV_TICKER_STALE_KEY)}`,
-      {
-        headers,
-        signal: AbortSignal.timeout(2500),
-        next: { revalidate: 60, tags: ["kv-ticker-prices"] },
-      },
-    );
-    if (staleRes.ok) {
-      const data = (await staleRes.json()) as UpstashGetResponse;
-      if (typeof data.result === "string" && data.result.length > 0) {
-        const normalized = normalizePayload(JSON.parse(data.result));
-        if (normalized) {
-          return {
-            record: normalized.prices,
-            source: "stale",
-            isStale: true,
-            fetchedAt: normalized.fetchedAt,
-          };
-        }
-      }
-    }
-  } catch {
-    // Continue vers source "none"
+  // 2. Fallback stale (TTL 6 h, écrite 1 fois par heure ; cache 3 600 s invalidé par le cron)
+  if (isKvCircuitOpen()) return { record: {}, source: "none", isStale: false, fetchedAt: null };
+  const stale = await readKey(KV_TICKER_STALE_KEY, KV_TICKER_STALE_REVALIDATE_S);
+  if (stale) {
+    return { record: stale.prices, source: "stale", isStale: true, fetchedAt: stale.fetchedAt };
   }
 
   return { record: {}, source: "none", isStale: false, fetchedAt: null };
@@ -205,18 +186,20 @@ interface UpstashSetResult {
  */
 export async function writeTickerCacheBoth(
   record: TickerRecord,
-): Promise<UpstashSetResult & { live: boolean; stale: boolean; fetchedAt: string }> {
-  const kvUrl = process.env.KV_REST_API_URL;
-  const kvToken = process.env.KV_REST_API_TOKEN;
-  const fetchedAt = new Date().toISOString();
+  opts: { now?: Date; forceStale?: boolean } = {},
+): Promise<UpstashSetResult & { live: boolean; stale: boolean; staleSkipped: boolean; fetchedAt: string }> {
+  const cfg = kvRestConfig();
+  const now = opts.now ?? new Date();
+  const fetchedAt = now.toISOString();
+  const writeStale = opts.forceStale === true || shouldWriteStaleTicker(now);
 
-  if (!kvUrl || !kvToken) {
-    return { ok: false, live: false, stale: false, fetchedAt };
+  if (!cfg) {
+    return { ok: false, live: false, stale: false, staleSkipped: !writeStale, fetchedAt };
   }
 
-  const baseUrl = kvUrl.replace(/\/$/, "");
+  const baseUrl = cfg.url;
   const headers = {
-    Authorization: `Bearer ${kvToken}`,
+    Authorization: `Bearer ${cfg.token}`,
     "Content-Type": "application/json",
   };
 
@@ -226,18 +209,16 @@ export async function writeTickerCacheBoth(
 
   const writeOne = async (key: string, ttl: number): Promise<boolean> => {
     try {
-      const res = await fetch(
-        `${baseUrl}/set/${encodeURIComponent(key)}?ex=${ttl}`,
-        {
-          method: "POST",
-          headers,
-          body,
-          signal: AbortSignal.timeout(5000),
-        },
-      );
-      return res.ok;
+      await kvRestCall(`${baseUrl}/set/${encodeURIComponent(key)}?ex=${ttl}`, {
+        method: "POST",
+        headers,
+        body,
+        cache: "no-store",
+        signal: AbortSignal.timeout(5000),
+      });
+      return true;
     } catch {
-      return false;
+      return false; // panne, quota épuisé (disjoncteur ouvert) ou refus
     }
   };
 
@@ -245,10 +226,10 @@ export async function writeTickerCacheBoth(
   // on a quand même un fallback partiel.
   const [liveOk, staleOk] = await Promise.all([
     writeOne(KV_TICKER_LIVE_KEY, KV_TICKER_LIVE_TTL_SECONDS),
-    writeOne(KV_TICKER_STALE_KEY, KV_TICKER_STALE_TTL_SECONDS),
+    writeStale ? writeOne(KV_TICKER_STALE_KEY, KV_TICKER_STALE_TTL_SECONDS) : Promise.resolve(false),
   ]);
 
-  return { ok: liveOk && staleOk, live: liveOk, stale: staleOk, fetchedAt };
+  return { ok: liveOk && (staleOk || !writeStale), live: liveOk, stale: staleOk, staleSkipped: !writeStale, fetchedAt };
 }
 
 /**

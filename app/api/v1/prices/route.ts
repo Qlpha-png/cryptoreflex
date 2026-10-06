@@ -3,7 +3,7 @@
  *
  * Prix temps réel multi-cryptos pour usage IA / dashboard.
  *   - Source : KV-backed cg-ticker-prices:v1 (top 50, refresh 10min)
- *   - Fallback : KV cg-static-details:v1 (777 fiches, refresh 1×/jour)
+ *   - Fallback : KV cg-static-details:v2 (777 fiches en 32 seaux, écrits toutes les 6 h)
  *   - Latence : ~50ms (KV chaud)
  *
  * Auth : scope `public:read`
@@ -26,6 +26,7 @@
 
 import { requireApiKey } from "@/lib/api-keys/auth";
 import { successResponse, applicationError } from "@/lib/api-keys/response";
+import { readStaticDetailsFor } from "@/lib/static-details-store";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -95,8 +96,6 @@ export async function GET(req: Request): Promise<Response> {
     );
   }
 
-  const kvUrl = process.env.KV_REST_API_URL;
-  const kvToken = process.env.KV_REST_API_TOKEN;
   const result: Record<string, unknown> = {};
 
   // 1. Tente KV ticker (top 50). FIX 2026-05-14 — pattern live + stale via
@@ -117,28 +116,12 @@ export async function GET(req: Request): Promise<Response> {
     // KV indispo, on tente static-details ci-dessous
   }
 
-  // 2. Fallback KV static-details (777 fiches, frais 6h)
+  // 2. Fallback KV static-details (777 fiches, frais 6h). 06/10/2026 : seuls les seaux des ids manquants sont lus
+  //    (~100 Ko chacun, en cache ; lib/static-details-store) au lieu du lot de 3,1 Mo.
   let staticRecord: Record<string, CGMarketsRow> = {};
   const missing = ids.filter((id) => !tickerRecord[id]);
-  if (missing.length > 0 && kvUrl && kvToken) {
-    try {
-      const r = await fetch(
-        `${kvUrl.replace(/\/$/, "")}/get/${encodeURIComponent("cg-static-details:v1")}`,
-        {
-          headers: { Authorization: `Bearer ${kvToken}` },
-          signal: AbortSignal.timeout(3000),
-          next: { revalidate: 60 },
-        },
-      );
-      if (r.ok) {
-        const data = (await r.json()) as { result?: string | null };
-        if (typeof data.result === "string") {
-          staticRecord = JSON.parse(data.result);
-        }
-      }
-    } catch {
-      // KV indispo
-    }
+  if (missing.length > 0) {
+    staticRecord = (await readStaticDetailsFor<CGMarketsRow>(missing).catch(() => ({ rows: {} }))).rows;
   }
 
   const prices: Array<{

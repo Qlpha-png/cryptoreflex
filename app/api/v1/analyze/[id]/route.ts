@@ -18,6 +18,7 @@
 
 import { requireApiKey } from "@/lib/api-keys/auth";
 import { successResponse, applicationError } from "@/lib/api-keys/response";
+import { readStaticDetailFor } from "@/lib/static-details-store";
 import {
   calcAllIndicators,
   calcVolatility,
@@ -76,26 +77,8 @@ export async function GET(
   const profile = profileRaw as Profile;
 
   // 1. Crypto data (KV)
-  const kvUrl = process.env.KV_REST_API_URL;
-  const kvToken = process.env.KV_REST_API_TOKEN;
-  let row: CGRow | null = null;
-  if (kvUrl && kvToken) {
-    try {
-      const r = await fetch(
-        `${kvUrl.replace(/\/$/, "")}/get/${encodeURIComponent("cg-static-details:v1")}`,
-        { headers: { Authorization: `Bearer ${kvToken}` }, signal: AbortSignal.timeout(3000), next: { revalidate: 60 } },
-      );
-      if (r.ok) {
-        const data = (await r.json()) as { result?: string };
-        if (typeof data.result === "string") {
-          const cached = JSON.parse(data.result) as Record<string, CGRow>;
-          row = cached[id] ?? null;
-        }
-      }
-    } catch {
-      /* fall through */
-    }
-  }
+  // 06/10/2026 : un seau de ~100 Ko en cache (lib/static-details-store) au lieu du lot de 3,1 Mo.
+  const row: CGRow | null = await readStaticDetailFor<CGRow>(id).catch(() => null);
 
   if (!row) {
     return applicationError(404, "CRYPTO_NOT_FOUND", `Crypto \`${id}\` non trouvée.`, request_id);

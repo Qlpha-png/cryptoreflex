@@ -1168,29 +1168,10 @@ async function _fetchStaticDetailsBatch(): Promise<Record<string, CGMarketsRow>>
   // (erreur "Page changed from static to dynamic at runtime"). Inline
   // sans option cache : Next utilise default caching (acceptable car
   // KV peut servir données fraîches depuis cron 4×/jour, pas critique).
-  try {
-    const kvUrl = process.env.KV_REST_API_URL;
-    const kvToken = process.env.KV_REST_API_TOKEN;
-    if (kvUrl && kvToken) {
-      const url = `${kvUrl.replace(/\/$/, "")}/get/${encodeURIComponent(KV_STATIC_DETAILS_KEY)}`;
-      const res = await fetch(url, {
-        headers: { Authorization: `Bearer ${kvToken}`, accept: "application/json" },
-        signal: AbortSignal.timeout(5000),
-        next: { revalidate: 60, tags: ["kv-static-details"] },
-      });
-      if (res.ok) {
-        const data = (await res.json()) as { result?: string | null };
-        if (typeof data.result === "string" && data.result.length > 0) {
-          const parsed = JSON.parse(data.result) as Record<string, CGMarketsRow>;
-          if (parsed && Object.keys(parsed).length > 0) {
-            return parsed;
-          }
-        }
-      }
-    }
-  } catch {
-    // KV indispo → fallback CG live ci-dessous
-  }
+  // 06/10/2026 (chantier « KV un mois ») : PLUS de lecture de la clé v1 (lot unique de 3,1 Mo, ~95 % de la bande
+  // passante Upstash, jamais mis en cache car au-dessus de la limite de 2 Mo du cache Vercel). Les fiches lisent les
+  // 32 seaux v2 (lib/static-details-store.ts) ; cette fonction n'est plus que le repli CoinGecko en direct quand un
+  // seau manque. La clé v1 n'est plus écrite : la relire servirait des données de plus en plus anciennes.
 
   // Lazy import pour éviter cycle de dépendance avec lib/cryptos.ts
   const [topData, gemsData] = await Promise.all([
@@ -1355,7 +1336,7 @@ async function _fetchCoinDetail(
         // casse le cache unstable_cache).
         let batchDetails: Record<string, CGMarketsRow> = {};
         try {
-          batchDetails = await _hydrateStaticDetailsBatch();
+          batchDetails = await (await import("@/lib/static-details-store")).staticDetailsBatchFor(coingeckoId, _hydrateStaticDetailsBatch); // 06/10/2026 : 32 seaux KV en cache au lieu du lot de 3,1 Mo (lib/static-details-store.ts)
         } catch {
           // CG batch failed — fallback per-id below
         }
