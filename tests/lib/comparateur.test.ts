@@ -7,7 +7,7 @@ import { buildRows, costLabel, rowCost, sortRows, euros, type Row } from "@/lib/
 import { getAllPlatforms, isAvailableFr } from "@/lib/platforms";
 
 const base = (o: Partial<Row>): Row => ({
-  id: "x", name: "X", authority: "AMF", country: "France", french: true, supportFr: "chat", score: 4, ux: 4,
+  id: "x", name: "X", authority: "AMF", country: "France", french: true, supportFr: "Chat", supportFrRank: 1, score: 4, ux: 4,
   simple: { c100: 1, c1000: 10, kind: "exact" }, card: { c100: 2, c1000: 20, kind: "exact" }, path: "achat", note: null,
   verifiedDate: "2026-10-05", source: "https://x", affiliateUrl: "https://x", affiliationNotice: "", ...o,
 });
@@ -19,7 +19,7 @@ describe("sortRows", () => {
     base({ id: "bon", simple: { c100: 0.5, c1000: 5, kind: "exact" } }),
     base({ id: "auplus", simple: { c100: 1.5, c1000: 15, kind: "max" } }),
     base({ id: "inconnu", simple: { c100: null, c1000: null, kind: "partiel" } }),
-    base({ id: "sanscarte", simple: { c100: 0.8, c1000: 8, kind: "exact" }, card: null, french: false, supportFr: "non" }),
+    base({ id: "sanscarte", simple: { c100: 0.8, c1000: 8, kind: "exact" }, card: null, french: false, supportFr: "Non", supportFrRank: 0 }),
   ];
   it("prix : coûts publiés (exacts ou « au plus ») d'abord, puis marge non publiée, puis non publié", () => {
     expect(sortRows(rows, 100, "prix").map((r) => r.id)).toEqual(["bon", "sanscarte", "auplus", "cher", "partiel", "inconnu"]);

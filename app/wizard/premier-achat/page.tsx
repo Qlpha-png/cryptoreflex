@@ -69,7 +69,7 @@ export default function WizardPremierAchatPage() {
       },
       {
         name: "Sélectionner une plateforme MiCA débutant FR",
-        text: "Filtre sur : support en français, conformité MiCA, dépôt minimum bas. Coinbase, Bitpanda et Trade Republic sont les références côté débutants.",
+        text: "Filtre sur : chat en français relevé sur la page d'assistance officielle, conformité MiCA, dépôt minimum bas.",
       },
       {
         name: "Choisir une méthode de paiement",

@@ -14,7 +14,18 @@ import {
   Plus,
   Equal,
 } from "lucide-react";
-import { cardBuyPct, getPlatformById, isAvailableFr, type Platform, hasNoIncident, trustpilotText, verifiedBonus } from "@/lib/platforms";
+import {
+  cardBuyPct,
+  getPlatformById,
+  isAvailableFr,
+  type Platform,
+  hasNoIncident,
+  supportChatLabel,
+  supportDelayLabel,
+  supportPhoneLabel,
+  trustpilotText,
+  verifiedBonus,
+} from "@/lib/platforms";
 import {
   getComparison,
   getPublishableComparisons,
@@ -91,6 +102,18 @@ function trustpilotRow(a: Platform, b: Platform): CompareRow {
     bDisplay: trustpilotCell(b, !sameDate),
     hint: ra != null && rb != null ? winner(ra, rb) : "na",
   };
+}
+
+/** Gagnant sur un critère oui/non : seulement si les deux valeurs ont été relevées (null = non vérifié). */
+function boolHint(x: boolean | null, y: boolean | null): WinnerHint {
+  if (x == null || y == null) return "na";
+  return x === y ? "tie" : x ? "a" : "b";
+}
+
+/** Intitulé de la ligne, avec la date du relevé quand les deux fiches ont été relevées le même jour. */
+function supportRowLabel(label: string, a: Platform, b: Platform): string {
+  const d = a.support.verified;
+  return d && d === b.support.verified ? `${label} (relevé du ${fmtDateFr(d)})` : label;
 }
 
 function winner(aValue: number, bValue: number, lowerIsBetter = false): WinnerHint {
@@ -208,9 +231,11 @@ function buildRows(a: Platform, b: Platform): { fees: CompareRow[]; security: Co
   ];
 
   const support: CompareRow[] = [
-    { label: "Chat français", aDisplay: a.support.frenchChat ? "Oui" : "Non", bDisplay: b.support.frenchChat ? "Oui" : "Non", hint: a.support.frenchChat && !b.support.frenchChat ? "a" : !a.support.frenchChat && b.support.frenchChat ? "b" : "tie" },
-    { label: "Téléphone FR", aDisplay: a.support.frenchPhone ? "Oui" : "Non", bDisplay: b.support.frenchPhone ? "Oui" : "Non", hint: a.support.frenchPhone && !b.support.frenchPhone ? "a" : !a.support.frenchPhone && b.support.frenchPhone ? "b" : "tie" },
-    { label: "Délai réponse", aDisplay: a.support.responseTime, bDisplay: b.support.responseTime, hint: "tie" },
+    /* 06/10/2026 : valeurs relevées sur les pages officielles d'assistance (support.source) ; « Non vérifié » ne fait
+       jamais gagner ni perdre une plateforme. */
+    { label: supportRowLabel("Chat en français", a, b), aDisplay: supportChatLabel(a.support), bDisplay: supportChatLabel(b.support), hint: boolHint(a.support.frenchChat, b.support.frenchChat) },
+    { label: "Téléphone", aDisplay: supportPhoneLabel(a.support), bDisplay: supportPhoneLabel(b.support), hint: boolHint(a.support.frenchPhone, b.support.frenchPhone) },
+    { label: "Délai de réponse annoncé", aDisplay: supportDelayLabel(a.support), bDisplay: supportDelayLabel(b.support), hint: "na" },
     { label: "Score support", aDisplay: `${fmtNb(a.scoring.support)}/5`, bDisplay: `${fmtNb(b.scoring.support)}/5`, hint: winner(a.scoring.support, b.scoring.support) },
   ];
 
@@ -434,9 +459,9 @@ export default function ComparisonPage({ params }: Props) {
         {(
           [
             { title: "Frais", icon: Wallet, rows: rows.fees, intro: `Sur les frais, ${a.name} affiche ${fmtNb(a.fees.spotMaker)}% en maker contre ${fmtNb(b.fees.spotMaker)}% pour ${b.name}. La différence paraît mineure jusqu'à ce qu'on la projette sur 10 000€ de volume mensuel — auquel cas elle devient le critère dominant pour un trader actif.` },
-            { title: "Sécurité & MiCA", icon: ShieldCheck, rows: rows.security, intro: `Les deux plateformes opèrent sous agrément MiCA en France. La granularité de la comparaison se joue sur le pourcentage de cold storage, l'existence d'une assurance dédiée et l'historique d'incidents.` },
+            { title: "Sécurité & MiCA", icon: ShieldCheck, rows: rows.security, intro: `${a.category !== "wallet" && b.category !== "wallet" && isAvailableFr(a) && isAvailableFr(b) ? "Les deux plateformes sont agréées MiCA avec accès à la France. " : ""}La granularité de la comparaison se joue sur le pourcentage de cold storage, l'existence d'une assurance dédiée et l'historique d'incidents.` },
             { title: "Expérience utilisateur", icon: Coins, rows: rows.ux, intro: `Notes d'app mobile, Trustpilot et taille du catalogue. Ces métriques ne pèsent pas pareil selon votre profil — un investisseur passif accordera plus de poids à l'app, un trader actif au catalogue.` },
-            { title: "Support client", icon: HeadphonesIcon, rows: rows.support, intro: `En cas de problème (KYC bloqué, retrait en attente, suspicion de fraude), la qualité du support fait la différence entre une résolution en 24h et un mois de cauchemar administratif.` },
+            { title: "Support client", icon: HeadphonesIcon, rows: rows.support, intro: `En cas de problème (vérification d'identité bloquée, retrait en attente, suspicion de fraude), savoir comment joindre la plateforme compte. Canaux relevés sur les pages officielles d'assistance ; un délai n'est indiqué que si la plateforme l'annonce elle-même.` },
           ] as const
         ).map((section) => (
           <section key={section.title} className="mt-10">
@@ -475,6 +500,26 @@ export default function ComparisonPage({ params }: Props) {
                 </tbody>
               </table>
             </div>
+            {section.title === "Support client" && (
+              <ul className="mt-3 space-y-1 text-xs text-muted leading-relaxed">
+                {[a, b].map((plat) => (
+                  <li key={plat.id}>
+                    <span className="font-semibold text-white/80">{plat.name} :</span>{" "}
+                    {plat.support.note && plat.support.source && plat.support.verified ? (
+                      <>
+                        {plat.support.note.replace(/\.$/, "")} (
+                        <a href={plat.support.source} target="_blank" rel="noopener noreferrer" className="underline decoration-dotted underline-offset-2 hover:text-white">
+                          page d&apos;assistance officielle
+                        </a>
+                        , relevée le {fmtDateFr(plat.support.verified)}).
+                      </>
+                    ) : (
+                      "canaux d'assistance non vérifiés."
+                    )}
+                  </li>
+                ))}
+              </ul>
+            )}
           </section>
         ))}
 

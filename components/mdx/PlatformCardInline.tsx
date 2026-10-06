@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Star, ShieldCheck, Sparkles } from "lucide-react";
-import { getPlatformById, feeShort, verifiedBonus } from "@/lib/platforms";
+import { getPlatformById, feeShort, frenchHelpLabel, verifiedBonus } from "@/lib/platforms";
 import AffiliateLink from "./AffiliateLink";
 import PlatformLogo from "@/components/PlatformLogo";
 import { fmtFr } from "@/lib/format-fr";
@@ -84,10 +84,7 @@ export default function PlatformCardInline({
         <Stat label="Frais" value={feeShort(p)} />
         <Stat label="Dépôt min" value={`${p.deposit.minEur}€`} />
         <Stat label="Cryptos" value={`${p.cryptos.totalCount}+`} />
-        <Stat
-          label="Support FR"
-          value={p.support.frenchChat ? "Oui" : "Non"}
-        />
+        <Stat label="Aide en français" value={frenchHelpLabel(p.support)} />
       </dl>
 
       {showProsCons && (

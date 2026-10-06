@@ -61,7 +61,7 @@ const CRITERIA = [
   { name: "Sécurité", weight: 25, what: "Cold storage %, assurance des fonds, MFA obligatoire, audits de sécurité tiers, historique d'incidents et de remboursements." },
   { name: "Conformité MiCA", weight: 20, what: "Agrément MiCA (CASP) et accès à la France, autorité qui l'a délivré, ancienneté de l'agrément, restrictions imposées." },
   { name: "Expérience utilisateur", weight: 15, what: "Onboarding, ergonomie de l'app, qualité des notes Trustpilot, App Store, Play Store." },
-  { name: "Support en français", weight: 10, what: "Disponibilité chat FR, support téléphonique FR, temps de réponse moyen, qualité documentaire FR." },
+  { name: "Support en français", weight: 10, what: "Chat et téléphone en français, délai de réponse annoncé, qualité documentaire FR. Canaux relevés et datés sur la page officielle d'assistance de chaque plateforme ; une valeur non vérifiée est affichée comme telle." },
   { name: "Catalogue & services", weight: 10, what: "Nombre de cryptos, staking disponible, méthodes de paiement, plans d'épargne, services additionnels (carte, lending)." },
 ];
 

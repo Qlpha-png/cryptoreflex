@@ -16,7 +16,19 @@ import {
   MessageSquare,
   Ban,
 } from "lucide-react";
-import { cardBuyPct, getAllPlatforms, getPlatformById, isAvailableFr, type Platform, hasNoIncident, trustpilotText, verifiedBonus } from "@/lib/platforms";
+import {
+  cardBuyPct,
+  getAllPlatforms,
+  getPlatformById,
+  isAvailableFr,
+  type Platform,
+  hasNoIncident,
+  supportChatLabel,
+  supportDelayLabel,
+  supportPhoneLabel,
+  trustpilotText,
+  verifiedBonus,
+} from "@/lib/platforms";
 import {
   getPublishableReviewSlugs,
   getRelatedComparisons,
@@ -143,7 +155,7 @@ function buildVerdict(p: Platform): { headline: string; recommendation: string; 
   const isExchange = p.category === "exchange";
   const cheap = p.scoring.fees >= 4.3;
   const safe = p.scoring.security >= 4.6;
-  const french = p.support.frenchPhone;
+  const french = p.support.frenchPhone === true;
 
   let headline = `${p.name} obtient ${fmtNb(p.scoring.global)}/5 dans notre méthodologie 2026.`;
   let recommendation: string;
@@ -204,19 +216,19 @@ function buildFaq(p: Platform): { q: string; a: string }[] {
       : `${p.name} est un courtier : vous payez un frais d'achat unique, sans maker ni taker. Coût réel relevé : ${p.fees.verified?.realCostPct ?? `${fmtNb(p.fees.instantBuy)} %`}.`} Le retrait SEPA est facturé ${typeof p.fees.withdrawalFiatSepa === "number" ? (p.fees.withdrawalFiatSepa === 0 ? "0 € (gratuit)" : `${fmtNb(p.fees.withdrawalFiatSepa)} €`) : p.fees.withdrawalFiatSepa}. Spread : ${p.fees.spread}.`,
   });
 
+  /* 06/10/2026 : la réponse reprend ce que dit la page officielle d'assistance (support.note), datée. Avant, elle
+     promettait « chat ET téléphone en français » et des délais (« <12h ») jamais sourcés. */
   faq.push({
     q: `${p.name} propose-t-elle un support en français ?`,
-    a: p.support.frenchPhone
-      ? `Oui — chat ET téléphone en français, avec un délai de réponse moyen de ${p.support.responseTime}. C'est un cas rare sur le marché.`
-      : p.support.frenchChat
-        ? `Le support chat est disponible en français (délai ${p.support.responseTime}), mais il n'y a pas de ligne téléphonique. Pour de la résolution complexe, comptez 1 à 2 cycles d'aller-retour.`
-        : `Le support n'est pas disponible en français. Vous serez redirigé vers l'anglais avec un délai de ${p.support.responseTime}.`,
+    a: p.support.note && p.support.verified
+      ? `${p.support.note.replace(/\.$/, "")} (page d'assistance officielle relevée le ${frDate(p.support.verified)}). N'appelez jamais un numéro trouvé ailleurs que sur le site officiel : c'est une technique d'hameçonnage courante.`
+      : `Nous n'avons pas encore vérifié les canaux d'assistance de ${p.name}. Consultez son centre d'aide officiel avant d'ouvrir un compte, et n'appelez jamais un numéro trouvé ailleurs que sur le site officiel.`,
   });
 
   if (p.cryptos.stakingAvailable) {
     faq.push({
       q: `Peut-on faire du staking sur ${p.name} ?`,
-      a: `Oui. ${p.name} propose du staking sur ${p.cryptos.stakingCryptos.length} cryptos majeures, dont ${p.cryptos.stakingCryptos.slice(0, 5).join(", ")}. Les rendements varient selon la crypto et le réseau, et la plateforme prélève une commission sur les récompenses. Attention au lock-up : certaines cryptos imposent une période d'unstaking de quelques jours à plusieurs semaines.`,
+      a: `Oui. ${p.name} propose du staking, par exemple sur ${p.cryptos.stakingCryptos.slice(0, 5).join(", ")} (liste éligible à vérifier sur la plateforme, elle change souvent). Les rendements varient selon la crypto et le réseau, et la plateforme prélève une commission sur les récompenses. Attention au lock-up : certaines cryptos imposent une période d'unstaking de quelques jours à plusieurs semaines.`,
     });
   } else {
     faq.push({
@@ -544,11 +556,11 @@ export default function ReviewPage({ params }: Props) {
                   {p.scoring.ux >= 4.5 && (
                     <li className="flex gap-2"><span className="text-accent-green">•</span> Vous démarrez et voulez une interface qui ne vous perd pas.</li>
                   )}
-                  {p.support.frenchPhone && (
-                    <li className="flex gap-2"><span className="text-accent-green">•</span> Vous voulez un support FR par téléphone (pas que par chat).</li>
+                  {p.support.frenchPhone === true && (
+                    <li className="flex gap-2"><span className="text-accent-green">•</span> Vous voulez pouvoir joindre le support par téléphone, en français.</li>
                   )}
                   {p.cryptos.stakingAvailable && (
-                    <li className="flex gap-2"><span className="text-accent-green">•</span> Vous voulez faire du staking ({p.cryptos.stakingCryptos.length} cryptos éligibles).</li>
+                    <li className="flex gap-2"><span className="text-accent-green">•</span> Vous voulez faire du staking.</li>
                   )}
                   {p.mica.micaCompliant && (
                     <li className="flex gap-2"><span className="text-accent-green">•</span> La conformité MiCA est un critère indispensable pour vous.</li>
@@ -564,9 +576,11 @@ export default function ReviewPage({ params }: Props) {
                   {p.weaknesses.slice(0, 3).map((w) => (
                     <li key={w} className="flex gap-2"><span className="text-danger-fg">•</span> {w}.</li>
                   ))}
-                  {!p.support.frenchPhone && (
+                  {p.support.phone === "aucun" ? (
+                    <li className="flex gap-2"><span className="text-danger-fg">•</span> Vous voulez pouvoir appeler le support : {p.name} ne publie aucun numéro d&apos;assistance.</li>
+                  ) : p.support.frenchPhone === false ? (
                     <li className="flex gap-2"><span className="text-danger-fg">•</span> Vous avez besoin d&apos;un support téléphonique en français.</li>
-                  )}
+                  ) : null}
                   {!p.cryptos.stakingAvailable && (
                     <li className="flex gap-2"><span className="text-danger-fg">•</span> Le staking est un de vos critères principaux.</li>
                   )}
@@ -862,24 +876,52 @@ export default function ReviewPage({ params }: Props) {
           </h2>
           <div className="mt-4 grid gap-3 sm:grid-cols-3">
             <div className="rounded-xl border border-border bg-surface p-4 flex items-center gap-3">
-              <MessageSquare className={`h-5 w-5 ${p.support.frenchChat ? "text-accent-green" : "text-muted"}`} />
+              <MessageSquare className={`h-5 w-5 shrink-0 ${p.support.frenchChat === true ? "text-accent-green" : "text-muted"}`} />
               <div>
-                <div className="text-sm font-semibold">Chat français</div>
-                <div className="text-xs text-muted">{p.support.frenchChat ? "Disponible" : "Non disponible"}</div>
+                <div className="text-sm font-semibold">Chat en français</div>
+                <div className="text-xs text-muted">{supportChatLabel(p.support)}</div>
               </div>
             </div>
             <div className="rounded-xl border border-border bg-surface p-4 flex items-center gap-3">
-              <Phone className={`h-5 w-5 ${p.support.frenchPhone ? "text-accent-green" : "text-muted"}`} />
+              <Phone className={`h-5 w-5 shrink-0 ${p.support.frenchPhone === true ? "text-accent-green" : "text-muted"}`} />
               <div>
-                <div className="text-sm font-semibold">Téléphone FR</div>
-                <div className="text-xs text-muted">{p.support.frenchPhone ? "Disponible" : "Non disponible"}</div>
+                <div className="text-sm font-semibold">Téléphone</div>
+                <div className="text-xs text-muted">{supportPhoneLabel(p.support)}</div>
               </div>
             </div>
             <div className="rounded-xl border border-border bg-surface p-4">
-              <div className="text-xs uppercase tracking-wide text-muted">Délai réponse</div>
-              <div className="mt-1 text-sm font-semibold text-white">{p.support.responseTime}</div>
+              <div className="text-xs uppercase tracking-wide text-muted">Délai de réponse</div>
+              <div className="mt-1 text-sm font-semibold text-white">{supportDelayLabel(p.support)}</div>
             </div>
           </div>
+          {p.support.note && p.support.source && p.support.verified ? (
+            <p className="mt-3 text-sm text-white/75 leading-relaxed">
+              {p.support.note.replace(/\.$/, "")}.{" "}
+              <a href={p.support.source} target="_blank" rel="noopener noreferrer" className="underline decoration-dotted underline-offset-2 hover:text-white">
+                Page d&apos;assistance officielle
+              </a>{" "}
+              relevée le {frDate(p.support.verified)}
+              {p.support.otherSources?.length ? (
+                <>
+                  {" "}(autres pages officielles lues :{" "}
+                  {p.support.otherSources.map((u, i) => (
+                    <span key={u}>
+                      {i > 0 && ", "}
+                      <a href={u} target="_blank" rel="noopener noreferrer" className="underline decoration-dotted underline-offset-2 hover:text-white">
+                        {i + 2}
+                      </a>
+                    </span>
+                  ))}
+                  )
+                </>
+              ) : null}
+              . Méfiez-vous de tout numéro trouvé ailleurs que sur le site officiel.
+            </p>
+          ) : (
+            <p className="mt-3 text-sm text-muted">
+              Canaux d&apos;assistance non vérifiés : consultez le centre d&apos;aide officiel de {p.name}.
+            </p>
+          )}
         </section>
 
         {/* BONUS : seulement une offre relevée (verifiedBonus) */}

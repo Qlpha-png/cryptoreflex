@@ -11,7 +11,14 @@
  */
 
 import { Check, Minus, X } from "lucide-react";
-import { type Platform, trustpilotText, verifiedBonus } from "@/lib/platforms";
+import {
+  type Platform,
+  supportChatLabel,
+  supportDelayLabel,
+  supportPhoneLabel,
+  trustpilotText,
+  verifiedBonus,
+} from "@/lib/platforms";
 import { fmtDateFr, fmtFr, fmtNb } from "@/lib/format-fr";
 
 type Direction = "lower" | "higher" | "bool" | "none";
@@ -107,9 +114,10 @@ function buildRows(a: Platform, b: Platform): Row[] {
     { label: "Conforme MiCA", a: a.mica.micaCompliant, b: b.mica.micaCompliant, aRaw: a.mica.micaCompliant, bRaw: b.mica.micaCompliant, direction: "bool" },
 
     // GROUP : SUPPORT
-    { group: "Support client", label: "Chat FR", a: a.support.frenchChat, b: b.support.frenchChat, aRaw: a.support.frenchChat, bRaw: b.support.frenchChat, direction: "bool" },
-    { label: "Téléphone FR", a: a.support.frenchPhone, b: b.support.frenchPhone, aRaw: a.support.frenchPhone, bRaw: b.support.frenchPhone, direction: "bool" },
-    { label: "Temps de réponse", a: a.support.responseTime, b: b.support.responseTime, direction: "none" },
+    // Relevé sur les pages officielles d'assistance (support.source) ; null = non vérifié, jamais un oui ni un non.
+    { group: "Support client", label: "Chat en français", a: supportChatLabel(a.support), b: supportChatLabel(b.support), aRaw: a.support.frenchChat, bRaw: b.support.frenchChat, direction: "bool" },
+    { label: "Téléphone", a: supportPhoneLabel(a.support), b: supportPhoneLabel(b.support), aRaw: a.support.frenchPhone, bRaw: b.support.frenchPhone, direction: "bool" },
+    { label: "Délai de réponse annoncé", a: supportDelayLabel(a.support), b: supportDelayLabel(b.support), direction: "none" },
 
     // GROUP : NOTES UTILISATEURS
     { group: "Notes utilisateurs", label: "Trustpilot", a: tpCell(a), b: tpCell(b), aRaw: a.ratings.trustpilot, bRaw: b.ratings.trustpilot, direction: "higher" },

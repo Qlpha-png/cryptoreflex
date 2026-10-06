@@ -8,7 +8,7 @@
  *  - « partiel » : une marge non chiffrée s'ajoute. Un coût partiel n'est JAMAIS classé devant un coût publié en entier,
  *    et un coût non publié passe en dernier.
  */
-import { isAvailableFr, type CostKind, type Platform } from "@/lib/platforms";
+import { frenchHelpLabel, frenchHelpRank, isAvailableFr, type CostKind, type Platform } from "@/lib/platforms";
 
 export type Goal = "prix" | "debutant" | "francais" | "carte";
 export type Amount = 100 | 1000;
@@ -27,7 +27,10 @@ export interface Row {
   /** pays de l'autorité qui a délivré l'agrément (« Irlande », « France »…) */
   country: string;
   french: boolean;
-  supportFr: "telephone" | "chat" | "non";
+  /** Aide en français relevée sur la page officielle d'assistance (« Téléphone et chat », « Chat », « Non », « Non vérifié »…). */
+  supportFr: string;
+  /** 2 : téléphone en français ; 1 : chat en français ; 0 : sinon, non vérifié compris (tri « débutant »). */
+  supportFrRank: number;
   score: number;
   ux: number;
   simple: Cost;
@@ -72,7 +75,8 @@ export function buildRows(platforms: Platform[], notice: (id: string) => string)
         authority: auth,
         country,
         french: /\bAMF\b/.test(auth) || /AMF/.test(p.mica.status),
-        supportFr: p.support.frenchPhone ? "telephone" : p.support.frenchChat ? "chat" : "non",
+        supportFr: frenchHelpLabel(p.support),
+        supportFrRank: frenchHelpRank(p.support),
         score: p.scoring.global,
         ux: p.scoring.ux,
         simple,
@@ -117,8 +121,7 @@ export function sortRows(rows: Row[], amount: Amount, goal: Goal): Row[] {
     return (ca?.fee ?? 0) - (cb?.fee ?? 0) || b.score - a.score;
   };
   if (goal === "debutant") {
-    const fr = (r: Row) => (r.supportFr === "telephone" ? 2 : r.supportFr === "chat" ? 1 : 0);
-    return [...list].sort((a, b) => fr(b) - fr(a) || b.ux - a.ux || byCost(a, b));
+    return [...list].sort((a, b) => b.supportFrRank - a.supportFrRank || b.ux - a.ux || byCost(a, b));
   }
   return [...list].sort(byCost);
 }

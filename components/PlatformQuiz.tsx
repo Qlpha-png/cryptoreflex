@@ -194,7 +194,7 @@ interface ScoreBreakdown {
  *  - Q3 DCA + frais instant bas       → +10 (instant < 1)
  *  - Q4 frais bas + scoring.fees      → +8 (>= 4) / +14 (>= 4.5)
  *  - Q4 sécurité + scoring.security   → +8 / +14 même seuils
- *  - Q4 support FR + frenchChat true  → +20  (sinon -8 si false)
+ *  - Q4 support FR + frenchChat true  → +20  (-8 si false, 0 si non vérifié)
  *  - Q4 catalogue + totalCount        → +12 (>= 300) / +6 (>= 200)
  *  - Q5 dépôt CB + p.deposit.methods inclut "CB" → +4 (sinon -10 si CB pas dispo)
  *  - Q5 dépôt SEPA + methods inclut "SEPA"        → +4 (sinon -10)
@@ -270,8 +270,9 @@ function scorePlatform(p: Platform, answers: Answers): ScoreBreakdown {
       }
     }
     if (priority === "support_fr") {
-      bonuses += (p.support.frenchChat ? 20 : -8) * weight;
-      if (p.support.frenchChat) {
+      /* Chat en français relevé : +20 ; relevé sans français : -8 ; non vérifié : 0 (ni promesse ni pénalité). */
+      bonuses += (p.support.frenchChat === true ? 20 : p.support.frenchChat === false ? -8 : 0) * weight;
+      if (p.support.frenchChat === true) {
         reasons.push(idx === 0 ? "Support FR (priorité #1)" : "Support FR (priorité #2)");
       }
     }

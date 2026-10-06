@@ -95,9 +95,16 @@
         ]
       },
       "support": {
-        "frenchChat": true,
+        "frenchChat": null,
         "frenchPhone": true,
-        "responseTime": "<24h"
+        "phone": "numero",
+        "responseTime": null,
+        "source": "https://help.coinbase.com/fr/coinbase/privacy-and-security/account-compromised/my-account-was-compromised",
+        "otherSources": [
+          "https://help.coinbase.com/fr/coinbase/managing-my-account/other/coinbase-support"
+        ],
+        "verified": "2026-10-06",
+        "note": "Numéro d'assistance pour la France, en anglais et en français, de 9 h à 18 h CET, publié dans le centre d'aide (la page française indique « tous les jours », sa version anglaise « du lundi au vendredi »). Chat en direct ou demande d'appel depuis la rubrique « Contactez-nous » (l'appel n'est pas proposé dans toutes les régions) ; langue du chat non précisée"
       },
       "security": {
         "coldStoragePct": 98,
@@ -201,9 +208,16 @@
         ]
       },
       "support": {
-        "frenchChat": true,
+        "frenchChat": null,
         "frenchPhone": false,
-        "responseTime": "<48h"
+        "phone": "aucun",
+        "responseTime": null,
+        "source": "https://www.binance.com/en/support/faq/how-to-use-binance-support-7b0fd3ccb821483a99ff8f5cda374ee9",
+        "otherSources": [
+          "https://www.binance.com/en/support/faq/how-to-identify-fake-binance-support-phone-numbers-360020555172"
+        ],
+        "verified": "2026-10-06",
+        "note": "Chat avec un robot (IA), puis un agent sur demande ; Binance prévient qu'elle ne peut pas toujours répondre dans la langue choisie. Pas d'assistance par téléphone : le support n'existe que sur le site officiel, et toute personne qui appelle en se présentant comme Binance est un escroc, selon la plateforme"
       },
       "security": {
         "coldStoragePct": 95,
@@ -325,8 +339,15 @@
       },
       "support": {
         "frenchChat": true,
-        "frenchPhone": false,
-        "responseTime": "<24h"
+        "frenchPhone": true,
+        "phone": "appli",
+        "responseTime": null,
+        "source": "https://www.bitpanda.com/fr/support",
+        "otherSources": [
+          "https://support.bitpanda.com/hc/fr/articles/23717223536796-Comment-contacter-le-support-Bitpanda"
+        ],
+        "verified": "2026-10-06",
+        "note": "Support en français 24 h/24 et 7 j/7 : chat en direct (réponses d'une IA, puis un conseiller sur demande) et WhatsApp. Appel sur rendez-vous, du lundi au vendredi de 9 h à 17 h, en français, anglais, allemand ou italien : Bitpanda n'a pas de ligne entrante et rappelle à l'heure réservée"
       },
       "security": {
         "coldStoragePct": 99,
@@ -446,9 +467,17 @@
         ]
       },
       "support": {
-        "frenchChat": true,
-        "frenchPhone": true,
-        "responseTime": "<12h"
+        "frenchChat": null,
+        "frenchPhone": null,
+        "phone": "appli",
+        "responseTime": null,
+        "source": "https://support.kraken.com/fr/articles/115013099227-how-to-contact-kraken-phone-support",
+        "otherSources": [
+          "https://support.kraken.com/fr/articles/contacting-support",
+          "https://www.kraken.com/fr/features/24-7-support"
+        ],
+        "verified": "2026-10-06",
+        "note": "Support annoncé 24 h/24 et 7 j/7, joignable par chat depuis le centre de support ou l'application ; langue non précisée (Kraken dit seulement que son équipe parle « de nombreuses langues »). Aucun numéro publié : l'assistance vocale n'est accessible que depuis les applications mobiles Kraken, et seulement quand un appel est jugé adapté ; Kraken demande de considérer tout numéro trouvé en ligne à son nom comme une tentative d'hameçonnage potentielle"
       },
       "security": {
         "coldStoragePct": 95,
@@ -475,7 +504,7 @@
       "strengths": [
         "Aucun hack majeur en 14 ans",
         "Proof-of-Reserves audité",
-        "Support FR par téléphone"
+        "Support annoncé 24 h/24 et 7 j/7"
       ],
       "weaknesses": [
         "Interface Pro intimidante",
@@ -552,9 +581,13 @@
         ]
       },
       "support": {
-        "frenchChat": true,
-        "frenchPhone": false,
-        "responseTime": "<24h"
+        "frenchChat": null,
+        "frenchPhone": null,
+        "phone": null,
+        "responseTime": null,
+        "source": "https://www.bitget.com/fr/support",
+        "verified": "2026-10-06",
+        "note": "Service client en ligne « multilingue », annoncé 24 h/24 et 7 j/7, sans liste de langues. Aucun numéro d'assistance trouvé sur le site officiel"
       },
       "security": {
         "coldStoragePct": 90,
@@ -668,9 +701,16 @@
         ]
       },
       "support": {
-        "frenchChat": true,
-        "frenchPhone": false,
-        "responseTime": "<48h"
+        "frenchChat": null,
+        "frenchPhone": null,
+        "phone": "appli",
+        "responseTime": null,
+        "source": "https://traderepublic.com/fr-fr/support",
+        "otherSources": [
+          "https://assets.traderepublic.com/assets/files/Press_Release_fr_fr_CS.pdf"
+        ],
+        "verified": "2026-10-06",
+        "note": "Chat en direct et téléphone 24 h/24 et 7 j/7 dans l'application, avec de vraies personnes, selon Trade Republic, qui précise que ce service client « sera déployé pour tout le monde prochainement ». Son communiqué du 15 avril 2026 parle de conseillers « dans huit langues différentes », non nommées"
       },
       "security": {
         "coldStoragePct": 100,
@@ -788,7 +828,14 @@
       "support": {
         "frenchChat": true,
         "frenchPhone": true,
-        "responseTime": "<4h en semaine"
+        "phone": "numero",
+        "responseTime": null,
+        "source": "https://support.coinhouse.com/hc/fr/articles/25169157410450-comment-contacter-coinhouse",
+        "otherSources": [
+          "https://offre.coinhouse.com/fr/"
+        ],
+        "verified": "2026-10-06",
+        "note": "Société française, qui présente son « service client français ». Chat en ligne depuis l'espace client (web ou application), formulaire de contact, et téléphone du lundi au vendredi (9 h 30-12 h 30 et 13 h 30-18 h) ; selon l'affluence, Coinhouse peut rappeler dans la journée"
       },
       "security": {
         "coldStoragePct": 100,
@@ -814,7 +861,7 @@
       "idealFor": "Débutants français cherchant accompagnement humain et acteur local",
       "strengths": [
         "1er PSAN enregistré en France (2020)",
-        "Support FR par téléphone et bureau Paris",
+        "Support en français par chat et par téléphone (en semaine)",
         "Conseil patrimonial humain"
       ],
       "weaknesses": [
@@ -900,7 +947,11 @@
       "support": {
         "frenchChat": true,
         "frenchPhone": false,
-        "responseTime": "<24h"
+        "phone": "aucun",
+        "responseTime": null,
+        "source": "https://help.bitstack-app.com/fr/articles/7994891-comment-contacter-le-support-de-bitstack",
+        "verified": "2026-10-06",
+        "note": "Société française. Chat dans l'application (un robot, puis un agent humain sur demande) et e-mail ; équipe disponible du lundi au vendredi de 8 h à 22 h et le week-end de 9 h à 20 h (CET). Pas de support téléphonique : Bitstack n'a aucun numéro de téléphone"
       },
       "security": {
         "coldStoragePct": 100,
@@ -1017,9 +1068,16 @@
         ]
       },
       "support": {
-        "frenchChat": true,
+        "frenchChat": null,
         "frenchPhone": false,
-        "responseTime": "<12h"
+        "phone": "aucun",
+        "responseTime": null,
+        "source": "https://help.swissborg.com/hc/en-gb/articles/14883477512593-Contact-Support",
+        "otherSources": [
+          "https://help.swissborg.com/hc/fr-fr/articles/14883477512593-Contacter-l-assistance"
+        ],
+        "verified": "2026-10-06",
+        "note": "Messagerie dans l'application : un assistant IA répond d'abord, puis ouvre un ticket vers l'équipe (7 j/7, sauf de 1 h à 5 h UTC). SwissBorg précise que ce n'est pas un chat en direct et qu'elle ne propose aucun canal d'assistance en direct, donc pas de téléphone ; langue des réponses non précisée"
       },
       "security": {
         "coldStoragePct": 100,
@@ -1137,9 +1195,16 @@
         ]
       },
       "support": {
-        "frenchChat": true,
+        "frenchChat": null,
         "frenchPhone": false,
-        "responseTime": "<24h"
+        "phone": "aucun",
+        "responseTime": "5 jours ouvrés (formulaire)",
+        "source": "https://www.bybit.eu/fr-EU/help-center/article/How-to-Submit-a-Support-Ticket",
+        "otherSources": [
+          "https://www.bybit.eu/en-EU/help-center/article/How-to-Identify-Spoofing-Emails-and-Avoid-Common-Scams"
+        ],
+        "verified": "2026-10-06",
+        "note": "Bybit EU : demande d'assistance par formulaire, avec une réponse « dans un délai de 5 jours ouvrables », et chat en direct annoncé 24 h/24 et 7 j/7 ; langue du chat non précisée. Pas d'assistance par téléphone : Bybit EU ne demande jamais d'appeler un numéro"
       },
       "security": {
         "coldStoragePct": 90,
@@ -1256,9 +1321,16 @@
         ]
       },
       "support": {
-        "frenchChat": true,
+        "frenchChat": null,
         "frenchPhone": false,
-        "responseTime": "<24h"
+        "phone": "reserve",
+        "responseTime": null,
+        "source": "https://help.revolut.com/fr-FR/help/profile-and-plan/how-can-i-contact-revolut-support/",
+        "otherSources": [
+          "https://www.revolut.com/fr-FR/metal/"
+        ],
+        "verified": "2026-10-06",
+        "note": "Messagerie dans l'application, 24 h/24 et 7 j/7, « dans plus de 100 langues » selon Revolut. Appels dans l'application pour certains abonnements payants seulement (l'aide Revolut cite Ultra, la page de l'offre Metal les mentionne aussi), et uniquement en anglais"
       },
       "security": {
         "coldStoragePct": 95,
@@ -1375,9 +1447,16 @@
         ]
       },
       "support": {
-        "frenchChat": true,
-        "frenchPhone": false,
-        "responseTime": "<24h"
+        "frenchChat": null,
+        "frenchPhone": null,
+        "phone": null,
+        "responseTime": null,
+        "source": "https://www.okx.com/en-eu/learn/how-to-contact-okx-support",
+        "otherSources": [
+          "https://www.okx.com/en-eu/learn/crypto/okx-support-contact-guide"
+        ],
+        "verified": "2026-10-06",
+        "note": "Chat en direct 24 h/24 et 7 j/7 (site ou application), tickets et e-mail, selon les guides d'OKX ; langues non précisées. Ces guides se contredisent sur le téléphone : l'un cite un support téléphonique, l'autre dit qu'OKX ne publie aucun numéro public"
       },
       "security": {
         "coldStoragePct": 95,
@@ -1407,7 +1486,7 @@
         "Wallet OKX intégré (DeFi multi-chain) avec self-custody option"
       ],
       "weaknesses": [
-        "Support FR limité (chat oui, phone non)",
+        "Langues du support non précisées",
         "UX dense pour débutants — courbe d'apprentissage",
         "Note Trustpilot basse (2,4/5, relevé du 5 octobre 2026)"
       ],
@@ -1495,9 +1574,18 @@
         ]
       },
       "support": {
-        "frenchChat": true,
-        "frenchPhone": false,
-        "responseTime": "<48h"
+        "frenchChat": null,
+        "frenchPhone": null,
+        "phone": null,
+        "responseTime": null,
+        "source": "https://help.crypto.com/en/articles/6484926-avoiding-digital-currency-scams",
+        "otherSources": [
+          "https://crypto.com/eea/security",
+          "https://help.crypto.com/en/articles/6201686-how-to-set-up-your-digital-wallet",
+          "https://help.crypto.com/en/articles/11406910-complaints-handling-policy"
+        ],
+        "verified": "2026-10-06",
+        "note": "Chat dans l'application Crypto.com et sur chat.crypto.com, avec un support client « 24/7 » annoncé ; langue du chat non précisée. Pas de numéro d'assistance générale pour l'Europe : la seule ligne européenne publiée est réservée aux titulaires de la carte prépayée (enregistrement de la carte dans un portefeuille mobile)"
       },
       "security": {
         "coldStoragePct": 100,
@@ -1529,7 +1617,7 @@
       "weaknesses": [
         "Achat par carte jusqu'à 4 % dans l'application",
         "Carte exige souvent stake CRO pour bénéfices",
-        "Support FR uniquement chat (pas phone)"
+        "Langue du chat non précisée, pas de numéro d'assistance générale pour l'Europe"
       ],
       "badge": "Best app mobile",
       "category": "exchange"
@@ -1596,8 +1684,15 @@
       },
       "support": {
         "frenchChat": false,
-        "frenchPhone": false,
-        "responseTime": "<24h (anglais)"
+        "frenchPhone": null,
+        "phone": null,
+        "responseTime": null,
+        "source": "https://support.gemini.com/hc/en-us/articles/204732835-Customer-Support",
+        "otherSources": [
+          "https://support.gemini.com/hc/en-us/articles/360001322063-Will-Gemini-ever-call-me"
+        ],
+        "verified": "2026-10-06",
+        "note": "Gemini a fermé ses comptes européens en avril 2026. Toutes les demandes d'assistance passent par un formulaire (l'e-mail est son canal principal, aucun chat mentionné) ; un appel n'a lieu que dans des cas particuliers, sur demande, après un échange d'e-mails"
       },
       "security": {
         "coldStoragePct": 99,
@@ -1628,7 +1723,7 @@
       ],
       "weaknesses": [
         "Catalogue restreint (~80 cryptos)",
-        "Aucun support en français",
+        "Support par formulaire et e-mail uniquement",
         "Frais maker/taker plus élevés que la moyenne"
       ],
       "badge": "Le plus audité",
@@ -1711,9 +1806,13 @@
         ]
       },
       "support": {
-        "frenchChat": false,
-        "frenchPhone": false,
-        "responseTime": "<48h (anglais)"
+        "frenchChat": null,
+        "frenchPhone": null,
+        "phone": "numero",
+        "responseTime": null,
+        "source": "https://www.bitstamp.net/customer-support/",
+        "verified": "2026-10-06",
+        "note": "Numéros publiés, dont un pour l'Europe (Luxembourg), et formulaire de message ; support annoncé en direct 24 h/24 et 7 j/7. Langues non précisées"
       },
       "security": {
         "coldStoragePct": 95,
@@ -1744,7 +1843,7 @@
       ],
       "weaknesses": [
         "Catalogue restreint (~80 cryptos)",
-        "Support FR inexistant",
+        "Pas de numéro en France (numéro européen au Luxembourg), langues non précisées",
         "Frais SEPA retrait élevés (3 €)"
       ],
       "badge": "Le plus historique",
@@ -1832,9 +1931,13 @@
         ]
       },
       "support": {
-        "frenchChat": true,
+        "frenchChat": null,
         "frenchPhone": false,
-        "responseTime": "<24h"
+        "phone": "aucun",
+        "responseTime": "24 heures (objectif annoncé)",
+        "source": "https://support.bitvavo.com/hc/fr/articles/4405239686929",
+        "verified": "2026-10-06",
+        "note": "Chat en direct (application ou site) avec l'assistant IA Vavo, puis un agent humain de 7 h à 23 h (CET), 7 j/7, et e-mail ; Bitvavo dit s'efforcer de répondre sous 24 heures. Pas d'assistance téléphonique ; langue du chat non précisée"
       },
       "security": {
         "coldStoragePct": 95,
@@ -1865,7 +1968,7 @@
       ],
       "weaknesses": [
         "Pas d'assurance fonds clients (vs Coinbase/Kraken)",
-        "Support FR limité au chat",
+        "Pas d'assistance téléphonique, langue du chat non précisée",
         "Catalogue 200 cryptos (vs 350 OKX/Binance)"
       ],
       "badge": "Best frais bas",
@@ -1950,8 +2053,12 @@
       },
       "support": {
         "frenchChat": true,
-        "frenchPhone": true,
-        "responseTime": "<24h"
+        "frenchPhone": null,
+        "phone": null,
+        "responseTime": null,
+        "source": "https://www.etoro.com/fr/customer-service/about/",
+        "verified": "2026-10-06",
+        "note": "Chat en direct après connexion (assistant IA, puis service client), annoncé 24 h/24 et 6 j/7, avec une assistance dans plus de 7 langues dont le français. Aucun numéro d'assistance pour la France trouvé sur le site officiel"
       },
       "security": {
         "coldStoragePct": 90,
@@ -2061,9 +2168,13 @@
         "stakingCryptos": []
       },
       "support": {
-        "frenchChat": true,
-        "frenchPhone": true,
-        "responseTime": "<24h"
+        "frenchChat": false,
+        "frenchPhone": false,
+        "phone": "aucun",
+        "responseTime": null,
+        "source": "https://www.paymium.com/fr/aide/comment-nous-contacter",
+        "verified": "2026-10-06",
+        "note": "Société française. Support par ticket depuis l'espace client, ou par e-mail en cas de perte d'accès, du lundi au vendredi de 9 h à 18 h ; ni chat ni téléphone sur la page de contact"
       },
       "security": {
         "coldStoragePct": 100,
@@ -2175,7 +2286,11 @@
       "support": {
         "frenchChat": true,
         "frenchPhone": false,
-        "responseTime": "<24h"
+        "phone": "aucun",
+        "responseTime": "environ 12 h par e-mail",
+        "source": "https://deblock.com/fr/nous-contacter",
+        "verified": "2026-10-06",
+        "note": "Société française. Chat dans l'application (« le moyen le plus rapide ») et e-mail, avec une réponse annoncée en 12 h environ par e-mail ; pas de téléphone sur la page de contact, et Deblock ne contacte jamais ses clients par téléphone"
       },
       "security": {
         "coldStoragePct": 100,
@@ -2279,9 +2394,16 @@
         ]
       },
       "support": {
-        "frenchChat": true,
-        "frenchPhone": false,
-        "responseTime": "<24h"
+        "frenchChat": null,
+        "frenchPhone": null,
+        "phone": "reserve",
+        "responseTime": null,
+        "source": "https://nexo.com/security",
+        "otherSources": [
+          "https://nexo.com/private-clients"
+        ],
+        "verified": "2026-10-06",
+        "note": "Chat et e-mail 24 h/24 et 7 j/7, langue non précisée. Un chargé de clientèle joignable par téléphone est réservé aux clients Private (portefeuille de 100 000 $ ou plus)"
       },
       "security": {
         "coldStoragePct": 95,
@@ -2392,9 +2514,16 @@
         "stakingCryptos": []
       },
       "support": {
-        "frenchChat": false,
-        "frenchPhone": false,
-        "responseTime": "<48h (anglais)"
+        "frenchChat": null,
+        "frenchPhone": null,
+        "phone": null,
+        "responseTime": null,
+        "source": "https://support.moonpay.com/en/articles/381771-how-do-i-contact-moonpay-support",
+        "otherSources": [
+          "https://www.moonpay.com/fr/contact-us"
+        ],
+        "verified": "2026-10-06",
+        "note": "Chat via le widget du centre d'aide ; langue des réponses non précisée. La page de contact n'affiche aucun numéro de support client, seulement un numéro « Corporate » sous l'adresse de MoonPay USA"
       },
       "security": {
         "coldStoragePct": 100,
@@ -2425,7 +2554,7 @@
       ],
       "weaknesses": [
         "Frais d'achat très élevés (4,5 % CB + 1-3 % spread)",
-        "Pas de support FR",
+        "Centre d'aide en anglais, langue des réponses non précisée",
         "Pas adapté à un usage récurrent — on-ramp uniquement"
       ],
       "badge": "Best on-ramp",
@@ -2503,8 +2632,15 @@
       },
       "support": {
         "frenchChat": true,
-        "frenchPhone": false,
-        "responseTime": "<24h"
+        "frenchPhone": null,
+        "phone": "reserve",
+        "responseTime": null,
+        "source": "https://support.n26.com/fr-fr/application-et-produits/application/comment-contacter-n26",
+        "otherSources": [
+          "https://n26.com/fr-fr/services-bancaires"
+        ],
+        "verified": "2026-10-06",
+        "note": "Support général de N26 (pas de page propre à la crypto) : chat dans l'application, tous les jours de 7 h à 23 h, en français, anglais, allemand, italien ou espagnol. Appel depuis l'application réservé aux comptes Premium (Go, Smart, Metal) ; langue de l'appel non précisée"
       },
       "security": {
         "coldStoragePct": 100,
@@ -2609,9 +2745,16 @@
         "stakingCryptos": []
       },
       "support": {
-        "frenchChat": false,
-        "frenchPhone": false,
-        "responseTime": "<48h (allemand/anglais)"
+        "frenchChat": null,
+        "frenchPhone": null,
+        "phone": "reserve",
+        "responseTime": "moins de 15 min en moyenne (chat)",
+        "source": "https://21bitcoin.app/en/contact",
+        "otherSources": [
+          "https://21bitcoin.app/en/feature/individual-support"
+        ],
+        "verified": "2026-10-06",
+        "note": "Chat dans l'application ou sur le site, du lundi au vendredi de 9 h à 18 h et le week-end de 10 h à 14 h, avec un temps de réponse moyen annoncé de moins de 15 minutes ; site en anglais et en allemand, français non mentionné. Téléphone ou visio réservés à l'offre 21private (à partir de 100 000 €)"
       },
       "security": {
         "coldStoragePct": 100,
@@ -2642,7 +2785,7 @@
       ],
       "weaknesses": [
         "BTC uniquement (pas d'altcoins)",
-        "Support FR inexistant",
+        "Site et support en anglais ou en allemand, français non mentionné",
         "Service jeune"
       ],
       "badge": "DCA Bitcoin-only",
@@ -2713,7 +2856,11 @@
       "support": {
         "frenchChat": false,
         "frenchPhone": false,
-        "responseTime": "<48h"
+        "phone": "aucun",
+        "responseTime": null,
+        "source": "https://www.wirexapp.com/en-gb/legal/one/terms",
+        "verified": "2026-10-06",
+        "note": "Chat dans l'application avec un agent du service client, et e-mail, selon les conditions Wirex One, qui précisent que les communications se font en anglais. Aucun numéro d'assistance publié"
       },
       "security": {
         "coldStoragePct": 90,
@@ -2744,7 +2891,7 @@
       ],
       "weaknesses": [
         "Réputation dégradée post-incident liquidité 2023",
-        "Pas de support FR",
+        "Communications en anglais selon les conditions Wirex One",
         "Spread élevé"
       ],
       "badge": "Carte cashback BTC",
@@ -2825,9 +2972,13 @@
         ]
       },
       "support": {
-        "frenchChat": false,
-        "frenchPhone": false,
-        "responseTime": "<48h (italien/anglais)"
+        "frenchChat": null,
+        "frenchPhone": null,
+        "phone": null,
+        "responseTime": null,
+        "source": "https://support.youngplatform.com/hc/it/articles/39563206477458-Young-Platform-Base-vs-Pro-le-differenze-dopo-la-licenza-MiCAR",
+        "verified": "2026-10-06",
+        "note": "Le centre d'aide propose d'ouvrir un ticket ou d'écrire au support par e-mail ; nous n'y avons trouvé ni chat ni téléphone, et la langue des réponses n'est pas précisée"
       },
       "security": {
         "coldStoragePct": 95,
@@ -2857,7 +3008,7 @@
         "App très simple pour débutants"
       ],
       "weaknesses": [
-        "Pas de support FR",
+        "Support par ticket ou e-mail, langue non précisée",
         "Dépôt par carte impossible depuis la France (réservé à l'Italie)",
         "Plateforme jeune (2018)"
       ],
@@ -2922,9 +3073,13 @@
         "stakingCryptos": []
       },
       "support": {
-        "frenchChat": true,
-        "frenchPhone": true,
-        "responseTime": "<24h"
+        "frenchChat": null,
+        "frenchPhone": null,
+        "phone": null,
+        "responseTime": null,
+        "source": "https://www.paypal.com/fr/cshelp/contact-us",
+        "verified": "2026-10-06",
+        "note": "Chat avec l'assistant PayPal depuis la page « Nous contacter » de PayPal France : c'est le support général de PayPal, sans page dédiée à la crypto pour la France ; langue des réponses non précisée"
       },
       "security": {
         "coldStoragePct": 100,
@@ -3025,9 +3180,13 @@
         ]
       },
       "support": {
-        "frenchChat": false,
-        "frenchPhone": false,
-        "responseTime": "<48h (anglais)"
+        "frenchChat": null,
+        "frenchPhone": null,
+        "phone": null,
+        "responseTime": null,
+        "source": "https://support.bitfinex.com/hc/en-us/articles/360017323573-Bitfinex-customer-support",
+        "verified": "2026-10-06",
+        "note": "Chat en direct (fenêtre sur chaque page du site) et tickets ; langue des réponses non précisée. Aucun numéro d'assistance trouvé sur le site officiel"
       },
       "security": {
         "coldStoragePct": 99,
@@ -3058,7 +3217,7 @@
       ],
       "weaknesses": [
         "Hack 2016 historique (image dégradée)",
-        "Pas de support FR",
+        "Langue du support non précisée",
         "UX complexe pour débutants"
       ],
       "badge": "Pro trading",
@@ -3123,7 +3282,11 @@
       "support": {
         "frenchChat": false,
         "frenchPhone": false,
-        "responseTime": "<24h (allemand/anglais)"
+        "phone": "aucun",
+        "responseTime": null,
+        "source": "https://www.bsdex.de/en/support/",
+        "verified": "2026-10-06",
+        "note": "La page d'assistance renvoie vers la FAQ et vers le service client par e-mail ; ni chat ni téléphone n'y figurent, et la langue des réponses n'est pas précisée"
       },
       "security": {
         "coldStoragePct": 100,
@@ -3154,7 +3317,7 @@
       ],
       "weaknesses": [
         "Catalogue limité (~30 cryptos)",
-        "Pas de support FR",
+        "Support par e-mail uniquement",
         "Volume modeste"
       ],
       "badge": "Place financière DE",
@@ -3219,9 +3382,16 @@
         "stakingCryptos": []
       },
       "support": {
-        "frenchChat": true,
+        "frenchChat": null,
         "frenchPhone": false,
-        "responseTime": "<24h"
+        "phone": "aucun",
+        "responseTime": null,
+        "source": "https://www.plus500.com/fr/help/contactus",
+        "otherSources": [
+          "https://www.plus500.com/fr/aboutus"
+        ],
+        "verified": "2026-10-06",
+        "note": "Chat en ligne et formulaire, 24 h/24 et 7 j/7 ; Plus500 n'a pas de centre d'appels et communique par écrit. Langue des réponses non précisée"
       },
       "security": {
         "coldStoragePct": 0,
@@ -3317,9 +3487,16 @@
         "stakingCryptos": []
       },
       "support": {
-        "frenchChat": false,
-        "frenchPhone": false,
-        "responseTime": "<24h (NL/EN)"
+        "frenchChat": true,
+        "frenchPhone": true,
+        "phone": "numero",
+        "responseTime": null,
+        "source": "https://help.finst.com/fr/article/comment-contacter-le-service-client-1d3gtll/",
+        "otherSources": [
+          "https://finst.com/en/blog/articles/finst-launches-in-france"
+        ],
+        "verified": "2026-10-06",
+        "note": "anycoindirect.eu renvoie vers Finst. Support Finst en français par chat en direct, e-mail et téléphone (numéro français), du lundi au vendredi de 9 h à 18 h"
       },
       "security": {
         "coldStoragePct": 100,
@@ -3350,7 +3527,7 @@
         "Repris par Finst, agréé MiCA par l'AFM (Pays-Bas)"
       ],
       "weaknesses": [
-        "Pas de support FR",
+        "Marque fermée : le site renvoie vers Finst",
         "Frais élevés : environ 1 % de service et 1 à 3 % de spread (3 à 5 % au total)",
         "Pas de staking ni trading actif"
       ],
@@ -3430,9 +3607,16 @@
         "stakingCryptos": []
       },
       "support": {
-        "frenchChat": true,
-        "frenchPhone": false,
-        "responseTime": "<24h"
+        "frenchChat": null,
+        "frenchPhone": null,
+        "phone": null,
+        "responseTime": null,
+        "source": "https://helpcentre.trading212.com/hc/en-us/articles/31077497950365-Stay-Cyber-Smart-Safeguard-your-Trading-212-account",
+        "otherSources": [
+          "https://helpcentre.trading212.com/hc/en-us/articles/360019225778-How-do-I-contact-the-Trading-212-team"
+        ],
+        "verified": "2026-10-06",
+        "note": "Contact par le formulaire officiel du centre d'aide ou depuis l'application (Support, puis Contact us), dont un chat, et par e-mail ; langue des réponses non précisée. Aucun numéro d'assistance trouvé sur le site officiel"
       },
       "security": {
         "coldStoragePct": 0,
@@ -3527,8 +3711,12 @@
       },
       "support": {
         "frenchChat": true,
-        "frenchPhone": true,
-        "responseTime": "<24h"
+        "frenchPhone": null,
+        "phone": null,
+        "responseTime": null,
+        "source": "https://help.stackinsat.com/fr/article/pourquoi-est-ce-que-mon-compte-a-ete-debite-mais-je-nai-toujours-pas-recu-mes-satoshis-7zbs0z/",
+        "verified": "2026-10-06",
+        "note": "Société française. Le service client répond par chat et par e-mail depuis le centre d'aide ; aucun numéro d'assistance trouvé sur le site officiel"
       },
       "security": {
         "coldStoragePct": 100,
@@ -3643,9 +3831,13 @@
         ]
       },
       "support": {
-        "frenchChat": true,
-        "frenchPhone": true,
-        "responseTime": "<24h"
+        "frenchChat": null,
+        "frenchPhone": null,
+        "phone": null,
+        "responseTime": "2 jours ouvrés maximum",
+        "source": "https://help-center.meria.com/article/1144-guide-bien-debuter-sur-meria-%F0%9F%91%8C",
+        "verified": "2026-10-06",
+        "note": "Société française. Deux canaux : un chatbot (logo Meria en bas à droite) et un ticket sur le portail d'assistance, avec une réponse annoncée sous 2 jours ouvrés maximum ; aucun chat avec un conseiller ni langue de réponse précisés. Aucun numéro d'assistance trouvé sur le site officiel"
       },
       "security": {
         "coldStoragePct": 90,
@@ -3672,7 +3864,7 @@
       "idealFor": "Investisseurs français voulant un acteur local agréé MiCA pour acheter et staker une trentaine de cryptos",
       "strengths": [
         "Agréée MiCA par l'AMF (n° A2026-020, 22/06/2026)",
-        "Service 100 % français (chat + téléphone)",
+        "Société française, support par chatbot et ticket (réponse sous 2 jours ouvrés maximum)",
         "Staking intégré (commission de 5 à 14 % des récompenses)"
       ],
       "weaknesses": [
@@ -3759,9 +3951,13 @@
         ]
       },
       "support": {
-        "frenchChat": true,
-        "frenchPhone": true,
-        "responseTime": "<24h"
+        "frenchChat": null,
+        "frenchPhone": null,
+        "phone": null,
+        "responseTime": "8 jours (indicatif, tickets)",
+        "source": "https://feel-mining.com/documents/FEELMINING_CGV_B2C.pdf",
+        "verified": "2026-10-06",
+        "note": "Support par tickets, en français ou en anglais, avec un délai de réponse indicatif de huit jours selon les CGV ; chat et téléphone non vérifiés"
       },
       "security": {
         "coldStoragePct": 90,

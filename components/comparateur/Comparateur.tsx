@@ -158,9 +158,9 @@ export default function Comparateur({ rows, duelSlugs }: { rows: Row[]; duelSlug
                       <span className="inline-flex items-center gap-1 rounded-full border border-accent-green/30 bg-accent-green/10 px-2 py-0.5 font-semibold text-accent-green">
                         <Check className="h-3 w-3" aria-hidden="true" /> {r.french ? "Agréée par l'AMF" : `Agréée MiCA · ${r.country}`}
                       </span>
-                      {r.supportFr !== "non" && (
+                      {r.supportFrRank > 0 && (
                         <span className="inline-flex items-center gap-1">
-                          {r.supportFr === "telephone" ? <Phone className="h-3 w-3" aria-hidden="true" /> : <MessageCircle className="h-3 w-3" aria-hidden="true" />}
+                          {r.supportFrRank === 2 ? <Phone className="h-3 w-3" aria-hidden="true" /> : <MessageCircle className="h-3 w-3" aria-hidden="true" />}
                           Aide en français
                         </span>
                       )}
@@ -308,7 +308,7 @@ export default function Comparateur({ rows, duelSlugs }: { rows: Row[]; duelSlug
                     ["Achat de 1 000 €", (r: Row) => cell(rowCost(r, 1000, "prix"))],
                     ["100 € par carte", (r: Row) => cell(rowCost(r, 100, "carte"))],
                     ["Agrément", (r: Row) => (r.french ? "AMF (France)" : r.authority)],
-                    ["Aide en français", (r: Row) => (r.supportFr === "telephone" ? "Téléphone et chat" : r.supportFr === "chat" ? "Chat" : "Non")],
+                    ["Aide en français", (r: Row) => r.supportFr],
                     ["Note Cryptoreflex", (r: Row) => `${r.score.toLocaleString("fr-FR")}/5`],
                     ["Frais vérifiés le", (r: Row) => fmtDate(r.verifiedDate)],
                   ].map(([label, fn]) => (

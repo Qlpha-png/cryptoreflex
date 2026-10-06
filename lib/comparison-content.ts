@@ -17,7 +17,15 @@
  *   wordCount export).
  */
 
-import { cardBuyPct, isAvailableFr, type Platform, trustpilotText } from "@/lib/platforms";
+import {
+  cardBuyPct,
+  frenchHelpLabel,
+  isAvailableFr,
+  type Platform,
+  supportChatLabel,
+  supportPhoneLabel,
+  trustpilotText,
+} from "@/lib/platforms";
 import type { ComparisonEntry } from "@/lib/comparisons";
 import type { FaqItem } from "@/lib/schema";
 import type { ProfileVerdict } from "@/components/comparison/VerdictByProfile";
@@ -261,7 +269,7 @@ const OVERRIDES: Record<string, SlugOverride> = {
     pick: (a, b) =>
       `Pour qui veut un acteur jamais piraté avec perte de fonds clients depuis 2011 : ${b.name}.`,
     finalVerdict: (a, b) =>
-      `${b.name} (${fmtPct(b.fees.spotMaker)} maker / ${fmtPct(b.fees.spotTaker)} taker au premier palier) est l'une des plateformes les plus sûres du marché : aucun vol de fonds clients par piratage depuis 2011 à notre connaissance, preuve de réserves auditée, support téléphonique en français. ${a.name} propose un catalogue plus large (${a.cryptos.totalCount} cryptos contre ${b.cryptos.totalCount}) et des frais plus bas (${fmtPct(a.fees.spotMaker)} / ${fmtPct(a.fees.spotTaker)}).`,
+      `${b.name} (${fmtPct(b.fees.spotMaker)} maker / ${fmtPct(b.fees.spotTaker)} taker au premier palier) est l'une des plateformes les plus sûres du marché : aucun vol de fonds clients par piratage depuis 2011 à notre connaissance, preuve de réserves auditée. ${a.name} propose un catalogue plus large (${a.cryptos.totalCount} cryptos contre ${b.cryptos.totalCount}) et des frais plus bas (${fmtPct(a.fees.spotMaker)} / ${fmtPct(a.fees.spotTaker)}).`,
     faq: defaultFaq,
     profiles: defaultProfiles,
   },
@@ -329,9 +337,9 @@ const OVERRIDES: Record<string, SlugOverride> = {
   "coinbase-vs-kraken": {
     angle: "Marque grand public NASDAQ vs sécurité historique + Proof-of-Reserves",
     pick: (a, b) =>
-      `Pour la marque la plus rassurante et la pédagogie débutant : ${a.name}. Pour la sécurité maximale et le support FR par téléphone : ${b.name}.`,
+      `Pour la marque la plus rassurante et la pédagogie débutant : ${a.name}. Pour la sécurité et la preuve de réserves auditée : ${b.name}.`,
     finalVerdict: (a, b) =>
-      `${a.name} et ${b.name} sont les deux exchanges les plus matures du marché — fondés respectivement en 2012 et 2011, jamais hackés directement (incident ${a.name} 2024 = data breach via support tiers, fonds clients non touchés). ${a.name} a l'avantage de la marque grand public (cotée NASDAQ, plus connue auprès du non-initié) et de la pédagogie (Coinbase Earn, Coinbase Learn). ${b.name} brille par 2 atouts : la preuve de réserves auditée et le support téléphonique en français, quasi unique sur les grands exchanges internationaux. Côté frais, au premier palier, ${a.name} Advanced est à ${fmtPct(a.fees.spotMaker)} maker / ${fmtPct(a.fees.spotTaker)} taker contre ${fmtPct(b.fees.spotMaker)} / ${fmtPct(b.fees.spotTaker)} chez ${b.name} Pro. Verdict : ${b.name} pour qui priorise la sécurité et le support en français ; ${a.name} pour qui débute et veut la marque la plus connue.`,
+      `${a.name} et ${b.name} sont les deux exchanges les plus matures du marché — fondés respectivement en 2012 et 2011, jamais hackés directement (incident ${a.name} 2024 = data breach via support tiers, fonds clients non touchés). ${a.name} a l'avantage de la marque grand public (cotée NASDAQ, plus connue auprès du non-initié) et de la pédagogie (Coinbase Earn, Coinbase Learn). ${b.name} brille par sa preuve de réserves auditée. Côté frais, au premier palier, ${a.name} Advanced est à ${fmtPct(a.fees.spotMaker)} maker / ${fmtPct(a.fees.spotTaker)} taker contre ${fmtPct(b.fees.spotMaker)} / ${fmtPct(b.fees.spotTaker)} chez ${b.name} Pro. Verdict : ${b.name} pour qui priorise la sécurité et le support en français ; ${a.name} pour qui débute et veut la marque la plus connue.`,
     faq: defaultFaq,
     profiles: defaultProfiles,
   },
@@ -380,7 +388,7 @@ export function buildComparisonCopy(
     `Catalogue : ${a.cryptos.totalCount} cryptos chez ${a.name} vs ${b.cryptos.totalCount} chez ${b.name} — avantage ${cat.winner.name}.`,
     `Sécurité : score ${fmtScore(a.scoring.security)} vs ${fmtScore(b.scoring.security)} — ${sec.winner.name} en tête (${sec.winner.security.coldStoragePct} % cold storage).`,
     `MiCA : ${a.mica.status.includes("MiCA") ? "✅" : "—"} ${a.name}${a.mica.amfRegistration ? ` (AMF ${a.mica.amfRegistration})` : ""} | ${b.mica.status.includes("MiCA") ? "✅" : "—"} ${b.name}${b.mica.amfRegistration ? ` (AMF ${b.mica.amfRegistration})` : ""}.`,
-    `Support FR : ${a.name} ${a.support.frenchPhone ? "tél +" : ""}${a.support.frenchChat ? " chat" : ""} (${a.support.responseTime}) vs ${b.name} ${b.support.frenchPhone ? "tél +" : ""}${b.support.frenchChat ? " chat" : ""} (${b.support.responseTime}).`,
+    `Aide en français : ${a.name} ${frenchHelpLabel(a.support).toLowerCase()} vs ${b.name} ${frenchHelpLabel(b.support).toLowerCase()} (pages d'assistance officielles).`,
   ];
 
   const okA = isAvailableFr(a), okB = isAvailableFr(b);
@@ -420,7 +428,7 @@ export function buildComparisonCopy(
   ];
 
   const supportAnalysis = [
-    `Le support client en français est un critère sous-estimé jusqu'au premier problème (KYC bloqué, retrait en attente, oubli 2FA). ${a.name} propose : chat FR ${a.support.frenchChat ? "✅" : "❌"}, téléphone FR ${a.support.frenchPhone ? "✅" : "❌"}, temps de réponse moyen ${a.support.responseTime}. ${b.name} : chat FR ${b.support.frenchChat ? "✅" : "❌"}, téléphone FR ${b.support.frenchPhone ? "✅" : "❌"}, temps de réponse ${b.support.responseTime}.`,
+    `Le support client en français est un critère sous-estimé jusqu'au premier problème (KYC bloqué, retrait en attente, oubli 2FA). ${a.name} : chat en français ${supportChatLabel(a.support).toLowerCase()}, téléphone ${supportPhoneLabel(a.support).toLowerCase()}${a.support.responseTime ? `, délai annoncé ${a.support.responseTime}` : ""}. ${b.name} : chat en français ${supportChatLabel(b.support).toLowerCase()}, téléphone ${supportPhoneLabel(b.support).toLowerCase()}${b.support.responseTime ? `, délai annoncé ${b.support.responseTime}` : ""}. Valeurs relevées sur les pages officielles d'assistance.`,
     `Sur notre note support pondérée, ${sup.winner.name} prend l'avantage avec ${fmtScore(sup.winner.scoring.support)} (vs ${fmtScore(sup.loser.scoring.support)}). Trustpilot : ${a.name} ${trustpilotText(a.ratings) ?? "sans note publique"} (relevé le ${fmtDateFr(a.ratings.trustpilotVerified)}), ${b.name} ${trustpilotText(b.ratings) ?? "sans note publique"} (relevé le ${fmtDateFr(b.ratings.trustpilotVerified)}). Attention : une note Trustpilot reflète surtout les clients qui prennent la peine d'écrire, souvent après un incident ou sur invitation de la plateforme ; elle ne mesure pas à elle seule la qualité du support.`,
   ];
 

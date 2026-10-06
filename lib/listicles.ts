@@ -155,13 +155,13 @@ const PLATFORM_LISTICLES: PlatformListicle[] = [
     difficulty: 22,
     select() {
       return getAllPlatforms()
-        .filter((p) => p.category !== "wallet" && p.support.frenchChat && isAvailableFr(p))
+        .filter((p) => p.category !== "wallet" && p.support.frenchChat === true && isAvailableFr(p))
         .sort((a, b) => b.scoring.ux - a.scoring.ux)
         .slice(0, 5)
         .map((p, i) => ({
           rank: i + 1,
           data: p,
-          reason: `${p.idealFor} — Dépôt min ${p.deposit.minEur} €, ${p.support.frenchChat ? "support FR" : "support EN"}.`,
+          reason: `${p.idealFor} — Dépôt min ${p.deposit.minEur} €, chat en français.`,
         }));
     },
     highlightLabel: "UX",

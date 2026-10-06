@@ -5,6 +5,12 @@ import { getAffiliationKind } from "@/lib/partnerships";
 /** Fiabilité d'un coût du comparateur : publié en entier, majorant (marge publiée au plus), ou marge non chiffrée en plus. */
 export type CostKind = "exact" | "max" | "partiel";
 
+/**
+ * Accès téléphonique au support : numéro publié ; appel ou rappel sans numéro (depuis l'appli, sur rendez-vous…) ;
+ * réservé à une offre haut de gamme ; aucun.
+ */
+export type SupportPhone = "numero" | "appli" | "reserve" | "aucun";
+
 export interface Platform {
   id: string;
   name: string;
@@ -108,7 +114,29 @@ export interface Platform {
   };
   deposit: { minEur: number; methods: string[] };
   cryptos: { totalCount: number; stakingAvailable: boolean; stakingCryptos: string[] };
-  support: { frenchChat: boolean; frenchPhone: boolean; responseTime: string };
+  /**
+   * Assistance client, relevée sur la page officielle d'assistance de la plateforme (06/10/2026 : les anciennes valeurs
+   * n'avaient jamais été sourcées ; Kraken était donné « téléphone FR » alors qu'il ne publie aucun numéro).
+   * null = non vérifié : ne jamais l'afficher comme un oui ou un non. Toute valeur renseignée exige source + verified.
+   */
+  support: {
+    /** Chat ou messagerie d'assistance assurés en français, d'après la plateforme. */
+    frenchChat: boolean | null;
+    /** Assistance par téléphone en français (numéro publié, ou appel / rappel demandé depuis l'appli). */
+    frenchPhone: boolean | null;
+    /** Accès téléphonique : numéro publié, appel ou rappel demandé depuis l'appli / l'espace client, ou aucun. */
+    phone: SupportPhone | null;
+    /** Délai de réponse annoncé par la plateforme elle-même (jamais une estimation) ; null = aucun délai publié. */
+    responseTime: string | null;
+    /** Page officielle d'assistance relevée. */
+    source: string | null;
+    /** Autres pages officielles lues pour ce relevé (langues, téléphone…). */
+    otherSources?: string[];
+    /** Date du relevé (AAAA-MM-JJ). */
+    verified: string | null;
+    /** Ce que dit la page (canaux, langue, horaires, conditions), prêt à afficher. */
+    note: string | null;
+  };
   security: {
     coldStoragePct: number;
     insurance: boolean;
@@ -306,6 +334,52 @@ export function feeShortFr(p: Platform): string {
 
 /** Alias de feeShortFr : tout le site est en français (« 1,49 % » et non « 1.49% », audit du 05/10/2026). */
 export const feeShort = feeShortFr;
+
+/* -------------------------------------------------------------------------- */
+/* Support client — libellés (relevé du 06/10/2026)                            */
+/* -------------------------------------------------------------------------- */
+
+type Support = Platform["support"];
+
+/** « Oui » / « Non » / « Non vérifié » : un chat en français n'est promis que s'il a été relevé sur la page officielle. */
+export function supportChatLabel(s: Support): string {
+  return s.frenchChat === true ? "Oui" : s.frenchChat === false ? "Non" : "Non vérifié";
+}
+
+/** Accès téléphonique tel que la plateforme le décrit, avec la langue quand elle est connue. */
+export function supportPhoneLabel(s: Support): string {
+  /* « Aucun numéro publié » plutôt que « aucun téléphone » : certaines pages ne font que ne pas en afficher. */
+  if (s.phone === "aucun") return "Aucun numéro publié";
+  if (s.phone == null) return s.frenchPhone === false ? "Non" : "Non vérifié";
+  const how =
+    s.phone === "numero" ? "Numéro publié" : s.phone === "reserve" ? "Réservé aux offres haut de gamme" : "Appel possible, sans numéro publié";
+  const lang = s.frenchPhone === true ? "en français" : s.frenchPhone === false ? "pas en français" : "langue non précisée";
+  return `${how}, ${lang}`;
+}
+
+/** Délai de réponse annoncé par la plateforme, ou rien d'inventé. */
+export function supportDelayLabel(s: Support): string {
+  return s.responseTime ?? (s.verified ? "Aucun délai annoncé" : "Non vérifié");
+}
+
+/**
+ * Aide en français, en un mot pour les tableaux : « Téléphone et chat », « Chat », « Téléphone », « Non » ou
+ * « Non vérifié ». « Non » seulement quand le chat ET le téléphone ont été relevés sans français.
+ */
+export function frenchHelpLabel(s: Support): string {
+  const parts = [s.frenchPhone === true && "téléphone", s.frenchChat === true && "chat"].filter(Boolean) as string[];
+  if (parts.length) {
+    const t = parts.join(" et ");
+    return t.charAt(0).toUpperCase() + t.slice(1);
+  }
+  const noPhone = s.frenchPhone === false || s.phone === "aucun";
+  return s.frenchChat === false && noPhone ? "Non" : "Non vérifié";
+}
+
+/** Rang de tri « aide en français » : 2 téléphone, 1 chat, 0 sinon (non vérifié compris). */
+export function frenchHelpRank(s: Support): number {
+  return s.frenchPhone === true ? 2 : s.frenchChat === true ? 1 : 0;
+}
 
 /** Coût d'un achat payé par carte bancaire (surcoût du dépôt par carte compris quand la grille le publie). */
 export function cardBuyPct(p: Platform): number {

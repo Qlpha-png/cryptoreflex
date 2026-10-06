@@ -181,7 +181,7 @@ function buildListicleFaqs(
     return [
       {
         question: `Quelle est la meilleure plateforme du classement ?`,
-        answer: `${top.name} arrive en tête avec un score global de ${fmtNb(top.scoring.global)}/5. ${top.tagline} Sa combinaison de ${fmtNb(top.fees.spotTaker)}% de frais spot, statut ${top.mica.micaCompliant ? "MiCA-compliant" : "non agréé MiCA"} et ${top.support.frenchChat ? "support en français" : "support anglophone"} explique sa position.`,
+        answer: `${top.name} arrive en tête avec un score global de ${fmtNb(top.scoring.global)}/5. ${top.tagline} Sa combinaison de ${fmtNb(top.fees.spotTaker)}% de frais spot, statut ${top.mica.micaCompliant ? "MiCA-compliant" : "non agréé MiCA"}${top.support.frenchChat === true ? " et chat en français" : ""} explique sa position.`,
       },
       {
         question: `Comment ce classement est-il établi ?`,

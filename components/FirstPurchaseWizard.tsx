@@ -102,7 +102,7 @@ function getBeginnerFrPlatforms(platforms: Platform[]): Platform[] {
     .filter(
       (p) =>
         p.category !== "wallet" &&
-        p.support.frenchChat &&
+        p.support.frenchChat === true &&
         p.mica.micaCompliant &&
         p.deposit.minEur <= 25
     )
@@ -543,7 +543,7 @@ function Step3Platform({
         titleRef={titleRef}
         eyebrow="Étape 3 — Sur quelle plateforme ?"
         title="3 plateformes débutant FR — MiCA-compliant"
-        subtitle="Filtrées sur : support en français, conformité MiCA, dépôt minimum ≤ 25 €. Triées par notre score global."
+        subtitle="Filtrées sur : chat en français (relevé sur la page d'assistance officielle), conformité MiCA, dépôt minimum ≤ 25 €. Triées par notre score global."
       />
 
       <div role="radiogroup" className="mt-6 space-y-3">
@@ -591,8 +591,9 @@ function Step3Platform({
                   <dd className="font-mono text-fg">{p.deposit.minEur} €</dd>
                 </div>
                 <div>
-                  <dt className="text-muted">Support FR</dt>
-                  <dd className="text-accent-green font-semibold">Chat FR</dd>
+                  <dt className="text-muted">Aide en français</dt>
+                  {/* Seules les plateformes au chat en français relevé passent le filtre (pas d'import de lib/platforms côté client). */}
+                  <dd className="text-accent-green font-semibold">{p.support.frenchPhone === true ? "Téléphone et chat" : "Chat"}</dd>
                 </div>
               </dl>
             </button>
