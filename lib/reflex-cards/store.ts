@@ -6,7 +6,7 @@
  */
 import "server-only";
 import type { SupabaseClient } from "@supabase/supabase-js";
-import { CARD, GameError, dayAdd, type ColpDay, type GameState, type Patch, type PlayerRow, type CardRow, type Pity } from "./engine";
+import { CARD, GameError, dayAdd, recentWithSerials, type ColpDay, type GameState, type Patch, type PlayerRow, type CardRow, type Pity } from "./engine";
 import { planAction, planDaily, toClient, type Account, type Ctx, type Planned } from "./actions";
 
 export interface Loaded {
@@ -241,6 +241,26 @@ async function withDaily(db: GameDb, player: string, s: GameState, ctx: Ctx): Pr
   }
 }
 
+/** numérotées : rc_apply n'attribue le numéro (ou ne change la carte en Holo, plafond atteint) qu'après avoir écrit recent ;
+ *  « Dernières cartes obtenues » est réécrit juste après avec la vraie finition et le vrai numéro (avant : « Argent 01/99 » inventé,
+ *  Holo affichée en Argent). Jamais bloquant : le booster est déjà ouvert ; en cas d'échec, recent reste tel quel. */
+async function fixRecent(db: GameDb, player: string, s: GameState, planned: unknown[], numbered: ApplyResult["numbered"], ctx: Ctx): Promise<GameState> {
+  let cur = s;
+  for (let attempt = 0; attempt < 3; attempt++) {
+    const recent = recentWithSerials(cur.player.recent, planned, numbered);
+    if (!recent) return cur;
+    const fix: Patch = { player: { recent } };
+    try {
+      return applyPatch(cur, fix, await db.apply(player, cur.player.version, fix), ctx.now);
+    } catch (e) {
+      if (!/rc_conflict/.test(errMsg(e))) return cur;
+      /* la partie a bougé entre-temps (autre onglet) : on relit, le booster est retrouvé dans la liste à jour */
+      try { cur = toState(await db.load(player, dayAdd(ctx.today, -9))); } catch { return cur; }
+    }
+  }
+  return cur;
+}
+
 export interface EdRow { ed: string; card_id: string; player_id: string; first_at: string }
 /** rang de découverte de chaque Mythique / Relique du joueur parmi tous les exemplaires du monde (les lignes arrivent triées) */
 export function edRanksOf(rows: EdRow[], player: string): Record<string, number> {
@@ -327,7 +347,8 @@ export async function runAction(db: GameDb, player: string, a: string, body: Rec
       for (const n of res.numbered) { items[n.i].fin = n.fin; items[n.i].serial = n.serial; }
     }
     /* état après le geste calculé en mémoire (pas de relecture), puis mises à jour du jour éventuelles (objet mérité…) */
-    const after = applyPatch(s, planned.patch, res, ctx.now);
+    let after = applyPatch(s, planned.patch, res, ctx.now);
+    if (a === "ouvrir" && res.numbered?.length && Array.isArray(planned.patch.player?.recent)) after = await fixRecent(db, player, after, planned.patch.player.recent as unknown[], res.numbered, ctx);
     const s2 = (await withDaily(db, player, after, ctx)) ?? (await loadGame(db, player, ctx));
     /* une Mythique ou une Relique vient d'arriver : son rang mondial est relu ; sinon on garde ceux déjà connus */
     if (planned.patch.eds?.some((e) => e.ed === "myth" || e.ed === "relic")) { const w = await worldData(db, player, true); s2.edNo = w.ranks; s2.world = w.world; }

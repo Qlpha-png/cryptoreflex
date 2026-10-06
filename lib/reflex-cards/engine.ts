@@ -382,6 +382,26 @@ export function planOpen(s: GameState, o: { day: number; today: string; now: num
   return { patch, items, results, theme: fam };
 }
 
+/** « Dernières cartes obtenues » : rc_apply n'attribue le numéro d'une numérotée (ou ne la change en Holo, plafond du monde atteint)
+ *  qu'APRÈS avoir écrit recent, où planOpen a mis la finition prévue au tirage et serial null (le jeu affichait « Argent 01/99 »).
+ *  cur = recent lu (le booster écrit par planOpen, `planned`, en tête — ou décalé si d'autres cartes sont arrivées entre-temps) ;
+ *  renvoie cur avec la vraie finition et le vrai numéro sur les cartes du booster, null si le booster n'y est plus en entier. */
+export function recentWithSerials(cur: unknown[], planned: unknown[], numbered: { i: number; fin: string; serial: number | null }[]): unknown[] | null {
+  if (!numbered.length) return null;
+  type E = { id?: unknown; ed?: unknown; fin?: unknown; serial?: unknown } | null | undefined;
+  const same = (a: E, b: E) => !!a && !!b && a.id === b.id && (a.ed ?? null) === (b.ed ?? null) && (a.fin ?? null) === (b.fin ?? null) && (a.serial ?? null) === (b.serial ?? null);
+  const need = Math.max(...numbered.map((n) => n.i)) + 1;
+  for (let k = 0; k + need <= cur.length; k++) {
+    let ok = true;
+    for (let j = 0; ok && j < Math.min(planned.length, cur.length - k); j++) ok = same(cur[k + j] as E, planned[j] as E);
+    if (!ok) continue;
+    const out = [...cur];
+    for (const n of numbered) out[k + n.i] = { ...(cur[k + n.i] as object), fin: n.fin, serial: n.serial };
+    return out;
+  }
+  return null;
+}
+
 /* ---------- missions du jour ---------- */
 export function activeMissions(s: GameState, today: string) {
   const out: { d: string; id: string; k: string; g: number; r: number; key: string; cl: boolean; p: number }[] = [];
