@@ -327,7 +327,7 @@ date: "${TODAY}"
 category: "Marché"
 source: "Cryptoreflex"
 isBrief: true
-author: "La rédaction Cryptoreflex"
+author: "Cryptoreflex"
 keywords:
   - "actualité crypto"
   - "brief crypto"

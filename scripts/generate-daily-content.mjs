@@ -400,7 +400,7 @@ category: "${category}"
 source: "${yamlString(raw.source)}"
 sourceUrl: "${yamlString(raw.sourceUrl)}"
 originalTitle: "${yamlString(raw.title)}"
-author: "La rédaction Cryptoreflex"${imageLines}
+author: "Cryptoreflex"${imageLines}
 keywords:
 ${raw.matchedKeywords.slice(0, 5).map((k) => `  - "${k}"`).join("\n")}
 ---`;
@@ -717,7 +717,7 @@ trend: "${trend}"
 rsi: ${rsi}
 change24h: ${change24h.toFixed(2)}
 image: "/og-default.png"
-author: "La rédaction Cryptoreflex"
+author: "Cryptoreflex"
 ---`;
 
   const body = `## Situation actuelle

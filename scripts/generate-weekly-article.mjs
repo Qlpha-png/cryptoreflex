@@ -387,7 +387,7 @@ updatedAt: "${TODAY}"
 lastUpdated: "${TODAY}"
 category: "${frenchCategoryLabel(topic.category)}"
 cluster: "${topic.cluster}"
-author: "La rédaction Cryptoreflex"
+author: "Cryptoreflex"
 readTime: "${Math.max(6, Math.round((parsed._actualWordCount || parsed.wordCount || 1800) / 220))} min"
 readingTime: ${Math.max(6, Math.round((parsed._actualWordCount || parsed.wordCount || 1800) / 220))}
 wordCount: ${parsed._actualWordCount || parsed.wordCount || 1800}
