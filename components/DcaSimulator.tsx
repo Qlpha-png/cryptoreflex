@@ -509,8 +509,8 @@ function Chart({
           Évolution sur {series.length} mois — {symbol}
         </h4>
         <div className="flex flex-wrap gap-3 text-xs">
-          <Legend color="#F5A524" label="DCA" />
-          <Legend color="#0E7490" label="Achat unique" />
+          <Legend color="rgb(var(--c-primary))" label="DCA" />
+          <Legend color="rgb(var(--c-accent-cyan))" label="Achat unique" />
           <Legend color="#6B7280" label="Investi" dashed />
         </div>
       </div>
@@ -530,10 +530,10 @@ function Chart({
                 x2={width - padding.right}
                 y1={y}
                 y2={y}
-                stroke="#262B33"
+                style={{ stroke: "rgb(var(--c-border))" }}
                 strokeDasharray="2 4"
               />
-              <text x={padding.left - 8} y={y + 4} textAnchor="end" fontSize="10" fill="#9BA3AF">
+              <text x={padding.left - 8} y={y + 4} textAnchor="end" fontSize="10" style={{ fill: "rgb(var(--c-fg-4))" }}>
                 {compactEur(v)}
               </text>
             </g>
@@ -549,9 +549,9 @@ function Chart({
           strokeDasharray="4 4"
         />
         {/* Lump sum */}
-        <path d={buildPath("lumpSum")} fill="none" stroke="#0E7490" strokeWidth={2} />
+        <path d={buildPath("lumpSum")} fill="none" style={{ stroke: "rgb(var(--c-accent-cyan))" }} strokeWidth={2} />
         {/* DCA */}
-        <path d={buildPath("portfolio")} fill="none" stroke="#F5A524" strokeWidth={2.5} />
+        <path d={buildPath("portfolio")} fill="none" style={{ stroke: "rgb(var(--c-primary))" }} strokeWidth={2.5} />
 
         {/* X axis labels (1er, milieu, dernier) */}
         {[0, Math.floor(series.length / 2), series.length - 1].map((i) => (
@@ -561,7 +561,7 @@ function Chart({
             y={height - padding.bottom + 14}
             textAnchor="middle"
             fontSize="10"
-            fill="#9BA3AF"
+            style={{ fill: "rgb(var(--c-fg-4))" }}
           >
             M{series[i].month}
           </text>
@@ -580,7 +580,7 @@ function Legend({ color, label, dashed }: { color: string; label: string; dashed
           y1="1"
           x2="16"
           y2="1"
-          stroke={color}
+          style={{ stroke: color }}
           strokeWidth="2"
           strokeDasharray={dashed ? "3 3" : undefined}
         />

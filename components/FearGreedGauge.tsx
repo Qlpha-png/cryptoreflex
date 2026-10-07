@@ -88,9 +88,9 @@ export default function FearGreedGauge({
           {/* Dégradé linéaire horizontal rouge → orange → jaune → vert */}
           <linearGradient id="fg-grad" x1="0%" y1="0%" x2="100%" y2="0%">
             <stop offset="0%" stopColor="#dc2626" /> {/* red-600 */}
-            <stop offset="33%" stopColor="#f59e0b" /> {/* amber-500 */}
+            <stop offset="33%" style={{ stopColor: "rgb(var(--c-warning))" }} /> {/* amber-500 */}
             <stop offset="66%" stopColor="#eab308" /> {/* yellow-500 */}
-            <stop offset="100%" stopColor="#22c55e" /> {/* green-500 */}
+            <stop offset="100%" style={{ stopColor: "rgb(var(--c-success))" }} /> {/* green-500 */}
           </linearGradient>
         </defs>
 

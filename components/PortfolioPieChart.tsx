@@ -2,6 +2,7 @@
 
 import { useMemo } from "react";
 import { motion, useReducedMotion } from "motion/react";
+import { useThemeColors } from "@/lib/theme/colors";
 
 export interface PieSlice {
   /** Identifiant stable (cryptoId) — sert de key React. */
@@ -147,6 +148,7 @@ export default function PortfolioPieChart({
   }, [displayed, total]);
 
   const reduce = useReducedMotion();
+  const tc = useThemeColors();
 
   if (displayed.length === 0) {
     return null;
@@ -186,7 +188,7 @@ export default function PortfolioPieChart({
                 key={arc.id}
                 d={arc.d}
                 fill={arc.color}
-                stroke="rgba(0,0,0,0.25)"
+                stroke={tc("scrim", 0.25)}
                 strokeWidth={1}
                 initial={reduce ? false : { pathLength: 0, opacity: 0 }}
                 animate={{ pathLength: 1, opacity: 1 }}
@@ -214,8 +216,8 @@ export default function PortfolioPieChart({
             cx={size / 2}
             cy={size / 2}
             r={size * 0.22}
-            fill="#16191F"
-            stroke="rgba(255,255,255,0.04)"
+            fill={tc("surface")}
+            stroke={tc("fg-max", 0.04)}
             strokeWidth={1}
           />
         </svg>

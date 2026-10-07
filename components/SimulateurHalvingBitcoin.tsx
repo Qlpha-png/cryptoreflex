@@ -318,7 +318,7 @@ function HalvingChart({ data }: { data: ChartPoint[] }) {
         <Legend color="#9CA3AF" label="Total investi" dashed />
         <Legend color="#3b82f6" label="Conservateur" />
         <Legend color="#F5B800" label="Moyen" />
-        <Legend color="#22c55e" label="Bullish" />
+        <Legend color="rgb(var(--c-up))" label="Bullish" />
       </div>
       <svg
         viewBox={`0 0 ${width} ${height}`}
@@ -335,10 +335,10 @@ function HalvingChart({ data }: { data: ChartPoint[] }) {
                 x2={width - padding.right}
                 y1={y}
                 y2={y}
-                stroke="#262B33"
+                style={{ stroke: "rgb(var(--c-border))" }}
                 strokeDasharray="2 4"
               />
-              <text x={padding.left - 8} y={y + 4} textAnchor="end" fontSize="10" fill="#9BA3AF">
+              <text x={padding.left - 8} y={y + 4} textAnchor="end" fontSize="10" style={{ fill: "rgb(var(--c-fg-4))" }}>
                 {compactEur(v)}
               </text>
             </g>
@@ -348,7 +348,7 @@ function HalvingChart({ data }: { data: ChartPoint[] }) {
         <path d={buildPath("invested")} fill="none" stroke="#9CA3AF" strokeWidth={1.5} strokeDasharray="4 4" />
         <path d={buildPath("conservateur")} fill="none" stroke="#3b82f6" strokeWidth={2} />
         <path d={buildPath("moyen")} fill="none" stroke="#F5B800" strokeWidth={2.5} />
-        <path d={buildPath("bullish")} fill="none" stroke="#22c55e" strokeWidth={2} />
+        <path d={buildPath("bullish")} fill="none" style={{ stroke: "rgb(var(--c-up))" }} strokeWidth={2} />
 
         {data.map((d, i) => (
           <g key={d.label}>
@@ -358,7 +358,7 @@ function HalvingChart({ data }: { data: ChartPoint[] }) {
               y={height - padding.bottom + 18}
               textAnchor="middle"
               fontSize="11"
-              fill="#9BA3AF"
+              style={{ fill: "rgb(var(--c-fg-4))" }}
             >
               {d.label}
             </text>
@@ -378,7 +378,7 @@ function Legend({ color, label, dashed }: { color: string; label: string; dashed
           y1="1"
           x2="16"
           y2="1"
-          stroke={color}
+          style={{ stroke: color }}
           strokeWidth="2"
           strokeDasharray={dashed ? "3 3" : undefined}
         />

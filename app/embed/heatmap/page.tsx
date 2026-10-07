@@ -40,7 +40,7 @@ const LiveHeatmap = dynamic(() => import("@/components/LiveHeatmap"), {
     <div
       style={{
         height: 540,
-        background: "rgba(31,36,44,.4)",
+        background: "rgb(var(--c-elevated) / 0.4)",
         borderRadius: 16,
       }}
       aria-label="Chargement de la heatmap"
@@ -59,7 +59,7 @@ export default async function EmbedHeatmapPage() {
         maxWidth: 1100,
         margin: "0 auto",
         fontFamily: '"Cryptoreflex NNBSP", var(--font-sans), Inter, ui-sans-serif, system-ui, sans-serif',
-        color: "#FFF",
+        color: "rgb(var(--c-fg-max))",
       }}
     >
       <h1
@@ -75,7 +75,7 @@ export default async function EmbedHeatmapPage() {
       <p
         style={{
           fontSize: 12,
-          color: "#9BA3AF",
+          color: "rgb(var(--c-fg-4))",
           margin: "0 0 12px",
           lineHeight: 1.4,
         }}
@@ -88,7 +88,7 @@ export default async function EmbedHeatmapPage() {
           style={{
             padding: "32px 16px",
             textAlign: "center",
-            color: "#9BA3AF",
+            color: "rgb(var(--c-fg-4))",
             fontSize: 13,
             border: "1px dashed #2a2f37",
             borderRadius: 12,
@@ -106,9 +106,9 @@ export default async function EmbedHeatmapPage() {
         style={{
           marginTop: 14,
           paddingTop: 10,
-          borderTop: "1px solid #262B33",
+          borderTop: "1px solid rgb(var(--c-border))",
           fontSize: 11,
-          color: "#9BA3AF",
+          color: "rgb(var(--c-fg-4))",
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
@@ -125,13 +125,13 @@ export default async function EmbedHeatmapPage() {
             display: "inline-flex",
             alignItems: "center",
             gap: 4,
-            color: "#F5A524",
+            color: "rgb(var(--c-primary))",
             textDecoration: "none",
             fontWeight: 600,
           }}
         >
           Proposé par{" "}
-          <strong style={{ color: "#FCD34D" }}>{BRAND.name}</strong>
+          <strong style={{ color: "rgb(var(--c-primary-soft))" }}>{BRAND.name}</strong>
         </a>
       </footer>
     </div>

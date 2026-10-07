@@ -44,6 +44,7 @@ import {
 import { useLivePrices } from "@/lib/hooks/useLivePrices";
 import DataSourceLine from "@/components/DataSourceLine";
 import { ALLOWED_PRICE_STREAM_IDS } from "@/lib/binance-mapping";
+import { useThemeColors } from "@/lib/theme/colors";
 
 type Period = "1h" | "24h" | "7d";
 
@@ -347,6 +348,7 @@ export default function LiveHeatmap({
   heading = "Heatmap crypto en direct",
 }: Props) {
   const [period, setPeriod] = useState<Period>("24h");
+  const tc = useThemeColors();
   const [hovered, setHovered] = useState<string | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [size, setSize] = useState<{ w: number; h: number }>({
@@ -493,7 +495,7 @@ export default function LiveHeatmap({
 
           const bg = colorForChange(change);
           // 06/10/2026 — blanc pur partout (≥ 5:1 garanti par la palette).
-          const fg = "#FFFFFF";
+          const fg = tc("fg-max");
           const hasPage = slugSet.has(coin.id);
           const changeText = change === null ? "—" : formatPct(change);
           const cellLabel = `${coin.name} (${coin.symbol}), variation ${periodLabel} ${
@@ -683,17 +685,17 @@ function CellTooltip({
         zIndex: 50,
         whiteSpace: "nowrap",
         background: "rgba(15,18,24,0.96)",
-        border: "1px solid rgba(255,255,255,0.1)",
+        border: "1px solid rgb(var(--c-fg-max) / 0.1)",
         borderRadius: 8,
         padding: "8px 10px",
-        boxShadow: "0 10px 30px rgba(0,0,0,0.4)",
+        boxShadow: "0 10px 30px rgb(var(--c-scrim) / 0.4)",
         pointerEvents: "none",
         textAlign: "left",
       }}
     >
-      <div style={{ fontSize: 12, fontWeight: 700, color: "#fff" }}>
+      <div style={{ fontSize: 12, fontWeight: 700, color: "rgb(var(--c-fg-max))" }}>
         {coin.name}{" "}
-        <span style={{ color: "#9BA3AF", fontFamily: "ui-monospace" }}>
+        <span style={{ color: "rgb(var(--c-fg-4))", fontFamily: "ui-monospace" }}>
           {coin.symbol}
         </span>
       </div>
@@ -748,7 +750,7 @@ function LiveStatusBadge({
     status === "live" || status === "fallback"
       ? "#34d399"
       : status === "connecting"
-      ? "#9BA3AF"
+      ? "rgb(var(--c-fg-4))"
       : "#f87171";
 
   return (
@@ -780,7 +782,7 @@ function LiveStatusBadge({
       {lastUpdate && status === "live" && (
         <span
           style={{
-            color: "#9BA3AF",
+            color: "rgb(var(--c-fg-4))",
             fontWeight: 500,
             marginLeft: 4,
           }}

@@ -25,6 +25,8 @@ export interface CategoryTheme {
   accentSoft: string;
   /** Gradient CSS prêt à coller (utilisé pour séparateur sous H1). */
   gradient: string;
+  /** Bordure du badge quand `accent` est une variable (rgb(var(--c-…))) : `${accent}55` ne marche qu'avec un hex. */
+  accentBorder?: string;
 }
 
 /**
@@ -33,9 +35,10 @@ export interface CategoryTheme {
  */
 const DEFAULT_THEME: CategoryTheme = {
   label: "Crypto",
-  accent: "#F5A524",
-  accentSoft: "rgba(245, 165, 36, 0.10)",
-  gradient: "linear-gradient(90deg, #F5A524 0%, #FBBF24 100%)",
+  accent: "rgb(var(--c-primary))",
+  accentSoft: "rgb(var(--c-primary) / 0.1)",
+  gradient: "linear-gradient(90deg, rgb(var(--c-primary)) 0%, rgb(var(--c-primary-glow)) 100%)",
+  accentBorder: "rgb(var(--c-primary) / calc(85 / 255))",
 };
 
 /**
@@ -181,9 +184,10 @@ const THEMES: ReadonlyArray<{ keywords: string[]; theme: CategoryTheme }> = [
     keywords: ["exchange"],
     theme: {
       label: "Exchange",
-      accent: "#FBBF24",
-      accentSoft: "rgba(251, 191, 36, 0.10)",
-      gradient: "linear-gradient(90deg, #FBBF24 0%, #FCD34D 100%)",
+      accent: "rgb(var(--c-primary-glow))",
+      accentSoft: "rgb(var(--c-primary-glow) / 0.1)",
+      gradient: "linear-gradient(90deg, rgb(var(--c-primary-glow)) 0%, rgb(var(--c-primary-soft)) 100%)",
+      accentBorder: "rgb(var(--c-primary-glow) / calc(85 / 255))",
     },
   },
 ];

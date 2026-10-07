@@ -24,7 +24,7 @@ const Converter = dynamic(() => import("@/components/Converter"), {
     <div
       style={{
         height: 320,
-        background: "rgba(31,36,44,.4)",
+        background: "rgb(var(--c-elevated) / 0.4)",
         borderRadius: 16,
       }}
       aria-label="Chargement du convertisseur"
@@ -45,7 +45,7 @@ export default function EmbedConvertisseurPage() {
         style={{
           fontSize: 22,
           fontWeight: 800,
-          color: "#FFF",
+          color: "rgb(var(--c-fg-max))",
           margin: "0 0 6px",
           lineHeight: 1.2,
         }}
@@ -55,7 +55,7 @@ export default function EmbedConvertisseurPage() {
       <p
         style={{
           fontSize: 13,
-          color: "#9BA3AF",
+          color: "rgb(var(--c-fg-4))",
           margin: "0 0 16px",
           lineHeight: 1.4,
         }}

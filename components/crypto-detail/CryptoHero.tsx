@@ -88,7 +88,7 @@ export default function CryptoHero({
           <span
             className="inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-wider"
             style={{
-              borderColor: `${theme.accent}55`,
+              borderColor: theme.accentBorder ?? `${theme.accent}55`,
               backgroundColor: theme.accentSoft,
               color: theme.accent,
             }}

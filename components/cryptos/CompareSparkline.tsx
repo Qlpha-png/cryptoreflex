@@ -60,7 +60,7 @@ export default function CompareSparkline({
 
   // Couleur selon trend.
   const isUp = change7d != null && change7d >= 0;
-  const stroke = isUp ? "#22c55e" : "#f43f5e"; // accent-green vs accent-rose
+  const stroke = isUp ? "rgb(var(--c-up))" : "#f43f5e"; // accent-green vs accent-rose
   const fillOpacity = 0.12;
 
   // Path d'aire pour fond degrade (fermer en bas).
@@ -76,11 +76,11 @@ export default function CompareSparkline({
         change7d != null ? `${change7d.toFixed(1)}%` : ""
       }`}
     >
-      <path d={areaPath} fill={stroke} fillOpacity={fillOpacity} />
+      <path d={areaPath} style={{ fill: stroke }} fillOpacity={fillOpacity} />
       <path
         d={path}
         fill="none"
-        stroke={stroke}
+        style={{ stroke }}
         strokeWidth={1.5}
         strokeLinecap="round"
         strokeLinejoin="round"

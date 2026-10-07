@@ -45,8 +45,8 @@ export default function Sparkline({
   // Polygone fermé pour le "fill" sous la courbe.
   const fillD = `${pathD} L${width.toFixed(2)},${height} L0,${height} Z`;
 
-  const stroke = positive ? "#22c55e" : "#f43f5e";
-  const fill = positive ? "rgba(34,197,94,0.12)" : "rgba(244,63,94,0.12)";
+  const stroke = positive ? "rgb(var(--c-up))" : "#f43f5e";
+  const fill = positive ? "rgb(var(--c-up) / 0.12)" : "rgba(244,63,94,0.12)";
 
   return (
     <svg
@@ -57,8 +57,8 @@ export default function Sparkline({
       height={height}
       className={className}
     >
-      <path d={fillD} fill={fill} />
-      <path d={pathD} fill="none" stroke={stroke} strokeWidth={1.6} strokeLinecap="round" strokeLinejoin="round" />
+      <path d={fillD} style={{ fill }} />
+      <path d={pathD} fill="none" style={{ stroke }} strokeWidth={1.6} strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
 }

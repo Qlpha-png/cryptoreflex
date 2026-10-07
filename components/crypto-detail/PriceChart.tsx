@@ -10,6 +10,7 @@ import {
   type PointerEvent as ReactPointerEvent,
 } from "react";
 import { Activity } from "lucide-react";
+import { useThemeColors } from "@/lib/theme/colors";
 import { sourceInfo } from "@/lib/data-sources/attribution";
 import type { SourceName } from "@/lib/data-sources/priorities";
 
@@ -336,8 +337,9 @@ function ChartSvg({
   svgRef: React.MutableRefObject<SVGSVGElement | null>;
 }) {
   const { coords, linePath, fillPath, positive } = geometry;
-  const stroke = "#F5A524"; // primary
-  const strokeHover = "#FBBF24";
+  const tc = useThemeColors();
+  const stroke = tc("primary");
+  const strokeHover = tc("primary-glow");
   const gradientId = `priceFill-${period}`;
   const hovered = hoverIdx !== null ? coords[hoverIdx] : null;
 

@@ -30,9 +30,9 @@ export default function EmbedFooter({
       style={{
         marginTop: 16,
         paddingTop: 12,
-        borderTop: "1px solid #262B33",
+        borderTop: "1px solid rgb(var(--c-border))",
         fontSize: 11,
-        color: "#9BA3AF",
+        color: "rgb(var(--c-fg-4))",
         fontFamily: '"Cryptoreflex NNBSP", var(--font-sans), Inter, ui-sans-serif, system-ui, sans-serif',
       }}
     >
@@ -43,7 +43,7 @@ export default function EmbedFooter({
             display: "flex",
             alignItems: "flex-start",
             gap: 6,
-            color: "#FCD34D",
+            color: "rgb(var(--c-warning-fg))",
             lineHeight: 1.4,
           }}
         >
@@ -72,13 +72,13 @@ export default function EmbedFooter({
             display: "inline-flex",
             alignItems: "center",
             gap: 4,
-            color: "#F5A524",
+            color: "rgb(var(--c-primary))",
             textDecoration: "none",
             fontWeight: 600,
           }}
         >
           Proposé par{" "}
-          <strong style={{ color: "#FCD34D" }}>{BRAND.name}</strong>
+          <strong style={{ color: "rgb(var(--c-primary-soft))" }}>{BRAND.name}</strong>
           <ExternalLink size={11} />
         </a>
       </div>
