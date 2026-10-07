@@ -561,12 +561,35 @@ async function _fetchGlobalFromCoingecko(): Promise<GlobalMetrics | null> {
   };
 }
 
-export const fetchGlobalMetrics = unstable_cache(
-  _fetchGlobalMetrics,
-  ["coingecko-global-v1"],
+/**
+ * 07/10/2026 — l'échec n'est plus mis en cache. Pendant `next build`, CoinMarketCap est coupé (cmcEnabled) et
+ * CoinGecko répond 429 : la v1 gardait ce null 30 min, et /marche perdait ses 4 cartes après chaque déploiement.
+ * Comme pour le top du marché, l'appel mis en cache LÈVE quand toutes les sources tombent : unstable_cache sert alors
+ * le dernier relevé réussi (ou rien), et la première régénération à l'exécution passe par CoinMarketCap.
+ */
+const _cachedGlobalMetrics = unstable_cache(
+  async (): Promise<GlobalMetrics> => {
+    const g = await _fetchGlobalMetrics();
+    if (!g) throw new Error("métriques globales : aucune source disponible");
+    return g;
+  },
+  // v2 : la clé v1 contenait des null mis en cache pendant les builds.
+  ["coingecko-global-v2"],
   // BATCH 50 — 300s -> 1800s (30 min)
   { revalidate: 1800, tags: [CG_TAGS.global] }
 );
+
+/** Dernier relevé réussi de CETTE instance (si le Data Cache lui-même ne répond pas). */
+let _lastGlobalMetrics: GlobalMetrics | null = null;
+
+export async function fetchGlobalMetrics(): Promise<GlobalMetrics | null> {
+  try {
+    _lastGlobalMetrics = await _cachedGlobalMetrics();
+  } catch {
+    // toutes les sources en panne et aucun relevé dans le Data Cache : dernier relevé de l'instance, sinon rien
+  }
+  return _lastGlobalMetrics;
+}
 
 export interface FearGreedData {
   value: number; // 0-100
