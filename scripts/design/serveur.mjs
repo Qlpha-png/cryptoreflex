@@ -4,6 +4,7 @@
  *
  *   node scripts/design/serveur.mjs build  [--donnees <dir>]
  *   node scripts/design/serveur.mjs start  --port 3180 [--donnees <dir>]
+ *   … --enregistrer : SEULE façon de compléter le magasin (sinon rejeu strict : inconnu → 503 + manques.log)
  *
  * - Environnement forcé (prioritaire sur .env.local, que Next ne réécrit pas) : KV de prod coupé (au plafond), Resend coupé
  *   (envoie de vrais courriels), clés LLM coupées (coût) : KV_REST_API_URL=http://127.0.0.1:9, KV_REST_API_TOKEN,
@@ -48,7 +49,18 @@ const env = {
 // Le mode comptes appelle Supabase en écriture (rpc) : refusé par figer-donnees.cjs, rien n'est écrit.
 for (const [k, v] of Object.entries({ NEXT_PUBLIC_REFLEX_CARDS_ENABLED: "true", NEXT_PUBLIC_REFLEX_CARDS_LAUNCH_DATE: "2026-10-02", REFLEX_CARDS_ACCOUNTS: "true" }))
   if (env[k] === undefined) env[k] = v;
-if (cmd === "start" && process.env.BANC_DONNEES_MODE) env.BANC_DONNEES_MODE = process.env.BANC_DONNEES_MODE;
+// Rejeu STRICT par défaut (build ET start) : requête inconnue du magasin → 503 sans corps, journal manques.log
+// (BANC_MANQUES pour un journal par passe). Seule exception : --enregistrer, passe d'enregistrement explicite.
+// Une variable BANC_STRICT=0 héritée du shell ne suffit PAS à couper le mode strict.
+// --enregistrer seul = toutes les origines ; --enregistrer next-font = seulement le node-fetch de next/font (polices)
+const enregistrer = !!a.enregistrer;
+env.BANC_STRICT = enregistrer ? "0" : "1";
+delete env.BANC_DONNEES_MODE;
+delete env.BANC_ENREGISTRER_ORIGINES;
+if (typeof a.enregistrer === "string") env.BANC_ENREGISTRER_ORIGINES = a.enregistrer;
+console.log(enregistrer
+  ? "banc : PASSE D'ENREGISTREMENT (--enregistrer) : requêtes inconnues faites en direct puis enregistrées dans le magasin"
+  : `banc : rejeu STRICT : requête inconnue → 503 sans corps, notée dans ${env.BANC_MANQUES || path.join(donnees, "manques.log")}`);
 const next = path.join(ROOT, "node_modules/next/dist/bin/next");
 const port = String(a.port || 3180);
 if (cmd === "start" && !/^318\d$/.test(port)) { console.error("banc : ports 3180-3189 seulement"); process.exit(2); }

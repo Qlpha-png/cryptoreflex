@@ -5,8 +5,10 @@
  * But : deux builds du même code rendent exactement les mêmes pages, aujourd'hui comme dans trois semaines, pour que la
  * comparaison au pixel ne voie QUE les changements de design.
  *
- *  1. fetch sortant (hôte ≠ localhost) : rejoué depuis BANC_DONNEES s'il a déjà été vu, sinon fait en direct ET enregistré
- *     (mode « enregistre », par défaut). Mode « strict » : une requête inconnue échoue (503) au lieu de partir en direct.
+ *  1. fetch sortant (hôte ≠ localhost) : rejoué depuis BANC_DONNEES s'il a déjà été vu. Mode « strict » (PAR DÉFAUT depuis
+ *     le lot A5) : une requête inconnue reçoit 503 sans corps, ne part pas sur le réseau et va dans manques.log
+ *     (BANC_MANQUES). Mode « enregistre » (BANC_STRICT=0, serveur.mjs --enregistrer [origines]) : faite en direct ET
+ *     enregistrée. Le node-fetch interne de Next (polices de next/font/google) passe par le même magasin.
  *     Toute requête externe autre que GET/HEAD (écriture Supabase, Resend, Anthropic…) est REFUSÉE (503), sans exception.
  *     Clé = sha256(méthode + URL + corps). Les URL sont enregistrées CAVIARDÉES (paramètres key/token/secret…), les en-têtes
  *     de requête ne le sont jamais : aucun secret n'est écrit sur disque.
@@ -25,7 +27,14 @@ const crypto = require("node:crypto");
 const DIR = process.env.BANC_DONNEES;
 if (DIR && !globalThis.__bancFige) {
   globalThis.__bancFige = true;
-  const MODE = process.env.BANC_DONNEES_MODE === "strict" ? "strict" : "enregistre";
+  // REJEU STRICT par défaut (lot A5, 07/10/2026) : au lot A4, le serveur avait fait 4 requêtes RÉELLES pendant des
+  // captures (sources de secours appelées après les 429 rejoués de CoinGecko) et le banc les avait enregistrées. Désormais
+  // une requête absente du magasin reçoit 503 sans corps, sans partir sur le réseau, et va dans manques.log.
+  // BANC_STRICT=0 = passe d'enregistrement EXPLICITE (serveur.mjs --enregistrer), seul moyen de compléter le magasin.
+  const MODE = process.env.BANC_STRICT === "0" ? "enregistre" : "strict";
+  const MANQUES = process.env.BANC_MANQUES || path.join(DIR, "manques.log");
+  // passe d'enregistrement CIBLÉE (serveur.mjs --enregistrer next-font) : seules ces origines partent en direct
+  const ORIGINES_ENR = MODE === "enregistre" && process.env.BANC_ENREGISTRER_ORIGINES ? process.env.BANC_ENREGISTRER_ORIGINES.split(",") : null;
   const REQ = path.join(DIR, "requetes");
   fs.mkdirSync(REQ, { recursive: true });
 
@@ -76,8 +85,12 @@ if (DIR && !globalThis.__bancFige) {
   const enCours = new Map(); // clé → promesse de l'enregistrement en cours (une seule requête en direct par clé)
   globalThis.__bancStats = stats;
 
-  if (typeof realFetch === "function") {
-    const figee = async function fetch(input, init) {
+  const noterManque = (origine, method, url, key) => {
+    try { fs.appendFileSync(MANQUES, `${origine} ${method} ${caviarde(url)} #${key.slice(0, 12)}\n`); } catch { /* rien */ }
+  };
+  // Même logique pour le fetch global (code du site) et pour le node-fetch interne de Next (next/font/google : feuilles
+  // et fichiers de polices Google téléchargés à CHAQUE build au cache vidé, hors du fetch global, donc hors magasin avant).
+  const figer = (realFetch, origine) => async function fetch(input, init) {
       let url, method = "GET", body;
       try {
         if (typeof input === "string" || input instanceof URL) url = String(input);
@@ -108,9 +121,11 @@ if (DIR && !globalThis.__bancFige) {
       };
       let rec = lire();
       if (rec) { stats.rejouees++; return rejouer(rec); }
-      if (MODE === "strict") {
+      if (MODE === "strict" || (ORIGINES_ENR && !ORIGINES_ENR.includes(origine))) {
+        // réponse déterministe : 503, corps VIDE (le même octet pour octet à chaque passe), rien sur le réseau
         stats.refusees++;
-        return new Response("banc : requête inconnue du magasin (mode strict) " + caviarde(url), { status: 503 });
+        noterManque(origine, method, url, key);
+        return new Response(null, { status: 503, statusText: "banc strict" });
       }
       // Enregistrement SANS course : pendant un build, des dizaines de pages demandent la même URL au même moment, dans
       // plusieurs processus. Avant, chacune partait en direct et gardait SA réponse (cours différent à la seconde près),
@@ -141,7 +156,7 @@ if (DIR && !globalThis.__bancFige) {
           } catch { issue = "non écrite"; }
           try { fs.unlinkSync(tmp); } catch { /* déjà renommé ou absent */ }
           if (issue === "gardée") stats.enregistrees++;
-          try { fs.appendFileSync(path.join(DIR, "journal-direct.log"), `${process.pid} ${method} ${res.status} ${caviarde(url)} ${issue}\n`); } catch { /* rien */ }
+          try { fs.appendFileSync(path.join(DIR, "journal-direct.log"), `${process.pid} ${method} ${res.status} ${caviarde(url)} ${issue}${origine === "serveur" ? "" : " (" + origine + ")"}\n`); } catch { /* rien */ }
           return out;
         })().finally(() => enCours.delete(key));
         enCours.set(key, attente);
@@ -149,7 +164,28 @@ if (DIR && !globalThis.__bancFige) {
       const direct = await attente; // une erreur réseau remonte à l'appelant, comme un fetch normal
       rec = lire() || direct; // la version du magasin fait foi ; « direct » seulement si l'écriture a échoué
       return rejouer(rec);
-    };
-    globalThis.fetch = figee;
-  }
+  };
+  if (typeof realFetch === "function") globalThis.fetch = figer(realFetch, "serveur");
+
+  // node-fetch interne de Next (next/font/google) : enveloppé au premier require, même magasin, même mode strict
+  const Module = require("node:module");
+  const chargerOrig = Module._load;
+  const NODE_FETCH = /(^|[\\/])next[\\/]dist[\\/]compiled[\\/]node-fetch([\\/]index(\.js)?)?$/;
+  let enveloppe = null;
+  Module._load = function (request, parent, isMain) {
+    const m = chargerOrig.apply(this, arguments);
+    if (typeof request !== "string" || !NODE_FETCH.test(request) || !m) return m;
+    if (m.__bancFige) return m;
+    if (!enveloppe) {
+      const orig = typeof m === "function" ? m : m.default;
+      if (typeof orig !== "function") return m;
+      const w = figer(orig, "next-font");
+      enveloppe = function nodeFetchFige(input, init) { return w(input, init); };
+      for (const k of Object.keys(m)) { try { enveloppe[k] = m[k]; } catch { /* propriété figée */ } }
+      enveloppe.default = enveloppe;
+      enveloppe.__bancFige = true;
+      if (m.__esModule) Object.defineProperty(enveloppe, "__esModule", { value: true });
+    }
+    return enveloppe;
+  };
 }

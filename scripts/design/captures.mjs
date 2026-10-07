@@ -36,6 +36,9 @@ const LARGEURS = String(a.largeurs || "390,1440").split(",").map(Number);
 const PAUSE = a.pause !== undefined ? Number(a.pause) : PROD ? 20000 : 0;
 const DPR = Number(a.dpr || 1);
 const FIGER = LOCALE;
+// rejeu strict côté navigateur, sauf passe d'enregistrement explicite (--enregistrer) ; BANC_STRICT hérité ignoré
+process.env.BANC_STRICT = a.enregistrer ? "0" : "1";
+if (FIGER) console.log(a.enregistrer ? "banc : PASSE D'ENREGISTREMENT (--enregistrer) côté navigateur" : "banc : rejeu STRICT côté navigateur (inconnu → 503 sans corps, manques.log)");
 const DONNEES = FIGER ? dossierDonnees(a) : null;
 const HORLOGE = FIGER ? horlogeFigee(DONNEES) : null;
 if (FIGER && !HORLOGE) console.warn("banc : magasin sans horloge (manifest.json absent) : le serveur a-t-il été lancé par serveur.mjs ?");

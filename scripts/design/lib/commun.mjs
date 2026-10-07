@@ -85,11 +85,19 @@ const LOCAL = /^https?:\/\/(localhost|127\.\d+\.\d+\.\d+|\[::1\])(:\d+)?\//i;
  * enregistrée fait foi : la passe qui enregistre voit exactement ce que les passes suivantes rejoueront.
  */
 const enregistrementsEnCours = new Map();
+/** rejeu strict côté navigateur : actif sauf passe d'enregistrement explicite (captures.mjs --enregistrer → BANC_STRICT=0) */
+export const bancStrict = () => process.env.BANC_STRICT !== "0";
 async function rejouerOuEnregistrer(route, dir, cle, url) {
   const f = path.join(dir, sha256(cle) + ".json");
   let rec = lireJson(f);
   if (!rec) {
-    if (process.env.BANC_DONNEES_MODE === "strict") return route.fulfill({ status: 503, body: "banc : ressource inconnue du magasin (strict)" });
+    if (bancStrict()) {
+      // rejeu strict (défaut) : 503 sans corps, rien sur le réseau, ressource notée dans manques.log
+      const origine = path.basename(dir) === "navigateur-edge" ? "navigateur-edge" : "navigateur";
+      const journal = process.env.BANC_MANQUES || path.join(path.dirname(dir), "manques.log");
+      try { fs.appendFileSync(journal, `${origine} GET ${url.replace(/([?&][^=]*(key|token|secret|sig)[^=]*=)[^&]*/gi, "$1***")} #${sha256(cle).slice(0, 12)}\n`); } catch { /* rien */ }
+      return route.fulfill({ status: 503, body: "" });
+    }
     let attente = enregistrementsEnCours.get(f);
     if (!attente) {
       attente = (async () => {
