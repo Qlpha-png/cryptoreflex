@@ -13,13 +13,27 @@ on:
   # publication vers 10-13h Paris au lieu du matin). Déclenchement désormais PRÉCIS
   # via cron-job.org → API workflow_dispatch, tous les jours à 06:30 Europe/Paris.
   # Si cron-job.org tombe, les monitors freshness-check + health-check alertent.
+  # 07/10/2026 : cron-job.org lance toujours la publication à 04 h 30 UTC (constaté du 02 au 07/10/2026). Filet : l'horloge
+  # Vercel (lib/gardien.ts, /api/cron/gardien/daily-content) lance ce workflow à 04 h 45 UTC avec « filet » ; il ne fait
+  # alors RIEN si la publication du jour a déjà réussi (le générateur publie jusqu'à 3 nouvelles actus par passage : un
+  # second passage complet doublerait les actus du jour). Sans « filet » (cron-job.org, sentinelle, lancement manuel) :
+  # comportement inchangé.
   workflow_dispatch:
+    inputs:
+      filet:
+        description: "Lancement de secours : ne rien faire si la publication du jour a déjà réussi"
+        type: boolean
+        default: false
+
+# Nom du passage : les passages « filet » sont exclus du plafond de 3 relances par jour de la sentinelle.
+run-name: ${{ (inputs.filet == true || inputs.filet == 'true') && 'Publication du jour (filet du gardien)' || 'Daily content generator (news + TA)' }}
 
 # Permissions write requise pour commit + push automatique sur main.
-# `issues: write` pour pouvoir créer une issue auto en cas d'échec (notify step).
+# Tickets : dépôt PRIVÉ Qlpha-png/cryptoreflex-sentinelle (secret SENTINELLE_TOKEN), plus aucun ticket dans ce dépôt.
+# `actions: read` : le filet lit les passages du jour.
 permissions:
   contents: write
-  issues: write
+  actions: read
 
 # Concurrency : 1 seul run à la fois (évite race conditions sur git push).
 concurrency:
@@ -27,9 +41,34 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  filet:
+    if: inputs.filet == true || inputs.filet == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    outputs:
+      deja: ${{ steps.lecture.outputs.deja }}
+    steps:
+      - name: Publication du jour déjà réussie ?
+        id: lecture
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          n=$(gh run list -R "$GITHUB_REPOSITORY" --workflow daily-content.yml --status success --created ">=$(date -u +%F)" --json databaseId --jq 'length')
+          if [ "${n:-0}" -gt 0 ]; then
+            echo "deja=true" >> "$GITHUB_OUTPUT"
+            echo "Publication du jour déjà réussie : rien à faire."
+          else
+            echo "Aucune publication réussie aujourd'hui : lancement."
+          fi
+
   generate:
+    needs: filet
+    # filet sauté (lancement normal) ou en panne : on publie (mieux vaut un doublon qu'aucune publication)
+    if: ${{ !cancelled() && needs.filet.outputs.deja != 'true' }}
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    env:
+      TICKETS_PRIVES: ${{ secrets.SENTINELLE_TOKEN != '' }}
 
     steps:
       - name: Checkout main
@@ -171,24 +210,31 @@ jobs:
       # ----------------------------------------------------------------------
       # Ticket UNIQUE (05/10/2026) : un échec complète le ticket ouvert au lieu d'en créer un par jour (13 tickets jamais
       # fermés) ; un article écarté par le garde-fou y est signalé ; le premier passage vert le ferme.
-      - name: Ticket (échec, article écarté, retour au vert)
-        if: always()
+      - name: Tickets privés non configurés
+        if: always() && env.TICKETS_PRIVES != 'true'
+        run: |
+          echo "Secret SENTINELLE_TOKEN absent : aucun ticket ni commentaire (l'échec du job reste le signal)."
+
+      - name: Ticket (échec, article écarté, retour au vert) — dépôt privé
+        if: always() && env.TICKETS_PRIVES == 'true'
         uses: actions/github-script@v9
         env:
           DROPPED: ${{ steps.gate.outputs.dropped }}
           DROPPED_LIST: ${{ steps.gate.outputs.dropped_list }}
           FAILED: ${{ job.status == 'failure' }}
         with:
+          github-token: ${{ secrets.SENTINELLE_TOKEN }}
           script: |
+            const depot = { owner: "Qlpha-png", repo: "cryptoreflex-sentinelle" };
             const date = new Date().toISOString().slice(0, 10);
             const runUrl = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
-            const { data: open } = await github.rest.issues.listForRepo({ ...context.repo, state: "open", labels: "auto-content", per_page: 50 });
+            const { data: open } = await github.rest.issues.listForRepo({ ...depot, state: "open", labels: "auto-content", per_page: 50 });
             const mine = open.filter((i) => i.title.startsWith("[daily-content]"));
             const failed = process.env.FAILED === "true", dropped = Number(process.env.DROPPED || 0);
             if (!failed && dropped === 0) {
               for (const i of mine) {
-                await github.rest.issues.createComment({ ...context.repo, issue_number: i.number, body: `✅ Publication du ${date} réussie : retour au vert. [Voir l'exécution](${runUrl})` });
-                await github.rest.issues.update({ ...context.repo, issue_number: i.number, state: "closed" });
+                await github.rest.issues.createComment({ ...depot, issue_number: i.number, body: `✅ Publication du ${date} réussie : retour au vert. [Voir l'exécution](${runUrl})` });
+                await github.rest.issues.update({ ...depot, issue_number: i.number, state: "closed" });
               }
               return;
             }
@@ -196,16 +242,15 @@ jobs:
               ? [`❌ Échec de la publication du ${date}.`, `**Run** : ${runUrl}`]
               : [`⚠️ Publication du ${date} faite, mais ${dropped} article(s) écarté(s) par le garde-fou fiscal (formulation à revoir) :`, ...String(process.env.DROPPED_LIST || "").split(" ").filter(Boolean).map((f) => `- \`${f}\``), `**Run** : ${runUrl}`];
             if (mine.length) {
-              await github.rest.issues.createComment({ ...context.repo, issue_number: mine[0].number, body: lines.join("\n") });
+              await github.rest.issues.createComment({ ...depot, issue_number: mine[0].number, body: lines.join("\n") });
               return;
             }
             if (!failed) {
-              await github.rest.issues.create({ ...context.repo, title: `[daily-content] article(s) écarté(s) - ${date}`, body: lines.join("\n"), labels: ["auto-content"] });
+              await github.rest.issues.create({ ...depot, title: `[daily-content] article(s) écarté(s) - ${date}`, body: lines.join("\n"), labels: ["auto-content"] });
               return;
             }
             await github.rest.issues.create({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
+              ...depot,
               title: `[daily-content] FAIL - ${date}`,
               body: [
                 `Le workflow \`daily-content\` a échoué.`,

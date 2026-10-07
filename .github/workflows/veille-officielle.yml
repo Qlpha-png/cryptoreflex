@@ -10,9 +10,13 @@
 # data/veille/etat.json). Script : scripts/veille-officielle.mjs ; sources : data/veille/sources.json.
 name: Veille officielle (lois, BOFiP, registres, frais)
 
+# 07/10/2026 : lancée par l'horloge Vercel (lib/gardien.ts, sans aucune entrée : jamais « enregistrer ») ; l'horaire
+# ci-dessous reste comme filet. Tickets dans le dépôt PRIVÉ Qlpha-png/cryptoreflex-sentinelle (secret SENTINELLE_TOKEN ;
+# absent : aucun ticket, l'échec du job reste le signal). Un doublon est sans danger (lecture seule sans « enregistrer »,
+# groupe de concurrence, ticket complété une fois par ensemble d'écarts).
 on:
   schedule:
-    - cron: "40 4 * * *" # 6 h 40 à Paris, avant le contrôle complet de la sentinelle
+    - cron: "40 4 * * *" # 6 h 40 à Paris, avant le contrôle complet de la sentinelle (filet de l'horloge Vercel)
   workflow_dispatch:
     inputs:
       enregistrer:
@@ -26,7 +30,6 @@ on:
 
 permissions:
   contents: write
-  issues: write
 
 concurrency:
   group: veille-officielle
@@ -36,6 +39,12 @@ jobs:
   veille:
     runs-on: ubuntu-latest
     timeout-minutes: 50
+    env:
+      TICKETS_PRIVES: ${{ secrets.SENTINELLE_TOKEN != '' }}
+      # entrées comparées au booléen ET au texte (un lancement par l'API peut envoyer "true"/"false" en texte : le texte
+      # "false" ne doit JAMAIS valoir vrai)
+      ENREGISTRER: ${{ inputs.enregistrer == true || inputs.enregistrer == 'true' }}
+      DETAIL: ${{ inputs.detail == true || inputs.detail == 'true' }}
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -61,11 +70,11 @@ jobs:
           PISTE_CLIENT_ID: ${{ secrets.PISTE_CLIENT_ID }}
           PISTE_CLIENT_SECRET: ${{ secrets.PISTE_CLIENT_SECRET }}
           VEILLE_REPORT: veille-report.md
-        run: node scripts/veille-officielle.mjs --navigateur ${{ inputs.enregistrer && '--enregistrer' || '' }} ${{ inputs.detail && '--detail' || '' }}
+        run: node scripts/veille-officielle.mjs --navigateur ${{ env.ENREGISTRER == 'true' && '--enregistrer' || '' }} ${{ env.DETAIL == 'true' && '--detail' || '' }}
 
       - name: Enregistrer la nouvelle référence
         # aussi quand des écarts de valeur restent : les versions relues sont enregistrées, l'écart reste signalé
-        if: inputs.enregistrer
+        if: env.ENREGISTRER == 'true'
         run: |
           if [ -z "$(git status --porcelain -- data/veille/etat.json)" ]; then
             echo "Référence inchangée."
@@ -86,34 +95,41 @@ jobs:
           done
           exit 1
 
-      - name: Ticket « veille-officielle »
-        if: always()
+      - name: Tickets privés non configurés
+        if: always() && env.TICKETS_PRIVES != 'true'
+        run: |
+          echo "Secret SENTINELLE_TOKEN absent : aucun ticket ni commentaire (l'échec du job reste le signal)."
+
+      - name: Ticket « veille-officielle » (dépôt privé)
+        if: always() && env.TICKETS_PRIVES == 'true'
         uses: actions/github-script@v9
         env:
           OUTCOME: ${{ steps.run.outcome }}
         with:
+          github-token: ${{ secrets.SENTINELLE_TOKEN }}
           script: |
             const fs = require("fs");
+            const depot = { owner: "Qlpha-png", repo: "cryptoreflex-sentinelle" };
             const report = fs.existsSync("veille-report.md") ? fs.readFileSync("veille-report.md", "utf8") : "(rapport absent)";
             const runUrl = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
             const failed = process.env.OUTCOME === "failure";
             const defects = report.split("\n").filter((l) => l.startsWith("- ❌")).sort().join("\n");
-            const { data: open } = await github.rest.issues.listForRepo({ ...context.repo, state: "open", labels: "veille-officielle", per_page: 10 });
+            const { data: open } = await github.rest.issues.listForRepo({ ...depot, state: "open", labels: "veille-officielle", per_page: 10 });
             const issue = open[0];
             if (failed) {
               const body = `${report}\n\n[Voir l'exécution](${runUrl})`;
               if (!issue) {
-                await github.rest.issues.create({ ...context.repo, title: "[Veille officielle] une source officielle a changé", body, labels: ["veille-officielle"] });
+                await github.rest.issues.create({ ...depot, title: "[Veille officielle] une source officielle a changé", body, labels: ["veille-officielle"] });
                 return;
               }
               // une seule alerte par ensemble d'écarts identique (pas un commentaire par nuit)
-              const { data: comments } = await github.rest.issues.listComments({ ...context.repo, issue_number: issue.number, per_page: 100 });
+              const { data: comments } = await github.rest.issues.listComments({ ...depot, issue_number: issue.number, per_page: 100 });
               const lastBody = comments.length ? comments[comments.length - 1].body : issue.body;
               const lastDefects = (lastBody || "").split("\n").filter((l) => l.startsWith("- ❌")).sort().join("\n");
-              if (lastDefects !== defects) await github.rest.issues.createComment({ ...context.repo, issue_number: issue.number, body });
+              if (lastDefects !== defects) await github.rest.issues.createComment({ ...depot, issue_number: issue.number, body });
             } else if (issue) {
-              await github.rest.issues.createComment({ ...context.repo, issue_number: issue.number, body: `✅ Plus aucun écart avec les sources officielles.\n\n${report}\n\n[Voir l'exécution](${runUrl})` });
-              await github.rest.issues.update({ ...context.repo, issue_number: issue.number, state: "closed" });
+              await github.rest.issues.createComment({ ...depot, issue_number: issue.number, body: `✅ Plus aucun écart avec les sources officielles.\n\n${report}\n\n[Voir l'exécution](${runUrl})` });
+              await github.rest.issues.update({ ...depot, issue_number: issue.number, state: "closed" });
             }
 
       - name: Échec si changement (e-mail GitHub)

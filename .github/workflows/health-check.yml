@@ -4,15 +4,16 @@ name: Health check (URLs + freshness sitemap-news)
 # Cron : 00:15, 06:15, 12:15, 18:15 UTC (offset 15min pour éviter de tomber pile
 # au moment ou daily-content tourne, qui pourrait causer un faux positif si
 # le redeploy Vercel n'est pas terminé).
+# 07/10/2026 : lancé par l'horloge Vercel (lib/gardien.ts) ; l'horaire ci-dessous reste comme filet (doublon sans danger :
+# lecture seule, groupe de concurrence). Tickets dans le dépôt PRIVÉ Qlpha-png/cryptoreflex-sentinelle (SENTINELLE_TOKEN).
 on:
   schedule:
-    - cron: "15 */6 * * *"
+    - cron: "15 */6 * * *" # filet de l'horloge Vercel
   workflow_dispatch:
 
 # Permissions : besoin d'écrire les issues si fail.
 permissions:
   contents: read
-  issues: write
 
 concurrency:
   group: health-check
@@ -22,6 +23,8 @@ jobs:
   check:
     runs-on: ubuntu-latest
     timeout-minutes: 5
+    env:
+      TICKETS_PRIVES: ${{ secrets.SENTINELLE_TOKEN != '' }}
 
     steps:
       - name: Checkout
@@ -39,18 +42,24 @@ jobs:
         # ouvrir l'issue + envoyer le webhook Slack. On capture l'exit via if.
         continue-on-error: true
 
-      - name: Open GitHub issue on failure
-        if: steps.health.outcome == 'failure'
+      - name: Tickets privés non configurés
+        if: steps.health.outcome == 'failure' && env.TICKETS_PRIVES != 'true'
+        run: |
+          echo "Secret SENTINELLE_TOKEN absent : aucun ticket ni commentaire (l'échec du job reste le signal)."
+
+      - name: Open GitHub issue on failure (dépôt privé)
+        if: steps.health.outcome == 'failure' && env.TICKETS_PRIVES == 'true'
         uses: actions/github-script@v9
         with:
+          github-token: ${{ secrets.SENTINELLE_TOKEN }}
           script: |
+            const depot = { owner: "Qlpha-png", repo: "cryptoreflex-sentinelle" };
             const date = new Date().toISOString().slice(0, 10);
             const runUrl = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
             const title = `[health-check] FAIL - ${date}`;
             // Avoid spam : check if an open issue with same title-prefix already exists
             const existing = await github.rest.issues.listForRepo({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
+              ...depot,
               state: "open",
               labels: "health-check",
               per_page: 50,
@@ -60,8 +69,7 @@ jobs:
             );
             if (already) {
               await github.rest.issues.createComment({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
+                ...depot,
                 issue_number: already.number,
                 body: `Nouveau fail détecté ${date} — voir [run #${context.runId}](${runUrl}).`,
               });
@@ -69,8 +77,7 @@ jobs:
               return;
             }
             await github.rest.issues.create({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
+              ...depot,
               title,
               body: [
                 `Le health-check automatique a échoué.`,

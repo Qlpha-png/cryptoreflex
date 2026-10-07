@@ -9,14 +9,16 @@
 # Aucun formulaire n'est envoyé, aucun e-mail : lecture seule.
 name: Audit navigateur (nuit)
 
+# 07/10/2026 : lancé par l'horloge Vercel (lib/gardien.ts) ; l'horaire ci-dessous reste comme filet (un doublon est sans
+# danger : lecture seule, groupe de concurrence, ticket complété une fois par ensemble de défauts). Tickets dans le dépôt
+# PRIVÉ Qlpha-png/cryptoreflex-sentinelle (secret SENTINELLE_TOKEN).
 on:
   schedule:
-    - cron: "10 3 * * *" # 5 h 10 à Paris, avant la publication des actus
+    - cron: "10 3 * * *" # 5 h 10 à Paris, avant la publication des actus (filet de l'horloge Vercel)
   workflow_dispatch:
 
 permissions:
   contents: read
-  issues: write
 
 concurrency:
   group: audit-navigateur
@@ -28,6 +30,7 @@ jobs:
     timeout-minutes: 60
     env:
       BASE: https://www.cryptoreflex.fr
+      TICKETS_PRIVES: ${{ secrets.SENTINELLE_TOKEN != '' }}
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -72,31 +75,46 @@ jobs:
             audit-nuit-report.md
           retention-days: 14
 
-      - name: Ticket « Audit navigateur »
-        if: always()
+      - name: Tickets privés non configurés
+        if: always() && env.TICKETS_PRIVES != 'true'
+        run: |
+          echo "Secret SENTINELLE_TOKEN absent : aucun ticket ni commentaire (l'échec du job reste le signal)."
+
+      - name: Ticket « Audit navigateur » (dépôt privé)
+        if: always() && env.TICKETS_PRIVES == 'true'
         uses: actions/github-script@v9
         env:
           OUTCOME: ${{ steps.report.outcome }}
         with:
+          github-token: ${{ secrets.SENTINELLE_TOKEN }}
           script: |
             const fs = require("fs");
+            const depot = { owner: "Qlpha-png", repo: "cryptoreflex-sentinelle" };
             const report = fs.existsSync("audit-nuit-report.md") ? fs.readFileSync("audit-nuit-report.md", "utf8") : "(rapport absent)";
             const runUrl = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
             const failed = process.env.OUTCOME === "failure";
             const defects = report.split("\n").filter((l) => l.startsWith("- ❌")).sort().join("\n");
-            const { data: open } = await github.rest.issues.listForRepo({ ...context.repo, state: "open", labels: "audit-navigateur", per_page: 10 });
+            const { data: open } = await github.rest.issues.listForRepo({ ...depot, state: "open", labels: "audit-navigateur", per_page: 10 });
             const issue = open[0];
             if (failed) {
               const body = `${report}\n\n[Voir l'exécution et les captures](${runUrl})`;
               if (!issue) {
-                await github.rest.issues.create({ ...context.repo, title: "[Audit navigateur] défauts détectés sur cryptoreflex.fr", body, labels: ["audit-navigateur"] });
+                await github.rest.issues.create({ ...depot, title: "[Audit navigateur] défauts détectés sur cryptoreflex.fr", body, labels: ["audit-navigateur"] });
                 return;
               }
-              const { data: comments } = await github.rest.issues.listComments({ ...context.repo, issue_number: issue.number, per_page: 100 });
+              const { data: comments } = await github.rest.issues.listComments({ ...depot, issue_number: issue.number, per_page: 100 });
               const lastBody = comments.length ? comments[comments.length - 1].body : issue.body;
               const lastDefects = (lastBody || "").split("\n").filter((l) => l.startsWith("- ❌")).sort().join("\n");
-              if (lastDefects !== defects) await github.rest.issues.createComment({ ...context.repo, issue_number: issue.number, body });
+              if (lastDefects !== defects) await github.rest.issues.createComment({ ...depot, issue_number: issue.number, body });
             } else if (issue) {
-              await github.rest.issues.createComment({ ...context.repo, issue_number: issue.number, body: `✅ Tout est revenu au vert.\n\n${report}\n\n[Voir l'exécution](${runUrl})` });
-              await github.rest.issues.update({ ...context.repo, issue_number: issue.number, state: "closed" });
+              await github.rest.issues.createComment({ ...depot, issue_number: issue.number, body: `✅ Tout est revenu au vert.\n\n${report}\n\n[Voir l'exécution](${runUrl})` });
+              await github.rest.issues.update({ ...depot, issue_number: issue.number, state: "closed" });
             }
+
+      # 07/10/2026 : sans tickets privés, rien ne signalait un défaut (le job restait vert) : le job échoue alors (e-mail
+      # GitHub). Avec les tickets privés, comportement inchangé (le ticket est le signal, le job reste vert).
+      - name: Échec si défaut et pas de ticket (e-mail GitHub)
+        if: steps.report.outcome == 'failure' && env.TICKETS_PRIVES != 'true'
+        run: |
+          echo "L'audit navigateur a trouvé des défauts (tickets privés non configurés)."
+          exit 1

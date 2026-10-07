@@ -12,9 +12,11 @@ name: Refresh static-details KV (4×/jour, depuis GH IP)
 #
 # Coût : ~120 runs/mois × ~30s = ~60 min/mois sous le free tier (illim. public).
 
+# 07/10/2026 : lancé par l'horloge Vercel (lib/gardien.ts) ; l'horaire ci-dessous reste comme filet (doublon sans danger :
+# réécriture idempotente des mêmes seaux, groupe de concurrence ; le passage le plus récent remplace celui en cours).
 on:
   schedule:
-    - cron: "0 */6 * * *"
+    - cron: "0 */6 * * *" # filet de l'horloge Vercel
   workflow_dispatch:
 
 permissions:

@@ -8,9 +8,11 @@ name: Refresh prices DB (3×/jour, dédié)
 #
 # Schedule : 3×/jour (8h, 14h, 20h UTC) — soft refresh, rank évolue peu.
 
+# 07/10/2026 : lancé par l'horloge Vercel (lib/gardien.ts) ; l'horaire ci-dessous reste comme filet (doublon sans danger :
+# rafraîchissement idempotent, groupe de concurrence).
 on:
   schedule:
-    - cron: "0 8,14,20 * * *"
+    - cron: "0 8,14,20 * * *" # filet de l'horloge Vercel
   workflow_dispatch:
 
 permissions:

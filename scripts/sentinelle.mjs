@@ -5,8 +5,9 @@
  * Kev, 04/10/2026 : « que les chiffres, documents, articles soient automatisés et contrôlés, avec une détection
  * d'erreur fiable et automatique pour te prévenir même quand je ne suis pas actif ». Lancé par GitHub Actions
  * (.github/workflows/sentinelle.yml) : contrôle léger toutes les heures et après chaque déploiement, complet chaque nuit.
- * Un défaut → code de sortie 1 (GitHub envoie un e-mail), ticket « Sentinelle » mis à jour, et la tâche Claude
- * planifiée se déclenche pour corriger ou préparer la correction.
+ * Un défaut → code de sortie 1 (GitHub envoie un e-mail), ticket « Sentinelle » mis à jour (dépôt privé
+ * Qlpha-png/cryptoreflex-sentinelle), et la tâche Claude planifiée se déclenche pour corriger ou préparer la correction.
+ * Sortie standard : un décompte seulement (journal public) ; le détail est dans le fichier du rapport.
  *
  * Usage : node scripts/sentinelle.mjs [--full] [--site=https://www.cryptoreflex.fr]
  * Variables facultatives : KV_REST_API_URL / KV_REST_API_TOKEN (âge des prix), GITHUB_TOKEN + GITHUB_REPOSITORY
@@ -486,6 +487,7 @@ const lines = [
 ];
 writeFileSync(REPORT, lines.join("\n") + "\n");
 writeFileSync(path.join(path.dirname(REPORT), "sentinelle-repairs.json"), JSON.stringify(repairs, null, 1));
-if (repairs.dailyContent || repairs.orchestrator || repairs.rerun.length) console.log("\nRéparations proposées :", JSON.stringify(repairs));
-console.log(lines.join("\n"));
+/* 07/10/2026 : dépôt public = journal public. Sur la sortie standard, un simple décompte ; le détail (défauts, réparations,
+   chiffres d'infrastructure) reste dans le fichier du rapport, publié seulement dans le ticket du dépôt privé. */
+console.log(`${fails.length} défaut(s), ${warns.length} à surveiller, ${results.filter((r) => r.level === "ok").length} contrôles réussis`);
 process.exit(fails.length ? 1 : 0);

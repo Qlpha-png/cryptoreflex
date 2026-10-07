@@ -10,12 +10,18 @@
 # Un défaut : le job échoue (GitHub envoie un e-mail), le ticket « Sentinelle » est créé ou complété (une seule fois
 # par ensemble de défauts identique), et la routine Claude planifiée s'en charge. Retour au vert : ticket fermé.
 # Script : scripts/sentinelle.mjs (aucun secret ni donnée personnelle dans le rapport).
+#
+# 07/10/2026 — dépôt PUBLIC = journaux publics : le rapport détaillé (défauts, réparations, chiffres d'infrastructure)
+# ne va QUE dans les tickets du dépôt PRIVÉ Qlpha-png/cryptoreflex-sentinelle (secret SENTINELLE_TOKEN). Journal et
+# résumé du job : un simple décompte. Secret absent : aucun ticket ni commentaire nulle part, l'échec du job reste le
+# signal. Lancement : horloge Vercel (lib/gardien.ts, /api/cron/gardien/sentinelle-*) ; les horaires ci-dessous restent
+# comme filet (GitHub en saute la plupart).
 name: Sentinelle (détection d'erreurs)
 
 on:
   schedule:
-    - cron: "17 * * * *" # contrôle léger, toutes les heures
-    - cron: "35 5 * * *" # contrôle complet, 7 h 35 à Paris (après le robot d'actus de 4 h 30 UTC)
+    - cron: "17 * * * *" # contrôle léger, toutes les heures (filet de l'horloge Vercel)
+    - cron: "35 5 * * *" # contrôle complet, 7 h 35 à Paris (après le robot d'actus de 4 h 30 UTC ; filet de l'horloge Vercel)
   deployment_status:
   # 05/10/2026 : juste après chaque publication du jour (déclenchement fiable : les tâches programmées de GitHub prennent
   # souvent plusieurs heures de retard) — contrôle, puis réparation automatique si la publication a raté.
@@ -31,12 +37,15 @@ on:
 
 permissions:
   contents: write
-  issues: write
   # write : relancer un robot (publication du jour, orchestrateur de secours, nouvelle tentative d'un robot en échec)
   actions: write
 
+# 07/10/2026 : deux groupes (complet / léger). Avec un seul groupe, un passage léger arrivé pendant qu'un complet
+# attendait son tour ANNULAIT le complet (GitHub ne garde qu'un passage en attente par groupe) ; l'horloge Vercel et le
+# filet GitHub multiplient les lancements, donc ce cas devenait probable. Un doublon reste sans danger : recomptage
+# commité seulement s'il change, ticket complété une fois par ensemble de défauts, réparations bornées (voir plus bas).
 concurrency:
-  group: sentinelle
+  group: sentinelle-${{ (github.event.schedule == '35 5 * * *' || inputs.full == true || inputs.full == 'true') && 'complet' || 'leger' }}
   cancel-in-progress: false
 
 jobs:
@@ -47,7 +56,10 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 45
     env:
-      FULL: ${{ github.event.schedule == '35 5 * * *' || inputs.full == true }}
+      # l'horloge Vercel envoie full="true" (texte) : comparaison au booléen ET au texte
+      FULL: ${{ github.event.schedule == '35 5 * * *' || inputs.full == true || inputs.full == 'true' }}
+      # tickets privés seulement si le secret existe (jamais de ticket dans le dépôt public)
+      TICKETS_PRIVES: ${{ secrets.SENTINELLE_TOKEN != '' }}
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -106,36 +118,43 @@ jobs:
           SENTINELLE_REPORT: sentinelle-report.md
         run: node scripts/sentinelle.mjs ${{ env.FULL == 'true' && '--full' || '' }}
 
-      - name: Ticket « Sentinelle »
-        if: always()
+      - name: Tickets privés non configurés
+        if: always() && env.TICKETS_PRIVES != 'true'
+        run: |
+          echo "Secret SENTINELLE_TOKEN absent : aucun ticket ni commentaire (l'échec du job reste le signal)."
+
+      - name: Ticket « Sentinelle » (dépôt privé)
+        if: always() && env.TICKETS_PRIVES == 'true'
         uses: actions/github-script@v9
         env:
           OUTCOME: ${{ steps.run.outcome }}
           FULL: ${{ env.FULL }}
         with:
+          github-token: ${{ secrets.SENTINELLE_TOKEN }}
           script: |
             const fs = require("fs");
+            const depot = { owner: "Qlpha-png", repo: "cryptoreflex-sentinelle" };
             const report = fs.existsSync("sentinelle-report.md") ? fs.readFileSync("sentinelle-report.md", "utf8") : "(rapport absent)";
             const runUrl = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
             const failed = process.env.OUTCOME === "failure";
             const defects = report.split("\n").filter((l) => l.startsWith("- ❌")).sort().join("\n");
-            const { data: open } = await github.rest.issues.listForRepo({ ...context.repo, state: "open", labels: "sentinelle", per_page: 10 });
+            const { data: open } = await github.rest.issues.listForRepo({ ...depot, state: "open", labels: "sentinelle", per_page: 10 });
             const issue = open[0];
             if (failed) {
               const body = `${report}\n\n[Voir l'exécution](${runUrl})`;
               if (!issue) {
-                await github.rest.issues.create({ ...context.repo, title: "[Sentinelle] défauts détectés sur cryptoreflex.fr", body, labels: ["sentinelle"] });
+                await github.rest.issues.create({ ...depot, title: "[Sentinelle] défauts détectés sur cryptoreflex.fr", body, labels: ["sentinelle"] });
                 return;
               }
               // une seule alerte par ensemble de défauts identique (pas un commentaire par heure)
-              const { data: comments } = await github.rest.issues.listComments({ ...context.repo, issue_number: issue.number, per_page: 100 });
+              const { data: comments } = await github.rest.issues.listComments({ ...depot, issue_number: issue.number, per_page: 100 });
               const lastBody = comments.length ? comments[comments.length - 1].body : issue.body;
               const lastDefects = (lastBody || "").split("\n").filter((l) => l.startsWith("- ❌")).sort().join("\n");
-              if (lastDefects !== defects) await github.rest.issues.createComment({ ...context.repo, issue_number: issue.number, body });
+              if (lastDefects !== defects) await github.rest.issues.createComment({ ...depot, issue_number: issue.number, body });
             } else if (issue) {
               // Un contrôle LÉGER ne ferme le ticket que si tous les défauts ouverts relèvent de ce qu'il vérifie
               // (constaté le 05/10/2026 : un contrôle léger avait fermé un ticket de défauts des plans du site).
-              const { data: comments } = await github.rest.issues.listComments({ ...context.repo, issue_number: issue.number, per_page: 100 });
+              const { data: comments } = await github.rest.issues.listComments({ ...depot, issue_number: issue.number, per_page: 100 });
               const lastBody = comments.length ? comments[comments.length - 1].body : issue.body;
               const openDefects = (lastBody || "").split("\n").filter((l) => l.startsWith("- ❌"));
               // « quota » volontairement absent : juste après minuit UTC le compteur du jour repart de zéro et un
@@ -143,17 +162,19 @@ jobs:
               const quickAreas = /^- ❌ \[(pages|chiffres|fraîcheur|prix|robots|jeu)\]/;
               const canClose = process.env.FULL === "true" || openDefects.every((l) => quickAreas.test(l));
               if (canClose) {
-                await github.rest.issues.createComment({ ...context.repo, issue_number: issue.number, body: `✅ Tout est revenu au vert.\n\n${report}\n\n[Voir l'exécution](${runUrl})` });
-                await github.rest.issues.update({ ...context.repo, issue_number: issue.number, state: "closed" });
+                await github.rest.issues.createComment({ ...depot, issue_number: issue.number, body: `✅ Tout est revenu au vert.\n\n${report}\n\n[Voir l'exécution](${runUrl})` });
+                await github.rest.issues.update({ ...depot, issue_number: issue.number, state: "closed" });
               }
             }
 
       # 05/10/2026 (Kev : « un truc sans jeton et sans devoir que je l'actualise ») : réparations SANS IA, décidées par
       # scripts/sentinelle.mjs (sentinelle-repairs.json) avec garde-fous anti-boucle :
       #  - publication du jour ratée ou incomplète (actus périmées, moins de 5 analyses) → relancée (elle ne recrée que ce qui
-      #    manque), au plus 3 passages par jour et jamais pendant qu'une autre tourne ;
+      #    manque), au plus 3 passages par jour (hors passages « filet » de l'horloge Vercel) et jamais pendant qu'une autre tourne ;
       #  - orchestrateur quotidien sans passage depuis plus de 27 h → lancement de secours, au plus une fois toutes les 20 h ;
       #  - autre robot GitHub en échec → une seule nouvelle tentative des étapes en échec.
+      # 07/10/2026 : les relances gardent le jeton du dépôt public ; le détail va dans sentinelle-reparations.md, publié
+      # seulement dans le ticket privé (jamais dans le journal ni le résumé du job, qui sont publics).
       - name: Réparations automatiques (sans IA)
         if: always()
         continue-on-error: true
@@ -168,14 +189,15 @@ jobs:
             if (R.dailyContent) {
               const runs = await runsOf("daily-content.yml");
               const busy = runs.some((r) => r.status !== "completed");
-              const n = runs.filter((r) => r.created_at.startsWith(today)).length;
-              if (busy) core.info("publication du jour déjà en cours : rien à relancer");
+              // les passages « filet » de l'horloge Vercel (qui ne font rien si la publication a réussi) ne comptent pas
+              const n = runs.filter((r) => r.created_at.startsWith(today) && !/filet/i.test(r.display_title || "")).length;
+              if (busy) { /* publication du jour déjà en cours : rien à relancer (pas de commentaire, comme avant) */ }
               else if (n >= 3) done.push(`publication du jour NON relancée (${R.dailyContent}) : déjà ${n} passages aujourd'hui, intervention humaine nécessaire`);
               else { await github.rest.actions.createWorkflowDispatch({ ...context.repo, workflow_id: "daily-content.yml", ref: "main" }); done.push(`publication du jour relancée (${R.dailyContent})`); }
             }
             if (R.orchestrator) {
               const runs = await runsOf("coolify-crons.yml");
-              if (runs.some((r) => Date.now() - Date.parse(r.created_at) < 20 * 3600e3)) core.info("orchestrateur : lancement de secours déjà fait il y a moins de 20 h");
+              if (runs.some((r) => Date.now() - Date.parse(r.created_at) < 20 * 3600e3)) { /* secours déjà lancé il y a moins de 20 h */ }
               else { await github.rest.actions.createWorkflowDispatch({ ...context.repo, workflow_id: "coolify-crons.yml", ref: "main", inputs: { job: "daily-orchestrator" } }); done.push(`orchestrateur quotidien relancé en secours (${R.orchestrator})`); }
             }
             for (const r of R.rerun || []) {
@@ -183,22 +205,36 @@ jobs:
               catch (e) { done.push(`« ${r.name} » : nouvelle tentative impossible (${e.message})`); }
             }
             if (!done.length) return core.info("rien à réparer");
-            core.info(done.join("\n"));
-            fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, `\n### Réparations automatiques\n\n${done.map((d) => "- " + d).join("\n")}\n`);
-            const { data: open } = await github.rest.issues.listForRepo({ ...context.repo, state: "open", labels: "sentinelle", per_page: 5 });
-            if (open[0]) await github.rest.issues.createComment({ ...context.repo, issue_number: open[0].number, body: `🔧 Réparations automatiques (sans IA) :\n\n${done.map((d) => "- " + d).join("\n")}` });
+            fs.writeFileSync("sentinelle-reparations.md", done.map((d) => "- " + d).join("\n") + "\n");
+            core.info("décisions de réparation consignées pour le ticket privé");
 
-      # 05/10/2026 : 13 tickets d'échec de robots restaient ouverts depuis des mois (jamais fermés, donc plus lus). Ménage à
-      # chaque passage : un ticket est fermé dès que son robot a réussi APRÈS son ouverture, et les doublons d'un même robot
-      # sont regroupés dans le plus récent.
-      - name: Ménage des tickets des robots
-        if: always()
+      - name: Ticket « Sentinelle » — réparations (dépôt privé)
+        if: always() && env.TICKETS_PRIVES == 'true' && hashFiles('sentinelle-reparations.md') != ''
         continue-on-error: true
         uses: actions/github-script@v9
         with:
+          github-token: ${{ secrets.SENTINELLE_TOKEN }}
           script: |
+            const fs = require("fs");
+            const depot = { owner: "Qlpha-png", repo: "cryptoreflex-sentinelle" };
+            const liste = fs.readFileSync("sentinelle-reparations.md", "utf8").trim();
+            const { data: open } = await github.rest.issues.listForRepo({ ...depot, state: "open", labels: "sentinelle", per_page: 5 });
+            if (open[0]) await github.rest.issues.createComment({ ...depot, issue_number: open[0].number, body: `🔧 Réparations automatiques (sans IA) :\n\n${liste}` });
+
+      # 05/10/2026 : 13 tickets d'échec de robots restaient ouverts depuis des mois (jamais fermés, donc plus lus). Ménage à
+      # chaque passage : un ticket est fermé dès que son robot a réussi APRÈS son ouverture, et les doublons d'un même robot
+      # sont regroupés dans le plus récent. 07/10/2026 : tickets dans le dépôt privé ; passages lus dans le dépôt public.
+      - name: Ménage des tickets des robots (dépôt privé)
+        if: always() && env.TICKETS_PRIVES == 'true'
+        continue-on-error: true
+        uses: actions/github-script@v9
+        with:
+          github-token: ${{ secrets.SENTINELLE_TOKEN }}
+          script: |
+            const depot = { owner: "Qlpha-png", repo: "cryptoreflex-sentinelle" };
             const ROBOTS = [["[daily-content]", "daily-content.yml"], ["[weekly-blog]", "weekly-blog.yml"], ["[weekly-events]", "weekly-events.yml"], ["[health-check]", "health-check.yml"], ["[stale-content]", "freshness-check.yml"]];
-            const { data: open } = await github.rest.issues.listForRepo({ ...context.repo, state: "open", per_page: 100 });
+            const { data: open } = await github.rest.issues.listForRepo({ ...depot, state: "open", per_page: 100 });
+            let fermes = 0;
             for (const [prefix, wf] of ROBOTS) {
               const mine = open.filter((i) => !i.pull_request && i.title.startsWith(prefix)).sort((x, y) => Date.parse(y.created_at) - Date.parse(x.created_at));
               if (!mine.length) continue;
@@ -209,11 +245,12 @@ jobs:
                 if (ok && Date.parse(ok.created_at) > Date.parse(i.created_at)) msg = `✅ Fermé automatiquement : le robot \`${wf}\` a réussi depuis l'ouverture de ce ticket (${ok.created_at.slice(0, 16).replace("T", " ")} UTC, ${ok.html_url}).`;
                 else if (k > 0) msg = `Regroupé dans #${mine[0].number} (même robot, ticket plus récent).`;
                 if (!msg) continue;
-                await github.rest.issues.createComment({ ...context.repo, issue_number: i.number, body: msg });
-                await github.rest.issues.update({ ...context.repo, issue_number: i.number, state: "closed" });
-                core.info(`#${i.number} fermé : ${msg.slice(0, 80)}`);
+                await github.rest.issues.createComment({ ...depot, issue_number: i.number, body: msg });
+                await github.rest.issues.update({ ...depot, issue_number: i.number, state: "closed" });
+                fermes++;
               }
             }
+            core.info(`ménage des tickets : ${fermes} fermé(s)`);
 
       - name: Échec si défaut (e-mail GitHub)
         if: steps.run.outcome == 'failure'
