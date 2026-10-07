@@ -797,6 +797,34 @@
       "avant": "« nous publions chaque ajout sous 48 h ».",
       "après": "« nous l'ajoutons après vérification ».",
       "nature": "Délai promis non tenable."
+    },
+    {
+      "date": "2026-10-07",
+      "page": "/outils/verificateur-mica",
+      "avant": "« Vérification mensuelle : chaque fiche est revue le 25 de chaque mois […] Prochaine revue prévue : 2 novembre 2026. »",
+      "après": "« Veille automatique : une veille compare nos fiches au registre de l'ESMA (contrôle prévu chaque nuit) et nous signale tout écart ; la fiche est alors corrigée à la main et datée. »",
+      "nature": "Processus décrit à tort : aucune revue mensuelle à date fixe n'existait."
+    },
+    {
+      "date": "2026-10-07",
+      "page": "/api-publique",
+      "avant": "« Plateformes / PSAN / fiscal : mise à jour mensuelle. »",
+      "après": "« Chaque endpoint indique sa date de mise à jour […] Plateformes et statuts MiCA : corrigés dès qu'un écart est constaté par notre veille automatique, frais datés plateforme par plateforme. »",
+      "nature": "Fréquence de mise à jour annoncée à tort."
+    },
+    {
+      "date": "2026-10-07",
+      "page": "/embed",
+      "avant": "« données ouvertes mises à jour mensuellement » ; « se met à jour mensuellement avec nos data ».",
+      "après": "« données ouvertes et datées » ; « suit nos données à chaque mise à jour ».",
+      "nature": "Fréquence de mise à jour annoncée à tort."
+    },
+    {
+      "date": "2026-10-07",
+      "page": "/actualites",
+      "avant": "« Publiée automatiquement à partir de [source] » (sans mention de l'IA).",
+      "après": "« Rédigée par une IA à partir de [source] et publiée automatiquement. »",
+      "nature": "Mention de l'IA ajoutée (règlement européen sur l'IA, art. 50) : les actualités et le brief sont rédigés par une IA."
     }
   ]
 }
