@@ -16,6 +16,7 @@ import SpotlightDelegate from "@/components/SpotlightDelegate";
 import VisibilityPauser from "@/components/ui/VisibilityPauser";
 import { BRAND } from "@/lib/brand";
 import { logEnvValidationOnce } from "@/lib/env";
+import { SCRIPT_AVANT_AFFICHAGE } from "@/lib/theme/anti-flash";
 import {
   graphSchema,
   organizationSchema,
@@ -258,7 +259,13 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   // PWA : couleur de la barre d'adresse / chrome navigateur en mode installé.
   // Cohérente avec manifest.theme_color et background_color.
-  themeColor: "#0B0D10",
+  // Lot A6 : tableau à 2 media (clair / sombre), MÊME valeur dans les deux tant que le thème clair n'est pas ouvert
+  // (aucun changement pour personne). Au lot B11 : valeur Papier pour light ; le script avant affichage corrige
+  // les 2 balises quand un choix est mémorisé.
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#0B0D10" },
+    { media: "(prefers-color-scheme: dark)", color: "#0B0D10" },
+  ],
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
@@ -285,6 +292,12 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <head>
+        {/* Lot A6 — thème : script EN LIGNE et SYNCHRONE, avant toute peinture (jamais next/script
+            afterInteractive/lazyOnload). Seul ce script pose data-theme sur <html> (jamais le JSX) ;
+            suppressHydrationWarning ci-dessus couvre l'attribut ajouté. Phase « Encre seule » : il ne pose
+            data-theme="light" que sous l'interrupteur d'essai (?apparence=essai-clair), sans effet visible tant
+            que Papier n'existe pas. Détail et tests : lib/theme/anti-flash.ts. CSP : script-src 'unsafe-inline'. */}
+        <script dangerouslySetInnerHTML={{ __html: SCRIPT_AVANT_AFFICHAGE }} />
         {/* Lighthouse perf audit 26/04/2026 (Agent Mobile 2) win #2 :
             preconnect aux CDN tiers utilises above-fold => -100ms LCP.
             CoinGecko a 2 CDNs distincts : assets.coingecko.com (logos legacy)
@@ -365,9 +378,9 @@ export default function RootLayout({
               left: 0,
               right: 0,
               padding: "12px 16px",
-              background: "#0B0D10",
-              borderTop: "2px solid #FCD34D",
-              color: "#fff",
+              background: "rgb(var(--c-background))",
+              borderTop: "2px solid rgb(var(--c-primary-soft))",
+              color: "rgb(var(--c-fg-max))",
               fontSize: "14px",
               textAlign: "center",
               zIndex: 9999,
@@ -376,7 +389,7 @@ export default function RootLayout({
           >
             Ce site utilise des outils de mesure d'audience (Vercel Web Analytics, sans cookies tiers).
             JavaScript étant désactivé, vous pouvez consulter notre{" "}
-            <a href="/confidentialite" style={{ color: "#FCD34D", textDecoration: "underline" }}>
+            <a href="/confidentialite" style={{ color: "rgb(var(--c-link))", textDecoration: "underline" }}>
               politique de confidentialité
             </a>{" "}
             pour plus d'informations.

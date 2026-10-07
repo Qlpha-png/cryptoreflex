@@ -20,6 +20,10 @@ const c = (nom: string) => `rgb(var(--c-${nom}) / <alpha-value>)`;
 const plein = (nom: string) => `var(--c-${nom})`;
 
 const config: Config = {
+  // Lot A6 : la variante dark: suit l'attribut data-theme="dark" posé sur <html> (script avant affichage,
+  // lib/theme/anti-flash.ts), plus la préférence du système. 0 classe dark: dans le code aujourd'hui : CSS compilé
+  // inchangé. :where() garde la spécificité de la classe seule (comme la stratégie « selector »).
+  darkMode: ["variant", '&:where([data-theme="dark"], [data-theme="dark"] *)'],
   content: [
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
     "./components/**/*.{js,ts,jsx,tsx,mdx}",

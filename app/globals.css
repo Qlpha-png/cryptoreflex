@@ -1159,7 +1159,7 @@ p.lead, .ds-lead, .lead {
 }
 
 /* Flash GREEN/RED 600ms quand un prix change (signal "live data" Binance-style).
-   Appliqué via React class toggle (cf. PriceFlash dans HeroLiveWidgetMobile). */
+   Appliqué via React class toggle (cf. PriceFlash dans components/PriceTicker.tsx et components/TickerTape.tsx). */
 .flash-up {
   animation: flash-bg-up 600ms cubic-bezier(0.22, 1, 0.36, 1);
   border-radius: 6px;
@@ -2024,4 +2024,11 @@ html {
     /* Sur desktop, pas de mobile bar : juste un confort de 80px. */
     scroll-padding-bottom: 80px;
   }
+}
+
+/* Lot A6 — garde des transitions pendant une bascule de thème : la bascule (lib/theme/preference.ts) pose
+   data-theme-switch sur <html> pendant UNE image, sinon les centaines de transition-colors / transition-all
+   animeraient le changement de couleurs (vague de 150 ms). Sans l'attribut : aucun effet. */
+[data-theme-switch] * {
+  transition: none !important;
 }
