@@ -313,7 +313,7 @@ export default function NextStepsGuide(props: Props) {
                                  focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background
                                  ${
                                    isPrimary
-                                     ? "border-primary/60 bg-primary/10 hover:bg-primary/15 shadow-[0_8px_24px_-12px_rgba(245,165,36,0.4)]"
+                                     ? "border-primary/60 bg-primary/10 hover:bg-primary/15 shadow-[0_8px_24px_-12px_rgb(var(--c-primary)/0.4)]"
                                      : "border-border bg-elevated/40 hover:border-primary/40 hover:bg-elevated"
                                  }`;
 

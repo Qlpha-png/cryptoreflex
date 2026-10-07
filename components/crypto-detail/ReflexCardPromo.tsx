@@ -31,7 +31,7 @@ export default async function ReflexCardPromo({ coingeckoIds, className }: { coi
   const chance = UNIVERS_ON() ? universCardP(day, r, univ ? CAT_LABEL[univ.cat] : undefined) : todayChance(legacy!, day);
   const visual = rare ? (
     // eslint-disable-next-line @next/next/no-img-element
-    <img src={rare.src} width={rare.w} height={rare.h} alt={`Carte Reflex ${name}, version ${rare.label}`} loading="lazy" decoding="async" className="h-auto w-[132px] drop-shadow-[0_14px_24px_rgba(0,0,0,.55)] sm:w-[164px]" />
+    <img src={rare.src} width={rare.w} height={rare.h} alt={`Carte Reflex ${name}, version ${rare.label}`} loading="lazy" decoding="async" className="h-auto w-[132px] drop-shadow-[0_14px_24px_rgb(var(--c-scrim)/0.55)] sm:w-[164px]" />
   ) : legacy ? (
     <CardVisual card={{ ...legacy, r, ...(univ ? { num: univ.rank, noto: univ.rank, ovr: universOvr(univ.rank, universStats()[univ.cat].total) } : {}) }} mode="card" day={day} width={120} uid="fiche" still chance={chance} ft={univ ? `Cryptos · ${univ.rank.toLocaleString("fr-FR")}` : undefined} />
   ) : null;

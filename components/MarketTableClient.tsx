@@ -573,7 +573,7 @@ const Sparkline = memo(function SparklineImpl({
     .map((c, i) => `${i === 0 ? "M" : "L"}${c.x.toFixed(2)},${c.y.toFixed(2)}`)
     .join(" ");
   const areaPath = `${path} L${w},${h} L0,${h} Z`;
-  const stroke = positive ? "#22C55E" : "#EF4444";
+  const stroke = positive ? "rgb(var(--c-up))" : "rgb(var(--c-down))";
   const gradientId = `spk-mkt-${coinId ?? "default"}-${positive ? "up" : "down"}`;
   const lastPoint = coords[coords.length - 1];
 
@@ -587,15 +587,15 @@ const Sparkline = memo(function SparklineImpl({
     >
       <defs>
         <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor={stroke} stopOpacity="0.18" />
-          <stop offset="100%" stopColor={stroke} stopOpacity="0" />
+          <stop offset="0%" style={{ stopColor: stroke }} stopOpacity="0.18" />
+          <stop offset="100%" style={{ stopColor: stroke }} stopOpacity="0" />
         </linearGradient>
       </defs>
       <path d={areaPath} fill={`url(#${gradientId})`} />
       <path
         d={path}
         fill="none"
-        stroke={stroke}
+        style={{ stroke }}
         strokeWidth={1.75}
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -605,7 +605,7 @@ const Sparkline = memo(function SparklineImpl({
         cx={lastPoint.x}
         cy={lastPoint.y}
         r={2}
-        fill={stroke}
+        style={{ fill: stroke }}
         className="motion-safe:animate-pulse"
       />
     </svg>

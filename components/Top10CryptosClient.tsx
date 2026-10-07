@@ -543,7 +543,7 @@ function CryptoCard({ crypto }: { crypto: TopCrypto }) {
     >
       {/* Audit UX P0 : sticker "Commencez ici" sur Bitcoin (rang 1) — réduit paralysie 10 cards */}
       {isFirstStep && (
-        <span className="absolute -top-3 left-4 inline-flex items-center gap-1 rounded-full bg-primary text-background text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 shadow-[0_4px_14px_-2px_rgba(245,165,36,0.55)] badge-pulse-strong z-10">
+        <span className="absolute -top-3 left-4 inline-flex items-center gap-1 rounded-full bg-primary text-background text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 shadow-[0_4px_14px_-2px_rgb(var(--c-primary)/0.55)] badge-pulse-strong z-10">
           <Sparkles className="h-2.5 w-2.5" strokeWidth={2.5} aria-hidden="true" />
           Commencez ici
         </span>
@@ -635,7 +635,7 @@ function CryptoCard({ crypto }: { crypto: TopCrypto }) {
               aria-hidden="true"
               className={`h-3 w-1.5 rounded-full transition-colors ${
                 s <= crypto.beginnerFriendly
-                  ? "bg-accent-green shadow-[inset_0_0_4px_rgba(34,197,94,0.4)]"
+                  ? "bg-accent-green shadow-[inset_0_0_4px_rgb(var(--c-success)/0.4)]"
                   : "border border-border bg-transparent"
               }`}
             />

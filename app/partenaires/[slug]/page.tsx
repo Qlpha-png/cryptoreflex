@@ -289,7 +289,7 @@ function PartnerHero({
         aria-hidden="true"
         className="partner-hero-glow"
         style={{
-          background: `radial-gradient(circle at 30% 30%, ${partner.brandColor}40 0%, transparent 55%), radial-gradient(circle at 75% 70%, rgba(245, 158, 11, 0.18) 0%, transparent 60%)`,
+          background: `radial-gradient(circle at 30% 30%, ${partner.brandColor}40 0%, transparent 55%), radial-gradient(circle at 75% 70%, rgb(var(--c-warning) / 0.18) 0%, transparent 60%)`,
         }}
       />
 
@@ -1074,7 +1074,7 @@ function ProductCard({
           className="absolute inset-0 opacity-0 group-hover/card:opacity-100 transition-opacity duration-500"
           style={{
             background:
-              "radial-gradient(circle at center, rgba(245,158,11,0.18) 0%, transparent 65%)",
+              "radial-gradient(circle at center, rgb(var(--c-warning) / 0.18) 0%, transparent 65%)",
           }}
         />
         {product.imagePath ? (
@@ -1498,7 +1498,7 @@ function FinalCta({
           className="absolute inset-0 -z-10 opacity-50"
           style={{
             background:
-              "radial-gradient(ellipse at center, rgba(245, 158, 11, 0.20) 0%, transparent 60%)",
+              "radial-gradient(ellipse at center, rgb(var(--c-warning) / 0.2) 0%, transparent 60%)",
             filter: "blur(60px)",
           }}
         />

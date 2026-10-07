@@ -374,7 +374,7 @@ function AdminLink({
       href={href}
       target={external ? "_blank" : undefined}
       rel={external ? "noopener noreferrer" : undefined}
-      className={`group rounded-2xl border p-4 transition-all hover:-translate-y-0.5 hover:shadow-[0_8px_24px_-12px_rgba(245,165,36,0.3)] ${variantClass}`}
+      className={`group rounded-2xl border p-4 transition-all hover:-translate-y-0.5 hover:shadow-[0_8px_24px_-12px_rgb(var(--c-primary)/0.3)] ${variantClass}`}
     >
       <div className="flex items-start gap-3">
         <div className="shrink-0 grid place-items-center h-9 w-9 rounded-xl bg-elevated text-fg/85 group-hover:bg-primary/15 group-hover:text-primary transition-colors">

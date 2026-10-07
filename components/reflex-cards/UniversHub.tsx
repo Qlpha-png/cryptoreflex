@@ -123,7 +123,7 @@ export default function UniversHub({ accounts }: { accounts: boolean }) {
                     alt=""
                     width={x.rare!.w}
                     height={x.rare!.h}
-                    className={`absolute bottom-0 h-auto drop-shadow-[0_22px_34px_rgba(0,0,0,.6)] ${i === 1 ? "left-1/2 z-10 w-[170px] -translate-x-1/2 sm:w-[220px]" : i === 0 ? "left-0 w-[140px] origin-bottom -rotate-[9deg] sm:w-[180px]" : "right-0 w-[140px] origin-bottom rotate-[9deg] sm:w-[180px]"}`}
+                    className={`absolute bottom-0 h-auto drop-shadow-[0_22px_34px_rgb(var(--c-scrim)/0.6)] ${i === 1 ? "left-1/2 z-10 w-[170px] -translate-x-1/2 sm:w-[220px]" : i === 0 ? "left-0 w-[140px] origin-bottom -rotate-[9deg] sm:w-[180px]" : "right-0 w-[140px] origin-bottom rotate-[9deg] sm:w-[180px]"}`}
                   />
                 ))}
               </div>

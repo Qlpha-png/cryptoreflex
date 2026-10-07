@@ -85,7 +85,7 @@ export default function ReadingProgressBar({
     >
       <div
         ref={barRef}
-        className="h-full origin-left bg-gradient-to-r from-primary to-primary-glow shadow-[0_0_8px_rgba(245,165,36,0.55)] motion-reduce:transition-none"
+        className="h-full origin-left bg-gradient-to-r from-primary to-primary-glow shadow-[0_0_8px_rgb(var(--c-primary)/0.55)] motion-reduce:transition-none"
         style={{
           transform: "scaleX(0)",
           willChange: "transform",

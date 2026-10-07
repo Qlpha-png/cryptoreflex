@@ -718,8 +718,8 @@ function PortfolioSparkline({
 
   const fillD = `${pathD} L${width.toFixed(2)},${height} L0,${height} Z`;
 
-  const stroke = positive ? "#22C55E" : "#EF4444";
-  const fill = positive ? "rgba(34,197,94,0.16)" : "rgba(239,68,68,0.14)";
+  const stroke = positive ? "rgb(var(--c-up))" : "rgb(var(--c-down))";
+  const fill = positive ? "rgb(var(--c-up) / 0.16)" : "rgb(var(--c-down) / 0.14)";
 
   return (
     <svg
@@ -730,11 +730,11 @@ function PortfolioSparkline({
       height={height}
       className="w-full max-w-[200px] sm:w-[200px] sm:max-w-none mt-2 sm:mt-0"
     >
-      <path d={fillD} fill={fill} />
+      <path d={fillD} style={{ fill }} />
       <path
         d={pathD}
         fill="none"
-        stroke={stroke}
+        style={{ stroke }}
         strokeWidth={1.8}
         strokeLinecap="round"
         strokeLinejoin="round"

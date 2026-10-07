@@ -187,7 +187,7 @@ export default function NewsletterStickyBar() {
       // mangeaient ~25 % du viewport sur petit smartphone. La règle
       // `[@media(max-height:640px)]:hidden` est une syntaxe arbitraire Tailwind
       // qui s'applique sans avoir à configurer un breakpoint custom.
-      className="md:hidden [@media(max-height:640px)]:hidden fixed inset-x-0 bottom-0 z-[90] border-t border-border bg-background/95 backdrop-blur-md shadow-[0_-4px_20px_rgba(0,0,0,0.4)] animate-fade-in-up"
+      className="md:hidden [@media(max-height:640px)]:hidden fixed inset-x-0 bottom-0 z-[90] border-t border-border bg-background/95 backdrop-blur-md shadow-[0_-4px_20px_rgb(var(--c-scrim)/0.4)] animate-fade-in-up"
       style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
     >
       <div className="px-4 py-3">

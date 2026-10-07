@@ -183,10 +183,10 @@ export default async function FearGreedPage() {
 
         {/* Légende des zones */}
         <section className="mt-10 grid grid-cols-2 sm:grid-cols-4 gap-3">
-          <Zone color="#dc2626" range="0 – 24" label="Peur extrême" hint="Marché paniqué, opportunités d'accumulation pour les long terme." />
-          <Zone color="#f59e0b" range="25 – 49" label="Peur" hint="Sentiment baissier dominant, prudence." />
-          <Zone color="#eab308" range="50 – 74" label="Neutre / Cupidité" hint="Marché équilibré qui penche vers l'optimisme." />
-          <Zone color="#22c55e" range="75 – 100" label="Cupidité extrême" hint="Euphorie, FOMO. Souvent un sommet local approche." />
+          <Zone color="#dc2626" border="#dc262655" range="0 – 24" label="Peur extrême" hint="Marché paniqué, opportunités d'accumulation pour les long terme." />
+          <Zone color="rgb(var(--c-warning))" border="rgb(var(--c-warning) / 0.3333333)" range="25 – 49" label="Peur" hint="Sentiment baissier dominant, prudence." />
+          <Zone color="#eab308" border="#eab30855" range="50 – 74" label="Neutre / Cupidité" hint="Marché équilibré qui penche vers l'optimisme." />
+          <Zone color="rgb(var(--c-success))" border="rgb(var(--c-success) / 0.3333333)" range="75 – 100" label="Cupidité extrême" hint="Euphorie, FOMO. Souvent un sommet local approche." />
         </section>
 
         {/* Section éducative — H2 1 */}
@@ -384,11 +384,14 @@ export default async function FearGreedPage() {
 
 function Zone({
   color,
+  border,
   range,
   label,
   hint,
 }: {
   color: string;
+  /** Bordure explicite (jamais color + "55", qui casse avec une variable). */
+  border: string;
   range: string;
   label: string;
   hint: string;
@@ -396,7 +399,7 @@ function Zone({
   return (
     <div
       className="rounded-xl border bg-surface p-4"
-      style={{ borderColor: color + "55" }}
+      style={{ borderColor: border }}
     >
       <div
         className="text-[11px] font-mono uppercase tracking-wider"

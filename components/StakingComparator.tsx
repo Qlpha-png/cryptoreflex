@@ -668,10 +668,10 @@ export default function StakingComparator({ pairs }: Props) {
           height: 18px;
           width: 18px;
           border-radius: 9999px;
-          background: var(--color-primary, #f5a524);
-          border: 2px solid #0b0d10;
-          box-shadow: 0 0 0 1px rgba(245, 165, 36, 0.6),
-            0 4px 10px -2px rgba(0, 0, 0, 0.5);
+          background: var(--color-primary, rgb(var(--c-primary)));
+          border: 2px solid rgb(var(--c-background));
+          box-shadow: 0 0 0 1px rgb(var(--c-primary) / 0.6),
+            0 4px 10px -2px rgb(var(--c-scrim) / 0.5);
           cursor: pointer;
           pointer-events: auto;
           transition: transform 120ms ease, box-shadow 200ms ease;
@@ -680,10 +680,10 @@ export default function StakingComparator({ pairs }: Props) {
           height: 18px;
           width: 18px;
           border-radius: 9999px;
-          background: var(--color-primary, #f5a524);
-          border: 2px solid #0b0d10;
-          box-shadow: 0 0 0 1px rgba(245, 165, 36, 0.6),
-            0 4px 10px -2px rgba(0, 0, 0, 0.5);
+          background: var(--color-primary, rgb(var(--c-primary)));
+          border: 2px solid rgb(var(--c-background));
+          box-shadow: 0 0 0 1px rgb(var(--c-primary) / 0.6),
+            0 4px 10px -2px rgb(var(--c-scrim) / 0.5);
           cursor: pointer;
           pointer-events: auto;
         }
@@ -694,11 +694,11 @@ export default function StakingComparator({ pairs }: Props) {
           transform: scale(1.1);
         }
         .staking-range:focus-visible::-webkit-slider-thumb {
-          outline: 2px solid var(--color-primary-glow, #fbbf24);
+          outline: 2px solid var(--color-primary-glow, rgb(var(--c-primary-glow)));
           outline-offset: 2px;
         }
         .staking-range:focus-visible::-moz-range-thumb {
-          outline: 2px solid var(--color-primary-glow, #fbbf24);
+          outline: 2px solid var(--color-primary-glow, rgb(var(--c-primary-glow)));
           outline-offset: 2px;
         }
         .staking-range::-webkit-slider-runnable-track {

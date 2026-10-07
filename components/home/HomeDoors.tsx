@@ -67,7 +67,7 @@ function CardsFan() {
           alt={c.alt}
           width={102}
           height={141}
-          className={`absolute left-1/2 top-1 h-[141px] w-[102px] drop-shadow-[0_8px_18px_rgba(0,0,0,0.55)] ${c.rot}`}
+          className={`absolute left-1/2 top-1 h-[141px] w-[102px] drop-shadow-[0_8px_18px_rgb(var(--c-scrim)/0.55)] ${c.rot}`}
         />
       ))}
     </div>

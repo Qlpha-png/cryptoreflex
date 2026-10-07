@@ -125,7 +125,7 @@ export default async function AccountPage() {
             {/* Cerfa 2086 — outil phare, gratuit pour tous. */}
             <Link
               href="/outils/cerfa-2086-auto"
-              className="spotlight-card group rounded-xl border border-border bg-surface p-4 hover:border-primary/50 hover:shadow-[0_8px_24px_-12px_rgba(245,165,36,0.4)] transition-all"
+              className="spotlight-card group rounded-xl border border-border bg-surface p-4 hover:border-primary/50 hover:shadow-[0_8px_24px_-12px_rgb(var(--c-primary)/0.4)] transition-all"
             >
               <div className="flex items-start gap-3">
                 <div className="shrink-0 grid place-items-center h-9 w-9 rounded-xl bg-warning/15 text-primary-glow group-hover:bg-warning/25 transition-colors">
@@ -149,7 +149,7 @@ export default async function AccountPage() {
             {/* Fiches crypto */}
             <Link
               href="/cryptos"
-              className="spotlight-card group rounded-xl border border-border bg-surface p-4 hover:border-primary/50 hover:shadow-[0_8px_24px_-12px_rgba(245,165,36,0.4)] transition-all"
+              className="spotlight-card group rounded-xl border border-border bg-surface p-4 hover:border-primary/50 hover:shadow-[0_8px_24px_-12px_rgb(var(--c-primary)/0.4)] transition-all"
             >
               <div className="flex items-start gap-3">
                 <div className="shrink-0 grid place-items-center h-9 w-9 rounded-xl bg-primary/15 text-primary group-hover:bg-primary/25 transition-colors">

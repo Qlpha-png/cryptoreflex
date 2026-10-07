@@ -67,7 +67,8 @@ export default function FearGreedGauge({
   const tipY = cy - needleR * Math.cos(angleRad);
 
   // Couleur principale selon la valeur (sert au texte central et à l'aiguille)
-  const color = colorFor(v);
+  const teinte = colorFor(v);
+  const color = teinte.color;
 
   // Path arc demi-cercle (de gauche à droite par le haut)
   const arcStart = `${cx - r},${cy}`;
@@ -147,12 +148,12 @@ export default function FearGreedGauge({
           y1={cy}
           x2={tipX}
           y2={tipY}
-          stroke={color}
+          style={{ stroke: color }}
           strokeWidth="4"
           strokeLinecap="round"
         />
         {/* Pivot central */}
-        <circle cx={cx} cy={cy} r={8} fill={color} />
+        <circle cx={cx} cy={cy} r={8} style={{ fill: color }} />
         <circle cx={cx} cy={cy} r={3} fill="#0a0a0a" />
 
         {/* Score affiché */}
@@ -162,8 +163,7 @@ export default function FearGreedGauge({
           textAnchor="middle"
           fontSize={Math.round(size / 7)}
           fontWeight="800"
-          fill={color}
-          style={{ fontFamily: "ui-monospace, SFMono-Regular, monospace" }}
+          style={{ fill: color, fontFamily: "ui-monospace, SFMono-Regular, monospace" }}
         >
           {v}
           <tspan
@@ -179,7 +179,7 @@ export default function FearGreedGauge({
       {/* Classification visuelle (en plus du SVG) */}
       <div
         className="mt-2 inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-sm font-semibold"
-        style={{ color, borderColor: color + "55", backgroundColor: color + "12" }}
+        style={{ color, borderColor: teinte.border, backgroundColor: teinte.soft }}
       >
         {classification}
       </div>
@@ -188,10 +188,13 @@ export default function FearGreedGauge({
   );
 }
 
-/** Couleur principale en fonction de la value (cohérent avec gradient). */
-function colorFor(v: number): string {
-  if (v <= 24) return "#dc2626"; // red-600 — Extreme Fear
-  if (v <= 49) return "#f59e0b"; // amber-500 — Fear
-  if (v <= 74) return "#eab308"; // yellow-500 — Neutral
-  return "#22c55e"; // green-500 — Greed/Extreme Greed
+/**
+ * Couleurs en fonction de la value (cohérent avec gradient). Bordure (alpha 0x55) et fond (alpha 0x12) explicites :
+ * jamais `color + "55"`, qui casse en silence avec une variable.
+ */
+function colorFor(v: number): { color: string; border: string; soft: string } {
+  if (v <= 24) return { color: "#dc2626", border: "#dc262655", soft: "#dc262612" }; // red-600 — Extreme Fear
+  if (v <= 49) return { color: "rgb(var(--c-warning))", border: "rgb(var(--c-warning) / 0.3333333)", soft: "rgb(var(--c-warning) / 0.0705882)" }; // amber-500 — Fear
+  if (v <= 74) return { color: "#eab308", border: "#eab30855", soft: "#eab30812" }; // yellow-500 — Neutral
+  return { color: "rgb(var(--c-success))", border: "rgb(var(--c-success) / 0.3333333)", soft: "rgb(var(--c-success) / 0.0705882)" }; // green-500 — Greed/Extreme Greed
 }

@@ -833,7 +833,7 @@ const RANK_STYLES: Record<1 | 2 | 3, { medal: string; bg: string; border: string
   1: {
     medal: "🥇",
     bg: "bg-primary/10",
-    border: "border-primary/50 shadow-[0_0_30px_-8px_rgba(245,165,36,0.4)]",
+    border: "border-primary/50 shadow-[0_0_30px_-8px_rgb(var(--c-primary)/0.4)]",
     label: "Notre meilleur match",
   },
   2: {

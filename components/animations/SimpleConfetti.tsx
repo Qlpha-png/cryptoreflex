@@ -15,7 +15,7 @@ import { useEffect, useState } from "react";
  * - z-index élevé pour passer au-dessus de tout (popup-like)
  * - Render only client-side (SSR-safe via useState mount)
  */
-const COLORS = ["#F5A524", "#FBBF24", "#10B981", "#22C55E", "#FFFFFF"];
+const COLORS = ["rgb(var(--c-primary))", "rgb(var(--c-primary-glow))", "#10B981", "rgb(var(--c-success))", "rgb(var(--c-fg-max))"];
 
 export default function SimpleConfetti() {
   const [show, setShow] = useState(false);

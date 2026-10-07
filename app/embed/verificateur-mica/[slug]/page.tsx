@@ -49,35 +49,35 @@ export default function EmbedPage({ params }: Params) {
 
   const borderColor =
     color === "green"
-      ? "rgba(34,197,94,.4)"
+      ? "rgb(var(--c-success) / 0.4)"
       : color === "amber"
-      ? "rgba(245,165,36,.4)"
+      ? "rgb(var(--c-primary) / 0.4)"
       : color === "red"
-      ? "rgba(239,68,68,.4)"
-      : "#262B33";
+      ? "rgb(var(--c-danger) / 0.4)"
+      : "rgb(var(--c-border))";
 
   const badgeStyle = (() => {
     switch (color) {
       case "green":
-        return { color: "#22C55E", background: "rgba(34,197,94,.1)", border: "1px solid rgba(34,197,94,.4)" };
+        return { color: "rgb(var(--c-success))", background: "rgb(var(--c-success) / 0.1)", border: "1px solid rgb(var(--c-success) / 0.4)" };
       case "amber":
-        return { color: "#FCD34D", background: "rgba(245,165,36,.1)", border: "1px solid rgba(245,165,36,.4)" };
+        return { color: "rgb(var(--c-warning-fg))", background: "rgb(var(--c-primary) / 0.1)", border: "1px solid rgb(var(--c-primary) / 0.4)" };
       case "red":
-        return { color: "#EF4444", background: "rgba(239,68,68,.1)", border: "1px solid rgba(239,68,68,.4)" };
+        return { color: "rgb(var(--c-danger))", background: "rgb(var(--c-danger) / 0.1)", border: "1px solid rgb(var(--c-danger) / 0.4)" };
       default:
-        return { color: "#9BA3AF", background: "rgba(31,36,44,.6)", border: "1px solid #262B33" };
+        return { color: "rgb(var(--c-fg-4))", background: "rgb(var(--c-elevated) / 0.6)", border: "1px solid rgb(var(--c-border))" };
     }
   })();
 
   return (
     <article
       style={{
-        background: "#16191F",
+        background: "rgb(var(--c-surface))",
         border: `1px solid ${borderColor}`,
         borderRadius: 16,
         padding: 18,
-        color: "#F4F5F7",
-        boxShadow: "0 8px 24px -8px rgba(0,0,0,.4)",
+        color: "rgb(var(--c-fg))",
+        boxShadow: "0 8px 24px -8px rgb(var(--c-scrim) / 0.4)",
         maxWidth: 640,
         margin: "0 auto",
         fontFamily: '"Cryptoreflex NNBSP", var(--font-sans), Inter, ui-sans-serif, system-ui, sans-serif',
@@ -96,10 +96,10 @@ export default function EmbedPage({ params }: Params) {
         }}
       >
         <div style={{ minWidth: 0, flex: 1 }}>
-          <h2 style={{ margin: 0, fontSize: 18, fontWeight: 800, color: "#FFF" }}>
+          <h2 style={{ margin: 0, fontSize: 18, fontWeight: 800, color: "rgb(var(--c-fg-max))" }}>
             {platform.name}
           </h2>
-          <p style={{ margin: "2px 0 0", fontSize: 12, color: "#9BA3AF" }}>
+          <p style={{ margin: "2px 0 0", fontSize: 12, color: "rgb(var(--c-fg-4))" }}>
             {platform.headquarters}
           </p>
         </div>
@@ -151,13 +151,13 @@ export default function EmbedPage({ params }: Params) {
         style={{
           marginTop: 14,
           paddingTop: 12,
-          borderTop: "1px solid #262B33",
+          borderTop: "1px solid rgb(var(--c-border))",
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
           gap: 8,
           fontSize: 11,
-          color: "#9BA3AF",
+          color: "rgb(var(--c-fg-4))",
           flexWrap: "wrap",
         }}
       >
@@ -175,12 +175,12 @@ export default function EmbedPage({ params }: Params) {
             display: "inline-flex",
             alignItems: "center",
             gap: 4,
-            color: "#FCD34D",
+            color: "rgb(var(--c-link))",
             textDecoration: "none",
           }}
         >
           Proposé par{" "}
-          <strong style={{ color: "#F5A524" }}>Cryptoreflex</strong>
+          <strong style={{ color: "rgb(var(--c-primary))" }}>Cryptoreflex</strong>
           <ExternalLink size={12} />
         </a>
       </footer>
@@ -199,15 +199,15 @@ function FieldBox({
 }) {
   const valueColor =
     highlight === "red"
-      ? "#EF4444"
+      ? "rgb(var(--c-danger))"
       : highlight === "green"
-      ? "#22C55E"
-      : "#F4F5F7";
+      ? "rgb(var(--c-success))"
+      : "rgb(var(--c-fg))";
   return (
     <div
       style={{
-        background: "rgba(31,36,44,.4)",
-        border: "1px solid #262B33",
+        background: "rgb(var(--c-elevated) / 0.4)",
+        border: "1px solid rgb(var(--c-border))",
         borderRadius: 10,
         padding: "10px 12px",
       }}
@@ -216,7 +216,7 @@ function FieldBox({
         style={{
           fontSize: 10,
           fontWeight: 600,
-          color: "#9BA3AF",
+          color: "rgb(var(--c-fg-4))",
           textTransform: "uppercase",
           letterSpacing: "0.04em",
           margin: 0,

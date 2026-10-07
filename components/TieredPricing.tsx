@@ -101,7 +101,7 @@ export default function TieredPricing({
               aria-labelledby={`tier-${tier.id}-name`}
               className={`relative rounded-3xl p-6 sm:p-8 flex flex-col ${
                 tier.highlight
-                  ? "card-premium ring-2 ring-primary/40 shadow-[0_20px_60px_-20px_rgba(245,165,36,0.4)]"
+                  ? "card-premium ring-2 ring-primary/40 shadow-[0_20px_60px_-20px_rgb(var(--c-primary)/0.4)]"
                   : "glass"
               }`}
             >

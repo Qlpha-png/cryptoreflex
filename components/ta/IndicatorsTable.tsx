@@ -109,7 +109,7 @@ export default function IndicatorsTable({ indicators, currentPrice }: Props) {
           <div className="absolute inset-y-0 left-[70%] right-0 bg-emerald-500/20" />
           {/* Curseur */}
           <div
-            className="absolute top-0 h-full w-1 rounded-full bg-primary shadow-[0_0_8px_rgba(245,165,36,0.8)]"
+            className="absolute top-0 h-full w-1 rounded-full bg-primary shadow-[0_0_8px_rgb(var(--c-primary)/0.8)]"
             style={{ left: `calc(${rsi}% - 2px)` }}
           />
         </div>
@@ -150,7 +150,7 @@ export default function IndicatorsTable({ indicators, currentPrice }: Props) {
         </div>
         <div className="relative h-2 rounded-full bg-gradient-to-r from-rose-500/20 via-warning/20 to-emerald-500/20 overflow-hidden">
           <div
-            className="absolute top-0 h-full w-1 rounded-full bg-primary shadow-[0_0_8px_rgba(245,165,36,0.8)]"
+            className="absolute top-0 h-full w-1 rounded-full bg-primary shadow-[0_0_8px_rgb(var(--c-primary)/0.8)]"
             style={{ left: `calc(${bbPosition}% - 2px)` }}
           />
         </div>

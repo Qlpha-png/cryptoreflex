@@ -62,7 +62,7 @@ export default function PartnersPage() {
           className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[60vw] h-[60vw] max-w-[700px] max-h-[700px] rounded-full pointer-events-none -z-10 motion-safe:animate-pulse-slow"
           style={{
             background:
-              "radial-gradient(circle, rgba(245,158,11,0.18) 0%, transparent 70%)",
+              "radial-gradient(circle, rgb(var(--c-warning) / 0.18) 0%, transparent 70%)",
             filter: "blur(80px)",
           }}
         />
@@ -208,7 +208,7 @@ function PartnerShowcase({
         className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-700"
         style={{
           background:
-            "linear-gradient(115deg, transparent 30%, rgba(245,158,11,0.04) 50%, transparent 70%)",
+            "linear-gradient(115deg, transparent 30%, rgb(var(--c-warning) / 0.04) 50%, transparent 70%)",
         }}
       />
 
@@ -417,7 +417,7 @@ function ProductTile({
           className="absolute inset-0 opacity-0 group-hover/tile:opacity-100 transition-opacity duration-500"
           style={{
             background:
-              "radial-gradient(circle at center, rgba(245,158,11,0.15) 0%, transparent 65%)",
+              "radial-gradient(circle at center, rgb(var(--c-warning) / 0.15) 0%, transparent 65%)",
           }}
         />
         {product.imagePath ? (

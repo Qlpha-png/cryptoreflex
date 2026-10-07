@@ -88,7 +88,7 @@ export default function CryptoHero({
           <span
             className="inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-wider"
             style={{
-              borderColor: theme.accentBorder ?? `${theme.accent}55`,
+              borderColor: theme.accentBorder,
               backgroundColor: theme.accentSoft,
               color: theme.accent,
             }}
@@ -204,7 +204,7 @@ export default function CryptoHero({
         {/* BATCH 48d glassmorphism : backdrop-blur + bg semi-transparent +
             ring inset subtil = trading-terminal Linear/Vercel feel. Le
             spotlight-card ajoute le halo gold qui suit la souris. */}
-        <div className="spotlight-card rounded-2xl border border-border/60 bg-surface/60 backdrop-blur-md p-4 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.04)]">
+        <div className="spotlight-card rounded-2xl border border-border/60 bg-surface/60 backdrop-blur-md p-4 shadow-[inset_0_1px_0_0_rgb(var(--c-fg-max)/0.04)]">
           <div className="text-xs uppercase tracking-wider text-muted mb-2">7 derniers jours</div>
           <Sparkline points={detail?.sparkline7d ?? []} positive={positive7d} width={240} height={70} />
           {/* 06/10/2026 — source RÉELLE de la courbe et du prix (CoinDetail.sources), plus de « CoinGecko » en dur. */}

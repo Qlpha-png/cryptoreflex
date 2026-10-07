@@ -300,7 +300,7 @@ function AnalysisCard({ article }: { article: TAArticleSummary }) {
     >
       {/* Badge "Aujourd'hui" pulse-strong si analyse du jour */}
       {today && (
-        <span className="absolute -top-2 left-4 inline-flex items-center gap-1 rounded-full bg-primary text-background text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 shadow-[0_4px_14px_-2px_rgba(245,165,36,0.55)] badge-pulse-strong z-10 whitespace-nowrap">
+        <span className="absolute -top-2 left-4 inline-flex items-center gap-1 rounded-full bg-primary text-background text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 shadow-[0_4px_14px_-2px_rgb(var(--c-primary)/0.55)] badge-pulse-strong z-10 whitespace-nowrap">
           <Sparkles className="h-2.5 w-2.5" strokeWidth={2.5} aria-hidden="true" focusable="false" />
           Aujourd&apos;hui
         </span>

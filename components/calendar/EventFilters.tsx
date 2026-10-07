@@ -170,7 +170,7 @@ export default function EventFilters({
                       className={`h-4 w-4 rounded border ${checked ? "border-primary bg-primary" : "border-border"}`}
                     >
                       {checked && (
-                        <svg viewBox="0 0 20 20" fill="white" className="h-full w-full">
+                        <svg viewBox="0 0 20 20" style={{ fill: "rgb(var(--c-fg-max))" }} className="h-full w-full">
                           <path
                             fillRule="evenodd"
                             d="M16.704 5.29a1 1 0 010 1.42l-8 8a1 1 0 01-1.42 0l-4-4a1 1 0 111.42-1.42L8 12.585l7.29-7.295a1 1 0 011.414 0z"

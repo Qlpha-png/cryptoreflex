@@ -265,7 +265,7 @@ export default async function CartePage({ params }: Props) {
                 <div className="mt-6 max-w-[288px] text-center">
                   <p className="text-xs font-semibold uppercase tracking-wide" style={{ color: rare.form === "myth" ? "#ff2d6f" : "#f7d774" }}>Sa version la plus rare</p>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={rare.src} width={rare.w} height={rare.h} alt={`Carte Reflex ${name}, version ${rare.label}`} loading="lazy" decoding="async" className="mx-auto mt-2 h-auto w-[220px] drop-shadow-[0_18px_30px_rgba(0,0,0,.55)]" />
+                  <img src={rare.src} width={rare.w} height={rare.h} alt={`Carte Reflex ${name}, version ${rare.label}`} loading="lazy" decoding="async" className="mx-auto mt-2 h-auto w-[220px] drop-shadow-[0_18px_30px_rgb(var(--c-scrim)/0.55)]" />
                   <p className="mt-2 text-xs text-muted"><strong className="text-fg/85">{rare.label}</strong> : {rare.phrase}.</p>
                 </div>
               )}

@@ -25,8 +25,12 @@ export interface CategoryTheme {
   accentSoft: string;
   /** Gradient CSS prêt à coller (utilisé pour séparateur sous H1). */
   gradient: string;
-  /** Bordure du badge quand `accent` est une variable (rgb(var(--c-…))) : `${accent}55` ne marche qu'avec un hex. */
-  accentBorder?: string;
+  /**
+   * Bordure du badge (OBLIGATOIRE) : valeur rendue exacte. Jamais `${accent}55`, qui ne marche qu'avec un hex et
+   * casse en silence quand `accent` est une variable (rgb(var(--c-…))). Accent hex → hex + alpha 55 ;
+   * accent en variable → même alpha écrit `/ 0.3333333`.
+   */
+  accentBorder: string;
 }
 
 /**
@@ -38,7 +42,7 @@ const DEFAULT_THEME: CategoryTheme = {
   accent: "rgb(var(--c-primary))",
   accentSoft: "rgb(var(--c-primary) / 0.1)",
   gradient: "linear-gradient(90deg, rgb(var(--c-primary)) 0%, rgb(var(--c-primary-glow)) 100%)",
-  accentBorder: "rgb(var(--c-primary) / calc(85 / 255))",
+  accentBorder: "rgb(var(--c-primary) / 0.3333333)",
 };
 
 /**
@@ -57,6 +61,7 @@ const THEMES: ReadonlyArray<{ keywords: string[]; theme: CategoryTheme }> = [
       accent: "#818CF8",
       accentSoft: "rgba(129, 140, 248, 0.10)",
       gradient: "linear-gradient(90deg, #818CF8 0%, #A78BFA 100%)",
+      accentBorder: "#818CF855",
     },
   },
   // RWA — teal
@@ -67,6 +72,7 @@ const THEMES: ReadonlyArray<{ keywords: string[]; theme: CategoryTheme }> = [
       accent: "#2DD4BF",
       accentSoft: "rgba(45, 212, 191, 0.10)",
       gradient: "linear-gradient(90deg, #2DD4BF 0%, #5EEAD4 100%)",
+      accentBorder: "#2DD4BF55",
     },
   },
   // Oracles — cyan
@@ -77,6 +83,7 @@ const THEMES: ReadonlyArray<{ keywords: string[]; theme: CategoryTheme }> = [
       accent: "#22D3EE",
       accentSoft: "rgba(34, 211, 238, 0.10)",
       gradient: "linear-gradient(90deg, #22D3EE 0%, #67E8F9 100%)",
+      accentBorder: "#22D3EE55",
     },
   },
   // DePIN — orange
@@ -87,6 +94,7 @@ const THEMES: ReadonlyArray<{ keywords: string[]; theme: CategoryTheme }> = [
       accent: "#FB923C",
       accentSoft: "rgba(251, 146, 60, 0.10)",
       gradient: "linear-gradient(90deg, #FB923C 0%, #FDBA74 100%)",
+      accentBorder: "#FB923C55",
     },
   },
   // DeFi — vert émeraude
@@ -97,6 +105,7 @@ const THEMES: ReadonlyArray<{ keywords: string[]; theme: CategoryTheme }> = [
       accent: "#10B981",
       accentSoft: "rgba(16, 185, 129, 0.10)",
       gradient: "linear-gradient(90deg, #10B981 0%, #34D399 100%)",
+      accentBorder: "#10B98155",
     },
   },
   // Stablecoin — gris
@@ -107,6 +116,7 @@ const THEMES: ReadonlyArray<{ keywords: string[]; theme: CategoryTheme }> = [
       accent: "#94A3B8",
       accentSoft: "rgba(148, 163, 184, 0.10)",
       gradient: "linear-gradient(90deg, #94A3B8 0%, #CBD5E1 100%)",
+      accentBorder: "#94A3B855",
     },
   },
   // Memecoin — rose
@@ -117,6 +127,7 @@ const THEMES: ReadonlyArray<{ keywords: string[]; theme: CategoryTheme }> = [
       accent: "#F472B6",
       accentSoft: "rgba(244, 114, 182, 0.10)",
       gradient: "linear-gradient(90deg, #F472B6 0%, #F9A8D4 100%)",
+      accentBorder: "#F472B655",
     },
   },
   // Gaming — violet
@@ -127,6 +138,7 @@ const THEMES: ReadonlyArray<{ keywords: string[]; theme: CategoryTheme }> = [
       accent: "#A78BFA",
       accentSoft: "rgba(167, 139, 250, 0.10)",
       gradient: "linear-gradient(90deg, #A78BFA 0%, #C4B5FD 100%)",
+      accentBorder: "#A78BFA55",
     },
   },
   // Layer 2 — purple
@@ -137,6 +149,7 @@ const THEMES: ReadonlyArray<{ keywords: string[]; theme: CategoryTheme }> = [
       accent: "#C084FC",
       accentSoft: "rgba(192, 132, 252, 0.10)",
       gradient: "linear-gradient(90deg, #C084FC 0%, #D8B4FE 100%)",
+      accentBorder: "#C084FC55",
     },
   },
   // Layer 0 — indigo plus profond
@@ -147,6 +160,7 @@ const THEMES: ReadonlyArray<{ keywords: string[]; theme: CategoryTheme }> = [
       accent: "#6366F1",
       accentSoft: "rgba(99, 102, 241, 0.10)",
       gradient: "linear-gradient(90deg, #6366F1 0%, #818CF8 100%)",
+      accentBorder: "#6366F155",
     },
   },
   // Layer 1 / smart contracts / blockchain — bleu cyan
@@ -154,9 +168,10 @@ const THEMES: ReadonlyArray<{ keywords: string[]; theme: CategoryTheme }> = [
     keywords: ["layer 1", "layer-1", "l1", "smart contract", "blockchain", "réserve de valeur", "reserve de valeur", "modular"],
     theme: {
       label: "Layer 1",
-      accent: "#38BDF8",
-      accentSoft: "rgba(56, 189, 248, 0.10)",
-      gradient: "linear-gradient(90deg, #38BDF8 0%, #7DD3FC 100%)",
+      accent: "rgb(var(--c-ice))",
+      accentSoft: "var(--c-ice-soft)",
+      gradient: "linear-gradient(90deg, rgb(var(--c-ice)) 0%, rgb(var(--c-ice-fg)) 100%)",
+      accentBorder: "rgb(var(--c-ice) / 0.3333333)",
     },
   },
   // Infrastructure / indexation — teal-bleu
@@ -167,6 +182,7 @@ const THEMES: ReadonlyArray<{ keywords: string[]; theme: CategoryTheme }> = [
       accent: "#06B6D4",
       accentSoft: "rgba(6, 182, 212, 0.10)",
       gradient: "linear-gradient(90deg, #06B6D4 0%, #22D3EE 100%)",
+      accentBorder: "#06B6D455",
     },
   },
   // Paiements — vert un peu différent
@@ -177,6 +193,7 @@ const THEMES: ReadonlyArray<{ keywords: string[]; theme: CategoryTheme }> = [
       accent: "#34D399",
       accentSoft: "rgba(52, 211, 153, 0.10)",
       gradient: "linear-gradient(90deg, #34D399 0%, #6EE7B7 100%)",
+      accentBorder: "#34D39955",
     },
   },
   // Token d'exchange — gold (mais légèrement différencié)
@@ -187,7 +204,7 @@ const THEMES: ReadonlyArray<{ keywords: string[]; theme: CategoryTheme }> = [
       accent: "rgb(var(--c-primary-glow))",
       accentSoft: "rgb(var(--c-primary-glow) / 0.1)",
       gradient: "linear-gradient(90deg, rgb(var(--c-primary-glow)) 0%, rgb(var(--c-primary-soft)) 100%)",
-      accentBorder: "rgb(var(--c-primary-glow) / calc(85 / 255))",
+      accentBorder: "rgb(var(--c-primary-glow) / 0.3333333)",
     },
   },
 ];

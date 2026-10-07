@@ -398,7 +398,7 @@ function ToolCard({ tool }: { tool: Tool }) {
       data-tool-card
       data-tier={isPro ? "pro" : "free"}
       data-search-text={`${tool.title} ${tool.desc} ${tool.cat}`}
-      className={`spotlight-card group relative flex h-full flex-col rounded-2xl border border-border bg-surface p-5 transition-all hover:border-primary/50 hover:shadow-[0_8px_24px_-12px_rgba(245,165,36,0.4)] ${
+      className={`spotlight-card group relative flex h-full flex-col rounded-2xl border border-border bg-surface p-5 transition-all hover:border-primary/50 hover:shadow-[0_8px_24px_-12px_rgb(var(--c-primary)/0.4)] ${
         isSoon ? "opacity-70" : ""
       }`}
     >
