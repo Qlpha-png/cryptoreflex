@@ -126,7 +126,7 @@ const FAQ = [
   {
     question: "Quelle est la fréquence de mise à jour ?",
     answer:
-      "Plateformes / PSAN / fiscal : mise à jour mensuelle. Décentralisation : trimestrielle. Top cryptos : mensuelle. Tous les endpoints incluent _meta.lastUpdated et un cache CDN de 24h (revalidate 86 400s).",
+      "Chaque endpoint indique sa date de mise à jour dans _meta.lastUpdated. Plateformes et statuts MiCA : corrigés dès qu'un écart est constaté par notre veille automatique (contrôle prévu chaque nuit), frais datés plateforme par plateforme. Décentralisation et top cryptos : révisés périodiquement. Cache CDN de 24 h (revalidate 86 400 s).",
   },
   {
     question: "Y a-t-il un tier B2B avec plus de données ou un SLA ?",

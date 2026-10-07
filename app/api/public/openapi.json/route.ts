@@ -98,7 +98,7 @@ export function GET() {
         get: {
           summary: "Catalogue plateformes crypto",
           description:
-            `${STATS.platformsAudited} plateformes crypto auditées : frais maker/taker/SEPA, sécurité, statut MiCA, support FR. Mise à jour mensuelle.`,
+            `${STATS.platformsAudited} plateformes crypto auditées : frais maker/taker/SEPA, sécurité, statut MiCA, support FR. Date de vérification sur chaque fiche.`,
           tags: ["platforms"],
           responses: {
             "200": {

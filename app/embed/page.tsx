@@ -146,7 +146,7 @@ ${SCRIPT_TAG}`,
     notes: [
       "data-limit : 1 à 10 (défaut: 5).",
       "Affiche rang + nom + symbole + tagline FR pour chaque crypto.",
-      "Données issues de /api/public/top-cryptos (mise à jour mensuelle).",
+      "Données issues de /api/public/top-cryptos (date de mise à jour dans _meta.lastUpdated).",
     ],
   },
 ];
@@ -179,7 +179,7 @@ export default function EmbedPage() {
             3 widgets prêts à copier-coller dans votre blog FR : statut MiCA d'une
             plateforme, encart « MiCA en vigueur », top 10 cryptos
             vulgarisées. <strong>5 minutes d'install</strong>, &lt; 5 Ko
-            gzippé, données ouvertes mises à jour mensuellement.
+            gzippé, données ouvertes et datées.
           </p>
 
           <div className="mt-6 flex flex-wrap gap-3 text-sm">
@@ -235,8 +235,8 @@ export default function EmbedPage() {
               </div>
               <h3 className="mt-3 font-semibold text-fg-max">Publiez. C'est tout.</h3>
               <p className="mt-1 text-sm text-slate-400">
-                Le widget se rend automatiquement et se met à jour
-                mensuellement avec nos data.
+                Le widget se rend automatiquement et suit nos données
+                à chaque mise à jour.
               </p>
             </li>
           </ol>

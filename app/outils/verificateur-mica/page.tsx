@@ -150,7 +150,7 @@ export default function VerificateurMicaPage({ searchParams }: PageProps) {
             <p className="mt-4 text-lg text-fg-max/75">
               Vérifiez en 3 secondes l'agrément MiCA et l'accès à la France de
               n'importe quelle plateforme crypto. Données croisées depuis les
-              registres officiels AMF, ESMA, BaFin — mises à jour mensuellement.
+              registres officiels AMF et ESMA, contrôlés par une veille automatique et datés fiche par fiche.
             </p>
             <div className="mt-6 flex flex-wrap items-center gap-4 text-sm text-muted">
               <span className="flex items-center gap-1.5">
@@ -221,11 +221,9 @@ export default function VerificateurMicaPage({ searchParams }: PageProps) {
             />
             <MethodCard
               icon={CheckCircle2}
-              title="Vérification mensuelle"
-              text={`Chaque fiche est revue le 25 de chaque mois. Dernière mise à jour : ${formatMicaDate(
+              title="Veille automatique"
+              text={`Une veille automatique compare nos fiches au registre de l'ESMA (contrôle prévu chaque nuit) et nous signale tout écart ; la fiche est alors corrigée à la main et datée. Dernière mise à jour : ${formatMicaDate(
                 meta.lastUpdated
-              )}. Prochaine revue prévue : ${formatMicaDate(
-                meta.nextReviewDate
               )}.`}
             />
             <MethodCard
