@@ -1,3 +1,4 @@
+import { avecTypoSync } from "@/components/ui/Typo";
 import type { ReactNode } from "react";
 import { Lightbulb } from "lucide-react";
 
@@ -19,7 +20,7 @@ interface KeyTakeawaysProps {
  *   - Deuxième point
  *   </KeyTakeaways>
  */
-export default function KeyTakeaways({
+function KeyTakeaways({
   children,
   title = "À retenir",
 }: KeyTakeawaysProps) {
@@ -50,3 +51,5 @@ export default function KeyTakeaways({
     </aside>
   );
 }
+
+export default avecTypoSync(KeyTakeaways);

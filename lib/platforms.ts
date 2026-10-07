@@ -385,7 +385,7 @@ export function feeShortFr(p: Platform): string {
   if (p.category === "wallet") return "spread intégré";
   const mt = p.fees.verified?.makerTakerApplies ?? true;
   const rc = Number(mt ? p.fees.spotTaker : p.fees.instantBuy);
-  return Number.isFinite(rc) ? `${rc.toLocaleString("fr-FR", { maximumFractionDigits: 2 })} %` : "voir l'avis";
+  return Number.isFinite(rc) ? `${rc.toLocaleString("fr-FR", { maximumFractionDigits: 2 })}\u00a0%` : "voir l'avis";
 }
 
 /** Alias de feeShortFr : tout le site est en français (« 1,49 % » et non « 1.49% », audit du 05/10/2026). */

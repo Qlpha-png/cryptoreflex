@@ -1,5 +1,6 @@
 "use client";
 
+import { avecTypoSync } from "@/components/ui/Typo";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Home, TrendingUp, Coins, Wrench, GalleryVerticalEnd, Menu } from "lucide-react";
@@ -96,7 +97,7 @@ function isActive(pathname: string, href: string): boolean {
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
-export default function MobileBottomNav() {
+function MobileBottomNav() {
   const pathname = usePathname() ?? "/";
   const activeIdx = TABS.findIndex((t) => isActive(pathname, t.href));
 
@@ -194,3 +195,5 @@ export default function MobileBottomNav() {
     </nav>
   );
 }
+
+export default avecTypoSync(MobileBottomNav);

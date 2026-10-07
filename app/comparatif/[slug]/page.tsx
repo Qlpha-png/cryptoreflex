@@ -1,3 +1,4 @@
+import { avecTypoSync } from "@/components/ui/Typo";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
@@ -129,7 +130,7 @@ function winner(aValue: number, bValue: number, lowerIsBetter = false): WinnerHi
   return aValue > bValue ? "a" : "b";
 }
 
-function WinnerBadge({ hint, side }: { hint: WinnerHint; side: "a" | "b" }) {
+function WinnerBadgeBase({ hint, side }: { hint: WinnerHint; side: "a" | "b" }) {
   if (hint === "na") return null;
   if (hint === "tie") return <Equal className="h-4 w-4 text-muted inline" />;
   if (hint === side) return <Trophy className="h-4 w-4 text-primary inline" />;
@@ -282,7 +283,7 @@ function buildRows(a: Platform, b: Platform): { fees: CompareRow[]; security: Co
  * Page
  * ------------------------------------------------------------------ */
 
-export default function ComparisonPage({ params }: Props) {
+function ComparisonPage({ params }: Props) {
   const spec = getComparison(params.slug);
   if (!spec) notFound();
 
@@ -703,3 +704,7 @@ export default function ComparisonPage({ params }: Props) {
     </article>
   );
 }
+
+const WinnerBadge = avecTypoSync(WinnerBadgeBase);
+
+export default avecTypoSync(ComparisonPage);

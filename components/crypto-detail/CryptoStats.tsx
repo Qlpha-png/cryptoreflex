@@ -1,3 +1,4 @@
+import { avecTypoSync } from "@/components/ui/Typo";
 import {
   formatCompactNumber,
   formatUsd,
@@ -27,7 +28,7 @@ interface Props {
  * fonction). Les fonctions ne traversent pas la frontière Server → Client
  * Component (Next 14 RSC).
  */
-export default function CryptoStats({
+function CryptoStats({
   symbol,
   detail,
   category,
@@ -208,7 +209,7 @@ export default function CryptoStats({
  *  - kind="atl" : current > atl (typique). Badge "x47" ou "+450%" success ;
  *    multiplicateur si > 10x, % sinon (lisibilité retail).
  */
-function DistanceBadge({
+function DistanceBadgeBase({
   current,
   reference,
   kind,
@@ -283,7 +284,7 @@ function DistanceBadge({
  * PegBadge — stablecoins uniquement : écart au peg (cible 1,00 $) en %.
  * Vert si quasi-ancré (<0,5%), ambre si <2%, rouge au-delà (dé-peg).
  */
-function PegBadge({ current }: { current: number }) {
+function PegBadgeBase({ current }: { current: number }) {
   if (!Number.isFinite(current) || current <= 0) return null;
   const dev = (current - 1) * 100; // écart vs peg 1 USD, en %
   const abs = Math.abs(dev);
@@ -306,7 +307,7 @@ function PegBadge({ current }: { current: number }) {
   );
 }
 
-function StatCard({
+function StatCardBase({
   label,
   sub,
   badge,
@@ -334,3 +335,9 @@ function StatCard({
     </div>
   );
 }
+
+const DistanceBadge = avecTypoSync(DistanceBadgeBase);
+const PegBadge = avecTypoSync(PegBadgeBase);
+const StatCard = avecTypoSync(StatCardBase);
+
+export default avecTypoSync(CryptoStats);

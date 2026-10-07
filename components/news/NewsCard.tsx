@@ -1,3 +1,4 @@
+import { avecTypoSync } from "@/components/ui/Typo";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import type { NewsSummary } from "@/lib/news-types";
@@ -49,7 +50,7 @@ const CATEGORY_GRADIENT: Record<string, string> = {
   Plateformes:  "from-fuchsia-500/40 to-purple-600/40",
 };
 
-export default function NewsCard({ news }: Props) {
+function NewsCard({ news }: Props) {
   const badgeClasses = CATEGORY_BADGE[news.category] ?? "bg-background/85 text-muted ring-border";
   // CATEGORY_GRADIENT plus utilise depuis BATCH 56#12 (OG image dynamique au
   // lieu de gradient fallback). Garde la constante au cas ou on voudrait
@@ -172,3 +173,5 @@ export function categoryUrl(category: string): string {
   const slug = NEWS_CATEGORY_SLUGS[category as keyof typeof NEWS_CATEGORY_SLUGS];
   return slug ? `/actualites?categorie=${slug}` : "/actualites";
 }
+
+export default avecTypoSync(NewsCard);

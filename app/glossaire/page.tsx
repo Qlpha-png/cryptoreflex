@@ -1,3 +1,4 @@
+import { avecTypoSync } from "@/components/ui/Typo";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { BookOpen, ArrowRight } from "lucide-react";
@@ -32,7 +33,7 @@ export const metadata: Metadata = {
 
 const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
 
-export default function GlossaryIndexPage() {
+function GlossaryIndexPage() {
   const grouped = groupByLetter(GLOSSARY_TERMS);
   const presentLetters = ALPHABET.filter((l) => grouped[l]?.length);
   const hasNumeric = !!grouped["#"]?.length;
@@ -200,7 +201,7 @@ export default function GlossaryIndexPage() {
   );
 }
 
-function LetterSection({
+function LetterSectionBase({
   letter,
   anchorId,
   terms,
@@ -241,3 +242,7 @@ function LetterSection({
     </section>
   );
 }
+
+const LetterSection = avecTypoSync(LetterSectionBase);
+
+export default avecTypoSync(GlossaryIndexPage);

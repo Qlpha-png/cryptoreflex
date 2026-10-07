@@ -1,3 +1,4 @@
+import { avecTypoSync } from "@/components/ui/Typo";
 import Link from "next/link";
 import { ShieldAlert, CalendarClock, ArrowRight } from "lucide-react";
 
@@ -59,7 +60,7 @@ function formatDateWithOrdinal(date: Date): string {
   return `${dayStr} ${monthStr} ${yearStr}`;
 }
 
-export default function MicaCountdown({
+function MicaCountdown({
   variant = "card",
   now,
   className = "",
@@ -184,3 +185,5 @@ export default function MicaCountdown({
     </aside>
   );
 }
+
+export default avecTypoSync(MicaCountdown);

@@ -1,3 +1,4 @@
+import { avecTypoSync } from "@/components/ui/Typo";
 import Link from "next/link";
 import { ExternalLink, ShieldCheck, Star, Zap } from "lucide-react";
 import { getAllPlatforms, isAvailableFr, feeShort, type Platform } from "@/lib/platforms";
@@ -31,7 +32,7 @@ interface Props {
  * « Publicité » UNIQUEMENT sur les plateformes réellement rémunérées, cf.
  * lib/partnerships.ts). Pas de countdown faux, pas de social proof inventé.
  */
-export default function QuickBuyBox({
+function QuickBuyBox({
   cryptoName,
   cryptoSymbol,
   platformNames,
@@ -112,7 +113,7 @@ export default function QuickBuyBox({
   );
 }
 
-function QuickBuyRow({
+function QuickBuyRowBase({
   platform,
   cryptoName,
   isTop,
@@ -203,3 +204,7 @@ function QuickBuyRow({
     </div>
   );
 }
+
+const QuickBuyRow = avecTypoSync(QuickBuyRowBase);
+
+export default avecTypoSync(QuickBuyBox);

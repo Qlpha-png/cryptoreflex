@@ -1,3 +1,4 @@
+import { avecTypoSync } from "@/components/ui/Typo";
 import { FEAR_GREED_INFO } from "@/lib/data-sources/attribution";
 import type { SourceName } from "@/lib/data-sources/priorities";
 
@@ -8,7 +9,7 @@ import type { SourceName } from "@/lib/data-sources/priorities";
  */
 export const FEAR_GREED_SOURCE_URL = "https://alternative.me/crypto/fear-and-greed-index/";
 
-export default function FearGreedSource({
+function FearGreedSource({
   className,
   focusable = true,
   source = "alternative-me",
@@ -35,3 +36,5 @@ export default function FearGreedSource({
     </span>
   );
 }
+
+export default avecTypoSync(FearGreedSource);

@@ -81,7 +81,7 @@ function fmtEur(n: number): string {
 function fmtPct(n: number): string {
   if (!Number.isFinite(n)) return "—";
   const sign = n >= 0 ? "+" : "";
-  return `${sign}${fmtFr(n, 2)}%`;
+  return `${sign}${fmtFr(n, 2)}\u00a0%`;
 }
 
 export default function ProfitLossCalculator() {

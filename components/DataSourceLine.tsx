@@ -1,3 +1,4 @@
+import { avecTypoSync } from "@/components/ui/Typo";
 import { SOURCE_INFO, formatAsOf, sourcesUsed } from "@/lib/data-sources/attribution";
 import type { SourceName } from "@/lib/data-sources/priorities";
 
@@ -6,7 +7,7 @@ import type { SourceName } from "@/lib/data-sources/priorities";
  * `sources` de chaque ligne), avec leur lien, et l'heure du relevé quand il n'est plus à jour (`stale`).
  * Remplace les « Données : CoinGecko » écrits en dur. Sans hook : utilisable côté serveur comme côté client.
  */
-export default function DataSourceLine({
+function DataSourceLine({
   items,
   className,
   prefix = "Données :",
@@ -47,3 +48,5 @@ export default function DataSourceLine({
     </p>
   );
 }
+
+export default avecTypoSync(DataSourceLine);

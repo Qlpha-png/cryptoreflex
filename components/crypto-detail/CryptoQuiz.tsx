@@ -1,5 +1,6 @@
 "use client";
 
+import { avecTypoSync } from "@/components/ui/Typo";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import {
@@ -34,7 +35,7 @@ type GameState = "idle" | "playing" | "finished";
  * Flow : start → 8 questions avec feedback immédiat → score final +
  * suggestions selon score + lead magnet newsletter si > 6/8.
  */
-export default function CryptoQuiz({ cryptoId, cryptoName, cryptoSymbol, quiz }: Props) {
+function CryptoQuiz({ cryptoId, cryptoName, cryptoSymbol, quiz }: Props) {
   const [state, setState] = useState<GameState>("idle");
   const [currentIdx, setCurrentIdx] = useState(0);
   const [selectedIdx, setSelectedIdx] = useState<number | null>(null);
@@ -303,3 +304,5 @@ export default function CryptoQuiz({ cryptoId, cryptoName, cryptoSymbol, quiz }:
     </section>
   );
 }
+
+export default avecTypoSync(CryptoQuiz);

@@ -353,7 +353,8 @@ describe("attribution réelle (fiche, comparateur, convertisseur, graphique)", (
     const { default: Ath } = await import("@/components/crypto-detail/AthAlertBanner");
     const props = { cryptoName: "Bitcoin", symbol: "BTC", currentPrice: 99, ath: 100 };
     const both = renderToStaticMarkup(createElement(Ath, { ...props, priceSource: "binance", athSource: "coingecko" }));
-    expect(both).toContain("prix : Binance ; sommet : CoinGecko");
+    // Typographie française au rendu (lot B1-bis) : espaces insécables devant « : ; », comparées ici comme des espaces simples.
+    expect(both.replace(/[  ]/g, " ")).toContain("prix : Binance ; sommet : CoinGecko");
     const none = renderToStaticMarkup(createElement(Ath, props));
     expect(none).not.toMatch(/CoinGecko/);
     const { default: Pair } = await import("@/components/crypto-detail/PairConverter");

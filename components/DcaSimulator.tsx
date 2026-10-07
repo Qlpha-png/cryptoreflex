@@ -1,5 +1,6 @@
 "use client";
 
+import { avecTypoSync } from "@/components/ui/Typo";
 import { useEffect, useMemo, useState } from "react";
 import { TrendingUp, TrendingDown, Calendar, Coins, Loader2 } from "lucide-react";
 import type { HistoricalPoint } from "@/lib/historical-prices";
@@ -42,7 +43,7 @@ interface SimulationResult {
   lumpSumRoi: number;
 }
 
-export default function DcaSimulator() {
+function DcaSimulator() {
   const [monthly, setMonthly] = useState(200);
   const [coin, setCoin] = useState<CoinChoice>("bitcoin");
   const [months, setMonths] = useState(36);
@@ -398,7 +399,7 @@ export default function DcaSimulator() {
 /*  Sous-composants                                                           */
 /* -------------------------------------------------------------------------- */
 
-function Field({
+function FieldBase({
   label,
   value,
   onChange,
@@ -436,7 +437,7 @@ function Field({
   );
 }
 
-function Stat({
+function StatBase({
   label,
   value,
   tone,
@@ -460,7 +461,9 @@ function Stat({
       </div>
       <div className={`mt-1 inline-flex items-center gap-1 font-mono font-bold ${color}`}>
         {icon}
-        <span className="text-base sm:text-lg">{value}</span>
+        {/* Reprise B1-bis : une valeur courte (« +17,6 % », « 1 200 € ») ne se coupe jamais ; overflow-wrap:anywhere
+            (globals.css) passait outre l'espace insécable dans cette cellule étroite à 320 px. */}
+        <span className="text-base sm:text-lg whitespace-nowrap">{value}</span>
       </div>
     </div>
   );
@@ -470,7 +473,7 @@ function Stat({
  * Chart SVG natif — 2 lignes (DCA portefeuille vs Lump sum portefeuille) + zone investi.
  * Pas de dépendance ; ResizeObserver pour responsive.
  */
-function Chart({
+function ChartBase({
   series,
   symbol,
 }: {
@@ -571,7 +574,7 @@ function Chart({
   );
 }
 
-function Legend({ color, label, dashed }: { color: string; label: string; dashed?: boolean }) {
+function LegendBase({ color, label, dashed }: { color: string; label: string; dashed?: boolean }) {
   return (
     <span className="inline-flex items-center gap-1.5 text-muted">
       <svg width="16" height="2">
@@ -616,3 +619,10 @@ function compactEur(v: number): string {
   if (abs >= 1e3) return `${fmt(v / 1e3)} k €`;
   return `${fmt(v, 0)} €`;
 }
+
+const Field = avecTypoSync(FieldBase);
+const Stat = avecTypoSync(StatBase);
+const Chart = avecTypoSync(ChartBase);
+const Legend = avecTypoSync(LegendBase);
+
+export default avecTypoSync(DcaSimulator);

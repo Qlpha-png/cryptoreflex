@@ -10,6 +10,7 @@
  * Server Component — liens contextuels passés par la page hôte.
  */
 
+import { avecTypoSync } from "@/components/ui/Typo";
 import Link from "next/link";
 import { GraduationCap, ArrowRight } from "lucide-react";
 
@@ -25,7 +26,7 @@ interface AcademyCrossLinkProps {
   className?: string;
 }
 
-export default function AcademyCrossLink({
+function AcademyCrossLink({
   title = "Nouveau en crypto ? Formez-vous gratuitement",
   subtitle = "14 parcours pédagogiques avec quiz de validation — sans paiement, sans carte bancaire.",
   links,
@@ -65,3 +66,5 @@ export default function AcademyCrossLink({
     </section>
   );
 }
+
+export default avecTypoSync(AcademyCrossLink);

@@ -117,7 +117,7 @@ function formatPrice(value: number): string {
 function formatPct(value: number): string {
   if (!Number.isFinite(value)) return "—";
   const sign = value > 0 ? "+" : "";
-  return `${sign}${fmtFr(value, 2)}%`;
+  return `${sign}${fmtFr(value, 2)}\u00a0%`;
 }
 
 export default async function TAArticlePage({ params }: Props) {

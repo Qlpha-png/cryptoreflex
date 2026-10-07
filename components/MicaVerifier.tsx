@@ -1,5 +1,6 @@
 "use client";
 
+import { avecTypoSync } from "@/components/ui/Typo";
 import { useEffect, useId, useMemo, useRef, useState } from "react";
 import {
   AlertTriangle,
@@ -34,7 +35,7 @@ interface Props {
   initialPlatformId?: string;
 }
 
-export default function MicaVerifier({ initialPlatformId }: Props) {
+function MicaVerifier({ initialPlatformId }: Props) {
   const allPlatforms = useMemo(() => getAllMicaPlatforms(), []);
   const meta = useMemo(() => getMicaMeta(), []);
 
@@ -288,7 +289,7 @@ export default function MicaVerifier({ initialPlatformId }: Props) {
 // SOUS-COMPOSANTS
 // ============================================================================
 
-function ResultCard({
+function ResultCardBase({
   platform,
   onCopyEmbed,
   copied,
@@ -497,7 +498,7 @@ function ResultCard({
   );
 }
 
-function Field({
+function FieldBase({
   icon: Icon,
   label,
   value,
@@ -524,3 +525,8 @@ function Field({
     </div>
   );
 }
+
+const ResultCard = avecTypoSync(ResultCardBase);
+const Field = avecTypoSync(FieldBase);
+
+export default avecTypoSync(MicaVerifier);

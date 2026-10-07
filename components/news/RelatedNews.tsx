@@ -1,3 +1,4 @@
+import { avecTypoSync } from "@/components/ui/Typo";
 import Link from "next/link";
 import { ArrowRight, Newspaper } from "lucide-react";
 import type { NewsSummary } from "@/lib/news-types";
@@ -20,7 +21,7 @@ interface Props {
   excludeSlug?: string;
 }
 
-export default function RelatedNews({ items, excludeSlug }: Props) {
+function RelatedNews({ items, excludeSlug }: Props) {
   const filtered = excludeSlug
     ? items.filter((n) => n.slug !== excludeSlug)
     : items;
@@ -73,7 +74,7 @@ export default function RelatedNews({ items, excludeSlug }: Props) {
 
 /* -------------------------------------------------------------------------- */
 
-function RelatedCard({ news }: { news: NewsSummary }) {
+function RelatedCardBase({ news }: { news: NewsSummary }) {
   const relDate = formatRelativeFr(news.date);
   const catLabel = NEWS_CATEGORY_LABELS[news.category];
 
@@ -104,3 +105,7 @@ function RelatedCard({ news }: { news: NewsSummary }) {
     </article>
   );
 }
+
+const RelatedCard = avecTypoSync(RelatedCardBase);
+
+export default avecTypoSync(RelatedNews);

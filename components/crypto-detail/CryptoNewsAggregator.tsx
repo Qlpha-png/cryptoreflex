@@ -1,5 +1,6 @@
 "use client";
 
+import { avecTypoSync } from "@/components/ui/Typo";
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { ExternalLink, Newspaper, RotateCw, TrendingDown, TrendingUp, Minus } from "lucide-react";
@@ -29,7 +30,7 @@ interface ApiResponse {
   items: CryptoNewsItem[];
 }
 
-export default function CryptoNewsAggregator({
+function CryptoNewsAggregator({
   coingeckoId,
   cryptoName,
   cryptoSymbol,
@@ -262,7 +263,7 @@ export default function CryptoNewsAggregator({
 /*  Card                                                                      */
 /* -------------------------------------------------------------------------- */
 
-function NewsCard({ item }: { item: CryptoNewsItem }) {
+function NewsCardBase({ item }: { item: CryptoNewsItem }) {
   return (
     <a
       href={item.url}
@@ -300,7 +301,7 @@ function NewsCard({ item }: { item: CryptoNewsItem }) {
   );
 }
 
-function SentimentBadge({ sentiment }: { sentiment: CryptoNewsItem["sentiment"] }) {
+function SentimentBadgeBase({ sentiment }: { sentiment: CryptoNewsItem["sentiment"] }) {
   const config: Record<
     CryptoNewsItem["sentiment"],
     { label: string; cls: string; Icon: typeof TrendingUp }
@@ -336,7 +337,7 @@ function SentimentBadge({ sentiment }: { sentiment: CryptoNewsItem["sentiment"] 
 /*  Skeleton & helpers                                                        */
 /* -------------------------------------------------------------------------- */
 
-function NewsSkeleton() {
+function NewsSkeletonBase() {
   return (
     <section
       aria-label="Chargement des actualités"
@@ -383,7 +384,7 @@ function formatRelativeFr(input: string | number): string {
  * Pas de useState (re-render naturel via setInterval + force update via
  * key sur le compteur). Très léger, 0 dépendance externe.
  */
-function RelativeTime({ since }: { since: number }) {
+function RelativeTimeBase({ since }: { since: number }) {
   const [, setTick] = useState(0);
   useEffect(() => {
     const id = setInterval(() => setTick((t) => t + 1), 30_000);
@@ -391,3 +392,10 @@ function RelativeTime({ since }: { since: number }) {
   }, []);
   return <span className="font-mono">{formatRelativeFr(since)}</span>;
 }
+
+const NewsCard = avecTypoSync(NewsCardBase);
+const SentimentBadge = avecTypoSync(SentimentBadgeBase);
+const NewsSkeleton = avecTypoSync(NewsSkeletonBase);
+const RelativeTime = avecTypoSync(RelativeTimeBase);
+
+export default avecTypoSync(CryptoNewsAggregator);

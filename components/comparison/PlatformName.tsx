@@ -1,3 +1,4 @@
+import { avecTypoSync } from "@/components/ui/Typo";
 import Link from "next/link";
 import type { ReactNode } from "react";
 
@@ -7,7 +8,7 @@ import type { ReactNode } from "react";
  * Utilisé par /comparatif/frais et /comparatif/securite (audit 2026-10-02 :
  * 33 liens /comparatif/<id> en 404).
  */
-export default function PlatformName({
+function PlatformName({
   href,
   className,
   children,
@@ -23,3 +24,5 @@ export default function PlatformName({
     </Link>
   );
 }
+
+export default avecTypoSync(PlatformName);

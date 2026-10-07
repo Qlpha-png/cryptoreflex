@@ -1,5 +1,6 @@
 "use client";
 
+import { avecTypoSync } from "@/components/ui/Typo";
 import {
   useCallback,
   useEffect,
@@ -59,7 +60,7 @@ const HEIGHT = 120;
 const PADDING_X = 4;
 const PADDING_Y = 6;
 
-export default function PriceChart({
+function PriceChart({
   coingeckoId,
   currency = "eur",
   cryptoName,
@@ -315,7 +316,7 @@ interface Geometry {
   positive: boolean;
 }
 
-function ChartSvg({
+function ChartSvgBase({
   geometry,
   hoverIdx,
   ariaLabel,
@@ -426,7 +427,7 @@ function ChartSvg({
   );
 }
 
-function Skeleton() {
+function SkeletonBase() {
   return (
     <div
       role="status"
@@ -475,3 +476,7 @@ function formatDate(t: number, period: Period): string {
   });
 }
 
+const ChartSvg = avecTypoSync(ChartSvgBase);
+const Skeleton = avecTypoSync(SkeletonBase);
+
+export default avecTypoSync(PriceChart);

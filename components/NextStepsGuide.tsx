@@ -1,3 +1,4 @@
+import { avecTypoSync } from "@/components/ui/Typo";
 import Link from "next/link";
 import {
   ArrowRight,
@@ -269,7 +270,7 @@ function selectSteps(props: Props): Step[] {
 /*  Render                                                                    */
 /* -------------------------------------------------------------------------- */
 
-export default function NextStepsGuide(props: Props) {
+function NextStepsGuide(props: Props) {
   const steps = selectSteps(props);
   const title = props.title ?? "Continuez votre exploration";
   const intro =
@@ -398,3 +399,5 @@ export default function NextStepsGuide(props: Props) {
     </section>
   );
 }
+
+export default avecTypoSync(NextStepsGuide);

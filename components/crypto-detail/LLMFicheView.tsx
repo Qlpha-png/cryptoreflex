@@ -1,3 +1,4 @@
+import { avecTypoSync } from "@/components/ui/Typo";
 import Link from "next/link";
 // FIX C cohérence (2026-05-09) — remplace les emojis 📊/💰/🗓️ par les icônes
 // Lucide pour aligner les fiches LLM sur le design system du reste du site
@@ -77,7 +78,7 @@ const SCORE_LABELS: Record<string, string> = {
   overall: "Score global",
 };
 
-export function LLMFicheView({ fiche, knownIds }: { fiche: CryptoFicheRow; knownIds: ReadonlySet<string> }) {
+function LLMFicheViewBase({ fiche, knownIds }: { fiche: CryptoFicheRow; knownIds: ReadonlySet<string> }) {
   // texte généré par IA : accents manquants rétablis à l'affichage (lib/fr-accents.ts, audit du 05/10/2026)
   const llm = corrigerAccentsProfond((fiche.llm_content || {}) as LLMContent);
   const pageUrl = `${BRAND.url}/cryptos/${fiche.coingecko_id}`;
@@ -407,3 +408,5 @@ export function LLMFicheView({ fiche, knownIds }: { fiche: CryptoFicheRow; known
     </article>
   );
 }
+
+export const LLMFicheView = avecTypoSync(LLMFicheViewBase);

@@ -1,3 +1,4 @@
+import { avecTypoSync } from "@/components/ui/Typo";
 import Link from "next/link";
 import { ShieldCheck, ExternalLink, Smartphone, HardDrive, Globe } from "lucide-react";
 import type { WalletRecommendation } from "@/lib/crypto-wallets";
@@ -17,7 +18,7 @@ interface Props {
  *
  * Section pédagogique post-acheter : "tu as acheté, maintenant où le sécuriser ?"
  */
-export default function RecommendedWallets({
+function RecommendedWallets({
   cryptoName,
   cryptoSymbol,
   chain,
@@ -77,7 +78,7 @@ function levelColor(level: string): string {
   return "text-fg/70 border-border bg-surface/40";
 }
 
-function WalletRow({ wallet }: { wallet: WalletRecommendation }) {
+function WalletRowBase({ wallet }: { wallet: WalletRecommendation }) {
   return (
     <div className="rounded-2xl border border-border bg-surface p-5 hover:border-primary/40 transition-colors flex flex-col">
       <div className="flex flex-wrap items-start justify-between gap-3">
@@ -111,3 +112,7 @@ function WalletRow({ wallet }: { wallet: WalletRecommendation }) {
     </div>
   );
 }
+
+const WalletRow = avecTypoSync(WalletRowBase);
+
+export default avecTypoSync(RecommendedWallets);

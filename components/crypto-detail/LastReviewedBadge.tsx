@@ -1,3 +1,4 @@
+import { avecTypoSync } from "@/components/ui/Typo";
 import { CalendarCheck2 } from "lucide-react";
 
 /**
@@ -37,7 +38,7 @@ function formatFr(dateIso: string): string {
   });
 }
 
-export default function LastReviewedBadge({
+function LastReviewedBadge({
   dateIso,
   variant = "compact",
   label = "Vérifié éditorialement",
@@ -77,3 +78,5 @@ export default function LastReviewedBadge({
     </span>
   );
 }
+
+export default avecTypoSync(LastReviewedBadge);

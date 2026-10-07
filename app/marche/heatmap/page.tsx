@@ -1,3 +1,4 @@
+import { avecTypo } from "@/components/ui/Typo";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Flame, Info } from "lucide-react";
@@ -95,7 +96,7 @@ const webPageSchema: JsonLd = {
   dateModified: new Date().toISOString().slice(0, 10),
 };
 
-export default async function HeatmapPage() {
+async function HeatmapPage() {
   // Fetch top 100 — fetchTopMarket renvoie au max ce que CoinGecko fournit.
   // Si > 100 (paranoïa future), on slice ; si < 100, on rend ce qu'on a.
   const all = await fetchTopMarket(100);
@@ -237,3 +238,5 @@ export default async function HeatmapPage() {
     </article>
   );
 }
+
+export default avecTypo(HeatmapPage);

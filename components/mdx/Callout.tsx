@@ -1,3 +1,4 @@
+import { avecTypoSync } from "@/components/ui/Typo";
 import type { ReactNode } from "react";
 import { Info, AlertTriangle, Lightbulb, CheckCircle2 } from "lucide-react";
 
@@ -55,7 +56,7 @@ const STYLES: Record<
  *     Les frais d'instant buy peuvent atteindre 1,49 %.
  *   </Callout>
  */
-export default function Callout({ type = "info", title, children }: CalloutProps) {
+function Callout({ type = "info", title, children }: CalloutProps) {
   const style = STYLES[type] ?? STYLES.info;
   const { Icon } = style;
   const heading = title ?? style.defaultTitle;
@@ -83,3 +84,5 @@ export default function Callout({ type = "info", title, children }: CalloutProps
     </aside>
   );
 }
+
+export default avecTypoSync(Callout);

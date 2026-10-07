@@ -1,3 +1,4 @@
+import { avecTypo } from "@/components/ui/Typo";
 import Link from "next/link";
 import { ArrowRight, Sparkles } from "lucide-react";
 
@@ -15,7 +16,7 @@ import { rareCard } from "@/lib/reflex-cards/rare";
  * envie » → la carte est montrée en grand dans sa version la plus rare (Mythique, Icône ou Onyx 1/1, photographiée avec le moteur du
  * jeu), avec sa rareté et sa chance ACTUELLES (Univers : les mêmes que dans le jeu). Rien si le jeu est coupé ou sans carte.
  */
-export default async function ReflexCardPromo({ coingeckoIds, className }: { coingeckoIds: (string | null | undefined)[]; className?: string }) {
+async function ReflexCardPromo({ coingeckoIds, className }: { coingeckoIds: (string | null | undefined)[]; className?: string }) {
   if (!isReflexCardsEnabled()) return null;
   const ids = coingeckoIds.filter((x): x is string => !!x);
   const legacy = ids.map((id) => getCard(id)).find(Boolean);
@@ -79,3 +80,5 @@ export default async function ReflexCardPromo({ coingeckoIds, className }: { coi
     </section>
   );
 }
+
+export default avecTypo(ReflexCardPromo);

@@ -1,3 +1,4 @@
+import { avecTypoSync } from "@/components/ui/Typo";
 import Link from "next/link";
 import { Star, ShieldCheck, Sparkles } from "lucide-react";
 import { getPlatformById, feeShort, frenchHelpLabel, verifiedBonus } from "@/lib/platforms";
@@ -21,7 +22,7 @@ interface PlatformCardInlineProps {
  *   <PlatformCardInline id="bitpanda" />
  *   <PlatformCardInline id="binance" ctaLabel="Tester Binance" showProsCons />
  */
-export default function PlatformCardInline({
+function PlatformCardInline({
   id,
   ctaLabel,
   showProsCons = false,
@@ -121,7 +122,7 @@ export default function PlatformCardInline({
   );
 }
 
-function Stat({ label, value }: { label: string; value: string }) {
+function StatBase({ label, value }: { label: string; value: string }) {
   return (
     <div className="bg-surface px-4 py-2.5">
       <dt className="text-xs uppercase tracking-wide text-muted">{label}</dt>
@@ -129,3 +130,7 @@ function Stat({ label, value }: { label: string; value: string }) {
     </div>
   );
 }
+
+const Stat = avecTypoSync(StatBase);
+
+export default avecTypoSync(PlatformCardInline);

@@ -1,3 +1,4 @@
+import { avecTypoSync } from "@/components/ui/Typo";
 import { ChevronDown } from "lucide-react";
 
 interface FAQItem {
@@ -18,7 +19,7 @@ interface FAQProps {
  * Si tu veux garder le contrôle sur le schema (ex: une page injecte déjà
  * un graph FAQPage), passer `noSchema` (à ajouter si besoin).
  */
-export default function FAQ({ items, title = "Questions fréquentes" }: FAQProps) {
+function FAQ({ items, title = "Questions fréquentes" }: FAQProps) {
   if (!items || items.length === 0) return null;
 
   // JSON-LD FAQPage pour Google rich results
@@ -63,3 +64,5 @@ export default function FAQ({ items, title = "Questions fréquentes" }: FAQProps
     </section>
   );
 }
+
+export default avecTypoSync(FAQ);

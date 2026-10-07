@@ -35,6 +35,7 @@ import HowToSchema from "@/components/mdx/HowToSchema";
 import MdxLink from "@/components/mdx/MdxLink";
 import WaltioFranchise from "@/components/fiscal-tools/WaltioFranchise";
 import ScrollableTable from "@/components/ui/ScrollableTable";
+import { sansTypo } from "@/components/ui/Typo";
 
 /* -------------------------------------------------------------------------- */
 /*  Components mappés → markdown HTML                                         */
@@ -137,19 +138,21 @@ const mdxComponents = {
     <em className="italic text-fg-max/90" {...props} />
   ),
 
-  code: (props: ComponentProps<"code">) => (
+  // Reprise B1-bis : `code` et `pre` sont des fonctions (pas des balises) ; marqués sansTypo pour que typoNode ne
+  // traite jamais le code MDX placé dans un composant enveloppé (Callout, FAQ, KeyTakeaways, Tldr…).
+  code: sansTypo((props: ComponentProps<"code">) => (
     <code
       className="rounded bg-elevated px-1.5 py-0.5 font-mono text-[0.875em] text-primary-glow before:content-none after:content-none"
       {...props}
     />
-  ),
+  )),
 
-  pre: (props: ComponentProps<"pre">) => (
+  pre: sansTypo((props: ComponentProps<"pre">) => (
     <pre
       className="my-6 overflow-x-auto rounded-xl border border-border bg-surface p-4 text-sm leading-relaxed [&_code]:bg-transparent [&_code]:p-0 [&_code]:text-fg-max/90"
       {...props}
     />
-  ),
+  )),
 
   /* Tableaux GFM ---------------------------------------------------------- */
   // FIX RESPONSIVE 2026-05-02 #6 — `max-w-full` sur le wrapper le découple

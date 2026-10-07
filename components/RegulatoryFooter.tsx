@@ -1,3 +1,4 @@
+import { avecTypoSync } from "@/components/ui/Typo";
 import Link from "next/link";
 import { ShieldCheck } from "lucide-react";
 
@@ -32,7 +33,7 @@ interface Props {
   context?: string;
 }
 
-export default function RegulatoryFooter({
+function RegulatoryFooter({
   className = "",
   context,
 }: Props) {
@@ -90,3 +91,5 @@ export default function RegulatoryFooter({
     </aside>
   );
 }
+
+export default avecTypoSync(RegulatoryFooter);

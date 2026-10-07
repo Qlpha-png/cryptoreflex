@@ -1,5 +1,6 @@
 "use client";
 
+import { avecTypoSync } from "@/components/ui/Typo";
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
   ArrowRight,
@@ -59,7 +60,7 @@ interface SimResult {
   endPrice: number;
 }
 
-export default function MiniInvestSimulator() {
+function MiniInvestSimulator() {
   const [amount, setAmount] = useState<number>(1000);
   const [coinId, setCoinId] = useState<string>("bitcoin");
   const [days, setDays] = useState<number>(365);
@@ -288,7 +289,7 @@ export default function MiniInvestSimulator() {
 /*  Result block                                                              */
 /* -------------------------------------------------------------------------- */
 
-function ResultBlock({
+function ResultBlockBase({
   result,
   amount,
   coinSymbol,
@@ -340,12 +341,16 @@ function formatEur(v: number): string {
       maximumFractionDigits: 0,
     }).format(v);
   } catch {
-    return `${fmtFr(v, 0)} €`;
+    return `${fmtFr(v, 0)}\u00a0€`;
   }
 }
 
 function formatPct(v: number): string {
   const abs = Math.abs(v);
   const digits = abs >= 100 ? 0 : abs >= 10 ? 1 : 2;
-  return `${fmtFr(v, digits)} %`;
+  return `${fmtFr(v, digits)}\u00a0%`;
 }
+
+const ResultBlock = avecTypoSync(ResultBlockBase);
+
+export default avecTypoSync(MiniInvestSimulator);

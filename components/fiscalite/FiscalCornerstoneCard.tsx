@@ -1,3 +1,4 @@
+import { avecTypoSync } from "@/components/ui/Typo";
 import Link from "next/link";
 import { BookOpen, ArrowRight } from "lucide-react";
 
@@ -31,7 +32,7 @@ interface Props {
   fromPage?: string;
 }
 
-export default function FiscalCornerstoneCard({
+function FiscalCornerstoneCard({
   variant = "default",
   fromPage,
 }: Props) {
@@ -87,3 +88,5 @@ export default function FiscalCornerstoneCard({
     </aside>
   );
 }
+
+export default avecTypoSync(FiscalCornerstoneCard);

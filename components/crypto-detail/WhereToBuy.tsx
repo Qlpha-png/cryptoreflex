@@ -1,3 +1,4 @@
+import { avecTypoSync } from "@/components/ui/Typo";
 import Link from "next/link";
 import { ExternalLink, ShieldCheck, Star } from "lucide-react";
 import { getAllPlatforms, isAvailableFr, feeShort, type Platform, verifiedBonus } from "@/lib/platforms";
@@ -21,7 +22,7 @@ interface Props {
  * - les plateformes connues affichent un CTA d'affiliation + score,
  *   les inconnues sont rendues en "fallback léger" (pas de hardcoded URL).
  */
-export default function WhereToBuy({ cryptoName, platformNames }: Props) {
+function WhereToBuy({ cryptoName, platformNames }: Props) {
   const allPlatforms = getAllPlatforms();
   const norm = (s: string) => s.toLowerCase().replace(/\s+/g, "");
 
@@ -97,7 +98,7 @@ export default function WhereToBuy({ cryptoName, platformNames }: Props) {
   );
 }
 
-function PlatformRow({
+function PlatformRowBase({
   name,
   platform,
   cryptoName,
@@ -194,3 +195,7 @@ function PlatformRow({
 function isDecentralized(name: string): boolean {
   return /\bDEX\b|wallet|portefeuille|jupiter|raydium|uniswap|aerodrome|hyperliquid|curve|pancakeswap|atomic swap/i.test(name);
 }
+
+const PlatformRow = avecTypoSync(PlatformRowBase);
+
+export default avecTypoSync(WhereToBuy);

@@ -15,6 +15,7 @@
  *  - YMYL : disclaimer en hero + footer du composant
  */
 
+import { avecTypoSync } from "@/components/ui/Typo";
 import type { Metadata } from "next";
 import Link from "next/link";
 import dynamic from "next/dynamic";
@@ -92,7 +93,7 @@ export const metadata: Metadata = {
 /*  Page                                                                      */
 /* -------------------------------------------------------------------------- */
 
-export default function Cerfa2086AutoPage() {
+function Cerfa2086AutoPage() {
   /* --------------------- Schema.org JSON-LD --------------------- */
 
   const webAppSchema: JsonLd = {
@@ -328,7 +329,7 @@ interface CrossLinkProps {
   description: string;
 }
 
-function CrossLink({ href, title, description }: CrossLinkProps) {
+function CrossLinkBase({ href, title, description }: CrossLinkProps) {
   return (
     <Link
       href={href}
@@ -345,3 +346,7 @@ function CrossLink({ href, title, description }: CrossLinkProps) {
     </Link>
   );
 }
+
+const CrossLink = avecTypoSync(CrossLinkBase);
+
+export default avecTypoSync(Cerfa2086AutoPage);

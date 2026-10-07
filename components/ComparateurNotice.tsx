@@ -1,3 +1,4 @@
+import { avecTypoSync } from "@/components/ui/Typo";
 import type { ReactNode } from "react";
 import Link from "next/link";
 import { Info } from "lucide-react";
@@ -12,7 +13,7 @@ export const FONCTIONNEMENT_PATH = "/fonctionnement-du-comparateur";
  * une page serveur comme dans un composant client. Les faits affichés sont vérifiés dans le code (lib/comparateur.ts,
  * lib/platform-filter.ts, lib/scoring.ts ne lisent aucune donnée de partenariat : tests/lib/fonctionnement-comparateur.test.ts).
  */
-export default function ComparateurNotice({
+function ComparateurNotice({
   critere,
   perimetre,
   liens,
@@ -58,3 +59,5 @@ export default function ComparateurNotice({
     </aside>
   );
 }
+
+export default avecTypoSync(ComparateurNotice);

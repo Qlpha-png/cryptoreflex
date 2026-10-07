@@ -11,6 +11,7 @@
  * affichent la progression via <ProgressTracker /> (Client).
  */
 
+import { avecTypoSync } from "@/components/ui/Typo";
 import type { Metadata } from "next";
 import Link from "next/link";
 import {
@@ -82,7 +83,7 @@ const FAQ_ITEMS = [
   },
 ];
 
-export default function AcademiePage() {
+function AcademiePage() {
   // Schema.org Course par track + Course "parent" pour la formation globale.
   const totalLessons = TRACKS.reduce((acc, t) => acc + t.lessons.length, 0);
   const totalMinutes = TRACKS.reduce(
@@ -375,7 +376,7 @@ export default function AcademiePage() {
 /*  Sous-composants Server                                                    */
 /* -------------------------------------------------------------------------- */
 
-function ValueCard({
+function ValueCardBase({
   icon,
   title,
   text,
@@ -394,3 +395,7 @@ function ValueCard({
     </article>
   );
 }
+
+const ValueCard = avecTypoSync(ValueCardBase);
+
+export default avecTypoSync(AcademiePage);

@@ -1,3 +1,4 @@
+import { avecTypoSync } from "@/components/ui/Typo";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, Calculator, GalleryVerticalEnd, GraduationCap, Scale, type LucideIcon } from "lucide-react";
@@ -31,7 +32,7 @@ const FAN = [
   { id: "solana", alt: "Carte Mythique Solana « La Grande Accélération »", rot: "rotate-[9deg] translate-x-[10%] translate-y-2" },
 ];
 
-function TopPlatforms() {
+function TopPlatformsBase() {
   const top = getTopPlatforms(3);
   return (
     <ul className="mt-4 space-y-2" aria-label="Les 3 plateformes autorisées en France les mieux notées">
@@ -58,7 +59,7 @@ function TopPlatforms() {
   );
 }
 
-function CardsFan() {
+function CardsFanBase() {
   return (
     <div aria-hidden="true" className="relative mx-auto mt-4 h-[150px] w-full max-w-[260px]">
       {FAN.map((c) => (
@@ -75,7 +76,7 @@ function CardsFan() {
   );
 }
 
-export default function HomeDoors() {
+function HomeDoors() {
   const cards = isReflexCardsEnabled();
   const doors: Door[] = [
     {
@@ -175,3 +176,8 @@ export default function HomeDoors() {
     </section>
   );
 }
+
+const TopPlatforms = avecTypoSync(TopPlatformsBase);
+const CardsFan = avecTypoSync(CardsFanBase);
+
+export default avecTypoSync(HomeDoors);

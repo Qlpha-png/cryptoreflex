@@ -1,3 +1,4 @@
+import { avecTypoSync } from "@/components/ui/Typo";
 import { AlertTriangle, Info, Scale, BookOpen } from "lucide-react";
 
 /**
@@ -117,7 +118,7 @@ const toneClasses: Record<VariantConfig["tone"], string> = {
   neutral: "border-border bg-elevated/40 text-muted",
 };
 
-export default function AmfDisclaimer({
+function AmfDisclaimer({
   variant,
   compact = false,
   className = "",
@@ -160,3 +161,5 @@ export default function AmfDisclaimer({
     </aside>
   );
 }
+
+export default avecTypoSync(AmfDisclaimer);

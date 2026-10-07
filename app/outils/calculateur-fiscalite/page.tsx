@@ -1,3 +1,4 @@
+import { avecTypoSync } from "@/components/ui/Typo";
 import type { Metadata } from "next";
 import Link from "next/link";
 import dynamic from "next/dynamic";
@@ -250,7 +251,7 @@ const webAppSchema: JsonLd = generateWebApplicationSchema({
 /*  Page                                                                       */
 /* -------------------------------------------------------------------------- */
 
-export default function CalculateurFiscalitePage() {
+function CalculateurFiscalitePage() {
   // Outils complémentaires (Waltio, Koinly, CoinTracking) injectés en JSON-LD
   // ItemList relatif pour signaler à Google la grappe "fiscalité crypto".
   const fiscalTools = getAllFiscalTools();
@@ -1099,3 +1100,5 @@ export default function CalculateurFiscalitePage() {
     </>
   );
 }
+
+export default avecTypoSync(CalculateurFiscalitePage);

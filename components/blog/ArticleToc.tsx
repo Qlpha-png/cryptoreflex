@@ -1,5 +1,6 @@
 "use client";
 
+import { avecTypoSync } from "@/components/ui/Typo";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { List } from "lucide-react";
 import { track } from "@/lib/analytics";
@@ -46,7 +47,7 @@ interface Props {
  *  - keyboard nav native (liens d'ancre)
  *  - prefers-reduced-motion respecté (smooth scroll désactivable)
  */
-export default function ArticleToc({
+function ArticleToc({
   rootSelector,
   slug,
   minHeadings = 3,
@@ -235,3 +236,5 @@ export default function ArticleToc({
     </>
   );
 }
+
+export default avecTypoSync(ArticleToc);

@@ -1,5 +1,6 @@
 "use client";
 
+import { avecTypoSync } from "@/components/ui/Typo";
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { cryptoPagePath } from "@/lib/crypto-page-slug";
@@ -80,7 +81,7 @@ function sortValue(c: MarketCoin, key: SortKey): number | string {
   }
 }
 
-export default function CryptoScreener({ coins, internalSlugs = [] }: Props) {
+function CryptoScreener({ coins, internalSlugs = [] }: Props) {
   const [sortKey, setSortKey] = useState<SortKey>("rank");
   const [sortAsc, setSortAsc] = useState(true);
   const [query, setQuery] = useState("");
@@ -319,7 +320,7 @@ export default function CryptoScreener({ coins, internalSlugs = [] }: Props) {
   );
 }
 
-function PctCell({
+function PctCellBase({
   value,
   hideBelowLg = false,
 }: {
@@ -335,13 +336,17 @@ function PctCell({
   const up = value >= 0;
   return (
     <td
-      className={`px-3 py-2.5 text-right num-data ${cls} ${
+      className={`px-3 py-2.5 text-right whitespace-nowrap num-data ${cls} ${
         up ? "text-success-fg" : "text-danger-fg"
       }`}
     >
       <span aria-hidden="true">{up ? "▲" : "▼"}</span>
       <span className="sr-only">{up ? "Hausse de" : "Baisse de"}</span>{" "}
-      {fmtFr(Math.abs(value), 2)}%
+      {fmtFr(Math.abs(value), 2)}&nbsp;%
     </td>
   );
 }
+
+const PctCell = avecTypoSync(PctCellBase);
+
+export default avecTypoSync(CryptoScreener);

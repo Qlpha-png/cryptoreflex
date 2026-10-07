@@ -1,3 +1,5 @@
+import { avecTypoSync } from "@/components/ui/Typo";
+import { typoFr } from "@/lib/typo-fr";
 import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
@@ -124,11 +126,11 @@ function buildRows(): FeesRow[] {
 }
 
 function fmtPct(n: number): string {
-  return `${n.toLocaleString("fr-FR", { maximumFractionDigits: 2 })} %`;
+  return `${n.toLocaleString("fr-FR", { maximumFractionDigits: 2 })}\u00a0%`;
 }
 
 function fmtSepa(v: number | string): string {
-  if (typeof v === "number") return v === 0 ? "Gratuit" : `${v.toLocaleString("fr-FR", { maximumFractionDigits: 2 })} €`;
+  if (typeof v === "number") return v === 0 ? "Gratuit" : `${v.toLocaleString("fr-FR", { maximumFractionDigits: 2 })}\u00a0€`;
   return v;
 }
 
@@ -137,7 +139,7 @@ function eur(n: number): string {
 }
 
 /** Badge de confiance par verdict. */
-function VerdictBadge({ verdict }: { verdict?: Verified["verdict"] }) {
+function VerdictBadgeBase({ verdict }: { verdict?: Verified["verdict"] }) {
   if (verdict === "fiable")
     return (
       <span className="inline-flex items-center gap-1 rounded-md border border-accent-green/30 bg-accent-green/10 px-1.5 py-0.5 text-xs font-bold text-accent-green">
@@ -163,7 +165,7 @@ function VerdictBadge({ verdict }: { verdict?: Verified["verdict"] }) {
   );
 }
 
-export default function ComparatifFraisPage() {
+function ComparatifFraisPage() {
   const all = buildRows();
 
   // Hors classement "achat" : plateformes fermées au marché FR (Gemini) et CFD
@@ -566,7 +568,7 @@ export default function ComparatifFraisPage() {
   );
 }
 
-function Stat({
+function StatBase({
   label,
   value,
   sub,
@@ -590,8 +592,13 @@ function Stat({
         {icon}
         {label}
       </div>
-      <div className="mt-2 text-xl font-extrabold text-fg">{value}</div>
-      <div className="mt-0.5 text-xs text-fg/70">{sub}</div>
+      <div className="mt-2 text-xl font-extrabold text-fg">{typoFr(value)}</div>
+      <div className="mt-0.5 text-xs text-fg/70">{typoFr(sub)}</div>
     </div>
   );
 }
+
+const VerdictBadge = avecTypoSync(VerdictBadgeBase);
+const Stat = avecTypoSync(StatBase);
+
+export default avecTypoSync(ComparatifFraisPage);

@@ -469,7 +469,7 @@ export function formatPct(value: number): string {
   return `${sign}${value.toLocaleString("fr-FR", {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
-  })} %`;
+  })}\u00a0%`;
 }
 
 /* ============================================================

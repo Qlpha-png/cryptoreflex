@@ -75,7 +75,7 @@ export interface ComparisonCopy {
 /* -------------------------------------------------------------------------- */
 
 function fmtPct(n: number): string {
-  return `${n.toLocaleString("fr-FR", { maximumFractionDigits: 2 })} %`;
+  return `${n.toLocaleString("fr-FR", { maximumFractionDigits: 2 })}\u00a0%`;
 }
 
 function fmtScore(n: number): string {

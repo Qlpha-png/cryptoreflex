@@ -1,5 +1,6 @@
 "use client";
 
+import { avecTypoSync } from "@/components/ui/Typo";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   Activity,
@@ -39,7 +40,7 @@ interface ApiResponse {
   metrics: OnChainMetrics | null;
 }
 
-export default function OnChainMetricsLive({ coingeckoId, cryptoName }: Props) {
+function OnChainMetricsLive({ coingeckoId, cryptoName }: Props) {
   const [metrics, setMetrics] = useState<OnChainMetrics | null>(null);
   const [initialLoading, setInitialLoading] = useState<boolean>(true);
   const [refreshing, setRefreshing] = useState<boolean>(false);
@@ -169,7 +170,7 @@ interface CardSpec {
   source?: "DeFiLlama" | "CoinGecko" | "GitHub";
 }
 
-function MetricCards({ metrics }: { metrics: OnChainMetrics }) {
+function MetricCardsBase({ metrics }: { metrics: OnChainMetrics }) {
   const cards = useMemo(() => buildCards(metrics), [metrics]);
   return (
     <>
@@ -291,7 +292,7 @@ function buildCards(m: OnChainMetrics): CardSpec[] {
   return cards;
 }
 
-function TrendBadge({ value }: { value: number }) {
+function TrendBadgeBase({ value }: { value: number }) {
   const positive = value >= 0;
   const Icon = positive ? TrendingUp : TrendingDown;
   const cls = positive
@@ -311,7 +312,7 @@ function TrendBadge({ value }: { value: number }) {
 /*  Footer & helpers                                                          */
 /* -------------------------------------------------------------------------- */
 
-function SourceFooter({ metrics }: { metrics: OnChainMetrics }) {
+function SourceFooterBase({ metrics }: { metrics: OnChainMetrics }) {
   const sources: string[] = [];
   if (typeof metrics.tvlUSD === "number" || typeof metrics.tvlChange7d === "number") {
     sources.push("DeFiLlama");
@@ -337,7 +338,7 @@ function SourceFooter({ metrics }: { metrics: OnChainMetrics }) {
   );
 }
 
-function SkeletonGrid() {
+function SkeletonGridBase() {
   return (
     <section
       aria-label="Chargement des métriques on-chain"
@@ -410,3 +411,10 @@ function formatRelativeFr(iso: string): string {
   const diffD = Math.round(diffH / 24);
   return `il y a ${diffD} j`;
 }
+
+const MetricCards = avecTypoSync(MetricCardsBase);
+const TrendBadge = avecTypoSync(TrendBadgeBase);
+const SourceFooter = avecTypoSync(SourceFooterBase);
+const SkeletonGrid = avecTypoSync(SkeletonGridBase);
+
+export default avecTypoSync(OnChainMetricsLive);

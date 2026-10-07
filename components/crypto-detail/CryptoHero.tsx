@@ -1,3 +1,4 @@
+import { avecTypoSync } from "@/components/ui/Typo";
 import { TrendingUp, TrendingDown } from "lucide-react";
 import Sparkline from "./Sparkline";
 import { formatPct, formatUsd, type CoinDetail } from "@/lib/coingecko";
@@ -50,7 +51,7 @@ interface Props {
  * logo + nom + ticker + prix temps réel + variation 24h + sparkline 7j.
  * Server Component — données déjà fetch côté page parente via fetchCoinDetail().
  */
-export default function CryptoHero({
+function CryptoHero({
   name,
   symbol,
   category,
@@ -241,3 +242,5 @@ export default function CryptoHero({
     </header>
   );
 }
+
+export default avecTypoSync(CryptoHero);

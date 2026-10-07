@@ -1,5 +1,6 @@
 "use client";
 
+import { avecTypoSync } from "@/components/ui/Typo";
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
   Calculator,
@@ -92,7 +93,7 @@ const SP500_BENCHMARKS: Array<{ years: number; roiPct: number }> = [
   { years: 1, roiPct: 12 },
 ];
 
-export default function ROISimulator({
+function ROISimulator({
   coingeckoId,
   cryptoName,
   cryptoSymbol,
@@ -546,7 +547,7 @@ export default function ROISimulator({
 /*  StrategyButton                                                            */
 /* -------------------------------------------------------------------------- */
 
-function StrategyButton({
+function StrategyButtonBase({
   active,
   onClick,
   label,
@@ -581,7 +582,7 @@ function StrategyButton({
 /*  ResultBlock                                                               */
 /* -------------------------------------------------------------------------- */
 
-function ResultBlock({
+function ResultBlockBase({
   result,
   cryptoSymbol,
   strategy,
@@ -668,7 +669,7 @@ function ResultBlock({
 /*  PortfolioSparkline (SVG maison, zéro dep)                                 */
 /* -------------------------------------------------------------------------- */
 
-function PortfolioSparkline({
+function PortfolioSparklineBase({
   series,
   positive,
 }: {
@@ -755,14 +756,14 @@ function formatEur(v: number): string {
       maximumFractionDigits: v >= 1000 ? 0 : 2,
     }).format(v);
   } catch {
-    return `${v.toLocaleString("fr-FR", { maximumFractionDigits: 0 })} €`;
+    return `${v.toLocaleString("fr-FR", { maximumFractionDigits: 0 })}\u00a0€`;
   }
 }
 
 function formatPct(v: number): string {
   const abs = Math.abs(v);
   const digits = abs >= 100 ? 0 : abs >= 10 ? 1 : 2;
-  return `${v.toLocaleString("fr-FR", { minimumFractionDigits: digits, maximumFractionDigits: digits })} %`;
+  return `${v.toLocaleString("fr-FR", { minimumFractionDigits: digits, maximumFractionDigits: digits })}\u00a0%`;
 }
 
 function formatCrypto(v: number): string {
@@ -772,3 +773,8 @@ function formatCrypto(v: number): string {
   return v.toExponential(2);
 }
 
+const StrategyButton = avecTypoSync(StrategyButtonBase);
+const ResultBlock = avecTypoSync(ResultBlockBase);
+const PortfolioSparkline = avecTypoSync(PortfolioSparklineBase);
+
+export default avecTypoSync(ROISimulator);

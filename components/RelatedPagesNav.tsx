@@ -16,6 +16,7 @@
  * tracking se fait au niveau du <Link> via le router.
  */
 
+import { avecTypoSync } from "@/components/ui/Typo";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { getRelatedPages, getClusterFor } from "@/lib/internal-link-graph";
@@ -38,7 +39,7 @@ export interface RelatedPagesNavProps {
   className?: string;
 }
 
-export default function RelatedPagesNav({
+function RelatedPagesNav({
   currentPath,
   limit = 4,
   title,
@@ -154,3 +155,5 @@ export default function RelatedPagesNav({
     </nav>
   );
 }
+
+export default avecTypoSync(RelatedPagesNav);

@@ -1,3 +1,4 @@
+import { avecTypo } from "@/components/ui/Typo";
 import Link from "next/link";
 import { Clock, Flame } from "lucide-react";
 import { getAllArticleSummaries } from "@/lib/mdx";
@@ -25,7 +26,7 @@ function formatDate(iso: string): string {
   return new Date(iso).toLocaleDateString("fr-FR");
 }
 
-export default async function PopularArticles({
+async function PopularArticles({
   excludeSlug,
   limit = 5,
 }: Props) {
@@ -86,3 +87,5 @@ export default async function PopularArticles({
     </aside>
   );
 }
+
+export default avecTypo(PopularArticles);

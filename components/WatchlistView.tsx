@@ -1,5 +1,6 @@
 "use client";
 
+import { avecTypoSync } from "@/components/ui/Typo";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { cryptoPagePath } from "@/lib/crypto-page-slug";
@@ -57,7 +58,7 @@ const REFRESH_MS = 120_000; // 2 min — aligné avec PriceTicker
  *
  * Empty state premium + bouton "Vider" avec confirmation native (no lib).
  */
-export default function WatchlistView() {
+function WatchlistView() {
   const [ids, setIds] = useState<string[]>([]);
   const [prices, setPrices] = useState<LivePrice[]>([]);
   const [loading, setLoading] = useState(true);
@@ -300,7 +301,7 @@ export default function WatchlistView() {
 /* Sous-composants                                                            */
 /* -------------------------------------------------------------------------- */
 
-function PriceRow({
+function PriceRowBase({
   price,
   onRemove,
 }: {
@@ -374,7 +375,7 @@ function PriceRow({
   );
 }
 
-function PriceCardMobile({
+function PriceCardMobileBase({
   price,
   onRemove,
 }: {
@@ -435,7 +436,7 @@ function PriceCardMobile({
   );
 }
 
-function WatchlistSkeleton() {
+function WatchlistSkeletonBase() {
   return (
     <div className="space-y-3" aria-hidden="true">
       <div className="h-4 w-40 skeleton" />
@@ -455,7 +456,7 @@ function WatchlistSkeleton() {
   );
 }
 
-function RowSkeleton() {
+function RowSkeletonBase() {
   return (
     <tr className="border-t border-border">
       <td className="px-4 py-3">
@@ -480,7 +481,7 @@ function RowSkeleton() {
   );
 }
 
-function CardSkeleton() {
+function CardSkeletonBase() {
   return (
     <div className="rounded-xl border border-border bg-surface p-3 flex items-center gap-3">
       <div className="h-9 w-9 rounded-full skeleton" />
@@ -515,5 +516,13 @@ function formatPrice(value: number): string {
 
 function formatPct(value: number): string {
   const sign = value >= 0 ? "+" : "";
-  return `${sign}${fmtFr(value, 2)}%`;
+  return `${sign}${fmtFr(value, 2)}\u00a0%`;
 }
+
+const PriceRow = avecTypoSync(PriceRowBase);
+const PriceCardMobile = avecTypoSync(PriceCardMobileBase);
+const WatchlistSkeleton = avecTypoSync(WatchlistSkeletonBase);
+const RowSkeleton = avecTypoSync(RowSkeletonBase);
+const CardSkeleton = avecTypoSync(CardSkeletonBase);
+
+export default avecTypoSync(WatchlistView);

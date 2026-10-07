@@ -141,5 +141,5 @@ export function formatEur(value: number): string {
 export function formatPctSigned(value: number): string {
   if (!Number.isFinite(value)) return "—";
   const sign = value >= 0 ? "+" : "";
-  return `${sign}${fmtFr(value, 2)} %`;
+  return `${sign}${fmtFr(value, 2)}\u00a0%`;
 }

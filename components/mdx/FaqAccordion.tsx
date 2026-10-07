@@ -1,3 +1,4 @@
+import { avecTypoSync } from "@/components/ui/Typo";
 import { ChevronDown } from "lucide-react";
 import StructuredData from "@/components/StructuredData";
 import { faqSchema, type FaqItem } from "@/lib/schema";
@@ -17,7 +18,7 @@ interface FaqAccordionProps {
  *     { question: "Faut-il déclarer un compte à zéro ?", answer: "Oui, …" },
  *   ]} />
  */
-export default function FaqAccordion({ items, title }: FaqAccordionProps) {
+function FaqAccordion({ items, title }: FaqAccordionProps) {
   if (!items || items.length === 0) return null;
 
   return (
@@ -54,3 +55,5 @@ export default function FaqAccordion({ items, title }: FaqAccordionProps) {
     </section>
   );
 }
+
+export default avecTypoSync(FaqAccordion);

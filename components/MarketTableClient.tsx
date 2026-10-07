@@ -1,5 +1,6 @@
 "use client";
 
+import { avecTypoSync } from "@/components/ui/Typo";
 import { memo, useMemo, useState } from "react";
 import Link from "next/link";
 import { cryptoPagePath } from "@/lib/crypto-page-slug";
@@ -47,7 +48,7 @@ interface Props {
   internalSlugs: string[];
 }
 
-export default function MarketTableClient({ coins, limit, internalSlugs }: Props) {
+function MarketTableClient({ coins, limit, internalSlugs }: Props) {
   // Tri par défaut : par rang croissant (= ordre market cap décroissant).
   const [sortKey, setSortKey] = useState<SortKey>("rank");
   const [sortDir, setSortDir] = useState<SortDir>("asc");
@@ -251,7 +252,7 @@ export default function MarketTableClient({ coins, limit, internalSlugs }: Props
 }
 
 /* ───────────────────────── SORTABLE TH ───────────────────────── */
-function SortableTh({
+function SortableThBase({
   label,
   sortKey,
   activeKey,
@@ -313,7 +314,7 @@ function SortableTh({
 }
 
 /* ───────────────────────── MOBILE CARD ───────────────────────── */
-function CoinCardMobile({
+function CoinCardMobileBase({
   coin,
   priority,
   hasPage,
@@ -410,7 +411,7 @@ function CoinCardMobile({
 }
 
 /* ───────────────────────── DESKTOP ROW ───────────────────────── */
-function CoinRow({
+function CoinRowBase({
   coin,
   priority,
   hasPage,
@@ -504,7 +505,7 @@ function CoinRow({
  * Audit A11y V5 P0 (1.4.1 Use of Color) : signe +/− textuel explicite + flèche
  * plus grosse (h-4 vs h-3) pour daltoniens. Pas color-only.
  */
-function PctCell({ value }: { value: number | null }) {
+function PctCellBase({ value }: { value: number | null }) {
   if (value === null || value === undefined)
     return (
       <span className="text-muted text-xs" aria-label="Donnée indisponible">
@@ -516,7 +517,7 @@ function PctCell({ value }: { value: number | null }) {
   const sign = up ? "+" : "−";
   return (
     <span
-      className={`inline-flex items-center gap-0.5 font-mono text-xs font-semibold tabular-nums ${
+      className={`inline-flex items-center gap-0.5 whitespace-nowrap font-mono text-xs font-semibold tabular-nums ${
         up ? "text-accent-green" : "text-danger-fg"
       }`}
     >
@@ -640,3 +641,10 @@ function getSortValue(coin: MarketCoin, key: SortKey): number | null {
       return null;
   }
 }
+
+const SortableTh = avecTypoSync(SortableThBase);
+const CoinCardMobile = avecTypoSync(CoinCardMobileBase);
+const CoinRow = avecTypoSync(CoinRowBase);
+const PctCell = avecTypoSync(PctCellBase);
+
+export default avecTypoSync(MarketTableClient);

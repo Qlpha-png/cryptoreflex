@@ -1,3 +1,4 @@
+import { avecTypoSync } from "@/components/ui/Typo";
 import { ArrowRight, ShieldCheck, Star, Sparkles } from "lucide-react";
 import Link from "next/link";
 import PlatformCard from "./PlatformCard";
@@ -36,7 +37,7 @@ import { BRAND } from "@/lib/brand";
 /** Nombre de cartes plateformes rendues sur la home. */
 const HOME_PLATFORM_CARDS = 6;
 
-export default function PlatformsSection() {
+function PlatformsSection() {
   // Triées par scoring global desc. Exclut les plateformes fermées au marché
   // FR (ex : Gemini) : on ne les met ni dans le carousel (CTA "s'inscrire"),
   // ni dans le JSON-LD ItemList, ni dans le décompte.
@@ -208,3 +209,5 @@ export default function PlatformsSection() {
     </section>
   );
 }
+
+export default avecTypoSync(PlatformsSection);

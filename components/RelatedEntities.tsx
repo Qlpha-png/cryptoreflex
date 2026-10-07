@@ -23,6 +23,7 @@
  * casse la pertinence sémantique pour Google.
  */
 
+import { avecTypoSync } from "@/components/ui/Typo";
 import Link from "next/link";
 import { ArrowUpRight, Coins, Building2, Wrench, GitCompare, BookOpen } from "lucide-react";
 
@@ -88,7 +89,7 @@ function entityKindLabel(type: EntityIndexEntry["type"]): string {
 /*  Composant                                                                  */
 /* -------------------------------------------------------------------------- */
 
-export default function RelatedEntities({
+function RelatedEntities({
   text,
   entities,
   limit = 6,
@@ -169,3 +170,5 @@ export default function RelatedEntities({
     </section>
   );
 }
+
+export default avecTypoSync(RelatedEntities);

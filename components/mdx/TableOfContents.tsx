@@ -1,3 +1,4 @@
+import { avecTypoSync } from "@/components/ui/Typo";
 import type { ReactNode } from "react";
 import { List } from "lucide-react";
 
@@ -11,7 +12,7 @@ interface TableOfContentsProps {
  * comme un sommaire collé en haut d'un long-form. Le contenu est passé en
  * children (généralement une liste markdown / OL avec liens d'ancre).
  */
-export default function TableOfContents({
+function TableOfContents({
   children,
   title = "Sommaire",
 }: TableOfContentsProps) {
@@ -30,3 +31,5 @@ export default function TableOfContents({
     </nav>
   );
 }
+
+export default avecTypoSync(TableOfContents);

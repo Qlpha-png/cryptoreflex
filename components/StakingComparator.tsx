@@ -1,5 +1,6 @@
 "use client";
 
+import { avecTypoSync } from "@/components/ui/Typo";
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import {
@@ -114,7 +115,7 @@ function applySort(list: StakingPair[], sort: SortKey): StakingPair[] {
 /*  Composants internes                                                */
 /* ------------------------------------------------------------------ */
 
-function RiskDots({ level }: { level: StakingPair["risk"] }) {
+function RiskDotsBase({ level }: { level: StakingPair["risk"] }) {
   const tone =
     level <= 2
       ? "text-success"
@@ -142,7 +143,7 @@ function RiskDots({ level }: { level: StakingPair["risk"] }) {
   );
 }
 
-function ApyBar({ min, max }: { min: number; max: number }) {
+function ApyBarBase({ min, max }: { min: number; max: number }) {
   // Position de la barre [min..max] sur l'échelle 0..APY_MAX_BOUND.
   const lo = Math.max(0, Math.min(min, APY_MAX_BOUND));
   const hi = Math.max(lo, Math.min(max, APY_MAX_BOUND));
@@ -170,7 +171,7 @@ function ApyBar({ min, max }: { min: number; max: number }) {
   );
 }
 
-function PlatformBadge({ id }: { id: string }) {
+function PlatformBadgeBase({ id }: { id: string }) {
   return (
     <span className="inline-flex items-center rounded-full border border-border bg-elevated/60 px-2 py-0.5 text-xs font-medium text-fg/80">
       {platformLabel(id)}
@@ -178,7 +179,7 @@ function PlatformBadge({ id }: { id: string }) {
   );
 }
 
-function StakingCard({ pair }: { pair: StakingPair }) {
+function StakingCardBase({ pair }: { pair: StakingPair }) {
   /* seules les plateformes autorisées en France sont proposées (les ids hors catalogue, ex. protocoles, restent) */
   const ids = pair.availableOn.filter((id) => { const p = getPlatformById(id); return !p || isAvailableFr(p); });
   const bestPlatformId = ids[0];
@@ -297,7 +298,7 @@ function StakingCard({ pair }: { pair: StakingPair }) {
 /*  Composant principal                                                */
 /* ------------------------------------------------------------------ */
 
-export default function StakingComparator({ pairs }: Props) {
+function StakingComparator({ pairs }: Props) {
   // Liste de plateformes uniques dérivée de toutes les pairs.
   const allPlatforms = useMemo(() => {
     const set = new Set<string>();
@@ -724,7 +725,7 @@ export default function StakingComparator({ pairs }: Props) {
 /*  StatPill                                                           */
 /* ------------------------------------------------------------------ */
 
-function StatPill({
+function StatPillBase({
   label,
   value,
   tone,
@@ -745,3 +746,11 @@ function StatPill({
     </div>
   );
 }
+
+const RiskDots = avecTypoSync(RiskDotsBase);
+const ApyBar = avecTypoSync(ApyBarBase);
+const PlatformBadge = avecTypoSync(PlatformBadgeBase);
+const StakingCard = avecTypoSync(StakingCardBase);
+const StatPill = avecTypoSync(StatPillBase);
+
+export default avecTypoSync(StakingComparator);

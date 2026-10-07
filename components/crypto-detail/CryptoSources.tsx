@@ -1,3 +1,4 @@
+import { avecTypoSync } from "@/components/ui/Typo";
 import Link from "next/link";
 import {
   ExternalLink,
@@ -90,7 +91,7 @@ function isExternal(url: string): boolean {
   return /^https?:\/\//i.test(url);
 }
 
-export default function CryptoSources({ cryptoName, sources, className = "" }: Props) {
+function CryptoSources({ cryptoName, sources, className = "" }: Props) {
   if (!sources || sources.length === 0) return null;
 
   const sorted = sortSources(sources);
@@ -175,3 +176,5 @@ export default function CryptoSources({ cryptoName, sources, className = "" }: P
     </section>
   );
 }
+
+export default avecTypoSync(CryptoSources);

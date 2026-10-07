@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { ChevronLeft, ChevronRight, Clock, Sparkles, ArrowRight, TrendingUp, TrendingDown, Activity } from "lucide-react";
 
@@ -80,9 +80,21 @@ function formatDate(iso: string): string {
   });
 }
 
-function isToday(iso: string): boolean {
-  const today = new Date().toISOString().slice(0, 10);
-  return iso === today;
+/**
+ * Date du jour (UTC) lue APRÈS l'hydratation. La page est servie depuis le cache (ISR) : calculée au rendu, « aujourd'hui »
+ * pouvait différer entre le HTML (rendu la veille) et le navigateur → erreur React 418 et nouveau rendu complet.
+ * Avant le montage : null (aucune pastille « aujourd'hui »), identique côté serveur et côté client.
+ */
+function useAujourdhui(): string | null {
+  const [jour, setJour] = useState<string | null>(null);
+  useEffect(() => {
+    setJour(new Date().toISOString().slice(0, 10));
+  }, []);
+  return jour;
+}
+
+function isToday(iso: string, aujourdhui: string | null): boolean {
+  return aujourdhui !== null && iso === aujourdhui;
 }
 
 function formatPrice(value: number): string {
@@ -95,7 +107,7 @@ function formatPrice(value: number): string {
 function formatPct(value: number): string {
   if (!Number.isFinite(value)) return "—";
   const sign = value > 0 ? "+" : "";
-  return `${sign}${fmtFr(value, 2)}%`;
+  return `${sign}${fmtFr(value, 2)}\u00a0%`;
 }
 
 export default function AnalysesIndexClient({ articles }: Props) {
@@ -131,7 +143,8 @@ export default function AnalysesIndexClient({ articles }: Props) {
   const visible = filtered.slice((safePage - 1) * PAGE_SIZE, safePage * PAGE_SIZE);
 
   // Stats agrégées pour header (signal "vivant").
-  const todayCount = useMemo(() => articles.filter((a) => isToday(a.date)).length, [articles]);
+  const aujourdhui = useAujourdhui();
+  const todayCount = useMemo(() => articles.filter((a) => isToday(a.date, aujourdhui)).length, [articles, aujourdhui]);
   const bullishCount = useMemo(() => articles.filter((a) => a.trend === "bullish").length, [articles]);
   const bearishCount = useMemo(() => articles.filter((a) => a.trend === "bearish").length, [articles]);
 
@@ -236,7 +249,7 @@ export default function AnalysesIndexClient({ articles }: Props) {
         <ul className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {visible.map((a, idx) => (
             <li key={a.slug} style={{ ["--i" as string]: idx } as React.CSSProperties}>
-              <AnalysisCard article={a} />
+              <AnalysisCard article={a} aujourdhui={aujourdhui} />
             </li>
           ))}
         </ul>
@@ -280,14 +293,16 @@ export default function AnalysesIndexClient({ articles }: Props) {
 /*  Card                                                                      */
 /* -------------------------------------------------------------------------- */
 
-function AnalysisCard({ article }: { article: TAArticleSummary }) {
+function AnalysisCard({ article, aujourdhui }: { article: TAArticleSummary; aujourdhui: string | null }) {
   const change = article.change24h;
   const changeColor = change > 0 ? "text-emerald-400" : change < 0 ? "text-rose-400" : "text-muted";
   const changeSign = change > 0 ? "+" : change < 0 ? "" : "";
   const rsi = article.rsi;
   const rsiColor = rsi >= 70 ? "bg-rose-500" : rsi <= 30 ? "bg-emerald-500" : "bg-warning";
-  const rsiLabel = rsi >= 70 ? "Survente possible" : rsi <= 30 ? "Achat possible" : "Neutre";
-  const today = isToday(article.date);
+  // RSI ≥ 70 = zone de SURACHAT, ≤ 30 = zone de SURVENTE (l'ancien libellé inversait le sens et disait « Achat
+  // possible » : une incitation à acheter, pas une information — doctrine AMF).
+  const rsiLabel = rsi >= 70 ? "Zone de surachat" : rsi <= 30 ? "Zone de survente" : "Neutre";
+  const today = isToday(article.date, aujourdhui);
 
   return (
     <Link

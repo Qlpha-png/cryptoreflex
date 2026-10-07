@@ -1,5 +1,6 @@
 "use client";
 
+import { avecTypoSync } from "@/components/ui/Typo";
 import { useDeferredValue, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import {
@@ -111,7 +112,7 @@ function pageWindow(current: number, total: number): Array<number | "…"> {
   return out;
 }
 
-export default function CryptosBrowser({ items }: { items: UnifiedCrypto[] }) {
+function CryptosBrowser({ items }: { items: UnifiedCrypto[] }) {
   // Données riches des 100 statiques (sync, déjà bundlées) indexées par id.
   const staticById = useMemo(() => {
     const m = new Map<string, AnyCrypto>();
@@ -363,7 +364,7 @@ export default function CryptosBrowser({ items }: { items: UnifiedCrypto[] }) {
 /* -------------------------------------------------------------------------- */
 
 /** Carte riche pour les 100 fiches éditoriales premium (données statiques). */
-function CryptoCard({ crypto }: { crypto: AnyCrypto }) {
+function CryptoCardBase({ crypto }: { crypto: AnyCrypto }) {
   const isGem = crypto.kind === "hidden-gem";
   return (
     <Link
@@ -420,7 +421,7 @@ function CryptoCard({ crypto }: { crypto: AnyCrypto }) {
 }
 
 /** Carte légère pour les fiches générées (LLM pipeline) — data minimale. */
-function LightCryptoCard({ c }: { c: UnifiedCrypto }) {
+function LightCryptoCardBase({ c }: { c: UnifiedCrypto }) {
   return (
     <Link
       href={`/cryptos/${c.id}`}
@@ -456,3 +457,8 @@ function LightCryptoCard({ c }: { c: UnifiedCrypto }) {
     </Link>
   );
 }
+
+const CryptoCard = avecTypoSync(CryptoCardBase);
+const LightCryptoCard = avecTypoSync(LightCryptoCardBase);
+
+export default avecTypoSync(CryptosBrowser);

@@ -23,6 +23,7 @@
  *  - View Transitions API si dispo (Chrome 111+)
  */
 
+import { avecTypoSync } from "@/components/ui/Typo";
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
@@ -93,7 +94,7 @@ interface Props {
   onClose: () => void;
 }
 
-export default function BurgerMenu({ open, onClose }: Props) {
+function BurgerMenu({ open, onClose }: Props) {
   const [query, setQuery] = useState("");
   const [openSections, setOpenSections] = useState<Set<string>>(
     new Set() // toutes repliées : on lit d'abord la liste des rubriques
@@ -432,3 +433,5 @@ export default function BurgerMenu({ open, onClose }: Props) {
     </div>
   );
 }
+
+export default avecTypoSync(BurgerMenu);

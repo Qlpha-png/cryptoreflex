@@ -9,6 +9,7 @@
  * n'est supprimé du dépôt) : défilé des régulateurs, grande réassurance, onglets d'ancres, grandes cartes top 10,
  * carrousel du blog, grille académie, doublons outils et quiz, « Avant de partir », bouton collant mobile.
  */
+import { avecTypo } from "@/components/ui/Typo";
 import type { Metadata } from "next";
 import dynamic from "next/dynamic";
 
@@ -49,7 +50,7 @@ export const metadata: Metadata = {
   twitter: { title: TITLE, description: DESCRIPTION },
 };
 
-export default async function HomePage() {
+async function HomePage() {
   // Un seul appel « top 20 » sert au bandeau, à la courbe du Hero et aux 5 cours (quota CoinGecko).
   const [market, globalMetrics, fearGreed] = await Promise.all([fetchTopMarket(20), fetchGlobalMetrics(), fetchFearGreed()]);
   const tickerCoins: TickerCoin[] = market.slice(0, 8).map((m) => ({
@@ -104,3 +105,5 @@ export default async function HomePage() {
     </>
   );
 }
+
+export default avecTypo(HomePage);

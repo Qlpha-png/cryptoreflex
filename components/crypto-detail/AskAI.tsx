@@ -1,3 +1,4 @@
+import { avecTypoSync } from "@/components/ui/Typo";
 import { Info } from "lucide-react";
 
 interface Props {
@@ -19,7 +20,7 @@ interface Props {
  * Export par défaut et props { cryptoId, cryptoName, cryptoSymbol } conservés
  * pour ne rien casser côté montage (app/cryptos/[slug]/page.tsx).
  */
-export default function AskAI({ cryptoName }: Props) {
+function AskAI({ cryptoName }: Props) {
   return (
     <section
       id="ask-ai"
@@ -43,3 +44,5 @@ export default function AskAI({ cryptoName }: Props) {
     </section>
   );
 }
+
+export default avecTypoSync(AskAI);

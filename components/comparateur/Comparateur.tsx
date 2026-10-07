@@ -5,6 +5,7 @@
  * retrouve). Deux questions, une liste classée avec UN chiffre lisible (le coût en euros), un panier « Comparer ».
  * Calculs : lib/comparateur.ts (testés). L'état (montant, objectif) est gardé dans l'adresse pour le partage.
  */
+import { avecTypoSync } from "@/components/ui/Typo";
 import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { ArrowRight, Check, Coins, CreditCard, ExternalLink, Flag, Info, Phone, MessageCircle, Plus, Sprout, X } from "lucide-react";
@@ -26,7 +27,7 @@ const FIRST = 8;
 const fmtDate = (iso: string | null) =>
   iso ? new Date(`${iso}T12:00:00Z`).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" }) : "—";
 
-export default function Comparateur({ rows, duelSlugs }: { rows: Row[]; duelSlugs: string[] }) {
+function Comparateur({ rows, duelSlugs }: { rows: Row[]; duelSlugs: string[] }) {
   const [amount, setAmount] = useState<Amount>(100);
   const [goal, setGoal] = useState<Goal>("prix");
   const [picked, setPicked] = useState<string[]>([]);
@@ -352,3 +353,5 @@ function cell(c: ReturnType<typeof rowCost>): string {
   const l = costLabel(c);
   return `${l.prefix ? l.prefix + " " : ""}${l.main}${c.kind === "partiel" || c.kind === "max-partiel" ? " + marge" : ""}`;
 }
+
+export default avecTypoSync(Comparateur);

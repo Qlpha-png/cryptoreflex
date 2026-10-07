@@ -1,5 +1,6 @@
 "use client";
 
+import { avecTypoSync } from "@/components/ui/Typo";
 import { useState, useMemo, useCallback } from "react";
 import { ArrowRightLeft, Calculator } from "lucide-react";
 import { FX_FALLBACK } from "@/lib/fx-fallback";
@@ -47,7 +48,7 @@ type Fiat = "EUR" | "USD";
  * Pas de useEffect / pas de polling : composant statique en termes de cycle
  * de vie (tout dépend de l'input user). Optimisé pour 0 re-render parasite.
  */
-export default function PairConverter({
+function PairConverter({
   symbol,
   name,
   priceUsd,
@@ -339,3 +340,5 @@ function formatPlainCrypto(n: number): string {
     useGrouping: false,
   }).format(n);
 }
+
+export default avecTypoSync(PairConverter);

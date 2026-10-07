@@ -1,3 +1,4 @@
+import { avecTypoSync } from "@/components/ui/Typo";
 import { ShieldCheck } from "lucide-react";
 
 /**
@@ -33,7 +34,7 @@ interface Props {
   className?: string;
 }
 
-export default function MiCAComplianceBadge({
+function MiCAComplianceBadge({
   variant = "default",
   verifiedAt,
   jurisdiction,
@@ -84,3 +85,5 @@ export default function MiCAComplianceBadge({
     </div>
   );
 }
+
+export default avecTypoSync(MiCAComplianceBadge);

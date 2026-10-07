@@ -1,5 +1,6 @@
 "use client";
 
+import { avecTypoSync } from "@/components/ui/Typo";
 import { useEffect, useState, useCallback, useTransition } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
@@ -45,7 +46,7 @@ const TYPE_FILTERS: Array<{ key: SearchResult["type"] | "all"; label: string }> 
   { key: "glossary", label: "Glossaire" },
 ];
 
-export default function SearchClient() {
+function SearchClient() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const initialQuery = searchParams.get("q") ?? "";
@@ -275,3 +276,5 @@ export default function SearchClient() {
     </div>
   );
 }
+
+export default avecTypoSync(SearchClient);

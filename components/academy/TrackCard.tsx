@@ -7,6 +7,7 @@
  * pages internes — la landing reste 100% statique pour le SEO + perfs.
  */
 
+import { avecTypoSync } from "@/components/ui/Typo";
 import Link from "next/link";
 import {
   ArrowRight,
@@ -52,7 +53,7 @@ interface TrackCardProps {
   track: Track;
 }
 
-export default function TrackCard({ track }: TrackCardProps) {
+function TrackCard({ track }: TrackCardProps) {
   const Icon = ICONS[track.iconKey];
   const lessonCount = track.lessons.length;
 
@@ -110,3 +111,5 @@ export default function TrackCard({ track }: TrackCardProps) {
     </Link>
   );
 }
+
+export default avecTypoSync(TrackCard);

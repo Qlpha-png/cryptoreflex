@@ -1,3 +1,4 @@
+import { avecTypo, avecTypoSync } from "@/components/ui/Typo";
 import type { Metadata } from "next";
 import Link from "next/link";
 import {
@@ -105,7 +106,7 @@ const SUBPAGES = [
   },
 ] as const;
 
-export default async function MarcheDashboardPage() {
+async function MarcheDashboardPage() {
   // 3 endpoints distincts (markets / global / alternative.me) — pas de
   // doublon de quota. Chaque fetch a son propre fallback null/[] : le
   // dashboard dégrade par bloc au lieu de tomber entier.
@@ -364,7 +365,7 @@ export default async function MarcheDashboardPage() {
 }
 
 /* StatCard — chiffre global en verre, style terminal */
-function StatCard({
+function StatCardBase({
   label,
   value,
   delta,
@@ -406,3 +407,7 @@ function StatCard({
     </div>
   );
 }
+
+const StatCard = avecTypoSync(StatCardBase);
+
+export default avecTypo(MarcheDashboardPage);

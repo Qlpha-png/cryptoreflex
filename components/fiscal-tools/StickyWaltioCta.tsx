@@ -15,6 +15,7 @@
  *  - "waltio-sticky-dismiss" → si l'utilisateur ferme
  */
 
+import { avecTypoSync } from "@/components/ui/Typo";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ArrowRight, X, Sparkles } from "lucide-react";
 import { track, trackAffiliateClick } from "@/lib/analytics";
@@ -30,7 +31,7 @@ const WALTIO_AFFILIATE_URL = waltioAffiliateUrl({
   utm_campaign: "calculator-sticky",
 });
 
-export default function StickyWaltioCta() {
+function StickyWaltioCta() {
   const [visible, setVisible] = useState(false);
   const [dismissed, setDismissed] = useState(false);
   const shownRef = useRef(false);
@@ -147,3 +148,5 @@ export default function StickyWaltioCta() {
     </div>
   );
 }
+
+export default avecTypoSync(StickyWaltioCta);

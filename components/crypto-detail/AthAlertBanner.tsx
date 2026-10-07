@@ -1,3 +1,4 @@
+import { avecTypoSync } from "@/components/ui/Typo";
 import { Sparkles, TrendingUp } from "lucide-react";
 import { sourceInfo } from "@/lib/data-sources/attribution";
 import type { SourceName } from "@/lib/data-sources/priorities";
@@ -28,7 +29,7 @@ interface Props {
  * Render server-side, pas de JS. Mis à jour à chaque ISR (fiches
  * crypto = revalidate 3600s).
  */
-export default function AthAlertBanner({
+function AthAlertBanner({
   cryptoName,
   symbol,
   currentPrice,
@@ -102,3 +103,5 @@ export default function AthAlertBanner({
     </aside>
   );
 }
+
+export default avecTypoSync(AthAlertBanner);

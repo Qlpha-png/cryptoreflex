@@ -1,3 +1,4 @@
+import { avecTypoSync } from "@/components/ui/Typo";
 import Link from "next/link";
 import { ArrowRight, ExternalLink, ShieldCheck } from "lucide-react";
 import { findPaidPlatformByUrl } from "@/lib/platforms";
@@ -30,7 +31,7 @@ const CLAIMS_PAYMENT = /affili|commission|rémunér|parrainage|sponsor|publicit|
  * d'« affiliation » (c'est un parrainage personnel). Désormais : « sponsored » + mention « Publicité » du bon type
  * seulement si l'URL porte le vrai code d'une relation listée dans lib/partnerships.ts.
  */
-export default function CTABox({
+function CTABox({
   title,
   description,
   ctaText,
@@ -100,3 +101,5 @@ export default function CTABox({
     </aside>
   );
 }
+
+export default avecTypoSync(CTABox);

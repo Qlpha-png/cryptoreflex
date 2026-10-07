@@ -1,5 +1,6 @@
 "use client";
 
+import { avecTypoSync } from "@/components/ui/Typo";
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
   ArrowRight,
@@ -190,7 +191,7 @@ const VIEW_STORAGE_KEY = "cr:top10:view";
 /*  Component                                                                 */
 /* -------------------------------------------------------------------------- */
 
-export default function Top10CryptosClient({
+function Top10CryptosClient({
   cryptos,
 }: {
   cryptos: TopCrypto[];
@@ -527,7 +528,7 @@ export default function Top10CryptosClient({
 /*  Sous-composants                                                           */
 /* -------------------------------------------------------------------------- */
 
-function CryptoCard({ crypto }: { crypto: TopCrypto }) {
+function CryptoCardBase({ crypto }: { crypto: TopCrypto }) {
   const RiskIcon = RISK_ICONS[crypto.riskLevel];
   const riskColor = RISK_COLORS[crypto.riskLevel];
   const riskLevel = RISK_RANK[crypto.riskLevel] + 1; // 1-5 pour risk-meter
@@ -678,7 +679,7 @@ function CryptoCard({ crypto }: { crypto: TopCrypto }) {
   );
 }
 
-function CryptoListRow({ crypto }: { crypto: TopCrypto }) {
+function CryptoListRowBase({ crypto }: { crypto: TopCrypto }) {
   const RiskIcon = RISK_ICONS[crypto.riskLevel];
   const riskColor = RISK_COLORS[crypto.riskLevel];
 
@@ -729,3 +730,8 @@ function CryptoListRow({ crypto }: { crypto: TopCrypto }) {
     </Link>
   );
 }
+
+const CryptoCard = avecTypoSync(CryptoCardBase);
+const CryptoListRow = avecTypoSync(CryptoListRowBase);
+
+export default avecTypoSync(Top10CryptosClient);

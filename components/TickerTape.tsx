@@ -1,5 +1,6 @@
 "use client";
 
+import { avecTypoSync } from "@/components/ui/Typo";
 import { useEffect, useRef, useState } from "react";
 import { Pause, Play } from "lucide-react";
 import { formatUsd, formatCompactUsd } from "@/lib/coingecko";
@@ -54,7 +55,7 @@ interface Props {
   priceSource?: MarketSource | null;
 }
 
-export default function TickerTape({ coins, globalMetrics, fearGreed, priceSource = null }: Props) {
+function TickerTape({ coins, globalMetrics, fearGreed, priceSource = null }: Props) {
   const [list, setList] = useState<TickerCoin[]>(coins);
   const [paused, setPaused] = useState(false);
   const { prices: live } = useLivePrices(coins.map((c) => c.id));
@@ -84,7 +85,7 @@ export default function TickerTape({ coins, globalMetrics, fearGreed, priceSourc
         </TapeCell>,
         <TapeCell key="dom" label="Dominance BTC">
           <span className="num-data text-ice-fg">
-            {fmtFr(globalMetrics.btcDominance, 1)}%
+            {fmtFr(globalMetrics.btcDominance, 1)}&nbsp;%
           </span>
         </TapeCell>,
       );
@@ -157,7 +158,7 @@ export default function TickerTape({ coins, globalMetrics, fearGreed, priceSourc
             >
               <span aria-hidden="true">{up ? "▲" : "▼"}</span>
               <span className="sr-only">{up ? "Hausse de" : "Baisse de"}</span>{" "}
-              {fmtFr(Math.abs(coin.change24h), 2)}%
+              {fmtFr(Math.abs(coin.change24h), 2)}&nbsp;%
             </span>
           </div>
         );
@@ -210,7 +211,7 @@ export default function TickerTape({ coins, globalMetrics, fearGreed, priceSourc
   );
 }
 
-function TapeCell({ label, children }: { label: string; children: React.ReactNode }) {
+function TapeCellBase({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div className="flex shrink-0 items-center gap-1.5 px-4 border-r border-border/40">
       <span className="text-muted">{label}</span>
@@ -219,19 +220,19 @@ function TapeCell({ label, children }: { label: string; children: React.ReactNod
   );
 }
 
-function Delta({ value }: { value: number }) {
+function DeltaBase({ value }: { value: number }) {
   const up = value >= 0;
   return (
-    <span className={`num-data ${up ? "text-success-fg" : "text-danger-fg"}`}>
+    <span className={`num-data whitespace-nowrap ${up ? "text-success-fg" : "text-danger-fg"}`}>
       <span aria-hidden="true">{up ? "▲" : "▼"}</span>
       <span className="sr-only">{up ? "Hausse de" : "Baisse de"}</span>{" "}
-      {fmtFr(Math.abs(value), 2)}%
+      {fmtFr(Math.abs(value), 2)}&nbsp;%
     </span>
   );
 }
 
 /* Flash GREEN/RED 600ms quand le prix change (classes globals.css) */
-function PriceFlash({ price, children }: { price: number; children: React.ReactNode }) {
+function PriceFlashBase({ price, children }: { price: number; children: React.ReactNode }) {
   const prev = useRef(price);
   const [flash, setFlash] = useState<"up" | "down" | null>(null);
 
@@ -249,3 +250,9 @@ function PriceFlash({ price, children }: { price: number; children: React.ReactN
     </span>
   );
 }
+
+const TapeCell = avecTypoSync(TapeCellBase);
+const Delta = avecTypoSync(DeltaBase);
+const PriceFlash = avecTypoSync(PriceFlashBase);
+
+export default avecTypoSync(TickerTape);

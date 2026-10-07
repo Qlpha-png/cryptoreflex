@@ -1,3 +1,4 @@
+import { avecTypoSync } from "@/components/ui/Typo";
 import Link from "next/link";
 import { paidLinkCaption } from "@/lib/partnerships";
 
@@ -8,7 +9,7 @@ import { paidLinkCaption } from "@/lib/partnerships";
  * annoncer une commission inexistante est aussi trompeur que d'en cacher une. Wording selon le type réel :
  * affiliation (commission Cryptoreflex) ou parrainage personnel du fondateur.
  */
-export default function PaidLinkCaption({
+function PaidLinkCaption({
   platformId,
   href,
   className = "mt-1 block text-xs text-muted hover:text-fg underline underline-offset-2",
@@ -30,3 +31,5 @@ export default function PaidLinkCaption({
     </Link>
   );
 }
+
+export default avecTypoSync(PaidLinkCaption);

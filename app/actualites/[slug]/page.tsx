@@ -1,3 +1,4 @@
+import { avecTypo } from "@/components/ui/Typo";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { typoFr } from "@/lib/typo-fr";
@@ -121,7 +122,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 /*  Page                                                                      */
 /* -------------------------------------------------------------------------- */
 
-export default async function NewsDetailPage({ params }: PageProps) {
+async function NewsDetailPage({ params }: PageProps) {
   const news = await getNewsBySlug(params.slug);
   if (!news) notFound();
 
@@ -378,3 +379,5 @@ export default async function NewsDetailPage({ params }: PageProps) {
     </article>
   );
 }
+
+export default avecTypo(NewsDetailPage);

@@ -1,5 +1,6 @@
 "use client";
 
+import { avecTypoSync } from "@/components/ui/Typo";
 import { useEffect, useState } from "react";
 
 /**
@@ -16,7 +17,7 @@ import { useEffect, useState } from "react";
  *
  * Coût : 1 setInterval, ~3 KB JS chunk client. Acceptable pour un islet leaf.
  */
-export default function LiveAge({ since }: { since: string }) {
+function LiveAge({ since }: { since: string }) {
   // BUG FIX 2026-05-03 (BATCH 44e) — `Date.now()` dans useState initializer
   // s'execute server-side (SSR cache) ET client-side (hydration) avec
   // VALEURS DIFFERENTES (timestamp server cache vs timestamp client hydrate).
@@ -58,3 +59,5 @@ export default function LiveAge({ since }: { since: string }) {
   const h = Math.floor(m / 60);
   return <span>{h}h</span>;
 }
+
+export default avecTypoSync(LiveAge);

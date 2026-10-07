@@ -1,3 +1,4 @@
+import { avecTypoSync } from "@/components/ui/Typo";
 import Link from "next/link";
 import { ArrowRight, FileCheck2 } from "lucide-react";
 
@@ -32,7 +33,7 @@ interface Props {
   fromPage?: string;
 }
 
-export default function PackCTABlock({
+function PackCTABlock({
   variant = "default",
   fromPage,
 }: Props) {
@@ -90,3 +91,5 @@ export default function PackCTABlock({
     </aside>
   );
 }
+
+export default avecTypoSync(PackCTABlock);

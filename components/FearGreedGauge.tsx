@@ -12,6 +12,7 @@
  * `prefers-reduced-motion` : aucune animation utilisée → conformité naturelle.
  */
 
+import { avecTypoSync } from "@/components/ui/Typo";
 import FearGreedSource from "@/components/FearGreedSource";
 
 import type { SourceName } from "@/lib/data-sources/priorities";
@@ -33,7 +34,7 @@ interface Props {
   source?: SourceName | null;
 }
 
-export default function FearGreedGauge({
+function FearGreedGauge({
   value,
   classification,
   size = 360,
@@ -199,3 +200,5 @@ function colorFor(v: number): { color: string; border: string; soft: string } {
   if (v <= 74) return { color: "rgb(var(--c-primary))", border: "rgb(var(--c-primary) / 0.3333333)", soft: "rgb(var(--c-primary) / 0.0705882)" }; // or — Neutral / Cupidité
   return { color: "rgb(var(--c-success))", border: "rgb(var(--c-success) / 0.3333333)", soft: "rgb(var(--c-success) / 0.0705882)" }; // green-500 — Greed/Extreme Greed
 }
+
+export default avecTypoSync(FearGreedGauge);

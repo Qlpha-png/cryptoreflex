@@ -1,3 +1,4 @@
+import { avecTypoSync } from "@/components/ui/Typo";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import { ArrowRight, Mail, ShieldAlert } from "lucide-react";
@@ -60,7 +61,7 @@ interface HeroProps {
 // Compteurs : source unique lib/brand.ts (STATS.platforms = plateformes agréées MiCA
 // avec accès à la France ; la copie locale de ces chiffres avait divergé).
 
-export default function Hero({ prices, sparklines, updatedAt, fearGreed }: HeroProps) {
+function Hero({ prices, sparklines, updatedAt, fearGreed }: HeroProps) {
   const lastUpdateDate = updatedAt ? new Date(updatedAt) : new Date();
   const lastUpdate = lastUpdateDate.toLocaleDateString("fr-FR", {
     day: "2-digit",
@@ -200,3 +201,5 @@ export default function Hero({ prices, sparklines, updatedAt, fearGreed }: HeroP
     </section>
   );
 }
+
+export default avecTypoSync(Hero);

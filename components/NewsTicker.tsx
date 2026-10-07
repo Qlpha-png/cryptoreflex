@@ -1,5 +1,6 @@
 "use client";
 
+import { avecTypoSync } from "@/components/ui/Typo";
 import Link from "next/link";
 import { Newspaper } from "lucide-react";
 import type { ArticleSummary } from "@/lib/mdx";
@@ -29,7 +30,7 @@ interface Props {
  * - Server fetch côté wrapper, pas d'appel client.
  * - Animation transform-only (compositor-driven, 0 reflow).
  */
-export default function NewsTicker({ articles }: Props) {
+function NewsTicker({ articles }: Props) {
   if (!articles || articles.length === 0) return null;
 
   // Loop ×2 pour un défilement infini sans saut (translateX 0 → -50%).
@@ -86,7 +87,7 @@ export default function NewsTicker({ articles }: Props) {
 
 /* -------------------------------------------------------------------------- */
 
-function NewsItem({
+function NewsItemBase({
   article,
   ariaHidden = false,
 }: {
@@ -143,3 +144,7 @@ function formatRelative(iso: string): string {
     month: "short",
   });
 }
+
+const NewsItem = avecTypoSync(NewsItemBase);
+
+export default avecTypoSync(NewsTicker);

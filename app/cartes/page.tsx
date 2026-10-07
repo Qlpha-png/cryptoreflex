@@ -1,3 +1,4 @@
+import { avecTypo } from "@/components/ui/Typo";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -63,7 +64,7 @@ export function generateMetadata(): Metadata {
   };
 }
 
-export default async function CartesPage() {
+async function CartesPage() {
   if (!isReflexCardsEnabled()) notFound();
   if (UNIVERS_ON()) {
     const schemaU = graphSchema([
@@ -410,3 +411,5 @@ export default async function CartesPage() {
     </>
   );
 }
+
+export default avecTypo(CartesPage);

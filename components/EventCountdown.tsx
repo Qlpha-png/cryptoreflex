@@ -1,5 +1,6 @@
 "use client";
 
+import { avecTypoSync } from "@/components/ui/Typo";
 import { useEffect, useState } from "react";
 
 /**
@@ -32,7 +33,7 @@ function computeRemainingMs(date: string): number {
   return Math.max(0, target - Date.now());
 }
 
-export default function EventCountdown({ date, isApproximate, fallbackLabel }: Props) {
+function EventCountdown({ date, isApproximate, fallbackLabel }: Props) {
   // BATCH 55 (2026-05-03) — FIX React #425 home (audit live post-BATCH 54).
   // Avant : useState(() => computeRemainingMs(date)) -> Date.now() au render
   // initial. SSR cache vs hydration client = remaining different -> #425.
@@ -109,3 +110,5 @@ export default function EventCountdown({ date, isApproximate, fallbackLabel }: P
     </span>
   );
 }
+
+export default avecTypoSync(EventCountdown);

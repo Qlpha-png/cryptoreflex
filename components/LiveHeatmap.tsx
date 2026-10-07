@@ -26,6 +26,7 @@
  *     l'affiche déjà).
  */
 
+import { avecTypoSync } from "@/components/ui/Typo";
 import {
   useEffect,
   useMemo,
@@ -304,7 +305,7 @@ function squarify(
 
 /* ─────────────────────── Sparkline mini (pure SVG) ─────────────────────── */
 
-function MiniSparkline({
+function MiniSparklineBase({
   values,
   color,
 }: {
@@ -341,7 +342,7 @@ function MiniSparkline({
 
 /* ─────────────────────── Composant principal ─────────────────────── */
 
-export default function LiveHeatmap({
+function LiveHeatmap({
   coins,
   internalSlugs,
   embed = false,
@@ -666,7 +667,7 @@ export default function LiveHeatmap({
 
 /* ─────────────────────── Tooltip ─────────────────────── */
 
-function CellTooltip({
+function CellTooltipBase({
   coin,
   change,
   price,
@@ -731,7 +732,7 @@ function CellTooltip({
 
 /* ─────────────────────── Status badge ─────────────────────── */
 
-function LiveStatusBadge({
+function LiveStatusBadgeBase({
   status,
   lastUpdate,
 }: {
@@ -806,3 +807,9 @@ function LiveStatusBadge({
     </span>
   );
 }
+
+const MiniSparkline = avecTypoSync(MiniSparklineBase);
+const CellTooltip = avecTypoSync(CellTooltipBase);
+const LiveStatusBadge = avecTypoSync(LiveStatusBadgeBase);
+
+export default avecTypoSync(LiveHeatmap);

@@ -1,3 +1,4 @@
+import { avecTypoSync } from "@/components/ui/Typo";
 import {
   Calendar,
   Unlock,
@@ -73,7 +74,7 @@ function formatDate(dateStr: string): string {
  * CryptoEventCalendar — calendrier court-moyen terme par crypto.
  * Server Component (data statique). Si aucun événement upcoming → render null.
  */
-export default function CryptoEventCalendar({ cryptoId, cryptoName }: Props) {
+function CryptoEventCalendar({ cryptoId, cryptoName }: Props) {
   const events = getUpcomingEventsFor(cryptoId, 5);
   if (events.length === 0) return null;
 
@@ -148,3 +149,5 @@ export default function CryptoEventCalendar({ cryptoId, cryptoName }: Props) {
     </section>
   );
 }
+
+export default avecTypoSync(CryptoEventCalendar);

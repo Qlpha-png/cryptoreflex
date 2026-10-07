@@ -1,5 +1,6 @@
 "use client";
 
+import { avecTypoSync } from "@/components/ui/Typo";
 import { useEffect, useRef, useState, FormEvent } from "react";
 import Link from "next/link";
 import {
@@ -50,7 +51,7 @@ import { BRAND } from "@/lib/brand";
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-export default function NewsletterCapture() {
+function NewsletterCapture() {
   const [email, setEmail] = useState("");
   const [emailValid, setEmailValid] = useState<boolean | null>(null);
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
@@ -402,3 +403,5 @@ export default function NewsletterCapture() {
     </section>
   );
 }
+
+export default avecTypoSync(NewsletterCapture);

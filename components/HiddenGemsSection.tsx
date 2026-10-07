@@ -1,3 +1,4 @@
+import { avecTypoSync } from "@/components/ui/Typo";
 import hiddenGemsData from "@/data/hidden-gems.json";
 import { Gem, ShieldCheck, AlertTriangle, ExternalLink, Activity } from "lucide-react";
 import AmfDisclaimer from "./AmfDisclaimer";
@@ -43,7 +44,7 @@ interface HiddenGem {
  * Chaque carte affiche un score de fiabilité 0-10 calculé sur :
  * équipe identifiée + open source + audits + années d'activité + incidents.
  */
-export default function HiddenGemsSection() {
+function HiddenGemsSection() {
   // 90 hidden gems en JSON, on n'affiche que les 10 premières en home —
   // le reste est dans /cryptos avec filtre "Hidden Gems" (90 fiches au total).
   const gems = (hiddenGemsData.hiddenGems as HiddenGem[]).slice(0, 10);
@@ -83,7 +84,7 @@ export default function HiddenGemsSection() {
   );
 }
 
-function GemCard({ gem }: { gem: HiddenGem }) {
+function GemCardBase({ gem }: { gem: HiddenGem }) {
   const score = gem.reliability.score;
   const scoreColor =
     score >= 8.5
@@ -251,7 +252,7 @@ function GemCard({ gem }: { gem: HiddenGem }) {
   );
 }
 
-function Indicator({
+function IndicatorBase({
   label,
   value,
   ok,
@@ -273,3 +274,8 @@ function Indicator({
     </div>
   );
 }
+
+const GemCard = avecTypoSync(GemCardBase);
+const Indicator = avecTypoSync(IndicatorBase);
+
+export default avecTypoSync(HiddenGemsSection);

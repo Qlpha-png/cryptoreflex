@@ -1,5 +1,6 @@
 "use client";
 
+import { avecTypoSync } from "@/components/ui/Typo";
 import { useEffect, useMemo, useState } from "react";
 import { ArrowDownUp, Loader2, RefreshCw } from "lucide-react";
 import { COIN_NAMES } from "@/lib/historical-prices";
@@ -34,7 +35,7 @@ export interface ConverterProps {
   defaultAmount?: number;
 }
 
-export default function Converter({
+function Converter({
   defaultFrom = "btc",
   defaultTo = "eur",
   defaultAmount = 1,
@@ -170,7 +171,7 @@ export default function Converter({
 
 /* -------------------------------------------------------------------------- */
 
-function Row({
+function RowBase({
   amount,
   onAmountChange,
   symbol,
@@ -294,3 +295,7 @@ function fmtRelative(iso: string): string {
   if (h < 24) return `il y a ${h} h`;
   return new Date(iso).toLocaleString("fr-FR");
 }
+
+const Row = avecTypoSync(RowBase);
+
+export default avecTypoSync(Converter);

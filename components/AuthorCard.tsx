@@ -10,6 +10,7 @@
  *   <AuthorCard authorId="kevin-voisin" variant="full" />
  */
 
+import { avecTypoSync } from "@/components/ui/Typo";
 import Image from "next/image";
 import Link from "next/link";
 import { Linkedin, Mail, Clock, BadgeCheck } from "lucide-react";
@@ -27,7 +28,7 @@ interface AuthorCardProps {
 }
 
 /** Icône X (Twitter) — Lucide n'expose plus le logo X moderne. */
-function XIcon({ className }: { className?: string }) {
+function XIconBase({ className }: { className?: string }) {
   return (
     <svg
       viewBox="0 0 24 24"
@@ -45,7 +46,7 @@ function formatDate(iso: string): string {
   return new Date(iso).toLocaleDateString("fr-FR");
 }
 
-function SocialLinks({ author }: { author: Author }) {
+function SocialLinksBase({ author }: { author: Author }) {
   return (
     <div className="flex items-center gap-2">
       {author.social.linkedin && (
@@ -83,7 +84,7 @@ function SocialLinks({ author }: { author: Author }) {
   );
 }
 
-export default function AuthorCard({
+function AuthorCard({
   authorId,
   variant = "compact",
   date,
@@ -200,3 +201,8 @@ export default function AuthorCard({
     </aside>
   );
 }
+
+const XIcon = avecTypoSync(XIconBase);
+const SocialLinks = avecTypoSync(SocialLinksBase);
+
+export default avecTypoSync(AuthorCard);

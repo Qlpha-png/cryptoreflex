@@ -24,6 +24,7 @@
  *  - validation par un fiscaliste recommandée
  */
 
+import { avecTypoSync } from "@/components/ui/Typo";
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { CerfaSummary, CerfaTransaction } from "@/lib/cerfa-2086";
 import { parseCerfaFile } from "@/lib/cerfa-csv";
@@ -70,7 +71,7 @@ function fmtEur(n: number): string {
 /*  Composant principal                                                       */
 /* -------------------------------------------------------------------------- */
 
-export default function Cerfa2086Generator({ cryptoId: _cryptoId }: Props) {
+function Cerfa2086Generator({ cryptoId: _cryptoId }: Props) {
   const [state, setState] = useState<State>("idle");
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [parseErrors, setParseErrors] = useState<string[]>([]);
@@ -861,7 +862,7 @@ interface PreviewRowProps {
   strong?: boolean;
 }
 
-function PreviewRow({ label, value, tone = "default", strong = false }: PreviewRowProps) {
+function PreviewRowBase({ label, value, tone = "default", strong = false }: PreviewRowProps) {
   const toneClass =
     tone === "success"
       ? "text-success"
@@ -881,3 +882,7 @@ function PreviewRow({ label, value, tone = "default", strong = false }: PreviewR
     </div>
   );
 }
+
+const PreviewRow = avecTypoSync(PreviewRowBase);
+
+export default avecTypoSync(Cerfa2086Generator);

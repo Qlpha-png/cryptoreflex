@@ -1,3 +1,4 @@
+import { avecTypoSync } from "@/components/ui/Typo";
 import { CheckCircle2, Clock, Calendar, ExternalLink, ShieldCheck } from "lucide-react";
 import type { RoadmapEvent } from "@/lib/crypto-roadmaps";
 
@@ -23,7 +24,7 @@ interface Props {
  *  - Aucun render null silencieux : si events vide, on ne rend rien (le caller
  *    décide d'afficher un placeholder)
  */
-export default function CryptoRoadmap({ cryptoName, events }: Props) {
+function CryptoRoadmap({ cryptoName, events }: Props) {
   if (!events.length) return null;
 
   // Tri robuste : à venir d'abord (planned > in-progress > done), puis par date numérique.
@@ -99,7 +100,7 @@ function parseRoadmapDate(s: string): { year: number; month: number } {
   return { year: 0, month: 0 };
 }
 
-function RoadmapItem({ event }: { event: RoadmapEvent }) {
+function RoadmapItemBase({ event }: { event: RoadmapEvent }) {
   const statusConfig = {
     done: {
       icon: <CheckCircle2 className="h-4 w-4" />,
@@ -168,3 +169,7 @@ function RoadmapItem({ event }: { event: RoadmapEvent }) {
     </li>
   );
 }
+
+const RoadmapItem = avecTypoSync(RoadmapItemBase);
+
+export default avecTypoSync(CryptoRoadmap);

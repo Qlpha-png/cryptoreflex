@@ -1,3 +1,4 @@
+import { avecTypoSync } from "@/components/ui/Typo";
 import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
@@ -134,7 +135,7 @@ function buildRows(): SecurityRow[] {
     .sort((a, b) => b.securityScore - a.securityScore);
 }
 
-export default function ComparatifSecuritePage() {
+function ComparatifSecuritePage() {
   const rows = buildRows();
   const top = rows[0];
   const withIncident = rows.filter((r) => r.lastIncident).length;
@@ -419,7 +420,7 @@ export default function ComparatifSecuritePage() {
   );
 }
 
-function Stat({
+function StatBase({
   label,
   value,
   sub,
@@ -450,7 +451,7 @@ function Stat({
 }
 
 /** Valeur cliquable vers sa source (page officielle, communiqué, presse) ; texte simple sans source. */
-function SourceLink({
+function SourceLinkBase({
   href,
   title,
   className,
@@ -474,3 +475,8 @@ function SourceLink({
     </a>
   );
 }
+
+const Stat = avecTypoSync(StatBase);
+const SourceLink = avecTypoSync(SourceLinkBase);
+
+export default avecTypoSync(ComparatifSecuritePage);

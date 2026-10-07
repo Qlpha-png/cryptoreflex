@@ -8,6 +8,7 @@
  * flicke après hydratation. On rend un placeholder cohérent en attendant.
  */
 
+import { avecTypoSync } from "@/components/ui/Typo";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -32,7 +33,7 @@ interface LessonNavigatorProps {
   total: number;
 }
 
-export default function LessonNavigator({
+function LessonNavigator({
   trackId,
   trackTitle,
   current,
@@ -154,3 +155,5 @@ export default function LessonNavigator({
     </nav>
   );
 }
+
+export default avecTypoSync(LessonNavigator);

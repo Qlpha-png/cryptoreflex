@@ -1,3 +1,4 @@
+import { avecTypo } from "@/components/ui/Typo";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import type { MarketCoin } from "@/lib/coingecko";
@@ -17,7 +18,7 @@ const DAY = 86_400_000;
 const fmtDate = (iso: string) =>
   new Date(iso).toLocaleDateString("fr-FR", { day: "numeric", month: "long", timeZone: "Europe/Paris" });
 
-export default async function HomeMarketToday({
+async function HomeMarketToday({
   market,
   priceSource = null,
 }: {
@@ -114,3 +115,5 @@ export default async function HomeMarketToday({
     </section>
   );
 }
+
+export default avecTypo(HomeMarketToday);

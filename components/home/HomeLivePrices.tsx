@@ -1,5 +1,6 @@
 "use client";
 
+import { avecTypoSync } from "@/components/ui/Typo";
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -23,7 +24,7 @@ export interface HomeCoin {
 }
 
 const fmtPrice = (v: number) =>
-  `${v.toLocaleString("fr-FR", { maximumFractionDigits: v >= 100 ? 0 : v >= 1 ? 2 : 4 })} $`;
+  `${v.toLocaleString("fr-FR", { maximumFractionDigits: v >= 100 ? 0 : v >= 1 ? 2 : 4 })}\u00a0$`;
 /** Variation arrondie au centième ; une variation qui s'arrondit à 0 s'affiche « 0,00 % » (jamais « -0,00 % »). */
 const round2 = (v: number) => {
   const r = Math.round(v * 100) / 100;
@@ -31,14 +32,14 @@ const round2 = (v: number) => {
 };
 const fmtPct = (v: number) => {
   const r = round2(v);
-  return `${r > 0 ? "+" : ""}${r.toLocaleString("fr-FR", { maximumFractionDigits: 2, minimumFractionDigits: 2 })} %`;
+  return `${r > 0 ? "+" : ""}${r.toLocaleString("fr-FR", { maximumFractionDigits: 2, minimumFractionDigits: 2 })}\u00a0%`;
 };
 const pctClass = (v: number) => {
   const r = round2(v);
   return r > 0 ? "text-success-fg" : r < 0 ? "text-danger-fg" : "text-fg-4";
 };
 
-export default function HomeLivePrices({ coins }: { coins: HomeCoin[] }) {
+function HomeLivePrices({ coins }: { coins: HomeCoin[] }) {
   const { prices, lastUpdate, status } = useLivePrices(coins.map((c) => c.id));
   const live = lastUpdate !== null && Object.keys(prices).length > 0;
   // Logos qui ne se chargent pas → initiales, jamais une colonne vide (audit du 06/10/2026).
@@ -80,7 +81,7 @@ export default function HomeLivePrices({ coins }: { coins: HomeCoin[] }) {
                 </span>
                 <span className="text-right tabular-nums">
                   <span className="block text-sm font-semibold text-fg">{fmtPrice(price)}</span>
-                  <span className={`block text-xs ${pctClass(change)}`}>{fmtPct(change)}</span>
+                  <span className={`block whitespace-nowrap text-xs ${pctClass(change)}`}>{fmtPct(change)}</span>
                 </span>
               </Link>
             </li>
@@ -97,3 +98,5 @@ export default function HomeLivePrices({ coins }: { coins: HomeCoin[] }) {
     </div>
   );
 }
+
+export default avecTypoSync(HomeLivePrices);

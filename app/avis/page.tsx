@@ -1,3 +1,4 @@
+import { avecTypoSync } from "@/components/ui/Typo";
 import type { Metadata } from "next";
 import Link from "next/link";
 import {
@@ -90,7 +91,7 @@ const CATEGORY_ICONS: Record<Platform["category"], typeof Building2> = {
 /*  Page                                                                      */
 /* -------------------------------------------------------------------------- */
 
-export default function AvisHubPage() {
+function AvisHubPage() {
   const publishableSlugs = new Set(getPublishableReviewSlugs());
   // 06/10/2026 : les plateformes non autorisées en France (isAvailableFr) passent après les
   // disponibles (tri stable : l'ordre par score est conservé dans chaque groupe).
@@ -285,7 +286,7 @@ export default function AvisHubPage() {
 /*  Sub-component                                                             */
 /* -------------------------------------------------------------------------- */
 
-function ReviewCard({ platform }: { platform: Platform }) {
+function ReviewCardBase({ platform }: { platform: Platform }) {
   const { id, name, tagline, scoring, mica, badge } = platform;
   // 06/10/2026 : plateforme non autorisée en France → badge rouge, et pas de pastille « MiCA »
   // (Gemini reste agréée MiCA à Malte mais a quitté le marché français).
@@ -338,3 +339,7 @@ function ReviewCard({ platform }: { platform: Platform }) {
     </Link>
   );
 }
+
+const ReviewCard = avecTypoSync(ReviewCardBase);
+
+export default avecTypoSync(AvisHubPage);

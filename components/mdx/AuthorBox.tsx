@@ -1,3 +1,4 @@
+import { avecTypoSync } from "@/components/ui/Typo";
 import Link from "next/link";
 import { Calendar, Clock, BookOpen, ShieldCheck } from "lucide-react";
 
@@ -15,7 +16,7 @@ interface AuthorBoxProps {
  * les dates de publication et de MAJ, le temps de lecture et un lien
  * vers la méthodologie. Utilisé pour renforcer E-E-A-T (E-A-T).
  */
-export default function AuthorBox({
+function AuthorBox({
   author = "Cryptoreflex",
   publishedAt,
   updatedAt,
@@ -55,3 +56,5 @@ export default function AuthorBox({
     </aside>
   );
 }
+
+export default avecTypoSync(AuthorBox);

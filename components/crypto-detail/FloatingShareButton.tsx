@@ -1,5 +1,6 @@
 "use client";
 
+import { avecTypoSync } from "@/components/ui/Typo";
 import { useEffect, useRef, useState } from "react";
 import { Share2, Link2, Check, X } from "lucide-react";
 
@@ -27,7 +28,7 @@ interface FloatingShareButtonProps {
  *
  * Pas de dépendance externe ; les icons réseaux sont des SVG inline.
  */
-export default function FloatingShareButton({
+function FloatingShareButton({
   url,
   shareText,
   title,
@@ -247,3 +248,5 @@ export default function FloatingShareButton({
     </div>
   );
 }
+
+export default avecTypoSync(FloatingShareButton);

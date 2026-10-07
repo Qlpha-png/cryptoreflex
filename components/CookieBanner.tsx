@@ -1,5 +1,6 @@
 "use client";
 
+import { avecTypoSync } from "@/components/ui/Typo";
 import { useEffect, useId, useRef, useState } from "react";
 import { Cookie, Settings2, X, Check, ShieldOff } from "lucide-react";
 import {
@@ -26,7 +27,7 @@ import {
  *
  * Pas de dépendance externe (pas de Cookiebot/Klaro/OneTrust).
  */
-export default function CookieBanner() {
+function CookieBanner() {
   const [mounted, setMounted] = useState(false);
   const [open, setOpen] = useState(false);
   const [customizing, setCustomizing] = useState(false);
@@ -291,7 +292,7 @@ export default function CookieBanner() {
 /* Sous-composants & helpers                                                  */
 /* -------------------------------------------------------------------------- */
 
-function CategoryRow({
+function CategoryRowBase({
   title,
   description,
   checked,
@@ -376,3 +377,7 @@ function trapFocus(e: KeyboardEvent, container: HTMLElement | null) {
     first.focus();
   }
 }
+
+const CategoryRow = avecTypoSync(CategoryRowBase);
+
+export default avecTypoSync(CookieBanner);

@@ -1,3 +1,4 @@
+import { avecTypoSync } from "@/components/ui/Typo";
 import { Sparkles, Clock } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import type { ReactNode } from "react";
@@ -57,7 +58,7 @@ export interface TldrProps {
   children?: ReactNode;
 }
 
-export default function Tldr({
+function Tldr({
   headline,
   bullets,
   readingTime,
@@ -129,3 +130,5 @@ export default function Tldr({
     </section>
   );
 }
+
+export default avecTypoSync(Tldr);

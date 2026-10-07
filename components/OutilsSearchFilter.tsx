@@ -1,5 +1,6 @@
 "use client";
 
+import { avecTypoSync } from "@/components/ui/Typo";
 import { useEffect, useRef, useState } from "react";
 import { Search, X } from "lucide-react";
 
@@ -40,7 +41,7 @@ const TIER_LABELS: Record<Tier, string> = {
   pro: "Avancés",
 };
 
-export default function OutilsSearchFilter() {
+function OutilsSearchFilter() {
   const [query, setQuery] = useState("");
   const [tier, setTier] = useState<Tier>("all");
   const [count, setCount] = useState<number | null>(null);
@@ -182,3 +183,5 @@ export default function OutilsSearchFilter() {
     </div>
   );
 }
+
+export default avecTypoSync(OutilsSearchFilter);

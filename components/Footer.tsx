@@ -1,3 +1,4 @@
+import { avecTypo, avecTypoSync } from "@/components/ui/Typo";
 import Link from "next/link";
 import { Mail, ShieldCheck, Lock, ArrowRight, Sparkles } from "lucide-react";
 import { BRAND } from "@/lib/brand";
@@ -52,7 +53,7 @@ interface FooterLinkProps {
   showChevron?: boolean;
 }
 
-function FooterLink({ href, children, showChevron = true }: FooterLinkProps) {
+function FooterLinkBase({ href, children, showChevron = true }: FooterLinkProps) {
   return (
     <Link href={href} className={FOOTER_LINK_CLASS}>
       <span>{children}</span>
@@ -73,7 +74,7 @@ function FooterLink({ href, children, showChevron = true }: FooterLinkProps) {
 const GROUPS = visibleSections(isReflexCardsEnabled()).filter((g) => g.id !== "espace");
 const MAX_LINKS = 6;
 
-export default async function Footer() {
+async function Footer() {
   return (
     <footer
       // Audit A11y : retire role="contentinfo" redondant (<footer> top-level l'a déjà implicite).
@@ -259,3 +260,7 @@ export default async function Footer() {
     </footer>
   );
 }
+
+const FooterLink = avecTypoSync(FooterLinkBase);
+
+export default avecTypo(Footer);

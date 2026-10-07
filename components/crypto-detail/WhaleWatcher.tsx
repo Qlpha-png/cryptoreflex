@@ -1,5 +1,6 @@
 "use client";
 
+import { avecTypoSync } from "@/components/ui/Typo";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   Building2,
@@ -50,7 +51,7 @@ interface ApiResponse {
   whales: WhaleTransaction[] | null;
 }
 
-export default function WhaleWatcher({
+function WhaleWatcher({
   coingeckoId,
   cryptoName,
   cryptoSymbol,
@@ -205,7 +206,7 @@ export default function WhaleWatcher({
 /*  Row                                                                       */
 /* -------------------------------------------------------------------------- */
 
-function WhaleRow({
+function WhaleRowBase({
   tx,
   cryptoSymbol,
   index,
@@ -272,7 +273,7 @@ function WhaleRow({
 /*  Owner chip                                                                */
 /* -------------------------------------------------------------------------- */
 
-function OwnerChip({
+function OwnerChipBase({
   type,
   label,
 }: {
@@ -321,7 +322,7 @@ function ownerLabel(type: WhaleOwnerType, name?: string): string {
 /*  Skeleton                                                                  */
 /* -------------------------------------------------------------------------- */
 
-function SkeletonList() {
+function SkeletonListBase() {
   return (
     <section
       aria-label="Chargement des transactions whales"
@@ -412,3 +413,9 @@ function formatRelativeFr(iso: string): string {
   const diffD = Math.round(diffH / 24);
   return `il y a ${diffD} j`;
 }
+
+const WhaleRow = avecTypoSync(WhaleRowBase);
+const OwnerChip = avecTypoSync(OwnerChipBase);
+const SkeletonList = avecTypoSync(SkeletonListBase);
+
+export default avecTypoSync(WhaleWatcher);

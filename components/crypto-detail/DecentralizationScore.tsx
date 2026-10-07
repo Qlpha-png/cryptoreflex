@@ -1,3 +1,4 @@
+import { avecTypoSync } from "@/components/ui/Typo";
 import Link from "next/link";
 import { ShieldCheck, Users, Globe, Layers, GitBranch, Code2, Info } from "lucide-react";
 import {
@@ -21,7 +22,7 @@ interface Props {
  * honnête (« pas encore couvert ») au lieu de rendre null silencieusement —
  * fix audit UX 2026-05-01 (Karim friction 2/3).
  */
-export default function DecentralizationScore({ cryptoId, cryptoName }: Props) {
+function DecentralizationScore({ cryptoId, cryptoName }: Props) {
   const score = getDecentralizationScore(cryptoId);
   if (!score) {
     return (
@@ -149,8 +150,9 @@ export default function DecentralizationScore({ cryptoId, cryptoName }: Props) {
                   {c.label}
                 </span>
               </div>
-              <span className="text-xs font-mono text-muted">
-                {c.weight}%
+              {/* Reprise B1-bis : « 30 % » sur une ligne (insécable + nowrap) ; avant, « 30 / % » à 320 px. */}
+              <span className="text-xs font-mono text-muted whitespace-nowrap">
+                {c.weight}&nbsp;%
               </span>
             </div>
             <div className="mt-2 flex items-baseline justify-between gap-2">
@@ -200,3 +202,5 @@ export default function DecentralizationScore({ cryptoId, cryptoName }: Props) {
     </section>
   );
 }
+
+export default avecTypoSync(DecentralizationScore);

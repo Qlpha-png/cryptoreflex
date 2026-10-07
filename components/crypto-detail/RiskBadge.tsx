@@ -1,3 +1,4 @@
+import { avecTypoSync } from "@/components/ui/Typo";
 import { AlertTriangle, ShieldCheck, ShieldAlert } from "lucide-react";
 import type { RiskLevel } from "@/lib/cryptos";
 
@@ -22,7 +23,7 @@ interface Props {
  *   reliability 7-8.5  → ambre
  *   reliability < 7    → rose
  */
-export default function RiskBadge({
+function RiskBadge({
   riskLevel,
   reliabilityScore,
   beginnerFriendly,
@@ -45,7 +46,7 @@ export default function RiskBadge({
   );
 }
 
-function RiskTile({ riskLevel }: { riskLevel: RiskLevel }) {
+function RiskTileBase({ riskLevel }: { riskLevel: RiskLevel }) {
   // Tokens sémantiques (tailwind.config "SEMANTIC COLOR TOKENS") — alignés
   // sur DataQualityBadge. Les *-fg sont plus clairs que les anciennes
   // couleurs accent-* : meilleur contraste AA sur fond sombre.
@@ -71,7 +72,7 @@ function RiskTile({ riskLevel }: { riskLevel: RiskLevel }) {
   );
 }
 
-function ReliabilityTile({ score }: { score: number }) {
+function ReliabilityTileBase({ score }: { score: number }) {
   const tone =
     score >= 8.5
       ? "border-success-border bg-success-soft text-success-fg"
@@ -95,7 +96,7 @@ function ReliabilityTile({ score }: { score: number }) {
   );
 }
 
-function BeginnerTile({ score }: { score: number }) {
+function BeginnerTileBase({ score }: { score: number }) {
   const dots = Array.from({ length: 5 });
   return (
     <div className="rounded-2xl border border-primary/30 bg-primary/5 p-4 text-primary-soft">
@@ -121,3 +122,9 @@ function BeginnerTile({ score }: { score: number }) {
     </div>
   );
 }
+
+const RiskTile = avecTypoSync(RiskTileBase);
+const ReliabilityTile = avecTypoSync(ReliabilityTileBase);
+const BeginnerTile = avecTypoSync(BeginnerTileBase);
+
+export default avecTypoSync(RiskBadge);

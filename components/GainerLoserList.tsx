@@ -1,3 +1,4 @@
+import { avecTypoSync } from "@/components/ui/Typo";
 import CryptoLogo from "@/components/ui/CryptoLogo";
 import Link from "next/link";
 import { cryptoPagePath } from "@/lib/crypto-page-slug";
@@ -42,7 +43,7 @@ interface Props {
  * enveloppe la ligne dans un Link → /cryptos/[slug]. Sinon ligne statique
  * (pas de lien externe vers CoinGecko pour éviter de dégrader le PageRank).
  */
-export default function GainerLoserList({
+function GainerLoserList({
   coins,
   variant,
   title,
@@ -142,3 +143,5 @@ export default function GainerLoserList({
     </section>
   );
 }
+
+export default avecTypoSync(GainerLoserList);

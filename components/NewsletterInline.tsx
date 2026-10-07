@@ -1,5 +1,6 @@
 "use client";
 
+import { avecTypoSync } from "@/components/ui/Typo";
 import { useState, FormEvent, useEffect, useRef } from "react";
 import {
   Mail,
@@ -143,7 +144,7 @@ const CONTEXT_COPY: Record<
   },
 };
 
-export default function NewsletterInline({
+function NewsletterInline({
   source = "inline",
   variant = "default",
   title,
@@ -440,3 +441,5 @@ export default function NewsletterInline({
     </>
   );
 }
+
+export default avecTypoSync(NewsletterInline);

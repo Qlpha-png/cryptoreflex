@@ -418,7 +418,7 @@ export function formatPercent(value: number, decimals = 1): string {
   return `${(value * 100).toLocaleString("fr-FR", {
     minimumFractionDigits: decimals,
     maximumFractionDigits: decimals,
-  })} %`;
+  })}\u00a0%`;
 }
 
 /** Libellé humain d'un régime fiscal. */

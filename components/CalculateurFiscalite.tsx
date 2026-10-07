@@ -19,6 +19,7 @@
  * dans le projet).
  */
 
+import { avecTypoSync } from "@/components/ui/Typo";
 import { useMemo, useState, type FormEvent, type ChangeEvent } from "react";
 import {
   AlertCircle,
@@ -104,7 +105,7 @@ function sanitizeNumeric(value: string): string {
 /*  Composant principal                                                       */
 /* -------------------------------------------------------------------------- */
 
-export default function CalculateurFiscalite() {
+function CalculateurFiscalite() {
   const [form, setForm] = useState<FormState>(INITIAL);
   const [showResult, setShowResult] = useState(false);
   const [errors, setErrors] = useState<Partial<Record<keyof FormState, string>>>(
@@ -517,7 +518,7 @@ interface WaltioPostResultCtaProps {
   regime: Regime;
 }
 
-function WaltioPostResultCta({
+function WaltioPostResultCtaBase({
   taxAmount,
   isExonere,
   regime,
@@ -664,7 +665,7 @@ function WaltioPostResultCta({
 /*  Sous-composants                                                           */
 /* -------------------------------------------------------------------------- */
 
-function NumericField({
+function NumericFieldBase({
   id,
   label,
   hint,
@@ -739,7 +740,7 @@ function NumericField({
   );
 }
 
-function RegimeOption({
+function RegimeOptionBase({
   value,
   current,
   title,
@@ -796,7 +797,7 @@ interface ResultInputs {
   reports: number;
 }
 
-function ResultPanel({
+function ResultPanelBase({
   result,
   tmi,
   inputs,
@@ -987,7 +988,7 @@ function ResultPanel({
   );
 }
 
-function SummaryTile({
+function SummaryTileBase({
   label,
   value,
   tone,
@@ -1014,7 +1015,7 @@ function SummaryTile({
   );
 }
 
-function BreakdownTable({
+function BreakdownTableBase({
   result,
   inputs,
 }: {
@@ -1087,7 +1088,7 @@ function BreakdownTable({
   );
 }
 
-function Row({
+function RowBase({
   label,
   value,
   emphasis,
@@ -1122,7 +1123,7 @@ function Row({
 /*  EmailCapture — lead magnet (Beehiiv via /api/newsletter/subscribe)        */
 /* -------------------------------------------------------------------------- */
 
-function EmailCapture({
+function EmailCaptureBase({
   email,
   state,
   message,
@@ -1241,3 +1242,14 @@ function EmailCapture({
     </section>
   );
 }
+
+const WaltioPostResultCta = avecTypoSync(WaltioPostResultCtaBase);
+const NumericField = avecTypoSync(NumericFieldBase);
+const RegimeOption = avecTypoSync(RegimeOptionBase);
+const ResultPanel = avecTypoSync(ResultPanelBase);
+const SummaryTile = avecTypoSync(SummaryTileBase);
+const BreakdownTable = avecTypoSync(BreakdownTableBase);
+const Row = avecTypoSync(RowBase);
+const EmailCapture = avecTypoSync(EmailCaptureBase);
+
+export default avecTypoSync(CalculateurFiscalite);

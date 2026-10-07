@@ -108,7 +108,7 @@ function platformsForCrypto(symbol: string): Platform[] {
 
 /** Coût d'un achat après un virement SEPA : taker d'un carnet d'ordres, sinon frais du courtier. */
 const afterSepaPct = (p: Platform) => ((p.fees.verified?.makerTakerApplies ?? true) ? p.fees.spotTaker : p.fees.instantBuy);
-const pctFr = (n: number) => `${n.toLocaleString("fr-FR", { maximumFractionDigits: 2 })} %`;
+const pctFr = (n: number) => `${n.toLocaleString("fr-FR", { maximumFractionDigits: 2 })}\u00a0%`;
 const rangeFr = (xs: number[]) => {
   if (!xs.length) return "—";
   const lo = Math.min(...xs), hi = Math.max(...xs);

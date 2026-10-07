@@ -1,3 +1,4 @@
+import { avecTypoSync } from "@/components/ui/Typo";
 import Link from "next/link";
 import {
   AlertCircle,
@@ -32,7 +33,7 @@ const ICON_MAP: Record<string, LucideIcon> = {
  * Pour les cryptos hors top 30 on rend un placeholder honnête (« pas encore
  * couvert ») au lieu de silencieusement null — fix audit UX 2026-05-01.
  */
-export default function WhitepaperTldr({ cryptoId, cryptoName }: Props) {
+function WhitepaperTldr({ cryptoId, cryptoName }: Props) {
   const tldr = getWhitepaperTldrFor(cryptoId);
   if (!tldr) {
     return (
@@ -133,3 +134,5 @@ export default function WhitepaperTldr({ cryptoId, cryptoName }: Props) {
     </section>
   );
 }
+
+export default avecTypoSync(WhitepaperTldr);

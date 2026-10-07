@@ -26,3 +26,21 @@ export function fmtDateFr(iso: string | null | undefined): string {
   const d = new Date(Date.UTC(+m[1], +m[2] - 1, +m[3]));
   return Number.isNaN(d.getTime()) ? iso : d.toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" });
 }
+
+/** Espace insécable (U+00A0), construite par code : jamais d'espace invisible écrite dans le source. */
+export const NBSP = String.fromCharCode(0x00a0);
+
+/**
+ * Pourcentage : UNE seule convention partout, « 3,17 % » avec espace INSÉCABLE (le « % » ne passe jamais seul à la ligne).
+ * `signe: true` ajoute « + » devant un nombre positif (« +1,68 % »). Valeur absente ou infinie : « — ».
+ */
+export function fmtPct(n: number | null | undefined, digits = 2, signe = false): string {
+  if (n == null || !Number.isFinite(n)) return "—";
+  return `${signe && n > 0 ? "+" : ""}${fmtFr(n, digits)}${NBSP}%`;
+}
+
+/** Montant en euros, « 1 000 € » : espaces fines dans le nombre (locale fr-FR), espace insécable devant « € ». */
+export function fmtEur(n: number | null | undefined, maxDigits = 2): string {
+  if (n == null || !Number.isFinite(n)) return "—";
+  return `${fmtNb(n, maxDigits)}${NBSP}€`;
+}

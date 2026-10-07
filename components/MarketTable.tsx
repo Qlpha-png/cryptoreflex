@@ -1,3 +1,4 @@
+import { avecTypo } from "@/components/ui/Typo";
 import { BarChart3 } from "lucide-react";
 import { fetchTopMarket } from "@/lib/coingecko";
 import EmptyState from "@/components/ui/EmptyState";
@@ -20,7 +21,7 @@ import MarketTableClient from "@/components/MarketTableClient";
  *  - <md : cartes verticales compactes (titre + prix + 24h + sparkline mini).
  *  - >=md : tableau classique CoinMarketCap-like avec tri.
  */
-export default async function MarketTable({ limit = 20 }: { limit?: number }) {
+async function MarketTable({ limit = 20 }: { limit?: number }) {
   const coins = await fetchTopMarket(limit);
 
   if (!coins.length) {
@@ -50,3 +51,5 @@ export default async function MarketTable({ limit = 20 }: { limit?: number }) {
 
   return <MarketTableClient coins={coins} limit={limit} internalSlugs={internalSlugs} />;
 }
+
+export default avecTypo(MarketTable);

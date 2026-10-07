@@ -1,5 +1,6 @@
 "use client";
 
+import { avecTypoSync } from "@/components/ui/Typo";
 import { Clock, AlertTriangle } from "lucide-react";
 import { useEffect, useState } from "react";
 
@@ -64,7 +65,7 @@ function formatAge(ms: number): string {
   return `il y a ${h} h ${remainingMin} min`;
 }
 
-export default function PriceFreshnessBadge({
+function PriceFreshnessBadge({
   fetchedAt,
   alwaysShow = false,
   className = "",
@@ -120,3 +121,5 @@ export default function PriceFreshnessBadge({
     </span>
   );
 }
+
+export default avecTypoSync(PriceFreshnessBadge);

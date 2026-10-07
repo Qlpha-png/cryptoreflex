@@ -1,5 +1,6 @@
 "use client";
 
+import { avecTypoSync } from "@/components/ui/Typo";
 import { useEffect, useRef, useState } from "react";
 import { ArrowDownRight, ArrowUpRight, Pause, Play } from "lucide-react";
 import { type CoinPrice, formatPct, formatUsd, DEFAULT_COINS } from "@/lib/coingecko";
@@ -27,7 +28,7 @@ interface Props {
  *    / .flash-down déjà présentes dans globals.css).
  *  - Fallback REST automatique si SSE down 3× d'affilée (cf. useLivePrices).
  */
-export default function PriceTicker({ initial }: Props) {
+function PriceTicker({ initial }: Props) {
   const [prices, setPrices] = useState<CoinPrice[]>(initial);
   const [paused, setPaused] = useState(false);
 
@@ -141,7 +142,7 @@ export default function PriceTicker({ initial }: Props) {
 /* PriceFlash — flash GREEN/RED 600ms quand le prix change                     */
 /* -------------------------------------------------------------------------- */
 
-function PriceFlash({ price, children }: { price: number; children: React.ReactNode }) {
+function PriceFlashBase({ price, children }: { price: number; children: React.ReactNode }) {
   const prev = useRef(price);
   const [flash, setFlash] = useState<"up" | "down" | null>(null);
 
@@ -159,3 +160,7 @@ function PriceFlash({ price, children }: { price: number; children: React.ReactN
     </span>
   );
 }
+
+const PriceFlash = avecTypoSync(PriceFlashBase);
+
+export default avecTypoSync(PriceTicker);

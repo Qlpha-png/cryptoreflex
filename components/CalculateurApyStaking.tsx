@@ -1,5 +1,6 @@
 "use client";
 
+import { avecTypoSync } from "@/components/ui/Typo";
 import { useEffect, useMemo, useState } from "react";
 import { Coins, ShieldAlert, Lock, Sparkles, ArrowRight, Info } from "lucide-react";
 import {
@@ -41,7 +42,7 @@ function formatEur(value: number): string {
   }).format(value);
 }
 
-export default function CalculateurApyStaking() {
+function CalculateurApyStaking() {
   const [coinId, setCoinId] = useState<StakingCryptoData["id"]>("ethereum");
   const [amount, setAmount] = useState<number>(1000);
   const [months, setMonths] = useState<number>(12);
@@ -310,3 +311,5 @@ export default function CalculateurApyStaking() {
     </div>
   );
 }
+
+export default avecTypoSync(CalculateurApyStaking);

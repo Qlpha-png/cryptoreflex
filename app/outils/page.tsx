@@ -1,3 +1,4 @@
+import { avecTypoSync } from "@/components/ui/Typo";
 import type { Metadata } from "next";
 import Link from "next/link";
 import {
@@ -104,7 +105,7 @@ const CATEGORIES: Array<{
 /*  Page                                                                      */
 /* -------------------------------------------------------------------------- */
 
-export default function OutilsPage() {
+function OutilsPage() {
   const totalTools = TOOLS.length;
   // Démonétisation juin 2026 : tous les outils sont gratuits. Le tier "pro"
   // ne sert plus qu'à distinguer les outils « avancés » (Cerfa auto, IA) pour
@@ -286,7 +287,7 @@ export default function OutilsPage() {
 /*  Sous-composants                                                           */
 /* -------------------------------------------------------------------------- */
 
-function StatCard({
+function StatCardBase({
   label,
   value,
   accent,
@@ -330,7 +331,7 @@ function StatCard({
   );
 }
 
-function CategorySection({
+function CategorySectionBase({
   category,
   tools,
 }: {
@@ -378,7 +379,7 @@ function CategorySection({
   );
 }
 
-function ToolCard({ tool }: { tool: Tool }) {
+function ToolCardBase({ tool }: { tool: Tool }) {
   const Icon = tool.Icon;
   const isPro = tool.tier === "pro";
   const isSoon = tool.status === "soon";
@@ -472,3 +473,9 @@ function ToolCard({ tool }: { tool: Tool }) {
     </Link>
   );
 }
+
+const StatCard = avecTypoSync(StatCardBase);
+const CategorySection = avecTypoSync(CategorySectionBase);
+const ToolCard = avecTypoSync(ToolCardBase);
+
+export default avecTypoSync(OutilsPage);

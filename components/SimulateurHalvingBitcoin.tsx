@@ -1,5 +1,6 @@
 "use client";
 
+import { avecTypoSync } from "@/components/ui/Typo";
 import { useEffect, useMemo, useState } from "react";
 import { Calendar, TrendingUp, ArrowRight, Info } from "lucide-react";
 import {
@@ -42,7 +43,7 @@ interface ChartPoint {
   bullish: number;
 }
 
-export default function SimulateurHalvingBitcoin() {
+function SimulateurHalvingBitcoin() {
   const [amountEur, setAmountEur] = useState<number>(100);
   const [frequency, setFrequency] = useState<"monthly" | "weekly">("monthly");
   const [startDate, setStartDate] = useState<string>(today());
@@ -241,7 +242,7 @@ export default function SimulateurHalvingBitcoin() {
   );
 }
 
-function ScenarioCard({
+function ScenarioCardBase({
   title,
   description,
   invested,
@@ -286,7 +287,7 @@ function ScenarioCard({
  * Chart SVG natif — 4 lignes (investi + 3 scénarios) sur les halvings futurs.
  * Pas de dépendance externe (pattern aligné sur DcaSimulator.tsx).
  */
-function HalvingChart({ data }: { data: ChartPoint[] }) {
+function HalvingChartBase({ data }: { data: ChartPoint[] }) {
   const width = 720;
   const height = 300;
   const padding = { top: 16, right: 16, bottom: 32, left: 64 };
@@ -369,7 +370,7 @@ function HalvingChart({ data }: { data: ChartPoint[] }) {
   );
 }
 
-function Legend({ color, label, dashed }: { color: string; label: string; dashed?: boolean }) {
+function LegendBase({ color, label, dashed }: { color: string; label: string; dashed?: boolean }) {
   return (
     <span className="inline-flex items-center gap-1.5 text-fg-max/70">
       <svg width="16" height="2">
@@ -387,3 +388,9 @@ function Legend({ color, label, dashed }: { color: string; label: string; dashed
     </span>
   );
 }
+
+const ScenarioCard = avecTypoSync(ScenarioCardBase);
+const HalvingChart = avecTypoSync(HalvingChartBase);
+const Legend = avecTypoSync(LegendBase);
+
+export default avecTypoSync(SimulateurHalvingBitcoin);

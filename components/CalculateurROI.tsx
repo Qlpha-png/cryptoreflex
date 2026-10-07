@@ -14,6 +14,7 @@
  *  - Disclaimer YMYL.
  */
 
+import { avecTypoSync } from "@/components/ui/Typo";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import {
@@ -38,7 +39,7 @@ const DEFAULTS = {
   sellFeeRate: 0.5,
 };
 
-export default function CalculateurROI() {
+function CalculateurROI() {
   const [buyPrice, setBuyPrice] = useState<number>(DEFAULTS.buyPrice);
   const [sellPrice, setSellPrice] = useState<number>(DEFAULTS.sellPrice);
   const [quantity, setQuantity] = useState<number>(DEFAULTS.quantity);
@@ -279,7 +280,7 @@ interface FieldProps {
   min?: number;
   compact?: boolean;
 }
-function Field({ label, value, onChange, step = 1, min, compact }: FieldProps) {
+function FieldBase({ label, value, onChange, step = 1, min, compact }: FieldProps) {
   const [raw, setRaw] = useState<string>(String(value));
 
   // Sync externe (Reset, ou changement programmatique de `value`) :
@@ -330,7 +331,7 @@ interface ResultCardProps {
   tone: "success" | "danger" | "warning";
   Icon: typeof TrendingUp;
 }
-function ResultCard({ label, value, format, tone, Icon }: ResultCardProps) {
+function ResultCardBase({ label, value, format, tone, Icon }: ResultCardProps) {
   const toneClass =
     tone === "success"
       ? "border-success/30 bg-success/5 text-success-fg"
@@ -367,3 +368,8 @@ function ResultCard({ label, value, format, tone, Icon }: ResultCardProps) {
     </div>
   );
 }
+
+const Field = avecTypoSync(FieldBase);
+const ResultCard = avecTypoSync(ResultCardBase);
+
+export default avecTypoSync(CalculateurROI);

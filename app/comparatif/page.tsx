@@ -1,3 +1,4 @@
+import { avecTypoSync } from "@/components/ui/Typo";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight, ChevronDown, ShieldAlert, ShieldCheck, Sparkles, Wallet } from "lucide-react";
@@ -65,7 +66,7 @@ function duelTitle(c: ComparisonSpec): string {
   return `${getPlatformById(c.a)?.name ?? c.a} vs ${getPlatformById(c.b)?.name ?? c.b}`;
 }
 
-export default function ComparatifPage() {
+function ComparatifPage() {
   const all = getAllPlatforms();
   /* mention affichée seulement quand le lien rapporte quelque chose (sinon : bruit inutile sous chaque carte) */
   // 06/10/2026 : même mention « Publicité — … » (bon type) que partout ailleurs sur le site.
@@ -243,3 +244,5 @@ export default function ComparatifPage() {
     </>
   );
 }
+
+export default avecTypoSync(ComparatifPage);

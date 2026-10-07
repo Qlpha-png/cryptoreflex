@@ -1,3 +1,4 @@
+import { avecTypo, avecTypoSync } from "@/components/ui/Typo";
 import type { Metadata } from "next";
 import { notFound, permanentRedirect } from "next/navigation";
 import Link from "next/link";
@@ -400,7 +401,7 @@ function buildFaq(c: AnyCrypto): { q: string; a: string }[] {
 /*  Page                                                                      */
 /* -------------------------------------------------------------------------- */
 
-export default async function CryptoPage({ params }: Props) {
+async function CryptoPage({ params }: Props) {
   // FIX A 2026-05-09 — slug aliases (`/cryptos/onyxcoin` → `/cryptos/chain-2`).
   // On vérifie EN PREMIER si le slug d'URL est un alias friendly. Si oui,
   // on émet un 308 Permanent Redirect via `permanentRedirect()` (signal SEO
@@ -1243,7 +1244,7 @@ export default async function CryptoPage({ params }: Props) {
 /*  Sous-composants page                                                      */
 /* -------------------------------------------------------------------------- */
 
-function Spec({
+function SpecBase({
   icon: Icon,
   label,
   value,
@@ -1268,7 +1269,7 @@ function Spec({
  * Rendu uniquement si on a des données ; sinon null (coin hors Binance).
  * Chaque année lie vers /historique-prix/[id]/[année] (maillage interne).
  */
-function AnnualPerformance({ cryptoId, cryptoName }: { cryptoId: string; cryptoName: string }) {
+function AnnualPerformanceBase({ cryptoId, cryptoName }: { cryptoId: string; cryptoName: string }) {
   const PERF_YEARS = [2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026];
   const rows = PERF_YEARS.map((y) => {
     const d = getYearOhlc(cryptoId, y);
@@ -1338,7 +1339,7 @@ function AnnualPerformance({ cryptoId, cryptoName }: { cryptoId: string; cryptoN
   );
 }
 
-function HiddenGemSections({ gem }: { gem: HiddenGem }) {
+function HiddenGemSectionsBase({ gem }: { gem: HiddenGem }) {
   const r = gem.reliability;
   return (
     <>
@@ -1436,7 +1437,7 @@ function HiddenGemSections({ gem }: { gem: HiddenGem }) {
   );
 }
 
-function ReliabilityCell({
+function ReliabilityCellBase({
   label,
   value,
   ok,
@@ -1460,3 +1461,10 @@ function ReliabilityCell({
     </div>
   );
 }
+
+const Spec = avecTypoSync(SpecBase);
+const AnnualPerformance = avecTypoSync(AnnualPerformanceBase);
+const HiddenGemSections = avecTypoSync(HiddenGemSectionsBase);
+const ReliabilityCell = avecTypoSync(ReliabilityCellBase);
+
+export default avecTypo(CryptoPage);

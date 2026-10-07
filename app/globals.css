@@ -192,6 +192,10 @@ h3:not(.uppercase, .font-mono, .font-code, .titre-libre) {
   font-family: "Cryptoreflex NNBSP", var(--font-sans), system-ui, sans-serif;
   font-variant-numeric: tabular-nums;
   letter-spacing: -0.01em;
+  /* Reprise B1-bis : un chiffre et son unité ne se séparent jamais. overflow-wrap:anywhere (body) passe outre les
+     espaces insécables dans une cellule étroite ; ici seules les vraies espaces restent des points de coupure. */
+  overflow-wrap: normal;
+  word-break: normal;
 }
 
 /* .ticker-tape-track — défilement du bandeau marché fin (TickerTape.tsx).

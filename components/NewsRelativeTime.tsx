@@ -1,5 +1,6 @@
 "use client";
 
+import { avecTypoSync } from "@/components/ui/Typo";
 import { useEffect, useState } from "react";
 import { formatRelativeFr } from "@/lib/news-aggregator";
 
@@ -24,7 +25,7 @@ import { formatRelativeFr } from "@/lib/news-aggregator";
  *
  * Coût : ~1.5 KB JS, 1 setInterval throttled.
  */
-export default function NewsRelativeTime({ date }: { date: string }) {
+function NewsRelativeTime({ date }: { date: string }) {
   // Sentinel : "" garanti identique SSR + 1er render client = no mismatch.
   const [label, setLabel] = useState<string>("");
 
@@ -48,3 +49,5 @@ export default function NewsRelativeTime({ date }: { date: string }) {
     </time>
   );
 }
+
+export default avecTypoSync(NewsRelativeTime);

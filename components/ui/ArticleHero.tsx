@@ -1,3 +1,4 @@
+import { avecTypoSync } from "@/components/ui/Typo";
 import { BookOpen, FileText, ShieldCheck, TrendingUp, Zap, Wallet, Coins, Layers } from "lucide-react";
 
 /**
@@ -45,7 +46,7 @@ function categoryIcon(category: string) {
   return FileText;
 }
 
-export default function ArticleHero({
+function ArticleHero({
   category,
   title,
   gradient,
@@ -104,3 +105,5 @@ export default function ArticleHero({
     </div>
   );
 }
+
+export default avecTypoSync(ArticleHero);

@@ -1,5 +1,6 @@
 "use client";
 
+import { avecTypoSync } from "@/components/ui/Typo";
 import { useEffect, useState } from "react";
 
 /**
@@ -49,7 +50,7 @@ interface MiniOrderBookProps {
   refreshMs?: number;
 }
 
-export default function MiniOrderBook({
+function MiniOrderBook({
   symbol,
   depth = 5,
   refreshMs = 5000,
@@ -281,3 +282,5 @@ export default function MiniOrderBook({
     </div>
   );
 }
+
+export default avecTypoSync(MiniOrderBook);

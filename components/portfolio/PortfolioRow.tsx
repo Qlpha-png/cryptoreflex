@@ -44,7 +44,7 @@ function fmtQty(value: number): string {
 function fmtPct(value: number | null): string {
   if (value === null || !Number.isFinite(value)) return "—";
   const sign = value >= 0 ? "+" : "";
-  return `${sign}${fmtFr(value, 2)} %`;
+  return `${sign}${fmtFr(value, 2)}\u00a0%`;
 }
 
 export default function PortfolioRow({

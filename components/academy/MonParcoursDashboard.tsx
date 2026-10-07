@@ -12,6 +12,7 @@
  * du localStorage après montage (même pattern que <ProgressTracker />).
  */
 
+import { avecTypoSync } from "@/components/ui/Typo";
 import { useEffect, useState, type ReactNode } from "react";
 import Link from "next/link";
 import {
@@ -85,7 +86,7 @@ const LEVEL_LABELS = {
 const RING_R = 52;
 const RING_C = 2 * Math.PI * RING_R;
 
-export default function MonParcoursDashboard() {
+function MonParcoursDashboard() {
   const [hydrated, setHydrated] = useState(false);
   const [streak, setStreak] = useState({ current: 0, best: 0 });
 
@@ -506,7 +507,7 @@ const BADGE_ICONS = {
  * colorés (gold), les autres grisés avec un cadenas : la "carotte"
  * visible est ce qui fait revenir (pattern Duolingo).
  */
-function BadgeShelf({ inputs }: { inputs: BadgeInputs }) {
+function BadgeShelfBase({ inputs }: { inputs: BadgeInputs }) {
   const badges = computeBadgesFromInputs(inputs);
   const earnedCount = badges.filter((b) => b.earned).length;
 
@@ -571,7 +572,7 @@ function BadgeShelf({ inputs }: { inputs: BadgeInputs }) {
   );
 }
 
-function StatTile({
+function StatTileBase({
   icon,
   value,
   label,
@@ -594,3 +595,8 @@ function StatTile({
     </div>
   );
 }
+
+const BadgeShelf = avecTypoSync(BadgeShelfBase);
+const StatTile = avecTypoSync(StatTileBase);
+
+export default avecTypoSync(MonParcoursDashboard);

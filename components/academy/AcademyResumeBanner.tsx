@@ -1,5 +1,6 @@
 "use client";
 
+import { avecTypoSync } from "@/components/ui/Typo";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { ArrowRight, Flame, PlayCircle } from "lucide-react";
@@ -36,7 +37,7 @@ interface ResumeState {
   streak: number;
 }
 
-export default function AcademyResumeBanner() {
+function AcademyResumeBanner() {
   const [resume, setResume] = useState<ResumeState | null>(null);
 
   useEffect(() => {
@@ -109,3 +110,5 @@ export default function AcademyResumeBanner() {
     </div>
   );
 }
+
+export default avecTypoSync(AcademyResumeBanner);

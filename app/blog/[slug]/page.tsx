@@ -1,3 +1,4 @@
+import { avecTypo } from "@/components/ui/Typo";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
@@ -228,7 +229,7 @@ function splitContentForInlineCta(
 /*  Page                                                                      */
 /* -------------------------------------------------------------------------- */
 
-export default async function BlogArticlePage({ params }: Props) {
+async function BlogArticlePage({ params }: Props) {
   const article = await getArticleBySlug(params.slug);
   if (!article) notFound();
 
@@ -567,3 +568,5 @@ export default async function BlogArticlePage({ params }: Props) {
     </>
   );
 }
+
+export default avecTypo(BlogArticlePage);

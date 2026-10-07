@@ -1,5 +1,6 @@
 "use client";
 
+import { avecTypoSync } from "@/components/ui/Typo";
 import {
   useCallback,
   useEffect,
@@ -73,7 +74,7 @@ interface ApiResponse {
  *   - gain = totalValue - totalCost ; gainPct = gain / totalCost
  *   - allocation = (qty × prixActuel) / totalValue → pour le pie
  */
-export default function PortfolioView() {
+function PortfolioView() {
   const [holdings, setHoldings] = useState<Holding[]>([]);
   const [prices, setPrices] = useState<LivePrice[]>([]);
   const [updatedAt, setUpdatedAt] = useState<string | null>(null);
@@ -559,7 +560,7 @@ export default function PortfolioView() {
 /*  Sous-composants                                                           */
 /* -------------------------------------------------------------------------- */
 
-function StatCard({
+function StatCardBase({
   label,
   value,
   subtitle,
@@ -595,7 +596,7 @@ function StatCard({
   );
 }
 
-function HoldingRow({
+function HoldingRowBase({
   holding,
   price,
   onRemove,
@@ -713,7 +714,7 @@ function HoldingRow({
   );
 }
 
-function HoldingCardMobile({
+function HoldingCardMobileBase({
   holding,
   price,
   onRemove,
@@ -827,7 +828,7 @@ function HoldingCardMobile({
   );
 }
 
-function PortfolioSkeleton() {
+function PortfolioSkeletonBase() {
   return (
     <div className="space-y-4" aria-hidden="true">
       <div className="h-4 w-40 skeleton" />
@@ -880,3 +881,10 @@ function formatQty(value: number): string {
   if (value >= 1) return value.toLocaleString("fr-FR", { maximumFractionDigits: 4 });
   return value.toLocaleString("fr-FR", { maximumFractionDigits: 6 });
 }
+
+const StatCard = avecTypoSync(StatCardBase);
+const HoldingRow = avecTypoSync(HoldingRowBase);
+const HoldingCardMobile = avecTypoSync(HoldingCardMobileBase);
+const PortfolioSkeleton = avecTypoSync(PortfolioSkeletonBase);
+
+export default avecTypoSync(PortfolioView);

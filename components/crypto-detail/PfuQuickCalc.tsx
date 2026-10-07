@@ -1,5 +1,6 @@
 "use client";
 
+import { avecTypoSync } from "@/components/ui/Typo";
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { Calculator, ArrowRight, Info } from "lucide-react";
@@ -39,7 +40,7 @@ interface Props {
  *
  * Euros : taux du jour fourni par la page (lib/fx.ts) ; à défaut, dernier taux BCE connu (avant le 05/10/2026 : 0,92 figé).
  */
-export default function PfuQuickCalc({ symbol, cryptoName, priceUsd, usdToEur = FX_FALLBACK.eur }: Props) {
+function PfuQuickCalc({ symbol, cryptoName, priceUsd, usdToEur = FX_FALLBACK.eur }: Props) {
   const priceEur = priceUsd * usdToEur;
 
   const [purchasePriceEur, setPurchasePriceEur] = useState<string>("");
@@ -81,7 +82,7 @@ export default function PfuQuickCalc({ symbol, cryptoName, priceUsd, usdToEur = 
     `${n >= 0 ? "+" : ""}${new Intl.NumberFormat("fr-FR", {
       maximumFractionDigits: 1,
       minimumFractionDigits: 1,
-    }).format(n)}%`;
+    }).format(n)}\u00a0%`;
 
   return (
     <section
@@ -240,7 +241,7 @@ export default function PfuQuickCalc({ symbol, cryptoName, priceUsd, usdToEur = 
   );
 }
 
-function ResultCell({
+function ResultCellBase({
   label,
   value,
   hint,
@@ -278,3 +279,7 @@ function parseFr(s: string): number {
   const n = Number(cleaned);
   return Number.isFinite(n) ? n : NaN;
 }
+
+const ResultCell = avecTypoSync(ResultCellBase);
+
+export default avecTypoSync(PfuQuickCalc);

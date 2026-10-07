@@ -10,6 +10,7 @@
  * liberté de navigation). Le niveau est mémorisé en localStorage.
  */
 
+import { avecTypoSync } from "@/components/ui/Typo";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Sprout, Target, Rocket, ArrowRight } from "lucide-react";
@@ -38,7 +39,7 @@ const RECO: Record<AcademyLevel, TrackId[]> = {
   avance: ["avance", "trading", "defi", "nft-web3"],
 };
 
-export default function AcademyLevelGuide() {
+function AcademyLevelGuide() {
   const [hydrated, setHydrated] = useState(false);
   const [level, setLevel] = useState<AcademyLevel | null>(null);
 
@@ -143,3 +144,5 @@ export default function AcademyLevelGuide() {
     </section>
   );
 }
+
+export default avecTypoSync(AcademyLevelGuide);

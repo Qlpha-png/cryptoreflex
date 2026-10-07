@@ -1,3 +1,4 @@
+import { avecTypoSync } from "@/components/ui/Typo";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
@@ -121,7 +122,7 @@ export function generateMetadata({ params }: Props): Metadata {
  * Helpers visuels
  * ------------------------------------------------------------------ */
 
-function Score({ value, label }: { value: number; label: string }) {
+function ScoreBase({ value, label }: { value: number; label: string }) {
   const pct = Math.round((value / 5) * 100);
   return (
     <div className="rounded-xl border border-border bg-surface px-4 py-3">
@@ -142,7 +143,7 @@ function Score({ value, label }: { value: number; label: string }) {
 }
 
 /** Lien(s) vers la source d'une donnée de sécurité (page officielle, communiqué, article de presse). */
-function SecuritySource({ href }: { href?: string | string[] }) {
+function SecuritySourceBase({ href }: { href?: string | string[] }) {
   const urls = (Array.isArray(href) ? href : href ? [href] : []).filter(Boolean);
   if (urls.length === 0) return null;
   const cls = "underline decoration-fg-max/30 hover:text-fg-max";
@@ -170,7 +171,7 @@ function SecuritySource({ href }: { href?: string | string[] }) {
   );
 }
 
-function Stars({ n }: { n: number }) {
+function StarsBase({ n }: { n: number }) {
   return (
     <div className="flex items-center gap-0.5">
       {Array.from({ length: 5 }).map((_, i) => (
@@ -189,7 +190,7 @@ function Stars({ n }: { n: number }) {
    cardCostSentence), testés dans tests/lib/platform-truth.test.ts. */
 
 /** Tuile de coût pour 1 000 € : montant relevé, ou la raison de son absence. */
-function CostTile({ label, cost, normalCase = false }: { label: string; cost: PurchaseCost; normalCase?: boolean }) {
+function CostTileBase({ label, cost, normalCase = false }: { label: string; cost: PurchaseCost; normalCase?: boolean }) {
   return (
     <div className="rounded-xl border border-border bg-elevated p-4">
       <div className={normalCase ? "text-xs text-muted" : "text-xs uppercase tracking-wide text-muted"}>{label}</div>
@@ -331,7 +332,7 @@ function buildFaq(p: Platform): { q: string; a: string }[] {
  * Page
  * ------------------------------------------------------------------ */
 
-export default function ReviewPage({ params }: Props) {
+function ReviewPage({ params }: Props) {
   const p = getPlatformById(params.slug);
   if (!p) notFound();
 
@@ -1237,3 +1238,10 @@ export default function ReviewPage({ params }: Props) {
     </article>
   );
 }
+
+const Score = avecTypoSync(ScoreBase);
+const SecuritySource = avecTypoSync(SecuritySourceBase);
+const Stars = avecTypoSync(StarsBase);
+const CostTile = avecTypoSync(CostTileBase);
+
+export default avecTypoSync(ReviewPage);

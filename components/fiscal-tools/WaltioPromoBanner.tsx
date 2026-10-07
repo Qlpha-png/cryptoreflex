@@ -11,6 +11,7 @@
  *  - "waltio-promo-banner-dismiss"
  */
 
+import { avecTypoSync } from "@/components/ui/Typo";
 import { useCallback, useEffect, useState } from "react";
 import { Tag, X } from "lucide-react";
 import { track, trackAffiliateClick } from "@/lib/analytics";
@@ -28,7 +29,7 @@ const WALTIO_AFFILIATE_URL = waltioAffiliateUrl({
   utm_content: "fr-2026-05",
 });
 
-export default function WaltioPromoBanner() {
+function WaltioPromoBanner() {
   const [dismissed, setDismissed] = useState(true); // hidden until we check storage
 
   useEffect(() => {
@@ -125,3 +126,5 @@ export default function WaltioPromoBanner() {
     </div>
   );
 }
+
+export default avecTypoSync(WaltioPromoBanner);

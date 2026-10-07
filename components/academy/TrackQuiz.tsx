@@ -10,6 +10,7 @@
  *  - L'utilisateur peut retenter le quiz autant de fois qu'il veut.
  */
 
+import { avecTypoSync } from "@/components/ui/Typo";
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import {
@@ -61,7 +62,7 @@ function seededOrder(id: string, n: number): number[] {
   return arr;
 }
 
-export default function TrackQuiz({
+function TrackQuiz({
   trackId,
   trackTitle,
   questions,
@@ -393,3 +394,5 @@ export default function TrackQuiz({
     </section>
   );
 }
+
+export default avecTypoSync(TrackQuiz);

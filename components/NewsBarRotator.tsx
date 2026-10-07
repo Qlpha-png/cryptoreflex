@@ -1,5 +1,6 @@
 "use client";
 
+import { avecTypoSync } from "@/components/ui/Typo";
 import { useEffect, useState } from "react";
 import { formatRelativeFr } from "@/lib/news-aggregator";
 
@@ -25,7 +26,7 @@ interface Props {
  *  - Page Visibility API : pause si onglet hidden (économie batterie).
  *  - prefers-reduced-motion : pas de rotation, on affiche les 3 items en flex.
  */
-export default function NewsBarRotator({ news }: Props) {
+function NewsBarRotator({ news }: Props) {
   const [idx, setIdx] = useState(0);
   const [paused, setPaused] = useState(false);
   const [reduced, setReduced] = useState(false);
@@ -94,7 +95,7 @@ export default function NewsBarRotator({ news }: Props) {
   );
 }
 
-function NewsItemLink({ item }: { item: NewsItem }) {
+function NewsItemLinkBase({ item }: { item: NewsItem }) {
   return (
     <a
       href={item.link}
@@ -117,3 +118,7 @@ function NewsItemLink({ item }: { item: NewsItem }) {
     </a>
   );
 }
+
+const NewsItemLink = avecTypoSync(NewsItemLinkBase);
+
+export default avecTypoSync(NewsBarRotator);

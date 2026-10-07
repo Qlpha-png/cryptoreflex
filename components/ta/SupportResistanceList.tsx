@@ -38,7 +38,7 @@ function distancePct(level: number, price: number): number {
 
 function fmtPct(pct: number): string {
   const sign = pct > 0 ? "+" : "";
-  return `${sign}${fmtFr(pct, 2)}%`;
+  return `${sign}${fmtFr(pct, 2)}\u00a0%`;
 }
 
 /* -------------------------------------------------------------------------- */

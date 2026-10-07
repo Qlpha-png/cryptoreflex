@@ -1,5 +1,6 @@
 "use client";
 
+import { avecTypoSync } from "@/components/ui/Typo";
 import {
   useCallback,
   useDeferredValue,
@@ -87,7 +88,7 @@ function textForChange(value: number | null): string {
 /** Délais (ms) pour les 3 tentatives de retry automatique côté client. */
 const RETRY_DELAYS_MS = [5_000, 15_000, 30_000];
 
-export default function Heatmap({ coins, internalSlugs }: Props) {
+function Heatmap({ coins, internalSlugs }: Props) {
   const [topFilter, setTopFilter] = useState<TopFilter>(100);
   const [period, setPeriod] = useState<Period>("24h");
   const [hovered, setHovered] = useState<string | null>(null);
@@ -386,7 +387,7 @@ export default function Heatmap({ coins, internalSlugs }: Props) {
 }
 
 /* ───────────────────────── TOOLTIP ───────────────────────── */
-function CellTooltip({
+function CellTooltipBase({
   coin,
   change,
   period,
@@ -424,3 +425,7 @@ function CellTooltip({
     </div>
   );
 }
+
+const CellTooltip = avecTypoSync(CellTooltipBase);
+
+export default avecTypoSync(Heatmap);

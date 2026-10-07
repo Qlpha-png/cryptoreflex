@@ -1,5 +1,6 @@
 "use client";
 
+import { avecTypoSync } from "@/components/ui/Typo";
 import { useEffect, useState } from "react";
 
 /**
@@ -43,7 +44,7 @@ function computeRemaining(target: Date): Remaining {
   return { days, hours, minutes, seconds, total };
 }
 
-export default function HalvingCountdown({ targetDate }: Props) {
+function HalvingCountdown({ targetDate }: Props) {
   const [remaining, setRemaining] = useState<Remaining | null>(null);
   const [reducedMotion, setReducedMotion] = useState(false);
 
@@ -112,7 +113,7 @@ export default function HalvingCountdown({ targetDate }: Props) {
   );
 }
 
-function Cell({
+function CellBase({
   value,
   label,
   pad = 0,
@@ -143,3 +144,7 @@ function Cell({
     </div>
   );
 }
+
+const Cell = avecTypoSync(CellBase);
+
+export default avecTypoSync(HalvingCountdown);

@@ -1,5 +1,6 @@
 "use client";
 
+import { avecTypoSync } from "@/components/ui/Typo";
 import { useEffect, useState } from "react";
 import { ArrowRight } from "lucide-react";
 import { trackAffiliateClick } from "@/lib/analytics";
@@ -36,7 +37,7 @@ interface Props {
   surface?: string;
 }
 
-export default function MobileStickyCTA({
+function MobileStickyCTA({
   platformId,
   label,
   href,
@@ -130,3 +131,5 @@ export default function MobileStickyCTA({
     </div>
   );
 }
+
+export default avecTypoSync(MobileStickyCTA);

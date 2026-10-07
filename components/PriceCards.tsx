@@ -1,3 +1,4 @@
+import { avecTypoSync } from "@/components/ui/Typo";
 import { ArrowDownRight, ArrowUpRight } from "lucide-react";
 import { type CoinPrice, formatCompactUsd, formatPct, formatUsd } from "@/lib/coingecko";
 import CryptoLogo from "@/components/ui/CryptoLogo";
@@ -10,7 +11,7 @@ interface Props {
  * Larger cards for the hero / featured coins (BTC, ETH, SOL).
  * Layout: header row (icon + name) → price → footer row (% + market cap).
  */
-export default function PriceCards({ prices }: Props) {
+function PriceCards({ prices }: Props) {
   const featured = prices.filter((p) =>
     ["bitcoin", "ethereum", "solana"].includes(p.id)
   );
@@ -72,3 +73,5 @@ export default function PriceCards({ prices }: Props) {
 
 // compactUsd local supprimé 19/05/2026 — utilisation de formatCompactUsd de
 // lib/coingecko.ts pour cohérence format "k / M / Md / T $" (audit FR).
+
+export default avecTypoSync(PriceCards);

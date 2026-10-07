@@ -1,3 +1,4 @@
+import { avecTypoSync } from "@/components/ui/Typo";
 import type { ReactNode } from "react";
 
 interface ComparisonTableProps {
@@ -13,7 +14,7 @@ interface ComparisonTableProps {
  * (headers + rows) plutôt que markdown brut, pour permettre des nœuds React
  * en cellules (badges, liens, icônes) si besoin.
  */
-export default function ComparisonTable({
+function ComparisonTable({
   headers,
   rows,
   boldFirstCol = true,
@@ -53,3 +54,5 @@ export default function ComparisonTable({
     </div>
   );
 }
+
+export default avecTypoSync(ComparisonTable);

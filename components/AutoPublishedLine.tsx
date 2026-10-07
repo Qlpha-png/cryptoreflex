@@ -1,3 +1,4 @@
+import { avecTypoSync } from "@/components/ui/Typo";
 import { Fragment } from "react";
 import { autoPublicationSources, type AutoSourceFrontmatter } from "@/lib/auto-publication";
 
@@ -8,7 +9,7 @@ import { autoPublicationSources, type AutoSourceFrontmatter } from "@/lib/auto-p
  * 07/10/2026 (règlement IA, art. 50(4)) : `redigeeParIA` pour les actualités, rédigées par une IA →
  * « Rédigée par une IA à partir de [source] et publiée automatiquement. » (voir lib/auto-publication.ts).
  */
-export default function AutoPublishedLine({
+function AutoPublishedLine({
   frontmatter,
   redigeeParIA = false,
   className = "mt-10",
@@ -50,3 +51,5 @@ export default function AutoPublishedLine({
     </p>
   );
 }
+
+export default avecTypoSync(AutoPublishedLine);

@@ -1,3 +1,4 @@
+import { avecTypoSync } from "@/components/ui/Typo";
 import Link from "next/link";
 import { getCorrectionsForSlug } from "@/lib/corrections";
 import { formatDateFr } from "@/lib/engagements";
@@ -12,7 +13,7 @@ import { formatDateFr } from "@/lib/engagements";
 /** Ajoute un point final si le texte n'en a pas. */
 const endDot = (s: string) => (/[.!?…]$/.test(s.trim()) ? s : `${s}.`);
 
-export default function CorrectionNotice({ slug }: { slug: string }) {
+function CorrectionNotice({ slug }: { slug: string }) {
   const corrections = getCorrectionsForSlug(slug);
   if (corrections.length === 0) return null;
   return (
@@ -39,3 +40,5 @@ export default function CorrectionNotice({ slug }: { slug: string }) {
     </aside>
   );
 }
+
+export default avecTypoSync(CorrectionNotice);

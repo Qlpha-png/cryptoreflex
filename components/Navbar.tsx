@@ -1,5 +1,6 @@
 "use client";
 
+import { avecTypoSync } from "@/components/ui/Typo";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
@@ -125,7 +126,7 @@ function isActive(href: string, pathname: string): boolean {
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
-export default function Navbar() {
+function Navbar() {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -425,3 +426,5 @@ export default function Navbar() {
     </>
   );
 }
+
+export default avecTypoSync(Navbar);

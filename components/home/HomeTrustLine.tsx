@@ -1,3 +1,4 @@
+import { avecTypoSync } from "@/components/ui/Typo";
 import Link from "next/link";
 import { ShieldCheck } from "lucide-react";
 import { getExchangePlatforms } from "@/lib/platforms";
@@ -38,7 +39,7 @@ export function verificationWindow(rawDates: Array<string | null | undefined>): 
   return `entre le ${start} et le ${premier(fmt(last, true))}`;
 }
 
-export default function HomeTrustLine() {
+function HomeTrustLine() {
   const when = verificationWindow(getExchangePlatforms().map((p) => p.mica?.lastVerified));
   return (
     <section aria-label="Notre engagement" className="mx-auto max-w-7xl px-4 pb-12 sm:px-6 lg:px-8">
@@ -59,3 +60,5 @@ export default function HomeTrustLine() {
     </section>
   );
 }
+
+export default avecTypoSync(HomeTrustLine);
