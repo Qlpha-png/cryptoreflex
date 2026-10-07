@@ -361,7 +361,7 @@ const FAQ = [
   },
   {
     q: "À quelle fréquence cet outil est-il mis à jour ?",
-    a: "Toutes les fiches sont vérifiées manuellement le 25 de chaque mois. Les mises à jour intermédiaires (changement majeur de statut, nouvel agrément) sont intégrées dans les 7 jours suivant la publication officielle.",
+    a: "Les statuts viennent des registres officiels : la liste blanche de l'AMF et le registre des prestataires agréés de l'ESMA. Une veille automatique relit ces registres chaque nuit et signale tout changement ; la fiche est alors corrigée après vérification. La date de la dernière vérification est affichée sur chaque fiche.",
   },
   {
     q: "Puis-je intégrer un badge sur mon site ?",

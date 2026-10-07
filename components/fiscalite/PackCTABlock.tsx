@@ -37,9 +37,9 @@ function PackCTABlock({
   variant = "default",
   fromPage,
 }: Props) {
-  const href = fromPage
-    ? `/pack-declaration-crypto-2026?utm_source=internal&utm_medium=link&utm_campaign=fiscal-cta&utm_content=${encodeURIComponent(fromPage)}`
-    : "/pack-declaration-crypto-2026";
+  // Lien interne = URL canonique, sans paramètre de suivi (audit SEO du 08/10/2026). fromPage reste accepté.
+  void fromPage;
+  const href = "/pack-declaration-crypto-2026";
 
   if (variant === "compact") {
     return (

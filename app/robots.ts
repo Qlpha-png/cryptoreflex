@@ -64,7 +64,10 @@ export default function robots(): MetadataRoute.Robots {
       // ----- Bots généralistes -----
       {
         userAgent: "*",
-        allow: "/",
+        // Audit SEO 08/10/2026 : le logo déclaré dans le JSON-LD Organization (lib/schema.ts) est servi par /api/logo ;
+        // avec « Disallow: /api/ » seul, Googlebot ne pouvait pas le récupérer. La règle la plus longue l'emporte :
+        // « Allow: /api/logo » rouvre ce seul chemin.
+        allow: ["/", "/api/logo"],
         disallow: COMMON_DISALLOW,
       },
 

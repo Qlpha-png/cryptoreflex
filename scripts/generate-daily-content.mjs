@@ -169,7 +169,12 @@ function parseRssItems(xml) {
     const title = decodeHtmlEntities((block.match(/<title>([\s\S]*?)<\/title>/) || [, ""])[1]
       .replace(/<!\[CDATA\[(.*?)\]\]>/s, "$1")
       .trim());
-    const link = (block.match(/<link>([\s\S]*?)<\/link>/) || [, ""])[1].trim();
+    // Certains flux (Cointelegraph) mettent le lien dans un CDATA : sans ce nettoyage, la page publiée liait
+    // « /%3C![CDATA[https://…]]> » (404). On garde seulement une vraie adresse http(s).
+    const link = decodeHtmlEntities((block.match(/<link>([\s\S]*?)<\/link>/) || [, ""])[1]
+      .replace(/<!\[CDATA\[(.*?)\]\]>/s, "$1")
+      .trim());
+    if (!/^https?:\/\//i.test(link)) continue;
     const description = (block.match(/<description>([\s\S]*?)<\/description>/) || [, ""])[1]
       .replace(/<!\[CDATA\[(.*?)\]\]>/s, "$1")
       .replace(/<[^>]+>/g, "")

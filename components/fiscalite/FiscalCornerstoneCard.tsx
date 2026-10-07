@@ -36,9 +36,10 @@ function FiscalCornerstoneCard({
   variant = "default",
   fromPage,
 }: Props) {
-  const href = fromPage
-    ? `/etudes/fiscalite-crypto-france-2026-guide-cerfa?utm_source=internal&utm_medium=link&utm_campaign=fiscal-cornerstone&utm_content=${encodeURIComponent(fromPage)}`
-    : "/etudes/fiscalite-crypto-france-2026-guide-cerfa";
+  // Lien interne = URL canonique, sans paramètre de suivi (audit SEO du 08/10/2026 : les ?utm_* créaient des doublons
+  // d'URL explorés par Google). fromPage reste accepté pour ne casser aucun appelant.
+  void fromPage;
+  const href = "/etudes/fiscalite-crypto-france-2026-guide-cerfa";
 
   if (variant === "compact") {
     return (
