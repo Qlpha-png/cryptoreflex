@@ -59,15 +59,26 @@ describe("D3 — contenus publiés automatiquement", () => {
     ).toBe("Publiée automatiquement à partir de CoinDesk, The Block et Decrypt.");
   });
 
-  it("actualités et analyses techniques : plus de fiche auteur, la ligne automatique à la place, sans « IA »", () => {
+  it("règlement IA art. 50(4) (07/10/2026) : texte rédigé par une IA → « Rédigée par une IA … et publiée automatiquement »", () => {
+    expect(autoPublicationText(autoPublicationSources({ source: "CoinDesk", sourceUrl: "https://www.coindesk.com/x" }), true)).toBe(
+      "Rédigée par une IA à partir de CoinDesk et publiée automatiquement.",
+    );
+    expect(autoPublicationText(autoPublicationSources({}), true)).toBe("Rédigée par une IA et publiée automatiquement.");
+    expect(
+      autoPublicationText(autoPublicationSources({ sources: ["CoinDesk — https://a.example/1", "The Block — https://b.example/2"] }), true),
+    ).toBe("Rédigée par une IA à partir de CoinDesk et The Block et publiée automatiquement.");
+  });
+
+  it("actualités et analyses techniques : plus de fiche auteur ; mention IA sur les actus (rédigées par IA), pas sur les analyses (gabarit sans IA)", () => {
     for (const p of ["app/actualites/[slug]/page.tsx", "app/analyses-techniques/[slug]/page.tsx"]) {
       const src = stripComments(read(p));
       expect(src, p).not.toMatch(/<AuthorCard\b/);
       expect(src, p).toMatch(/<AutoPublishedLine\b/);
       expect(src, p).not.toMatch(/DEFAULT_AUTHOR_ID|redaction-cryptoreflex|La rédaction/);
     }
-    const line = read("components/AutoPublishedLine.tsx");
-    expect(stripComments(line)).not.toMatch(/\bIA\b/);
+    expect(stripComments(read("app/actualites/[slug]/page.tsx"))).toMatch(/<AutoPublishedLine\s+redigeeParIA\b/);
+    expect(stripComments(read("app/analyses-techniques/[slug]/page.tsx"))).not.toMatch(/redigeeParIA/);
+    expect(stripComments(read("components/news/BriefHero.tsx"))).toMatch(/Rédigée par une IA, publiée automatiquement/);
     expect(stripComments(read("components/news/BriefHero.tsx"))).not.toMatch(/Par \{brief\.author\}/);
   });
 

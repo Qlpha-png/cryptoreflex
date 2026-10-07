@@ -353,7 +353,8 @@ export default async function NewsDetailPage({ params }: PageProps) {
 
         {/* D3 (décision de Kev, 06/10/2026) : actualité publiée automatiquement → pas de fiche auteur, une ligne
             discrète avec la source lue dans le frontmatter. */}
-        <AutoPublishedLine frontmatter={{ source: news.source, sourceUrl: news.sourceUrl, sources: news.isBrief ? news.sources : undefined }} />
+        {/* 07/10/2026 : actualités et brief rédigés par une IA → mention obligatoire (règlement IA, art. 50(4)). */}
+        <AutoPublishedLine redigeeParIA frontmatter={{ source: news.source, sourceUrl: news.sourceUrl, sources: news.isBrief ? news.sources : undefined }} />
 
         {/* NEWSLETTER CTA */}
         <div className="mt-10">

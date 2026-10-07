@@ -58,8 +58,9 @@ export default function BriefHero({ brief }: { brief: NewsSummary }) {
 
       {/* Signature + CTA */}
       <div className="mt-7 flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-border/60 pt-5 text-sm text-muted">
-        {/* D3 (06/10/2026) : brève publiée automatiquement, pas de signature « Par … ». */}
-        <span className="text-fg/70">Publiée automatiquement</span>
+        {/* D3 (06/10/2026) : brève publiée automatiquement, pas de signature « Par … ». 07/10/2026 : rédigée par une
+            IA (scripts/generate-daily-brief.mjs) → mention obligatoire (règlement IA, art. 50(4)). */}
+        <span className="text-fg/70">Rédigée par une IA, publiée automatiquement</span>
         <span className="text-border" aria-hidden="true">·</span>
         <span className="inline-flex items-center gap-1">
           <Clock className="h-3.5 w-3.5" aria-hidden="true" />
