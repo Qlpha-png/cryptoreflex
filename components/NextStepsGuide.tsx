@@ -84,8 +84,8 @@ const POOL: Record<string, Step> = {
   quiz: {
     href: "/quiz/plateforme",
     Icon: HelpCircle,
-    label: "Comparer les plateformes en 30 secondes",
-    desc: "6 questions → Top 3 plateformes adaptées à votre profil. Outil pédagogique, le choix final vous appartient.",
+    label: "Filtrer les plateformes autorisées en France",
+    desc: "3 critères (carte, aide en français, coût publié) → toutes les plateformes autorisées en France qui les remplissent, par ordre alphabétique.",
     primary: true,
   },
   comparator: {

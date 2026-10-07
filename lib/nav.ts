@@ -79,7 +79,7 @@ export const NAV_SECTIONS: NavSection[] = [
     href: "/comparatif",
     links: [
       { href: "/comparatif", label: "Comparer les plateformes", desc: "Celles autorisées en France, côte à côte" },
-      { href: "/quiz/plateforme", label: "Questionnaire rapide", desc: "Comparer selon vos besoins, sans e-mail" },
+      { href: "/quiz/plateforme", label: "Filtrer les plateformes", desc: "Carte, aide en français, coût publié" },
       { href: "/comparatif/frais", label: "Les frais comparés", desc: "Ce que coûte vraiment un achat" },
       { href: "/comparatif/securite", label: "La sécurité comparée", desc: "Qui protège le mieux vos cryptos" },
       { href: "/avis", label: "Avis détaillés", desc: "Chaque plateforme testée" },
@@ -203,6 +203,8 @@ export const FOOTER_LEGAL: NavLink[] = [
   { href: "/cgu", label: "Conditions d'utilisation" },
   { href: "/accessibilite", label: "Accessibilité" },
   { href: "/transparence", label: "Affiliation" },
+  // Article D111-7 du Code de la consommation : rubrique accessible depuis toutes les pages (07/10/2026).
+  { href: "/fonctionnement-du-comparateur", label: "Fonctionnement du comparateur" },
   { href: "/corrections", label: "Corrections" },
   { href: "/sponsoring", label: "Sponsoring" },
   { href: "/ressources-libres", label: "Données libres" },

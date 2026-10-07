@@ -111,8 +111,8 @@ Calendrier événements crypto (halvings, hard forks, conférences, échéances 
 - /outils/whitepaper-tldr : résumé automatique de whitepapers.
 - /convertisseur : conversion fiat ↔ crypto live (top 30 paires).
 
-### /quiz/trouve-ton-exchange
-Quiz interactif "trouve la plateforme idéale en 60s" — recommandation personnalisée selon profil (débutant/avancé, montant, fréquence, besoins). Aucun concurrent FR n'a d'équivalent.
+### /quiz/plateforme
+Filtre des plateformes autorisées en France : 3 critères (paiement par carte, aide en français, coût publié), résultat par ordre alphabétique, sans note ni lien rémunéré. Information générale, pas un conseil personnalisé.
 
 ### /methodologie
 Documentation publique du processus éditorial : sourcing, fact-checking, scoring 6 critères pondérés, déclaration des conflits d'intérêts, droit de réponse, charte éthique.

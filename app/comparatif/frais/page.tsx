@@ -26,6 +26,7 @@ import {
 } from "@/lib/schema";
 import { fitTitle } from "@/lib/seo-text";
 import { fmtDateFr } from "@/lib/format-fr";
+import ComparateurNotice from "@/components/ComparateurNotice";
 
 /**
  * /comparatif/frais — Frais RÉELS des plateformes crypto FR.
@@ -255,6 +256,23 @@ export default function ComparatifFraisPage() {
             (carte / appli simple) du frais maker/taker réservé aux traders.
           </p>
         </header>
+
+        <ComparateurNotice
+          className="mt-6 max-w-3xl"
+          critere={
+            <>
+              le tableau va du frais le plus bas au plus élevé, en pourcentage du montant acheté : frais « taker » d&apos;un
+              ordre au marché pour une plateforme à carnet d&apos;ordres, frais d&apos;achat simple pour un courtier ou une
+              appli. Seul ce pourcentage sert au tri ; une marge (spread), publiée ou non, n&apos;y est pas ajoutée.
+            </>
+          }
+          perimetre={
+            <>
+              les {all.length} plateformes autorisées en France de notre base. D&apos;autres prestataires agréés peuvent
+              servir la France sans figurer ici.
+            </>
+          }
+        />
 
         {/* Stats hero */}
         <div className="mt-8 grid gap-3 sm:grid-cols-3">

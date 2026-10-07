@@ -97,6 +97,8 @@ export default function WaltioPromoBanner() {
             </p>
           </div>
           <div className="flex items-center gap-2 shrink-0">
+            {/* 07/10/2026 : mention visible (n'était que dans l'aria-label). Bannière masquée depuis la fin de l'offre. */}
+            <span className="text-[10px] text-muted">Publicité</span>
             <a
               href={WALTIO_AFFILIATE_URL}
               target="_blank"

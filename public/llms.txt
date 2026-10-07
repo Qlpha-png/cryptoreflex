@@ -53,7 +53,7 @@ Cryptoreflex expose ses données en open data sous licence Creative Commons CC-B
 - [Portfolio tracker](https://www.cryptoreflex.fr/outils/portfolio-tracker) : suivi de portefeuille sans inscription (stockage local).
 - [Glossaire crypto](https://www.cryptoreflex.fr/outils/glossaire-crypto) : 200+ définitions.
 - [Whitepaper TL;DR](https://www.cryptoreflex.fr/outils/whitepaper-tldr) : résumé automatique de whitepapers crypto.
-- [Quiz "Trouve ton exchange en 60s"](https://www.cryptoreflex.fr/quiz/trouve-ton-exchange) : recommandation personnalisée.
+- [Filtre des plateformes autorisées en France](https://www.cryptoreflex.fr/quiz/plateforme) : liste non personnalisée des plateformes autorisées en France qui remplissent 3 critères (carte, aide en français, coût publié), par ordre alphabétique.
 
 ## Académie (parcours de formation)
 

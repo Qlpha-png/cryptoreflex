@@ -59,7 +59,7 @@ export default function StickyPartnerCta({
         </div>
         <div className="flex-1 min-w-0 px-1">
           <p className="text-[11px] uppercase tracking-wider text-muted leading-none">
-            {partnerName} · à partir de
+            Publicité · {partnerName} · à partir de
           </p>
           <p className="text-base font-extrabold text-primary font-mono tabular-nums leading-tight">
             {priceFrom}

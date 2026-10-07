@@ -44,6 +44,7 @@ import {
 } from "@/lib/fiscalite";
 import { track, trackAffiliateClick } from "@/lib/analytics";
 import { waltioAffiliateUrl as waltioAffiliateUrlWith } from "@/lib/partner-links";
+import WaltioFranchise from "@/components/fiscal-tools/WaltioFranchise";
 import CountUp from "@/components/animations/CountUp";
 import PdfModal from "@/components/calculateur-fiscalite/PdfModal";
 
@@ -563,7 +564,7 @@ function WaltioPostResultCta({
       taxAmount,
     )}`;
     pitch =
-      "Sur un impôt élevé, chaque moins-value oubliée et chaque frais non déduit vous coûtent cher. Waltio retrouve automatiquement vos moins-values de l'année (imputables sur vos plus-values crypto), tous vos frais de cession et vous calcule le bon arbitrage PFU vs barème. Plan Starter 99 €/an jusqu'à 1 000 transactions (vs 600 € et plus chez un comptable).";
+      "Sur un impôt élevé, chaque moins-value oubliée et chaque frais non déduit vous coûtent cher. Waltio retrouve automatiquement vos moins-values de l'année (imputables sur vos plus-values crypto), tous vos frais de cession et vous calcule le bon arbitrage PFU vs barème. Plan Starter 99 €/an jusqu'à 1 000 transactions.";
   } else {
     headline = "Économisez 40 h sur votre déclaration crypto";
     pitch =
@@ -606,7 +607,7 @@ function WaltioPostResultCta({
                 className="h-3.5 w-3.5 shrink-0 text-success"
                 aria-hidden="true"
               />
-              220+ exchanges connectés
+              700+ exchanges et wallets (selon Waltio)
             </li>
             <li className="flex items-center gap-1.5">
               <CheckCircle2
@@ -623,6 +624,9 @@ function WaltioPostResultCta({
               Support client en français
             </li>
           </ul>
+
+          {/* 07/10/2026 : fuite de données Waltio de janvier 2026, juste avant le bouton. */}
+          <WaltioFranchise variant="compact" className="mt-4" />
 
           <div className="mt-4 flex flex-col sm:flex-row gap-2">
             <a
@@ -647,8 +651,8 @@ function WaltioPostResultCta({
             </a>
           </div>
           <p className="mt-2 text-[10px] text-muted/70">
-            Lien d'affiliation publicitaire — Cryptoreflex perçoit une
-            commission. <a href="/transparence" className="underline">En savoir plus</a>.
+            Publicité — Cryptoreflex perçoit une commission.{" "}
+            <a href="/transparence" className="underline">En savoir plus</a>.
           </p>
         </div>
       </div>

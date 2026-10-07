@@ -338,6 +338,12 @@ export default function PdfPreview({
               <div className="mt-2 inline-block rounded border border-amber-500 bg-amber-50 px-3 py-1 text-[9.5pt] font-mono text-amber-800">
                 cryptoreflex.fr/go/waltio
               </div>
+              {/* 07/10/2026 : lien rémunéré → « Publicité » ; fuite de données Waltio de janvier 2026. */}
+              <p className="mt-1 text-[10pt] leading-relaxed text-slate-700">
+                Publicité — Cryptoreflex perçoit une commission. Bon à savoir :
+                Waltio a annoncé une fuite de données en janvier 2026 (détail
+                sur cryptoreflex.fr/partenaires/waltio).
+              </p>
             </div>
           </div>
         </section>

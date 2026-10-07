@@ -11,6 +11,7 @@ import { withHreflang } from "@/lib/seo-alternates";
 import StructuredData from "@/components/StructuredData";
 import PlatformLogo from "@/components/PlatformLogo";
 import Comparateur from "@/components/comparateur/Comparateur";
+import ComparateurNotice from "@/components/ComparateurNotice";
 import { breadcrumbSchema, faqSchema, graphSchema, type JsonLd } from "@/lib/schema";
 import { fitDescription } from "@/lib/seo-text";
 
@@ -114,6 +115,24 @@ export default function ComparatifPage() {
             </p>
           </header>
 
+          <ComparateurNotice
+            className="mt-5"
+            critere={
+              <>
+                par défaut, le coût d&apos;un achat de Bitcoin de 100 € après un virement, relevé sur la grille officielle de
+                chaque plateforme. Les coûts publiés en entier ou plafonnés passent d&apos;abord, puis ceux qui ajoutent une
+                marge non chiffrée, puis ceux qui ne sont pas publiés ; à coût égal, la note sur 5 départage. Les boutons
+                ci-dessous changent ce critère.
+              </>
+            }
+            perimetre={
+              <>
+                les {rows.length} plateformes autorisées en France de notre base de {all.filter((p) => p.category !== "wallet").length}{" "}
+                plateformes étudiées. D&apos;autres prestataires agréés peuvent servir la France sans figurer ici.
+              </>
+            }
+          />
+
           <div className="mt-6">
             <Comparateur rows={rows} duelSlugs={duels.map((d) => d.slug)} />
           </div>
@@ -190,11 +209,11 @@ export default function ComparatifPage() {
 
           <div className="mt-8 flex flex-col items-start gap-3 rounded-2xl border border-primary/30 bg-primary/5 p-5 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <p className="text-base font-bold text-fg">Pas sûr de votre choix ?</p>
-              <p className="mt-1 text-sm text-fg/70">Six questions courtes, une plateforme conseillée et deux autres pistes.</p>
+              <p className="text-base font-bold text-fg">Filtrer selon vos critères</p>
+              <p className="mt-1 text-sm text-fg/70">Paiement par carte, aide en français, coût publié : la liste des plateformes autorisées qui les remplissent.</p>
             </div>
             <Link href="/quiz/plateforme" className="btn-primary shrink-0 px-4 py-2.5 text-sm">
-              Faire le questionnaire <ArrowRight className="h-4 w-4" aria-hidden="true" />
+              Ouvrir le filtre <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </Link>
           </div>
 

@@ -32,6 +32,7 @@ import LessonTool from "@/components/academy/LessonTool";
 import FAQ from "@/components/mdx/FAQ";
 import HowToSchema from "@/components/mdx/HowToSchema";
 import MdxLink from "@/components/mdx/MdxLink";
+import WaltioFranchise from "@/components/fiscal-tools/WaltioFranchise";
 import ScrollableTable from "@/components/ui/ScrollableTable";
 
 /* -------------------------------------------------------------------------- */
@@ -54,6 +55,13 @@ const mdxComponents = {
   LessonTool,
   FAQ,
   HowToSchema,
+  // 07/10/2026 : encart « Bon à savoir » sur la fuite de données Waltio de janvier 2026, à placer avant toute
+  // recommandation de Waltio avec un lien rémunéré (test : tests/lib/waltio-franchise.test.ts).
+  WaltioFranchise: (props: ComponentProps<typeof WaltioFranchise>) => (
+    <div className="not-prose my-6">
+      <WaltioFranchise {...props} />
+    </div>
+  ),
 
   /* Overrides Markdown standard ------------------------------------------ */
   a: MdxLink,

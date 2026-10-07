@@ -125,8 +125,7 @@ export default function WizardPremierAchatPage() {
                 Pas sûr de la plateforme à choisir&nbsp;?
               </h2>
               <p className="mt-1 text-sm text-fg/70">
-                Lancez le questionnaire dédié — 6 questions courtes, reco basée sur votre
-                profil (budget, fréquence d'achat, priorité).
+                Ouvrez le filtre des plateformes autorisées en France (3 critères : carte, aide en français, coût publié) — pas un conseil personnalisé.
               </p>
               <Link
                 href="/quiz/plateforme"

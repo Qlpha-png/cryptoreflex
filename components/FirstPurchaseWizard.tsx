@@ -609,8 +609,7 @@ function Step3Platform({
               Vous hésitez entre les trois&nbsp;?
             </h3>
             <p className="mt-1 text-xs text-fg/75">
-              Lancez le questionnaire « quelle plateforme pour vous » — 6 questions courtes
-              pour une reco personnalisée.
+              Ouvrez le filtre des plateformes autorisées en France (3 critères : carte, aide en français, coût publié) — pas un conseil personnalisé.
             </p>
           </div>
           <Link

@@ -825,6 +825,20 @@
       "avant": "« Publiée automatiquement à partir de [source] » (sans mention de l'IA).",
       "après": "« Rédigée par une IA à partir de [source] et publiée automatiquement. »",
       "nature": "Mention de l'IA ajoutée (règlement européen sur l'IA, art. 50) : les actualités et le brief sont rédigés par une IA."
+    },
+    {
+      "date": "2026-10-07",
+      "page": "/quiz/plateforme",
+      "avant": "« On vous recommande la plateforme la plus adaptée parmi 25 options analysées » ; « Vos 3 plateformes recommandées » ; « Notre meilleur match », avec des liens rémunérés dans le résultat.",
+      "après": "Filtre neutre : toutes les plateformes autorisées en France qui remplissent les critères cochés, par ordre alphabétique, sans lien rémunéré dans le résultat, avec la mention « Ce filtre n'est pas un conseil personnalisé ».",
+      "nature": "Recommandation personnalisée retirée (doctrine AMF du 04/08/2026 sur le conseil en crypto-actifs)."
+    },
+    {
+      "date": "2026-10-07",
+      "page": "/outils/declaration-fiscale-crypto",
+      "avant": "« 100 % conforme à la fiscalité française » ; « c'est le meilleur ratio fiabilité × support × prix » ; « 220+ exchanges » ; « réponse < 24h » ; « vs 600 € et plus chez un comptable ».",
+      "après": "« conçu pour la fiscalité française des particuliers » ; « c'est notre choix : rapport fiscal prêt, aide en français et une offre d'entrée à 39 €/an » ; « 700+ (selon Waltio) » ; délai de réponse et comparaison avec un comptable retirés (non sourcés).",
+      "nature": "Promesses invérifiables et chiffres non sourcés sur Waltio corrigés ; fuite de données de janvier 2026 désormais signalée partout où Waltio est recommandé."
     }
   ]
 }

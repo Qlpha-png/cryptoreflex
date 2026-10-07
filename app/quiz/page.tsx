@@ -32,10 +32,10 @@ export const revalidate = 86400;
 
 const PAGE_PATH = "/quiz";
 const PAGE_URL = `${BRAND.url}${PAGE_PATH}`;
-const TITLE = "Questionnaires crypto : plateforme idéale";
+const TITLE = "Filtre des plateformes et quiz crypto";
 const DESCRIPTION =
   // 06/10/2026 : plus de « recommandation » ni de « quelle crypto pour votre premier achat » ; le quiz crypto a 6 questions (pas 5).
-  "Deux questionnaires courts et neutres pour démarrer dans la crypto : quelles plateformes correspondent à votre usage (6 questions) et quels types de projets crypto découvrir en premier (6 questions). Outils pédagogiques, pas un conseil d'investissement.";
+  "Deux outils courts et neutres pour démarrer dans la crypto : un filtre des plateformes autorisées en France selon 3 critères (carte, aide en français, coût publié) et un quiz sur les types de projets crypto à découvrir en premier (6 questions). Outils pédagogiques, pas un conseil d'investissement.";
 
 export const metadata: Metadata = {
   title: TITLE,
@@ -75,15 +75,15 @@ interface QuizCard {
 const QUIZZES: QuizCard[] = [
   {
     href: "/quiz/plateforme",
-    title: "Quel exchange crypto pour vous ?",
+    title: "Filtrer les plateformes autorisées en France",
     description:
-      `Six questions courtes pour matcher votre profil (budget, fréquence d'achat, support FR, conformité MiCA) avec la plateforme la plus adaptée parmi les ${STATS.platforms} plateformes autorisées en France.`,
-    questionCount: "6 questions",
-    estimatedTime: "~2 minutes",
+      `Trois critères (paiement par carte, aide en français, coût publié) pour lister, parmi les ${STATS.platforms} plateformes autorisées en France, toutes celles qui les remplissent, par ordre alphabétique. Pas un conseil personnalisé.`,
+    questionCount: "3 critères",
+    estimatedTime: "~1 minute",
     highlights: [
-      "Tient compte du support FR",
-      "Filtre les plateformes non-MiCA",
-      "Résultat neutre, pas d'affilié biaisé",
+      "Uniquement des plateformes autorisées en France",
+      "Critères relevés sur les sources officielles",
+      "Ordre alphabétique, aucun lien rémunéré dans le résultat",
     ],
     icon: Building2,
     accent: "from-cyan-500/20 to-blue-500/20 border-cyan-500/30",

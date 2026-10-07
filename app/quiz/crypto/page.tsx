@@ -136,9 +136,9 @@ export default function QuizCryptoPage() {
                 Vous savez quelle crypto ? Comparez les plateformes MiCA
               </h2>
               <p className="mt-1 text-sm text-fg/70">
-                Questionnaire pédagogique en 6 questions — il présente les exchanges régulés
-                MiCA pertinents selon votre budget, votre fréquence d&apos;achat et votre
-                support préféré. Le choix final vous appartient.
+                Notre filtre liste les plateformes autorisées en France qui remplissent vos
+                critères (carte, aide en français, coût publié). Ce n&apos;est pas un conseil
+                personnalisé : le choix final vous appartient.
               </p>
             </div>
             <Link href="/quiz/plateforme" className="btn-primary shrink-0">

@@ -41,6 +41,7 @@ import { track, trackAffiliateClick } from "@/lib/analytics";
 import type { FiscaliteInput, FiscaliteResult } from "@/lib/fiscalite";
 import { useFocusTrap } from "@/lib/use-focus-trap";
 import { waltioAffiliateUrl } from "@/lib/partner-links";
+import WaltioFranchise from "@/components/fiscal-tools/WaltioFranchise";
 
 // 06/10/2026 : « waltio.com?ref=cryptoreflex » n'était pas tracé (le programme Waltio identifie l'affilié par a_aid).
 const WALTIO_AFFILIATE_URL_POST_PDF = waltioAffiliateUrl({
@@ -357,6 +358,8 @@ export default function PdfModal({
                     2086 + 3916-bis à recopier. Rapport fiscal dès{" "}
                     <strong className="text-primary-soft">39 €/an</strong>.
                   </p>
+                  {/* 07/10/2026 : fuite de données Waltio de janvier 2026, juste avant le lien. */}
+                  <WaltioFranchise variant="compact" className="mt-3" />
                   <a
                     href={WALTIO_AFFILIATE_URL_POST_PDF}
                     target="_blank"
@@ -376,6 +379,9 @@ export default function PdfModal({
                     Génère mes formulaires Cerfa avec Waltio
                     <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
                   </a>
+                  <p className="mt-1 text-[10px] text-muted/70">
+                    Publicité — Cryptoreflex perçoit une commission.
+                  </p>
                 </div>
               </div>
             </div>

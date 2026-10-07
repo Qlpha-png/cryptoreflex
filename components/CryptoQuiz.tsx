@@ -783,7 +783,7 @@ function ResultView({
             Comparer les plateformes régulées
           </div>
           <div className="mt-1 text-xs text-muted">
-            6 questions pour voir quels exchanges agréés MiCA correspondent à votre usage.
+            Filtre des plateformes autorisées en France selon 3 critères (carte, aide en français, coût publié).
           </div>
         </Link>
         <button

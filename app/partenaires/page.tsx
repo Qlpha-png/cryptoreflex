@@ -18,6 +18,7 @@ import {
   type PartnerProduct,
 } from "@/data/partners";
 import { BRAND } from "@/lib/brand";
+import WaltioFranchise from "@/components/fiscal-tools/WaltioFranchise";
 import { withHreflang } from "@/lib/seo-alternates";
 
 export const metadata: Metadata = {
@@ -290,6 +291,8 @@ function PartnerShowcase({
 
           {/* Bottom : main CTA + commission disclosure */}
           <div className="mt-auto space-y-3">
+            {/* 07/10/2026 : fuite de données Waltio de janvier 2026, juste avant le bouton. */}
+            {partner.slug === "waltio" && <WaltioFranchise variant="line" className="text-center" />}
             <Link prefetch={false}
               href={`/go/${partner.slug}?ctx=vitrine&pos=main-cta`}
               className="btn-primary btn-primary-shine w-full min-h-[52px] inline-flex items-center justify-center gap-2 group/cta"
@@ -312,7 +315,7 @@ function PartnerShowcase({
             </Link>
 
             <p className="text-[11px] text-center text-muted leading-relaxed">
-              Lien affilié — Cryptoreflex perçoit{" "}
+              Publicité — lien affilié : Cryptoreflex perçoit{" "}
               {partner.commission ?? "une commission"} sans surcoût pour vous.
             </p>
           </div>

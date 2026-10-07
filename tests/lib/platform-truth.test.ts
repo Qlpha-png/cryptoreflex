@@ -56,7 +56,6 @@ const ZONE_CODE = [
   ...listFiles("components/comparison", /\.tsx$/),
   "components/PlatformCard.tsx",
   "components/PlatformQuiz.tsx",
-  "components/QuizExchange.tsx",
   "components/mdx/PlatformCardInline.tsx",
 ];
 const ARTICLES = listFiles("content/articles", /\.mdx$/);

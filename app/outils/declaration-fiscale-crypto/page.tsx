@@ -15,6 +15,7 @@ import StructuredData from "@/components/StructuredData";
 import FiscalToolCard from "@/components/fiscal-tools/FiscalToolCard";
 import FiscalToolComparisonTable from "@/components/fiscal-tools/FiscalToolComparisonTable";
 import WaltioPromoCard from "@/components/fiscal-tools/WaltioPromoCard";
+import WaltioFranchise from "@/components/fiscal-tools/WaltioFranchise";
 import RelatedPagesNav from "@/components/RelatedPagesNav";
 import FiscalCornerstoneCard from "@/components/fiscalite/FiscalCornerstoneCard";
 import {
@@ -277,11 +278,14 @@ export default function DeclarationFiscaleCryptoPage() {
               Pour la France : Waltio en premier choix
             </h2>
             <p className="mt-3 text-fg/75">
-              Sur les 3 outils testés, Waltio est le seul édité en France
+              Sur les 3 outils comparés, Waltio est le seul édité en France
               avec un export <strong>directement compatible</strong> avec le
               formulaire 2086 et le 3916-bis. Pour un contribuable français,
-              c'est le meilleur ratio fiabilité × support × prix.
+              c'est notre choix : rapport fiscal prêt, aide en français et une
+              offre d'entrée à 39 €/an.
             </p>
+            {/* 07/10/2026 : fuite de données Waltio de janvier 2026, affichée avant le premier bouton Waltio. */}
+            <WaltioFranchise variant="compact" className="mt-5" />
           </div>
 
           <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -299,6 +303,7 @@ export default function DeclarationFiscaleCryptoPage() {
             <WaltioPromoCard
               placement="declaration-page-banner"
               variant="banner"
+              showFranchise={false}
               headline="Générez votre Cerfa 2086 + 3916-bis en 10 minutes avec Waltio"
               description="Connectez vos exchanges (Kraken, Coinbase, Bitpanda, Ledger…), Waltio calcule automatiquement vos plus-values selon la fiscalité française et vous livre les formulaires à recopier sur impots.gouv.fr. Rapport fiscal dès 39 €/an."
             />

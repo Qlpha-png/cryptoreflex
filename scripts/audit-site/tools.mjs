@@ -160,12 +160,16 @@ const SCENARIOS = {
     const t = norm(await page.locator("main").innerText());
     ok(/Bitcoin|BTC/.test(t) && /€/.test(t), "la position Bitcoin est ajoutée avec sa valeur");
   },
-  async "comparateur-personnalise"(page, ok) {
-    await page.goto(`${BASE}/outils/comparateur-personnalise`, { waitUntil: "networkidle" });
+  /* 07/10/2026 : /outils/comparateur-personnalise et /quiz/trouve-ton-exchange redirigent vers ce filtre neutre. */
+  async "filtre-plateformes"(page, ok) {
+    await page.goto(`${BASE}/quiz/plateforme`, { waitUntil: "networkidle" });
     await clickThrough(page);
     const t = norm(await page.locator("main").innerText());
-    ok(/Coinbase|Kraken|Bitpanda|Bitstack|Coinhouse|Trade Republic/.test(t), "des plateformes sont recommandées");
-    ok(!/\bBinance\b/.test(t.split(/Avertissement|Méthodologie/)[0]), "aucune plateforme non autorisée (Binance) recommandée");
+    ok(/Coinbase|Kraken|Bitpanda|Bitstack|Coinhouse|Trade Republic|Bitvavo/.test(t), "le filtre liste des plateformes");
+    ok(/n'est pas un conseil personnalisé/.test(t), "l'avertissement « pas un conseil personnalisé » est affiché");
+    ok(!/\bBinance\b/.test(t.split(/Méthodologie|Autorisation vérifiée/)[0]), "aucune plateforme non autorisée (Binance) listée");
+    const paid = await page.locator('main section[role="form"] a[href*="/go/"], main section[role="form"] a[rel*="sponsored"]').count();
+    ok(paid === 0, "aucun lien rémunéré dans le résultat");
   },
   async glossaire(page, ok) {
     await page.goto(`${BASE}/outils/glossaire-crypto`, { waitUntil: "networkidle" });
@@ -178,12 +182,6 @@ const SCENARIOS = {
     await page.getByRole("searchbox").first().fill("ethereum");
     await page.waitForTimeout(600);
     ok(/Ethereum/i.test(await page.locator("main").innerText()), "le filtre « ethereum » trouve des comparatifs");
-  },
-  async "quiz-exchange"(page, ok) {
-    await page.goto(`${BASE}/quiz/trouve-ton-exchange`, { waitUntil: "networkidle" });
-    await clickThrough(page, 14);
-    const t = norm(await page.locator("main").innerText());
-    ok(/Coinbase|Kraken|Bitpanda|Bitstack|Coinhouse|Trade Republic|Revolut|Bitvavo/.test(t), "le quiz aboutit à des plateformes");
   },
   async "wizard-premier-achat"(page, ok) {
     await page.goto(`${BASE}/wizard/premier-achat`, { waitUntil: "networkidle" });

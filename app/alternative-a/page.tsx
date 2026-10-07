@@ -114,10 +114,10 @@ export default function AlternativeAHub() {
                 Pas sûr de quelle alternative choisir ?
               </h2>
               <p className="mt-1 text-sm text-muted leading-relaxed">
-                Notre questionnaire pédagogique vous présente les plateformes MiCA
-                pertinentes en 30 secondes, selon votre profil (débutant,
-                investisseur régulier, trader actif). Outil informatif, sans
-                conseil personnalisé — le choix final vous appartient.
+                Notre filtre liste les plateformes autorisées en France qui
+                remplissent vos critères (carte, aide en français, coût publié),
+                par ordre alphabétique. Ce n'est pas un conseil personnalisé : le
+                choix final vous appartient.
               </p>
             </div>
           </div>

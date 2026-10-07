@@ -154,6 +154,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     entry("/embed", "monthly", 0.7),
     entry("/contact", "monthly", 0.5),
     entry("/methodologie", "monthly", 0.5),
+    entry("/fonctionnement-du-comparateur", "monthly", 0.4),
     // Charte éthique éditoriale — ajout 2026-05-07 (signal E-E-A-T).
     entry("/charte", "yearly", 0.6),
     // Journal des corrections — ajout 2026-10-06 (data/corrections.json, promesse « pas de correction silencieuse »).
@@ -185,7 +186,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     entry("/halving-bitcoin", "weekly", 0.65),
     entry("/quiz/plateforme", "monthly", 0.7),
     entry("/quiz/crypto", "monthly", 0.7),
-    // Quiz "Trouve ton exchange en 60 sec" (lead magnet).
     // Programmatic SEO — /comparer (hub cryptos vs cryptos).
     entry("/comparer", "weekly", 0.75),
     entry("/wizard/premier-achat", "monthly", 0.7),

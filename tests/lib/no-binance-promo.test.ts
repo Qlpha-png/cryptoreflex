@@ -14,7 +14,7 @@ const read = (p: string) => readFileSync(resolve(ROOT, p), "utf8");
 
 const PROMO_FILES = [
   "app/twitter-image.tsx",
-  "app/quiz/trouve-ton-exchange/opengraph-image.tsx",
+  /* 07/10/2026 : app/quiz/trouve-ton-exchange/opengraph-image.tsx supprimée (page redirigée vers /quiz/plateforme). */
   "app/opengraph-image.tsx",
   "app/portefeuille/page.tsx",
   "components/Footer.tsx",

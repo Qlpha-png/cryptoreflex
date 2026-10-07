@@ -64,6 +64,7 @@ import { BRAND } from "@/lib/brand";
 import { breadcrumbSchema, faqSchema } from "@/lib/schema";
 import StructuredData from "@/components/StructuredData";
 import StickyPartnerCta from "./StickyPartnerCta";
+import WaltioFranchise from "@/components/fiscal-tools/WaltioFranchise";
 import { withHreflang } from "@/lib/seo-alternates";
 import { fitTitle } from "@/lib/seo-text";
 import { fmtFr, fmtNb } from "@/lib/format-fr";
@@ -213,7 +214,7 @@ export default function PartnerDetailPage({ params }: Props) {
               aria-hidden="true"
             />
             <p className="text-xs sm:text-sm text-fg/75 leading-relaxed">
-              <span className="font-bold text-fg">Lien affilié.</span> Cette
+              <span className="font-bold text-fg">Publicité.</span> Cette
               page contient des liens affiliés (loi 9 juin 2023). La note de{" "}
               {fmtNb(review.rating)}/5 est celle de Trustpilot (
               {review.externalReviewCount.toLocaleString("fr-FR")} avis, relevée le{" "}
@@ -338,6 +339,15 @@ function PartnerHero({
               </a>
             </div>
 
+            {/* 07/10/2026 : fuite de données Waltio de janvier 2026, juste avant le bouton principal. */}
+            {partner.slug === "waltio" && (
+              <WaltioFranchise
+                variant="compact"
+                detailHref={`#${sectionAnchor("Sécurité, prise en charge et mises à jour")}`}
+                className="mt-6 max-w-2xl"
+              />
+            )}
+
             {/* CTA principal hero */}
             <div className="mt-7 flex flex-col sm:flex-row gap-3 animate-hero-fade-up-delay-3">
               <Link prefetch={false}
@@ -360,7 +370,7 @@ function PartnerHero({
 
             {/* Disclosure légère */}
             <p className="mt-3 text-[11px] text-muted">
-              Lien affilié — sans surcoût pour vous.
+              Publicité — lien affilié, sans surcoût pour vous.
             </p>
           </div>
 
@@ -919,7 +929,7 @@ function BeforeAfter({
           <ExternalLink className="h-4 w-4" aria-hidden="true" />
         </Link>
         <p className="mt-2 text-[11px] text-muted">
-          Lien affilié — sans surcoût pour vous.
+          Publicité — lien affilié, sans surcoût pour vous.
         </p>
       </div>
     </section>
@@ -1167,7 +1177,8 @@ function PartnerAnalysis({
         {review.sections.map((section, i) => (
           <article
             key={section.title}
-            className="partner-section glass rounded-2xl p-6 sm:p-7"
+            id={sectionAnchor(section.title)}
+            className="partner-section glass rounded-2xl p-6 sm:p-7 scroll-mt-24"
             style={{ ["--i" as never]: i + 1 }}
           >
             <h3 className="text-xl sm:text-2xl font-extrabold text-fg tracking-tight mb-4 leading-tight">
@@ -1212,6 +1223,19 @@ function PartnerAnalysis({
       </div>
     </section>
   );
+}
+
+/**
+ * Ancre d'une section d'analyse (07/10/2026) : « Sécurité, prise en charge et mises à jour » →
+ * « securite-prise-en-charge-et-mises-a-jour » (cible du lien de l'encart <WaltioFranchise />).
+ */
+function sectionAnchor(title: string): string {
+  return title
+    .normalize("NFD")
+    .replace(/[̀-ͯ]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
 }
 
 /** Markdown inline minimal : **bold** + escapeHtml. Sans dépendance. */
@@ -1537,7 +1561,7 @@ function FinalCta({
         </div>
 
         <p className="mt-5 text-[11px] text-muted">
-          Lien affilié — Cryptoreflex perçoit {partner.commission ?? "une commission"} sans surcoût pour vous. Si {partner.name}{" "}
+          Publicité — lien affilié : Cryptoreflex perçoit {partner.commission ?? "une commission"} sans surcoût pour vous. Si {partner.name}{" "}
           cesse d&apos;être recommandable, on retire la page.
         </p>
       </div>

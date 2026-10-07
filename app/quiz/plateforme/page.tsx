@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowRight, Sparkles } from "lucide-react";
+import { ArrowRight, ListChecks } from "lucide-react";
 
-import { getAllPlatforms, isAvailableFr } from "@/lib/platforms";
+import { getExchangePlatforms } from "@/lib/platforms";
+import { CRITERIA, FILTER_DISCLAIMER, filterScope, releveText } from "@/lib/platform-filter";
 import { BRAND } from "@/lib/brand";
 import StructuredData from "@/components/StructuredData";
 import PlatformQuiz from "@/components/PlatformQuiz";
@@ -12,16 +13,21 @@ import { withHreflang } from "@/lib/seo-alternates";
 
 export const revalidate = 86400;
 
-// Note : le suffixe "| Cryptoreflex" est ajouté automatiquement par le template
-// title de app/layout.tsx — on l'omet ici pour éviter la duplication.
-const TITLE = `Questionnaire : quelle plateforme crypto pour vous ?`;
-const DESCRIPTION =
-  "6 questions courtes pour trouver la plateforme crypto la plus adaptée à votre profil : budget, fréquence d'achat, support FR, conformité MiCA. Reco neutre Cryptoreflex.";
+/**
+ * 07/10/2026 : filtre neutre (plus de « on vous recommande », de top 3 ni de liens rémunérés dans le résultat).
+ * L'AMF (actualité du 04/08/2026) range les recommandations personnalisées sur l'utilisation de services sur
+ * crypto-actifs dans le conseil soumis à agrément ; l'information non personnalisée destinée au public est libre.
+ */
+// Le suffixe « | Cryptoreflex » est ajouté par le template title de app/layout.tsx.
+const TITLE = "Filtre : plateformes crypto autorisées en France";
+const DESCRIPTION = `${CRITERIA.length} critères (paiement par carte, aide en français, coût publié) pour lister les plateformes crypto autorisées en France qui les remplissent, par ordre alphabétique. Information générale, pas un conseil personnalisé.`;
 const PATH = "/quiz/plateforme";
 
 export const metadata: Metadata = {
   title: TITLE,
   description: DESCRIPTION,
+  /* Remplace les mots-clés globaux du site (« meilleur exchange crypto ») sur cette page. */
+  keywords: ["plateformes crypto autorisées en France", "filtre plateformes crypto", "MiCA", "PSCA"],
   alternates: withHreflang(`${BRAND.url}${PATH}`),
   openGraph: {
     title: TITLE,
@@ -37,28 +43,20 @@ export const metadata: Metadata = {
 };
 
 export default function QuizPlateformePage() {
-  const platforms = getAllPlatforms().filter(isAvailableFr);
+  /* Exchanges et courtiers autorisés en France (les portefeuilles matériels ne sont pas des plateformes d'achat). */
+  const platforms = filterScope(getExchangePlatforms());
+  const micaReleve = releveText(platforms.map((p) => p.mica.lastVerified));
 
-  /**
-   * Schema.org : on combine un Breadcrumb + une WebPage de type Quiz
-   * (Quiz est dans schema.org, mais sa support Rich Results est limitée —
-   * on garde un WebPage robuste plus une mention Quiz pour la sémantique).
-   */
   const breadcrumbs = breadcrumbSchema([
     { name: "Accueil", url: BRAND.url },
-    { name: "Questionnaire plateforme", url: `${BRAND.url}${PATH}` },
+    { name: "Filtre des plateformes", url: `${BRAND.url}${PATH}` },
   ]);
 
-  const quizSchema = {
+  const pageSchema = {
     "@context": "https://schema.org",
-    "@type": "Quiz",
+    "@type": "WebPage",
     name: TITLE,
     description: DESCRIPTION,
-    about: {
-      "@type": "Thing",
-      name: "Plateformes crypto régulées MiCA en France",
-    },
-    educationalLevel: "Beginner",
     inLanguage: "fr-FR",
     url: `${BRAND.url}${PATH}`,
     isAccessibleForFree: true,
@@ -69,7 +67,7 @@ export default function QuizPlateformePage() {
     },
   };
 
-  const schema = graphSchema([breadcrumbs, quizSchema]);
+  const schema = graphSchema([breadcrumbs, pageSchema]);
 
   return (
     <>
@@ -77,83 +75,72 @@ export default function QuizPlateformePage() {
 
       <article className="py-12 sm:py-16">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-          {/* Breadcrumb */}
           <nav aria-label="Fil d'Ariane" className="text-xs text-muted mb-6">
             <Link href="/" className="hover:text-fg">
               Accueil
             </Link>
             <span className="mx-1.5">/</span>
-            <span className="text-fg">Questionnaire plateforme</span>
+            <span className="text-fg">Filtre des plateformes</span>
           </nav>
 
-          {/* Hero */}
           <header className="mb-10 sm:mb-12">
             <span className="badge-info">
-              <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
-              Questionnaire personnalisé · 2 minutes
+              <ListChecks className="h-3.5 w-3.5" aria-hidden="true" />
+              Filtre · {CRITERIA.length} critères
             </span>
             <h1 className="mt-3 text-3xl sm:text-5xl font-extrabold tracking-tight">
-              Quelle plateforme crypto{" "}
-              <span className="gradient-text">pour vous&nbsp;?</span>
+              Plateformes crypto{" "}
+              <span className="gradient-text">autorisées en France</span>
             </h1>
             <p className="mt-3 max-w-2xl text-fg/80 text-base sm:text-lg">
-              Répondez à 6 questions courtes — budget, fréquence d'achat, support
-              français, conformité MiCA — on vous recommande la plateforme la plus
-              adaptée parmi {platforms.length} options analysées.
+              Choisissez {CRITERIA.length} critères : paiement par carte, aide en français, coût publié. Le filtre
+              liste, parmi les {platforms.length} plateformes autorisées en France, toutes celles qui les remplissent,
+              par ordre alphabétique.
             </p>
+            <p className="mt-3 max-w-2xl text-sm text-muted">{FILTER_DISCLAIMER}</p>
           </header>
 
-          {/* Quiz interactif */}
           <PlatformQuiz platforms={platforms} />
 
-          {/* Méthodologie courte */}
           <section className="mt-12 grid grid-cols-1 sm:grid-cols-3 gap-4">
             <Method
-              title="Scoring transparent"
-              description="6 critères pondérés (frais, sécurité, UX, support, MiCA, dépôt min). Le détail est documenté."
+              title="Autorisation vérifiée"
+              description={`Seules les plateformes agréées MiCA avec accès à la France (registre de l'ESMA et liste blanche de l'AMF${
+                micaReleve ? `, ${micaReleve}` : ""
+              }).`}
             />
             <Method
-              title="Aucun biais sponsor"
-              description="Les liens rémunérés, marqués « Publicité », ne modifient ni le scoring ni la reco."
+              title="Critères sourcés"
+              description="Chaque critère repose sur un relevé daté de la grille de frais ou de la page d'assistance officielle. Staking, dépôt minimum et nombre de cryptos ne sont pas encore relevés : ils ne filtrent rien."
             />
             <Method
-              title="Reco neutre"
-              description="Si rien ne matche vos contraintes, on vous le dit — pas de reco forcée."
+              title="Aucun classement"
+              description="Ordre alphabétique, aucune note, aucun lien rémunéré dans le résultat : chaque plateforme mène à sa fiche."
             />
           </section>
 
-          {/* Cross-promo */}
           <aside className="mt-12 glass rounded-2xl p-6 sm:p-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div>
-              <h2 className="text-lg font-bold text-fg">
-                Vous hésitez encore ? Lancez l'assistant "premier achat"
-              </h2>
+              <h2 className="text-lg font-bold text-fg">Comparer les coûts d&apos;un achat</h2>
               <p className="mt-1 text-sm text-fg/70">
-                5 étapes guidées pour faire votre premier achat sans vous tromper —
-                montant, crypto, plateforme, méthode de paiement.
+                Le coût d&apos;un achat de Bitcoin sur chaque plateforme, avec la grille officielle et la date du
+                relevé.
               </p>
             </div>
-            <Link href="/wizard/premier-achat" className="btn-primary shrink-0">
-              Lancer l'assistant
+            <Link href="/comparatif/frais" className="btn-primary shrink-0">
+              Voir le comparatif des frais
               <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </Link>
           </aside>
         </div>
       </article>
 
-      {/* Next Steps Guide — main tenue : actions post-quiz (ROI, premier achat, newsletter). */}
-      <NextStepsGuide context="quiz-result" />
+      <NextStepsGuide context="quiz-result" intro="D'autres outils pour préparer un achat." />
     </>
   );
 }
 
-function Method({
-  title,
-  description,
-}: {
-  title: string;
-  description: string;
-}) {
+function Method({ title, description }: { title: string; description: string }) {
   return (
     <div className="rounded-xl border border-border bg-elevated/40 p-5">
       <h3 className="font-semibold text-fg">{title}</h3>

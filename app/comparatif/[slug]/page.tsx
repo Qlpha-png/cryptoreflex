@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import {
   cardCost1000,
+  getAllPlatforms,
   getPlatformById,
   isAvailableFr,
   cardFeeMeasured,
@@ -45,6 +46,7 @@ import { withHreflang } from "@/lib/seo-alternates";
 import { fitTitle } from "@/lib/seo-text";
 import { fmtDateFr, fmtFr, fmtNb } from "@/lib/format-fr";
 import { buildDuelVerdict } from "@/lib/comparison-verdict";
+import ComparateurNotice from "@/components/ComparateurNotice";
 
 // FIX SEO 2026-06-11 — pattern blog/[slug] : SSG pur + dynamicParams=false.
 // Slug inconnu = vrai HTTP 404 (avant : soft-404 en 200, vérifié live).
@@ -350,6 +352,23 @@ export default function ComparisonPage({ params }: Props) {
                 ? `Deux références du wallet matériel comparées sur la sécurité, l'écosystème et la facilité d'usage.`
                 : `Comparatif méthodique : frais réels, sécurité, conformité MiCA, support FR. Frais relevés le ${fmtDateFr(a.fees.verified?.date ?? "") || "—"}, statuts MiCA vérifiés le ${fmtDateFr(a.mica.lastVerified) || "—"}.`}
           </p>
+
+          <ComparateurNotice
+            className="mt-5 max-w-3xl"
+            critere={
+              <>
+                pas de classement général. Sur chaque ligne du tableau, la meilleure des deux valeurs relevées est signalée ;
+                le verdict retient la plateforme qui a la meilleure note sur 5, et une plateforme non autorisée en France
+                n&apos;est jamais retenue.
+              </>
+            }
+            perimetre={
+              <>
+                ce duel compare deux des {getAllPlatforms().length} plateformes et portefeuilles de notre base, qui ne couvre
+                pas tout le marché.
+              </>
+            }
+          />
 
           {/* Plateforme non autorisée en France (registre MiCA de l'ESMA, liste blanche AMF) */}
           {(!okA || !okB) && (
