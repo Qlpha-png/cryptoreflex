@@ -49,7 +49,7 @@ export default function MarqueePauseButton() {
       // BATCH 22 a11y — min-w fixe pour éviter le micro-CLS quand le label
       // bascule entre "Pause" (40px) et "Reprendre" (60px). Justify-center
       // pour centrer le texte qui change.
-      className="inline-flex items-center justify-center gap-1.5 rounded-full border border-border bg-elevated/60 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-fg/80 hover:border-primary/40 hover:text-fg transition-colors min-h-tap min-w-[110px]"
+      className="inline-flex items-center justify-center gap-1.5 rounded-full border border-border bg-elevated/60 px-2.5 py-1 text-xs font-bold uppercase tracking-wider text-fg/80 hover:border-primary/40 hover:text-fg transition-colors min-h-tap min-w-[110px]"
     >
       {paused ? (
         <>

@@ -194,7 +194,7 @@ export default function AvisHubPage() {
                     className="inline-flex items-center gap-1.5 rounded-full border border-border bg-surface px-3 py-1.5 text-xs font-semibold text-muted hover:text-fg hover:border-primary/30 transition-colors"
                   >
                     {CATEGORY_LABELS[cat]}
-                    <span className="text-[10px] opacity-70">({count})</span>
+                    <span className="text-xs opacity-70">({count})</span>
                   </a>
                 );
               }
@@ -261,7 +261,7 @@ export default function AvisHubPage() {
             <h2 className="text-lg font-bold text-fg">
               Comment on note les plateformes
             </h2>
-            <p className="mt-2 text-sm text-fg/70 max-w-3xl">
+            <p className="mt-2 text-sm text-fg/70 max-w-[34em]">
               Six critères pondérés, mesurés sur la base de
               données vérifiables (frais affichés, registres AMF/MiCA, avis
               Trustpilot). Aucune note n'est influencée par les commissions
@@ -305,11 +305,11 @@ function ReviewCard({ platform }: { platform: Platform }) {
               Non disponible en France
             </span>
           ) : badge && (
-            <span className="inline-flex items-center gap-1 rounded-full border border-primary/30 bg-primary/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-primary-soft">
+            <span className="inline-flex items-center gap-1 rounded-full border border-primary/30 bg-primary/10 px-2 py-0.5 text-xs font-bold uppercase tracking-wider text-primary-soft">
               {badge}
             </span>
           )}
-          <h3 className="mt-2 text-lg font-bold text-fg truncate">{name}</h3>
+          <h3 className="mt-2 text-lg font-bold text-fg break-words">{name}</h3>
           <div className="mt-1 flex items-center gap-1.5">
             <Star className="h-3.5 w-3.5 fill-primary text-primary" />
             <span className="font-mono text-sm tabular-nums text-fg">
@@ -320,7 +320,7 @@ function ReviewCard({ platform }: { platform: Platform }) {
         </div>
         {available && mica.micaCompliant && (
           <span
-            className="inline-flex items-center gap-1 rounded-md border border-accent-green/30 bg-accent-green/10 px-2 py-0.5 text-[10px] font-semibold text-accent-green shrink-0"
+            className="inline-flex items-center gap-1 rounded-md border border-accent-green/30 bg-accent-green/10 px-2 py-0.5 text-xs font-semibold text-accent-green shrink-0"
             title="Conforme MiCA"
           >
             <ShieldCheck className="h-3 w-3" />
@@ -329,7 +329,7 @@ function ReviewCard({ platform }: { platform: Platform }) {
         )}
       </div>
 
-      <p className="mt-3 text-sm text-fg/70 line-clamp-3 flex-1">{tagline}</p>
+      <p className="mt-3 text-sm text-fg/70 flex-1">{tagline}</p>
 
       <div className="mt-4 inline-flex items-center gap-1 text-xs font-semibold text-primary-soft group-hover:text-primary">
         Lire l'avis détaillé

@@ -39,7 +39,7 @@ export default async function ReflexCardPromo({ coingeckoIds, className }: { coi
   return (
     <section
       aria-label={`Carte Reflex ${name}`}
-      className={`flex items-center gap-4 rounded-2xl border p-3 sm:gap-6 sm:p-5 ${className ?? ""}`}
+      className={`flex flex-col items-start gap-4 rounded-2xl border p-3 min-[400px]:flex-row min-[400px]:items-center sm:gap-6 sm:p-5 ${className ?? ""}`}
       style={{ borderColor: `${col}66`, background: `radial-gradient(120% 140% at 0% 50%, ${col}26, transparent 60%)` }}
     >
       {visual && (
@@ -48,7 +48,7 @@ export default async function ReflexCardPromo({ coingeckoIds, className }: { coi
         </Link>
       )}
       <div className="min-w-0 flex-1">
-        <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wide" style={{ color: col }}>
+        <span className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide" style={{ color: col }}>
           <Sparkles className="h-3.5 w-3.5" /> Reflex Cards · le jeu de cartes crypto gratuit
         </span>
         <p className="mt-1 text-base font-bold text-fg sm:text-lg">

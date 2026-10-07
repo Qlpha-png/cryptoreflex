@@ -103,8 +103,8 @@ export default function CryptoSources({ cryptoName, sources, className = "" }: P
       <header className="mb-4 flex items-center gap-2">
         <ShieldCheck className="h-4 w-4 text-primary-soft" aria-hidden="true" />
         <h2 className="text-base font-bold text-fg">Sources utilisées</h2>
-        <span className="text-[11px] text-muted">·</span>
-        <span className="text-[11px] text-muted">
+        <span className="text-xs text-muted">·</span>
+        <span className="text-xs text-muted">
           {sorted.length} référence{sorted.length > 1 ? "s" : ""} publique{sorted.length > 1 ? "s" : ""}
         </span>
       </header>
@@ -131,7 +131,7 @@ export default function CryptoSources({ cryptoName, sources, className = "" }: P
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-baseline gap-1.5">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-muted">
+                  <span className="text-xs font-bold uppercase tracking-wider text-muted">
                     {typeLabel}
                   </span>
                 </div>
@@ -145,7 +145,7 @@ export default function CryptoSources({ cryptoName, sources, className = "" }: P
                   )}
                 </div>
                 {s.note && (
-                  <div className="mt-0.5 text-[11px] text-muted leading-snug break-words">
+                  <div className="mt-0.5 text-xs text-muted leading-snug break-words">
                     {s.note}
                   </div>
                 )}

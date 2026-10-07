@@ -43,9 +43,10 @@ function TopPlatforms() {
           >
             {/* pas de fond blanc : certains logos sont blancs (Coinbase), comme dans le comparatif */}
             <PlatformLogo id={p.id} name={p.name} size={28} className="h-7 w-7 rounded-md" />
-            <span className="flex-1 min-w-0 truncate whitespace-nowrap text-sm font-semibold text-fg">{p.name}</span>
-            {/* « frais d'achat » en entier, sauf dans les 4 colonnes étroites (≥ 1280 px) où « frais » suffit */}
-            <span className="shrink-0 whitespace-nowrap text-xs text-fg/70">
+            <span className="flex-1 min-w-max whitespace-nowrap text-sm font-semibold text-fg">{p.name}</span>
+            {/* « frais d'achat » en entier, sauf dans les 4 colonnes étroites (≥ 1280 px) où « frais » suffit.
+                B1 : le nom n'est plus tronqué (« Kraken » coupé à 320 px) ; c'est la mention des frais qui passe à la ligne. */}
+            <span className="min-w-0 text-right text-xs text-fg/70">
               <span className="xl:hidden">frais d&apos;achat </span>
               <span className="hidden xl:inline">frais </span>
               <b className="text-fg/90">{feeShortFr(p)}</b>
@@ -138,24 +139,28 @@ export default function HomeDoors() {
               <span className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary-glow">
                 <d.Icon className="h-5 w-5" strokeWidth={1.75} aria-hidden="true" />
               </span>
-              <h3 className="text-xl font-bold text-fg">{d.title}</h3>
+              <h3 className="text-2xl font-bold text-fg">{d.title}</h3>
             </div>
             <p className="mt-1.5 text-sm leading-relaxed text-fg/75">{d.text}</p>
             <div className="flex-1">{d.children}</div>
             {/* un seul bouton plein (« Comparer les plateformes ») ; les autres portes en btn-ghost (06/10/2026).
                 Hauteur fixe 48 px (plein sans bordure = 44, contour = 46) ; xl:px-3 : en 4 colonnes,
-                « Comparer les plateformes » + flèche (204 px) passait sur 2 lignes avec px-5. */}
+                « Comparer les plateformes » + flèche (204 px) passait sur 2 lignes avec px-5.
+                B1 (07/10/2026) : text-sm = 16 px, le libellé repassait sur 2 lignes en 4 colonnes (230 px pour 218) ;
+                xl:text-body (15 px) + xl:px-2.5 : 217 px pour 222, sur 1 ligne (mesuré au rendu, 1280 à 1440 px). */}
             {d.cta.plain ? (
-              <a href={d.cta.href} className={`${d.cta.primary ? "btn-primary" : "btn-ghost"} mt-5 inline-flex h-12 w-full justify-center py-0 text-sm xl:px-3`}>
+              <a href={d.cta.href} className={`${d.cta.primary ? "btn-primary" : "btn-ghost"} mt-5 inline-flex h-12 w-full justify-center py-0 text-base xl:px-2.5 xl:text-[0.9375rem]`}>
                 {d.cta.label} <ArrowRight className="h-4 w-4" aria-hidden="true" />
               </a>
             ) : (
-              <Link href={d.cta.href} className={`${d.cta.primary ? "btn-primary" : "btn-ghost"} mt-5 inline-flex h-12 w-full justify-center py-0 text-sm xl:px-3`}>
+              <Link href={d.cta.href} className={`${d.cta.primary ? "btn-primary" : "btn-ghost"} mt-5 inline-flex h-12 w-full justify-center py-0 text-base xl:px-2.5 xl:text-[0.9375rem]`}>
                 {d.cta.label} <ArrowRight className="h-4 w-4" aria-hidden="true" />
               </Link>
             )}
-            {/* place de 2 liens réservée dès 2 colonnes : boutons alignés d'une porte à l'autre (06/10/2026) */}
-            <ul className="mt-3 space-y-1.5 text-sm md:min-h-[2.875rem]">
+            {/* place de 2 liens réservée dès 2 colonnes : boutons alignés d'une porte à l'autre (06/10/2026).
+                B1 finitions F5 : text-sm = 16 px / 24 px, 2 liens = 54 px (3,375 rem) ; l'ancienne réserve de 46 px laissait les
+                portes à 1 lien 8 px plus bas. */}
+            <ul className="mt-3 space-y-1.5 text-sm xl:text-[0.9375rem] md:min-h-[3.375rem]">
               {d.links.map((l) => (
                 <li key={l.href}>
                   <Link href={l.href} className="text-primary-soft underline-offset-4 hover:text-primary hover:underline">

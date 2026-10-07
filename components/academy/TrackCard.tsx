@@ -66,7 +66,7 @@ export default function TrackCard({ track }: TrackCardProps) {
         <div className="inline-flex h-11 w-11 items-center justify-center rounded-xl border border-fg-max/10 bg-background/40 text-primary-glow">
           <Icon className="h-5 w-5" aria-hidden="true" />
         </div>
-        <span className="inline-flex items-center gap-1 rounded-full border border-fg-max/10 bg-background/40 px-2.5 py-1 text-[11px] font-mono text-fg/80">
+        <span className="inline-flex items-center gap-1 rounded-full border border-fg-max/10 bg-background/40 px-2.5 py-1 text-xs font-mono text-fg/80">
           <Clock className="h-3 w-3" aria-hidden="true" />
           ~{track.estimatedHours}h
         </span>
@@ -80,9 +80,9 @@ export default function TrackCard({ track }: TrackCardProps) {
         {track.description}
       </p>
 
-      <dl className="mt-5 grid grid-cols-2 gap-3 text-xs">
+      <dl className="mt-5 grid grid-cols-[minmax(0,1fr)_auto] gap-3 text-xs">
         <div className="rounded-lg border border-fg-max/5 bg-background/30 p-2.5">
-          <dt className="text-[10px] uppercase tracking-wider text-muted">
+          <dt className="text-xs uppercase tracking-wider text-muted">
             Leçons
           </dt>
           <dd className="mt-0.5 font-mono text-base font-bold text-fg">
@@ -90,7 +90,7 @@ export default function TrackCard({ track }: TrackCardProps) {
           </dd>
         </div>
         <div className="rounded-lg border border-fg-max/5 bg-background/30 p-2.5">
-          <dt className="text-[10px] uppercase tracking-wider text-muted">
+          <dt className="text-xs uppercase tracking-wider text-muted">
             Niveau
           </dt>
           <dd className="mt-0.5 text-sm font-semibold text-fg">

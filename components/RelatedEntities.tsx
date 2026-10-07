@@ -143,7 +143,7 @@ export default function RelatedEntities({
                 </span>
                 <span className="min-w-0 flex-1">
                   <span className="flex items-center gap-2">
-                    <span className="text-[10px] font-semibold uppercase tracking-wider text-muted">
+                    <span className="text-xs font-semibold uppercase tracking-wider text-muted">
                       {entityKindLabel(e.type)}
                     </span>
                   </span>

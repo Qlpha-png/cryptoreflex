@@ -344,7 +344,7 @@ export default async function AcheterEnFrancePage({ params }: Props) {
                             <ExternalLink className="h-3 w-3" />
                           </a>
                         </div>
-                        <PaidLinkCaption platformId={p.id} href={p.affiliateUrl} className="mt-1.5 block text-[11px] text-muted underline hover:text-fg" />
+                        <PaidLinkCaption platformId={p.id} href={p.affiliateUrl} className="mt-1.5 block text-xs text-muted underline hover:text-fg" />
                       </div>
                     </div>
                   </article>

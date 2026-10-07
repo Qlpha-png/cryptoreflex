@@ -98,7 +98,7 @@ function NewsItem({
       href={`/blog/${article.slug}`}
       aria-hidden={ariaHidden || undefined}
       tabIndex={ariaHidden ? -1 : 0}
-      className="group inline-flex items-center gap-2 px-5 text-[13px] text-muted
+      className="group inline-flex items-center gap-2 px-5 text-xs text-muted
                  hover:text-fg transition-colors duration-fast
                  focus:outline-none focus-visible:ring-2 focus-visible:ring-primary
                  focus-visible:ring-offset-2 focus-visible:ring-offset-elevated rounded"
@@ -108,7 +108,7 @@ function NewsItem({
         strokeWidth={1.75}
         aria-hidden="true"
       />
-      <span className="text-[11px] uppercase tracking-wider text-muted/80 font-medium shrink-0 font-mono">
+      <span className="text-xs uppercase tracking-wider text-muted/80 font-medium shrink-0 font-mono">
         {formatRelative(article.date)}
       </span>
       <span className="text-fg/85 group-hover:text-fg max-w-[34ch] truncate">

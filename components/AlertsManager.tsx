@@ -584,15 +584,15 @@ export default function AlertsManager({ cryptos }: Props) {
                   <div className="flex items-center gap-2">
                     <span className="font-mono text-xs font-bold text-fg">{a.symbol}</span>
                     {a.status === "active" ? (
-                      <span className="inline-flex items-center gap-1 rounded-full bg-accent-green/10 border border-accent-green/30 px-2 py-0.5 text-[10px] uppercase tracking-wider text-accent-green">
+                      <span className="inline-flex items-center gap-1 rounded-full bg-accent-green/10 border border-accent-green/30 px-2 py-0.5 text-xs uppercase tracking-wider text-accent-green">
                         Active
                       </span>
                     ) : a.status === "triggered" ? (
-                      <span className="inline-flex items-center gap-1 rounded-full bg-warning/10 border border-warning/30 px-2 py-0.5 text-[10px] uppercase tracking-wider text-primary-soft">
+                      <span className="inline-flex items-center gap-1 rounded-full bg-warning/10 border border-warning/30 px-2 py-0.5 text-xs uppercase tracking-wider text-primary-soft">
                         Déclenchée
                       </span>
                     ) : (
-                      <span className="inline-flex items-center gap-1 rounded-full bg-muted/10 border border-border px-2 py-0.5 text-[10px] uppercase tracking-wider text-muted">
+                      <span className="inline-flex items-center gap-1 rounded-full bg-muted/10 border border-border px-2 py-0.5 text-xs uppercase tracking-wider text-muted">
                         En pause
                       </span>
                     )}
@@ -608,7 +608,7 @@ export default function AlertsManager({ cryptos }: Props) {
                       {formatPrice(a.threshold, a.currency)}
                     </span>
                   </p>
-                  <p className="mt-1 text-[11px] text-muted">
+                  <p className="mt-1 text-xs text-muted">
                     Créée {formatRelativeTime(a.createdAt)}
                     {a.lastTriggered ? ` · déclenchée ${formatRelativeTime(a.lastTriggered)}` : ""}
                   </p>

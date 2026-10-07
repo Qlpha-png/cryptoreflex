@@ -20,7 +20,7 @@ export default function ComparisonTable({
 }: ComparisonTableProps) {
   return (
     <div className="not-prose my-6 overflow-x-auto rounded-xl border border-border">
-      <table className="w-full border-collapse text-sm">
+      <table className="w-full min-w-[480px] border-collapse text-sm break-normal">
         <thead className="bg-elevated text-left text-xs uppercase tracking-wide text-fg/75">
           <tr>
             {headers.map((h, i) => (

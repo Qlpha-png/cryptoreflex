@@ -74,7 +74,7 @@ export default async function EmbedHeatmapPage() {
       </h1>
       <p
         style={{
-          fontSize: 12,
+          fontSize: 14,
           color: "rgb(var(--c-fg-4))",
           margin: "0 0 12px",
           lineHeight: 1.4,
@@ -89,7 +89,7 @@ export default async function EmbedHeatmapPage() {
             padding: "32px 16px",
             textAlign: "center",
             color: "rgb(var(--c-fg-4))",
-            fontSize: 13,
+            fontSize: 14,
             border: "1px dashed #2a2f37",
             borderRadius: 12,
           }}
@@ -107,7 +107,7 @@ export default async function EmbedHeatmapPage() {
           marginTop: 14,
           paddingTop: 10,
           borderTop: "1px solid rgb(var(--c-border))",
-          fontSize: 11,
+          fontSize: 14,
           color: "rgb(var(--c-fg-4))",
           display: "flex",
           alignItems: "center",

@@ -120,7 +120,7 @@ export default function StickyBreadcrumb({
                 <span className="truncate">{cryptoName}</span>
               )}
               {sticky && (
-                <span className="font-mono text-[11px] text-muted shrink-0 motion-safe:animate-[fade-in-up_300ms_ease-out]">
+                <span className="font-mono text-xs text-muted shrink-0 motion-safe:animate-[fade-in-up_300ms_ease-out]">
                   {cryptoSymbol}
                 </span>
               )}

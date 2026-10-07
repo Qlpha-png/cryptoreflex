@@ -194,7 +194,7 @@ export default function TrackPage({ params }: Props) {
                       Passer le quiz maintenant
                       <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
                     </Link>
-                    <p className="mt-2 text-[11px] text-muted">
+                    <p className="mt-2 text-xs text-muted">
                       Recommandé : terminez d&apos;abord toutes les leçons. Le
                       quiz couvre tout le parcours.
                     </p>
@@ -264,7 +264,7 @@ export default function TrackPage({ params }: Props) {
 function Stat({ label, value }: { label: string; value: string }) {
   return (
     <div className="rounded-lg border border-border bg-surface px-3 py-2">
-      <dt className="text-[10px] uppercase tracking-wider text-muted">
+      <dt className="text-xs uppercase tracking-wider text-muted">
         {label}
       </dt>
       <dd className="mt-0.5 font-mono text-sm font-bold text-fg">{value}</dd>
@@ -302,7 +302,7 @@ function LessonRow({
         <h3 className="text-sm font-semibold text-fg group-hover:text-primary-glow transition-colors">
           {lesson.title}
         </h3>
-        <p className="mt-0.5 inline-flex items-center gap-1 text-[11px] text-muted">
+        <p className="mt-0.5 inline-flex items-center gap-1 text-xs text-muted">
           <Clock className="h-3 w-3" aria-hidden="true" />
           {lesson.durationMin} min
           <span className="mx-1">·</span>
@@ -310,7 +310,7 @@ function LessonRow({
           Article guidé
         </p>
         {prereqTitles.length > 0 && (
-          <p className="mt-1 text-[11px] text-primary-soft/90">
+          <p className="mt-1 text-xs text-primary-soft/90">
             Recommandé avant : {prereqTitles.join(" · ")}
           </p>
         )}

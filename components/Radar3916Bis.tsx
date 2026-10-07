@@ -212,7 +212,7 @@ export default function Radar3916Bis() {
             {STEPS.map((label, idx) => (
               <li key={label} className="flex items-center gap-1">
                 <span
-                  className={`inline-flex h-6 w-6 items-center justify-center rounded-full border text-[10px] font-bold tabular-nums ${
+                  className={`inline-flex h-6 w-6 items-center justify-center rounded-full border text-xs font-bold tabular-nums ${
                     idx === step
                       ? "bg-primary text-elevated border-primary"
                       : idx < step
@@ -423,7 +423,7 @@ function Step2Details({
                   href={ex.officialLegalUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-[10px] text-primary-soft hover:text-primary inline-flex items-center gap-1 underline"
+                  className="text-xs text-primary-soft hover:text-primary inline-flex items-center gap-1 underline"
                 >
                   Mentions légales
                   <ExternalLink className="h-3 w-3" aria-hidden="true" />
@@ -592,7 +592,7 @@ function Step3Recap({
                   <div className="flex items-center gap-2 flex-wrap">
                     <span className="font-bold text-sm text-fg">{ex.name}</span>
                     {account.declaredBefore && (
-                      <span className="text-[10px] font-bold uppercase rounded-full bg-success/15 text-success border border-success/30 px-2 py-0.5">
+                      <span className="text-xs font-bold uppercase rounded-full bg-success/15 text-success border border-success/30 px-2 py-0.5">
                         Déjà déclaré
                       </span>
                     )}

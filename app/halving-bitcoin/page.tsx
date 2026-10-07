@@ -213,7 +213,7 @@ export default function HalvingPage() {
           <div className="mt-4">
             <HalvingCountdown targetDate={new Date(targetIso)} />
           </div>
-          <p className="mt-4 text-[11px] text-muted">
+          <p className="mt-4 text-xs text-muted">
             Date cible estimée : {NEXT_HALVING_DATE.toLocaleDateString("fr-FR", {
               day: "2-digit",
               month: "long",
@@ -310,7 +310,7 @@ export default function HalvingPage() {
                       <td className="px-4 py-3 font-mono font-semibold text-fg">
                         {row.year}
                         {row.status === "prévu" && (
-                          <span className="ml-1.5 align-middle text-[10px] font-semibold uppercase tracking-wider text-primary-soft">
+                          <span className="ml-1.5 align-middle text-xs font-semibold uppercase tracking-wider text-primary-soft">
                             prévu
                           </span>
                         )}
@@ -444,7 +444,7 @@ export default function HalvingPage() {
           </p>
         </div>
 
-        <p className="mt-6 text-[11px] text-muted leading-relaxed">
+        <p className="mt-6 text-xs text-muted leading-relaxed">
           Estimation calculée sur la base d'un temps moyen de 10 minutes par
           bloc. Données historiques publiques (CoinGecko, Glassnode, mempool.space).
         </p>

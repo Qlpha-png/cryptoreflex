@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { typoFr } from "@/lib/typo-fr";
 import { notFound } from "next/navigation";
 import { ExternalLink, ChevronLeft, Clock } from "lucide-react";
 
@@ -217,7 +218,7 @@ export default async function NewsDetailPage({ params }: PageProps) {
           <div className="flex flex-wrap items-center gap-3">
             <Link
               href={`/actualites?categorie=${catSlug}`}
-              className="inline-flex items-center rounded-full bg-primary/10 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-primary-glow ring-1 ring-primary/20 hover:bg-primary/20 transition-colors"
+              className="inline-flex items-center rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-semibold uppercase tracking-wider text-primary-glow ring-1 ring-primary/20 hover:bg-primary/20 transition-colors"
             >
               {catLabel}
             </Link>
@@ -245,7 +246,7 @@ export default async function NewsDetailPage({ params }: PageProps) {
           </div>
 
           <h1 className="mt-4 text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight leading-tight text-fg">
-            {news.title}
+            {typoFr(news.title)}
           </h1>
 
           <p className="mt-4 text-base sm:text-lg text-muted leading-relaxed">
@@ -271,7 +272,7 @@ export default async function NewsDetailPage({ params }: PageProps) {
             />
           </div>
           {news.image && news.imageCredit && (
-            <p className="mt-2 text-[11px] text-muted">
+            <p className="mt-2 text-xs text-muted">
               Photo :{" "}
               {news.imageCreditUrl ? (
                 <a

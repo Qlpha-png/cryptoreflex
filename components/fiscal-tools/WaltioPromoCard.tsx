@@ -77,7 +77,7 @@ export default function WaltioPromoCard({
             >
               essayez Waltio
             </AffiliateLink>{" "}
-            <span className="text-[11px] text-muted">({caption})</span>{" "}
+            <span className="text-xs text-muted">({caption})</span>{" "}
             (notre outil recommandé, édité en France, rapport fiscal dès 39 €/an). Voir le{" "}
             <Link
               href="/outils/declaration-fiscale-crypto"
@@ -100,7 +100,7 @@ export default function WaltioPromoCard({
       >
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5">
           <div className="flex-1">
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/20 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider text-primary-soft">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/20 px-2.5 py-1 text-xs font-bold uppercase tracking-wider text-primary-soft">
               <Sparkles className="h-3 w-3" aria-hidden="true" />
               Outil partenaire
             </span>
@@ -133,7 +133,7 @@ export default function WaltioPromoCard({
             >
               Voir le comparatif complet
             </Link>
-            <p className="text-[10px] text-muted/70">{caption}</p>
+            <p className="text-xs text-muted/70">{caption}</p>
           </div>
         </div>
       </section>

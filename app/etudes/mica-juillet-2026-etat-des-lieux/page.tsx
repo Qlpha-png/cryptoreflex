@@ -317,15 +317,15 @@ export default function MicaStudyPage() {
                 </div>
                 <div className="mt-3 grid gap-2 sm:grid-cols-3 text-sm">
                   <div>
-                    <div className="text-[11px] uppercase tracking-wider text-slate-500">Autorité</div>
+                    <div className="text-xs uppercase tracking-wider text-slate-500">Autorité</div>
                     <div className="text-slate-200">{p.mica.authority ?? "—"}</div>
                   </div>
                   <div>
-                    <div className="text-[11px] uppercase tracking-wider text-slate-500">Agrément MiCA</div>
+                    <div className="text-xs uppercase tracking-wider text-slate-500">Agrément MiCA</div>
                     <div className="text-slate-200">{frDate(p.mica.registrationDate)}</div>
                   </div>
                   <div>
-                    <div className="text-[11px] uppercase tracking-wider text-slate-500">Accès à la France</div>
+                    <div className="text-xs uppercase tracking-wider text-slate-500">Accès à la France</div>
                     <div className="text-slate-200">
                       {p.mica.amfRegistration ? `Agrément AMF n° ${p.mica.amfRegistration}` : "Passeport européen"}
                     </div>

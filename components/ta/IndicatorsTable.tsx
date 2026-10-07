@@ -113,7 +113,7 @@ export default function IndicatorsTable({ indicators, currentPrice }: Props) {
             style={{ left: `calc(${rsi}% - 2px)` }}
           />
         </div>
-        <div className="flex justify-between text-[10px] text-muted mt-1">
+        <div className="flex justify-between text-xs text-muted mt-1">
           <span>0 (survente)</span>
           <span>50</span>
           <span>100 (surachat)</span>
@@ -154,7 +154,7 @@ export default function IndicatorsTable({ indicators, currentPrice }: Props) {
             style={{ left: `calc(${bbPosition}% - 2px)` }}
           />
         </div>
-        <div className="flex justify-between text-[10px] text-muted mt-1 font-mono">
+        <div className="flex justify-between text-xs text-muted mt-1 font-mono">
           <span>Basse : {formatPrice(indicators.bollinger.lower)} $</span>
           <span>Médiane : {formatPrice(indicators.bollinger.middle)} $</span>
           <span>Haute : {formatPrice(indicators.bollinger.upper)} $</span>
@@ -181,11 +181,11 @@ function Cell({
 }) {
   return (
     <div className="rounded-xl border border-border bg-elevated/40 p-3">
-      <div className="text-[11px] uppercase tracking-wide text-muted">{label}</div>
+      <div className="text-xs uppercase tracking-wide text-muted">{label}</div>
       <div className={`mt-1 font-mono text-base font-bold ${toneClasses(tone)}`}>
         <ToneIcon tone={tone} /> {value}
       </div>
-      {hint && <div className="text-[11px] text-muted mt-0.5">{hint}</div>}
+      {hint && <div className="text-xs text-muted mt-0.5">{hint}</div>}
     </div>
   );
 }

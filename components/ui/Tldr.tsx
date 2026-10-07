@@ -80,7 +80,7 @@ export default function Tldr({
           <Icon className="h-4 w-4" aria-hidden="true" />
         </span>
         <div className="min-w-0 flex-1">
-          <div className="text-[11px] uppercase tracking-wider text-primary-soft font-bold">
+          <div className="text-xs uppercase tracking-wider text-primary-soft font-bold">
             En 60 secondes
           </div>
           <h2
@@ -110,7 +110,7 @@ export default function Tldr({
       </ul>
 
       {(readingTime || level) && (
-        <div className="mt-4 flex items-center gap-3 text-[11px] text-muted">
+        <div className="mt-4 flex items-center gap-3 text-xs text-muted">
           {readingTime && (
             <span className="inline-flex items-center gap-1">
               <Clock className="h-3 w-3" aria-hidden="true" />

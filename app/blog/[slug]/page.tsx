@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import { typoFr } from "@/lib/typo-fr";
 import { ArrowLeft, ArrowRight, Clock, Calendar, GraduationCap } from "lucide-react";
 
 import {
@@ -355,10 +356,10 @@ export default async function BlogArticlePage({ params }: Props) {
                 </div>
 
                 <h1 className="mt-4 text-4xl font-extrabold tracking-tight leading-tight sm:text-5xl">
-                  {article.title}
+                  {typoFr(article.title)}
                 </h1>
 
-                <p className="mt-4 text-lg text-fg/70">{article.description}</p>
+                <p className="mt-4 text-lg text-fg/70">{typoFr(article.description)}</p>
 
                 {/* BATCH 56#14 (2026-05-03) — Hero article : utilise OG image
                     dynamique (bug 'HTTP 500 fs serverless' corrige depuis,

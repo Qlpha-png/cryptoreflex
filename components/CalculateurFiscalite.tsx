@@ -290,7 +290,7 @@ export default function CalculateurFiscalite() {
         <NumericField
           id="totalCessions"
           label="Total des cessions de l'année (€)"
-          hint="Somme de toutes vos ventes crypto vers euros (ou achats de biens/services). Exclut les conversions crypto ↔ crypto."
+          hint={"Somme de toutes vos ventes crypto vers euros (ou achats de biens/services). Exclut les conversions crypto\u00A0↔ crypto."}
           value={form.totalCessions}
           onChange={(v) => update("totalCessions", v)}
           error={errors.totalCessions}
@@ -650,7 +650,7 @@ function WaltioPostResultCta({
               <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </a>
           </div>
-          <p className="mt-2 text-[10px] text-muted/70">
+          <p className="mt-2 text-xs text-muted/70">
             Publicité — Cryptoreflex perçoit une commission.{" "}
             <a href="/transparence" className="underline">En savoir plus</a>.
           </p>
@@ -1004,7 +1004,7 @@ function SummaryTile({
       : "text-fg-max";
   return (
     <div className="rounded-xl border border-border bg-elevated/50 p-3">
-      <div className="text-[11px] uppercase tracking-wider text-muted">
+      <div className="text-xs uppercase tracking-wider text-muted">
         {label}
       </div>
       <div className={`mt-1 font-mono font-bold text-base sm:text-lg ${toneClass}`}>
@@ -1232,7 +1232,7 @@ function EmailCapture({
               {message}
             </p>
           )}
-          <p className="mt-3 text-[11px] text-muted">
+          <p className="mt-3 text-xs text-muted">
             En vous inscrivant, vous êtes inscrit à notre newsletter crypto FR (sans spam,
             désinscription en 1 clic). Vos données ne sont jamais revendues.
           </p>

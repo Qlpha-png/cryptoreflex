@@ -289,7 +289,7 @@ export default function NewsletterCapture() {
               </form>
 
               {/* Trust signals déplacés sous le form (visible mais pas encombrant le top) */}
-              <div id="newsletter-hint" className="mt-3 flex flex-wrap items-center gap-2 text-[11px] text-fg/65">
+              <div id="newsletter-hint" className="mt-3 flex flex-wrap items-center gap-2 text-xs text-fg/65">
                 {/* Pas de compteur d'inscrits : le seul chiffre honnête serait mesuré en base.
                     Le « +250 inscrits cette semaine » écrit en dur a été retiré (audit 03/10/2026). */}
                 <span className="inline-flex items-center gap-1">

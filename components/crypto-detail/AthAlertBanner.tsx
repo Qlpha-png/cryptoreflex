@@ -92,7 +92,7 @@ export default function AthAlertBanner({
       </span>
       <div className="flex-1 min-w-0">
         <p className="text-sm sm:text-base font-bold leading-tight">{title}</p>
-        <p className="mt-0.5 text-[12px] sm:text-[13px] opacity-90 font-mono">
+        <p className="mt-0.5 text-xs sm:text-xs opacity-90 font-mono">
           {badge} · prix actuel calculé en USD{sourceNote}
         </p>
       </div>

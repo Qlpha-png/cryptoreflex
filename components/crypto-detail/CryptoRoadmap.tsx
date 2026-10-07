@@ -39,7 +39,7 @@ export default function CryptoRoadmap({ cryptoName, events }: Props) {
       <h2 className="text-2xl sm:text-3xl font-bold tracking-tight">
         Roadmap & moments clés de {cryptoName}
       </h2>
-      <p className="mt-2 text-sm text-muted max-w-3xl">
+      <p className="mt-2 text-sm text-muted max-w-[34em]">
         Évolutions techniques, gouvernance et adoptions à venir + jalons historiques marquants.
         <strong className="text-fg/85"> Sources officielles cliquables</strong> sous chaque
         événement (whitepapers, blogs projets, GitHub releases). Méthodologie publique.
@@ -134,7 +134,7 @@ function RoadmapItem({ event }: { event: RoadmapEvent }) {
           <h3 className="text-base font-bold text-fg">{event.title}</h3>
           <div className="flex items-center gap-2 flex-wrap">
             <span
-              className={`inline-flex items-center rounded-full border px-2 py-0.5 text-[10px] font-semibold ${cfg.color}`}
+              className={`inline-flex items-center rounded-full border px-2 py-0.5 text-xs font-semibold ${cfg.color}`}
             >
               {cfg.label}
             </span>
@@ -145,7 +145,7 @@ function RoadmapItem({ event }: { event: RoadmapEvent }) {
 
         {/* Source primaire (V2 audit fix) — affichée seulement si fournie */}
         {event.sourceUrl && (
-          <div className="mt-3 flex items-center gap-3 flex-wrap text-[11px]">
+          <div className="mt-3 flex items-center gap-3 flex-wrap text-xs">
             <a
               href={event.sourceUrl}
               target="_blank"

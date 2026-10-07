@@ -340,13 +340,13 @@ export default function Top10CryptosClient({
           {/* Lien vers les 100 fiches — petit, contextuel, sans paragraphe doublon */}
           <a
             href="/cryptos"
-            className="text-[12px] text-muted hover:text-primary inline-flex items-center gap-1"
+            className="text-xs text-muted hover:text-primary inline-flex items-center gap-1"
           >
             Voir les {STATS.cryptos} fiches
             <span aria-hidden="true">→</span>
           </a>
           {/* E-E-A-T freshness en discret à droite */}
-          <span className="text-[11px] text-fg/45 ml-auto hidden sm:inline">
+          <span className="text-xs text-fg/45 ml-auto hidden sm:inline">
             Mis à jour <time dateTime="2026-04-26">26 avril 2026</time>
           </span>
         </div>
@@ -390,7 +390,7 @@ export default function Top10CryptosClient({
                   ].join(" ")}
                 >
                   {f.label}
-                  <span className="text-[11px] text-fg/55 tabular-nums">({n})</span>
+                  <span className="text-xs text-fg/55 tabular-nums">({n})</span>
                 </button>
               );
             })}
@@ -543,7 +543,7 @@ function CryptoCard({ crypto }: { crypto: TopCrypto }) {
     >
       {/* Audit UX P0 : sticker "Commencez ici" sur Bitcoin (rang 1) — réduit paralysie 10 cards */}
       {isFirstStep && (
-        <span className="absolute -top-3 left-4 inline-flex items-center gap-1 rounded-full bg-primary text-background text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 shadow-[0_4px_14px_-2px_rgb(var(--c-primary)/0.55)] badge-pulse-strong z-10">
+        <span className="absolute -top-3 left-4 inline-flex items-center gap-1 rounded-full bg-primary text-background text-xs font-bold uppercase tracking-wider px-2.5 py-1 shadow-[0_4px_14px_-2px_rgb(var(--c-primary)/0.55)] badge-pulse-strong z-10">
           <Sparkles className="h-2.5 w-2.5" strokeWidth={2.5} aria-hidden="true" />
           Commencez ici
         </span>
@@ -560,7 +560,7 @@ function CryptoCard({ crypto }: { crypto: TopCrypto }) {
             />
             <span
               aria-hidden="true"
-              className="absolute -top-1.5 -right-1.5 inline-flex h-5 min-w-[20px] items-center justify-center rounded-full bg-primary text-background font-bold font-mono text-[10px] px-1 ring-2 ring-background"
+              className="absolute -top-1.5 -right-1.5 inline-flex h-5 min-w-[20px] items-center justify-center rounded-full bg-primary text-background font-bold font-mono text-xs px-1 ring-2 ring-background"
             >
               {crypto.rank}
             </span>
@@ -577,7 +577,7 @@ function CryptoCard({ crypto }: { crypto: TopCrypto }) {
               <span className="text-muted font-mono text-sm">{crypto.symbol}</span>
             </h3>
             {/* Badge catégorie picto coloré (Audit Visual E) */}
-            <div className={`mt-1 inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider ${catVisual.color}`}>
+            <div className={`mt-1 inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-xs font-semibold uppercase tracking-wider ${catVisual.color}`}>
               <CatIcon className="h-2.5 w-2.5" strokeWidth={2.5} aria-hidden="true" focusable="false" />
               {crypto.category}
               <span className="text-fg/65 font-normal normal-case">· {crypto.yearCreated}</span>
@@ -688,7 +688,7 @@ function CryptoListRow({ crypto }: { crypto: TopCrypto }) {
       className="flex items-center gap-3 px-4 py-3 hover:bg-elevated/40 active:bg-elevated/60 transition-colors min-h-[60px]
                  focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-surface"
     >
-      <span className="flex h-7 w-7 items-center justify-center text-muted font-mono text-[11px] shrink-0 tabular-nums">
+      <span className="flex h-7 w-7 items-center justify-center text-muted font-mono text-xs shrink-0 tabular-nums">
         {crypto.rank}
       </span>
       <CryptoLogo
@@ -700,27 +700,27 @@ function CryptoListRow({ crypto }: { crypto: TopCrypto }) {
       <div className="min-w-0 flex-1">
         <div className="flex items-baseline gap-2">
           <span className="font-semibold text-fg text-sm truncate">{crypto.name}</span>
-          <span className="text-[11px] text-muted font-mono uppercase shrink-0">
+          <span className="text-xs text-muted font-mono uppercase shrink-0">
             {crypto.symbol}
           </span>
         </div>
-        <div className="text-[11px] text-fg/55 truncate">{crypto.tagline}</div>
+        <div className="text-xs text-fg/55 truncate">{crypto.tagline}</div>
       </div>
 
-      <div className="hidden sm:block text-[11px] text-fg/55 shrink-0 max-w-[180px] truncate">
+      <div className="hidden sm:block text-xs text-fg/55 shrink-0 max-w-[180px] truncate">
         {crypto.category}
       </div>
 
       {/* Risk : icône + texte + couleur (V6 fix) */}
       <div
-        className={`inline-flex items-center gap-1 text-[11px] font-semibold whitespace-nowrap shrink-0 ${riskColor}`}
+        className={`inline-flex items-center gap-1 text-xs font-semibold whitespace-nowrap shrink-0 ${riskColor}`}
         aria-label={`Niveau de risque : ${crypto.riskLevel}`}
       >
         <RiskIcon className="h-3 w-3" strokeWidth={2.5} aria-hidden="true" focusable="false" />
         {crypto.riskLevel}
       </div>
 
-      <div className="hidden md:flex items-center gap-1 text-[11px] text-fg/55 shrink-0">
+      <div className="hidden md:flex items-center gap-1 text-xs text-fg/55 shrink-0">
         <span>Débutant</span>
         <span className="font-bold text-fg">{crypto.beginnerFriendly}/5</span>
       </div>

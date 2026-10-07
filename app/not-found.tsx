@@ -105,7 +105,7 @@ export default function NotFound() {
                 className="w-full rounded-xl bg-elevated border border-border pl-11 pr-4 py-3 text-fg placeholder:text-muted focus:outline-none focus:border-primary/60 focus:ring-2 focus:ring-primary/30 transition-colors"
               />
             </div>
-            <p className="mt-2 text-[11px] text-muted">
+            <p className="mt-2 text-xs text-muted">
               La recherche couvre articles, plateformes, cryptos, comparatifs, outils et glossaire.
             </p>
           </form>

@@ -323,12 +323,12 @@ export default function TrackQuiz({
                           )}
                           <span className="flex-1">{choice}</span>
                           {isCorrectChoice && (
-                            <span className="shrink-0 text-[10px] font-bold uppercase tracking-wide text-success-fg">
+                            <span className="shrink-0 text-xs font-bold uppercase tracking-wide text-success-fg">
                               Bonne réponse
                             </span>
                           )}
                           {isUserChoice && !isCorrectChoice && (
-                            <span className="shrink-0 text-[10px] font-bold uppercase tracking-wide text-danger-fg">
+                            <span className="shrink-0 text-xs font-bold uppercase tracking-wide text-danger-fg">
                               Votre choix
                             </span>
                           )}

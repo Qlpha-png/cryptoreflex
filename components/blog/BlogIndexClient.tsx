@@ -293,13 +293,13 @@ export default function BlogIndexClient({ articles, categories }: Props) {
       {totalPages > 1 && (
         <nav
           aria-label="Pagination des articles"
-          className="mt-12 flex items-center justify-center gap-2"
+          className="mt-12 flex flex-wrap items-center justify-center gap-2"
         >
           <button
             type="button"
             disabled={safePage <= 1}
             onClick={() => setPage((p) => Math.max(1, p - 1))}
-            className="inline-flex items-center gap-1 rounded-lg border border-border bg-surface px-3 py-2 text-sm
+            className="inline-flex items-center gap-1 whitespace-nowrap rounded-lg border border-border bg-surface px-3 py-2 text-sm
                        hover:border-primary/40 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:border-border
                        focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
             aria-label="Page précédente"
@@ -308,7 +308,7 @@ export default function BlogIndexClient({ articles, categories }: Props) {
             Précédent
           </button>
 
-          <span className="px-3 text-sm text-muted">
+          <span className="whitespace-nowrap px-3 text-sm text-muted">
             Page <strong className="text-fg">{safePage}</strong> sur {totalPages}
           </span>
 
@@ -316,7 +316,7 @@ export default function BlogIndexClient({ articles, categories }: Props) {
             type="button"
             disabled={safePage >= totalPages}
             onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-            className="inline-flex items-center gap-1 rounded-lg border border-border bg-surface px-3 py-2 text-sm
+            className="inline-flex items-center gap-1 whitespace-nowrap rounded-lg border border-border bg-surface px-3 py-2 text-sm
                        hover:border-primary/40 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:border-border
                        focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
             aria-label="Page suivante"

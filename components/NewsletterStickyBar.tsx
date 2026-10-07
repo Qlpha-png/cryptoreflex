@@ -259,7 +259,7 @@ export default function NewsletterStickyBar() {
           </p>
         )}
 
-        <p className="mt-1.5 text-[10px] text-muted leading-snug">
+        <p className="mt-1.5 text-xs text-muted leading-snug">
           Gratuit, sans spam, désabonnement en 1 clic. Conforme au RGPD (Beehiiv).
         </p>
       </div>

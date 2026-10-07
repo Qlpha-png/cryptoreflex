@@ -172,7 +172,7 @@ export default function Cerfa2086AutoPage() {
               ligne par ligne
             </h1>
 
-            <p className="mt-4 max-w-3xl text-lg text-fg/80 leading-relaxed">
+            <p className="mt-4 max-w-[34em] text-lg text-fg/80 leading-relaxed">
               Recopiez tous vos achats et ventes dans notre modèle CSV, depuis
               votre premier achat. Notre moteur applique la formule de
               l&apos;<strong>article 150 VH bis du CGI</strong> telle que le

@@ -119,7 +119,7 @@ export default function ProfitLossCalculatorPage() {
 
         {/* Header */}
         <header className="mt-6 max-w-3xl">
-          <div className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-primary-soft">
+          <div className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-bold uppercase tracking-wider text-primary-soft">
             <Calculator className="h-3.5 w-3.5" />
             Calculateur PnL
           </div>
@@ -169,7 +169,7 @@ export default function ProfitLossCalculatorPage() {
             href="/outils/calculateur-fiscalite"
             className="rounded-2xl border border-border bg-surface p-5 hover:border-primary/40 transition-colors"
           >
-            <div className="text-[11px] font-bold uppercase tracking-wider text-muted">
+            <div className="text-xs font-bold uppercase tracking-wider text-muted">
               Outil complémentaire
             </div>
             <div className="mt-2 text-base font-bold text-fg flex items-center gap-2">
@@ -185,7 +185,7 @@ export default function ProfitLossCalculatorPage() {
             href="/outils/cerfa-2086-auto"
             className="rounded-2xl border border-border bg-surface p-5 hover:border-primary/40 transition-colors"
           >
-            <div className="text-[11px] font-bold uppercase tracking-wider text-muted">
+            <div className="text-xs font-bold uppercase tracking-wider text-muted">
               Outil complémentaire
             </div>
             <div className="mt-2 text-base font-bold text-fg flex items-center gap-2">
@@ -203,7 +203,7 @@ export default function ProfitLossCalculatorPage() {
           <AmfDisclaimer variant="educatif" />
         </div>
 
-        <p className="mt-6 text-[11px] text-muted leading-relaxed">
+        <p className="mt-6 text-xs text-muted leading-relaxed">
           Cet outil ne remplace pas un comptable ni un conseiller fiscal. Le
           PFU de 31,4 % s&apos;applique aux{" "}
           <strong className="text-fg">cessions imposables</strong> uniquement

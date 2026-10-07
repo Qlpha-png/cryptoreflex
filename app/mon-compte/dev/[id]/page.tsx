@@ -199,7 +199,7 @@ function StatusBadge({ status }: { status: string }) {
   const cfg = map[status] ?? { label: status, classes: "bg-muted" };
   return (
     <span
-      className={`inline-flex items-center rounded-full border px-2 py-0.5 text-[10px] font-medium ${cfg.classes}`}
+      className={`inline-flex items-center rounded-full border px-2 py-0.5 text-xs font-medium ${cfg.classes}`}
     >
       {cfg.label}
     </span>
@@ -208,7 +208,7 @@ function StatusBadge({ status }: { status: string }) {
 
 function TierBadge({ tier }: { tier: string }) {
   return (
-    <span className="inline-flex items-center rounded-full border px-2 py-0.5 text-[10px] font-medium bg-primary/5 text-primary border-primary/30">
+    <span className="inline-flex items-center rounded-full border px-2 py-0.5 text-xs font-medium bg-primary/5 text-primary border-primary/30">
       {tierLabel(tier)}
     </span>
   );

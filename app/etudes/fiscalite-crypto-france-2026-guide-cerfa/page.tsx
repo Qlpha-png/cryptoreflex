@@ -311,7 +311,7 @@ export default function FiscaliteCryptoStudyPage() {
                 className="rounded-xl border border-fg-max/10 bg-fg-max/[0.03] p-4"
               >
                 <div className={`text-2xl font-bold ${s.color}`}>{s.value}</div>
-                <div className="mt-1 text-[11px] uppercase tracking-wider text-slate-400 leading-tight">
+                <div className="mt-1 text-xs uppercase tracking-wider text-slate-400 leading-tight">
                   {s.label}
                 </div>
               </div>

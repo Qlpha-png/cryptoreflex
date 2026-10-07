@@ -279,7 +279,7 @@ export default function AcheterPaysPage({ params }: Props) {
           <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-fg">
             Comment acheter {c.name} {country.inName} en 2026
           </h1>
-          <p className="mt-4 text-base text-fg/80 leading-relaxed max-w-3xl">
+          <p className="mt-4 text-base text-fg/80 leading-relaxed max-w-[34em]">
             {`Acheter ${c.name} (${c.symbol}) ${country.fromName} passe par une plateforme régulée — agréée MiCA dans l'UE ou supervisée par l'autorité compétente (${country.regulator}) — avec dépôt en ${country.currency}. ${c.name} se positionne sur « ${c.category.toLowerCase()} » ; notre base recense ${c.whereToBuy.length} plateforme${c.whereToBuy.length > 1 ? "s" : ""} où l'acquérir. Étapes (compte, KYC, dépôt, achat, sécurisation) et fiscalité applicable détaillées ci-dessous — information éducative, jamais un conseil d'investissement.`}
           </p>
           <p className="mt-3 text-sm text-muted">
@@ -329,7 +329,7 @@ export default function AcheterPaysPage({ params }: Props) {
                       className="text-sm font-semibold text-fg hover:text-primary-soft inline-flex items-center gap-1.5"
                     >
                       {p}
-                      <span className="text-[11px] font-normal text-muted">
+                      <span className="text-xs font-normal text-muted">
                         (avis)
                       </span>
                     </Link>
@@ -483,7 +483,7 @@ function EditorialStat({ label, value }: { label: string; value: string }) {
   if (!value) return null;
   return (
     <div className="rounded-lg border border-border bg-surface px-3 py-2">
-      <dt className="text-[11px] uppercase tracking-wider text-muted">{label}</dt>
+      <dt className="text-xs uppercase tracking-wider text-muted">{label}</dt>
       <dd className="mt-0.5 text-sm font-semibold text-fg">{value}</dd>
     </div>
   );

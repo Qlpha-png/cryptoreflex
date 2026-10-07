@@ -171,7 +171,7 @@ export default function ProgressTracker({
                       isDone ? "text-muted line-through" : "text-fg/90"
                     }`}
                   >
-                    <span className="font-mono text-[11px] text-muted">
+                    <span className="font-mono text-xs text-muted">
                       {String(lesson.order).padStart(2, "0")}.
                     </span>{" "}
                     {lesson.title}
@@ -188,7 +188,7 @@ export default function ProgressTracker({
         <button
           type="button"
           onClick={handleReset}
-          className="mt-5 inline-flex items-center gap-1.5 text-[11px] text-muted hover:text-danger-fg"
+          className="mt-5 inline-flex items-center gap-1.5 text-xs text-muted hover:text-danger-fg"
           aria-label="Réinitialiser la progression du parcours"
         >
           <RotateCcw className="h-3 w-3" aria-hidden="true" />

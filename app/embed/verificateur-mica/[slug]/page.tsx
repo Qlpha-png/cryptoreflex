@@ -99,7 +99,7 @@ export default function EmbedPage({ params }: Params) {
           <h2 style={{ margin: 0, fontSize: 18, fontWeight: 800, color: "rgb(var(--c-fg-max))" }}>
             {platform.name}
           </h2>
-          <p style={{ margin: "2px 0 0", fontSize: 12, color: "rgb(var(--c-fg-4))" }}>
+          <p style={{ margin: "2px 0 0", fontSize: 14, color: "rgb(var(--c-fg-4))" }}>
             {platform.headquarters}
           </p>
         </div>
@@ -109,7 +109,7 @@ export default function EmbedPage({ params }: Params) {
             alignItems: "center",
             gap: 4,
             padding: "4px 10px",
-            fontSize: 11,
+            fontSize: 14,
             fontWeight: 600,
             borderRadius: 999,
             whiteSpace: "nowrap",
@@ -156,7 +156,7 @@ export default function EmbedPage({ params }: Params) {
           alignItems: "center",
           justifyContent: "space-between",
           gap: 8,
-          fontSize: 11,
+          fontSize: 14,
           color: "rgb(var(--c-fg-4))",
           flexWrap: "wrap",
         }}
@@ -214,7 +214,7 @@ function FieldBox({
     >
       <dt
         style={{
-          fontSize: 10,
+          fontSize: 14,
           fontWeight: 600,
           color: "rgb(var(--c-fg-4))",
           textTransform: "uppercase",
@@ -227,7 +227,7 @@ function FieldBox({
       <dd
         style={{
           margin: "4px 0 0",
-          fontSize: 13,
+          fontSize: 14,
           fontWeight: highlight ? 700 : 500,
           color: valueColor,
         }}

@@ -124,7 +124,7 @@ export default function PlatformCardInline({
 function Stat({ label, value }: { label: string; value: string }) {
   return (
     <div className="bg-surface px-4 py-2.5">
-      <dt className="text-[11px] uppercase tracking-wide text-muted">{label}</dt>
+      <dt className="text-xs uppercase tracking-wide text-muted">{label}</dt>
       <dd className="mt-0.5 font-semibold text-fg-max tabular-nums">{value}</dd>
     </div>
   );

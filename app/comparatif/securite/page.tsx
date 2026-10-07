@@ -195,7 +195,7 @@ export default function ComparatifSecuritePage() {
 
         {/* Header */}
         <header className="mt-6 max-w-3xl">
-          <div className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-primary-soft">
+          <div className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-bold uppercase tracking-wider text-primary-soft">
             <ShieldCheck className="h-3.5 w-3.5" />
             Sécurité des plateformes
           </div>
@@ -266,7 +266,7 @@ export default function ComparatifSecuritePage() {
                     key={r.id}
                     className={`border-t border-border ${isBest ? "bg-primary/5" : ""}`}
                   >
-                    <td className="px-4 py-3 font-mono text-xs text-muted">{i + 1}</td>
+                    <td className="whitespace-nowrap px-4 py-3 font-mono text-xs text-muted">{i + 1}</td>
                     <td className="px-4 py-3 whitespace-nowrap">
                       <PlatformName
                         href={r.href}
@@ -284,12 +284,12 @@ export default function ComparatifSecuritePage() {
                         )}
                         {r.name}
                         {isBest && (
-                          <span className="text-[10px] font-bold uppercase tracking-wider text-primary">#1</span>
+                          <span className="text-xs font-bold uppercase tracking-wider text-primary">#1</span>
                         )}
                       </PlatformName>
                     </td>
                     <td className="px-4 py-3 text-right">
-                      <span className="inline-flex items-center gap-1 whitespace-nowrap rounded-md border border-primary/30 bg-primary/10 px-2 py-0.5 font-mono text-[11px] font-bold text-primary-soft">
+                      <span className="inline-flex items-center gap-1 whitespace-nowrap rounded-md border border-primary/30 bg-primary/10 px-2 py-0.5 font-mono text-xs font-bold text-primary-soft">
                         {note(r.securityScore)}/5
                       </span>
                     </td>
@@ -324,12 +324,12 @@ export default function ComparatifSecuritePage() {
                     </td>
                     <td className="px-4 py-3">
                       {r.micaCompliant ? (
-                        <span className="inline-flex items-center gap-1 rounded-md border border-accent-green/30 bg-accent-green/10 px-2 py-0.5 text-[10px] font-bold text-accent-green">
+                        <span className="inline-flex items-center gap-1 rounded-md border border-accent-green/30 bg-accent-green/10 px-2 py-0.5 text-xs font-bold text-accent-green">
                           <CheckCircle2 className="h-3 w-3" />
                           {r.micaStatus.length > 30 ? "Agréée MiCA" : r.micaStatus}
                         </span>
                       ) : (
-                        <span className="inline-flex items-center gap-1 rounded-md border border-primary-glow/30 bg-primary-glow/10 px-2 py-0.5 text-[10px] font-bold text-primary-soft">
+                        <span className="inline-flex items-center gap-1 rounded-md border border-primary-glow/30 bg-primary-glow/10 px-2 py-0.5 text-xs font-bold text-primary-soft">
                           <AlertTriangle className="h-3 w-3" />
                           Non autorisée en France
                         </span>
@@ -360,7 +360,7 @@ export default function ComparatifSecuritePage() {
         {/* Insights */}
         <section className="mt-10 grid gap-3 sm:grid-cols-2">
           <div className="rounded-2xl border border-accent-green/30 bg-accent-green/5 p-5">
-            <div className="text-[11px] font-bold uppercase tracking-wider text-accent-green">
+            <div className="text-xs font-bold uppercase tracking-wider text-accent-green">
               Bon à savoir
             </div>
             <p className="mt-2 text-sm text-fg/85">
@@ -372,7 +372,7 @@ export default function ComparatifSecuritePage() {
             </p>
           </div>
           <div className="rounded-2xl border border-primary-glow/30 bg-primary-glow/5 p-5">
-            <div className="text-[11px] font-bold uppercase tracking-wider text-primary-soft">
+            <div className="text-xs font-bold uppercase tracking-wider text-primary-soft">
               Important
             </div>
             <p className="mt-2 text-sm text-fg/85">
@@ -390,7 +390,7 @@ export default function ComparatifSecuritePage() {
             href="/comparatif/frais"
             className="rounded-2xl border border-border bg-surface p-5 hover:border-primary/40 transition-colors"
           >
-            <div className="text-[11px] font-bold uppercase tracking-wider text-muted">
+            <div className="text-xs font-bold uppercase tracking-wider text-muted">
               À comparer aussi
             </div>
             <div className="mt-2 text-base font-bold text-fg">Frais des plateformes</div>
@@ -400,7 +400,7 @@ export default function ComparatifSecuritePage() {
             href="/outils/verificateur-mica"
             className="rounded-2xl border border-border bg-surface p-5 hover:border-primary/40 transition-colors"
           >
-            <div className="text-[11px] font-bold uppercase tracking-wider text-muted">
+            <div className="text-xs font-bold uppercase tracking-wider text-muted">
               Vérifiez une plateforme
             </div>
             <div className="mt-2 text-base font-bold text-fg">Vérificateur MiCA / CASP</div>
@@ -408,7 +408,7 @@ export default function ComparatifSecuritePage() {
           </Link>
         </section>
 
-        <p className="mt-10 text-[11px] text-muted leading-relaxed">
+        <p className="mt-10 text-xs text-muted leading-relaxed">
           Statuts MiCA vérifiés le {formatMicaDate(getMicaMeta().lastUpdated)} sur le registre de l&apos;ESMA et la
           liste blanche de l&apos;AMF (à recouper avant toute décision). Seuls les liens marqués
           « Publicité » sont rémunérés (affiliation ou parrainage personnel du fondateur) : voir notre{" "}
@@ -439,7 +439,7 @@ function Stat({
   };
   return (
     <div className={`rounded-2xl border p-4 ${styles[tone]}`}>
-      <div className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-wider opacity-80">
+      <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider opacity-80">
         {icon}
         {label}
       </div>

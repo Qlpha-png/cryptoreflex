@@ -394,7 +394,7 @@ export default function SuccessionCryptoTool() {
         <pre
           role="region"
           aria-label="Aperçu de la lettre"
-          className={`mt-4 max-h-[28rem] overflow-auto whitespace-pre-wrap rounded-xl border border-border bg-elevated/40 p-4 text-[13px] leading-relaxed text-fg/90 ${
+          className={`mt-4 max-h-[28rem] overflow-auto whitespace-pre-wrap rounded-xl border border-border bg-elevated/40 p-4 text-xs leading-relaxed text-fg/90 ${
             blocked ? "blur-sm select-none" : ""
           }`}
         >

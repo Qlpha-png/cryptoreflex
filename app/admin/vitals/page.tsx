@@ -313,7 +313,7 @@ function RatingPill({ rating }: { rating: Rating }) {
   }[rating];
   return (
     <span
-      className={`inline-flex items-center rounded-full border px-2.5 py-1 text-[11px] font-bold ${cfg.cls}`}
+      className={`inline-flex items-center rounded-full border px-2.5 py-1 text-xs font-bold ${cfg.cls}`}
     >
       {cfg.label}
     </span>

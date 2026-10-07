@@ -117,6 +117,98 @@ export const LEGACY = [
 /** Jetons sans nom Tailwind (collision avec des classes déjà écrites dans le code : voir rôle). */
 export const SANS_NOM_TAILWIND = new Set(["gold"]);
 
+/**
+ * Lot B1 — polices auto-hébergées (fichiers du kit C+ copiés tels quels dans public/fonts/cplus-v1/, licence SIL OFL 1.1
+ * à côté). Le dossier porte la version : changer un fichier = nouveau dossier cplus-v2 (en-tête immuable, next.config.js).
+ */
+export const DOSSIER_POLICES = "/fonts/cplus-v1/";
+const PLAGE_LATIN =
+  "U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD";
+/** [famille, fichier, style, graisses (axe du fichier), unicode-range, en ligne (data: URI), font-display (swap par défaut)] */
+export const POLICES = [
+  // Espace fine insécable (U+202F) des nombres français : Inter la dessine avec 1 à 2 px, on lisait « 20000 € ». Micro-police
+  // (328 octets) avec la largeur d'une espace normale, en tête des piles. Reprise B1 : ÉCRITE EN LIGNE (data: URI, autorisé
+  // par la CSP font-src 'self' data:) au lieu d'un fichier : une requête de police de moins (≈ 2,2 Ko d'en-têtes + corps),
+  // ce qui garde Inter + Newsreader + espace fine sous le budget de 110 Ko (b1/r3-*).
+  ["Cryptoreflex NNBSP", "cr-nnbsp.woff2", null, null, "U+202F", true],
+  // font-display: optional pour Inter ET Newsreader (jury B1, ronde 2 ; mesuré le 07/10/2026, fin/isoler.mjs) : en swap,
+  // une ligne proche de la largeur du conteneur changeait de nombre de lignes à l'arrivée de la police (rangée « MiCA ·
+  // 10 min · 25/04/2026 · MAJ » au-dessus du h1 des articles et actus : 1 ligne avec le repli, 2 avec Inter) → CLS 0,17 à
+  // 0,22 sur des articles et actus à 390-412 px, 0,01 à 0,04 sur la fiche, le comparatif, l'accueil et /academie à
+  // 360-412 px. Aucun repli n'a exactement la chasse de la vraie police : seul « optional » supprime la cause. La page
+  // garde la police disponible au premier rendu (repli mesuré si le fichier n'est pas encore là, ~100 ms) et la vraie
+  // police sert dès la page suivante (cache immuable).
+  ["Inter", "inter-latin.woff2", "normal", "100 900", PLAGE_LATIN, false, "optional"],
+  // Newsreader réduit par le kit : axe opsz figé à 40, axe wght 200-800 gardé (58 Ko au lieu de 132).
+  ["Newsreader", "newsreader-latin.woff2", "normal", "200 800", PLAGE_LATIN, false, "optional"],
+  // Italique : fichier statique (graisse 500, opsz figé à 48), chargé à la demande (aucun préchargement).
+  ["Newsreader", "newsreader-italic-latin.woff2", "italic", "400 600", PLAGE_LATIN, false, "optional"],
+];
+/**
+ * Replis MESURÉS (pas d'estimation) : la police locale est mise à la chasse de la vraie police, pour que le texte ne
+ * change ni de largeur ni de nombre de lignes quand la police arrive (CLS de bascule).
+ * size-adjust = largeur avec la vraie police / largeur avec la police locale, dans Edge, sur les textes réels des 13 pages
+ * du kit C+ ; ascent/descent = hhea du fichier / size-adjust (Inter 1984/-494 pour 2048 ; Newsreader 1470/-530 pour 2000).
+ * - Faces normales et italique : valeurs du kit (cplus/systeme/fallback-metrics.json, spec-systeme.md : Inter 106,25 %,
+ *   Newsreader 106,33 %, italique 100,14 %), recontrôlées le 07/10/2026 (b1/verif-replis.mjs : 106,38 % / 106,32 % / 100,45 %).
+ * - Faces GRASSES (ajout B1) : sans elles, un titre en 800 retombe sur Times New Roman normal grossi artificiellement,
+ *   9 % plus étroit que Newsreader 800 (mesuré) → le titre change de nombre de lignes à la bascule. Arial Bold et
+ *   Times New Roman Bold, mis à la chasse de la graisse demandée (b1/verif-replis-graisses.mjs, 07/10/2026).
+ * [famille, polices locales, style, graisses, size-adjust, ascent, descent]
+ */
+const LOCAL_ARIAL = ["Arial", "ArialMT", "Liberation Sans", "Arimo"];
+const LOCAL_ARIAL_GRAS = ["Arial Bold", "Arial-BoldMT", "Liberation Sans Bold", "Arimo Bold"];
+const LOCAL_TIMES = ["Times New Roman", "TimesNewRomanPSMT", "Liberation Serif", "Tinos"];
+const LOCAL_TIMES_GRAS = ["Times New Roman Bold", "TimesNewRomanPS-BoldMT", "Liberation Serif Bold", "Tinos Bold"];
+const LOCAL_TIMES_ITALIQUE = ["Times New Roman Italic", "TimesNewRomanPS-ItalicMT", "Liberation Serif Italic", "Tinos Italic"];
+export const REPLIS = [
+  ["Inter Fallback", LOCAL_ARIAL, "normal", "100 450", "106.25%", "91.17%", "22.70%"],
+  // 500 (navigation, libellés) : Inter 500 est 1,68 % plus large que le repli à 106,25 % (mesuré sur 73 éléments réels de 13 pages,
+  // finitions/mesure-replis.mjs) : 106,25 x 1,0168 = 108,04 % ; ascent 96,88 / 108,04 = 89,67 %, descent 24,12 / 108,04 = 22,32 %.
+  ["Inter Fallback", LOCAL_ARIAL, "normal", "451 550", "108.04%", "89.67%", "22.32%"],
+  ["Inter Fallback", LOCAL_ARIAL_GRAS, "normal", "551 650", "101.33%", "95.60%", "23.80%"],
+  ["Inter Fallback", LOCAL_ARIAL_GRAS, "normal", "651 750", "102.28%", "94.72%", "23.58%"],
+  ["Inter Fallback", LOCAL_ARIAL_GRAS, "normal", "751 900", "103.47%", "93.63%", "23.31%"],
+  ["Newsreader Fallback", LOCAL_TIMES, "normal", "100 550", "106.33%", "69.12%", "24.92%"],
+  ["Newsreader Fallback", LOCAL_TIMES_GRAS, "normal", "551 650", "102.70%", "71.56%", "25.80%"],
+  ["Newsreader Fallback", LOCAL_TIMES_GRAS, "normal", "651 750", "105.46%", "69.69%", "25.13%"],
+  ["Newsreader Fallback", LOCAL_TIMES_GRAS, "normal", "751 900", "109.77%", "66.96%", "24.14%"],
+  ["Newsreader Fallback", LOCAL_TIMES_ITALIQUE, "italic", "100 900", "100.14%", "73.39%", "26.46%"],
+];
+/** Piles (variables CSS) : --font-sans remplace la variable que posait next/font Inter (retiré au lot B1). */
+export const PILES = [
+  ["font-sans", '"Inter", "Inter Fallback", system-ui, sans-serif', "Texte courant (Tailwind font-sans et font-mono)"],
+  ["font-serif", '"Newsreader", "Newsreader Fallback", Georgia, serif', "Titres éditoriaux (Tailwind font-display et font-serif)"],
+];
+
+export function genererPolices() {
+  const faces = POLICES.map(([famille, fichier, style, graisses, plage, enLigne, affichage = "swap"]) => [
+    "@font-face {",
+    `  font-family: "${famille}";`,
+    enLigne
+      ? `  src: url("data:font/woff2;base64,${fs.readFileSync(path.join(ROOT, "public", DOSSIER_POLICES, fichier)).toString("base64")}") format("woff2");`
+      : `  src: url("${DOSSIER_POLICES}${fichier}") format("woff2");`,
+    ...(style ? [`  font-style: ${style};`] : []),
+    ...(graisses ? [`  font-weight: ${graisses};`] : []),
+    `  font-display: ${affichage};`,
+    `  unicode-range: ${plage};`,
+    "}",
+  ].join("\n"));
+  const replis = REPLIS.map(([famille, locales, style, graisses, taille, asc, desc]) => [
+    "@font-face {",
+    `  font-family: "${famille}";`,
+    `  src: ${locales.map((l) => `local("${l}")`).join(", ")};`,
+    `  font-style: ${style};`,
+    `  font-weight: ${graisses};`,
+    `  size-adjust: ${taille};`,
+    `  ascent-override: ${asc};`,
+    `  descent-override: ${desc};`,
+    "  line-gap-override: 0%;",
+    "}",
+  ].join("\n"));
+  return [...faces, ...replis].join("\n");
+}
+
 /** Couleur complète (rgba) : exposée à Tailwind en var(--c-x), sans <alpha-value>. */
 export const estComplete = (valeur) => !/^#[0-9A-F]{6}$/i.test(valeur);
 
@@ -145,9 +237,13 @@ export function genererCss(phase = "legacy") {
    Régénérer : node scripts/design/tokens.source.mjs --phase ${phase}
    Format canaux « R G B » : rgb(var(--c-x) / <alpha-value>) dans tailwind.config.ts.
    Exceptions (couleur complète, pas d'opacité /NN) : *-soft et *-border des couleurs d'état.
+   Polices (lot B1) : fichiers locaux ${DOSSIER_POLICES} + replis mesurés (voir REPLIS dans tokens.source.mjs).
    ===================================================================== */
 
+${genererPolices()}
+
 :root {
+${PILES.map(([nom, pile, role]) => `  --${nom}: ${pile}; /* ${role} */`).join("\n")}
 ${lignes.join("\n")}
 }
 `;

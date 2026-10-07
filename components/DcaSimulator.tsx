@@ -455,7 +455,7 @@ function Stat({
       : "text-fg-max";
   return (
     <div className="rounded-xl border border-border bg-elevated/40 p-3">
-      <div className="text-[10px] font-semibold text-muted uppercase tracking-wide">
+      <div className="text-xs font-semibold text-muted uppercase tracking-wide">
         {label}
       </div>
       <div className={`mt-1 inline-flex items-center gap-1 font-mono font-bold ${color}`}>

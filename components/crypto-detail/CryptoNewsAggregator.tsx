@@ -201,7 +201,7 @@ export default function CryptoNewsAggregator({
                 : "Auto-refresh actif toutes les 5 minutes — cliquer pour mettre en pause"
             }
             title={autoRefreshPaused ? "Auto-refresh en pause" : "Auto-refresh actif (cliquer pour pause)"}
-            className={`hidden sm:inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[10px] font-mono font-bold uppercase tracking-wider ml-1 min-h-[24px] cursor-pointer transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
+            className={`hidden sm:inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-xs font-mono font-bold uppercase tracking-wider ml-1 min-h-[24px] cursor-pointer transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
               autoRefreshPaused
                 ? "border-border bg-elevated/60 text-muted hover:text-fg"
                 : "border-success-border bg-success-soft text-success-fg hover:bg-success/80"
@@ -243,7 +243,7 @@ export default function CryptoNewsAggregator({
         ))}
       </ul>
 
-      <footer className="mt-4 flex items-center justify-between flex-wrap gap-2 text-[11px] text-muted">
+      <footer className="mt-4 flex items-center justify-between flex-wrap gap-2 text-xs text-muted">
         <span>
           Source : CryptoPanic · MAJ {formatRelativeFr(lastFetched)}
         </span>
@@ -272,13 +272,13 @@ function NewsCard({ item }: { item: CryptoNewsItem }) {
       className="group block rounded-xl border border-border bg-elevated/40 p-4 transition-colors hover:border-primary/40 hover:bg-elevated/60 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-surface"
     >
       <div className="flex items-start justify-between gap-3">
-        <div className="flex items-center gap-2 min-w-0">
+        <div className="flex flex-wrap items-center gap-x-2 gap-y-1 min-w-0">
           <SentimentBadge sentiment={item.sentiment} />
-          <span className="text-[10px] uppercase tracking-wider font-mono text-muted/80 truncate">
+          <span className="min-w-0 text-xs uppercase tracking-wider font-mono text-muted/80 break-words">
             {item.source}
           </span>
-          <span className="text-[10px] text-muted/60">·</span>
-          <span className="text-[10px] text-muted/80 whitespace-nowrap">
+          <span className="text-xs text-muted/60">·</span>
+          <span className="text-xs text-muted/80 whitespace-nowrap">
             {formatRelativeFr(item.publishedAt)}
           </span>
         </div>
@@ -287,11 +287,12 @@ function NewsCard({ item }: { item: CryptoNewsItem }) {
           aria-hidden="true"
         />
       </div>
-      <h3 className="mt-2 text-sm font-bold text-fg leading-snug line-clamp-2 group-hover:text-primary transition-colors">
+      {/* Jury B1 (accessibilité) : le titre est le nom visible du lien, il n'est plus tronqué ; l'extrait passe à 3 lignes. */}
+      <h3 className="mt-2 text-sm font-bold text-fg leading-snug group-hover:text-primary transition-colors">
         {item.title}
       </h3>
       {item.snippet && (
-        <p className="mt-1 text-xs text-muted leading-relaxed line-clamp-2">
+        <p className="mt-1 text-xs text-muted leading-relaxed line-clamp-3">
           {item.snippet}
         </p>
       )}
@@ -323,7 +324,7 @@ function SentimentBadge({ sentiment }: { sentiment: CryptoNewsItem["sentiment"] 
   const { label, cls, Icon } = config[sentiment];
   return (
     <span
-      className={`inline-flex items-center gap-1 rounded-md border px-1.5 py-0.5 text-[10px] font-semibold ${cls}`}
+      className={`inline-flex items-center gap-1 rounded-md border px-1.5 py-0.5 text-xs font-semibold ${cls}`}
     >
       <Icon className="h-3 w-3" aria-hidden="true" />
       {label}

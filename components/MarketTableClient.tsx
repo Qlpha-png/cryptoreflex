@@ -244,7 +244,7 @@ export default function MarketTableClient({ coins, limit, internalSlugs }: Props
         </div>
 
         {/* 06/10/2026 — sources réellement servies (champ `sources`), plus de lien CoinGecko en dur. */}
-        <DataSourceLine items={coins} className="mt-3 text-[11px] text-muted text-right" />
+        <DataSourceLine items={coins} className="mt-3 text-xs text-muted text-right" />
       </div>
     </section>
   );
@@ -304,7 +304,7 @@ function SortableTh({
         }`}
       >
         {label}
-        <span aria-hidden="true" className="inline-block w-3 text-center text-[10px]">
+        <span aria-hidden="true" className="inline-block w-3 text-center text-xs">
           {isActive ? (dir === "asc" ? "▲" : "▼") : ""}
         </span>
       </button>
@@ -334,7 +334,7 @@ function CoinCardMobile({
           : "cursor-default",
       ].join(" ")}
     >
-      <span className="text-muted font-mono text-[11px] w-5 text-center shrink-0">
+      <span className="text-muted font-mono text-xs w-5 text-center shrink-0">
         {coin.marketCapRank}
       </span>
 
@@ -349,11 +349,11 @@ function CoinCardMobile({
       <div className="min-w-0 flex-1">
         <div className="flex items-baseline gap-2">
           <span className="font-semibold text-fg text-[15px] truncate">{coin.name}</span>
-          <span className="text-[11px] text-muted font-mono uppercase shrink-0">
+          <span className="text-xs text-muted font-mono uppercase shrink-0">
             {coin.symbol}
           </span>
         </div>
-        <div className="text-[11px] text-muted mt-0.5 font-mono">
+        <div className="text-xs text-muted mt-0.5 font-mono">
           MCap {formatCompactUsd(coin.marketCap)}
         </div>
       </div>

@@ -88,7 +88,7 @@ export default function PriceFreshnessBadge({
   if (level === "fresh") {
     return (
       <span
-        className={`inline-flex items-center gap-1 rounded-full bg-success/10 px-2 py-0.5 text-[10px] font-medium text-success ${className}`}
+        className={`inline-flex items-center gap-1 rounded-full bg-success/10 px-2 py-0.5 text-xs font-medium text-success ${className}`}
         title={`Dernière mise à jour ${ageLabel}`}
       >
         <Clock className="h-3 w-3" aria-hidden="true" />
@@ -100,7 +100,7 @@ export default function PriceFreshnessBadge({
   if (level === "indicative") {
     return (
       <span
-        className={`inline-flex items-center gap-1 rounded-full bg-muted/15 px-2 py-0.5 text-[10px] font-medium text-muted ${className}`}
+        className={`inline-flex items-center gap-1 rounded-full bg-muted/15 px-2 py-0.5 text-xs font-medium text-muted ${className}`}
         title={`Prix mis à jour ${ageLabel}. Si vous prenez une décision financière, vérifiez auprès de la plateforme.`}
       >
         <Clock className="h-3 w-3" aria-hidden="true" />
@@ -112,7 +112,7 @@ export default function PriceFreshnessBadge({
   // delayed (2 h - 6 h)
   return (
     <span
-      className={`inline-flex items-center gap-1 rounded-full bg-warning/15 px-2 py-0.5 text-[10px] font-medium text-primary-soft ${className}`}
+      className={`inline-flex items-center gap-1 rounded-full bg-warning/15 px-2 py-0.5 text-xs font-medium text-primary-soft ${className}`}
       title={`Prix mis à jour ${ageLabel}. Données potentiellement retardées : vérifiez auprès de la plateforme avant toute décision.`}
     >
       <AlertTriangle className="h-3 w-3" aria-hidden="true" />

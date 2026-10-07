@@ -57,7 +57,7 @@ export default function MiCAComplianceBadge({
         inline-flex items-center gap-2 rounded-full
         border border-accent-green/30 bg-accent-green/10
         ${isBanner ? "px-4 py-2 text-sm w-full justify-center" : ""}
-        ${isCompact ? "px-2 py-0.5 text-[10px]" : ""}
+        ${isCompact ? "px-2 py-0.5 text-xs" : ""}
         ${!isBanner && !isCompact ? "px-3 py-1 text-xs" : ""}
         font-semibold text-accent-green
         ${className}
@@ -77,7 +77,7 @@ export default function MiCAComplianceBadge({
         {jurisdiction && !isCompact ? ` (${jurisdiction})` : ""}
       </span>
       {verifiedLabel && !isCompact && (
-        <span className="text-[10px] font-normal text-accent-green/70">
+        <span className="text-xs font-normal text-accent-green/70">
           · vérifié {verifiedLabel}
         </span>
       )}

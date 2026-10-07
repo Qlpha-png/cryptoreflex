@@ -100,11 +100,11 @@ export default async function Footer() {
               conso). Reformulé en "MiCA · info publique" qui décrit
               factuellement notre rôle d'éditeur (pas régulé directement,
               mais traite de la régulation MiCA). */}
-          <span className="inline-flex items-center gap-1 rounded-full border border-emerald-500/30 bg-emerald-500/5 px-2 py-0.5 text-[10px] font-mono font-bold text-emerald-300/90 uppercase tracking-wider">
+          <span className="inline-flex items-center gap-1 rounded-full border border-emerald-500/30 bg-emerald-500/5 px-2 py-0.5 text-xs font-mono font-bold text-emerald-300/90 uppercase tracking-wider">
             <ShieldCheck className="h-2.5 w-2.5" strokeWidth={2.5} aria-hidden="true" focusable="false" />
             MiCA · info publique
           </span>
-          <span className="inline-flex items-center gap-1 rounded-full border border-accent-cyan/30 bg-accent-cyan/5 px-2 py-0.5 text-[10px] font-mono font-bold text-accent-cyan uppercase tracking-wider">
+          <span className="inline-flex items-center gap-1 rounded-full border border-accent-cyan/30 bg-accent-cyan/5 px-2 py-0.5 text-xs font-mono font-bold text-ice-fg uppercase tracking-wider">
             <Sparkles className="h-2.5 w-2.5" strokeWidth={2.5} aria-hidden="true" focusable="false" />
             Méthodologie publique
           </span>
@@ -145,7 +145,7 @@ export default async function Footer() {
                 avant "Cryptoreflex Editorial" (entité fictive) + contraste 11px/55%
                 inférieur à 4.5:1 = WCAG AA fail. Maintenant : nom réel du
                 directeur de publication + opacité 70% pour contraste AA strict. */}
-            <p className="mt-5 text-[11px] text-fg/70 leading-relaxed max-w-md">
+            <p className="mt-5 text-xs text-fg/70 leading-relaxed max-w-md">
               Édité depuis la France par{" "}
               <span className="text-fg/90 font-medium">Kevin Voisin</span>{" "}
               (Entreprise Individuelle). Directeur de publication : Kevin Voisin.{" "}
@@ -190,7 +190,7 @@ export default async function Footer() {
         </div>
         {/* Légal et services, en une ligne */}
         <nav aria-label="Informations légales" className="mt-10 pt-4 border-t border-border/60">
-          <ul className="flex flex-wrap gap-x-4 gap-y-2 text-[12px] text-fg/70">
+          <ul className="flex flex-wrap gap-x-4 gap-y-2 text-xs text-fg/70">
             {FOOTER_LEGAL.map((link) => (
               <li key={link.href}>
                 <Link href={link.href} className="hover:text-white">{link.label}</Link>
@@ -205,7 +205,7 @@ export default async function Footer() {
             agréés AMF — RISQUE AMF (démarchage régulé non détenu).
             Cryptoreflex n'a aucun partenariat CIF ORIAS et n'est pas autorisé
             à le suggérer. Contraste passé à fg/70 pour WCAG AA. */}
-        <div className="mt-4 hidden md:flex flex-wrap items-center gap-x-4 gap-y-1 text-[11px] text-fg/70">
+        <div className="mt-4 hidden md:flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-fg/70">
           <span className="inline-flex items-center gap-1">
             <Lock className="h-3 w-3" strokeWidth={2} aria-hidden="true" focusable="false" />
             Hébergé en UE
@@ -232,7 +232,7 @@ export default async function Footer() {
           </div>
           <p
             role="note"
-            className="leading-relaxed border border-amber-500/30 bg-amber-500/5 rounded-lg p-3 text-[13px] sm:text-xs text-amber-100"
+            className="leading-relaxed border border-amber-500/30 bg-amber-500/5 rounded-lg p-3 text-xs sm:text-xs text-amber-100"
           >
             <strong className="text-amber-200">
               <span aria-hidden="true">⚠️ </span>Avertissement légal

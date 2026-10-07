@@ -367,7 +367,7 @@ export default async function FearGreedPage() {
         </aside>
 
         {/* Mentions */}
-        <p className="mt-8 text-[11px] text-muted leading-relaxed">
+        <p className="mt-8 text-xs text-muted leading-relaxed">
           Données fournies par alternative.me (cache serveur 1 h). Cette page
           est purement informative et ne constitue pas un conseil en
           investissement. Investir dans les cryptomonnaies comporte un risque
@@ -402,7 +402,7 @@ function Zone({
       style={{ borderColor: border }}
     >
       <div
-        className="text-[11px] font-mono uppercase tracking-wider"
+        className="text-xs font-mono uppercase tracking-wider"
         style={{ color }}
       >
         {range}

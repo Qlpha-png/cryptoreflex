@@ -288,7 +288,7 @@ function PlatformItem({
               <ExternalLink className="h-3 w-3" />
             </a>
           </div>
-          <PaidLinkCaption platformId={platform.id} href={platform.affiliateUrl} className="mt-1.5 block text-[11px] text-muted underline hover:text-fg" />
+          <PaidLinkCaption platformId={platform.id} href={platform.affiliateUrl} className="mt-1.5 block text-xs text-muted underline hover:text-fg" />
         </div>
       </div>
     </article>

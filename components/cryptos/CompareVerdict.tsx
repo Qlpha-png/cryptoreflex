@@ -102,7 +102,7 @@ function VerdictCard({ verdict }: { verdict: Verdict }) {
     <div className={`rounded-xl border ${a.border} ${a.bg} p-4`}>
       <div className="flex items-center gap-2">
         <Icon className={`h-4 w-4 ${a.icon}`} aria-hidden="true" />
-        <h3 className="text-[11px] font-bold uppercase tracking-wider text-fg/70">
+        <h3 className="text-xs font-bold uppercase tracking-wider text-fg/70">
           {verdict.profile}
         </h3>
       </div>

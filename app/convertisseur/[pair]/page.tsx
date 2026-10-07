@@ -269,7 +269,7 @@ export default async function PairPage({ params }: PageProps) {
                 <div className="overflow-x-auto rounded-2xl border border-border">
                   <table className="w-full text-sm">
                     <caption className="sr-only">Conversion de {fromUp} en {toUp} pour les montants courants</caption>
-                    <thead className="bg-elevated/60 text-left text-[11px] uppercase tracking-wider text-muted">
+                    <thead className="bg-elevated/60 text-left text-xs uppercase tracking-wider text-muted">
                       <tr>
                         <th scope="col" className="px-4 py-2.5 font-semibold">{fromName}</th>
                         <th scope="col" className="px-4 py-2.5 font-semibold text-right">{toName}</th>
@@ -289,7 +289,7 @@ export default async function PairPage({ params }: PageProps) {
                   <div className="overflow-x-auto rounded-2xl border border-border">
                     <table className="w-full text-sm">
                       <caption className="sr-only">Conversion inverse : {toUp} en {fromUp}</caption>
-                      <thead className="bg-elevated/60 text-left text-[11px] uppercase tracking-wider text-muted">
+                      <thead className="bg-elevated/60 text-left text-xs uppercase tracking-wider text-muted">
                         <tr>
                           <th scope="col" className="px-4 py-2.5 font-semibold">{toName}</th>
                           <th scope="col" className="px-4 py-2.5 font-semibold text-right">{fromName}</th>
@@ -464,9 +464,9 @@ function StatCell({ label, value, sub, tone }: { label: string; value: string; s
   const color = tone == null || tone === 0 ? "text-fg-max" : tone > 0 ? "text-accent-green" : "text-danger-fg";
   return (
     <div className="rounded-xl border border-border bg-elevated/40 px-3 py-2.5">
-      <dt className="text-[11px] uppercase tracking-wider text-muted">{label}</dt>
+      <dt className="text-xs uppercase tracking-wider text-muted">{label}</dt>
       <dd className={`mt-0.5 text-sm font-semibold tabular-nums ${color}`}>{value}</dd>
-      {sub ? <dd className="text-[11px] text-muted">{sub}</dd> : null}
+      {sub ? <dd className="text-xs text-muted">{sub}</dd> : null}
     </div>
   );
 }

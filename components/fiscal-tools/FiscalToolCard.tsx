@@ -40,7 +40,7 @@ export default function FiscalToolCard({
 
   return (
     <article
-      className={`relative glass rounded-2xl p-5 sm:p-6 flex flex-col h-full
+      className={`relative glass min-w-0 rounded-2xl p-5 sm:p-6 flex flex-col h-full
                   ${
                     tool.recommended
                       ? "border-primary/60 ring-1 ring-primary/30"
@@ -106,7 +106,7 @@ export default function FiscalToolCard({
         <span className="text-muted">Tarif : </span>
         <strong className="text-fg-max">{startingPrice}</strong>
         {tool.freeTrial && (
-          <span className="ml-2 inline-flex items-center rounded-full bg-success/15 px-2 py-0.5 text-[10px] font-semibold text-success">
+          <span className="ml-2 inline-flex items-center rounded-full bg-success/15 px-2 py-0.5 text-xs font-semibold text-success">
             Essai gratuit
           </span>
         )}

@@ -31,7 +31,7 @@ export default function EmbedFooter({
         marginTop: 16,
         paddingTop: 12,
         borderTop: "1px solid rgb(var(--c-border))",
-        fontSize: 11,
+        fontSize: 14,
         color: "rgb(var(--c-fg-4))",
         fontFamily: '"Cryptoreflex NNBSP", var(--font-sans), Inter, ui-sans-serif, system-ui, sans-serif',
       }}

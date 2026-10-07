@@ -280,7 +280,7 @@ export default function TransparencePage() {
               {affiliatePartnerships.length > 1 ? "s" : ""}
             </span>
           </div>
-          <p className="mt-2 text-sm text-muted max-w-3xl">
+          <p className="mt-2 text-sm text-muted max-w-[34em]">
             Vrais contrats commerciaux signés entre {BRAND.name} et le partenaire
             (via plateforme professionnelle Impact.com, Cellxpert ou programme
             d&apos;affiliation maison). Pour chaque ligne : statut MiCA, numéro
@@ -326,7 +326,7 @@ export default function TransparencePage() {
               {referralPartnerships.length > 1 ? "s" : ""}
             </span>
           </div>
-          <p className="mt-2 text-sm text-muted max-w-3xl">
+          <p className="mt-2 text-sm text-muted max-w-[34em]">
             <strong className="text-fg">⚠ Pas un partenariat commercial.</strong>{" "}
             Ces codes sont les liens de parrainage personnels que Kevin Voisin
             (fondateur, en tant que client particulier des plateformes) a
@@ -524,7 +524,7 @@ export default function TransparencePage() {
           <h2 className="text-2xl sm:text-3xl font-bold text-fg">
             Conformité MiCA depuis le 1<sup>er</sup> juillet 2026
           </h2>
-          <p className="mt-3 text-sm sm:text-base text-fg/85 leading-relaxed max-w-3xl">
+          <p className="mt-3 text-sm sm:text-base text-fg/85 leading-relaxed max-w-[34em]">
             {MICA_TRANSITION_NOTICE}
           </p>
           <div className="mt-6">
@@ -676,14 +676,14 @@ function PartnershipRow({
                 className="object-contain"
               />
             ) : (
-              <span aria-hidden="true" className="text-[11px] font-bold text-fg/70">
+              <span aria-hidden="true" className="text-xs font-bold text-fg/70">
                 {row.name.slice(0, 1)}
               </span>
             )}
           </span>
           <div>
             <div className="font-semibold text-fg">{row.name}</div>
-            <div className="text-[11px] text-muted capitalize">
+            <div className="text-xs text-muted capitalize">
               {row.category}
             </div>
           </div>
@@ -694,7 +694,7 @@ function PartnershipRow({
       </td>
       <td className="px-4 py-3 align-top text-xs">
         {row.mica.amfRegistration ? (
-          <code className="rounded bg-surface px-1.5 py-0.5 text-[11px] text-fg/90">
+          <code className="rounded bg-surface px-1.5 py-0.5 text-xs text-fg/90">
             {row.mica.amfRegistration}
           </code>
         ) : (
@@ -706,11 +706,11 @@ function PartnershipRow({
       </td>
       <td className="px-4 py-3 align-top text-xs">
         {isReview ? (
-          <span className="inline-flex items-center gap-1 rounded-full bg-warning/15 px-2 py-0.5 text-[11px] font-medium text-amber-200">
+          <span className="inline-flex items-center gap-1 rounded-full bg-warning/15 px-2 py-0.5 text-xs font-medium text-amber-200">
             <Clock className="h-3 w-3" /> {row.partnership.since}
           </span>
         ) : (
-          <span className="inline-flex items-center gap-1 rounded-full bg-accent-green/15 px-2 py-0.5 text-[11px] font-medium text-accent-green">
+          <span className="inline-flex items-center gap-1 rounded-full bg-accent-green/15 px-2 py-0.5 text-xs font-medium text-accent-green">
             <CheckCircle2 className="h-3 w-3" />{" "}
             {new Date(row.partnership.since).toLocaleDateString("fr-FR")}
           </span>

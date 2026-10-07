@@ -444,7 +444,7 @@ export default function AddHoldingDialog({
               autoComplete="off"
               className="w-full px-3 py-2.5 rounded-lg border border-border bg-surface text-fg text-sm placeholder:text-muted/70 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary font-mono"
             />
-            <p className="mt-1.5 text-[11px] text-muted">
+            <p className="mt-1.5 text-xs text-muted">
               Votre PRU (prix de revient unitaire) en EUR. Mettez 0 si la position
               est offerte (airdrop, cadeau).
             </p>

@@ -64,7 +64,7 @@ export default function AffiliateLink({
   // ou « Publicité — lien de parrainage personnel ».
   const mention = paidId ? paidLinkCaption(paidId, rawHref) : null;
   const mentionNode = mention ? (
-    <span className="not-prose ml-1 text-[0.8em] text-muted">({mention})</span>
+    <span className="not-prose ml-1 text-[0.875em] text-muted">({mention})</span>
   ) : null;
 
   if (variant === "button") {

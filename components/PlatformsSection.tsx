@@ -63,7 +63,7 @@ export default function PlatformsSection() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
           <div className="max-w-2xl">
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/5 px-3 py-1 text-[10px] font-mono font-bold text-emerald-300/90 uppercase tracking-wider">
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/5 px-3 py-1 text-xs font-mono font-bold text-emerald-300/90 uppercase tracking-wider">
               <ShieldCheck className="h-3 w-3" strokeWidth={2.5} aria-hidden="true" />
               {totalAvailable} plateformes vérifiées · MiCA · AMF
             </span>
@@ -90,7 +90,7 @@ export default function PlatformsSection() {
         </div>
 
         {/* Disclaimer affiliation global — Audit Mobile : 1 fois au lieu de N */}
-        <p className="mt-5 inline-flex items-center gap-1.5 text-[11px] text-muted">
+        <p className="mt-5 inline-flex items-center gap-1.5 text-xs text-muted">
           <Star className="h-3 w-3 text-primary-soft" strokeWidth={2} aria-hidden="true" />
           <span>
             Certains liens sont des liens partenaires rémunérés (signalés).{" "}

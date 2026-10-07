@@ -148,7 +148,7 @@ export default function PackDeclarationPage() {
         </nav>
 
         <header className="mt-6 max-w-3xl">
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-warning/15 border border-warning/30 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-warning-fg">
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-warning/15 border border-warning/30 px-3 py-1 text-xs font-bold uppercase tracking-wider text-warning-fg">
             <Calendar className="h-3 w-3" aria-hidden /> Correction en ligne jusqu'au 30 novembre 2026
           </span>
           <h1 className="mt-4 text-4xl sm:text-6xl font-extrabold tracking-tight">
@@ -180,7 +180,7 @@ export default function PackDeclarationPage() {
 
         {/* CTA — ressource gratuite */}
         <section className="mt-12 rounded-3xl border-2 border-primary/40 bg-gradient-to-br from-primary/15 via-primary/5 to-transparent p-6 sm:p-10 text-center">
-          <div className="inline-flex items-center gap-1 rounded-full bg-primary/20 border border-primary/40 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-primary-soft">
+          <div className="inline-flex items-center gap-1 rounded-full bg-primary/20 border border-primary/40 px-3 py-1 text-xs font-bold uppercase tracking-wider text-primary-soft">
             <Sparkles className="h-3 w-3" /> 100 % gratuit · sans abonnement
           </div>
           <h2 className="mt-3 text-3xl sm:text-4xl font-extrabold">

@@ -137,7 +137,7 @@ function Cell({
       >
         {display}
       </div>
-      <div className="mt-1 text-[11px] sm:text-xs uppercase tracking-wider text-muted font-semibold">
+      <div className="mt-1 text-xs sm:text-xs uppercase tracking-wider text-muted font-semibold">
         {label}
       </div>
     </div>

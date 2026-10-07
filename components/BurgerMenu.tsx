@@ -256,14 +256,14 @@ export default function BurgerMenu({ open, onClose }: Props) {
             ) : (
               <kbd
                 aria-hidden="true"
-                className="absolute right-2 top-1/2 -translate-y-1/2 hidden sm:inline-flex items-center justify-center h-6 px-1.5 rounded bg-background/60 border border-border/60 text-[10px] font-mono text-muted"
+                className="absolute right-2 top-1/2 -translate-y-1/2 hidden sm:inline-flex items-center justify-center h-6 px-1.5 rounded bg-background/60 border border-border/60 text-xs font-mono text-muted"
               >
                 ⌘K
               </kbd>
             )}
           </div>
           {query.trim() && (
-            <p className="mt-2 text-[11px] text-muted">
+            <p className="mt-2 text-xs text-muted">
               {totalMatches > 0 ? (
                 <>
                   <strong className="text-fg">{totalMatches}</strong> résultat{totalMatches > 1 ? "s" : ""}
@@ -300,12 +300,12 @@ export default function BurgerMenu({ open, onClose }: Props) {
                       <sec.Icon className="h-4 w-4" strokeWidth={1.85} />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <div className="text-[13px] font-bold text-fg flex items-center gap-2">
+                      <div className="text-xs font-bold text-fg flex items-center gap-2">
                         {sec.title}
-                        <span className="text-[10px] font-mono text-muted/70">({sec.items.length})</span>
+                        <span className="text-xs font-mono text-muted/70">({sec.items.length})</span>
                       </div>
                       {sec.intro && (
-                        <div className="text-[11px] text-muted mt-0.5">{sec.intro}</div>
+                        <div className="text-xs text-muted mt-0.5">{sec.intro}</div>
                       )}
                     </div>
                     <ChevronDown
@@ -329,12 +329,12 @@ export default function BurgerMenu({ open, onClose }: Props) {
                           >
                             <div className="flex-1 min-w-0">
                               <div className="flex items-center gap-2 flex-wrap">
-                                <span className="text-[13px] font-medium text-fg/85 group-hover:text-primary-glow transition-colors">
+                                <span className="text-xs font-medium text-fg/85 group-hover:text-primary-glow transition-colors">
                                   {item.label}
                                 </span>
                               </div>
                               {item.desc && (
-                                <div className="text-[11px] text-fg/55 mt-0.5 leading-snug">
+                                <div className="text-xs text-fg/55 mt-0.5 leading-snug">
                                   {item.desc}
                                 </div>
                               )}
@@ -367,9 +367,9 @@ export default function BurgerMenu({ open, onClose }: Props) {
         </div>
 
         {/* Footer drawer : raccourci clavier + version */}
-        <div className="flex-none border-t border-border/60 bg-background/95 backdrop-blur-md px-5 py-3 text-[11px] text-muted flex items-center justify-between">
+        <div className="flex-none border-t border-border/60 bg-background/95 backdrop-blur-md px-5 py-3 text-xs text-muted flex items-center justify-between">
           <span className="flex items-center gap-1.5">
-            Astuce&nbsp;: <kbd className="inline-flex items-center justify-center h-5 px-1.5 rounded bg-background/60 border border-border/60 font-mono text-[10px]">ESC</kbd> pour fermer
+            Astuce&nbsp;: <kbd className="inline-flex items-center justify-center h-5 px-1.5 rounded bg-background/60 border border-border/60 font-mono text-xs">ESC</kbd> pour fermer
           </span>
         </div>
       </div>

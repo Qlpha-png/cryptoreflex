@@ -270,7 +270,7 @@ function PartnerShowcase({
 
           {/* Pros */}
           <div className="mb-4">
-            <p className="text-[10px] uppercase tracking-wider text-success font-semibold mb-2">
+            <p className="text-xs uppercase tracking-wider text-success font-semibold mb-2">
               Points forts
             </p>
             <ul className="space-y-1.5">
@@ -314,7 +314,7 @@ function PartnerShowcase({
               <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
             </Link>
 
-            <p className="text-[11px] text-center text-muted leading-relaxed">
+            <p className="text-xs text-center text-muted leading-relaxed">
               Publicité — lien affilié : Cryptoreflex perçoit{" "}
               {partner.commission ?? "une commission"} sans surcoût pour vous.
             </p>
@@ -330,7 +330,7 @@ function PartnerShowcase({
               {partner.products.length > 1 ? "S" : ""} EN VITRINE
             </h3>
             {partner.commission && (
-              <span className="text-[11px] text-muted hidden sm:inline">
+              <span className="text-xs text-muted hidden sm:inline">
                 Commission : {partner.commission}
               </span>
             )}
@@ -401,7 +401,7 @@ function ProductTile({
       {/* Badge top-right */}
       {product.badge && (
         <span
-          className={`absolute top-2 right-2 z-10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded-full ${TONE_STYLES[product.badge.tone]}`}
+          className={`absolute top-2 right-2 z-10 px-2 py-0.5 text-xs font-bold uppercase tracking-wider rounded-full ${TONE_STYLES[product.badge.tone]}`}
         >
           {product.badge.label}
         </span>
@@ -454,7 +454,7 @@ function ProductTile({
           {product.highlights.slice(0, 3).map((h) => (
             <li
               key={h}
-              className="text-[11px] text-fg/70 flex items-start gap-1.5 leading-snug"
+              className="text-xs text-fg/70 flex items-start gap-1.5 leading-snug"
             >
               <span className="text-primary shrink-0 font-bold">·</span>
               <span>{h}</span>

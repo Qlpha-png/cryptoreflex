@@ -106,7 +106,8 @@ export default function MobileStickyCTA({
           {title && (
             <p className="text-xs font-semibold text-fg/90 truncate">{title}</p>
           )}
-          <p className="text-[10px] text-muted leading-tight truncate">
+          {/* Mention de risque : jamais tronquée (jury B1 : « Capital à risque ·… » à 14 px), elle passe à la ligne. */}
+          <p className="text-xs text-muted leading-tight">
             {shownDisclaimer}
           </p>
         </div>

@@ -348,7 +348,7 @@ function StatusBadge({ status }: { status: Status }) {
   const { label, cls, Icon } = map[status];
   return (
     <span
-      className={`inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ${cls}`}
+      className={`inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-xs font-bold uppercase tracking-wider ${cls}`}
     >
       {Icon && <Icon className="h-3 w-3" aria-hidden="true" />}
       {label}

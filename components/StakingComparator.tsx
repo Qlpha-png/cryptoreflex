@@ -172,7 +172,7 @@ function ApyBar({ min, max }: { min: number; max: number }) {
 
 function PlatformBadge({ id }: { id: string }) {
   return (
-    <span className="inline-flex items-center rounded-full border border-border bg-elevated/60 px-2 py-0.5 text-[11px] font-medium text-fg/80">
+    <span className="inline-flex items-center rounded-full border border-border bg-elevated/60 px-2 py-0.5 text-xs font-medium text-fg/80">
       {platformLabel(id)}
     </span>
   );
@@ -211,7 +211,7 @@ function StakingCard({ pair }: { pair: StakingPair }) {
 
       <dl className="mt-4 grid grid-cols-2 gap-3 text-sm">
         <div>
-          <dt className="text-[11px] uppercase tracking-wider text-muted flex items-center gap-1">
+          <dt className="text-xs uppercase tracking-wider text-muted flex items-center gap-1">
             <Lock className="h-3 w-3" aria-hidden="true" />
             Lock-up
           </dt>
@@ -228,7 +228,7 @@ function StakingCard({ pair }: { pair: StakingPair }) {
           </dd>
         </div>
         <div>
-          <dt className="text-[11px] uppercase tracking-wider text-muted flex items-center gap-1">
+          <dt className="text-xs uppercase tracking-wider text-muted flex items-center gap-1">
             <ShieldAlert className="h-3 w-3" aria-hidden="true" />
             Risque
           </dt>
@@ -240,7 +240,7 @@ function StakingCard({ pair }: { pair: StakingPair }) {
       </dl>
 
       <div className="mt-4">
-        <div className="text-[11px] uppercase tracking-wider text-muted mb-1.5">
+        <div className="text-xs uppercase tracking-wider text-muted mb-1.5">
           Disponible sur
         </div>
         <div className="flex flex-wrap gap-1.5">
@@ -249,7 +249,7 @@ function StakingCard({ pair }: { pair: StakingPair }) {
           ))}
           {overflow > 0 && (
             <span
-              className="inline-flex items-center rounded-full border border-border bg-elevated/40 px-2 py-0.5 text-[11px] font-medium text-muted"
+              className="inline-flex items-center rounded-full border border-border bg-elevated/40 px-2 py-0.5 text-xs font-medium text-muted"
               aria-label={`et ${overflow} autre${overflow > 1 ? "s" : ""} plateforme${overflow > 1 ? "s" : ""}`}
             >
               +{overflow}
@@ -437,7 +437,7 @@ export default function StakingComparator({ pairs }: Props) {
             <fieldset className="lg:col-span-4">
               <legend
                 id="apy-range-legend"
-                className="text-[11px] font-semibold uppercase tracking-wider text-muted mb-1.5 flex items-center gap-1"
+                className="text-xs font-semibold uppercase tracking-wider text-muted mb-1.5 flex items-center gap-1"
               >
                 <TrendingUp className="h-3 w-3" aria-hidden="true" />
                 APY ({apyMin}% – {apyMax === APY_MAX_BOUND ? `${APY_MAX_BOUND}%+` : `${apyMax}%`})
@@ -481,7 +481,7 @@ export default function StakingComparator({ pairs }: Props) {
                   aria-label={`APY maximum, actuellement ${apyMax}%`}
                 />
               </div>
-              <div className="mt-1 flex justify-between text-[10px] font-mono text-muted">
+              <div className="mt-1 flex justify-between text-xs font-mono text-muted">
                 <span>{APY_MIN_BOUND}%</span>
                 <span>{APY_MAX_BOUND}%</span>
               </div>
@@ -489,7 +489,7 @@ export default function StakingComparator({ pairs }: Props) {
 
             {/* Lock-up */}
             <fieldset className="lg:col-span-3">
-              <legend className="text-[11px] font-semibold uppercase tracking-wider text-muted mb-1.5 flex items-center gap-1">
+              <legend className="text-xs font-semibold uppercase tracking-wider text-muted mb-1.5 flex items-center gap-1">
                 <Lock className="h-3 w-3" aria-hidden="true" />
                 Lock-up
               </legend>
@@ -522,7 +522,7 @@ export default function StakingComparator({ pairs }: Props) {
 
             {/* Risque */}
             <fieldset className="lg:col-span-2">
-              <legend className="text-[11px] font-semibold uppercase tracking-wider text-muted mb-1.5 flex items-center gap-1">
+              <legend className="text-xs font-semibold uppercase tracking-wider text-muted mb-1.5 flex items-center gap-1">
                 <ShieldAlert className="h-3 w-3" aria-hidden="true" />
                 Risque max
               </legend>
@@ -556,7 +556,7 @@ export default function StakingComparator({ pairs }: Props) {
 
             {/* Plateformes */}
             <fieldset className="lg:col-span-3">
-              <legend className="text-[11px] font-semibold uppercase tracking-wider text-muted mb-1.5">
+              <legend className="text-xs font-semibold uppercase tracking-wider text-muted mb-1.5">
                 Plateforme
               </legend>
               <div
@@ -736,7 +736,7 @@ function StatPill({
   const valueClass = tone === "success" ? "text-success" : "text-fg";
   return (
     <div className="glass rounded-xl border border-border px-3 py-2.5">
-      <div className="text-[10px] font-semibold uppercase tracking-wider text-muted">
+      <div className="text-xs font-semibold uppercase tracking-wider text-muted">
         {label}
       </div>
       <div className={`mt-0.5 text-base sm:text-lg font-bold font-mono ${valueClass}`}>

@@ -54,7 +54,7 @@ export default function EmbedSimulateurDcaPage() {
       </h1>
       <p
         style={{
-          fontSize: 13,
+          fontSize: 14,
           color: "rgb(var(--c-fg-4))",
           margin: "0 0 16px",
           lineHeight: 1.4,

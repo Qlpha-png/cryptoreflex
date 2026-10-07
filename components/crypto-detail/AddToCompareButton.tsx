@@ -110,7 +110,7 @@ export default function AddToCompareButton({
         <span
           role="status"
           aria-live="polite"
-          className="absolute left-0 top-full mt-2 inline-block rounded-md border border-border bg-elevated px-2.5 py-1 text-[11px] font-medium text-fg shadow-lg shadow-black/30 whitespace-nowrap"
+          className="absolute left-0 top-full mt-2 inline-block rounded-md border border-border bg-elevated px-2.5 py-1 text-xs font-medium text-fg shadow-lg shadow-black/30 whitespace-nowrap"
         >
           {feedback}
         </span>

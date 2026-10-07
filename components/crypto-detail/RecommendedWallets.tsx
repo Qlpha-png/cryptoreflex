@@ -35,7 +35,7 @@ export default function RecommendedWallets({
           Chain : <span className="text-fg/70">{chain}</span>
         </span>
       </div>
-      <p className="mt-2 text-sm text-muted max-w-3xl">
+      <p className="mt-2 text-sm text-muted max-w-[34em]">
         Acheter sur une plateforme régulée, c&apos;est l&apos;étape 1. L&apos;étape 2 — souvent
         oubliée — c&apos;est <strong className="text-fg">retirer ses cryptos vers un wallet
         dont vous contrôlez les clés</strong>. Voici les wallets compatibles avec {cryptoName} adaptés à
@@ -80,18 +80,18 @@ function levelColor(level: string): string {
 function WalletRow({ wallet }: { wallet: WalletRecommendation }) {
   return (
     <div className="rounded-2xl border border-border bg-surface p-5 hover:border-primary/40 transition-colors flex flex-col">
-      <div className="flex items-start justify-between gap-3">
+      <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="min-w-0">
           <div className="flex items-center gap-2">
             <span className="text-fg/60">{iconForType(wallet.type)}</span>
             <h3 className="text-base font-bold text-fg">{wallet.name}</h3>
           </div>
-          <p className="mt-0.5 text-[11px] uppercase tracking-wider text-muted">
+          <p className="mt-0.5 text-xs uppercase tracking-wider text-muted">
             {wallet.type}
           </p>
         </div>
         <span
-          className={`shrink-0 inline-flex items-center rounded-full border px-2 py-0.5 text-[10px] font-semibold ${levelColor(wallet.level)}`}
+          className={`shrink-0 inline-flex items-center rounded-full border px-2 py-0.5 text-xs font-semibold ${levelColor(wallet.level)}`}
         >
           {wallet.level}
         </span>

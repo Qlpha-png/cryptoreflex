@@ -121,7 +121,7 @@ export default function Hero({ prices, sparklines, updatedAt, fearGreed }: HeroP
           {/* Eyebrow factuelle — annonce la signature */}
           {/* Courbe de secours (donnée absente) : plus de légende « panne » sous le héros, et le surtitre ne
               parle plus du Bitcoin, pour que le décor ne passe jamais pour la vraie courbe (06/10/2026). */}
-          <p className="font-mono text-[11px] sm:text-xs uppercase tracking-[0.18em] text-muted animate-hero-fade-up">
+          <p className="font-mono text-xs sm:text-xs uppercase tracking-[0.18em] text-muted animate-hero-fade-up">
             {head.isReal ? (
               <>
                 <span className="text-primary-soft">Pouls du marché</span>
@@ -183,7 +183,7 @@ export default function Hero({ prices, sparklines, updatedAt, fearGreed }: HeroP
           </p>
 
           {/* Disclaimer AMF — above the fold, inchangé */}
-          <p className="mt-5 text-[11px] leading-relaxed text-fg/55 max-w-xl animate-hero-fade-up animate-hero-fade-up-delay-4">
+          <p className="mt-5 text-xs leading-relaxed text-fg/55 max-w-xl animate-hero-fade-up animate-hero-fade-up-delay-4">
             <ShieldAlert className="inline h-3 w-3 mr-1 -mt-0.5 text-primary-soft/70" aria-hidden="true" />
             Investir en cryptomonnaies comporte un risque de perte en capital.
             Liens partenaires rémunérés signalés.{" "}

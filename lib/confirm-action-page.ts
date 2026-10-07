@@ -27,7 +27,7 @@ h1{font-size:22px;margin:0 0 14px;color:#fff}
 p{font-size:15px;line-height:1.6;margin:0 0 12px;color:#D1D5DB}
 button{margin-top:18px;padding:13px 22px;border:none;border-radius:10px;background:#F5A524;color:#0B0D10;font-size:15px;font-weight:700;cursor:pointer}
 a{color:#F5A524}
-.foot{margin-top:22px;font-size:12px;color:#6B7280}`;
+.foot{margin-top:22px;font-size:14px;color:#6B7280}`;
 
 /** Page avec un bouton qui envoie le formulaire en POST vers `actionUrl`. */
 export function confirmActionPage(opts: {

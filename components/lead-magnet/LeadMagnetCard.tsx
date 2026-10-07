@@ -158,7 +158,7 @@ export default function LeadMagnetCard({
         <form onSubmit={onSubmitOptIn} className="mt-3 flex flex-col gap-2">
           <label
             htmlFor={"lm-email-" + id}
-            className="text-[11px] leading-snug text-muted"
+            className="text-xs leading-snug text-muted"
           >
             Optionnel : inscrivez-vous à la newsletter Cryptoreflex (sans rythme d&apos;envoi fixe).
           </label>
@@ -187,7 +187,7 @@ export default function LeadMagnetCard({
               {errorMsg}
             </p>
           ) : null}
-          <p className="text-[11px] leading-snug text-muted/70">
+          <p className="text-xs leading-snug text-muted/70">
             Newsletter Cryptoreflex, facultative. Désinscription en 1 clic depuis
             chaque email.{" "}
             <Link href="/confidentialite" className="underline hover:text-muted">

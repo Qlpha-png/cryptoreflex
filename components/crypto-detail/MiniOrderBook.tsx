@@ -155,7 +155,7 @@ export default function MiniOrderBook({
         className="rounded-xl border border-border bg-elevated/40 p-3 h-[112px] motion-safe:animate-pulse"
         style={{ minHeight: 112 }}
       >
-        <div className="text-[10px] uppercase tracking-wider text-muted font-bold">
+        <div className="text-xs uppercase tracking-wider text-muted font-bold">
           Carnet d&apos;ordres · chargement
         </div>
       </div>
@@ -185,18 +185,18 @@ export default function MiniOrderBook({
     <div
       role="region"
       aria-label={`Carnet d'ordres ${symbol.toUpperCase()}/USDT en temps réel`}
-      className="rounded-xl border border-border bg-elevated/40 p-3 font-mono text-[11px]"
+      className="rounded-xl border border-border bg-elevated/40 p-3 font-mono text-xs"
     >
-      <div className="flex items-center justify-between gap-2 mb-2">
-        <div className="text-[10px] uppercase tracking-wider text-muted font-bold flex items-center gap-1.5">
+      <div className="flex flex-wrap items-center justify-between gap-x-2 gap-y-1 mb-2">
+        <div className="text-xs uppercase tracking-wider text-muted font-bold flex items-center gap-1.5">
           <span className="inline-block h-1.5 w-1.5 rounded-full bg-success animate-pulse" aria-hidden />
           Carnet d&apos;ordres · Binance
         </div>
         <div
-          className="text-[10px] text-muted tabular-nums"
+          className="whitespace-nowrap text-xs text-muted tabular-nums"
           aria-live="polite"
         >
-          spread {spreadPct.toLocaleString("fr-FR", { minimumFractionDigits: 3, maximumFractionDigits: 3 })} %
+          spread {spreadPct.toLocaleString("fr-FR", { minimumFractionDigits: 3, maximumFractionDigits: 3 })}&nbsp;%
         </div>
       </div>
 
@@ -206,7 +206,7 @@ export default function MiniOrderBook({
           les bids/asks changent toutes les 5s (trop bruyant pour SR) ; le
           spread reste annoncé via aria-live="polite" en haut. */}
       <table
-        className="w-full border-collapse text-[11px] tabular-nums"
+        className="w-full whitespace-nowrap border-collapse text-xs tabular-nums"
         aria-live="off"
       >
         <caption className="sr-only">
@@ -271,10 +271,10 @@ export default function MiniOrderBook({
 
       {/* Mid-price footer */}
       <div className="mt-2 pt-2 border-t border-border/60 flex items-center justify-between">
-        <span className="text-[9px] text-muted uppercase tracking-wider">
+        <span className="text-xs text-muted uppercase tracking-wider">
           Mid-price
         </span>
-        <span className="text-[12px] font-bold text-fg tabular-nums">
+        <span className="text-xs font-bold text-fg tabular-nums">
           {formatPrice(midPrice)} USDT
         </span>
       </div>

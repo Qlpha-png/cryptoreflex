@@ -194,7 +194,7 @@ export default function WhitepaperTldrPage() {
                 Les 15 red flags détectés
               </h2>
             </div>
-            <p className="text-fg-max/70 max-w-3xl">
+            <p className="text-fg-max/70 max-w-[34em]">
               Cette grille publique réunit des critères connus pour identifier
               les projets crypto douteux. Plus un whitepaper accumule de red
               flags, plus son score BS est élevé.

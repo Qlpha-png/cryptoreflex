@@ -58,7 +58,7 @@ export default function StickyPartnerCta({
           <ShoppingBag className="h-5 w-5 text-fg/80" />
         </div>
         <div className="flex-1 min-w-0 px-1">
-          <p className="text-[11px] uppercase tracking-wider text-muted leading-none">
+          <p className="text-xs uppercase tracking-wider text-muted leading-none">
             Publicité · {partnerName} · à partir de
           </p>
           <p className="text-base font-extrabold text-primary font-mono tabular-nums leading-tight">

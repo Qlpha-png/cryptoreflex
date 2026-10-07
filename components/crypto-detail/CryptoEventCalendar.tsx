@@ -82,7 +82,7 @@ export default function CryptoEventCalendar({ cryptoId, cryptoName }: Props) {
       <h2 className="text-2xl sm:text-3xl font-bold tracking-tight">
         Prochains événements {cryptoName}
       </h2>
-      <p className="mt-2 text-sm text-muted max-w-3xl">
+      <p className="mt-2 text-sm text-muted max-w-[34em]">
         Token unlocks, upgrades mainnet, ETF deadlines, conférences — calendrier
         court-moyen terme, vérifié manuellement par Cryptoreflex.
       </p>
@@ -109,15 +109,15 @@ export default function CryptoEventCalendar({ cryptoId, cryptoName }: Props) {
                   </span>
                 </div>
                 <div className="mt-1 flex items-center gap-2 flex-wrap">
-                  <span className="text-[10px] uppercase tracking-wider text-muted font-mono">
+                  <span className="text-xs uppercase tracking-wider text-muted font-mono">
                     {TYPE_LABEL[e.type]}
                   </span>
                   <span
-                    className={`inline-flex items-center rounded-full border px-2 py-0.5 text-[10px] font-semibold ${IMPORTANCE_COLOR[e.importance]}`}
+                    className={`inline-flex items-center rounded-full border px-2 py-0.5 text-xs font-semibold ${IMPORTANCE_COLOR[e.importance]}`}
                   >
                     {IMPORTANCE_LABEL[e.importance]}
                   </span>
-                  <span className="text-[10px] text-muted font-mono">
+                  <span className="text-xs text-muted font-mono">
                     {formatDate(e.date)}
                   </span>
                 </div>
@@ -141,7 +141,7 @@ export default function CryptoEventCalendar({ cryptoId, cryptoName }: Props) {
         })}
       </ol>
 
-      <p className="mt-4 text-[11px] text-muted leading-relaxed">
+      <p className="mt-4 text-xs text-muted leading-relaxed">
         Données éditoriales Cryptoreflex · Dernière vérification :{" "}
         {EVENTS_LAST_UPDATED}.
       </p>

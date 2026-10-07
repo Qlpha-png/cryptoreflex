@@ -156,7 +156,7 @@ export default function GlossaireCryptoPage() {
               {GLOSSARY_FLAT_CATEGORIES.map((c) => (
                 <span
                   key={c}
-                  className="inline-flex items-center text-[11px] font-semibold rounded-full bg-elevated text-muted border border-border px-2.5 py-1"
+                  className="inline-flex items-center text-xs font-semibold rounded-full bg-elevated text-muted border border-border px-2.5 py-1"
                 >
                   {c}
                 </span>

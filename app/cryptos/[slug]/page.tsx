@@ -660,14 +660,14 @@ export default async function CryptoPage({ params }: Props) {
                   <span aria-hidden="true">⏳</span>
                   Prochain halving Bitcoin
                 </h3>
-                <p className="mt-1 text-[12px] text-muted">
+                <p className="mt-1 text-xs text-muted">
                   Récompense par bloc divisée par 2 → {FUTURE_HALVINGS[0]?.rewardAfter ?? 1.5625} BTC.
                   Catalyseur historique d&apos;offre.
                 </p>
               </div>
               <Link
                 href="/halving-bitcoin"
-                className="text-[12px] font-semibold text-primary hover:text-primary-glow inline-flex items-center gap-1"
+                className="text-xs font-semibold text-primary hover:text-primary-glow inline-flex items-center gap-1"
               >
                 Cycle complet & projections
                 <ExternalLink className="h-3 w-3" aria-hidden="true" />
@@ -1169,14 +1169,14 @@ export default async function CryptoPage({ params }: Props) {
                   href={`/cryptos/${rc.id}`}
                   className="rounded-xl border border-border bg-surface p-4 hover:border-primary/40 transition-colors"
                 >
-                  <div className="text-[11px] uppercase tracking-wider text-muted">
+                  <div className="text-xs uppercase tracking-wider text-muted">
                     {rc.kind === "hidden-gem" ? "Hidden Gem" : `Top ${rc.rank}`}
                   </div>
                   <div className="mt-1 text-sm font-bold text-fg">
                     {rc.name}{" "}
                     <span className="text-muted font-mono text-xs">{rc.symbol}</span>
                   </div>
-                  <div className="mt-1 text-xs text-muted line-clamp-2">{rc.tagline}</div>
+                  <div className="mt-1 text-xs text-muted">{rc.tagline}</div>
                 </Link>
               ))}
             </div>
@@ -1204,7 +1204,7 @@ export default async function CryptoPage({ params }: Props) {
             FICHE_REVIEWED_DATE / LastReviewedBadge / JSON-LD dateModified.
             "recommandées" → "présentées" pour alignement wording compliance
             (phase 2 — pas de signal d'achat personnalisé). */}
-        <p className="mt-8 text-[11px] text-muted leading-relaxed">
+        <p className="mt-8 text-xs text-muted leading-relaxed">
           Données de prix : plateformes d'échange, CoinMarketCap et CoinGecko, selon disponibilité. Données éditoriales vérifiées
           le {new Date(FICHE_REVIEWED_DATE).toLocaleDateString("fr-FR")} par le
           fondateur {BRAND.name} (Kevin Voisin).{" "}
@@ -1256,7 +1256,7 @@ function Spec({
     <div className="rounded-xl border border-border bg-surface p-4">
       <div className="flex items-center gap-2 text-muted">
         <Icon className="h-4 w-4" />
-        <span className="text-[11px] uppercase tracking-wider">{label}</span>
+        <span className="text-xs uppercase tracking-wider">{label}</span>
       </div>
       <div className="mt-1 text-sm font-semibold text-fg">{value}</div>
     </div>
@@ -1313,7 +1313,7 @@ function AnnualPerformance({ cryptoId, cryptoName }: { cryptoId: string; cryptoN
                   </Link>
                   {/* 06/10/2026 — sous l'année sur mobile (au lieu d'élargir la colonne). */}
                   {r.m < 12 && (
-                    <span className="block text-[10px] font-normal leading-tight text-muted sm:ml-1.5 sm:inline sm:whitespace-nowrap">
+                    <span className="block text-xs font-normal leading-tight text-muted sm:ml-1.5 sm:inline sm:whitespace-nowrap">
                       en cours · {r.m}&nbsp;mois
                     </span>
                   )}
@@ -1356,11 +1356,11 @@ function HiddenGemSections({ gem }: { gem: HiddenGem }) {
           <ShieldCheck className="h-6 w-6 text-primary" />
           Score de fiabilité : {fmtFr(r.score, 1)}/10 — détail
         </h2>
-        <p className="mt-2 text-sm text-muted max-w-3xl">
+        <p className="mt-2 text-sm text-muted max-w-[34em]">
           Sept critères publics, vérifiables sur sources ouvertes (GitHub, registres, audits).
           Aucun jugement subjectif sur la "qualité" du token.
         </p>
-        <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
           <ReliabilityCell label="Équipe identifiée" ok={r.teamIdentified} value={r.teamIdentified ? "Oui (publique)" : "Anonyme"} />
           <ReliabilityCell label="Open source" ok={r.openSource} value={r.openSource ? "Oui (GitHub)" : "Non"} />
           <ReliabilityCell label="Années d'activité" ok={r.yearsActive >= 3} value={`${r.yearsActive} ans`} />
@@ -1371,11 +1371,11 @@ function HiddenGemSections({ gem }: { gem: HiddenGem }) {
         <div className="mt-4 rounded-xl border border-border bg-surface p-4">
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
-              <div className="text-[11px] uppercase tracking-wider text-muted">Levée de fonds</div>
+              <div className="text-xs uppercase tracking-wider text-muted">Levée de fonds</div>
               <div className="mt-1 text-sm font-semibold text-fg">{r.fundingRaised}</div>
             </div>
             <div>
-              <div className="text-[11px] uppercase tracking-wider text-muted">Investisseurs</div>
+              <div className="text-xs uppercase tracking-wider text-muted">Investisseurs</div>
               <div className="mt-1 text-sm text-fg/85">{r.backers.join(" · ")}</div>
             </div>
           </div>
@@ -1449,11 +1449,11 @@ function ReliabilityCell({
 }) {
   return (
     <div className="rounded-xl border border-border bg-surface p-4">
-      <div className="text-[11px] uppercase tracking-wider text-muted">{label}</div>
+      <div className="text-xs uppercase tracking-wider text-muted">{label}</div>
       <div
         className={`mt-1 text-sm font-semibold ${
           ok ? "text-accent-green" : "text-danger-fg"
-        } ${multiline ? "" : "truncate"}`}
+        } ${multiline ? "" : "break-words"}`}
       >
         {value}
       </div>

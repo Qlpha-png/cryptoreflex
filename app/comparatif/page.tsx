@@ -232,7 +232,7 @@ export default function ComparatifPage() {
             </div>
           </section>
 
-          <p className="mt-10 max-w-3xl text-xs leading-relaxed text-muted">
+          <p className="mt-10 max-w-[34em] text-xs leading-relaxed text-muted">
             Cryptoreflex est un média indépendant. Certains liens sont rémunérés, sans surcoût pour vous et sans effet sur le
             classement (<Link href="/transparence" className="underline hover:text-fg">transparence</Link>,{" "}
             <Link href="/methodologie" className="underline hover:text-fg">méthodologie</Link>). Investir dans les crypto-actifs

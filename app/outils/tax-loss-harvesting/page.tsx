@@ -113,7 +113,7 @@ export default function TaxLossHarvestingPage() {
         </nav>
 
         <header className="mt-6 max-w-3xl">
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/15 border border-primary/30 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-primary-soft">
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/15 border border-primary/30 px-3 py-1 text-xs font-bold uppercase tracking-wider text-primary-soft">
             <Scale className="h-3 w-3" aria-hidden /> Règle officielle · mise à jour le 5 octobre 2026
           </span>
           <h1 className="mt-4 text-4xl sm:text-5xl font-extrabold tracking-tight">
@@ -176,7 +176,7 @@ export default function TaxLossHarvestingPage() {
           </p>
           <div className="mt-6 grid gap-6 sm:grid-cols-2">
             <div className="rounded-xl border border-success/30 bg-success/5 p-5">
-              <div className="text-[11px] uppercase tracking-wider text-success">
+              <div className="text-xs uppercase tracking-wider text-success">
                 Cas 1 — portefeuille globalement en perte
               </div>
               <ul className="mt-3 space-y-1 text-sm text-fg/85">
@@ -192,7 +192,7 @@ export default function TaxLossHarvestingPage() {
               </ul>
             </div>
             <div className="rounded-xl border border-danger/30 bg-danger/5 p-5">
-              <div className="text-[11px] uppercase tracking-wider text-danger">
+              <div className="text-xs uppercase tracking-wider text-danger">
                 Cas 2 — portefeuille globalement en gain
               </div>
               <ul className="mt-3 space-y-1 text-sm text-fg/85">

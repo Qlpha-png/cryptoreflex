@@ -199,7 +199,7 @@ export default function WatchlistView() {
           {lastUpdateLabel && (
             <>
               {" · "}
-              <span className="font-mono text-[12px]">
+              <span className="font-mono text-xs">
                 MAJ {lastUpdateLabel}
               </span>
             </>
@@ -398,7 +398,7 @@ function PriceCardMobile({
         >
           {price.name}
         </Link>
-        <div className="text-[11px] text-muted font-mono uppercase">
+        <div className="text-xs text-muted font-mono uppercase">
           {price.symbol}
         </div>
       </div>

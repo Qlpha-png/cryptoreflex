@@ -209,7 +209,7 @@ export default function VerificateurMicaPage({ searchParams }: PageProps) {
           <h2 className="text-2xl sm:text-3xl font-extrabold text-fg-max">
             Notre méthodologie
           </h2>
-          <p className="mt-2 text-fg-max/70 max-w-3xl">
+          <p className="mt-2 text-fg-max/70 max-w-[34em]">
             Transparence totale sur les sources et critères de classification.
           </p>
 

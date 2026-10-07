@@ -84,9 +84,11 @@ export default function GainerLoserList({
             // à droite. Avant, ticker + nom + badge sur une ligne de ~75 px à
             // 390 px : le reset overflow-wrap:anywhere coupait « ZR / O ».
             const Inner = (
-              <div className="flex items-center gap-2.5 sm:gap-3 rounded-xl border border-border bg-surface px-3 py-2.5 hover:border-primary/40 transition-colors">
+              // B1 (textes ≥ 14 px) : le bloc ticker/nom garde au moins 5,5 rem ; s'il ne tient pas, la variation et
+              // le prix passent à la ligne (flex-wrap + ml-auto) au lieu de tronquer le ticker (« ZR… » à 280 px).
+              <div className="flex flex-wrap items-center gap-2.5 sm:gap-3 rounded-xl border border-border bg-surface px-3 py-2.5 hover:border-primary/40 transition-colors">
                 <span
-                  className="font-mono text-xs text-muted w-5 shrink-0 text-right"
+                  className="font-mono text-xs text-muted w-5 shrink-0 text-right max-[359px]:hidden"
                   aria-hidden="true"
                 >
                   {idx + 1}
@@ -97,22 +99,22 @@ export default function GainerLoserList({
                   imageUrl={c.image}
                   size={28}
                 />
-                <div className="min-w-0 flex-1">
+                <div className="min-w-0 grow shrink basis-[5.5rem]">
                   <div className="truncate font-mono font-bold text-sm text-fg">
                     {c.symbol}
                   </div>
                   <div className="truncate text-xs text-muted">{c.name}</div>
                 </div>
-                <div className="shrink-0 flex flex-col items-end gap-1">
+                <div className="ml-auto shrink-0 flex flex-col items-end gap-1">
                   <span
-                    className={`inline-flex items-center whitespace-nowrap rounded-lg ${tone.badgeBg} ${tone.text} font-mono font-bold text-sm tabular-nums px-2.5 py-0.5`}
+                    className={`inline-flex items-center whitespace-nowrap rounded-lg ${tone.badgeBg} ${tone.text} font-mono font-bold text-xs tabular-nums px-2 py-0.5`}
                     aria-label={`Variation 24h ${formatPct(c.priceChange24h)}`}
                   >
                     {formatPct(c.priceChange24h)}
                   </span>
                   {/* Prix en chiffres significatifs (0,0123 $) : formatCompactUsd
                       arrondissait les petites cryptos à « 0 $ ». */}
-                  <span className="whitespace-nowrap font-mono text-[11px] text-muted tabular-nums">
+                  <span className="whitespace-nowrap font-mono text-xs text-muted tabular-nums">
                     {formatPrice(c.currentPrice)}
                   </span>
                 </div>

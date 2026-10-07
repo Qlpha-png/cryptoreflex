@@ -139,7 +139,7 @@ export default function MiniInvestSimulator() {
           <h3 className="text-sm font-bold text-fg">
             Et si vous aviez investi… ?
           </h3>
-          <p className="text-[11px] text-muted">
+          <p className="text-xs text-muted">
             Estimation rapide single-shot sur historique CoinGecko.
           </p>
         </div>
@@ -150,7 +150,7 @@ export default function MiniInvestSimulator() {
         <div className="sm:col-span-1">
           <label
             htmlFor="mini-sim-amount"
-            className="block text-[11px] uppercase tracking-wider text-muted mb-1"
+            className="block text-xs uppercase tracking-wider text-muted mb-1"
           >
             Montant (€)
           </label>
@@ -175,7 +175,7 @@ export default function MiniInvestSimulator() {
         <div>
           <label
             htmlFor="mini-sim-coin"
-            className="block text-[11px] uppercase tracking-wider text-muted mb-1"
+            className="block text-xs uppercase tracking-wider text-muted mb-1"
           >
             Crypto
           </label>
@@ -199,7 +199,7 @@ export default function MiniInvestSimulator() {
         <div>
           <label
             htmlFor="mini-sim-period"
-            className="block text-[11px] uppercase tracking-wider text-muted mb-1"
+            className="block text-xs uppercase tracking-wider text-muted mb-1"
           >
             Période
           </label>
@@ -255,7 +255,7 @@ export default function MiniInvestSimulator() {
             {/* FIX P0 audit-fonctionnel-live-final #2 : disclaimer si CoinGecko
                 a tronqué le dataset (free tier limite >365j). */}
             {clamped && (
-              <p className="mt-2 text-[11px] text-primary-soft/90">
+              <p className="mt-2 text-xs text-primary-soft/90">
                 Données limitées par CoinGecko free tier — résultat indicatif
                 sur la période disponible.
               </p>

@@ -124,7 +124,7 @@ export default async function CartesPage() {
             <span className="mx-2">/</span>
             <span className="text-fg/80">Reflex Cards</span>
           </nav>
-          <div className="mt-6 grid items-center gap-10 lg:grid-cols-[1fr,auto]">
+          <div className="mt-6 grid grid-cols-1 items-center gap-10 lg:grid-cols-[1fr,auto]">
             <div className="max-w-xl">
               <span className="inline-flex items-center gap-2 rounded-full border border-primary-glow/40 bg-primary-glow/10 px-3 py-1 text-xs font-semibold text-primary-soft">
                 <Sparkles className="h-3.5 w-3.5" /> {day >= 1 ? "Saison 1 « Genèse » · en cours" : "Bientôt · Saison 1 « Genèse »"}
@@ -168,9 +168,10 @@ export default async function CartesPage() {
                 </a>
               </div>
             </div>
-            {/* éventail de 3 cartes (Kev l'adore) : 480 × 380, réduit à 70 % sous 640 px pour tenir sur mobile */}
-            <div className="relative mx-auto h-[266px] w-[336px] sm:h-[380px] sm:w-[480px]" aria-hidden="true">
-              <div className="absolute left-0 top-0 h-[380px] w-[480px] origin-top-left scale-[.7] sm:scale-100">
+            {/* éventail de 3 cartes (Kev l'adore) : 480 × 380, réduit à 70 % sous 640 px pour tenir sur mobile,
+                et à 51,6 % sous 360 px (B1 : 336 px ne tenaient pas dans 248 px à 280 px de large) */}
+            <div className="relative mx-auto h-[196px] w-[248px] min-[360px]:h-[266px] min-[360px]:w-[336px] sm:h-[380px] sm:w-[480px]" aria-hidden="true">
+              <div className="absolute left-0 top-0 h-[380px] w-[480px] origin-top-left scale-[.516] min-[360px]:scale-[.7] sm:scale-100">
                 <div className="absolute bottom-2 left-[40px] origin-bottom -rotate-[8deg]">
                   <CardVisual card={hero[0]} day={day} width={200} uid="hero-a" />
                 </div>
@@ -190,7 +191,7 @@ export default async function CartesPage() {
       <section className="py-10">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <h2 className="text-2xl font-bold sm:text-3xl">Six raretés, une matière chacune</h2>
-          <p className="mt-2 max-w-3xl text-fg/70">
+          <p className="mt-2 max-w-[34em] text-fg/70">
             Acier, émeraude, saphir, améthyste, cuivre en fusion, or ciselé : la matière de la carte dit sa rareté au premier regard. La rareté vient de la notoriété durable du projet (pages vues Wikipédia sur 12 mois et abonnés CoinGecko), jamais de son prix.
           </p>
           <ul className="mt-8 grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-3 lg:grid-cols-6">
@@ -245,7 +246,7 @@ export default async function CartesPage() {
             <h2 className="flex items-center gap-2 text-2xl font-bold sm:text-3xl">
               <Smartphone className="h-6 w-6 text-primary" /> Jouez comme une appli, sans store
             </h2>
-            <p className="mt-3 max-w-3xl text-fg/75">
+            <p className="mt-3 max-w-[34em] text-fg/75">
               Reflex Cards s&apos;installe comme une application : une icône sur votre écran d&apos;accueil, le jeu en plein écran,
               sans barre d&apos;adresse. Rien à télécharger, pas de store, 0 € — c&apos;est la même partie et le même compte.
             </p>
@@ -279,7 +280,7 @@ export default async function CartesPage() {
           <h2 className="flex items-center gap-2 text-2xl font-bold sm:text-3xl">
             <CalendarDays className="h-6 w-6 text-primary-soft" /> Le calendrier de la saison 1
           </h2>
-          <p className="mt-2 max-w-3xl text-fg/70">
+          <p className="mt-2 max-w-[34em] text-fg/70">
             4 collections (Genèse, Ascension, Éclipse, Apogée), chacune en 3 parties ; les parties suivantes sortiront plus tard dans la saison. Chaque partie mélange les familles et a sa Légendaire en tête d&apos;affiche. Une carte se tire dès sa sortie ; les nouveautés se fabriquent avec des éclats 7 jours plus tard.
           </p>
           <div className="mt-6 overflow-x-auto rounded-2xl border border-border">
@@ -325,7 +326,7 @@ export default async function CartesPage() {
         <section className="py-10">
           <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
             <h2 className="text-2xl font-bold sm:text-3xl">Le Musée des Fossiles</h2>
-            <p className="mt-2 max-w-3xl text-fg/70">
+            <p className="mt-2 max-w-[34em] text-fg/70">
               Les projets morts quittent l&apos;album pour le Musée : pierre, ambre et une leçon à retenir. On y entre sur un événement sourcé (faillite, fraude jugée, réseau arrêté), jamais sur une baisse de prix. L&apos;histoire est publique ; la carte, elle, se trouve en booster.
             </p>
             <ul className="mt-6 flex flex-wrap gap-6">
@@ -349,7 +350,7 @@ export default async function CartesPage() {
       <section id="toutes-les-cartes" className="scroll-mt-24 py-10">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <h2 className="text-2xl font-bold sm:text-3xl">Les cartes sorties, famille par famille</h2>
-          <p className="mt-2 max-w-3xl text-fg/70">
+          <p className="mt-2 max-w-[34em] text-fg/70">
             {released > 0
               ? `${released} cartes sorties sur ${REFLEX_META.ncards}. Douze familles, douze chapitres de l'album ; les autres cartes restent secrètes jusqu'à leur sortie.`
               : `Les cartes restent secrètes jusqu'à leur sortie : 300 le premier jour, puis une cinquantaine à chaque future sortie, jusqu'aux ${REFLEX_META.ncards} cartes de la saison.`}

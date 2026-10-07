@@ -127,7 +127,7 @@ export default function FaqCryptoPage() {
 
         {/* Header */}
         <header className="mt-6 max-w-3xl">
-          <div className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-primary-soft">
+          <div className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-bold uppercase tracking-wider text-primary-soft">
             <HelpCircle className="h-3.5 w-3.5" />
             FAQ crypto FR
           </div>
@@ -156,13 +156,13 @@ export default function FaqCryptoPage() {
                 href={`#${cat.id}`}
                 className="group rounded-xl border border-border bg-surface p-4 hover:border-primary/40 transition-colors"
               >
-                <div className="text-[11px] font-bold uppercase tracking-wider text-muted">
+                <div className="text-xs font-bold uppercase tracking-wider text-muted">
                   {count} question{count > 1 ? "s" : ""}
                 </div>
                 <div className="mt-1 text-sm font-bold text-fg group-hover:text-primary-glow transition-colors">
                   {cat.title}
                 </div>
-                <div className="mt-1 text-[11px] text-muted line-clamp-2">
+                <div className="mt-1 text-xs text-muted line-clamp-2">
                   {cat.intro}
                 </div>
               </a>
@@ -194,7 +194,7 @@ export default function FaqCryptoPage() {
                     className="group rounded-xl border border-border bg-surface p-4 sm:p-5 [&[open]]:border-primary/40 [&[open]]:bg-elevated/30"
                   >
                     <summary className="flex items-start gap-3 cursor-pointer list-none">
-                      <span className="text-[11px] font-mono font-bold text-primary-soft mt-0.5">
+                      <span className="text-xs font-mono font-bold text-primary-soft mt-0.5">
                         Q.
                       </span>
                       <h3 className="flex-1 text-sm sm:text-base font-bold text-fg">
@@ -221,7 +221,7 @@ export default function FaqCryptoPage() {
             href="/blog"
             className="rounded-2xl border border-border bg-surface p-5 hover:border-primary/40 transition-colors"
           >
-            <div className="text-[11px] font-bold uppercase tracking-wider text-muted flex items-center gap-2">
+            <div className="text-xs font-bold uppercase tracking-wider text-muted flex items-center gap-2">
               <BookOpen className="h-3 w-3" />
               Plus loin
             </div>
@@ -236,7 +236,7 @@ export default function FaqCryptoPage() {
             href="/glossaire"
             className="rounded-2xl border border-border bg-surface p-5 hover:border-primary/40 transition-colors"
           >
-            <div className="text-[11px] font-bold uppercase tracking-wider text-muted flex items-center gap-2">
+            <div className="text-xs font-bold uppercase tracking-wider text-muted flex items-center gap-2">
               <BookOpen className="h-3 w-3" />
               Définitions
             </div>
@@ -249,7 +249,7 @@ export default function FaqCryptoPage() {
           </Link>
         </section>
 
-        <p className="mt-12 text-[11px] text-muted leading-relaxed">
+        <p className="mt-12 text-xs text-muted leading-relaxed">
           FAQ mise à jour le {new Date(FILE._meta.lastUpdated).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" })}.
           Sources : BOFiP-Impôts, AMF, ESMA et notre expérience éditoriale. Cette page
           n&apos;est pas un conseil en investissement personnalisé, mais une

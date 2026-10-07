@@ -88,7 +88,7 @@ export default function QuickBuyBox({
         ))}
       </div>
 
-      <p className="mt-3 text-[11px] text-muted/90 leading-relaxed">
+      <p className="mt-3 text-xs text-muted/90 leading-relaxed">
         {anyPaid ? (
           <>
             Les liens marqués « Publicité » sont rémunérés (affiliation ou parrainage),
@@ -132,7 +132,7 @@ function QuickBuyRow({
       {isTop && (
         <span
           aria-hidden="true"
-          className="absolute -top-2 left-3 rounded-full bg-primary px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-background"
+          className="absolute -top-2 left-3 rounded-full bg-primary px-2 py-0.5 text-xs font-bold uppercase tracking-wider text-background"
         >
           #1 score
         </span>
@@ -145,14 +145,14 @@ function QuickBuyRow({
             </h3>
             {platform.mica.micaCompliant && (
               <span
-                className="inline-flex items-center gap-1 rounded-full border border-accent-green/30 bg-accent-green/10 px-1.5 py-0.5 text-[9px] font-semibold text-accent-green"
+                className="inline-flex items-center gap-1 rounded-full border border-accent-green/30 bg-accent-green/10 px-1.5 py-0.5 text-xs font-semibold text-accent-green"
                 title="Conforme MiCA"
               >
                 <ShieldCheck className="h-2.5 w-2.5" aria-hidden="true" /> MiCA
               </span>
             )}
           </div>
-          <div className="mt-0.5 inline-flex items-center gap-1 text-[11px] text-muted">
+          <div className="mt-0.5 inline-flex items-center gap-1 text-xs text-muted">
             <Star
               className="h-3 w-3 fill-primary text-primary"
               aria-hidden="true"
@@ -192,11 +192,11 @@ function QuickBuyRow({
       <PaidLinkCaption
         platformId={platform.id}
         href={platform.affiliateUrl}
-        className="mt-1.5 block text-center text-[11px] text-muted underline hover:text-fg"
+        className="mt-1.5 block text-center text-xs text-muted underline hover:text-fg"
       />
       <Link
         href={`/avis/${platform.id}`}
-        className="mt-1.5 block text-center text-[11px] text-muted hover:text-fg"
+        className="mt-1.5 block text-center text-xs text-muted hover:text-fg"
       >
         Lire l&apos;avis détaillé {cryptoName ? `· ${platform.name}` : ""}
       </Link>

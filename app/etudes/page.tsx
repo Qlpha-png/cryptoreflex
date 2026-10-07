@@ -132,7 +132,7 @@ export default function EtudesHubPage() {
           <h1 className="mt-4 text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl">
             Études cornerstone
           </h1>
-          <p className="mt-4 max-w-3xl text-lg text-slate-300">
+          <p className="mt-4 max-w-[34em] text-lg text-slate-300">
             Analyses longues, sources publiques, méthodologie publiée. Une
             étude par trimestre sur un sujet structurant du marché crypto FR.
             Données réutilisables sous licence{" "}

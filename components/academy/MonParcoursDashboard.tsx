@@ -217,7 +217,7 @@ export default function MonParcoursDashboard() {
             <span className="font-mono text-3xl font-extrabold text-fg tabular-nums">
               {globalPct}%
             </span>
-            <span className="text-[11px] uppercase tracking-wider text-muted">
+            <span className="text-xs uppercase tracking-wider text-muted">
               du cursus
             </span>
           </div>
@@ -307,7 +307,7 @@ export default function MonParcoursDashboard() {
                   className="flex items-center justify-between gap-2 rounded-lg border border-border bg-background/40 px-4 py-2.5 text-sm text-fg/90 transition-colors hover:border-ice/40"
                 >
                   <span>{track.title}</span>
-                  <span className="shrink-0 text-[11px] font-medium text-info-fg">
+                  <span className="shrink-0 text-xs font-medium text-info-fg">
                     validé il y a {days} j
                   </span>
                 </Link>
@@ -393,7 +393,7 @@ export default function MonParcoursDashboard() {
                       {Icon ? <Icon className="h-5 w-5" aria-hidden="true" /> : null}
                     </span>
                     <span
-                      className={`inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-[11px] font-semibold ${status.cls}`}
+                      className={`inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-xs font-semibold ${status.cls}`}
                     >
                       {(certified || pct === 100) && (
                         <CheckCircle2 className="h-3 w-3" aria-hidden="true" />
@@ -405,7 +405,7 @@ export default function MonParcoursDashboard() {
                   <h3 className="mt-4 text-base font-bold text-fg group-hover:text-primary-glow transition-colors">
                     {track.title}
                   </h3>
-                  <p className="mt-0.5 text-[11px] uppercase tracking-wider text-muted">
+                  <p className="mt-0.5 text-xs uppercase tracking-wider text-muted">
                     {LEVEL_LABELS[track.level]}
                   </p>
 
@@ -424,7 +424,7 @@ export default function MonParcoursDashboard() {
                         style={{ width: `${pct}%` }}
                       />
                     </div>
-                    <p className="mt-1.5 flex items-center justify-between text-[11px] text-muted">
+                    <p className="mt-1.5 flex items-center justify-between text-xs text-muted">
                       <span>
                         {doneCount}/{track.lessons.length} leçons
                       </span>
@@ -556,7 +556,7 @@ function BadgeShelf({ inputs }: { inputs: BadgeInputs }) {
               >
                 {badge.label}
               </p>
-              <p className="mt-0.5 text-[11px] leading-snug text-muted">
+              <p className="mt-0.5 text-xs leading-snug text-muted">
                 {badge.earned ? (
                   <span className="text-success-fg">Obtenu ✓</span>
                 ) : (
@@ -588,7 +588,7 @@ function StatTile({
       <dd className="mt-2 font-mono text-xl font-extrabold text-fg tabular-nums">
         {value}
       </dd>
-      <dt className="text-[11px] uppercase tracking-wider text-muted">
+      <dt className="text-xs uppercase tracking-wider text-muted">
         {label}
       </dt>
     </div>

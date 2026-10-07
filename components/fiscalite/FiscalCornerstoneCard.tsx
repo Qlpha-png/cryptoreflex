@@ -64,7 +64,7 @@ export default function FiscalCornerstoneCard({
           <BookOpen className="h-6 w-6" />
         </div>
         <div className="flex-1">
-          <div className="text-[10px] uppercase tracking-wider font-semibold text-muted">
+          <div className="text-xs uppercase tracking-wider font-semibold text-muted">
             Étude approfondie
           </div>
           <h3 className="mt-1 text-lg font-bold text-fg">

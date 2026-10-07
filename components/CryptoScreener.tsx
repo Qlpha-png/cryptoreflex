@@ -190,7 +190,7 @@ export default function CryptoScreener({ coins, internalSlugs = [] }: Props) {
                     aria-sort={
                       active ? (sortAsc ? "ascending" : "descending") : "none"
                     }
-                    className={`border-b border-border px-3 py-2.5 text-[11px] font-semibold uppercase tracking-wider text-muted ${
+                    className={`border-b border-border px-3 py-2.5 text-xs font-semibold uppercase tracking-wider text-muted ${
                       col.hideBelowLg ? "hidden lg:table-cell" : ""
                     } ${col.align === "right" ? "text-right" : "text-left"}`}
                   >
@@ -221,7 +221,7 @@ export default function CryptoScreener({ coins, internalSlugs = [] }: Props) {
               {hasSparklines && (
                 <th
                   scope="col"
-                  className="border-b border-border px-3 py-2.5 text-right text-[11px] font-semibold uppercase tracking-wider text-muted"
+                  className="border-b border-border px-3 py-2.5 text-right text-xs font-semibold uppercase tracking-wider text-muted"
                 >
                   7 jours
                 </th>

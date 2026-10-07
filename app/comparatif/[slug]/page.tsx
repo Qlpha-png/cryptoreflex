@@ -36,6 +36,7 @@ import {
   parseComparisonSlug,
 } from "@/lib/programmatic";
 import { BRAND } from "@/lib/brand";
+import { typoFr } from "@/lib/typo-fr";
 import MobileStickyCTA from "@/components/MobileStickyCTA";
 import PaidLinkCaption from "@/components/PaidLinkCaption";
 import { isPaidLink, outboundRel } from "@/lib/partnerships";
@@ -351,7 +352,7 @@ export default function ComparisonPage({ params }: Props) {
             {a.name} <span className="text-muted font-normal">vs</span> {b.name}
             <span className="text-muted font-normal"> en 2026</span>
           </h1>
-          <p className="mt-3 text-lg text-fg-max/70 max-w-3xl">
+          <p className="mt-3 text-lg text-fg-max/70 max-w-[34em]">
             {spec.bucket === "fr-vs-international"
               ? `Acteur français face à un acteur international : on compare l'accompagnement local et la profondeur de marché.`
               : spec.bucket === "wallet-vs-wallet"
@@ -406,11 +407,11 @@ export default function ComparisonPage({ params }: Props) {
                     <div className="text-lg font-bold text-fg-max">{plat.name}</div>
                     <div className="text-xs text-muted">{plat.tagline.slice(0, 70)}…</div>
                   </div>
-                  <div className="text-right">
+                  <div className="shrink-0 text-right">
                     <div className="font-mono text-lg font-bold text-primary">
                       {fmtFr(plat.scoring.global, 1)}
                     </div>
-                    <div className="text-[10px] uppercase text-muted">Note globale</div>
+                    <div className="whitespace-nowrap text-xs uppercase text-muted">Note globale</div>
                   </div>
                 </div>
                 {/*
@@ -437,7 +438,7 @@ export default function ComparisonPage({ params }: Props) {
                       Site officiel de {plat.name}
                       <ExternalLink className="h-4 w-4" />
                     </a>
-                    <PaidLinkCaption platformId={plat.id} href={plat.affiliateUrl} className="text-center text-[11px] text-muted underline hover:text-fg-max" />
+                    <PaidLinkCaption platformId={plat.id} href={plat.affiliateUrl} className="text-center text-xs text-muted underline hover:text-fg-max" />
                   </>
                 ) : (
                   <span className="mt-2 inline-flex items-center justify-center rounded-xl border border-red-400/40 bg-red-400/10 px-4 py-2.5 text-sm font-semibold text-red-200">
@@ -493,12 +494,12 @@ export default function ComparisonPage({ params }: Props) {
                 <tbody className="divide-y divide-border">
                   {section.rows.map((row) => (
                     <tr key={row.label}>
-                      <td className="px-4 py-3 text-muted min-w-[9rem]">{row.label}</td>
+                      <td className="px-4 py-3 text-muted min-w-[9rem]">{typoFr(row.label)}</td>
                       <td className={`px-4 py-3 text-right font-mono tabular-nums ${row.hint === "a" ? "text-fg-max font-semibold" : "text-fg-max/70"}`}>
-                        {row.aDisplay} <WinnerBadge hint={row.hint} side="a" />
+                        {typoFr(row.aDisplay)} <WinnerBadge hint={row.hint} side="a" />
                       </td>
                       <td className={`px-4 py-3 text-right font-mono tabular-nums ${row.hint === "b" ? "text-fg-max font-semibold" : "text-fg-max/70"}`}>
-                        {row.bDisplay} <WinnerBadge hint={row.hint} side="b" />
+                        {typoFr(row.bDisplay)} <WinnerBadge hint={row.hint} side="b" />
                       </td>
                     </tr>
                   ))}

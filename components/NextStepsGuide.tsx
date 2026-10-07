@@ -320,7 +320,7 @@ export default function NextStepsGuide(props: Props) {
               const inner = (
                 <>
                   {isPrimary && (
-                    <span className="absolute -top-2.5 left-5 inline-flex items-center gap-1 rounded-full bg-primary text-background px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider">
+                    <span className="absolute -top-2.5 left-5 inline-flex items-center gap-1 rounded-full bg-primary text-background px-2 py-0.5 text-xs font-bold uppercase tracking-wider">
                       <Sparkles className="h-2.5 w-2.5" aria-hidden="true" />
                       Recommandé
                     </span>

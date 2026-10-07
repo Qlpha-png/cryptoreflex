@@ -223,7 +223,7 @@ export default async function CryptoComparePage({ searchParams }: Props) {
 
           {/* Header */}
           <header className="mt-6 max-w-3xl">
-            <div className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-primary-soft">
+            <div className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-bold uppercase tracking-wider text-primary-soft">
               <Scale className="h-3.5 w-3.5" aria-hidden="true" />
               Comparateur multi-cryptos
             </div>
@@ -317,7 +317,7 @@ export default async function CryptoComparePage({ searchParams }: Props) {
 
         {/* Header */}
         <header className="mt-6 max-w-3xl">
-          <div className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-primary-soft">
+          <div className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-bold uppercase tracking-wider text-primary-soft">
             <Scale className="h-3.5 w-3.5" aria-hidden="true" />
             Comparateur multi-cryptos
           </div>
@@ -402,7 +402,7 @@ export default async function CryptoComparePage({ searchParams }: Props) {
           <AmfDisclaimer variant="educatif" />
         </div>
 
-        <p className="mt-6 text-[11px] text-muted leading-relaxed">
+        <p className="mt-6 text-xs text-muted leading-relaxed">
           Les prix et capitalisations proviennent de CoinGecko et de CoinMarketCap.
           Les scores éditoriaux (fiabilité, beginner-friendly, décentralisation)
           sont calculés par {BRAND.name} selon une{" "}
@@ -590,7 +590,7 @@ function DesktopTable({
                         unoptimized
                       />
                     ) : (
-                      <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-primary/20 text-[10px] font-bold text-primary-soft">
+                      <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-primary/20 text-xs font-bold text-primary-soft">
                         {c.symbol.slice(0, 2)}
                       </span>
                     )}
@@ -601,7 +601,7 @@ function DesktopTable({
                       {c.name}
                     </Link>
                   </div>
-                  <div className="mt-0.5 text-[11px] text-muted">
+                  <div className="mt-0.5 text-xs text-muted">
                     <span className="font-mono">{c.symbol}</span> ·{" "}
                     {c.kind === "hidden-gem" ? "Hidden Gem" : `Top ${c.rank}`}
                   </div>
@@ -703,7 +703,7 @@ function DesktopTable({
                     : "—"}
               </div>
               {d?.marketCapRank && d.marketCapRank > 0 && (
-                <div className="text-[11px] text-muted">
+                <div className="text-xs text-muted">
                   Rang #{d.marketCapRank}
                 </div>
               )}
@@ -748,7 +748,7 @@ function DesktopTable({
         {cryptos.map((c) =>
           cell(
             <span
-              className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ${
+              className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-bold uppercase tracking-wider ${
                 c.kind === "hidden-gem"
                   ? "border border-primary-glow/30 bg-primary-glow/10 text-primary-soft"
                   : "border border-primary/30 bg-primary/10 text-primary-soft"
@@ -784,7 +784,7 @@ function DesktopTable({
               >
                 {fmtFr(score.score, 1)}/10
               </span>
-              <div className="text-[10px] text-muted">
+              <div className="text-xs text-muted">
                 Nakamoto coef. {score.breakdown.nakamotoCoefficient}
               </div>
             </div>,
@@ -836,7 +836,7 @@ function DesktopTable({
                 <div className="font-mono text-base font-bold tabular-nums">
                   {fmtFr(c.reliability.score, 1)}/10
                 </div>
-                <div className="text-[11px] text-muted">Fiabilité</div>
+                <div className="text-xs text-muted">Fiabilité</div>
               </div>,
               isBest,
               `rel-${c.id}`,
@@ -848,7 +848,7 @@ function DesktopTable({
               <div className="font-mono text-base font-bold tabular-nums">
                 {c.beginnerFriendly}/5
               </div>
-              <div className="text-[11px] text-muted">
+              <div className="text-xs text-muted">
                 Accessible aux débutants · Risque {c.riskLevel.toLowerCase()}
               </div>
             </div>,
@@ -909,12 +909,12 @@ function DesktopTable({
           cell(
             <div className="flex flex-wrap gap-1.5">
               {listedVenues(c.whereToBuy).length === 0 && (
-                <span className="text-[11px] text-muted">Aucune plateforme agréée MiCA</span>
+                <span className="text-xs text-muted">Aucune plateforme agréée MiCA</span>
               )}
               {listedVenues(c.whereToBuy).slice(0, 5).map((p) => (
                 <span
                   key={p}
-                  className="inline-flex items-center rounded-full border border-border bg-elevated/60 px-2 py-0.5 text-[10px] font-medium text-fg/85"
+                  className="inline-flex items-center rounded-full border border-border bg-elevated/60 px-2 py-0.5 text-xs font-medium text-fg/85"
                 >
                   {p}
                 </span>
@@ -1001,7 +1001,7 @@ function MobileCard({
           )}
           <div className="min-w-0">
             <div className="text-sm font-bold text-fg truncate">{c.name}</div>
-            <div className="text-[11px] text-muted">
+            <div className="text-xs text-muted">
               <span className="font-mono">{c.symbol}</span> ·{" "}
               {c.kind === "hidden-gem" ? "Hidden Gem" : `Top ${c.rank}`}
             </div>
@@ -1013,7 +1013,7 @@ function MobileCard({
       {/* BATCH 61 — Sparkline 7j en haut */}
       {d && d.sparkline7d.length > 0 && (
         <div className="flex items-center justify-between gap-3">
-          <div className="text-[11px] text-muted">
+          <div className="text-xs text-muted">
             Tendance 7j ({chg7.text})
           </div>
           <CompareSparkline
@@ -1031,7 +1031,7 @@ function MobileCard({
           {bestFor.map((b) => (
             <span
               key={b}
-              className="inline-flex items-center gap-1 rounded-full border border-primary/30 bg-primary/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-primary-soft"
+              className="inline-flex items-center gap-1 rounded-full border border-primary/30 bg-primary/10 px-2 py-0.5 text-xs font-bold uppercase tracking-wider text-primary-soft"
             >
               <Sparkles className="h-3 w-3" aria-hidden="true" />
               {b}
@@ -1100,7 +1100,7 @@ function MobileCard({
 
       {/* Forces */}
       <div>
-        <div className="text-[11px] uppercase tracking-wider text-muted flex items-center gap-1.5">
+        <div className="text-xs uppercase tracking-wider text-muted flex items-center gap-1.5">
           <CheckCircle2 className="h-3.5 w-3.5 text-accent-green" /> Forces
         </div>
         <ul className="mt-2 space-y-1.5 text-xs text-fg/85">
@@ -1121,7 +1121,7 @@ function MobileCard({
 
       {/* Faiblesses */}
       <div>
-        <div className="text-[11px] uppercase tracking-wider text-muted flex items-center gap-1.5">
+        <div className="text-xs uppercase tracking-wider text-muted flex items-center gap-1.5">
           <AlertTriangle className="h-3.5 w-3.5 text-primary-glow" />{" "}
           {c.kind === "top10" ? "Faiblesses" : "Risques"}
         </div>
@@ -1139,17 +1139,17 @@ function MobileCard({
 
       {/* Where to buy */}
       <div>
-        <div className="text-[11px] uppercase tracking-wider text-muted">
+        <div className="text-xs uppercase tracking-wider text-muted">
           Où acheter
         </div>
         <div className="mt-2 flex flex-wrap gap-1.5">
           {listedVenues(c.whereToBuy).length === 0 && (
-            <span className="text-[11px] text-muted">Aucune plateforme agréée MiCA</span>
+            <span className="text-xs text-muted">Aucune plateforme agréée MiCA</span>
           )}
           {listedVenues(c.whereToBuy).slice(0, 5).map((p) => (
             <span
               key={p}
-              className="inline-flex items-center rounded-full border border-border bg-elevated/60 px-2 py-0.5 text-[10px] font-medium text-fg/85"
+              className="inline-flex items-center rounded-full border border-border bg-elevated/60 px-2 py-0.5 text-xs font-medium text-fg/85"
             >
               {p}
             </span>
@@ -1180,7 +1180,7 @@ function Stat({
 }) {
   return (
     <div>
-      <dt className="text-[10px] uppercase tracking-wider text-muted">
+      <dt className="text-xs uppercase tracking-wider text-muted">
         {label}
       </dt>
       <dd

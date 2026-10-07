@@ -342,9 +342,9 @@ export default function CalculateurFiscalitePage() {
               </span>
             </div>
             <h1 className="mt-4 font-display text-4xl sm:text-5xl font-extrabold tracking-tight text-fg-max">
-              Calculateur fiscalité crypto 2026 —{" "}
+              Calculateur fiscalité crypto 2026&nbsp;—{" "}
               <span className="gradient-text">
-                PFU 31,4 %, Barème, Cerfa 2086 / 3916-bis
+                PFU 31,4&nbsp;%, Barème, Cerfa 2086 / 3916-bis
               </span>
             </h1>
             <p className="mt-4 text-lg text-fg-max/80">
@@ -571,7 +571,7 @@ export default function CalculateurFiscalitePage() {
         <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
           <span className="badge-info">Comparatif</span>
           <h2 className="mt-4 font-display text-3xl sm:text-4xl font-extrabold tracking-tight text-fg-max">
-            Différence PFU 31,4 % vs barème progressif : que choisir ?
+            Différence PFU&nbsp;31,4&nbsp;% vs barème progressif&nbsp;: que choisir&#x202F;?
           </h2>
           <div className="mt-6 space-y-4 text-fg-max/80 text-sm sm:text-base leading-relaxed">
             <p>
@@ -597,8 +597,8 @@ export default function CalculateurFiscalitePage() {
                       data a son header lors de la navigation cellule par
                       cellule (tableau de comparaison fiscal = critique). */}
                   <tr className="border-b border-border/60">
-                    <th scope="col" className="px-3 py-2 text-left text-fg-max">TMI</th>
-                    <th scope="col" className="px-3 py-2 text-left text-fg-max">PFU 31,4 %</th>
+                    <th scope="col" className="whitespace-nowrap px-3 py-2 text-left text-fg-max">TMI</th>
+                    <th scope="col" className="whitespace-nowrap px-3 py-2 text-left text-fg-max">PFU&nbsp;31,4&nbsp;%</th>
                     <th scope="col" className="px-3 py-2 text-left text-fg-max">
                       Barème + PS
                     </th>
@@ -609,41 +609,41 @@ export default function CalculateurFiscalitePage() {
                 </thead>
                 <tbody className="text-fg-max/80">
                   <tr className="border-b border-border/40">
-                    <td className="px-3 py-2">0 %</td>
-                    <td className="px-3 py-2">31,4 %</td>
-                    <td className="px-3 py-2">18,6 %</td>
+                    <td className="whitespace-nowrap px-3 py-2">0&nbsp;%</td>
+                    <td className="whitespace-nowrap px-3 py-2">31,4&nbsp;%</td>
+                    <td className="whitespace-nowrap px-3 py-2">18,6&nbsp;%</td>
                     <td className="px-3 py-2 text-success font-semibold">
                       Barème (−12,8 pts)
                     </td>
                   </tr>
                   <tr className="border-b border-border/40">
-                    <td className="px-3 py-2">11 %</td>
-                    <td className="px-3 py-2">31,4 %</td>
+                    <td className="whitespace-nowrap px-3 py-2">11&nbsp;%</td>
+                    <td className="whitespace-nowrap px-3 py-2">31,4&nbsp;%</td>
                     <td className="px-3 py-2">29,6 % (≈ 34,6 % avec la décote)</td>
                     <td className="px-3 py-2 text-success font-semibold">
                       Barème (−1,8 pt), sauf décote : PFU
                     </td>
                   </tr>
                   <tr className="border-b border-border/40">
-                    <td className="px-3 py-2">30 %</td>
-                    <td className="px-3 py-2">31,4 %</td>
-                    <td className="px-3 py-2">48,6 %</td>
+                    <td className="whitespace-nowrap px-3 py-2">30&nbsp;%</td>
+                    <td className="whitespace-nowrap px-3 py-2">31,4&nbsp;%</td>
+                    <td className="whitespace-nowrap px-3 py-2">48,6&nbsp;%</td>
                     <td className="px-3 py-2 text-warning-fg font-semibold">
                       PFU (+17,2 pts)
                     </td>
                   </tr>
                   <tr className="border-b border-border/40">
-                    <td className="px-3 py-2">41 %</td>
-                    <td className="px-3 py-2">31,4 %</td>
-                    <td className="px-3 py-2">59,6 %</td>
+                    <td className="whitespace-nowrap px-3 py-2">41&nbsp;%</td>
+                    <td className="whitespace-nowrap px-3 py-2">31,4&nbsp;%</td>
+                    <td className="whitespace-nowrap px-3 py-2">59,6&nbsp;%</td>
                     <td className="px-3 py-2 text-warning-fg font-semibold">
                       PFU (+28,2 pts)
                     </td>
                   </tr>
                   <tr>
-                    <td className="px-3 py-2">45 %</td>
-                    <td className="px-3 py-2">31,4 %</td>
-                    <td className="px-3 py-2">63,6 %</td>
+                    <td className="whitespace-nowrap px-3 py-2">45&nbsp;%</td>
+                    <td className="whitespace-nowrap px-3 py-2">31,4&nbsp;%</td>
+                    <td className="whitespace-nowrap px-3 py-2">63,6&nbsp;%</td>
                     <td className="px-3 py-2 text-warning-fg font-semibold">
                       PFU (+32,2 pts)
                     </td>
@@ -930,7 +930,7 @@ export default function CalculateurFiscalitePage() {
                 aria-hidden="true"
               />
               <div>
-                <span className="inline-flex items-center gap-1.5 rounded-full border border-gold/40 bg-gold/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-gold">
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-gold/40 bg-gold/10 px-2 py-0.5 text-xs font-bold uppercase tracking-wider text-gold">
                   Gratuit
                 </span>
                 <h3 className="mt-2 font-display font-bold text-lg text-fg-max">
@@ -1059,7 +1059,7 @@ export default function CalculateurFiscalitePage() {
               >
                 <div className="flex items-center gap-2">
                   <span
-                    className={`text-[10px] uppercase tracking-wider font-semibold px-2 py-0.5 rounded-full ${
+                    className={`text-xs uppercase tracking-wider font-semibold px-2 py-0.5 rounded-full ${
                       article.cluster === "satellite"
                         ? "bg-primary/15 text-primary-soft"
                         : "bg-success/15 text-success"
@@ -1074,7 +1074,7 @@ export default function CalculateurFiscalitePage() {
                 <h3 className="mt-3 font-display font-bold text-base text-fg-max group-hover:text-primary-soft transition-colors">
                   {article.title}
                 </h3>
-                <p className="mt-2 text-xs text-fg-max/70 leading-relaxed line-clamp-3">
+                <p className="mt-2 text-xs text-fg-max/70 leading-relaxed">
                   {article.description}
                 </p>
                 <span className="mt-3 inline-flex items-center gap-1 text-xs text-primary-soft group-hover:gap-2 transition-all">

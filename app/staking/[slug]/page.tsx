@@ -283,7 +283,7 @@ export default function StakingDetailPage({ params }: Props) {
                         <ExternalLink className="h-3 w-3" />
                       </a>
                     </div>
-                    <PaidLinkCaption platformId={p.id} href={p.affiliateUrl} className="mt-1.5 block text-right text-[11px] text-muted underline hover:text-fg" />
+                    <PaidLinkCaption platformId={p.id} href={p.affiliateUrl} className="mt-1.5 block text-right text-xs text-muted underline hover:text-fg" />
                   </li>
                 ))}
               </ul>
@@ -456,7 +456,7 @@ function Stat({
       <dd className={`mt-1 text-xl sm:text-2xl font-extrabold ${valueClass ?? "text-fg"}`}>
         {value}
       </dd>
-      {hint && <p className="text-[11px] text-muted mt-0.5">{hint}</p>}
+      {hint && <p className="text-xs text-muted mt-0.5">{hint}</p>}
     </div>
   );
 }
@@ -482,7 +482,7 @@ function ProjectionCard({
           <Clock className="h-3.5 w-3.5" />
           {label}
         </span>
-        <span className="text-[10px] font-mono rounded-full bg-primary/15 text-primary-soft px-2 py-0.5">
+        <span className="text-xs font-mono rounded-full bg-primary/15 text-primary-soft px-2 py-0.5">
           {fmtFr(apy, 1)}% APY
         </span>
       </div>

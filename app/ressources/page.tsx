@@ -343,7 +343,7 @@ function ToolCard({ tool }: { tool: ToolMeta }) {
       className="group relative flex flex-col rounded-xl border border-border bg-surface p-5 transition hover:border-primary/50 hover:shadow-lg"
     >
       {badge ? (
-        <span className="absolute right-4 top-4 rounded-full bg-primary/20 px-2 py-0.5 text-[10px] font-bold uppercase text-primary-soft">
+        <span className="absolute right-4 top-4 rounded-full bg-primary/20 px-2 py-0.5 text-xs font-bold uppercase text-primary-soft">
           {badge}
         </span>
       ) : null}

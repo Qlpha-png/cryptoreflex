@@ -327,13 +327,13 @@ export default async function TAArticlePage({ params }: Props) {
                         // eslint-disable-next-line @next/next/no-img-element
                         <img src={taIcon(o)} alt="" className="h-8 w-8 rounded-full bg-elevated" loading="lazy" />
                       ) : (
-                        <div className="h-8 w-8 rounded-full bg-elevated grid place-items-center text-[11px] font-bold text-primary">
+                        <div className="h-8 w-8 rounded-full bg-elevated grid place-items-center text-xs font-bold text-primary">
                           {o.symbol.slice(0, 3)}
                         </div>
                       )}
                       <div className="flex-1 min-w-0">
                         <div className="text-sm font-semibold truncate">{o.name}</div>
-                        <div className="text-[11px] text-muted font-mono">
+                        <div className="text-xs text-muted font-mono">
                           {formatPrice(o.currentPrice)} $ · RSI {fmtFr(o.rsi, 1)}
                         </div>
                       </div>

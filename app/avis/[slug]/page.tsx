@@ -547,7 +547,7 @@ export default function ReviewPage({ params }: Props) {
               <ExternalLink className="h-4 w-4" />
             </AffiliateLink>
             {available && (
-            <p className="mt-3 text-[11px] text-muted leading-relaxed">
+            <p className="mt-3 text-xs text-muted leading-relaxed">
               {paidKind === "affiliate"
                 ? "Publicité — Cryptoreflex perçoit une commission si vous passez par ce lien, sans surcoût pour vous. "
                 : paidKind === "referral"
@@ -660,10 +660,10 @@ export default function ReviewPage({ params }: Props) {
           {v && (
             <div className="mt-4 rounded-xl border border-primary/25 bg-primary/5 p-4">
               <div className="flex flex-wrap items-center gap-2">
-                <span className="text-[11px] font-semibold uppercase tracking-wide text-primary-soft">
+                <span className="text-xs font-semibold uppercase tracking-wide text-primary-soft">
                   Frais réel vérifié
                 </span>
-                <span className={`rounded px-1.5 py-0.5 text-[10px] font-bold ${verdictClass}`}>
+                <span className={`rounded px-1.5 py-0.5 text-xs font-bold ${verdictClass}`}>
                   {verdictLabel}
                 </span>
               </div>
@@ -671,7 +671,7 @@ export default function ReviewPage({ params }: Props) {
               {v.note && (
                 <p className="mt-1 text-xs text-muted leading-snug">{v.note}</p>
               )}
-              <div className="mt-2 text-[11px] text-muted">
+              <div className="mt-2 text-xs text-muted">
                 <a
                   href={v.source}
                   target="_blank"
@@ -1182,8 +1182,8 @@ export default function ReviewPage({ params }: Props) {
                       <span className="font-mono tabular-nums">{fmtFr(op.scoring.global, 1)}</span>
                     </div>
                   </div>
-                  <div className="mt-1 text-xs text-muted line-clamp-2">{op.tagline}</div>
-                  <div className="mt-3 flex items-center gap-3 text-[11px] text-fg/60">
+                  <div className="mt-1 text-xs text-muted">{op.tagline}</div>
+                  <div className="mt-3 flex items-center gap-3 text-xs text-fg/60">
                     <span>Frais : {fmtNb(op.fees.spotTaker)}%</span>
                     <span>·</span>
                     <span>{op.cryptos.totalCount} cryptos</span>

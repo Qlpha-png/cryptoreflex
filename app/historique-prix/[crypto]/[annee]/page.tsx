@@ -204,7 +204,7 @@ export default function HistoriquePrixPage({ params }: Props) {
         </nav>
 
         <header className="mt-6">
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/15 border border-primary/30 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-primary-soft">
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/15 border border-primary/30 px-3 py-1 text-xs font-bold uppercase tracking-wider text-primary-soft">
             <Calendar className="h-3 w-3" aria-hidden /> Historique annuel
           </span>
           <h1 className="mt-4 text-3xl sm:text-5xl font-extrabold tracking-tight">
@@ -226,7 +226,7 @@ export default function HistoriquePrixPage({ params }: Props) {
               </>
             )}
           </p>
-          <p className="mt-3 text-base text-fg/75 leading-relaxed max-w-3xl">
+          <p className="mt-3 text-base text-fg/75 leading-relaxed max-w-[34em]">
             {buildIntro(c, annee)}
           </p>
         </header>
@@ -249,7 +249,7 @@ export default function HistoriquePrixPage({ params }: Props) {
               <OhlcCell label="Plus haut" value={formatOhlcPrice(ohlc.h)} />
               <OhlcCell label="Plus bas" value={formatOhlcPrice(ohlc.l)} />
               <div className="rounded-lg border border-border bg-surface px-3 py-2">
-                <dt className="text-[11px] uppercase tracking-wider text-muted">Variation (ouv.→clôt.)</dt>
+                <dt className="text-xs uppercase tracking-wider text-muted">Variation (ouv.→clôt.)</dt>
                 <dd
                   className={`mt-0.5 text-sm font-bold ${
                     ohlc.chg >= 0 ? "text-accent-green" : "text-danger-fg"
@@ -301,7 +301,7 @@ export default function HistoriquePrixPage({ params }: Props) {
             <div className="mt-5 overflow-x-auto rounded-2xl border border-border">
               <table className="w-full min-w-[640px] text-sm">
                 <caption className="sr-only">Prix mensuels de {c.name} en {annee} (USD, Binance)</caption>
-                <thead className="bg-elevated/60 text-left text-[11px] uppercase tracking-wider text-muted">
+                <thead className="bg-elevated/60 text-left text-xs uppercase tracking-wider text-muted">
                   <tr>
                     <th scope="col" className="whitespace-nowrap px-3 py-2.5 font-semibold">Mois</th>
                     <th scope="col" className="whitespace-nowrap px-3 py-2.5 font-semibold text-right">Ouverture</th>
@@ -464,7 +464,7 @@ export default function HistoriquePrixPage({ params }: Props) {
 function OhlcCell({ label, value }: { label: string; value: string }) {
   return (
     <div className="rounded-lg border border-border bg-surface px-3 py-2">
-      <dt className="text-[11px] uppercase tracking-wider text-muted">{label}</dt>
+      <dt className="text-xs uppercase tracking-wider text-muted">{label}</dt>
       <dd className="mt-0.5 text-sm font-semibold text-fg tabular-nums">{value}</dd>
     </div>
   );

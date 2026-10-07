@@ -17,6 +17,7 @@ import { MDXRemote } from "next-mdx-remote/rsc";
 import type { ComponentProps, ReactNode } from "react";
 import remarkGfm from "remark-gfm";
 import rehypeSlug from "rehype-slug";
+import rehypeTypoFr from "@/lib/rehype-typo-fr";
 
 import remarkAutoLinkEntities from "@/lib/remark-auto-link-entities";
 import Callout from "@/components/mdx/Callout";
@@ -84,9 +85,11 @@ const mdxComponents = {
       {...props}
     />
   ),
+  // Jury B1 (typographe) : h3 Inter 600 de 22/24 px trop proche du h2 Newsreader 24/30 px (rapport 1,09). Spec C+ : h3 de
+  // corps 18 px (20 px au plus), interligne 1,3 → rapport h2/h3 de 1,33 sur téléphone et 1,5 au-delà.
   h3: (props: ComponentProps<"h3">) => (
     <h3
-      className="mt-8 scroll-mt-24 text-xl font-semibold text-fg-max sm:text-2xl"
+      className="mt-8 scroll-mt-24 text-base leading-[1.3] font-semibold text-fg-max sm:text-lg sm:leading-[1.3]"
       {...props}
     />
   ),
@@ -98,7 +101,7 @@ const mdxComponents = {
   ),
 
   p: (props: ComponentProps<"p">) => (
-    <p className="leading-relaxed text-fg-max/80" {...props} />
+    <p className="leading-[1.65] text-fg-max/80" {...props} />
   ),
 
   ul: (props: ComponentProps<"ul">) => (
@@ -136,7 +139,7 @@ const mdxComponents = {
 
   code: (props: ComponentProps<"code">) => (
     <code
-      className="rounded bg-elevated px-1.5 py-0.5 font-mono text-[0.85em] text-primary-glow before:content-none after:content-none"
+      className="rounded bg-elevated px-1.5 py-0.5 font-mono text-[0.875em] text-primary-glow before:content-none after:content-none"
       {...props}
     />
   ),
@@ -213,7 +216,7 @@ export default function MdxContent({ source, components }: MdxContentProps) {
         // les URLs nues longues (0xABC..., bc1q..., transaction hashes)
         // ou les mots techniques non-cassables fassent déborder l'article.
         "prose prose-invert max-w-none min-w-0 w-full break-words",
-        "prose-headings:font-display prose-headings:tracking-tight",
+        "prose-headings:font-display prose-headings:font-medium prose-h3:font-semibold prose-h4:font-semibold prose-h1:tracking-[-0.02em] prose-h2:tracking-[-0.015em] prose-h3:tracking-[-0.01em] prose-h4:tracking-[-0.01em]", // B1 F2 : Newsreader 500/600 (spec C+), plus 700-800 serré
         "prose-a:text-primary-glow prose-a:no-underline hover:prose-a:underline",
         "prose-strong:text-fg-max",
         "prose-code:before:content-none prose-code:after:content-none",
@@ -248,7 +251,8 @@ export default function MdxContent({ source, components }: MdxContentProps) {
               // de sur-optimisation. Skip code/pre/headings/links existants.
               [remarkAutoLinkEntities, { maxLinks: 18 }],
             ],
-            rehypePlugins: [rehypeSlug],
+            // B1 reprise : espaces insécables devant : ; ? ! % € » au rendu (lib/typo-fr.ts), après les ancres.
+            rehypePlugins: [rehypeSlug, rehypeTypoFr],
           },
           parseFrontmatter: false, // déjà parsé par lib/mdx.ts
         }}

@@ -274,7 +274,8 @@ export default async function MarcheDashboardPage() {
 
             <div className="glass-card rounded-2xl p-4 sm:p-6">
               <h2 className="text-lg font-bold text-fg">Top movers 24h</h2>
-              <div className="mt-4 grid grid-cols-1 gap-6 sm:grid-cols-2">
+              {/* B1 : à lg (carte en demi-largeur), 2 listes côte à côte ne laissaient que 2 px au ticker */}
+              <div className="mt-4 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
                 <GainerLoserList
                   coins={gainers}
                   variant="gainers"
@@ -376,7 +377,7 @@ function StatCard({
 }) {
   return (
     <div className="glass-card rounded-xl p-4">
-      <dt className="text-[11px] uppercase tracking-wider text-muted font-semibold">
+      <dt className="text-xs uppercase tracking-wider text-muted font-semibold">
         {label}
       </dt>
       {/* 06/10/2026 — valeur et variation insécables ; si la carte est trop

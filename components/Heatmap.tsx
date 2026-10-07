@@ -254,7 +254,7 @@ export default function Heatmap({ coins, internalSlugs }: Props) {
       </div>
 
       {/* LEGEND — barre couleurs */}
-      <div className="mb-5 flex items-center gap-2 text-[11px] text-muted">
+      <div className="mb-5 flex items-center gap-2 text-xs text-muted">
         <span>-5 %+</span>
         <div
           aria-hidden="true"
@@ -378,7 +378,7 @@ export default function Heatmap({ coins, internalSlugs }: Props) {
       {/* 06/10/2026 — sources réellement servies (champ `sources`), plus de « CoinGecko » en dur. */}
       <DataSourceLine
         items={liveCoins}
-        className="mt-6 text-[11px] text-muted"
+        className="mt-6 text-xs text-muted"
         suffix={<>{" "}· Couleurs : vert = hausse, rouge = baisse sur la période sélectionnée.</>}
       />
     </div>
@@ -406,15 +406,15 @@ function CellTooltip({
         {coin.name}{" "}
         <span className="text-muted font-mono">{coin.symbol}</span>
       </div>
-      <div className="mt-0.5 font-mono text-[11px] text-muted tabular-nums">
+      <div className="mt-0.5 font-mono text-xs text-muted tabular-nums">
         {formatUsd(coin.currentPrice)}
       </div>
-      <div className="mt-0.5 font-mono text-[11px] text-muted tabular-nums">
+      <div className="mt-0.5 font-mono text-xs text-muted tabular-nums">
         MCap {formatCompactUsd(coin.marketCap)}
       </div>
       {change !== null && (
         <div
-          className={`mt-0.5 font-mono text-[11px] font-semibold tabular-nums ${
+          className={`mt-0.5 font-mono text-xs font-semibold tabular-nums ${
             change >= 0 ? "text-accent-green" : "text-danger-fg"
           }`}
         >

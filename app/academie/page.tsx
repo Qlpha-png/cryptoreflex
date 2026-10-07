@@ -145,7 +145,7 @@ export default function AcademiePage() {
           <p className="section-eyebrow">
             <strong>Académie</strong> — formation crypto · 100 % gratuite · sans email
           </p>
-          <h1 className="section-h1 mt-4 font-display font-bold">
+          <h1 className="section-h1 mt-4 font-display font-bold ![font-size:clamp(36px,4.4vw,61px)]">
             Apprenez à investir crypto avec{" "}
             <span className="text-gradient-gold">l&apos;Académie Cryptoreflex</span>
           </h1>
@@ -281,7 +281,7 @@ export default function AcademiePage() {
                 href="/cryptos/bitcoin"
                 className="group block h-full rounded-xl border border-border bg-background/60 p-4 hover:border-primary/40 hover:bg-elevated/60 transition-colors"
               >
-                <div className="text-[10px] font-bold uppercase tracking-wider text-primary-soft">
+                <div className="text-xs font-bold uppercase tracking-wider text-primary-soft">
                   Lire une fiche
                 </div>
                 <div className="mt-1 text-sm font-bold text-fg">
@@ -298,7 +298,7 @@ export default function AcademiePage() {
                 href="/comparatif"
                 className="group block h-full rounded-xl border border-border bg-background/60 p-4 hover:border-primary/40 hover:bg-elevated/60 transition-colors"
               >
-                <div className="text-[10px] font-bold uppercase tracking-wider text-primary-soft">
+                <div className="text-xs font-bold uppercase tracking-wider text-primary-soft">
                   Comparer
                 </div>
                 <div className="mt-1 text-sm font-bold text-fg">
@@ -315,7 +315,7 @@ export default function AcademiePage() {
                 href="/outils"
                 className="group block h-full rounded-xl border border-border bg-background/60 p-4 hover:border-primary/40 hover:bg-elevated/60 transition-colors"
               >
-                <div className="text-[10px] font-bold uppercase tracking-wider text-primary-soft">
+                <div className="text-xs font-bold uppercase tracking-wider text-primary-soft">
                   Utiliser un outil
                 </div>
                 <div className="mt-1 text-sm font-bold text-fg">

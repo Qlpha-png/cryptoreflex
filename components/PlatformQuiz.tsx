@@ -216,7 +216,7 @@ export default function PlatformQuiz({ platforms }: Props) {
               <ArrowLeft className="h-4 w-4" aria-hidden="true" />
               Précédent
             </button>
-            <p className="text-[11px] text-muted hidden sm:block">
+            <p className="text-xs text-muted hidden sm:block">
               Astuce : appuyez sur{" "}
               <kbd className="font-mono px-1 py-0.5 rounded border border-border bg-elevated text-fg">1-2</kbd> pour
               répondre
@@ -374,7 +374,7 @@ export function FilterResult({
               className="flex items-center justify-between gap-3 rounded-lg border border-border/60 bg-elevated/30 px-3 py-2"
             >
               <div className="min-w-0">
-                <div className="text-[11px] uppercase tracking-wider text-muted">{c.short}</div>
+                <div className="text-xs uppercase tracking-wider text-muted">{c.short}</div>
                 <div className="text-sm text-fg truncate">{answers[c.key] === "oui" ? "Oui" : ANY_LABEL}</div>
               </div>
               {onEdit && (

@@ -116,7 +116,7 @@ export default function GuidesHubPage() {
           <h1 className="mt-4 text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl">
             Guides pratiques
           </h1>
-          <p className="mt-4 max-w-3xl text-lg text-slate-300">
+          <p className="mt-4 max-w-[34em] text-lg text-slate-300">
             Vous avez déjà compris le sujet ? Passe à l'action. Ces guides sont
             courts (5-10 min), structurés en étapes à cocher, imprimables, et
             terminent toujours par un CTA concret.

@@ -4,9 +4,143 @@
    Régénérer : node scripts/design/tokens.source.mjs --phase legacy
    Format canaux « R G B » : rgb(var(--c-x) / <alpha-value>) dans tailwind.config.ts.
    Exceptions (couleur complète, pas d'opacité /NN) : *-soft et *-border des couleurs d'état.
+   Polices (lot B1) : fichiers locaux /fonts/cplus-v1/ + replis mesurés (voir REPLIS dans tokens.source.mjs).
    ===================================================================== */
 
+@font-face {
+  font-family: "Cryptoreflex NNBSP";
+  src: url("data:font/woff2;base64,d09GMgABAAAAAAFIAAoAAAAAApQAAAD+AAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAABmAANAoYNgE2AiQDBgsGAAQgBYEBBywb9gEQLgrsBnmHYhicCNzS631x1MTz/39v7vP+TW9WvXeOUHgoywMYxaEINtC+3kxKD1mI1+3zkNhOsfmOjVQ0L0D9/3SSI+0vS+lvbxzfSNPCG0424LIMIINMPo0brpO7fD8+ChIIOe2KzldeDCiWz8CVsbpF163+mMrqA7hKGzrMd4N5ZRWlhNWt/38MPgHQQCEoDAAKhBobGKtdCgThdedpps43nO4D3j437tUL6DfoNBB2FvnCoy8AgPgCQVMCGgAAyqGAmEVAM2RWJzUiNq20qpl0cdfTPT9i4wWQ6ST1AxeZR22TEc0gLvAgQYxkojuGwnihc0ob6PXqUgAAAA==") format("woff2");
+  font-display: swap;
+  unicode-range: U+202F;
+}
+@font-face {
+  font-family: "Inter";
+  src: url("/fonts/cplus-v1/inter-latin.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: optional;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Newsreader";
+  src: url("/fonts/cplus-v1/newsreader-latin.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 200 800;
+  font-display: optional;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Newsreader";
+  src: url("/fonts/cplus-v1/newsreader-italic-latin.woff2") format("woff2");
+  font-style: italic;
+  font-weight: 400 600;
+  font-display: optional;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Inter Fallback";
+  src: local("Arial"), local("ArialMT"), local("Liberation Sans"), local("Arimo");
+  font-style: normal;
+  font-weight: 100 450;
+  size-adjust: 106.25%;
+  ascent-override: 91.17%;
+  descent-override: 22.70%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: "Inter Fallback";
+  src: local("Arial"), local("ArialMT"), local("Liberation Sans"), local("Arimo");
+  font-style: normal;
+  font-weight: 451 550;
+  size-adjust: 108.04%;
+  ascent-override: 89.67%;
+  descent-override: 22.32%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: "Inter Fallback";
+  src: local("Arial Bold"), local("Arial-BoldMT"), local("Liberation Sans Bold"), local("Arimo Bold");
+  font-style: normal;
+  font-weight: 551 650;
+  size-adjust: 101.33%;
+  ascent-override: 95.60%;
+  descent-override: 23.80%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: "Inter Fallback";
+  src: local("Arial Bold"), local("Arial-BoldMT"), local("Liberation Sans Bold"), local("Arimo Bold");
+  font-style: normal;
+  font-weight: 651 750;
+  size-adjust: 102.28%;
+  ascent-override: 94.72%;
+  descent-override: 23.58%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: "Inter Fallback";
+  src: local("Arial Bold"), local("Arial-BoldMT"), local("Liberation Sans Bold"), local("Arimo Bold");
+  font-style: normal;
+  font-weight: 751 900;
+  size-adjust: 103.47%;
+  ascent-override: 93.63%;
+  descent-override: 23.31%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: "Newsreader Fallback";
+  src: local("Times New Roman"), local("TimesNewRomanPSMT"), local("Liberation Serif"), local("Tinos");
+  font-style: normal;
+  font-weight: 100 550;
+  size-adjust: 106.33%;
+  ascent-override: 69.12%;
+  descent-override: 24.92%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: "Newsreader Fallback";
+  src: local("Times New Roman Bold"), local("TimesNewRomanPS-BoldMT"), local("Liberation Serif Bold"), local("Tinos Bold");
+  font-style: normal;
+  font-weight: 551 650;
+  size-adjust: 102.70%;
+  ascent-override: 71.56%;
+  descent-override: 25.80%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: "Newsreader Fallback";
+  src: local("Times New Roman Bold"), local("TimesNewRomanPS-BoldMT"), local("Liberation Serif Bold"), local("Tinos Bold");
+  font-style: normal;
+  font-weight: 651 750;
+  size-adjust: 105.46%;
+  ascent-override: 69.69%;
+  descent-override: 25.13%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: "Newsreader Fallback";
+  src: local("Times New Roman Bold"), local("TimesNewRomanPS-BoldMT"), local("Liberation Serif Bold"), local("Tinos Bold");
+  font-style: normal;
+  font-weight: 751 900;
+  size-adjust: 109.77%;
+  ascent-override: 66.96%;
+  descent-override: 24.14%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: "Newsreader Fallback";
+  src: local("Times New Roman Italic"), local("TimesNewRomanPS-ItalicMT"), local("Liberation Serif Italic"), local("Tinos Italic");
+  font-style: italic;
+  font-weight: 100 900;
+  size-adjust: 100.14%;
+  ascent-override: 73.39%;
+  descent-override: 26.46%;
+  line-gap-override: 0%;
+}
+
 :root {
+  --font-sans: "Inter", "Inter Fallback", system-ui, sans-serif; /* Texte courant (Tailwind font-sans et font-mono) */
+  --font-serif: "Newsreader", "Newsreader Fallback", Georgia, serif; /* Titres éditoriaux (Tailwind font-display et font-serif) */
   --c-background: 11 13 16; /* Fond de page */
   --c-surface: 22 25 31; /* Cartes, panneaux */
   --c-elevated: 31 36 44; /* Menus, popovers */

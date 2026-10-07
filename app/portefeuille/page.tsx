@@ -98,7 +98,7 @@ export default function PortefeuillePage() {
         </div>
 
         {/* Aide pédagogique en bas */}
-        <footer className="mt-12 border-t border-border/60 pt-6 space-y-3 text-[12px] text-muted leading-relaxed">
+        <footer className="mt-12 border-t border-border/60 pt-6 space-y-3 text-xs text-muted leading-relaxed">
           <p>
             Le portefeuille est conservé dans le <strong>localStorage</strong>{" "}
             de votre navigateur. Si vous videz le cache, changez de navigateur ou

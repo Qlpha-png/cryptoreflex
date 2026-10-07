@@ -144,7 +144,7 @@ export default function AmfDisclaimer({
           )}
           <p
             className={`mt-2 text-xs leading-relaxed text-fg/80 ${
-              compact ? "" : "sm:text-[13px]"
+              compact ? "" : "sm:text-xs"
             }`}
           >
             <strong className="text-fg">{BASE_DISCLAIMER}</strong>

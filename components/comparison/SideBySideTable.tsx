@@ -166,7 +166,7 @@ export default function SideBySideTable({ a, b }: Props) {
                       <th
                         scope="colgroup"
                         colSpan={3}
-                        className="px-4 py-2 text-left text-[11px] font-bold uppercase tracking-widest text-primary"
+                        className="px-4 py-2 text-left text-xs font-bold uppercase tracking-widest text-primary"
                       >
                         {row.group}
                       </th>
@@ -188,7 +188,7 @@ export default function SideBySideTable({ a, b }: Props) {
           </tbody>
         </table>
       </div>
-      <div className="border-t border-border bg-surface/40 px-4 py-3 text-[11px] text-muted">
+      <div className="border-t border-border bg-surface/40 px-4 py-3 text-xs text-muted">
         {/* FIX B cohérence dates (2026-05-09) — DD/MM/YYYY au lieu de YYYY-MM-DD brut. */}
         Lecture : les cellules en vert indiquent le critère gagné par la plateforme. Données vérifiées le {new Date(a.mica.lastVerified).toLocaleDateString("fr-FR")} (sources publiques officielles).
       </div>

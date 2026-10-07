@@ -181,7 +181,7 @@ export default function CryptoQuickSwitcher({
           className="absolute left-0 right-0 top-full mt-1.5 z-30 rounded-xl border border-border bg-background shadow-2xl overflow-hidden"
         >
           {!query.trim() && (
-            <div className="px-3 py-1.5 text-[10px] uppercase tracking-wider text-muted bg-surface/40 border-b border-border">
+            <div className="px-3 py-1.5 text-xs uppercase tracking-wider text-muted bg-surface/40 border-b border-border">
               Suggestions populaires
             </div>
           )}
@@ -225,7 +225,7 @@ export default function CryptoQuickSwitcher({
                           {c.symbol}
                         </span>
                       </span>
-                      <span className="block text-[11px] text-muted truncate">
+                      <span className="block text-xs text-muted truncate">
                         {c.category} · {c.tagline}
                       </span>
                     </span>
@@ -240,7 +240,7 @@ export default function CryptoQuickSwitcher({
               );
             })}
           </ul>
-          <div className="px-3 py-2 text-[10px] text-muted/80 bg-surface/40 border-t border-border flex items-center justify-between">
+          <div className="px-3 py-2 text-xs text-muted/80 bg-surface/40 border-t border-border flex items-center justify-between">
             <span>↑↓ naviguer · Enter ouvrir · Esc fermer</span>
             <Link
               href="/cryptos"

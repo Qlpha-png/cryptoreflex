@@ -183,7 +183,7 @@ export default async function AdminAbTestPage() {
             <h1 className="mt-3 text-3xl sm:text-4xl font-extrabold tracking-tight">
               Expériences <span className="gradient-text">{BRAND.name}</span>
             </h1>
-            <p className="mt-2 text-sm text-muted max-w-3xl">
+            <p className="mt-2 text-sm text-muted max-w-[34em]">
               Test Z deux proportions (Wald, bilatéral). Significatif si p &lt;{" "}
               {SIGNIFICANCE_THRESHOLD}. Seuil minimal{" "}
               {MIN_EXPOSURES_PER_VARIANT} exposures / variant pour décider.{" "}
@@ -278,11 +278,11 @@ function ExperimentSection({ stats }: { stats: ExperimentStats }) {
             Métriques :{" "}
             {meta.metrics.map((m, i) => (
               <span key={m}>
-                <code className="font-mono text-[11px] bg-elevated px-1.5 py-0.5 rounded">
+                <code className="font-mono text-xs bg-elevated px-1.5 py-0.5 rounded">
                   {m}
                 </code>
                 {i === 0 ? (
-                  <span className="ml-1 text-primary-soft text-[10px] uppercase tracking-wider">
+                  <span className="ml-1 text-primary-soft text-xs uppercase tracking-wider">
                     primaire
                   </span>
                 ) : null}
@@ -376,7 +376,7 @@ function StatsTable({
               <>
                 <th className="px-3 py-2 text-right">
                   Taux primaire
-                  <div className="text-[10px] normal-case text-muted/70">
+                  <div className="text-xs normal-case text-muted/70">
                     {primaryMetric}
                   </div>
                 </th>
@@ -422,7 +422,7 @@ function StatsTable({
                   <div className="font-bold text-fg flex items-center gap-2">
                     <span className="font-mono">{v.variant}</span>
                     {isControl && (
-                      <span className="text-[10px] uppercase tracking-wider text-muted bg-elevated px-1.5 py-0.5 rounded">
+                      <span className="text-xs uppercase tracking-wider text-muted bg-elevated px-1.5 py-0.5 rounded">
                         control
                       </span>
                     )}
@@ -442,7 +442,7 @@ function StatsTable({
                       <div className="text-fg/85">
                         {c.toLocaleString("fr-FR")}
                       </div>
-                      <div className="text-[10px] text-muted">
+                      <div className="text-xs text-muted">
                         {(rate * 100).toFixed(2)}%
                       </div>
                     </td>
@@ -482,11 +482,11 @@ function StatsTable({
                       {isControl ? (
                         <span className="text-muted">—</span>
                       ) : significant ? (
-                        <span className="inline-flex items-center rounded-full border border-emerald-500/40 bg-emerald-500/10 px-2 py-0.5 text-[10px] font-bold text-emerald-300">
+                        <span className="inline-flex items-center rounded-full border border-emerald-500/40 bg-emerald-500/10 px-2 py-0.5 text-xs font-bold text-emerald-300">
                           {(100 * (1 - pValue)).toFixed(1)}%
                         </span>
                       ) : (
-                        <span className="inline-flex items-center rounded-full border border-border bg-elevated px-2 py-0.5 text-[10px] font-bold text-muted">
+                        <span className="inline-flex items-center rounded-full border border-border bg-elevated px-2 py-0.5 text-xs font-bold text-muted">
                           NS
                         </span>
                       )}

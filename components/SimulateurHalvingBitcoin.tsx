@@ -116,7 +116,7 @@ export default function SimulateurHalvingBitcoin() {
               className="mt-2 w-full rounded-xl border border-border bg-elevated px-3 py-2 text-fg-max"
               placeholder="100"
             />
-            <p className="mt-1 text-[11px] text-fg-max/50">
+            <p className="mt-1 text-xs text-fg-max/50">
               {frequency === "monthly" ? "par mois" : "par semaine"}
             </p>
           </div>

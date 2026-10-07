@@ -114,16 +114,18 @@ export default function AuthorCard({
           </span>
         </Link>
 
-        <div className="flex items-center gap-3 text-xs text-muted ml-auto">
+        {/* Chaque métadonnée reste entière (jury B1 : « 12 / min », « Publié le / 26/04/2026 ») ; c'est l'élément
+            entier qui passe à la ligne. */}
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted ml-auto">
           {readTime && (
-            <span className="inline-flex items-center gap-1">
+            <span className="inline-flex items-center gap-1 whitespace-nowrap">
               <Clock className="h-3.5 w-3.5" />
               {readTime}
             </span>
           )}
-          {date && <span>Publié le {formatDate(date)}</span>}
+          {date && <span className="whitespace-nowrap">Publié le {formatDate(date)}</span>}
           {dateModified && dateModified !== date && (
-            <span className="inline-flex items-center gap-1 text-primary-soft">
+            <span className="inline-flex items-center gap-1 whitespace-nowrap text-primary-soft">
               <BadgeCheck className="h-3.5 w-3.5" />
               MAJ {formatDate(dateModified)}
             </span>

@@ -93,7 +93,7 @@ export default function CompareDrawer() {
             <button
               type="button"
               onClick={clear}
-              className="text-[11px] font-medium text-muted hover:text-fg transition-colors sm:ml-2"
+              className="text-xs font-medium text-muted hover:text-fg transition-colors sm:ml-2"
               aria-label="Vider le comparateur"
             >
               Vider
@@ -128,7 +128,7 @@ export default function CompareDrawer() {
                   ) : (
                     <span
                       aria-hidden="true"
-                      className="inline-flex h-[18px] w-[18px] items-center justify-center rounded-full bg-primary/20 text-[9px] font-bold text-primary-soft"
+                      className="inline-flex h-[18px] w-[18px] items-center justify-center rounded-full bg-primary/20 text-xs font-bold text-primary-soft"
                     >
                       {c.symbol.slice(0, 2)}
                     </span>

@@ -31,7 +31,7 @@ export default function CompareSparkline({
 }: Props) {
   if (!data || data.length < 2) {
     return (
-      <span className="inline-block text-[10px] text-muted italic">
+      <span className="inline-block text-xs text-muted italic">
         Pas de données
       </span>
     );

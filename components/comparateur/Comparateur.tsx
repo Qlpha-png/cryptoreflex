@@ -101,7 +101,7 @@ export default function Comparateur({ rows, duelSlugs }: { rows: Row[]; duelSlug
             <span className="mr-2 inline-flex h-6 w-6 items-center justify-center rounded-full bg-primary text-xs font-extrabold text-background">2</span>
             Qu&apos;est-ce qui compte pour vous ?
           </legend>
-          <div className="mt-3 grid grid-cols-2 gap-2 lg:grid-cols-4" role="group" aria-label="Ce qui compte pour vous">
+          <div className="mt-3 grid grid-cols-1 min-[360px]:grid-cols-2 gap-2 lg:grid-cols-4" role="group" aria-label="Ce qui compte pour vous">
             {GOALS.map(({ id, label, Icon }) => (
               <button
                 key={id}
@@ -208,7 +208,7 @@ export default function Comparateur({ rows, duelSlugs }: { rows: Row[]; duelSlug
                   </Link>
                 </div>
               </div>
-              <p className="mt-2 text-[11px] text-muted">
+              <p className="mt-2 text-xs text-muted">
                 Frais vérifiés le {fmtDate(r.verifiedDate)}
                 {r.source ? (
                   <>

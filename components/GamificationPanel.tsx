@@ -161,7 +161,7 @@ export default function GamificationPanel() {
             </svg>
             <div className="absolute inset-0 grid place-items-center text-center">
               <div>
-                <div className="text-[10px] uppercase tracking-wider text-muted">
+                <div className="text-xs uppercase tracking-wider text-muted">
                   Niveau
                 </div>
                 <div className="text-3xl font-extrabold text-fg tabular-nums">
@@ -195,7 +195,7 @@ export default function GamificationPanel() {
             <span className="ml-1 text-sm font-normal text-fg/60">jours</span>
           </div>
           {progress.streakDays === 0 && (
-            <div className="mt-1 text-[11px] text-fg/60">
+            <div className="mt-1 text-xs text-fg/60">
               Visite chaque jour pour démarrer.
             </div>
           )}
@@ -211,7 +211,7 @@ export default function GamificationPanel() {
             <span className="ml-1 text-sm font-normal text-fg/60">jours</span>
           </div>
           {progress.bestStreak >= 365 && (
-            <div className="mt-1 text-[11px] text-primary-soft">
+            <div className="mt-1 text-xs text-primary-soft">
               Insider — 1 an+ 🏆
             </div>
           )}
@@ -261,7 +261,7 @@ export default function GamificationPanel() {
                     {b.name}
                   </span>
                 </div>
-                <div className="text-[11px] text-fg/65 leading-snug line-clamp-2">
+                <div className="text-xs text-fg/65 leading-snug line-clamp-2">
                   {b.description}
                 </div>
               </div>

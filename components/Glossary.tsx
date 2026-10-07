@@ -234,7 +234,7 @@ const CategoryChip = memo(function CategoryChip({
     >
       <span>{label}</span>
       <span
-        className={`tabular-nums text-[10px] px-1.5 py-0.5 rounded-full ${
+        className={`tabular-nums text-xs px-1.5 py-0.5 rounded-full ${
           active ? "bg-primary/30 text-primary-soft" : "bg-background/60 text-muted"
         }`}
       >
@@ -300,7 +300,7 @@ function TermItem({ term, query, inSection = false }: TermItemProps) {
         <h3 className="font-bold text-fg text-lg">
           {highlight(term.term, query)}
         </h3>
-        <span className="inline-flex items-center text-[10px] font-semibold uppercase tracking-wide rounded-full bg-primary/15 text-primary-soft border border-primary/30 px-2 py-1">
+        <span className="inline-flex items-center text-xs font-semibold uppercase tracking-wide rounded-full bg-primary/15 text-primary-soft border border-primary/30 px-2 py-1">
           {term.category}
         </span>
       </div>

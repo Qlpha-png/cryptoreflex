@@ -66,7 +66,7 @@ export default function WaltioFranchise({
 }: WaltioFranchiseProps) {
   if (variant === "line") {
     return (
-      <p className={`text-[11px] text-muted ${className}`} data-waltio-franchise="line">
+      <p className={`text-xs text-muted ${className}`} data-waltio-franchise="line">
         {lead}
         Bon à savoir : fuite de données chez Waltio en {WALTIO_INCIDENT.month}.{" "}
         <Link href={detailHref} className="underline hover:text-primary-soft">
@@ -128,7 +128,7 @@ export default function WaltioFranchise({
         passe unique, double authentification) et méfiez-vous des e-mails ou appels inattendus qui parlent de vos
         cryptos.
       </p>
-      <p className="mt-2 text-[11px] text-muted">
+      <p className="mt-2 text-xs text-muted">
         <Link href={detailHref} className="underline hover:text-primary-soft">
           Le détail sur notre fiche Waltio
         </Link>{" "}

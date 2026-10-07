@@ -381,13 +381,13 @@ function Pagination({
           <Link
             href={prev}
             rel="prev"
-            className="inline-flex items-center gap-1 rounded-lg border border-border bg-surface px-3 py-1.5 text-xs font-semibold text-fg/85 hover:border-primary/40 hover:text-fg transition-colors"
+            className="inline-flex items-center gap-1 whitespace-nowrap rounded-lg border border-border bg-surface px-3 py-1.5 text-xs font-semibold text-fg/85 hover:border-primary/40 hover:text-fg transition-colors"
           >
             <ChevronLeft className="h-3.5 w-3.5" aria-hidden="true" />
             Précédent
           </Link>
         ) : (
-          <span className="inline-flex items-center gap-1 rounded-lg border border-border/40 bg-surface/40 px-3 py-1.5 text-xs font-semibold text-muted/50">
+          <span className="inline-flex items-center gap-1 whitespace-nowrap rounded-lg border border-border/40 bg-surface/40 px-3 py-1.5 text-xs font-semibold text-muted/50">
             <ChevronLeft className="h-3.5 w-3.5" aria-hidden="true" />
             Précédent
           </span>
@@ -396,13 +396,13 @@ function Pagination({
           <Link
             href={next}
             rel="next"
-            className="inline-flex items-center gap-1 rounded-lg border border-primary/30 bg-primary/10 px-3 py-1.5 text-xs font-semibold text-primary-glow hover:bg-primary/20 transition-colors"
+            className="inline-flex items-center gap-1 whitespace-nowrap rounded-lg border border-primary/30 bg-primary/10 px-3 py-1.5 text-xs font-semibold text-primary-glow hover:bg-primary/20 transition-colors"
           >
             Suivant
             <ChevronRight className="h-3.5 w-3.5" aria-hidden="true" />
           </Link>
         ) : (
-          <span className="inline-flex items-center gap-1 rounded-lg border border-border/40 bg-surface/40 px-3 py-1.5 text-xs font-semibold text-muted/50">
+          <span className="inline-flex items-center gap-1 whitespace-nowrap rounded-lg border border-border/40 bg-surface/40 px-3 py-1.5 text-xs font-semibold text-muted/50">
             Suivant
             <ChevronRight className="h-3.5 w-3.5" aria-hidden="true" />
           </span>
@@ -448,7 +448,7 @@ function FeaturedNews({ news }: { news: NewsSummary }) {
           height={630}
         />
         <span
-          className={`absolute left-4 top-4 z-10 inline-flex items-center rounded-full px-3 py-1 text-[11px]
+          className={`absolute left-4 top-4 z-10 inline-flex items-center rounded-full px-3 py-1 text-xs
                       font-semibold uppercase tracking-wider ring-1 backdrop-blur-sm ${badge}`}
         >
           {catLabel}

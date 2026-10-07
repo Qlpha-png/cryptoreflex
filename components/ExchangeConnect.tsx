@@ -272,7 +272,7 @@ export default function ExchangeConnect() {
           <Plug className="h-4 w-4 text-primary" />
           Sync exchange (read-only)
         </h3>
-        <span className="text-[10px] uppercase tracking-wider rounded-full border border-emerald-500/30 bg-emerald-500/5 text-emerald-300 px-2 py-0.5">
+        <span className="text-xs uppercase tracking-wider rounded-full border border-emerald-500/30 bg-emerald-500/5 text-emerald-300 px-2 py-0.5">
           Bêta · Binance
         </span>
       </div>
@@ -300,7 +300,7 @@ export default function ExchangeConnect() {
                 <div className="flex items-center gap-2">
                   <span className="font-bold text-fg text-sm">Binance</span>
                   <span
-                    className={`inline-flex items-center gap-1 text-[10px] uppercase tracking-wider rounded-full px-2 py-0.5 ${
+                    className={`inline-flex items-center gap-1 text-xs uppercase tracking-wider rounded-full px-2 py-0.5 ${
                       binanceConn.lastSyncStatus === "ok"
                         ? "bg-emerald-500/15 text-emerald-300 border border-emerald-500/30"
                         : binanceConn.lastSyncStatus === "error"
@@ -315,7 +315,7 @@ export default function ExchangeConnect() {
                         : "En attente"}
                   </span>
                 </div>
-                <div className="mt-1 text-[11px] text-muted">
+                <div className="mt-1 text-xs text-muted">
                   {binanceConn.lastSyncedAt
                     ? `Dernière sync : ${new Date(binanceConn.lastSyncedAt).toLocaleString("fr-FR")}`
                     : "Jamais sync"}
@@ -350,7 +350,7 @@ export default function ExchangeConnect() {
           {/* Tableau balances synced (si sync vient d'être fait) */}
           {syncedBalances && syncedBalances.length > 0 && (
             <div className="mt-4 rounded-xl border border-border/60 bg-elevated/20 p-3 max-h-72 overflow-y-auto">
-              <div className="text-[11px] uppercase tracking-wider text-muted mb-2">
+              <div className="text-xs uppercase tracking-wider text-muted mb-2">
                 Balances détectées (top 10)
               </div>
               <ul className="space-y-1.5 text-xs">
@@ -366,7 +366,7 @@ export default function ExchangeConnect() {
                       {fmtFr(b.total, 8)}
                     </span>
                     <span
-                      className={`text-[10px] uppercase tracking-wider rounded px-1.5 py-0.5 ${
+                      className={`text-xs uppercase tracking-wider rounded px-1.5 py-0.5 ${
                         b.coingeckoId
                           ? "bg-emerald-500/10 text-emerald-300"
                           : "bg-elevated text-muted"
@@ -378,7 +378,7 @@ export default function ExchangeConnect() {
                 ))}
               </ul>
               {syncedBalances.length > 10 && (
-                <p className="mt-2 text-[10px] text-muted text-center">
+                <p className="mt-2 text-xs text-muted text-center">
                   + {syncedBalances.length - 10} autres balances
                 </p>
               )}
@@ -536,7 +536,7 @@ export default function ExchangeConnect() {
                 </button>
               </div>
 
-              <p className="text-[11px] text-muted leading-relaxed">
+              <p className="text-xs text-muted leading-relaxed">
                 Vos clés sont chiffrées AES-256-GCM côté serveur (clé maître non
                 exposée). Ce site ne stockera JAMAIS de clé avec permission de
                 trading ou retrait — la connexion est rejetée si vous cochez

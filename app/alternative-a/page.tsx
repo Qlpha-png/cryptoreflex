@@ -58,7 +58,7 @@ export default function AlternativeAHub() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Hero */}
         <header className="text-center mb-12">
-          <span className="inline-flex items-center gap-1.5 rounded-full border border-warning-border bg-warning-soft px-3 py-1 text-[10px] font-mono font-bold text-warning-fg uppercase tracking-wider mb-4">
+          <span className="inline-flex items-center gap-1.5 rounded-full border border-warning-border bg-warning-soft px-3 py-1 text-xs font-mono font-bold text-warning-fg uppercase tracking-wider mb-4">
             <Repeat className="h-3 w-3" aria-hidden="true" />
             Migration MiCA Phase 2 — 1ᵉʳ juillet 2026
           </span>
@@ -92,7 +92,7 @@ export default function AlternativeAHub() {
                   <h2 className="text-sm font-bold text-fg truncate">
                     Alternatives à {p.name}
                   </h2>
-                  <p className="text-[11px] text-muted mt-0.5">
+                  <p className="text-xs text-muted mt-0.5">
                     {isAvailableFr(p) ? "Agréée MiCA, accessible en France" : "Non autorisée en France"}
                   </p>
                 </div>

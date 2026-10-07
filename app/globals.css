@@ -7,17 +7,16 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Fonts: chargées via next/font (app/layout.tsx) — pas d'@import render-blocking. */
-
-/* Espace fine insécable (U+202F) des nombres français (« 20 000 € », format Intl fr-FR) : Inter la dessine avec 1 à
-   2 px, on lisait « 20000 € ». Cette micro-police (304 octets, scripts/build-nnbsp-font.py) ne contient que ce caractère,
-   avec la largeur d'une espace normale ; elle est en tête des piles de polices (tailwind.config.ts) et n'est
-   téléchargée que sur les pages qui affichent ce caractère (unicode-range). Audit du 05/10/2026. */
-@font-face {
-  font-family: "Cryptoreflex NNBSP";
-  src: url("/fonts/cr-nnbsp.woff2") format("woff2");
-  unicode-range: U+202F;
-  font-display: swap;
+/* Polices (lot B1) : Inter, Newsreader et « Cryptoreflex NNBSP » (espace fine insécable U+202F des nombres français,
+   scripts/build-nnbsp-font.py, audit du 05/10/2026) sont déclarées dans styles/tokens.css (fichiers locaux
+   /fonts/cplus-v1/, replis mesurés), sans préchargement (mesuré plus lent, app/layout.tsx). Space Grotesk et JetBrains Mono restent
+   chargées par next/font (variables --font-display / --font-mono des cartes Reflex et des blocs de code). */
+/* La base de Tailwind donne à code/kbd/samp/pre la famille « mono », devenue la pile Inter au lot B1 : le code garde
+   JetBrains Mono (famille Tailwind « code »). */
+@layer base {
+  code, kbd, samp, pre {
+    font-family: theme("fontFamily.code");
+  }
 }
 
 :root {
@@ -82,6 +81,16 @@ body {
   word-break: break-word;
 }
 
+/* B1 reprise (jury ronde 1) — `anywhere` réduit la largeur minimale des éléments flex : « Coinhous/e », « MiC/A »,
+   « NOUVEA/U », « Accuei/l » (fil d'Ariane), « T/MI », « Afficher » sur 3 lignes. Sur les éléments COURTS ci-dessous, un mot
+   ne se coupe qu'en dernier recours (`break-word`). Partout ailleurs `anywhere` reste la règle : avec `break-word` en base,
+   le banc de débordement trouvait 91 textes hors écran de plus à 280 px (un mot long dans une rangée flex ne rétrécit plus).
+   :where() = spécificité 0 : une classe break-all ou break-words posée sur l'élément garde la main. */
+:where(h1, h2, h3, h4, th, nav a, span[class*="rounded-full"], span[class*="badge"]) {
+  overflow-wrap: break-word;
+  word-break: normal;
+}
+
 /* Padding bottom mobile = laisser de la place pour la sticky bar */
 @media (max-width: 768px) {
   body {
@@ -131,6 +140,50 @@ body {
      a de la lumière) reste identique, le bas est sobre — et 60 fps. */
 }
 
+/* ================================================================
+ * B1 finitions F2 — TITRES EN NEWSREADER : graisses et approche de la spec C+ (cplus/spec-systeme.md)
+ * Les titres du site sont écrits `font-display font-bold|font-extrabold tracking-tight` (≈ 65 usages) : à 700-800, les
+ * lettres de Newsreader se touchent (« fi », « lc ») et le repli, plus étroit, faisait sauter le titre du calculateur.
+ * Spec : display / h1 / h2 en 500, h3 en 600 ; approche -0,025 / -0,02 / -0,015 / -0,01 em. Une seule règle ici plutôt
+ * que 65 classes réécrites : spécificité 0,2,0 ou plus (bat font-bold / font-extrabold / tracking-tight, 0,1,0).
+ * ================================================================ */
+.font-display.font-bold, .font-display.font-extrabold, .font-serif.font-bold, .font-serif.font-extrabold { font-weight: 600; }
+h1.font-display.font-bold, h1.font-display.font-extrabold, h2.font-display.font-bold, h2.font-display.font-extrabold,
+h1.font-serif.font-bold, h1.font-serif.font-extrabold, h2.font-serif.font-bold, h2.font-serif.font-extrabold { font-weight: 500; }
+h1.font-display.tracking-tight, h1.font-serif.tracking-tight { letter-spacing: -0.02em; }
+h2.font-display.tracking-tight, h2.font-serif.tracking-tight { letter-spacing: -0.015em; }
+h3.font-display.tracking-tight, h3.font-serif.tracking-tight { letter-spacing: -0.01em; }
+
+/* ================================================================
+ * B1 reprise (jury ronde 1) — UNE RÈGLE DE TITRES POUR TOUT LE SITE (spec C+ : h1 et h2 en Newsreader 500, h3 en Inter 600).
+ * Avant : h1 Inter 800 + h2 Newsreader 500 sur les articles, l'inverse sur l'accueil, deux familles de h3 sur la même
+ * page du calculateur. Spécificité 0,1,1 (élément + un :not) : bat font-bold, font-extrabold, font-sans, font-display,
+ * font-serif et tracking-tight (0,1,0) sans !important. Ne touche NI la taille NI l'interligne (gérés par les classes
+ * de chaque titre). Exceptions explicites : titres en capitales (.uppercase, étiquettes), en chiffres (.font-mono,
+ * .font-code) et ceux marqués .titre-libre.
+ * ================================================================ */
+h1:not(.uppercase, .font-mono, .font-code, .titre-libre),
+h2:not(.uppercase, .font-mono, .font-code, .titre-libre) {
+  font-family: "Cryptoreflex NNBSP", var(--font-serif), Georgia, serif;
+  font-weight: 500;
+}
+h1:not(.uppercase, .font-mono, .font-code, .titre-libre) { letter-spacing: -0.02em; }
+h2:not(.uppercase, .font-mono, .font-code, .titre-libre) { letter-spacing: -0.015em; }
+h3:not(.uppercase, .font-mono, .font-code, .titre-libre) {
+  font-family: "Cryptoreflex NNBSP", var(--font-sans), system-ui, sans-serif;
+  font-weight: 600;
+}
+
+/* ================================================================
+ * B1 reprise — MESURE DE LECTURE (spec C+ : --measure 34em ≈ 62 à 68 signes) pour les paragraphes hors articles.
+ * :where() = spécificité 0 : toute classe max-w-*, mx-auto ou w-* posée sur le paragraphe garde la main. Exclus : les
+ * cellules de tableau et les blocs centrés (le paragraphe resterait calé à gauche dans une boîte plus large). Les
+ * paragraphes de .prose (articles) ont leur propre règle dans tailwind.config.ts.
+ * ================================================================ */
+:where(main p, main dd, main figcaption, main legend):not(:where(table *, .text-center *, .text-center, .text-right, .text-right *, .prose *)) {
+  max-width: 34em;
+}
+
 /* Tabular nums pour tous les chiffres en mono — alignement parfait des prix */
 .font-mono {
   font-variant-numeric: tabular-nums;
@@ -158,7 +211,8 @@ body {
    s'alignent et ne sautent pas quand ils changent (sensation exchange).
    À appliquer sur tout chiffre LIVE (prix, %, volume). */
 .num-data {
-  font-family: "Cryptoreflex NNBSP", var(--font-mono), ui-monospace, SFMono-Regular, monospace;
+  /* B1 finitions F3 : Inter à chiffres tabulaires (comme la famille Tailwind font-mono), plus de JetBrains Mono téléchargée. */
+  font-family: "Cryptoreflex NNBSP", var(--font-sans), system-ui, sans-serif;
   font-variant-numeric: tabular-nums;
   letter-spacing: -0.01em;
 }
@@ -398,8 +452,8 @@ body {
 
 /* Eyebrow premium — letter-spacing 0.12em (vs Tailwind tracking-wider 0.05em) */
 .ds-eyebrow {
-  font-size: 11px;
-  line-height: 14px;
+  font-size: 14px; /* B1 : 11 → 14 px (plus aucun texte sous 14 px) */
+  line-height: 20px;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.12em;
@@ -498,7 +552,7 @@ body {
 .hero-h1 {
   font-size: clamp(44px, 7.5vw, 96px);
   line-height: 1.02;
-  letter-spacing: -0.035em;
+  letter-spacing: -0.025em; /* B1 finitions F2 : -0,035 → -0,025 (spec C+, Newsreader 500) */
 }
 .hero-h1-accent {
   background-image: linear-gradient(100deg, rgb(var(--c-primary)) 0%, rgb(var(--c-primary-glow)) 45%, #ffe9c2 75%, rgb(var(--c-primary-glow)) 100%);
@@ -566,7 +620,7 @@ body {
   gap: 8px;
   padding: 6px 12px;
   border-radius: 9999px;
-  font-size: 13px;
+  font-size: 14px; /* B1 : 13 → 14 px */
   color: var(--color-fg);
   background: rgba(14, 17, 22, 0.82);
   border: 1px solid rgb(var(--c-ice-fg) / 0.28);
@@ -584,7 +638,7 @@ body {
 }
 .hero-pulse-chip-label {
   font-weight: 700;
-  font-size: 11px;
+  font-size: 14px; /* B1 : 11 → 14 px */
   letter-spacing: 0.08em;
   color: var(--color-ice-fg);
 }
@@ -592,7 +646,7 @@ body {
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  font-size: 10px;
+  font-size: 14px; /* B1 : 10 → 14 px */
   text-transform: uppercase;
   letter-spacing: 0.08em;
   /* A1 : ancienne valeur de --color-muted (devenu l'alias de muted), rendu inchangé */
@@ -631,7 +685,7 @@ body {
 @media (max-width: 640px) {
   .hero-stage { min-height: 78svh; }
   .hero-pulse-band { height: clamp(170px, 26vh, 240px); }
-  .hero-pulse-chip { font-size: 12px; padding: 5px 10px; }
+  .hero-pulse-chip { font-size: 14px; padding: 5px 10px; } /* B1 : 12 → 14 px */
 }
 /* Sous md (768px), la bottom-nav mobile (64px, fixed) recouvrait le bas
    de la courbe au premier écran : on remonte la bande d'autant. */
@@ -687,7 +741,7 @@ body {
 }
 .hero-scrub-chip {
   transform: translate(-50%, -100%);
-  font-size: 12px;
+  font-size: 14px; /* B1 : 12 → 14 px */
   letter-spacing: 0.02em;
   white-space: nowrap;
   /* Lot A2 : --color-foreground n'a jamais existé, le secours s'affichait : valeur effective gardée (aucun jeton exact). */
@@ -750,8 +804,8 @@ body {
    avaient un H1 ~40px + badge pill = la composition timide que le
    panel a tuee sur la home. */
 .section-eyebrow {
-  font-family: "Cryptoreflex NNBSP", var(--font-mono), ui-monospace, monospace;
-  font-size: 11px;
+  font-family: "Cryptoreflex NNBSP", var(--font-sans), system-ui, sans-serif; /* B1 finitions F3 : plus de JetBrains Mono */
+  font-size: 14px; /* B1 : 11 → 14 px */
   text-transform: uppercase;
   letter-spacing: 0.18em;
   /* A1 : ancienne valeur de --color-muted (devenu l'alias de muted), rendu inchangé */
@@ -764,7 +818,7 @@ body {
 .section-h1 {
   font-size: clamp(38px, 4.6vw, 64px);
   line-height: 1.05;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.02em; /* B1 finitions F2 : -0,03 → -0,02 (spec C+, h1 Newsreader 500) */
 }
 
 

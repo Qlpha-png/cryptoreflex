@@ -161,7 +161,7 @@ export default async function AlertesPage() {
             Créez vos <span className="gradient-text">alertes prix crypto</span>
             <br className="hidden sm:block" /> par email.
           </h1>
-          <p className="mt-4 text-lg text-fg/80 max-w-3xl">
+          <p className="mt-4 text-lg text-fg/80 max-w-[34em]">
             Recevez un message dès qu'une crypto franchit votre seuil — Bitcoin
             au-dessus de 80 000 €, Ethereum sous 2 500 $, peu importe.
             Vérification toutes les 15 minutes, désinscription en 1 clic.
@@ -285,7 +285,7 @@ export default async function AlertesPage() {
         </section>
 
         {/* Mentions */}
-        <p className="mt-12 text-[11px] text-muted leading-relaxed">
+        <p className="mt-12 text-xs text-muted leading-relaxed">
           Données prix : prix du marché agrégés de plusieurs sources (Binance, Kraken, Coinbase, CoinGecko…), vérifiés toutes les 15 minutes.
           Cette page n'est pas un conseil en investissement — voir notre{" "}
           <Link href="/methodologie" className="underline hover:text-fg">méthodologie</Link>.

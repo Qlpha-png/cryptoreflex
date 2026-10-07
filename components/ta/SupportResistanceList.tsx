@@ -82,7 +82,7 @@ export default function SupportResistanceList({ levels, currentPrice, limit = 3 
                     className="flex items-center justify-between rounded-lg border border-rose-500/20 bg-rose-500/5 px-3 py-2"
                   >
                     <div className="flex items-center gap-2">
-                      <span className="inline-flex h-6 w-6 items-center justify-center rounded-md bg-rose-500/15 text-[11px] font-bold text-rose-300">
+                      <span className="inline-flex h-6 w-6 items-center justify-center rounded-md bg-rose-500/15 text-xs font-bold text-rose-300">
                         R{i + 1}
                       </span>
                       <span className="font-mono text-sm font-semibold text-fg">
@@ -118,7 +118,7 @@ export default function SupportResistanceList({ levels, currentPrice, limit = 3 
                     className="flex items-center justify-between rounded-lg border border-emerald-500/20 bg-emerald-500/5 px-3 py-2"
                   >
                     <div className="flex items-center gap-2">
-                      <span className="inline-flex h-6 w-6 items-center justify-center rounded-md bg-emerald-500/15 text-[11px] font-bold text-emerald-300">
+                      <span className="inline-flex h-6 w-6 items-center justify-center rounded-md bg-emerald-500/15 text-xs font-bold text-emerald-300">
                         S{i + 1}
                       </span>
                       <span className="font-mono text-sm font-semibold text-fg">

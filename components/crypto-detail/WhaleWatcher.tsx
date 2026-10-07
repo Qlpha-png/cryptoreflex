@@ -176,7 +176,7 @@ export default function WhaleWatcher({
         </button>
       </header>
 
-      <p className="mt-2 text-[12px] text-muted">
+      <p className="mt-2 text-xs text-muted">
         Top 5 des plus grosses transactions on-chain récentes (≥ 1 M$).
       </p>
 
@@ -191,7 +191,7 @@ export default function WhaleWatcher({
         ))}
       </ul>
 
-      <p className="mt-4 text-[11px] text-muted">
+      <p className="mt-4 text-xs text-muted">
         {/* SSR + 1er render client : `lastUpdate === null` → texte "—" identique
             des 2 cotes (zero mismatch). Apres mount + 1er fetch reussi,
             useEffect set la vraie valeur et le composant re-render. */}
@@ -238,7 +238,7 @@ function WhaleRow({
               {formatCompactUsd(tx.amountUSD)}
             </span>
           </div>
-          <div className="mt-2 flex items-center gap-1.5 text-[12px] text-muted flex-wrap">
+          <div className="mt-2 flex items-center gap-1.5 text-xs text-muted flex-wrap">
             <OwnerChip type={tx.fromType} label={fromLabel} />
             <ArrowRight className="h-3 w-3 shrink-0" aria-hidden="true" />
             <OwnerChip type={tx.toType} label={toLabel} />
@@ -247,7 +247,7 @@ function WhaleRow({
 
         {/* Métadonnées : timestamp + lien explorer */}
         <div className="flex items-center justify-between sm:justify-end gap-3 shrink-0">
-          <span className="text-[11px] text-muted whitespace-nowrap">
+          <span className="text-xs text-muted whitespace-nowrap">
             {formatRelativeFr(tx.timestamp)}
           </span>
           {explorer && tx.hash && (
@@ -256,7 +256,7 @@ function WhaleRow({
               target="_blank"
               rel="noopener noreferrer"
               aria-label={`Voir la transaction ${tx.hash.slice(0, 10)}… dans l'explorer`}
-              className="inline-flex items-center gap-1 rounded-md border border-border bg-surface px-2 py-1 text-[11px] font-mono text-muted hover:text-primary hover:border-primary/40 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-surface"
+              className="inline-flex items-center gap-1 rounded-md border border-border bg-surface px-2 py-1 text-xs font-mono text-muted hover:text-primary hover:border-primary/40 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-surface"
             >
               {shortenHash(tx.hash)}
               <ExternalLink className="h-3 w-3" aria-hidden="true" />
@@ -291,7 +291,7 @@ function OwnerChip({
 
   return (
     <span
-      className={`inline-flex items-center gap-1 rounded-md border px-1.5 py-0.5 font-mono text-[10px] font-semibold ${cls}`}
+      className={`inline-flex items-center gap-1 rounded-md border px-1.5 py-0.5 font-mono text-xs font-semibold ${cls}`}
     >
       <Icon className="h-3 w-3 shrink-0" aria-hidden="true" />
       <span className="truncate max-w-[120px]">{label}</span>

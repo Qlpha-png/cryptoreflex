@@ -53,7 +53,7 @@ export default function MdxLink({ href, children, ...rest }: ComponentProps<"a">
         >
           {children}
         </a>
-        {caption && <span className="not-prose ml-1 text-[0.8em] text-muted">({caption})</span>}
+        {caption && <span className="not-prose ml-1 text-[0.875em] text-muted">({caption})</span>}
       </>
     );
   }

@@ -572,7 +572,7 @@ export default async function CryptoPairPage({ params }: Props) {
           <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-fg">
             Comparatif {a.name} <span className="gradient-text">vs</span> {b.name} en 2026
           </h1>
-          <p className="mt-4 text-base text-fg/80 leading-relaxed max-w-3xl">
+          <p className="mt-4 text-base text-fg/80 leading-relaxed max-w-[34em]">
             {buildIntro(a, b, commonPlatforms.length)}
           </p>
           <p className="mt-3 text-sm text-muted">
@@ -755,7 +755,7 @@ export default async function CryptoPairPage({ params }: Props) {
           </p>
           <div className="mt-6 grid gap-4 sm:grid-cols-3">
             <div className="rounded-xl border border-border bg-surface p-4">
-              <div className="text-[11px] font-bold uppercase tracking-wider text-primary-soft">
+              <div className="text-xs font-bold uppercase tracking-wider text-primary-soft">
                 Profil débutant
               </div>
               <div className="mt-1 text-lg font-bold text-fg">
@@ -766,7 +766,7 @@ export default async function CryptoPairPage({ params }: Props) {
               </p>
             </div>
             <div className="rounded-xl border border-border bg-surface p-4">
-              <div className="text-[11px] font-bold uppercase tracking-wider text-primary-soft">
+              <div className="text-xs font-bold uppercase tracking-wider text-primary-soft">
                 Profil expérimenté
               </div>
               <div className="mt-1 text-lg font-bold text-fg">
@@ -777,7 +777,7 @@ export default async function CryptoPairPage({ params }: Props) {
               </p>
             </div>
             <div className="rounded-xl border border-border bg-surface p-4">
-              <div className="text-[11px] font-bold uppercase tracking-wider text-primary-soft">
+              <div className="text-xs font-bold uppercase tracking-wider text-primary-soft">
                 Long terme (5-10 ans)
               </div>
               <div className="mt-1 text-lg font-bold text-fg">

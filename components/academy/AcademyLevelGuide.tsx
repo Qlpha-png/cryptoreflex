@@ -111,7 +111,7 @@ export default function AcademyLevelGuide() {
       {/* Recommandation selon le niveau */}
       {hydrated && entry && (
         <div className="mt-5 rounded-xl border border-primary/30 bg-primary/5 p-5">
-          <p className="text-[11px] font-semibold uppercase tracking-wider text-primary-soft">
+          <p className="text-xs font-semibold uppercase tracking-wider text-primary-soft">
             Votre point de départ recommandé
           </p>
           <Link

@@ -67,7 +67,7 @@ export default function HomeLivePrices({ coins }: { coins: HomeCoin[] }) {
                     onError={() => setBroken((b) => ({ ...b, [c.id]: true }))}
                   />
                 ) : (
-                  <span aria-hidden="true" className="grid h-7 w-7 place-items-center rounded-full bg-elevated text-[10px] font-bold text-primary">
+                  <span aria-hidden="true" className="grid h-7 w-7 place-items-center rounded-full bg-elevated text-xs font-bold text-primary">
                     {c.symbol.slice(0, 3).toUpperCase()}
                   </span>
                 )}

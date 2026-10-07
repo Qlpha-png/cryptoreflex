@@ -105,7 +105,8 @@ export default function DecentralizationScore({ cryptoId, cryptoName }: Props) {
   return (
     <section id="decentralization" className="scroll-mt-24">
       <div className="flex items-start gap-3 flex-wrap">
-        <div className="flex items-center gap-3 flex-1 min-w-0">
+        {/* Base de 16rem : sous ~400 px la pastille de note passe sous le titre au lieu de l'écraser (jury B1 : « décentralisati / on » à 360 px). */}
+        <div className="flex items-center gap-3 flex-[1_1_16rem] min-w-0">
           <div className="shrink-0 grid place-items-center h-11 w-11 rounded-xl bg-primary/15 text-primary">
             <ShieldCheck className="h-5 w-5" />
           </div>
@@ -144,11 +145,11 @@ export default function DecentralizationScore({ cryptoId, cryptoName }: Props) {
             <div className="flex items-center justify-between gap-2">
               <div className="flex items-center gap-2 text-muted">
                 <c.Icon className="h-4 w-4" aria-hidden />
-                <span className="text-[11px] uppercase tracking-wider">
+                <span className="text-xs uppercase tracking-wider">
                   {c.label}
                 </span>
               </div>
-              <span className="text-[10px] font-mono text-muted">
+              <span className="text-xs font-mono text-muted">
                 {c.weight}%
               </span>
             </div>
@@ -167,7 +168,7 @@ export default function DecentralizationScore({ cryptoId, cryptoName }: Props) {
                 style={{ width: `${c.score * 10}%` }}
               />
             </div>
-            <p className="mt-2 text-[11px] text-muted leading-snug">{c.sub}</p>
+            <p className="mt-2 text-xs text-muted leading-snug">{c.sub}</p>
           </div>
         ))}
       </div>

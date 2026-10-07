@@ -140,24 +140,24 @@ function eur(n: number): string {
 function VerdictBadge({ verdict }: { verdict?: Verified["verdict"] }) {
   if (verdict === "fiable")
     return (
-      <span className="inline-flex items-center gap-1 rounded-md border border-accent-green/30 bg-accent-green/10 px-1.5 py-0.5 text-[10px] font-bold text-accent-green">
+      <span className="inline-flex items-center gap-1 rounded-md border border-accent-green/30 bg-accent-green/10 px-1.5 py-0.5 text-xs font-bold text-accent-green">
         <BadgeCheck className="h-3 w-3" /> Vérifié
       </span>
     );
   if (verdict === "douteux")
     return (
-      <span className="inline-flex items-center gap-1 rounded-md border border-primary-glow/30 bg-primary-glow/10 px-1.5 py-0.5 text-[10px] font-bold text-primary-soft">
+      <span className="inline-flex items-center gap-1 rounded-md border border-primary-glow/30 bg-primary-glow/10 px-1.5 py-0.5 text-xs font-bold text-primary-soft">
         <AlertTriangle className="h-3 w-3" /> À vérifier
       </span>
     );
   if (verdict === "indisponible")
     return (
-      <span className="inline-flex items-center gap-1 rounded-md border border-red-400/30 bg-red-400/10 px-1.5 py-0.5 text-[10px] font-bold text-danger-fg">
+      <span className="inline-flex items-center gap-1 rounded-md border border-red-400/30 bg-red-400/10 px-1.5 py-0.5 text-xs font-bold text-danger-fg">
         <Ban className="h-3 w-3" /> Fermé FR
       </span>
     );
   return (
-    <span className="inline-flex items-center gap-1 rounded-md border border-border bg-elevated/60 px-1.5 py-0.5 text-[10px] font-bold text-muted">
+    <span className="inline-flex items-center gap-1 rounded-md border border-border bg-elevated/60 px-1.5 py-0.5 text-xs font-bold text-muted">
       Non vérifiable
     </span>
   );
@@ -239,7 +239,7 @@ export default function ComparatifFraisPage() {
 
         {/* Header */}
         <header className="mt-6 max-w-3xl">
-          <div className="inline-flex items-center gap-2 rounded-full border border-accent-green/30 bg-accent-green/10 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-accent-green">
+          <div className="inline-flex items-center gap-2 rounded-full border border-accent-green/30 bg-accent-green/10 px-3 py-1 text-xs font-bold uppercase tracking-wider text-accent-green">
             <TrendingDown className="h-3.5 w-3.5" />
             Frais réels — vérifiés &amp; sourcés
           </div>
@@ -301,7 +301,7 @@ export default function ComparatifFraisPage() {
 
         {/* Exemple chiffré */}
         <section className="mt-6 rounded-2xl border border-primary/20 bg-primary/5 p-5">
-          <div className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-wider text-primary-soft">
+          <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-primary-soft">
             <Calculator className="h-3.5 w-3.5" /> Exemple concret — acheter 1 000 € de BTC
           </div>
           <p className="mt-2 text-sm text-fg/90">
@@ -344,7 +344,7 @@ export default function ComparatifFraisPage() {
                     key={r.id}
                     className={`border-t border-border align-top ${isBest ? "bg-accent-green/5" : ""}`}
                   >
-                    <td className="px-4 py-3 font-mono text-xs text-muted">{i + 1}</td>
+                    <td className="whitespace-nowrap px-4 py-3 font-mono text-xs text-muted">{i + 1}</td>
                     <td className="px-4 py-3">
                       <PlatformName
                         href={r.href}
@@ -362,13 +362,13 @@ export default function ComparatifFraisPage() {
                         )}
                         {r.name}
                         {isBest && (
-                          <span className="text-[10px] font-bold uppercase tracking-wider text-accent-green">
+                          <span className="text-xs font-bold uppercase tracking-wider text-accent-green">
                             #1
                           </span>
                         )}
                       </PlatformName>
                       {r.v?.model && (
-                        <div className="mt-1 text-[10px] uppercase tracking-wide text-muted">
+                        <div className="mt-1 text-xs uppercase tracking-wide text-muted">
                           {r.v.model === "exchange"
                             ? "Exchange"
                             : r.v.model === "courtier"
@@ -393,7 +393,7 @@ export default function ComparatifFraisPage() {
                         <VerdictBadge verdict={r.v?.verdict} />
                       </div>
                       {r.v?.note && (
-                        <p className="mt-1 max-w-md text-[11px] leading-snug text-muted">
+                        <p className="mt-1 max-w-md text-xs leading-snug text-muted">
                           {r.v.note}
                         </p>
                       )}
@@ -425,7 +425,7 @@ export default function ComparatifFraisPage() {
                         <span className="text-muted">—</span>
                       )}
                       {r.v?.date && (
-                        <div className="mt-0.5 text-[10px] text-muted">{fmtDateFr(r.v.date)}</div>
+                        <div className="mt-0.5 text-xs text-muted">{fmtDateFr(r.v.date)}</div>
                       )}
                     </td>
                     <td className="px-4 py-3 text-right">
@@ -451,7 +451,7 @@ export default function ComparatifFraisPage() {
         {/* Plateformes hors classement (fermées FR / CFD) */}
         {flagged.length > 0 && (
           <section className="mt-6 rounded-2xl border border-red-400/20 bg-red-400/5 p-5">
-            <div className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-wider text-danger-fg">
+            <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-danger-fg">
               <Ban className="h-3.5 w-3.5" /> Sorties du classement
             </div>
             <ul className="mt-3 space-y-2 text-sm text-fg/85">
@@ -520,7 +520,7 @@ export default function ComparatifFraisPage() {
             href="/comparatif/securite"
             className="rounded-2xl border border-border bg-surface p-5 hover:border-primary/40 transition-colors"
           >
-            <div className="text-[11px] font-bold uppercase tracking-wider text-muted">
+            <div className="text-xs font-bold uppercase tracking-wider text-muted">
               Aussi comparé sur Cryptoreflex
             </div>
             <div className="mt-2 text-base font-bold text-fg">
@@ -534,7 +534,7 @@ export default function ComparatifFraisPage() {
             href="/comparatif"
             className="rounded-2xl border border-border bg-surface p-5 hover:border-primary/40 transition-colors"
           >
-            <div className="text-[11px] font-bold uppercase tracking-wider text-muted">
+            <div className="text-xs font-bold uppercase tracking-wider text-muted">
               Hub comparatif
             </div>
             <div className="mt-2 text-base font-bold text-fg">
@@ -546,7 +546,7 @@ export default function ComparatifFraisPage() {
           </Link>
         </section>
 
-        <p className="mt-10 flex items-start gap-2 text-[11px] text-muted leading-relaxed">
+        <p className="mt-10 flex items-start gap-2 text-xs text-muted leading-relaxed">
           <Info className="mt-0.5 h-3.5 w-3.5 shrink-0" />
           <span>
             Frais re-vérifiés le {VERIFIED_AT} sur les grilles tarifaires
@@ -586,7 +586,7 @@ function Stat({
   };
   return (
     <div className={`rounded-2xl border p-4 ${styles[tone]}`}>
-      <div className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-wider opacity-80">
+      <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider opacity-80">
         {icon}
         {label}
       </div>

@@ -141,7 +141,7 @@ export default function PlatformCard({ platform, placement, index = 0 }: Props) 
           {/* Audit SEO/CRO P0 trust signal : badge MiCA · AMF visible
               above-the-fold = +12-18% CTR estimé (lève l'objection légalité). */}
           {micaLabel && (
-            <div className="mt-0.5 inline-flex items-center gap-1 text-[10px] font-mono font-bold text-emerald-300/90 uppercase tracking-wider">
+            <div className="mt-0.5 inline-flex items-center gap-1 text-xs font-mono font-bold text-emerald-300/90 uppercase tracking-wider">
               <ShieldCheck className="h-2.5 w-2.5" strokeWidth={2.5} aria-hidden="true" />
               {micaLabel}
             </div>
@@ -161,12 +161,12 @@ export default function PlatformCard({ platform, placement, index = 0 }: Props) 
                 className={`h-[14px] w-[14px] star-fill ${i < Math.round(rating) ? "fill-yellow-400 text-yellow-400 star-on" : "text-border"}`}
               />
             ))}
-            <span className="ml-1 text-[13px] font-bold tabular-nums text-fg-max/90" aria-hidden="true">
+            <span className="ml-1 text-xs font-bold tabular-nums text-fg-max/90" aria-hidden="true">
               {ratingFr}
             </span>
-            <span className="text-[11px] text-fg-max/60 font-normal" aria-hidden="true">/5</span>
+            <span className="text-xs text-fg-max/60 font-normal" aria-hidden="true">/5</span>
             {social && social.count != null && social.count > 0 && (
-              <span className="ml-1.5 text-[10px] text-fg-max/50" aria-hidden="true">
+              <span className="ml-1.5 text-xs text-fg-max/50" aria-hidden="true">
                 · {social.label} {socialRatingFr}/5 ({social.count.toLocaleString("fr-FR")} avis
                 {socialDate ? `, relevé le ${socialDate}` : ""})
               </span>
@@ -177,7 +177,7 @@ export default function PlatformCard({ platform, placement, index = 0 }: Props) 
 
       {/* Tagline (idealFor du JSON est plus actionnable que la tagline générique).
           Audit Mobile : hidden mobile pour gain hauteur (tagline = description riche desktop). */}
-      <p className="mt-3 text-[13px] leading-[1.55] text-fg-max/65 hidden sm:block">
+      <p className="mt-3 text-xs leading-[1.55] text-fg-max/65 hidden sm:block">
         {idealFor ? <><strong className="text-fg-max/90">Pour qui ?</strong> {idealFor}</> : tagline}
       </p>
 
@@ -185,7 +185,7 @@ export default function PlatformCard({ platform, placement, index = 0 }: Props) 
           Audit UX P0 : KPI implicite cherché par 70% des visiteurs. */}
       {fees.spotMaker != null && (
         <div className="mt-4 rounded-xl border border-l-2 border-l-accent-cyan border-accent-cyan/30 bg-accent-cyan/5 px-3 py-2">
-          <div className="text-[10px] text-accent-cyan font-semibold uppercase tracking-wider">
+          <div className="text-xs text-accent-cyan font-semibold uppercase tracking-wider">
             Frais spot
           </div>
           <div className="text-sm text-fg-max font-medium tabular-nums">
@@ -197,7 +197,7 @@ export default function PlatformCard({ platform, placement, index = 0 }: Props) 
       {/* Features list — Audit Visual : checkmarks gold pastille + Audit Mobile :
           features 3rd hidden mobile (gain hauteur). */}
       <ul
-        className="mt-4 space-y-2.5 text-[13px] text-fg-max/75 flex-1"
+        className="mt-4 space-y-2.5 text-xs text-fg-max/75 flex-1"
         aria-label={`Caractéristiques de ${name}`}
       >
         {features.map((f, idx) => (

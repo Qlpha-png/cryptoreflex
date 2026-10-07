@@ -185,7 +185,7 @@ export default function YieldStablecoinsPage() {
                       ({yields.length} plateformes)
                     </span>
                   </h2>
-                  <div className="text-[11px] text-muted">
+                  <div className="text-xs text-muted">
                     Trié par APY desc.
                   </div>
                 </header>
@@ -209,14 +209,14 @@ export default function YieldStablecoinsPage() {
                           <td className="px-3 py-3 font-semibold text-fg">
                             {y.platformName}
                             {y.notes && (
-                              <span className="block text-[11px] text-muted font-normal mt-0.5">
+                              <span className="block text-xs text-muted font-normal mt-0.5">
                                 {y.notes}
                               </span>
                             )}
                           </td>
                           <td className="px-3 py-3">
                             <span
-                              className={`inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[10px] font-bold ${
+                              className={`inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-xs font-bold ${
                                 y.regulation === "MiCA"
                                   ? "border-success/30 bg-success/10 text-success"
                                   : y.regulation === "PSAN"
@@ -243,7 +243,7 @@ export default function YieldStablecoinsPage() {
                           </td>
                           <td className="px-3 py-3">
                             <span
-                              className={`inline-flex items-center justify-center w-6 h-6 rounded-full font-mono text-[11px] font-bold ${
+                              className={`inline-flex items-center justify-center w-6 h-6 rounded-full font-mono text-xs font-bold ${
                                 y.risk <= 2
                                   ? "bg-success/15 text-success"
                                   : y.risk === 3
@@ -265,7 +265,7 @@ export default function YieldStablecoinsPage() {
                               <ExternalLink className="h-3 w-3" aria-hidden />
                             </a>
                             {isPaidYield(y.url) && (
-                              <span className="block text-[10px] text-muted">Publicité</span>
+                              <span className="block text-xs text-muted">Publicité</span>
                             )}
                           </td>
                         </tr>

@@ -295,7 +295,7 @@ export default function PriceChart({
         )}
       </div>
 
-      <p className="mt-3 text-[11px] text-muted">
+      <p className="mt-3 text-xs text-muted">
         {sourceInfo(seriesSource) ? `Données : ${sourceInfo(seriesSource)!.label}, ` : ""}devise {currency.toUpperCase()}, cache 1h.
       </p>
     </section>
@@ -402,7 +402,7 @@ function ChartSvg({
       {hovered && (
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute -top-2 rounded-lg border border-border bg-elevated/95 backdrop-blur px-2.5 py-1.5 text-[11px] font-mono text-fg shadow-lg"
+          className="pointer-events-none absolute -top-2 rounded-lg border border-border bg-elevated/95 backdrop-blur px-2.5 py-1.5 text-xs font-mono text-fg shadow-lg"
           style={{
             left: `calc(${(hovered.x / WIDTH) * 100}% - 50px)`,
             transform: "translateY(-100%)",
@@ -412,7 +412,7 @@ function ChartSvg({
           <div className="font-bold text-fg tabular-nums">
             {formatPrice(hovered.price, currency)}
           </div>
-          <div className="text-muted text-[10px]">
+          <div className="text-muted text-xs">
             {formatDate(hovered.t, period)}
           </div>
         </div>

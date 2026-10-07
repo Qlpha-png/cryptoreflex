@@ -300,7 +300,7 @@ function AnalysisCard({ article }: { article: TAArticleSummary }) {
     >
       {/* Badge "Aujourd'hui" pulse-strong si analyse du jour */}
       {today && (
-        <span className="absolute -top-2 left-4 inline-flex items-center gap-1 rounded-full bg-primary text-background text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 shadow-[0_4px_14px_-2px_rgb(var(--c-primary)/0.55)] badge-pulse-strong z-10 whitespace-nowrap">
+        <span className="absolute -top-2 left-4 inline-flex items-center gap-1 rounded-full bg-primary text-background text-xs font-bold uppercase tracking-wider px-2.5 py-0.5 shadow-[0_4px_14px_-2px_rgb(var(--c-primary)/0.55)] badge-pulse-strong z-10 whitespace-nowrap">
           <Sparkles className="h-2.5 w-2.5" strokeWidth={2.5} aria-hidden="true" focusable="false" />
           Aujourd&apos;hui
         </span>
@@ -319,7 +319,7 @@ function AnalysisCard({ article }: { article: TAArticleSummary }) {
           />
           <div className="min-w-0">
             <div className="font-bold text-sm text-fg truncate">{article.name}</div>
-            <div className="text-[11px] text-muted font-mono">{article.symbol}</div>
+            <div className="text-xs text-muted font-mono">{article.symbol}</div>
           </div>
         </div>
         <TrendBadge trend={article.trend} size="sm" />
@@ -338,10 +338,10 @@ function AnalysisCard({ article }: { article: TAArticleSummary }) {
       {/* RSI mini-bar avec label sémantique */}
       <div className="mt-3">
         <div className="flex items-center justify-between mb-1">
-          <span className="text-[10px] uppercase tracking-wide text-fg/65 font-semibold">
+          <span className="text-xs uppercase tracking-wide text-fg/65 font-semibold">
             RSI · {rsiLabel}
           </span>
-          <span className="text-[11px] font-mono font-semibold text-fg/85 tabular-nums">
+          <span className="text-xs font-mono font-semibold text-fg/85 tabular-nums">
             {fmtFr(rsi, 1)}
           </span>
         </div>
@@ -363,7 +363,7 @@ function AnalysisCard({ article }: { article: TAArticleSummary }) {
         </div>
       </div>
 
-      <footer className="mt-4 flex items-center justify-between text-[11px] text-fg/65">
+      <footer className="mt-4 flex items-center justify-between text-xs text-fg/65">
         <span className="inline-flex items-center gap-1">
           <Clock className="h-3 w-3" aria-hidden="true" focusable="false" />
           {formatDate(article.date)}

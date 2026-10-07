@@ -43,7 +43,7 @@ export default function CopyCompareLink({ url }: Props) {
 
   return (
     <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
-      <code className="block rounded-lg border border-border bg-surface px-3 py-2 text-[11px] text-muted truncate sm:max-w-md">
+      <code className="block rounded-lg border border-border bg-surface px-3 py-2 text-xs text-muted truncate sm:max-w-md">
         {url}
       </code>
       <button

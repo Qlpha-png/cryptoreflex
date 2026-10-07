@@ -42,9 +42,11 @@ export const ReadingProgressBar = dynamic(
   () => import("@/components/crypto-detail/ReadingProgressBar"),
   { ssr: false },
 );
+// B1 finitions : le fil d'Ariane arrivait après le JavaScript et poussait toute la fiche de 16 px (20 px avec text-xs à 14 px) :
+// CLS bureau 0,041 sur /cryptos/bitcoin (0,045 après B1b). La ligne est réservée dès le HTML (h-5 = 1,25rem = interligne de text-xs).
 export const StickyBreadcrumb = dynamic(
   () => import("@/components/crypto-detail/StickyBreadcrumb"),
-  { ssr: false },
+  { ssr: false, loading: () => <div className="h-5" aria-hidden="true" /> },
 );
 export const FloatingShareButton = dynamic(
   () => import("@/components/crypto-detail/FloatingShareButton"),

@@ -317,7 +317,7 @@ export default function DeclarationFiscaleCryptoPage() {
                 aria-hidden="true"
               />
               <div>
-                <span className="inline-flex items-center gap-1.5 rounded-full border border-warning/40 bg-warning/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-warning-fg">
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-warning/40 bg-warning/10 px-2 py-0.5 text-xs font-bold uppercase tracking-wider text-warning-fg">
                   Gratuit
                 </span>
                 <h3 className="mt-2 font-display font-bold text-lg text-fg">

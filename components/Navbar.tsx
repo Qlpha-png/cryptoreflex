@@ -350,7 +350,7 @@ export default function Navbar() {
                          focus-visible:ring-offset-2 focus-visible:ring-offset-background"
             >
               <UserCircle2 className="h-5 w-5" strokeWidth={1.75} aria-hidden="true" />
-              <span className="hidden lg:inline text-[12.5px] whitespace-nowrap">Mon compte</span>
+              <span className="hidden lg:inline text-xs whitespace-nowrap">Mon compte</span>
             </Link>
 
             {/* CTA primary — Audit SEO/CRO : "/quiz/plateforme" (KPI conversion)

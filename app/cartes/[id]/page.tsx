@@ -143,8 +143,9 @@ function CarteAVenir({ c, name, fiche }: { c: ReflexCard; name: string; fiche: s
           <span className="mx-2">/</span>
           <span className="text-fg/80">{name}</span>
         </nav>
-        <div className="mt-6 grid items-start gap-8 md:grid-cols-[288px,1fr] md:gap-12">
-          <div className="mx-auto md:mx-0">
+        <div className="mt-6 grid grid-cols-1 items-start gap-8 md:grid-cols-[288px,1fr] md:gap-12">
+          {/* B1 : sous 320 px, la carte (288 px) ne tient pas dans 248 px → zoom 0,86 sur la carte seule */}
+          <div className="mx-auto md:mx-0 max-[319px]:[zoom:0.86]">
             <CardVisual card={c} mode="back" day={0} width={288} />
           </div>
           <div>
@@ -258,9 +259,12 @@ export default async function CartePage({ params }: Props) {
           </nav>
           {isLaunched() && <InviteBanner name={name} />}
 
-          <div className="mt-6 grid gap-8 md:grid-cols-[288px,1fr] md:gap-12 items-start">
+          <div className="mt-6 grid grid-cols-1 gap-8 md:grid-cols-[288px,1fr] md:gap-12 items-start">
             <div className="mx-auto md:mx-0 md:sticky md:top-24">
-              <CardVisual card={cv} mode={revealed ? "card" : "slot"} day={day} width={288} chance={u ? chance : undefined} ft={ft} />
+              {/* B1 : sous 320 px, la carte (288 px) ne tient pas dans 248 px → zoom 0,86 sur la carte seule */}
+              <div className="max-[319px]:[zoom:0.86]">
+                <CardVisual card={cv} mode={revealed ? "card" : "slot"} day={day} width={288} chance={u ? chance : undefined} ft={ft} />
+              </div>
               {rare && (
                 <div className="mt-6 max-w-[288px] text-center">
                   <p className="text-xs font-semibold uppercase tracking-wide" style={{ color: rare.form === "myth" ? "#ff2d6f" : "#f7d774" }}>Sa version la plus rare</p>

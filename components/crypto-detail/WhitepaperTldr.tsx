@@ -85,13 +85,13 @@ export default function WhitepaperTldr({ cryptoId, cryptoName }: Props) {
         </div>
       </div>
 
-      <ol className="mt-6 grid gap-3 sm:grid-cols-2">
+      <ol className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
         {tldr.points.map((p, idx) => {
           const Icon = ICON_MAP[p.icon] ?? Lightbulb;
           return (
             <li
               key={`${p.title}-${idx}`}
-              className="rounded-2xl border border-border bg-surface p-4 sm:p-5 hover:border-primary/40 transition-colors flex gap-3"
+              className="rounded-2xl border border-border bg-surface p-4 sm:p-5 hover:border-primary/40 transition-colors flex max-[359px]:flex-col gap-3"
             >
               <div className="shrink-0">
                 <span
@@ -104,7 +104,7 @@ export default function WhitepaperTldr({ cryptoId, cryptoName }: Props) {
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2">
                   <Icon className="h-4 w-4 text-primary-soft shrink-0" aria-hidden />
-                  <h3 className="text-base font-bold text-fg truncate">{p.title}</h3>
+                  <h3 className="min-w-0 text-base font-bold text-fg break-words">{p.title}</h3>
                 </div>
                 <p className="mt-2 text-sm text-fg/80 leading-relaxed">
                   {p.description}

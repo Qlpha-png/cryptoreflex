@@ -281,7 +281,7 @@ export default function ApiPubliquePage() {
           <h1 className="mt-4 text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl">
             API publique Cryptoreflex
           </h1>
-          <p className="mt-4 max-w-3xl text-lg text-slate-300">
+          <p className="mt-4 max-w-[34em] text-lg text-slate-300">
             5 endpoints JSON sous licence{" "}
             <a
               href="https://creativecommons.org/licenses/by/4.0/deed.fr"
@@ -342,7 +342,7 @@ export default function ApiPubliquePage() {
 
               <div className="mt-4 overflow-x-auto rounded-lg border border-fg-max/5 bg-scrim/40 p-3 font-mono text-xs">
                 <div className="flex items-center gap-2 text-emerald-400">
-                  <span className="rounded bg-emerald-500/10 px-1.5 py-0.5 text-[10px] uppercase tracking-wide">
+                  <span className="rounded bg-emerald-500/10 px-1.5 py-0.5 text-xs uppercase tracking-wide">
                     GET
                   </span>
                   <span className="text-slate-200">
@@ -356,7 +356,7 @@ export default function ApiPubliquePage() {
                 <summary className="cursor-pointer text-slate-400 hover:text-slate-200">
                   Schéma de réponse
                 </summary>
-                <pre className="mt-2 overflow-x-auto rounded border border-fg-max/5 bg-scrim/40 p-3 font-mono text-[11px] text-slate-300">
+                <pre className="mt-2 overflow-x-auto rounded border border-fg-max/5 bg-scrim/40 p-3 font-mono text-xs text-slate-300">
                   <code>{ep.responseShape}</code>
                 </pre>
               </details>

@@ -120,7 +120,7 @@ function formatCell(value: CellValue): React.ReactNode {
       </span>
     );
   }
-  return <span className="font-mono text-sm text-fg-max/90">{value}</span>;
+  return <span className="whitespace-nowrap font-mono text-sm text-fg-max/90">{value}</span>;
 }
 
 export default function FiscalToolComparisonTable({
@@ -161,7 +161,7 @@ export default function FiscalToolComparisonTable({
                 >
                   {tool.name}
                   {tool.recommended && (
-                    <span className="ml-1.5 inline-flex items-center rounded-full bg-primary/20 px-1.5 py-0.5 text-[9px] font-bold text-primary-soft">
+                    <span className="ml-1.5 inline-flex items-center rounded-full bg-primary/20 px-1.5 py-0.5 text-xs font-bold text-primary-soft">
                       ★
                     </span>
                   )}
@@ -178,7 +178,7 @@ export default function FiscalToolComparisonTable({
                 >
                   {row.label}
                   {row.hint && (
-                    <span className="block mt-0.5 text-[11px] text-muted font-normal">
+                    <span className="block mt-0.5 text-xs text-muted font-normal">
                       {row.hint}
                     </span>
                   )}
@@ -280,7 +280,7 @@ export default function FiscalToolComparisonTable({
 
       {/* Mention de rémunération — 06/10/2026 : nomme les SEULS outils réellement partenaires (lib/partnerships.ts) ;
           avant, tous les liens (Koinly, CoinTracking compris) étaient annoncés comme rémunérés. */}
-      <p className="text-[11px] text-muted text-center">
+      <p className="text-xs text-muted text-center">
         {paidTools.length > 0
           ? `Publicité — ${paidTools.map((t) => t.name).join(", ")} : lien${paidTools.length > 1 ? "s" : ""} d'affiliation, Cryptoreflex perçoit une commission si vous souscrivez. ${
               paidTools.length < tools.length ? "Les autres liens mènent au site officiel de l'outil. " : ""

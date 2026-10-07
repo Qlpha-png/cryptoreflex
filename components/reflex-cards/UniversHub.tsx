@@ -136,7 +136,7 @@ export default function UniversHub({ accounts }: { accounts: boolean }) {
       <section className="py-10">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <h2 className="text-2xl font-bold sm:text-3xl">Six raretés, de la Commune à la Légendaire</h2>
-          <p className="mt-2 max-w-3xl text-fg/70">
+          <p className="mt-2 max-w-[34em] text-fg/70">
             La rareté d&apos;une carte, c&apos;est sa place dans sa catégorie (popularité, usage, histoire), jamais son prix. Chaque carte
             d&apos;un booster tire d&apos;abord une rareté, puis une catégorie, puis une carte au hasard parmi celles de cette catégorie et
             de cette rareté : une Commune crypto précise sort {oddsText(pCat("C", "crypto")).replace("1 carte sur", "1 fois sur")}, une
@@ -165,7 +165,7 @@ export default function UniversHub({ accounts }: { accounts: boolean }) {
       <section className="py-10">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <h2 className="flex items-center gap-2 text-2xl font-bold sm:text-3xl"><Crown className="h-6 w-6 text-primary-soft" /> Au-dessus des Légendaires</h2>
-          <p className="mt-2 max-w-3xl text-fg/70">
+          <p className="mt-2 max-w-[34em] text-fg/70">
             Les éditions spéciales ne se fabriquent pas : on les trouve en booster, ou jamais. Chacun des 8 chapitres a les siennes.
           </p>
           <div className="mt-6 grid gap-4 sm:grid-cols-3">
@@ -216,7 +216,7 @@ export default function UniversHub({ accounts }: { accounts: boolean }) {
       <section id="chapitres" className="scroll-mt-24 py-10">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <h2 className="text-2xl font-bold sm:text-3xl">Les 8 chapitres de l&apos;album</h2>
-          <p className="mt-2 max-w-3xl text-fg/70">
+          <p className="mt-2 max-w-[34em] text-fg/70">
             {fr(total)} cartes au total, toutes en jeu. Chaque chapitre a sa part des tirages : les petits chapitres (personnes,
             événements, entreprises, concepts) sortent bien plus souvent que leur taille ne le voudrait, pour qu&apos;un booster ne soit
             pas fait que de cryptos. Ouvrez un chapitre pour voir ses Légendaires et ses Ultra rares.

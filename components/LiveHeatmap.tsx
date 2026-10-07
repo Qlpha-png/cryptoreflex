@@ -653,7 +653,7 @@ export default function LiveHeatmap({
       {/* 06/10/2026 — sources réellement servies (champ `sources`), plus de « CoinGecko » en dur. */}
       <DataSourceLine
         items={coins}
-        className="mt-3 text-[11px] text-muted"
+        className="mt-3 text-xs text-muted"
         prefix="Prix en direct : flux Binance spot dans votre navigateur ; au chargement :"
         suffix={<>{" "}· Couleur interpolée selon la variation {periodLabel}. Cliquez sur une crypto pour ouvrir sa fiche.</>}
       />
@@ -693,7 +693,7 @@ function CellTooltip({
         textAlign: "left",
       }}
     >
-      <div style={{ fontSize: 12, fontWeight: 700, color: "rgb(var(--c-fg-max))" }}>
+      <div style={{ fontSize: 14, fontWeight: 700, color: "rgb(var(--c-fg-max))" }}>
         {coin.name}{" "}
         <span style={{ color: "rgb(var(--c-fg-4))", fontFamily: "ui-monospace" }}>
           {coin.symbol}
@@ -702,7 +702,7 @@ function CellTooltip({
       <div
         style={{
           marginTop: 2,
-          fontSize: 11,
+          fontSize: 14,
           color: "#cbd5e1",
           fontFamily: "ui-monospace",
         }}
@@ -713,7 +713,7 @@ function CellTooltip({
         <div
           style={{
             marginTop: 2,
-            fontSize: 11,
+            fontSize: 14,
             fontWeight: 700,
             fontFamily: "ui-monospace",
             color: change >= 0 ? "#34d399" : "#f87171",
@@ -760,7 +760,7 @@ function LiveStatusBadge({
         display: "inline-flex",
         alignItems: "center",
         gap: 6,
-        fontSize: 11,
+        fontSize: 14,
         fontWeight: 700,
         letterSpacing: "0.04em",
         color,

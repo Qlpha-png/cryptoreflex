@@ -171,7 +171,7 @@ export default function MobileBottomNav() {
                     className="pointer-events-none absolute top-2 left-1/2 ml-2.5 h-2 w-2 rounded-full bg-primary shadow-[0_0_8px_rgba(245,165,36,0.8)]"
                   />
                 )}
-                <span className={`relative ${label.length > 10 ? "text-[9.5px] tracking-[-0.01em]" : "text-[11px]"} leading-none whitespace-nowrap ${revenue ? "font-bold" : "font-medium"}`}>
+                <span className={`relative ${label.length > 10 ? "text-xs tracking-[-0.01em]" : "text-xs"} leading-none whitespace-nowrap ${revenue ? "font-bold" : "font-medium"}`}>
                   {label}
                 </span>
               </Link>
@@ -187,7 +187,7 @@ export default function MobileBottomNav() {
             className="relative flex w-full flex-col items-center justify-center gap-0.5 min-h-[56px] px-1 py-2 text-muted hover:text-fg active:text-fg transition-colors duration-fast"
           >
             <Menu className="relative h-[22px] w-[22px]" strokeWidth={1.85} aria-hidden="true" />
-            <span className="relative text-[11px] leading-none whitespace-nowrap font-medium">Menu</span>
+            <span className="relative text-xs leading-none whitespace-nowrap font-medium">Menu</span>
           </button>
         </li>
       </ul>

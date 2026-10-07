@@ -65,7 +65,7 @@ export default function UniversCarte({ c, chance }: { c: UCard; chance: number }
                 <div className="mt-5 text-xl font-extrabold leading-tight">{c.nom}</div>
                 <div className="mt-1 text-xs uppercase tracking-wide text-muted">{c.sym || sousFr(c) || label}</div>
                 <div className="mt-4 rounded-full border px-3 py-1 text-xs font-bold" style={{ borderColor: `${col}66`, background: `${col}1a`, color: col }}>{RNAME[c.r]} {PIPS[c.r]}</div>
-                <div className="mt-auto pt-4 text-[11px] text-muted">{label} · {fr(c.rank)} / {fr(total)}</div>
+                <div className="mt-auto pt-4 text-xs text-muted">{label} · {fr(c.rank)} / {fr(total)}</div>
               </div>
               <p className="mt-3 max-w-[288px] text-center text-xs text-muted">La carte complète, avec sa matière de rareté, se découvre dans le jeu.</p>
             </div>

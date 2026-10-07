@@ -374,7 +374,7 @@ export default function ROISimulator({
           <div className="flex items-baseline justify-between gap-3">
             <label
               htmlFor="roi-sim-amount"
-              className="text-[11px] uppercase tracking-wider text-muted font-semibold"
+              className="text-xs uppercase tracking-wider text-muted font-semibold"
             >
               Montant investi
             </label>
@@ -409,7 +409,7 @@ export default function ROISimulator({
             aria-label="Slider montant investi"
             className="mt-2 w-full accent-primary cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 rounded"
           />
-          <div className="mt-1 flex justify-between text-[10px] text-muted/80 font-mono">
+          <div className="mt-1 flex justify-between text-xs text-muted/80 font-mono">
             <span>{AMOUNT_MIN} €</span>
             <span>{AMOUNT_MAX.toLocaleString("fr-FR")} €</span>
           </div>
@@ -420,7 +420,7 @@ export default function ROISimulator({
           <div className="flex items-baseline justify-between gap-3">
             <label
               htmlFor="roi-sim-date"
-              className="text-[11px] uppercase tracking-wider text-muted font-semibold inline-flex items-center gap-1.5"
+              className="text-xs uppercase tracking-wider text-muted font-semibold inline-flex items-center gap-1.5"
             >
               <CalendarRange className="h-3 w-3" aria-hidden="true" />
               Date de départ
@@ -441,7 +441,7 @@ export default function ROISimulator({
             aria-valuetext={formattedStartDate}
             className="mt-2 w-full accent-primary cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 rounded"
           />
-          <div className="mt-1 flex justify-between text-[10px] text-muted/80 font-mono">
+          <div className="mt-1 flex justify-between text-xs text-muted/80 font-mono">
             <span>
               {new Date(effectiveFloor).toLocaleDateString("fr-FR", {
                 month: "short",
@@ -454,7 +454,7 @@ export default function ROISimulator({
 
         {/* Stratégie */}
         <div>
-          <div className="text-[11px] uppercase tracking-wider text-muted font-semibold inline-flex items-center gap-1.5">
+          <div className="text-xs uppercase tracking-wider text-muted font-semibold inline-flex items-center gap-1.5">
             <Repeat className="h-3 w-3" aria-hidden="true" />
             Stratégie d&apos;achat
           </div>
@@ -525,13 +525,13 @@ export default function ROISimulator({
       {/* Footer disclaimers */}
       <div className="mt-4 space-y-1.5">
         {clamped && (
-          <p className="text-[11px] text-warning-fg leading-snug inline-flex items-start gap-1.5">
+          <p className="text-xs text-warning-fg leading-snug inline-flex items-start gap-1.5">
             <Info className="h-3 w-3 mt-0.5 shrink-0" aria-hidden="true" />
             Données limitées par CoinGecko free tier — résultat indicatif sur la
             période disponible.
           </p>
         )}
-        <p className="text-[11px] text-muted leading-snug">
+        <p className="text-xs text-muted leading-snug">
           Les performances passées ne préjugent pas des performances futures.
           Calcul basé sur les prix CoinGecko en EUR. Action vs crypto =
           volatilité différente : la prime de risque crypto se paye en stress
@@ -570,7 +570,7 @@ function StrategyButton({
       }`}
     >
       <div className="text-xs sm:text-sm font-bold leading-tight">{label}</div>
-      <div className="text-[10px] sm:text-[11px] text-muted leading-tight mt-0.5">
+      <div className="text-xs sm:text-xs text-muted leading-tight mt-0.5">
         {sub}
       </div>
     </button>
@@ -608,7 +608,7 @@ function ResultBlock({
   return (
     <div className="grid gap-5 sm:grid-cols-[1fr_auto] sm:gap-6 items-center">
       <div className="min-w-0">
-        <div className="text-[11px] uppercase tracking-wider text-muted">
+        <div className="text-xs uppercase tracking-wider text-muted">
           Valeur aujourd&apos;hui ({strategyLabel} depuis {startDate})
         </div>
         <div className="mt-1 flex items-baseline gap-2 flex-wrap">
@@ -646,7 +646,7 @@ function ResultBlock({
             </span>
           </div>
           {sp500 && (
-            <div className="col-span-2 mt-1 text-[11px] text-muted/90">
+            <div className="col-span-2 mt-1 text-xs text-muted/90">
               À titre de comparaison, le S&amp;P 500 aurait fait
               ~+{sp500.roiPct}&nbsp;% sur ~{sp500.years} an
               {sp500.years > 1 ? "s" : ""}.

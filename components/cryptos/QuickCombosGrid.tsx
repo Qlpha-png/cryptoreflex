@@ -75,7 +75,7 @@ export default function QuickCombosGrid() {
       <div className="mt-6 space-y-6">
         {Array.from(byCategory.entries()).map(([cat, combos]) => (
           <div key={cat}>
-            <h3 className="text-[11px] font-bold uppercase tracking-wider text-muted">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-muted">
               {COMBO_CATEGORY_LABELS[cat]}
             </h3>
             <ul className="mt-2 grid gap-3 sm:grid-cols-2">
@@ -127,10 +127,10 @@ function ComboCard({ combo }: { combo: QuickCombo }) {
               aria-hidden="true"
             />
           </div>
-          <p className="mt-1 text-[11px] text-muted line-clamp-2">
+          <p className="mt-1 text-xs text-muted line-clamp-2">
             {combo.subtitle}
           </p>
-          <div className="mt-2 font-mono text-[10px] text-fg/70 truncate">
+          <div className="mt-2 font-mono text-xs text-fg/70 truncate">
             {symbols}
           </div>
         </div>

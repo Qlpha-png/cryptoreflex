@@ -136,7 +136,7 @@ export default function VsHub() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Hero */}
         <header className="text-center mb-12">
-          <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/5 px-3 py-1 text-[10px] font-mono font-bold text-primary uppercase tracking-wider mb-4">
+          <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/5 px-3 py-1 text-xs font-mono font-bold text-primary uppercase tracking-wider mb-4">
             <Swords className="h-3 w-3" aria-hidden="true" />
             {fmtCount(totalPairs)} duels possibles
           </span>
@@ -209,7 +209,7 @@ export default function VsHub() {
                     <li key={d.href}>
                       <Link
                         href={d.href}
-                        className="inline-flex items-center rounded-md border border-border/70 bg-elevated/40 px-2 py-0.5 text-[11px] font-medium text-fg/75 hover:border-primary/40 hover:text-primary-soft transition-colors"
+                        className="inline-flex items-center rounded-md border border-border/70 bg-elevated/40 px-2 py-0.5 text-xs font-medium text-fg/75 hover:border-primary/40 hover:text-primary-soft transition-colors"
                         aria-label={`Comparer ${c.name} contre ${d.name}`}
                       >
                         vs {d.label}

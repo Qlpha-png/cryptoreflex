@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import dynamic from "next/dynamic";
-import { Inter, JetBrains_Mono, Space_Grotesk } from "next/font/google";
+import { JetBrains_Mono, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import MobileBottomNav from "@/components/MobileBottomNav";
@@ -86,13 +86,19 @@ if (typeof window === "undefined") {
   logEnvValidationOnce();
 }
 
-// Fonts auto-hébergées via next/font (zéro request vers fonts.googleapis.com).
-// `display: swap` évite le FOIT, `variable` expose les --font-* à Tailwind.
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-sans",
-  display: "swap",
-});
+// Lot B1 (migration C+) : Inter et Newsreader sont auto-hébergées dans public/fonts/cplus-v1/ (fichiers du kit,
+// @font-face + replis mesurés dans app/styles/tokens.css, en-tête immuable dans next.config.js), sans préchargement
+// (voir F1 plus bas). next/font Inter est retiré : la variable --font-sans est posée par tokens.css.
+// Space Grotesk et JetBrains Mono restent ici (next/font, zéro requête vers fonts.googleapis.com) : les cartes Reflex
+// lisent --font-display / --font-mono (reflex-cards.css) jusqu'au lot B14 ; JetBrains Mono sert aussi le code.
+// B1 finitions F1 (mesuré, mobile bridé 4G simulée + CPU x4, 3 passes alternées, 6 pages du budget, même build, document
+// intercepté de la même façon pour toutes les variantes ; finitions/ab-precharge.mjs) : AUCUNE police n'est préchargée.
+// LCP médian contre HEAD : sans préchargement -124 à +20 ms ; Inter seule +128 à +240 ms ; Inter + Newsreader +332 à +640 ms
+// (106 Ko de polices concurrencent le CSS sur 1,6 Mbit/s). Le saut de mise en page à l'arrivée des polices est tenu par les
+// replis mesurés de tokens.css et par les titres en Newsreader 500 / 600 (le calculateur : CLS 0,001 sans préchargement).
+// Jury B1 ronde 2 : des lignes proches de la largeur du conteneur changeaient quand même de nombre de lignes à l'arrivée
+// d'Inter (CLS 0,17-0,22 sur des articles et actus à 390-412 px) → Inter et Newsreader en font-display: optional
+// (tokens.source.mjs) : la police de la page ne change plus après le premier rendu.
 // Lighthouse perf audit 26/04/2026 (Agent Mobile 2) :
 // 4 woff2 chargés en High prio retardaient le LCP de ~1500ms.
 // JetBrains_Mono = utilisé seulement dans les blocs <code> (jamais above-fold).
@@ -279,7 +285,7 @@ export default function RootLayout({
   return (
     <html
       lang="fr"
-      className={`${inter.variable} ${mono.variable} ${display.variable}`}
+      className={`${mono.variable} ${display.variable}`}
       // BATCH 44f (2026-05-03) — fix bug clic mort sur fiches crypto dont le
       // nom matche une wallet extension (ETH=MetaMask, SOL=Phantom). L'extension
       // injecte un <script> dans <html>/<body> pendant l'hydration React, ce
@@ -298,6 +304,7 @@ export default function RootLayout({
             data-theme="light" que sous l'interrupteur d'essai (?apparence=essai-clair), sans effet visible tant
             que Papier n'existe pas. Détail et tests : lib/theme/anti-flash.ts. CSP : script-src 'unsafe-inline'. */}
         <script dangerouslySetInnerHTML={{ __html: SCRIPT_AVANT_AFFICHAGE }} />
+        {/* Lot B1 finitions F1 : pas de <link rel="preload"> sur les polices (mesuré plus lent, voir plus haut). */}
         {/* Lighthouse perf audit 26/04/2026 (Agent Mobile 2) win #2 :
             preconnect aux CDN tiers utilises above-fold => -100ms LCP.
             CoinGecko a 2 CDNs distincts : assets.coingecko.com (logos legacy)

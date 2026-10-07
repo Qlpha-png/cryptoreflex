@@ -498,22 +498,22 @@ export default function CommandPalette() {
           </Command.List>
 
           {/* Footer raccourcis clavier — minimal, juste pour rappel */}
-          <div className="flex items-center justify-between gap-3 border-t border-border/60 px-4 py-2 text-[11px] text-muted/80">
+          <div className="flex items-center justify-between gap-3 border-t border-border/60 px-4 py-2 text-xs text-muted/80">
             <div className="flex items-center gap-3">
               <span className="inline-flex items-center gap-1">
-                <kbd className="inline-flex items-center justify-center h-4 px-1 rounded bg-background/60 border border-border/60 font-mono text-[10px]">
+                <kbd className="inline-flex items-center justify-center h-4 px-1 rounded bg-background/60 border border-border/60 font-mono text-xs">
                   ↑↓
                 </kbd>
                 <span>nav</span>
               </span>
               <span className="inline-flex items-center gap-1">
-                <kbd className="inline-flex items-center justify-center h-4 px-1 rounded bg-background/60 border border-border/60 font-mono text-[10px]">
+                <kbd className="inline-flex items-center justify-center h-4 px-1 rounded bg-background/60 border border-border/60 font-mono text-xs">
                   ↵
                 </kbd>
                 <span>exécuter</span>
               </span>
               <span className="inline-flex items-center gap-1">
-                <kbd className="inline-flex items-center justify-center h-4 px-1 rounded bg-background/60 border border-border/60 font-mono text-[10px]">
+                <kbd className="inline-flex items-center justify-center h-4 px-1 rounded bg-background/60 border border-border/60 font-mono text-xs">
                   Esc
                 </kbd>
                 <span>fermer</span>
@@ -543,7 +543,7 @@ function GroupHeading({
   count?: number;
 }) {
   return (
-    <div className="px-3 pt-2 pb-1 text-[11px] uppercase tracking-wider text-muted/80 font-semibold flex items-center gap-1.5">
+    <div className="px-3 pt-2 pb-1 text-xs uppercase tracking-wider text-muted/80 font-semibold flex items-center gap-1.5">
       {icon}
       <span>{label}</span>
       {typeof count === "number" && (

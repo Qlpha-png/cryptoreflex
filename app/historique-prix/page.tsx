@@ -74,7 +74,7 @@ export default function HistoriquePrixHub() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Hero */}
         <header className="text-center mb-12">
-          <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/5 px-3 py-1 text-[10px] font-mono font-bold text-primary uppercase tracking-wider mb-4">
+          <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/5 px-3 py-1 text-xs font-mono font-bold text-primary uppercase tracking-wider mb-4">
             <Calendar className="h-3 w-3" aria-hidden="true" />
             {PAGE_COUNT} pages historiques
           </span>
@@ -126,7 +126,7 @@ export default function HistoriquePrixHub() {
                     <li key={year}>
                       <Link
                         href={`/historique-prix/${id}/${year}`}
-                        className="inline-block rounded-md border border-border bg-background/60 px-2 py-0.5 text-[11px] font-mono text-fg/75 hover:border-primary/50 hover:text-primary transition-colors"
+                        className="inline-block rounded-md border border-border bg-background/60 px-2 py-0.5 text-xs font-mono text-fg/75 hover:border-primary/50 hover:text-primary transition-colors"
                         aria-label={`Historique ${c.name} ${year}`}
                       >
                         {year}

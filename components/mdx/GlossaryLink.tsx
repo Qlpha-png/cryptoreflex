@@ -50,11 +50,11 @@ export default function GlossaryLink({
           role="tooltip"
           className="not-prose absolute left-0 top-full z-30 mt-1.5 block w-72 max-w-[78vw] rounded-xl border border-border bg-surface p-3 text-left text-xs font-normal not-italic leading-relaxed text-fg/85 shadow-xl"
         >
-          <span className="mb-1 block text-[13px] font-semibold text-fg">
+          <span className="mb-1 block text-xs font-semibold text-fg">
             {term}
           </span>
           {definition}
-          <span className="mt-1.5 block text-[11px] text-primary-soft">
+          <span className="mt-1.5 block text-xs text-primary-soft">
             Cliquer pour la définition complète →
           </span>
         </span>

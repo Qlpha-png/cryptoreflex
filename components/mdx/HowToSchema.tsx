@@ -102,7 +102,7 @@ export default function HowToSchema({
         ))}
       </ol>
 
-      <p className="mt-6 inline-flex items-center gap-1.5 text-[11px] text-muted">
+      <p className="mt-6 inline-flex items-center gap-1.5 text-xs text-muted">
         <CheckCircle2 className="h-3 w-3 text-accent-green" />
         Procédure indexée Google (HowTo schema)
       </p>

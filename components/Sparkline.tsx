@@ -136,7 +136,7 @@ export default function Sparkline({
       </svg>
       {showLast && (
         <span
-          className="text-[11px] font-mono font-semibold tabular-nums"
+          className="text-xs font-mono font-semibold tabular-nums"
           style={{ color: stroke }}
         >
           {variationLabel}

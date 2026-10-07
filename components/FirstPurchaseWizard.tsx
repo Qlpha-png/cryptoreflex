@@ -573,7 +573,7 @@ function Step3Platform({
                       {fmtNb(p.scoring.global)}/5
                     </span>
                     {p.badge && (
-                      <span className="text-[10px] uppercase tracking-wider text-primary-soft">
+                      <span className="text-xs uppercase tracking-wider text-primary-soft">
                         {p.badge}
                       </span>
                     )}
@@ -725,7 +725,7 @@ function PaymentOption({
           <h3 className="font-bold text-lg text-fg">{title}</h3>
         </div>
         {recommended && (
-          <span className="badge-info text-[10px]">
+          <span className="badge-info text-xs">
             <Sparkles className="h-3 w-3" aria-hidden="true" />
             Recommandé
           </span>
@@ -883,7 +883,7 @@ function RecapRow({
   return (
     <li className="flex items-center justify-between gap-3 rounded-xl border border-border bg-elevated/30 px-4 py-3">
       <div className="min-w-0">
-        <div className="text-[11px] uppercase tracking-wider text-muted">{label}</div>
+        <div className="text-xs uppercase tracking-wider text-muted">{label}</div>
         <div className="text-sm font-semibold text-fg truncate">{value}</div>
       </div>
       <button

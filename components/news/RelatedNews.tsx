@@ -79,7 +79,7 @@ function RelatedCard({ news }: { news: NewsSummary }) {
 
   return (
     <article className="group relative flex h-full flex-col gap-2 rounded-xl border border-border bg-surface p-4 transition-colors hover:border-primary/40">
-      <span className="inline-flex w-fit items-center rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-primary-glow ring-1 ring-primary/20">
+      <span className="inline-flex w-fit items-center rounded-full bg-primary/10 px-2 py-0.5 text-xs font-semibold uppercase tracking-wider text-primary-glow ring-1 ring-primary/20">
         {catLabel}
       </span>
       <h3 className="text-sm font-semibold leading-snug text-fg">
@@ -93,7 +93,7 @@ function RelatedCard({ news }: { news: NewsSummary }) {
           {news.title}
         </Link>
       </h3>
-      <div className="mt-auto flex items-center justify-between gap-2 pt-2 text-[11px] text-muted">
+      <div className="mt-auto flex items-center justify-between gap-2 pt-2 text-xs text-muted">
         <span className="font-medium text-fg/70">{news.source}</span>
         {relDate && (
           <time dateTime={news.date} className="font-mono">

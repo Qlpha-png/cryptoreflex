@@ -378,7 +378,7 @@ export default function PortfolioView() {
           {lastUpdateLabel && (
             <>
               {" · "}
-              <span className="font-mono text-[12px]">
+              <span className="font-mono text-xs">
                 MAJ {lastUpdateLabel}
               </span>
             </>
@@ -580,14 +580,14 @@ function StatCard({
           : "text-fg";
   return (
     <div className="rounded-xl border border-border bg-surface p-4">
-      <div className="text-[11px] uppercase tracking-wider text-muted">
+      <div className="text-xs uppercase tracking-wider text-muted">
         {label}
       </div>
       <div className={`mt-1.5 text-xl font-bold tabular-nums ${valueClass}`}>
         {value}
       </div>
       {subtitle && (
-        <div className="mt-0.5 text-[11px] text-muted font-mono">
+        <div className="mt-0.5 text-xs text-muted font-mono">
           {subtitle}
         </div>
       )}
@@ -679,7 +679,7 @@ function HoldingRow({
               )}
               {`${up ? "+" : ""}${formatEur(gain)}`}
             </span>
-            <span className="text-[10px] opacity-80">
+            <span className="text-xs opacity-80">
               {`${up ? "+" : ""}${fmtFr(pct, 2)}%`}
             </span>
           </span>
@@ -748,7 +748,7 @@ function HoldingCardMobile({
           >
             {holding.name}
           </Link>
-          <div className="text-[11px] text-muted font-mono uppercase">
+          <div className="text-xs text-muted font-mono uppercase">
             {holding.symbol}
           </div>
         </div>
@@ -773,7 +773,7 @@ function HoldingCardMobile({
         </div>
       </div>
 
-      <div className="mt-3 grid grid-cols-3 gap-2 text-[11px] border-t border-border/50 pt-3">
+      <div className="mt-3 grid grid-cols-3 gap-2 text-xs border-t border-border/50 pt-3">
         <div>
           <div className="text-muted uppercase tracking-wider">Qté</div>
           <div className="font-mono text-fg/90 mt-0.5 truncate">
@@ -796,7 +796,7 @@ function HoldingCardMobile({
 
       {price?.sparkline7d && price.sparkline7d.length > 1 && (
         <div className="mt-3 flex items-center justify-between gap-2 border-t border-border/50 pt-2">
-          <span className="text-[10px] uppercase tracking-wider text-muted">
+          <span className="text-xs uppercase tracking-wider text-muted">
             7 jours
           </span>
           <Sparkline data={price.sparkline7d} width={120} height={26} showLast />

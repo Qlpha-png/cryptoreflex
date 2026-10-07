@@ -41,7 +41,7 @@ export default function WhereToBuy({ cryptoName, platformNames }: Props) {
     return (
       <section id="acheter" className="scroll-mt-24">
         <h2 className="text-2xl sm:text-3xl font-bold tracking-tight">Où acheter {cryptoName} en France ?</h2>
-        <p className="mt-2 text-sm text-muted max-w-3xl">
+        <p className="mt-2 text-sm text-muted max-w-[34em]">
           {note
             ? `${note}.`
             : `À notre connaissance, aucune plateforme agréée MiCA avec un accès à la France ne propose ${cryptoName} aujourd'hui.`}{" "}
@@ -67,7 +67,7 @@ export default function WhereToBuy({ cryptoName, platformNames }: Props) {
       <h2 className="text-2xl sm:text-3xl font-bold tracking-tight">
         Où acheter {cryptoName} en France ?
       </h2>
-      <p className="mt-2 text-sm text-muted max-w-3xl">
+      <p className="mt-2 text-sm text-muted max-w-[34em]">
         Plateformes agréées MiCA avec un accès à la France (registre de l&apos;ESMA) qui listent{" "}
         {cryptoName}, et protocoles décentralisés le cas échéant. Ouvrez un compte directement depuis Cryptoreflex
         {anyPaid ? " (les liens marqués « Publicité » sont rémunérés, sans surcoût pour vous)" : ""}.
@@ -79,7 +79,7 @@ export default function WhereToBuy({ cryptoName, platformNames }: Props) {
         ))}
       </div>
 
-      <p className="mt-4 text-[11px] text-muted leading-relaxed">
+      <p className="mt-4 text-xs text-muted leading-relaxed">
         {anyPaid ? (
           <>
             Seuls les liens marqués « Publicité » sont rémunérés (affiliation ou
@@ -117,7 +117,7 @@ function PlatformRow({
               Protocole décentralisé : vous gardez vos clés, pas d&apos;agrément MiCA
             </div>
           </div>
-          <span className="text-[11px] uppercase tracking-wider text-muted">
+          <span className="text-xs uppercase tracking-wider text-muted">
             DEX
           </span>
         </div>
@@ -128,22 +128,22 @@ function PlatformRow({
   const p = platform;
   return (
     <div className="rounded-2xl border border-border bg-surface p-5 hover:border-primary/40 transition-colors flex flex-col">
-      <div className="flex items-start justify-between gap-3">
+      <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="min-w-0 flex items-start gap-3">
           <PlatformLogo id={p.id} name={p.name} size={40} />
           <div className="min-w-0">
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
             <h3 className="text-base font-bold text-fg">{p.name}</h3>
             {p.mica.micaCompliant && (
               <span
-                className="inline-flex items-center gap-1 rounded-full border border-accent-green/30 bg-accent-green/10 px-2 py-0.5 text-[10px] font-semibold text-accent-green"
+                className="inline-flex shrink-0 items-center gap-1 whitespace-nowrap rounded-full border border-accent-green/30 bg-accent-green/10 px-2 py-0.5 text-xs font-semibold text-accent-green"
                 title="Plateforme conforme à la régulation européenne MiCA"
               >
                 <ShieldCheck className="h-3 w-3" /> MiCA
               </span>
             )}
           </div>
-          <p className="mt-1 text-xs text-muted line-clamp-2">{p.tagline}</p>
+          <p className="mt-1 text-xs text-muted">{p.tagline}</p>
           </div>
         </div>
         <div className="shrink-0 text-right">
@@ -152,7 +152,7 @@ function PlatformRow({
             <span className="font-mono font-semibold">{p.scoring.global.toLocaleString("fr-FR", { minimumFractionDigits: 1, maximumFractionDigits: 1 })}</span>
             <span className="text-muted">/5</span>
           </div>
-          <div className="mt-1 text-[10px] text-muted">Frais {feeShort(p)}</div>
+          <div className="mt-1 text-xs text-muted">Frais {feeShort(p)}</div>
         </div>
       </div>
 
@@ -185,7 +185,7 @@ function PlatformRow({
         </Link>
       </div>
       {/* 06/10/2026 : mention sous CE lien, et seulement s'il est réellement rémunéré (bon type). */}
-      <PaidLinkCaption platformId={p.id} href={p.affiliateUrl} className="mt-1.5 block text-[11px] text-muted underline hover:text-fg" />
+      <PaidLinkCaption platformId={p.id} href={p.affiliateUrl} className="mt-1.5 block text-xs text-muted underline hover:text-fg" />
     </div>
   );
 }

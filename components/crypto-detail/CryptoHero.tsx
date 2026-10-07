@@ -168,10 +168,12 @@ export default function CryptoHero({
               )}
             </div>
           </div>
-          <div className="flex items-center gap-2">
+          {/* B1 reprise : sous sm, la variation a sa propre ligne : à 390 px le prix et la variation tenaient côte à côte avec le repli
+              et plus avec Inter (ligne de 60 → 106 px à la bascule de police, CLS 0,05 de toute la fiche). */}
+          <div className="flex w-full flex-wrap items-center gap-x-2 gap-y-1 sm:w-auto">
             {hasLive ? (
               <span
-                className={`inline-flex items-center gap-1 rounded-lg px-2.5 py-1 text-sm font-semibold ${
+                className={`inline-flex items-center gap-1 whitespace-nowrap rounded-lg px-2.5 py-1 text-sm font-semibold ${
                   positive
                     ? "bg-accent-green/10 text-accent-green border border-accent-green/30"
                     : "bg-accent-rose/10 text-danger-fg border border-accent-rose/30"
@@ -184,7 +186,7 @@ export default function CryptoHero({
               <span className="text-sm text-muted">Variation 24h indisponible</span>
             )}
             {hasLive && detail?.priceChange7d !== null && detail?.priceChange7d !== undefined && (
-              <span className="text-xs text-muted">
+              <span className="whitespace-nowrap text-xs text-muted">
                 7j :{" "}
                 <span className={positive7d ? "text-accent-green" : "text-danger-fg"}>
                   {formatPct(detail.priceChange7d)}
@@ -221,7 +223,7 @@ export default function CryptoHero({
                   },
                 },
               ]}
-              className="mt-2 text-[11px] text-muted"
+              className="mt-2 text-xs text-muted"
               suffix="."
             />
           )}

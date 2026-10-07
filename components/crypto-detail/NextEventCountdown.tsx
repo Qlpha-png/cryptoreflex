@@ -116,26 +116,26 @@ export default function NextEventCountdown({
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 flex-wrap">
             <span
-              className={`inline-flex items-center gap-1 rounded-md border px-2 py-0.5 text-[10px] font-mono font-bold uppercase tracking-wider ${palette}`}
+              className={`inline-flex items-center gap-1 rounded-md border px-2 py-0.5 text-xs font-mono font-bold uppercase tracking-wider ${palette}`}
             >
               <Clock className="h-3 w-3" aria-hidden="true" />
               {typeLabel}
             </span>
             <h3
               id="next-event-countdown-title"
-              className="text-base sm:text-lg font-bold text-fg truncate"
+              className="text-base sm:text-lg font-bold text-fg break-words"
             >
               {eventTitle}
             </h3>
           </div>
           {eventDescription && (
-            <p className="mt-1 text-[12px] text-muted">{eventDescription}</p>
+            <p className="mt-1 text-xs text-muted">{eventDescription}</p>
           )}
         </div>
         {detailsUrl && (
           <Link
             href={detailsUrl}
-            className="text-[12px] font-semibold text-primary hover:text-primary-glow inline-flex items-center gap-1 shrink-0"
+            className="text-xs font-semibold text-primary hover:text-primary-glow inline-flex items-center gap-1 shrink-0"
           >
             Détails
             <ExternalLink className="h-3 w-3" aria-hidden="true" />
@@ -193,7 +193,7 @@ function Cell({
       >
         {display}
       </div>
-      <div className="mt-0.5 text-[10px] uppercase tracking-wider text-muted font-semibold">
+      <div className="mt-0.5 text-xs uppercase tracking-wider text-muted font-semibold">
         {label}
       </div>
     </div>

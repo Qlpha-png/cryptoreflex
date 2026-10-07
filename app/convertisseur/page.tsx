@@ -67,7 +67,7 @@ export default function ConvertisseurHub() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Hero */}
         <header className="text-center mb-12">
-          <span className="inline-flex items-center gap-1.5 rounded-full border border-success-border bg-success-soft px-3 py-1 text-[10px] font-mono font-bold text-success-fg uppercase tracking-wider mb-4">
+          <span className="inline-flex items-center gap-1.5 rounded-full border border-success-border bg-success-soft px-3 py-1 text-xs font-mono font-bold text-success-fg uppercase tracking-wider mb-4">
             <Globe className="h-3 w-3" aria-hidden="true" />
             Taux du marché en direct
           </span>

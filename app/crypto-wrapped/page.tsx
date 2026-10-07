@@ -148,7 +148,7 @@ export default function CryptoWrappedPage() {
 
         {/* Hero */}
         <header className="mt-6 max-w-3xl">
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/15 border border-primary/30 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-primary-soft">
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/15 border border-primary/30 px-3 py-1 text-xs font-bold uppercase tracking-wider text-primary-soft">
             <Sparkles className="h-3 w-3" aria-hidden /> En préparation
           </span>
           <h1 className="mt-4 text-4xl sm:text-6xl font-extrabold tracking-tight">
@@ -199,7 +199,7 @@ export default function CryptoWrappedPage() {
                 >
                   <Icon className="h-5 w-5" aria-hidden />
                 </div>
-                <div className="mt-3 text-[10px] uppercase tracking-wider text-muted font-bold">
+                <div className="mt-3 text-xs uppercase tracking-wider text-muted font-bold">
                   {eyebrow}
                 </div>
                 <h3 className="mt-1 text-base font-bold text-fg leading-tight">
@@ -238,7 +238,7 @@ export default function CryptoWrappedPage() {
               S&apos;inscrire à la newsletter
             </Link>
           </div>
-          <p className="mt-4 text-[11px] text-muted">
+          <p className="mt-4 text-xs text-muted">
             Crypto Wrapped est gratuit pour tous les utilisateurs Cryptoreflex.
           </p>
         </section>

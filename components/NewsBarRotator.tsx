@@ -85,7 +85,7 @@ export default function NewsBarRotator({ news }: Props) {
       </div>
       {/* Indicateur position discret (X de Y) */}
       <span
-        className="hidden md:inline-block ml-3 shrink-0 text-[10px] text-fg/60 font-mono tabular-nums"
+        className="hidden md:inline-block ml-3 shrink-0 text-xs text-fg/60 font-mono tabular-nums"
         aria-hidden="true"
       >
         {idx + 1}/{news.length}
@@ -100,18 +100,18 @@ function NewsItemLink({ item }: { item: NewsItem }) {
       href={item.link}
       target="_blank"
       rel="noopener nofollow ugc"
-      className="group inline-flex items-center gap-2 max-w-full text-[13px] text-fg/85
+      className="group inline-flex items-center gap-2 max-w-full text-xs text-fg/85
                  hover:text-fg transition-colors duration-fast
                  focus:outline-none focus-visible:ring-2 focus-visible:ring-primary
                  focus-visible:ring-offset-2 focus-visible:ring-offset-elevated rounded"
     >
-      <span className="text-[10px] uppercase tracking-wider text-fg/55 font-mono shrink-0">
+      <span className="text-xs uppercase tracking-wider text-fg/55 font-mono shrink-0">
         {item.source}
       </span>
       <span className="text-fg/85 group-hover:text-fg max-w-[40ch] truncate">
         {item.title}
       </span>
-      <span className="text-[11px] text-fg/55 shrink-0">
+      <span className="text-xs text-fg/55 shrink-0">
         · {formatRelativeFr(item.pubDate)}
       </span>
     </a>

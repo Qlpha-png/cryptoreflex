@@ -175,7 +175,7 @@ export default function EmbedPage() {
           <h1 className="mt-4 text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl">
             Widgets JavaScript Cryptoreflex
           </h1>
-          <p className="mt-4 max-w-3xl text-lg text-slate-300">
+          <p className="mt-4 max-w-[34em] text-lg text-slate-300">
             3 widgets prêts à copier-coller dans votre blog FR : statut MiCA d'une
             plateforme, encart « MiCA en vigueur », top 10 cryptos
             vulgarisées. <strong>5 minutes d'install</strong>, &lt; 5 Ko

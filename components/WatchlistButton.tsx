@@ -152,7 +152,7 @@ export default function WatchlistButton({
           aria-live="polite"
           className="pointer-events-none absolute left-1/2 top-full mt-2 -translate-x-1/2
                      whitespace-nowrap rounded-lg border border-border bg-elevated/95
-                     px-3 py-1.5 text-[11px] font-medium text-fg shadow-e3 z-30
+                     px-3 py-1.5 text-xs font-medium text-fg shadow-e3 z-30
                      animate-fade-in"
         >
           {feedback}

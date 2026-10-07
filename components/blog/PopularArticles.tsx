@@ -61,15 +61,15 @@ export default async function PopularArticles({
               <div className="flex items-start gap-3">
                 <span
                   aria-hidden="true"
-                  className="shrink-0 inline-flex h-6 w-6 items-center justify-center rounded-md bg-primary/10 text-[11px] font-bold font-mono text-primary"
+                  className="shrink-0 inline-flex h-6 w-6 items-center justify-center rounded-md bg-primary/10 text-xs font-bold font-mono text-primary"
                 >
                   {i + 1}
                 </span>
                 <div className="min-w-0 flex-1">
-                  <h3 className="text-sm font-semibold text-fg leading-snug group-hover:text-primary-glow line-clamp-2">
+                  <h3 className="text-sm font-semibold text-fg leading-snug group-hover:text-primary-glow">
                     {a.title}
                   </h3>
-                  <div className="mt-1 flex items-center gap-2 text-[11px] text-muted">
+                  <div className="mt-1 flex items-center gap-2 text-xs text-muted">
                     <span className="inline-flex items-center gap-0.5">
                       <Clock className="h-3 w-3" aria-hidden="true" />
                       {a.readTime}

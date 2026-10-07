@@ -180,21 +180,22 @@ function MetricCards({ metrics }: { metrics: OnChainMetrics }) {
           style={{ animationDelay: `${i * 60}ms` }}
         >
           <div className="flex items-center justify-between gap-2">
-            <div className="flex items-center gap-2 text-muted">
-              <c.icon className="h-3.5 w-3.5" aria-hidden="true" />
-              <span className="text-[11px] uppercase tracking-wider">{c.label}</span>
+            <div className="flex min-w-0 items-center gap-2 text-muted">
+              <c.icon className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+              <span className="text-xs uppercase tracking-wider">{c.label}</span>
             </div>
             {c.source && (
-              <span className="text-[10px] text-muted/70 font-mono">{c.source}</span>
+              // Reprise B1 (jury visiteur) : la source ne se coupe plus au milieu du mot (« CoinGe / cko »).
+              <span className="shrink-0 whitespace-nowrap text-xs text-muted/70 font-mono">{c.source}</span>
             )}
           </div>
           <div className="mt-2 font-mono text-lg font-bold text-fg tabular-nums truncate">
             {c.value}
           </div>
           {(c.sub || typeof c.trend === "number") && (
-            <div className="mt-1 flex items-center gap-2 text-[11px]">
+            <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs">
               {typeof c.trend === "number" && <TrendBadge value={c.trend} />}
-              {c.sub && <span className="text-muted truncate">{c.sub}</span>}
+              {c.sub && <span className="min-w-0 text-muted break-words">{c.sub}</span>}
             </div>
           )}
         </article>
@@ -298,7 +299,7 @@ function TrendBadge({ value }: { value: number }) {
     : "text-danger-fg border-accent-rose/30 bg-accent-rose/5";
   return (
     <span
-      className={`inline-flex items-center gap-1 rounded-md border px-1.5 py-0.5 font-mono text-[10px] font-semibold tabular-nums ${cls}`}
+      className={`inline-flex items-center gap-1 rounded-md border px-1.5 py-0.5 font-mono text-xs font-semibold tabular-nums ${cls}`}
     >
       <Icon className="h-3 w-3" aria-hidden="true" />
       {(positive ? "+" : "") + value.toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} %
@@ -330,7 +331,7 @@ function SourceFooter({ metrics }: { metrics: OnChainMetrics }) {
   const sourcesLabel = sources.length ? sources.join(" · ") : "Source unique";
 
   return (
-    <p className="mt-4 text-[11px] text-muted">
+    <p className="mt-4 text-xs text-muted">
       Sources : {sourcesLabel} · maj {formatRelativeFr(metrics.lastUpdate)}
     </p>
   );

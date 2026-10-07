@@ -73,7 +73,7 @@ export default function TradingViewWidget({
       className="rounded-2xl border border-border bg-surface overflow-hidden"
       aria-label={`Graphique TradingView ${name}`}
     >
-      <header className="flex items-center justify-between gap-3 px-5 py-3 border-b border-border bg-elevated/40">
+      <header className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1 px-5 py-3 border-b border-border bg-elevated/40">
         <div className="flex items-center gap-2">
           <BarChart3 className="h-4 w-4 text-primary" aria-hidden="true" />
           <h2 className="text-sm font-semibold text-fg">
@@ -86,7 +86,7 @@ export default function TradingViewWidget({
           onClick={() => setOpen((o) => !o)}
           aria-expanded={open}
           aria-controls={`tv-frame-${symbol.toLowerCase()}`}
-          className="inline-flex items-center gap-1.5 text-xs text-muted hover:text-fg
+          className="inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap text-xs text-muted hover:text-fg
                      focus:outline-none focus-visible:ring-2 focus-visible:ring-primary
                      focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded px-2 py-1"
         >
@@ -152,7 +152,7 @@ export default function TradingViewWidget({
           </div>
 
           {/* Footer du widget : lien externe systématique */}
-          <div className="flex items-center justify-between gap-3 px-5 py-2.5 border-t border-border bg-elevated/40 text-[11px] text-muted">
+          <div className="flex items-center justify-between gap-3 px-5 py-2.5 border-t border-border bg-elevated/40 text-xs text-muted">
             <span>
               Graphique fourni par{" "}
               <a

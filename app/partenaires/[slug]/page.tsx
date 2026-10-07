@@ -369,7 +369,7 @@ function PartnerHero({
             </div>
 
             {/* Disclosure légère */}
-            <p className="mt-3 text-[11px] text-muted">
+            <p className="mt-3 text-xs text-muted">
               Publicité — lien affilié, sans surcoût pour vous.
             </p>
           </div>
@@ -498,7 +498,7 @@ function MiniStat({
         className="h-3 w-3 text-muted mx-auto mb-1.5"
         aria-hidden="true"
       />
-      <p className="text-[10px] uppercase tracking-wider text-muted">
+      <p className="text-xs uppercase tracking-wider text-muted">
         {label}
       </p>
       <p className="text-xs font-bold text-fg mt-0.5">{value}</p>
@@ -741,7 +741,7 @@ function PedagogyCard({
           </span>
           <div className="min-w-0">
             <p
-              className={`text-[10px] font-bold tracking-[0.12em] uppercase ${labelClasses[tone]}`}
+              className={`text-xs font-bold tracking-[0.12em] uppercase ${labelClasses[tone]}`}
             >
               {labelByTone[tone]}
             </p>
@@ -773,7 +773,7 @@ function PedagogyCard({
               className="text-sm text-fg/85 leading-relaxed flex items-start gap-2.5"
             >
               <span
-                className="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary/20 text-primary text-[11px] font-extrabold font-mono tabular-nums mt-0.5"
+                className="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary/20 text-primary text-xs font-extrabold font-mono tabular-nums mt-0.5"
                 aria-hidden="true"
               >
                 {i + 1}
@@ -836,7 +836,7 @@ function BeforeAfter({
               <XCircle className="h-5 w-5" strokeWidth={1.85} />
             </span>
             <div>
-              <p className="text-[10px] font-bold tracking-[0.12em] uppercase text-warning">
+              <p className="text-xs font-bold tracking-[0.12em] uppercase text-warning">
                 Aujourd&apos;hui
               </p>
               <h3 className="mt-0.5 text-lg font-extrabold text-fg/90 leading-tight">
@@ -889,7 +889,7 @@ function BeforeAfter({
               <CheckCircle2 className="h-5 w-5" strokeWidth={1.85} />
             </span>
             <div>
-              <p className="text-[10px] font-bold tracking-[0.12em] uppercase text-success">
+              <p className="text-xs font-bold tracking-[0.12em] uppercase text-success">
                 Avec {partner.name}
               </p>
               <h3 className="mt-0.5 text-lg font-extrabold text-fg leading-tight">
@@ -928,7 +928,7 @@ function BeforeAfter({
           Passer du côté &ldquo;Avec {partner.name}&rdquo;
           <ExternalLink className="h-4 w-4" aria-hidden="true" />
         </Link>
-        <p className="mt-2 text-[11px] text-muted">
+        <p className="mt-2 text-xs text-muted">
           Publicité — lien affilié, sans surcoût pour vous.
         </p>
       </div>
@@ -1067,7 +1067,7 @@ function ProductCard({
     >
       {product.badge && (
         <span
-          className={`absolute top-3 right-3 z-10 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider rounded-full ${TONE_STYLES[product.badge.tone]}`}
+          className={`absolute top-3 right-3 z-10 px-2.5 py-1 text-xs font-bold uppercase tracking-wider rounded-full ${TONE_STYLES[product.badge.tone]}`}
         >
           {product.badge.label}
         </span>
@@ -1560,7 +1560,7 @@ function FinalCta({
           </Link>
         </div>
 
-        <p className="mt-5 text-[11px] text-muted">
+        <p className="mt-5 text-xs text-muted">
           Publicité — lien affilié : Cryptoreflex perçoit {partner.commission ?? "une commission"} sans surcoût pour vous. Si {partner.name}{" "}
           cesse d&apos;être recommandable, on retire la page.
         </p>

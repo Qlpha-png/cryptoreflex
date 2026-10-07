@@ -166,7 +166,7 @@ export default function CompareSelector({ selected, catalog }: Props) {
           <span className="text-xs font-bold uppercase tracking-wider text-muted">
             Selection
           </span>
-          <span className="rounded-full bg-elevated/60 px-2 py-0.5 text-[11px] font-mono font-bold text-fg/85">
+          <span className="rounded-full bg-elevated/60 px-2 py-0.5 text-xs font-mono font-bold text-fg/85">
             {selected.length}/{MAX_COMPARE}
           </span>
         </div>
@@ -174,7 +174,7 @@ export default function CompareSelector({ selected, catalog }: Props) {
           <button
             type="button"
             onClick={() => updateIds([])}
-            className="text-[11px] text-muted hover:text-fg underline underline-offset-2"
+            className="text-xs text-muted hover:text-fg underline underline-offset-2"
           >
             Tout effacer
           </button>
@@ -198,12 +198,12 @@ export default function CompareSelector({ selected, catalog }: Props) {
                 unoptimized
               />
             ) : (
-              <span className="inline-flex h-4 w-4 items-center justify-center rounded-full bg-primary/20 text-[8px] font-bold">
+              <span className="inline-flex h-4 w-4 items-center justify-center rounded-full bg-primary/20 text-xs font-bold">
                 {c.symbol.slice(0, 2)}
               </span>
             )}
             <span>{c.name}</span>
-            <span className="font-mono text-[10px] text-fg/60">{c.symbol}</span>
+            <span className="font-mono text-xs text-fg/60">{c.symbol}</span>
             <button
               type="button"
               onClick={() => handleRemove(c.id)}
@@ -275,7 +275,7 @@ export default function CompareSelector({ selected, catalog }: Props) {
                             unoptimized
                           />
                         ) : (
-                          <span className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-primary/20 text-[9px] font-bold text-primary-soft shrink-0">
+                          <span className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-primary/20 text-xs font-bold text-primary-soft shrink-0">
                             {c.symbol.slice(0, 2)}
                           </span>
                         )}
@@ -283,7 +283,7 @@ export default function CompareSelector({ selected, catalog }: Props) {
                           <span className="block font-semibold text-fg truncate">
                             {c.name}
                           </span>
-                          <span className="block text-[11px] text-muted">
+                          <span className="block text-xs text-muted">
                             <span className="font-mono">{c.symbol}</span> ·{" "}
                             {c.category}
                             {c.kind === "top10" && c.rank
@@ -297,7 +297,7 @@ export default function CompareSelector({ selected, catalog }: Props) {
                     </li>
                   ))}
                 </ul>
-                <div className="border-t border-border px-3 py-2 text-[11px] text-muted text-center">
+                <div className="border-t border-border px-3 py-2 text-xs text-muted text-center">
                   {filtered.length} résultat{filtered.length > 1 ? "s" : ""} ·{" "}
                   <Link
                     href="/cryptos"
@@ -312,14 +312,14 @@ export default function CompareSelector({ selected, catalog }: Props) {
         )}
 
         {isFull && (
-          <span className="text-[11px] text-muted italic self-center">
+          <span className="text-xs text-muted italic self-center">
             Maximum {MAX_COMPARE} cryptos atteint
           </span>
         )}
       </div>
 
       {!hydrated && (
-        <p className="mt-3 text-[11px] text-muted italic">
+        <p className="mt-3 text-xs text-muted italic">
           Synchronisation en cours...
         </p>
       )}

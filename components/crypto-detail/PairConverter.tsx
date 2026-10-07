@@ -152,7 +152,7 @@ export default function PairConverter({
         <button
           type="button"
           onClick={toggleFiat}
-          className="text-[11px] font-mono font-bold uppercase tracking-wider text-primary hover:text-primary-glow rounded-md border border-primary/30 bg-primary/5 px-2.5 py-1 transition-colors"
+          className="text-xs font-mono font-bold uppercase tracking-wider text-primary hover:text-primary-glow rounded-md border border-primary/30 bg-primary/5 px-2.5 py-1 transition-colors"
           aria-label={`Basculer la devise vers ${fiat === "EUR" ? "USD" : "EUR"}`}
         >
           Voir en {fiat === "EUR" ? "USD" : "EUR"}
@@ -164,7 +164,7 @@ export default function PairConverter({
         <div>
           <label
             htmlFor="pair-converter-crypto"
-            className="block text-[11px] uppercase tracking-wider text-muted mb-1"
+            className="block text-xs uppercase tracking-wider text-muted mb-1"
           >
             {name} ({symbol})
           </label>
@@ -204,7 +204,7 @@ export default function PairConverter({
         <div>
           <label
             htmlFor="pair-converter-fiat"
-            className="block text-[11px] uppercase tracking-wider text-muted mb-1"
+            className="block text-xs uppercase tracking-wider text-muted mb-1"
           >
             Montant en {fiat}
           </label>
@@ -235,7 +235,7 @@ export default function PairConverter({
         id="pair-converter-rate"
         aria-live="polite"
         aria-atomic="true"
-        className="mt-3 flex flex-wrap items-center justify-between gap-2 text-[11px] text-muted"
+        className="mt-3 flex flex-wrap items-center justify-between gap-2 text-xs text-muted"
       >
         <span>
           1 {symbol} ={" "}
@@ -266,13 +266,13 @@ export default function PairConverter({
 
       {/* Quick presets retail FR : 50€ / 100€ / 500€ / 1000€ — un clic = simulation */}
       <div className="mt-4 flex flex-wrap gap-1.5">
-        <span className="text-[11px] text-muted self-center mr-1">Test rapide&nbsp;:</span>
+        <span className="text-xs text-muted self-center mr-1">Test rapide&nbsp;:</span>
         {[50, 100, 500, 1000].map((amount) => (
           <button
             key={amount}
             type="button"
             onClick={() => handleFiatChange(String(amount))}
-            className="rounded-md border border-border bg-elevated px-2 py-0.5 text-[11px] font-mono text-fg/80 hover:border-primary/50 hover:text-primary transition-colors"
+            className="rounded-md border border-border bg-elevated px-2 py-0.5 text-xs font-mono text-fg/80 hover:border-primary/50 hover:text-primary transition-colors"
             aria-label={`Convertir ${amount} ${fiat === "EUR" ? "euros" : "dollars"}`}
           >
             {amount} {fiat === "EUR" ? "€" : "$"}

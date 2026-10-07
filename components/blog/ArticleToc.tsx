@@ -200,7 +200,7 @@ export default function ArticleToc({
         aria-label="Sommaire de l'article"
         className="not-prose hidden lg:block sticky top-24 max-h-[calc(100vh-7rem)] overflow-y-auto pr-2"
       >
-        <div className="mb-3 inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-wider text-primary-soft">
+        <div className="mb-3 inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-primary-soft">
           <List className="h-3.5 w-3.5" aria-hidden="true" />
           Dans cet article
         </div>
@@ -228,7 +228,7 @@ export default function ArticleToc({
             );
           })}
         </ol>
-        <p className="mt-4 text-[11px] text-muted">
+        <p className="mt-4 text-xs text-muted">
           {progress}% lu · {items.length} sections
         </p>
       </nav>

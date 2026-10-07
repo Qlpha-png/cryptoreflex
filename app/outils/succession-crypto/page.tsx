@@ -136,7 +136,7 @@ export default function SuccessionCryptoPage() {
         </nav>
 
         <header className="mt-6">
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/15 border border-primary/30 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-primary-soft">
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/15 border border-primary/30 px-3 py-1 text-xs font-bold uppercase tracking-wider text-primary-soft">
             <Heart className="h-3 w-3" aria-hidden /> Gratuit · rien n&apos;est enregistré
           </span>
           <h1 className="mt-4 text-4xl sm:text-5xl font-extrabold tracking-tight">
@@ -257,7 +257,7 @@ export default function SuccessionCryptoPage() {
           <div className="mt-5 hidden overflow-x-auto rounded-2xl border border-border sm:block">
             <table className="w-full text-sm">
               <caption className="sr-only">Abattements et taux des droits de succession selon le lien de parenté</caption>
-              <thead className="bg-elevated/60 text-left text-[11px] uppercase tracking-wider text-muted">
+              <thead className="bg-elevated/60 text-left text-xs uppercase tracking-wider text-muted">
                 <tr>
                   <th scope="col" className="px-3 py-2.5 font-semibold">Héritier</th>
                   <th scope="col" className="px-3 py-2.5 font-semibold">Abattement</th>
@@ -279,7 +279,7 @@ export default function SuccessionCryptoPage() {
           <div className="mt-3 overflow-x-auto rounded-2xl border border-border">
             <table className="w-full text-sm">
               <caption className="sr-only">Barème des droits de succession en ligne directe</caption>
-              <thead className="bg-elevated/60 text-left text-[11px] uppercase tracking-wider text-muted">
+              <thead className="bg-elevated/60 text-left text-xs uppercase tracking-wider text-muted">
                 <tr>
                   <th scope="col" className="px-3 py-2.5 font-semibold">Part nette taxable (après abattement)</th>
                   <th scope="col" className="px-3 py-2.5 font-semibold text-right">Taux</th>

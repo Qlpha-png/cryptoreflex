@@ -312,7 +312,9 @@ function StatCard({
   const numericValue = /^\d+$/.test(value) ? Number(value) : null;
   return (
     <div className={`rounded-2xl border border-border bg-gradient-to-br ${bg} to-transparent p-4`}>
-      <div className="text-[11px] uppercase tracking-wider text-muted">{label}</div>
+      {/* B1 : 14 px en capitales espacées ne tient pas dans une demi-colonne à 320 px (« DISPONIBLE / S ») → minuscules
+          sous 390 px. */}
+      <div className="text-xs uppercase tracking-wider text-muted max-[389px]:normal-case max-[389px]:tracking-normal">{label}</div>
       <div className={`mt-1 text-2xl sm:text-3xl font-extrabold tabular-nums ${text}`}>
         {numericValue !== null ? (
           <span
@@ -410,12 +412,12 @@ function ToolCard({ tool }: { tool: Tool }) {
       <div className="flex items-center justify-between gap-2 mb-3 min-h-[24px]">
         {/* Left : badge NOUVEAU (new) ou BIENTÔT (soon), sinon spacer invisible */}
         {tool.status === "new" ? (
-          <span className="inline-flex items-center gap-1 rounded-full bg-primary-glow px-2 py-0.5 text-[9px] font-extrabold uppercase tracking-wider text-background motion-safe:animate-pulse">
+          <span className="inline-flex items-center gap-1 rounded-full bg-primary-glow px-2 py-0.5 text-xs font-extrabold uppercase tracking-wider text-background motion-safe:animate-pulse">
             <Sparkles className="h-2.5 w-2.5" aria-hidden="true" />
             Nouveau
           </span>
         ) : isSoon ? (
-          <span className="inline-flex items-center gap-1 rounded-full border border-border bg-elevated px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-muted">
+          <span className="inline-flex items-center gap-1 rounded-full border border-border bg-elevated px-2 py-0.5 text-xs font-bold uppercase tracking-wider text-muted">
             Bientôt
           </span>
         ) : (
@@ -423,7 +425,7 @@ function ToolCard({ tool }: { tool: Tool }) {
         )}
         {/* Right : badge Avancé / Gratuit (tout est gratuit ; "avancé" = ex-tier pro) */}
         <span
-          className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ${
+          className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-bold uppercase tracking-wider ${
             isPro
               ? "border border-primary/40 bg-primary/15 text-primary"
               : "border border-accent-green/30 bg-accent-green/10 text-accent-green"

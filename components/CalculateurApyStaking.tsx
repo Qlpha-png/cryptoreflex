@@ -200,7 +200,7 @@ export default function CalculateurApyStaking() {
                     <tr key={r.provider} className="hover:bg-fg-max/5">
                       <td className="px-4 py-3 font-semibold text-fg-max">{r.provider}</td>
                       <td className="px-4 py-3">
-                        <span className={`inline-flex items-center rounded-full border px-2 py-0.5 text-[10px] font-semibold ${METHOD_BADGE[r.method]}`}>
+                        <span className={`inline-flex items-center rounded-full border px-2 py-0.5 text-xs font-semibold ${METHOD_BADGE[r.method]}`}>
                           {METHOD_LABEL[r.method]}
                         </span>
                       </td>
@@ -217,7 +217,7 @@ export default function CalculateurApyStaking() {
                 </tbody>
               </table>
             </div>
-            <p className="border-t border-border bg-elevated/40 px-4 py-2 text-[11px] text-fg-max/50">
+            <p className="border-t border-border bg-elevated/40 px-4 py-2 text-xs text-fg-max/50">
               APY indicatifs Q1 2026 — varient quotidiennement avec le réseau et les pools.
               Récompenses nettes affichées sans réinvestissement automatique.
             </p>

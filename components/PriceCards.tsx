@@ -59,7 +59,7 @@ export default function PriceCards({ prices }: Props) {
                 )}
                 {formatPct(coin.change24h)}
               </span>
-              <span className="text-[11px] text-muted whitespace-nowrap">
+              <span className="text-xs text-muted whitespace-nowrap">
                 MC {formatCompactUsd(coin.marketCap)}
               </span>
             </div>

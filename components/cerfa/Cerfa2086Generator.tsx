@@ -465,7 +465,7 @@ export default function Cerfa2086Generator({ cryptoId: _cryptoId }: Props) {
             </div>
           ))}
         </div>
-        <p className="mt-3 text-[11px] text-fg/55">
+        <p className="mt-3 text-xs text-fg/55">
           Gardez tout votre historique dans le même fichier, années précédentes comprises : la ligne 220
           additionne tous vos achats depuis le premier, et la ligne 221 tient compte de vos ventes passées.
         </p>
@@ -545,7 +545,7 @@ export default function Cerfa2086Generator({ cryptoId: _cryptoId }: Props) {
         <p className="mt-1 text-xs text-fg/60">
           ou cliquez pour parcourir — max 5 Mo, 1000 lignes
         </p>
-        <p className="mt-3 text-[11px] text-fg/55">
+        <p className="mt-3 text-xs text-fg/55">
           Colonnes attendues :{" "}
           <code className="font-mono">date, type, asset, quantity, price_eur, fees, exchange</code>
           {" "}· sur les ventes, <code className="font-mono">portfolio_value_eur</code> (valeur du
@@ -828,7 +828,7 @@ export default function Cerfa2086Generator({ cryptoId: _cryptoId }: Props) {
             l'outil la calcule avec les prix du jour qu'il connaît ; s'il en manque un, la
             cession est marquée « à compléter » plutôt qu'estimée.
           </p>
-          <pre className="overflow-x-auto rounded-lg bg-elevated/60 p-3 text-[11px] font-mono leading-relaxed">
+          <pre className="overflow-x-auto rounded-lg bg-elevated/60 p-3 text-xs font-mono leading-relaxed">
 {`date,type,asset,quantity,price_eur,fees,exchange,portfolio_value_eur
 2024-03-15,buy,BTC,0.05,60000,5,Kraken,
 2024-09-22,sell,BTC,0.02,58000,3,Kraken,2900

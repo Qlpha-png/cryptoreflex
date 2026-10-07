@@ -53,7 +53,7 @@ export default async function EmbedCartePage({ params }: { params: { id: string 
         href={`${BRAND.url}/cartes`}
         target="_blank"
         rel="noopener"
-        style={{ fontSize: 12, color: "#e9b949", textDecoration: "none", fontWeight: 600 }}
+        style={{ fontSize: 14, color: "#e9b949", textDecoration: "none", fontWeight: 600 }}
       >
         Reflex Cards · jeu gratuit sur Cryptoreflex
       </a>

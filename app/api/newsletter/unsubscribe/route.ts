@@ -90,7 +90,7 @@ function buildConfirmHtml(email: string): string {
     a.btn:hover { opacity: 0.85; }
     a.btn-primary { background: #F5A524; color: #0B0D10; }
     a.btn-secondary { background: transparent; color: #F5A524; border: 1px solid #F5A524; }
-    .footer { margin-top: 24px; font-size: 12px; color: #6B7280; }
+    .footer { margin-top: 24px; font-size: 14px; color: #6B7280; }
   </style>
 </head>
 <body>

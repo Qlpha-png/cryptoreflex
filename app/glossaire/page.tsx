@@ -124,13 +124,13 @@ export default function GlossaryIndexPage() {
           </div>
 
           {/* Catégories */}
-          <div className="mt-8 flex flex-wrap gap-2">
+          <div className="mt-8 flex gap-2 overflow-x-auto pb-1 sm:flex-wrap sm:overflow-visible sm:pb-0">
             {GLOSSARY_CATEGORIES.map((cat) => {
               const count = GLOSSARY_TERMS.filter((t) => t.category === cat).length;
               return (
                 <span
                   key={cat}
-                  className="inline-flex items-center gap-1.5 rounded-full border border-border bg-elevated/60 px-3 py-1 text-xs text-fg-max/80"
+                  className="inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full border border-border bg-elevated/60 px-3 py-1 text-xs text-fg-max/80"
                 >
                   {cat}
                   <span className="text-muted">({count})</span>

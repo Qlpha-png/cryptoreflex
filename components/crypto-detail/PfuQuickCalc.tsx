@@ -103,11 +103,11 @@ export default function PfuQuickCalc({ symbol, cryptoName, priceUsd, usdToEur = 
             </span>
             Combien d&apos;impôt sur votre plus-value {symbol} ?
           </h3>
-          <p className="mt-1 text-[12px] text-muted">
+          <p className="mt-1 text-xs text-muted">
             Simulation PFU 31,4% (article 150 VH bis CGI) — calcul indicatif par opération.
           </p>
         </div>
-        <span className="inline-flex items-center gap-1 rounded-md border border-primary/30 bg-primary/10 px-2 py-0.5 text-[10px] font-mono font-bold uppercase tracking-wider text-primary">
+        <span className="inline-flex items-center gap-1 rounded-md border border-primary/30 bg-primary/10 px-2 py-0.5 text-xs font-mono font-bold uppercase tracking-wider text-primary">
           🇫🇷 Spécifique FR
         </span>
       </header>
@@ -116,7 +116,7 @@ export default function PfuQuickCalc({ symbol, cryptoName, priceUsd, usdToEur = 
         <div>
           <label
             htmlFor="pfu-buy"
-            className="block text-[11px] uppercase tracking-wider text-muted mb-1"
+            className="block text-xs uppercase tracking-wider text-muted mb-1"
           >
             Prix d&apos;achat moyen (€/{symbol})
           </label>
@@ -142,7 +142,7 @@ export default function PfuQuickCalc({ symbol, cryptoName, priceUsd, usdToEur = 
         <div>
           <label
             htmlFor="pfu-qty"
-            className="block text-[11px] uppercase tracking-wider text-muted mb-1"
+            className="block text-xs uppercase tracking-wider text-muted mb-1"
           >
             Quantité possédée
           </label>
@@ -174,7 +174,7 @@ export default function PfuQuickCalc({ symbol, cryptoName, priceUsd, usdToEur = 
         className="mt-4 rounded-xl border border-border bg-surface p-4"
       >
         {!result ? (
-          <p className="text-[13px] text-muted">
+          <p className="text-xs text-muted">
             Saisissez votre prix d&apos;achat moyen et la quantité de {symbol} pour voir
             votre plus-value estimée et l&apos;impôt PFU dû à la cession en euros.
           </p>
@@ -220,7 +220,7 @@ export default function PfuQuickCalc({ symbol, cryptoName, priceUsd, usdToEur = 
       {/* Disclaimer + lien calc complète */}
       <div className="mt-3 flex items-start gap-2">
         <Info className="h-3.5 w-3.5 text-muted shrink-0 mt-0.5" strokeWidth={2} aria-hidden="true" />
-        <p className="text-[11px] text-muted leading-relaxed">
+        <p className="text-xs text-muted leading-relaxed">
           Calcul <strong className="text-fg/80">indicatif</strong>, juste si cette position est
           tout votre portefeuille crypto et que vous la vendez en entier. La plus-value réelle se
           calcule sur <strong className="text-fg/80">l&apos;ensemble de votre portefeuille</strong>{" "}
@@ -261,12 +261,12 @@ function ResultCell({
           : "text-fg";
   return (
     <div>
-      <div className="text-[10px] uppercase tracking-wider text-muted">{label}</div>
+      <div className="text-xs uppercase tracking-wider text-muted">{label}</div>
       <div className={`mt-0.5 font-mono text-sm font-bold tabular-nums ${valueColor}`}>
         {value}
       </div>
       {hint && (
-        <div className="mt-0.5 text-[10px] text-muted/80 font-mono">{hint}</div>
+        <div className="mt-0.5 text-xs text-muted/80 font-mono">{hint}</div>
       )}
     </div>
   );

@@ -85,7 +85,7 @@ export default function MicaCountdown({
         <span
           role="status"
           aria-label="MiCA Phase 2 est désormais en vigueur"
-          className={`inline-flex items-center gap-1.5 rounded-full border border-accent-green/40 bg-accent-green/10 px-2.5 py-1 text-[11px] font-semibold text-accent-green ${className}`}
+          className={`inline-flex items-center gap-1.5 rounded-full border border-accent-green/40 bg-accent-green/10 px-2.5 py-1 text-xs font-semibold text-accent-green ${className}`}
         >
           <ShieldAlert className="h-3 w-3" aria-hidden="true" />
           MiCA Phase 2 en vigueur
@@ -96,7 +96,7 @@ export default function MicaCountdown({
       <Link
         href={href}
         aria-label={`MiCA Phase 2 dans ${days} jours — voir la checklist`}
-        className={`inline-flex items-center gap-1.5 rounded-full border border-warning/40 bg-warning/10 px-2.5 py-1 text-[11px] font-semibold text-amber-200 hover:bg-warning/15 ${className}`}
+        className={`inline-flex items-center gap-1.5 rounded-full border border-warning/40 bg-warning/10 px-2.5 py-1 text-xs font-semibold text-amber-200 hover:bg-warning/15 ${className}`}
       >
         <CalendarClock className="h-3 w-3" aria-hidden="true" />
         MiCA Phase 2 — J-{days}
@@ -153,7 +153,7 @@ export default function MicaCountdown({
             <CalendarClock className="h-5 w-5" aria-hidden="true" />
           </span>
           <div className="min-w-0">
-            <p className="text-[11px] font-bold uppercase tracking-wider text-amber-200/90">
+            <p className="text-xs font-bold uppercase tracking-wider text-amber-200/90">
               Échéance réglementaire UE
             </p>
             {active ? (

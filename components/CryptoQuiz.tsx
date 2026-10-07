@@ -582,7 +582,7 @@ export default function CryptoQuiz({ cryptos }: Props) {
               <ArrowLeft className="h-4 w-4" aria-hidden="true" />
               Précédent
             </button>
-            <p className="text-[11px] text-muted hidden sm:block">
+            <p className="text-xs text-muted hidden sm:block">
               Astuce — appuyez sur{" "}
               <kbd className="font-mono px-1 py-0.5 rounded border border-border bg-elevated text-fg">
                 1-{currentQuestion.options.length}
@@ -665,7 +665,7 @@ function ResultView({
         <div className="relative">
           <div className="flex items-start justify-between gap-3 flex-wrap">
             <div>
-              <div className="text-[11px] uppercase tracking-wider text-muted">
+              <div className="text-xs uppercase tracking-wider text-muted">
                 {top.kind === "hidden-gem" ? "Hidden Gem" : `Top ${top.rank} mondial`}
               </div>
               <h3 className="mt-1 text-3xl sm:text-4xl font-extrabold tracking-tight">
@@ -714,7 +714,7 @@ function ResultView({
                   </h4>
                   <p className="mt-1 text-xs text-fg/75 line-clamp-2">{b.tagline}</p>
                 </div>
-                <span className="text-[10px] font-mono rounded-full bg-primary/15 text-primary-soft px-2 py-0.5 whitespace-nowrap shrink-0">
+                <span className="text-xs font-mono rounded-full bg-primary/15 text-primary-soft px-2 py-0.5 whitespace-nowrap shrink-0">
                   {b.category}
                 </span>
               </div>
@@ -747,7 +747,7 @@ function ResultView({
                 className="flex items-center justify-between gap-3 rounded-lg border border-border/60 bg-elevated/30 px-3 py-2"
               >
                 <div className="min-w-0">
-                  <div className="text-[11px] uppercase tracking-wider text-muted">
+                  <div className="text-xs uppercase tracking-wider text-muted">
                     Q{idx + 1}
                   </div>
                   <div className="text-sm text-fg truncate">{opt?.label ?? "—"}</div>

@@ -65,7 +65,7 @@ export default function LastReviewedBadge({
 
   return (
     <span
-      className={`inline-flex items-center gap-1 rounded-md border border-border/70 bg-background/40 px-2 py-0.5 text-[11px] font-medium text-muted ${className}`.trim()}
+      className={`inline-flex items-center gap-1 rounded-md border border-border/70 bg-background/40 px-2 py-0.5 text-xs font-medium text-muted ${className}`.trim()}
       role="note"
       aria-label={`${label} le ${formatted}`}
     >

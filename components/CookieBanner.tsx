@@ -121,12 +121,12 @@ export default function CookieBanner() {
                    border-t sm:border border-border bg-surface/95 backdrop-blur-md
                    shadow-card text-fg animate-fade-in-up"
       >
-        <div className="p-5 sm:p-6">
+        <div className="p-4 sm:p-6">
           {/* Header */}
           <div className="flex items-start gap-3">
             <div
               aria-hidden="true"
-              className="shrink-0 grid place-items-center h-10 w-10 rounded-xl
+              className="hidden min-[420px]:grid shrink-0 place-items-center h-10 w-10 rounded-xl
                          bg-primary/15 text-primary border border-primary/30"
             >
               <Cookie className="h-5 w-5" />
@@ -140,13 +140,30 @@ export default function CookieBanner() {
               </h2>
               <p
                 id={descId}
-                className="mt-1 text-sm text-muted leading-relaxed"
+                className="mt-1 text-sm text-muted leading-relaxed max-[389px]:text-xs max-[389px]:leading-snug"
               >
-                Cryptoreflex mesure son audience avec{" "}
-                <strong className="text-fg">Vercel Web Analytics</strong>{" "}
-                (statistiques anonymes et agrégées, sans cookie), que vous pouvez
-                refuser. Aucun pixel publicitaire ni enregistrement de session
-                n'est utilisé. Vous pouvez modifier vos choix à tout moment depuis la
+                {/* Jury B1 (mobile) : le bandeau couvrait 56 à 62 % de l'écran sous 390 px. Texte resserré (mêmes
+                    informations), icône masquée sous 420 px, « Personnaliser » en lien dans la phrase sur téléphone. */}
+                Nous mesurons l'audience avec{" "}
+                <strong className="text-fg">Vercel Web Analytics</strong> :
+                statistiques anonymes et agrégées, sans cookie, que vous pouvez
+                refuser. Aucun pixel publicitaire ni enregistrement de session.
+                Choix modifiables à tout moment :{" "}
+                {!customizing && (
+                  <>
+                    <button
+                      type="button"
+                      onClick={() => setCustomizing(true)}
+                      aria-expanded={false}
+                      className="sm:hidden font-semibold text-fg underline decoration-primary/60 underline-offset-2
+                                 hover:text-primary-soft focus-visible:outline-none
+                                 focus-visible:ring-2 focus-visible:ring-primary rounded"
+                    >
+                      personnaliser
+                    </button>
+                    <span className="sm:hidden" aria-hidden="true">{" · "}</span>
+                  </>
+                )}
                 page{" "}
                 <a
                   href="/confidentialite"
@@ -189,8 +206,8 @@ export default function CookieBanner() {
 
           {/* Actions */}
           <div
-            className="mt-5 flex flex-col sm:flex-row sm:items-center
-                       sm:justify-end gap-2 sm:gap-3"
+            className="mt-2 min-[360px]:mt-3 grid grid-cols-2 gap-2 sm:mt-5 sm:flex sm:flex-row sm:items-center
+                       sm:justify-end sm:gap-3"
           >
             {!customizing ? (
               <>
@@ -200,7 +217,7 @@ export default function CookieBanner() {
                   onClick={handleAcceptAll}
                   className={btn.primary}
                 >
-                  <Check className="h-4 w-4" aria-hidden="true" />
+                  <Check className="hidden h-4 w-4 sm:block" aria-hidden="true" />
                   Tout accepter
                 </button>
                 {/* CNIL : « Tout refuser » au même niveau et avec le même aspect que « Tout accepter »
@@ -210,16 +227,16 @@ export default function CookieBanner() {
                   onClick={handleRejectAll}
                   className={btn.primary}
                 >
-                  <ShieldOff className="h-4 w-4" aria-hidden="true" />
+                  <ShieldOff className="hidden h-4 w-4 sm:block" aria-hidden="true" />
                   Tout refuser
                 </button>
                 <button
                   type="button"
                   onClick={() => setCustomizing(true)}
-                  className={btn.outline}
+                  className={`${btn.outline} hidden sm:inline-flex sm:col-auto`}
                   aria-expanded={false}
                 >
-                  <Settings2 className="h-4 w-4" aria-hidden="true" />
+                  <Settings2 className="hidden h-4 w-4 sm:block" aria-hidden="true" />
                   Personnaliser
                 </button>
               </>
@@ -229,9 +246,9 @@ export default function CookieBanner() {
                   ref={firstFocusRef}
                   type="button"
                   onClick={handleSavePrefs}
-                  className={btn.primary}
+                  className={`${btn.primary} col-span-2 sm:col-auto`}
                 >
-                  <Check className="h-4 w-4" aria-hidden="true" />
+                  <Check className="hidden h-4 w-4 sm:block" aria-hidden="true" />
                   Enregistrer mes choix
                 </button>
                 <button
@@ -312,7 +329,7 @@ function CategoryRow({
         <span className="block text-sm font-semibold text-fg">
           {title}
           {disabled && (
-            <span className="ml-2 text-[10px] uppercase tracking-wider text-muted font-medium">
+            <span className="ml-2 text-xs uppercase tracking-wider text-muted font-medium">
               Toujours actif
             </span>
           )}
@@ -326,7 +343,7 @@ function CategoryRow({
 }
 
 const baseBtn =
-  "inline-flex items-center justify-center gap-2 min-h-[44px] px-4 py-2.5 " +
+  "inline-flex items-center justify-center gap-2 min-h-[44px] px-3 py-2.5 sm:px-4 " +
   "rounded-xl text-sm font-semibold transition-colors " +
   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary " +
   "focus-visible:ring-offset-2 focus-visible:ring-offset-surface";
@@ -340,9 +357,13 @@ const btn = {
 /** Piège le focus dans le dialog (accessibilité). */
 function trapFocus(e: KeyboardEvent, container: HTMLElement | null) {
   if (!container) return;
-  const focusables = container.querySelectorAll<HTMLElement>(
-    'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-  );
+  // Éléments visibles seulement : « personnaliser » existe en lien (téléphone) ET en bouton (ordinateur), l'un des deux
+  // est en display:none selon la largeur.
+  const focusables = Array.from(
+    container.querySelectorAll<HTMLElement>(
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+    )
+  ).filter((el) => el.getClientRects().length > 0);
   if (focusables.length === 0) return;
   const first = focusables[0];
   const last = focusables[focusables.length - 1];

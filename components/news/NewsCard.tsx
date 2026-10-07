@@ -77,7 +77,7 @@ export default function NewsCard({ news }: Props) {
           height={630}
         />
         <span
-          className={`absolute left-3 top-3 z-10 inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px]
+          className={`absolute left-3 top-3 z-10 inline-flex items-center rounded-full px-2.5 py-0.5 text-xs
                       font-semibold uppercase tracking-wider ring-1 backdrop-blur-sm ${badgeClasses}`}
         >
           {catLabel}
@@ -87,7 +87,7 @@ export default function NewsCard({ news }: Props) {
       {/* Content */}
       <div className="flex flex-1 flex-col gap-3 p-5">
         {/* Header : source + sentiment + date */}
-        <div className="flex items-center justify-between gap-2 text-[11px] text-muted">
+        <div className="flex items-center justify-between gap-2 text-xs text-muted">
           <span className="flex items-center gap-2 min-w-0">
             <span className="truncate font-semibold text-fg/80">{news.source}</span>
             <SentimentBadge title={news.title} description={news.description} />
@@ -120,7 +120,7 @@ export default function NewsCard({ news }: Props) {
         )}
 
         {/* CTA visuel (le clic est sur le titre) */}
-        <div className="mt-auto flex items-center gap-1.5 pt-1 text-[11px] font-medium text-primary-soft">
+        <div className="mt-auto flex items-center gap-1.5 pt-1 text-xs font-medium text-primary-soft">
           Lire l'analyse
           <ArrowUpRight className="h-3 w-3" aria-hidden="true" />
         </div>
@@ -148,7 +148,7 @@ export function SentimentBadge({
   const up = sentiment === "bullish";
   return (
     <span
-      className={`inline-flex shrink-0 items-center gap-0.5 rounded-full px-1.5 py-px text-[10px] font-semibold ring-1 ${
+      className={`inline-flex shrink-0 items-center gap-0.5 rounded-full px-1.5 py-px text-xs font-semibold ring-1 ${
         up
           ? "bg-success-soft text-success-fg ring-success-border"
           : "bg-danger-soft text-danger-fg ring-danger-border"

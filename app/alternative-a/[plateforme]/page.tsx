@@ -252,7 +252,7 @@ export default function AlternativePage({ params }: Props) {
                     {alt.scoring?.global != null ? fmtFr(alt.scoring.global, 1) : "—"}/5
                   </div>
                   {alt.mica?.micaCompliant && (
-                    <div className="mt-1 inline-flex items-center gap-1 rounded-full border border-success/30 bg-success/10 px-2 py-0.5 text-[10px] font-bold text-success">
+                    <div className="mt-1 inline-flex items-center gap-1 rounded-full border border-success/30 bg-success/10 px-2 py-0.5 text-xs font-bold text-success">
                       <ShieldCheck className="h-2.5 w-2.5" aria-hidden /> MiCA
                     </div>
                   )}
@@ -261,7 +261,7 @@ export default function AlternativePage({ params }: Props) {
 
               {alt.strengths && alt.strengths.length > 0 && (
                 <div className="mt-4">
-                  <div className="text-[10px] uppercase tracking-wider text-success font-bold">
+                  <div className="text-xs uppercase tracking-wider text-success font-bold">
                     Points forts
                   </div>
                   <ul className="mt-1.5 space-y-0.5 text-sm text-fg/85">

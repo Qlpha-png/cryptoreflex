@@ -83,7 +83,7 @@ export default function CryptoStats({
   }
 
   return (
-    <section className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+    <section className="grid grid-cols-1 min-[360px]:grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
       {/* Market cap — animé */}
       <StatCard
         label="Capitalisation"
@@ -226,7 +226,7 @@ function DistanceBadge({
     // Cas pump : current ≥ ATH (à epsilon près) → badge "Nouveau sommet"
     if (distance >= -0.5) {
       return (
-        <span className="mt-1.5 inline-flex items-center gap-1 rounded-md bg-success-soft border border-success-border px-1.5 py-0.5 text-[10px] font-mono font-bold text-success-fg">
+        <span className="mt-1.5 inline-flex items-center gap-1 rounded-md bg-success-soft border border-success-border px-1.5 py-0.5 text-xs font-mono font-bold text-success-fg">
           <span aria-hidden="true">▲</span>
           Au sommet
         </span>
@@ -242,7 +242,7 @@ function DistanceBadge({
           : "bg-danger-soft border-danger-border text-danger-fg";
     return (
       <span
-        className={`mt-1.5 inline-flex items-center gap-1 rounded-md border px-1.5 py-0.5 text-[10px] font-mono font-bold ${palette}`}
+        className={`mt-1.5 inline-flex items-center gap-1 rounded-md border px-1.5 py-0.5 text-xs font-mono font-bold ${palette}`}
         title={`Le prix actuel est à ${distance.toLocaleString("fr-FR", { maximumFractionDigits: 1 })} % de son sommet historique`}
       >
         <span aria-hidden="true">▼</span>
@@ -257,7 +257,7 @@ function DistanceBadge({
   if (distance <= 0.5) {
     // Cas crash extrême : current ≤ ATL (à epsilon près)
     return (
-      <span className="mt-1.5 inline-flex items-center gap-1 rounded-md bg-danger-soft border border-danger-border px-1.5 py-0.5 text-[10px] font-mono font-bold text-danger-fg">
+      <span className="mt-1.5 inline-flex items-center gap-1 rounded-md bg-danger-soft border border-danger-border px-1.5 py-0.5 text-xs font-mono font-bold text-danger-fg">
         <span aria-hidden="true">▼</span>
         Au plancher
       </span>
@@ -270,7 +270,7 @@ function DistanceBadge({
       : `+${distance.toLocaleString("fr-FR", { maximumFractionDigits: 0 })} %`;
   return (
     <span
-      className="mt-1.5 inline-flex items-center gap-1 rounded-md bg-success-soft border border-success-border px-1.5 py-0.5 text-[10px] font-mono font-bold text-success-fg"
+      className="mt-1.5 inline-flex items-center gap-1 rounded-md bg-success-soft border border-success-border px-1.5 py-0.5 text-xs font-mono font-bold text-success-fg"
       title={`Le prix actuel est ${ratio.toLocaleString("fr-FR", { maximumFractionDigits: 1 })}× supérieur à son plus bas listé (historique CoinGecko depuis ~2013, pas forcément le plancher absolu)`}
     >
       <span aria-hidden="true">▲</span>
@@ -296,7 +296,7 @@ function PegBadge({ current }: { current: number }) {
   const sign = dev >= 0 ? "+" : "";
   return (
     <span
-      className={`mt-1.5 inline-flex items-center gap-1 rounded-md border px-1.5 py-0.5 text-[10px] font-mono font-bold ${palette}`}
+      className={`mt-1.5 inline-flex items-center gap-1 rounded-md border px-1.5 py-0.5 text-xs font-mono font-bold ${palette}`}
       title={`Écart au peg (1,00 $) : ${sign}${dev.toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} %`}
     >
       <span aria-hidden="true">⚓</span>
@@ -319,14 +319,16 @@ function StatCard({
 }) {
   return (
     <div className="rounded-xl border border-border bg-surface p-4">
-      <div className="text-[11px] uppercase tracking-wider text-muted">
+      {/* Jury B1 : « CAPITALISATI / ON » à 320 px (14 px en capitales espacées dans une demi-colonne). Une colonne sous
+          360 px, minuscules sous 390 px, et la valeur passe à la ligne au lieu d'être tronquée. */}
+      <div className="text-xs uppercase tracking-wide text-muted max-[389px]:normal-case max-[389px]:tracking-normal">
         {label}
       </div>
-      <div className="mt-1 font-mono text-lg font-bold text-fg tabular-nums truncate">
+      <div className="mt-1 font-mono text-lg font-bold text-fg tabular-nums">
         {children}
       </div>
       {sub && (
-        <div className="mt-0.5 text-[11px] text-muted truncate">{sub}</div>
+        <div className="mt-0.5 text-xs text-muted break-words">{sub}</div>
       )}
       {badge}
     </div>

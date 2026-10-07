@@ -160,7 +160,7 @@ export default function ProfitLossCalculator() {
             />
           </div>
 
-          <div className="rounded-xl border border-border bg-elevated/30 p-3 text-[11px] text-muted">
+          <div className="rounded-xl border border-border bg-elevated/30 p-3 text-xs text-muted">
             <strong className="text-fg/80">Frais typiques :</strong> Coinbase
             Advanced ~0,4 % maker / 0,6 % taker · achat instantané : écart de prix de 1 à 2 % ·
             Plus d&apos;infos sur{" "}
@@ -183,7 +183,7 @@ export default function ProfitLossCalculator() {
 
           {/* Top result : PnL net */}
           <div className={`rounded-2xl border p-4 ${accentClass}`}>
-            <div className="text-[11px] font-bold uppercase tracking-wider opacity-80">
+            <div className="text-xs font-bold uppercase tracking-wider opacity-80">
               PnL net après frais
             </div>
             <div className="mt-1 font-mono text-2xl sm:text-3xl font-extrabold tabular-nums">
@@ -255,7 +255,7 @@ export default function ProfitLossCalculator() {
           </dl>
 
           {/* Disclaimer compact */}
-          <div className="rounded-xl border border-primary-glow/30 bg-primary-glow/5 p-3 text-[11px] text-amber-100/85 flex items-start gap-2">
+          <div className="rounded-xl border border-primary-glow/30 bg-primary-glow/5 p-3 text-xs text-amber-100/85 flex items-start gap-2">
             <AlertCircle className="h-4 w-4 text-primary-soft shrink-0 mt-0.5" />
             <p>
               <strong className="text-amber-200">Estimation éducative.</strong>{" "}
@@ -293,7 +293,7 @@ function Field({
 }) {
   return (
     <label className="block">
-      <span className="text-[11px] font-semibold uppercase tracking-wider text-muted">
+      <span className="text-xs font-semibold uppercase tracking-wider text-muted">
         {label}
       </span>
       <input
@@ -306,7 +306,7 @@ function Field({
         min="0"
         className="mt-1 w-full h-10 rounded-lg border border-border bg-elevated/60 px-3 font-mono text-sm text-fg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
       />
-      {hint && <p className="mt-0.5 text-[10px] text-muted">{hint}</p>}
+      {hint && <p className="mt-0.5 text-xs text-muted">{hint}</p>}
     </label>
   );
 }

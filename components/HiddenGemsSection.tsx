@@ -104,7 +104,7 @@ function GemCard({ gem }: { gem: HiddenGem }) {
             className="ring-1 ring-border"
           />
           <div className="min-w-0">
-            <div className="flex items-center gap-1.5 text-[11px] text-muted mb-1 flex-wrap">
+            <div className="flex items-center gap-1.5 text-xs text-muted mb-1 flex-wrap">
               <span className="font-mono">#{gem.rank}</span>
               <span>·</span>
               <span>{gem.category}</span>
@@ -126,7 +126,7 @@ function GemCard({ gem }: { gem: HiddenGem }) {
         >
           <div
             aria-hidden="true"
-            className="text-[10px] font-semibold uppercase tracking-wider opacity-70"
+            className="text-xs font-semibold uppercase tracking-wider opacity-70"
           >
             Fiabilité
           </div>
@@ -144,7 +144,7 @@ function GemCard({ gem }: { gem: HiddenGem }) {
 
       {/* Why hidden gem */}
       <div className="mt-4 rounded-xl border border-primary/20 bg-primary/5 p-3">
-        <div className="text-[10px] font-semibold uppercase tracking-wider text-primary-soft mb-1">
+        <div className="text-xs font-semibold uppercase tracking-wider text-primary-soft mb-1">
           Pourquoi c'est intéressant
         </div>
         <p className="text-xs text-fg/80 leading-relaxed">{gem.whyHiddenGem}</p>

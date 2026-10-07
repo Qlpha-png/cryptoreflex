@@ -29,6 +29,29 @@ export default function HeroPulseLive({ xPct, yPct, initialPrice }: Props) {
   const live = prices["bitcoin"];
   const price = live?.price ?? initialPrice;
 
+  // B1 reprise (jury ronde 1) : sous md, la barre fixe du bas (64 px, fond à 95 %) laissait voir le texte de la puce en
+  // transparence quand le héros dépasse l'écran (390×844, 414×896). La puce est masquée tant qu'elle chevauche la barre,
+  // et réapparaît dès qu'elle remonte (défilement, rotation). Île client-only : aucun effet sur le rendu serveur.
+  const chipRef = useRef<HTMLSpanElement>(null);
+  useEffect(() => {
+    const chip = chipRef.current;
+    if (!chip) return;
+    const verifier = () => {
+      const barre = document.querySelector<HTMLElement>('nav[aria-label="Navigation principale mobile"]');
+      const r = chip.getBoundingClientRect();
+      const b = barre && getComputedStyle(barre).display !== "none" ? barre.getBoundingClientRect() : null;
+      const chevauche = !!b && r.bottom > b.top && r.top < b.bottom;
+      chip.style.visibility = chevauche ? "hidden" : "";
+    };
+    verifier();
+    window.addEventListener("scroll", verifier, { passive: true });
+    window.addEventListener("resize", verifier);
+    return () => {
+      window.removeEventListener("scroll", verifier);
+      window.removeEventListener("resize", verifier);
+    };
+  }, [price]);
+
   // Flash 600ms à chaque variation de prix.
   const prev = useRef(price);
   const [flash, setFlash] = useState(false);
@@ -53,6 +76,7 @@ export default function HeroPulseLive({ xPct, yPct, initialPrice }: Props) {
       />
       {/* Chip prix BTC — mono, factuel */}
       <span
+        ref={chipRef}
         className={`hero-pulse-chip ${flash ? "hero-pulse-chip-flash" : ""}`}
         style={{
           left: `min(${xPct}%, calc(100% - 9.5rem))`,

@@ -36,7 +36,7 @@ export default function BriefHero({ brief }: { brief: NewsSummary }) {
 
       {/* Bandeau édition */}
       <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
-        <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/15 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.16em] text-primary-soft ring-1 ring-primary/30">
+        <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/15 px-3 py-1 text-xs font-bold uppercase tracking-[0.16em] text-primary-soft ring-1 ring-primary/30">
           <Newspaper className="h-3.5 w-3.5" aria-hidden="true" />
           Le brief du jour
         </span>
@@ -52,7 +52,7 @@ export default function BriefHero({ brief }: { brief: NewsSummary }) {
       </h2>
 
       {/* Chapô */}
-      <p className="mt-4 max-w-3xl text-base leading-relaxed text-fg/75 sm:text-lg line-clamp-3">
+      <p className="mt-4 max-w-[34em] text-base leading-relaxed text-fg/75 sm:text-lg line-clamp-3">
         {brief.description}
       </p>
 

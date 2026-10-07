@@ -154,7 +154,7 @@ export default async function GainersLosersPage() {
             secondaryCta={{ label: "Voir la heatmap", href: "/marche/heatmap" }}
           />
         ) : (
-          <div className="grid gap-6 lg:grid-cols-2">
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
             <GainerLoserList
               coins={gainers}
               variant="gainers"
@@ -240,7 +240,7 @@ export default async function GainersLosersPage() {
         </section>
 
         {/* Mentions */}
-        <p className="mt-8 text-[11px] text-muted leading-relaxed">
+        <p className="mt-8 text-xs text-muted leading-relaxed">
           Données de marché fournies par CoinMarketCap, avec CoinGecko en relais (heure du relevé indiquée). Cette
           page est purement informative et ne constitue pas un conseil en
           investissement. Investir dans les cryptomonnaies comporte un risque

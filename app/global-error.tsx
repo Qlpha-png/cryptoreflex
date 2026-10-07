@@ -85,7 +85,7 @@ export default function GlobalError({
               style={{
                 color: "#9BA3AF",
                 fontFamily: "ui-monospace, SFMono-Regular, monospace",
-                fontSize: 12,
+                fontSize: 14,
                 margin: "0 0 24px",
               }}
             >

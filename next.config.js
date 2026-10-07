@@ -557,6 +557,14 @@ const nextConfig = {
           { key: "Cache-Control", value: "public, max-age=31536000, immutable" },
         ],
       },
+      // Lot B1 (migration C+) : polices auto-hébergées Inter + Newsreader. Le dossier porte la version (cplus-v1) :
+      // tout changement de fichier = nouveau dossier (cplus-v2), jamais un remplacement sur place → immuable 1 an.
+      {
+        source: "/fonts/cplus-v1/:path*",
+        headers: [
+          { key: "Cache-Control", value: "public, max-age=31536000, immutable" },
+        ],
+      },
       {
         source: "/logos/:path*",
         headers: [

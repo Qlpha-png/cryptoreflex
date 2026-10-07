@@ -1,5 +1,6 @@
 import type { Config } from "tailwindcss";
 import typography from "@tailwindcss/typography";
+import plugin from "tailwindcss/plugin";
 
 /**
  * Cryptoreflex Design System — single source of truth.
@@ -176,27 +177,61 @@ const config: Config = {
       // Format : [fontSize, { lineHeight, letterSpacing?, fontWeight? }]
       // ---------------------------------------------------------------
       fontSize: {
-        caption: ["11px", { lineHeight: "14px", letterSpacing: "0.01em" }],
-        small: ["13px", { lineHeight: "18px" }],
-        body: ["15px", { lineHeight: "22px" }],
-        lead: ["17px", { lineHeight: "26px" }],
+        // Lot B1 (plan §2.1, lisibilité) : xs/sm/base remappés d'un cran (12→14, 14→16, 16→18 px), interlignes du
+        // cran supérieur de Tailwind (≈ 1,43 / 1,5 / 1,56 ; kit C+ : --fs-1 14 px · 1,45, --fs-2 16 px, --fs-3 18 px).
+        // Plus aucun texte sous 14 px : caption (11) et small (13) passent à 14 px. 2xl et au-delà ne bougent PAS.
+        xs: ["0.875rem", { lineHeight: "1.25rem" }],
+        sm: ["1rem", { lineHeight: "1.5rem" }],
+        base: ["1.125rem", { lineHeight: "1.75rem" }],
+        caption: ["0.875rem", { lineHeight: "1.25rem", letterSpacing: "0.01em" }],
+        small: ["0.875rem", { lineHeight: "1.25rem" }],
+        // B1 reprise (jury ronde 1) : base = 18 px, donc lg et xl montent aussi (sinon text-base = text-lg et xl à 1,11 de base) ;
+        // lead (chapô) 17 → 20 px (kit --fs-4), body 15 → 16 px. 2xl (24 px) et au-delà ne bougent pas.
+        lg: ["1.25rem", { lineHeight: "1.75rem" }],
+        xl: ["1.375rem", { lineHeight: "1.875rem" }],
+        body: ["16px", { lineHeight: "24px" }],
+        lead: ["20px", { lineHeight: "30px" }],
         h6: ["18px", { lineHeight: "24px", fontWeight: "600" }],
         h5: ["20px", { lineHeight: "26px", fontWeight: "600" }],
-        h4: ["24px", { lineHeight: "30px", fontWeight: "700", letterSpacing: "-0.01em" }],
-        h3: ["30px", { lineHeight: "36px", fontWeight: "700", letterSpacing: "-0.015em" }],
-        h2: ["36px", { lineHeight: "42px", fontWeight: "800", letterSpacing: "-0.02em" }],
-        h1: ["48px", { lineHeight: "52px", fontWeight: "800", letterSpacing: "-0.025em" }],
-        display: ["64px", { lineHeight: "68px", fontWeight: "800", letterSpacing: "-0.03em" }],
+        h4: ["24px", { lineHeight: "30px", fontWeight: "600", letterSpacing: "-0.01em" }],
+        h3: ["30px", { lineHeight: "36px", fontWeight: "600", letterSpacing: "-0.01em" }],
+        h2: ["36px", { lineHeight: "42px", fontWeight: "500", letterSpacing: "-0.015em" }],
+        h1: ["48px", { lineHeight: "52px", fontWeight: "500", letterSpacing: "-0.02em" }],
+        display: ["64px", { lineHeight: "68px", fontWeight: "500", letterSpacing: "-0.025em" }],
       },
 
       fontFamily: {
         // « Cryptoreflex NNBSP » : seulement U+202F, l'espace des milliers en français (voir app/globals.css).
+        // Lot B1 (plan §2.1) : --font-sans = Inter + repli mesuré, --font-serif = Newsreader + repli mesuré
+        // (app/styles/tokens.css). Les VARIABLES --font-display (Space Grotesk) et --font-mono (JetBrains Mono) restent
+        // celles de next/font : les cartes Reflex les lisent (reflex-cards.css) jusqu'au lot B14.
         sans: ["Cryptoreflex NNBSP", "var(--font-sans)", "system-ui", "sans-serif"],
-        display: ["Cryptoreflex NNBSP", "var(--font-display)", "var(--font-sans)", "sans-serif"],
-        mono: ["Cryptoreflex NNBSP", "var(--font-mono)", "ui-monospace", "SFMono-Regular", "monospace"],
+        // Titres éditoriaux : Newsreader. font-display (66 usages) et font-serif pointent sur la même pile.
+        display: ["Cryptoreflex NNBSP", "var(--font-serif)"],
+        serif: ["Cryptoreflex NNBSP", "var(--font-serif)"],
+        // font-mono (≈ 450 usages) affiche des chiffres : pile Inter + chiffres tabulaires (plugin plus bas), comme la spec C+.
+        mono: ["Cryptoreflex NNBSP", "var(--font-sans)", "system-ui", "sans-serif"],
+        // Code (nouveau) : JetBrains Mono.
+        code: ["Cryptoreflex NNBSP", "var(--font-mono)", "ui-monospace", "SFMono-Regular", "monospace"],
       },
       fontVariantNumeric: {
         tabular: "tabular-nums",
+      },
+
+      // B1 reprise (jury ronde 1) : corps de lecture des articles et des actus (MdxContent, pages légales) = --fs-read du kit C+
+      // (18 px mobile, 20 px dès lg), interligne 1,65, mesure 34em (≈ 62 à 68 signes). Le plugin typography a ses propres
+      // tailles : le remap de text-base ne l'atteignait pas. Ne touche que les composants, pas le MDX.
+      typography: {
+        DEFAULT: {
+          css: {
+            fontSize: "1.125rem",
+            lineHeight: "1.65",
+            p: { maxWidth: "34em" },
+            li: { maxWidth: "34em" },
+            dd: { maxWidth: "34em" },
+            blockquote: { maxWidth: "34em" },
+          },
+        },
       },
 
       // ---------------------------------------------------------------
@@ -274,7 +309,17 @@ const config: Config = {
       },
     },
   },
-  plugins: [typography],
+  plugins: [
+    typography,
+    // Lot B1 : font-mono passe de JetBrains Mono (chasse fixe) à Inter (chiffres proportionnels par défaut). Les chiffres
+    // gardent une chasse fixe (prix qui ne « sautent » pas) grâce aux chiffres tabulaires d'Inter. Couche components :
+    // toute classe numérique explicite (tabular-nums, slashed-zero, normal-nums…, couche utilities) garde la main.
+    plugin(({ addComponents }) => {
+      addComponents({ ".font-mono": { fontVariantNumeric: "tabular-nums" } });
+      // Corps de lecture des articles : 20 px dès lg (--fs-read du kit C+). Posé ici et non dans le thème typography, qui ignore les @media imbriqués.
+      addComponents({ "@media (min-width: 1024px)": { ".prose": { fontSize: "1.25rem" } } });
+    }),
+  ],
 };
 
 export default config;

@@ -234,7 +234,7 @@ export default function CryptosBrowser({ items }: { items: UnifiedCrypto[] }) {
               >
                 <Icon className="h-3.5 w-3.5" />
                 {label}
-                <span className="text-[10px] opacity-70">({counts[key]})</span>
+                <span className="text-xs opacity-70">({counts[key]})</span>
               </button>
             );
           })}
@@ -255,7 +255,7 @@ export default function CryptosBrowser({ items }: { items: UnifiedCrypto[] }) {
 
       {/* Filtre catégorie */}
       <div className="mt-3 flex items-center gap-2 flex-nowrap overflow-x-auto sm:flex-wrap snap-x snap-mandatory -mx-4 px-4 sm:mx-0 sm:px-0 scrollbar-thin">
-        <span className="text-[11px] uppercase tracking-wider text-muted shrink-0">Catégorie</span>
+        <span className="text-xs uppercase tracking-wider text-muted shrink-0">Catégorie</span>
         {categoryGroups.map((g) => {
           const active = category === g.name;
           return (
@@ -270,7 +270,7 @@ export default function CryptosBrowser({ items }: { items: UnifiedCrypto[] }) {
               aria-pressed={active}
             >
               {g.name}
-              <span className="text-[10px] opacity-70">({g.count})</span>
+              <span className="text-xs opacity-70">({g.count})</span>
             </button>
           );
         })}
@@ -383,7 +383,7 @@ function CryptoCard({ crypto }: { crypto: AnyCrypto }) {
           />
           <div className="min-w-0">
             <span
-              className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ${
+              className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-bold uppercase tracking-wider ${
                 isGem
                   ? "border border-primary-glow/30 bg-primary-glow/10 text-primary-soft"
                   : "border border-primary/30 bg-primary/10 text-primary-soft"
@@ -402,7 +402,7 @@ function CryptoCard({ crypto }: { crypto: AnyCrypto }) {
         </div>
         {isGem && (
           <div className="shrink-0 rounded-lg border border-border bg-elevated px-2 py-1 text-center">
-            <div className="text-[9px] uppercase tracking-wider text-muted">Fiabilité</div>
+            <div className="text-xs uppercase tracking-wider text-muted">Fiabilité</div>
             <div className="font-mono text-sm font-bold text-fg">{fmtFr(crypto.reliability.score, 1)}</div>
           </div>
         )}
@@ -436,7 +436,7 @@ function LightCryptoCard({ c }: { c: UnifiedCrypto }) {
           className="ring-1 ring-border shrink-0"
         />
         <div className="min-w-0 flex-1">
-          <span className="inline-flex items-center gap-1 rounded-full border border-violet-400/30 bg-violet-400/10 text-violet-300 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider">
+          <span className="inline-flex items-center gap-1 rounded-full border border-violet-400/30 bg-violet-400/10 text-violet-300 px-2 py-0.5 text-xs font-bold uppercase tracking-wider">
             <Sparkles className="h-3 w-3" /> Analyse
           </span>
           <h2 className="mt-1 text-lg font-bold text-fg truncate">

@@ -346,7 +346,7 @@ function StatBox({
   }[accent];
   return (
     <div className={`rounded-2xl border border-border bg-gradient-to-br ${bg} to-transparent p-4`}>
-      <div className="text-[11px] uppercase tracking-wider text-muted">{label}</div>
+      <div className="text-xs uppercase tracking-wider text-muted">{label}</div>
       <div className={`mt-1 text-2xl sm:text-3xl font-extrabold tabular-nums ${text}`}>
         {value}
       </div>

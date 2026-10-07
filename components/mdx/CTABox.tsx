@@ -89,7 +89,7 @@ export default function CTABox({
           <h3 className="text-lg font-bold text-fg sm:text-xl">{title}</h3>
           <p className="mt-2 text-sm leading-relaxed text-fg/75">{description}</p>
           {shownDisclosure && (
-            <p className="mt-3 inline-flex items-center gap-1.5 text-[11px] text-muted">
+            <p className="mt-3 inline-flex items-center gap-1.5 text-xs text-muted">
               <ShieldCheck className="h-3 w-3" />
               {shownDisclosure}
             </p>

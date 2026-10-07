@@ -198,7 +198,7 @@ function Row({
     <div className="rounded-xl border border-border bg-background/60 p-4">
       <label
         htmlFor={editable ? inputId : selectId}
-        className="text-[10px] font-semibold text-muted uppercase tracking-wide block"
+        className="text-xs font-semibold text-muted uppercase tracking-wide block"
       >
         {label}
       </label>
