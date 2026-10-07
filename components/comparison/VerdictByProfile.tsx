@@ -58,7 +58,7 @@ const PROFILE_META: Record<ProfileKey, { label: string; icon: ReactNode; sub: st
 export default function VerdictByProfile({ a, b, verdicts }: Props) {
   return (
     <section id="verdict-profil" className="scroll-mt-24">
-      <h2 className="text-2xl font-bold tracking-tight text-white sm:text-3xl">
+      <h2 className="text-2xl font-bold tracking-tight text-fg-max sm:text-3xl">
         Quelle plateforme selon votre profil ?
       </h2>
       <p className="mt-2 text-sm text-muted">
@@ -80,7 +80,7 @@ export default function VerdictByProfile({ a, b, verdicts }: Props) {
                   {meta.icon}
                 </span>
                 <div>
-                  <h3 className="text-base font-bold text-white">{meta.label}</h3>
+                  <h3 className="text-base font-bold text-fg-max">{meta.label}</h3>
                   <p className="mt-0.5 text-xs text-muted">{meta.sub}</p>
                 </div>
               </div>
@@ -102,7 +102,7 @@ export default function VerdictByProfile({ a, b, verdicts }: Props) {
                 )}
               </div>
 
-              <p className="mt-4 flex-1 text-sm leading-relaxed text-white/85">{v.reasoning}</p>
+              <p className="mt-4 flex-1 text-sm leading-relaxed text-fg-max/85">{v.reasoning}</p>
             </article>
           );
         })}

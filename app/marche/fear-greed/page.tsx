@@ -253,8 +253,8 @@ export default async function FearGreedPage() {
                 progressivement quand il dépasse 75.
               </p>
             </div>
-            <div className="rounded-2xl border border-amber-500/30 bg-amber-500/5 p-5">
-              <h3 className="text-lg font-bold text-amber-300">
+            <div className="rounded-2xl border border-warning/30 bg-warning/5 p-5">
+              <h3 className="text-lg font-bold text-primary-soft">
                 Limite : pas un signal magique
               </h3>
               <p className="mt-2 text-sm text-fg/85 leading-relaxed">

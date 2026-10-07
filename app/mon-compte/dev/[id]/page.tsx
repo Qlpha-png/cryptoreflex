@@ -188,10 +188,10 @@ export default async function ApiKeyDetailPage({
 
 function StatusBadge({ status }: { status: string }) {
   const map: Record<string, { label: string; classes: string }> = {
-    active: { label: "Active", classes: "bg-green-500/10 text-green-700 border-green-500/30" },
+    active: { label: "Active", classes: "bg-success/10 text-green-700 border-success/30" },
     deprecated: {
       label: "Période de grâce",
-      classes: "bg-amber-500/10 text-amber-700 border-amber-500/30",
+      classes: "bg-warning/10 text-amber-700 border-warning/30",
     },
     revoked: { label: "Révoquée", classes: "bg-muted text-muted-foreground border-border" },
     expired: { label: "Expirée", classes: "bg-muted text-muted-foreground border-border" },

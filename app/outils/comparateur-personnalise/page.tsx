@@ -105,10 +105,10 @@ export default function ComparateurPersonnalisePage() {
               <Sparkles className="h-3.5 w-3.5" />
               5 questions, 60 secondes
             </span>
-            <h1 className="mt-4 text-4xl sm:text-5xl font-extrabold tracking-tight text-white">
+            <h1 className="mt-4 text-4xl sm:text-5xl font-extrabold tracking-tight text-fg-max">
               Quelle <span className="gradient-text">plateforme crypto</span> choisir en 2026 ?
             </h1>
-            <p className="mt-4 text-lg text-white/70">
+            <p className="mt-4 text-lg text-fg-max/70">
               Questionnaire personnalisé : 5 questions sur votre profil, et on vous sort
               les 3 plateformes les plus adaptées (parmi Bitstack, Bitpanda,
               Coinbase, Kraken, SwissBorg). Pas un comparatif générique — UN scoring
@@ -121,7 +121,7 @@ export default function ComparateurPersonnalisePage() {
           </div>
 
           <div className="mt-16 grid lg:grid-cols-3 gap-6">
-            <h2 className="lg:col-span-3 text-2xl sm:text-3xl font-bold text-white">
+            <h2 className="lg:col-span-3 text-2xl sm:text-3xl font-bold text-fg-max">
               Pourquoi un comparateur personnalisé ?
             </h2>
             <Card
@@ -147,10 +147,10 @@ export default function ComparateurPersonnalisePage() {
                 <BookOpen className="h-6 w-6" />
               </div>
               <div className="flex-1">
-                <h3 className="font-bold text-white text-lg">
+                <h3 className="font-bold text-fg-max text-lg">
                   Comparatif détaillé toutes plateformes
                 </h3>
-                <p className="mt-1 text-sm text-white/70">
+                <p className="mt-1 text-sm text-fg-max/70">
                   Tableau side-by-side avec frais, MiCA, support FR, sécurité —
                   pour aller plus loin que le top 3 personnalisé.
                 </p>
@@ -166,7 +166,7 @@ export default function ComparateurPersonnalisePage() {
           </div>
 
           <div className="mt-16">
-            <h2 className="text-2xl sm:text-3xl font-bold text-white">
+            <h2 className="text-2xl sm:text-3xl font-bold text-fg-max">
               Questions fréquentes
             </h2>
             <div className="mt-6 space-y-3">
@@ -175,13 +175,13 @@ export default function ComparateurPersonnalisePage() {
                   key={item.question}
                   className="group rounded-xl border border-border bg-elevated/40 p-5 open:border-primary/40"
                 >
-                  <summary className="flex cursor-pointer items-center justify-between gap-3 font-semibold text-white">
+                  <summary className="flex cursor-pointer items-center justify-between gap-3 font-semibold text-fg-max">
                     {item.question}
                     <span className="text-primary transition-transform group-open:rotate-45">
                       +
                     </span>
                   </summary>
-                  <p className="mt-3 text-sm text-white/70 leading-relaxed">
+                  <p className="mt-3 text-sm text-fg-max/70 leading-relaxed">
                     {item.answer}
                   </p>
                 </details>
@@ -214,8 +214,8 @@ function Card({
       <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/15 text-primary-soft">
         {icon}
       </div>
-      <h3 className="mt-4 font-bold text-white">{title}</h3>
-      <p className="mt-2 text-sm text-white/70 leading-relaxed">{text}</p>
+      <h3 className="mt-4 font-bold text-fg-max">{title}</h3>
+      <p className="mt-2 text-sm text-fg-max/70 leading-relaxed">{text}</p>
     </div>
   );
 }

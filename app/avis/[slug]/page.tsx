@@ -124,7 +124,7 @@ function Score({ value, label }: { value: number; label: string }) {
     <div className="rounded-xl border border-border bg-surface px-4 py-3">
       <div className="flex items-baseline justify-between">
         <span className="text-xs uppercase tracking-wide text-muted">{label}</span>
-        <span className="font-mono text-sm tabular-nums text-white">
+        <span className="font-mono text-sm tabular-nums text-fg-max">
           {fmtFr(value, 1)}<span className="text-muted">/5</span>
         </span>
       </div>
@@ -161,7 +161,7 @@ function CostTile({ label, cost, normalCase = false }: { label: string; cost: Pu
   return (
     <div className="rounded-xl border border-border bg-elevated p-4">
       <div className={normalCase ? "text-xs text-muted" : "text-xs uppercase tracking-wide text-muted"}>{label}</div>
-      <div className="mt-1 text-2xl font-bold text-white tabular-nums">
+      <div className="mt-1 text-2xl font-bold text-fg-max tabular-nums">
         {cost.status === "ok" ? (
           <>
             {(cost.kind === "max" || cost.kind === "max-partiel") && <span className="mr-1 text-sm font-semibold text-fg/70">au plus</span>}
@@ -332,9 +332,9 @@ export default function ReviewPage({ params }: Props) {
     v?.verdict === "fiable"
       ? "bg-accent-green/15 text-accent-green"
       : v?.verdict === "douteux"
-      ? "bg-amber-400/15 text-amber-300"
+      ? "bg-primary-glow/15 text-primary-soft"
       : v?.verdict === "indisponible"
-      ? "bg-red-400/15 text-red-300"
+      ? "bg-red-400/15 text-danger-fg"
       : "bg-elevated text-muted";
 
   return (
@@ -347,15 +347,15 @@ export default function ReviewPage({ params }: Props) {
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
         {/* Breadcrumb */}
         <nav aria-label="Fil d'Ariane" className="text-xs text-muted">
-          <Link href="/" className="hover:text-white">
+          <Link href="/" className="hover:text-fg-max">
             Accueil
           </Link>
           <span className="mx-2">/</span>
-          <Link href="/#plateformes" className="hover:text-white">
+          <Link href="/#plateformes" className="hover:text-fg-max">
             Avis plateformes
           </Link>
           <span className="mx-2">/</span>
-          <span className="text-white/80">{p.name}</span>
+          <span className="text-fg-max/80">{p.name}</span>
         </nav>
 
         {/* Bandeau plateforme fermée au marché FR (ex : Gemini) */}
@@ -374,7 +374,7 @@ export default function ReviewPage({ params }: Props) {
                 {p.name} n&apos;est pas autorisée à servir les résidents français.
               </strong>{" "}
               {p.mica.status}. Depuis le 1er juillet 2026, seuls les prestataires agréés MiCA avec accès à la France peuvent y proposer des services sur crypto-actifs : nous ne proposons aucun lien vers {p.name}.{" "}
-              <Link href="/comparatif/frais" className="underline hover:text-white">
+              <Link href="/comparatif/frais" className="underline hover:text-fg-max">
                 Voir les plateformes autorisées →
               </Link>
             </p>
@@ -412,7 +412,7 @@ export default function ReviewPage({ params }: Props) {
                 Analyse indépendante Cryptoreflex
               </span>
             </h1>
-            <p className="mt-3 text-lg text-white/70">{p.tagline}</p>
+            <p className="mt-3 text-lg text-fg-max/70">{p.tagline}</p>
 
             {/* Pas de séparateur « · » entre les éléments : la ligne Trustpilot est longue et passe
                 à la ligne, ce qui laissait des points orphelins. L'espacement suffit. */}
@@ -420,7 +420,7 @@ export default function ReviewPage({ params }: Props) {
               <div className="flex items-center gap-2">
                 <Stars n={p.scoring.global} />
                 <span className="font-mono text-sm tabular-nums">
-                  <span className="text-white font-semibold">{fmtFr(p.scoring.global, 1)}</span>
+                  <span className="text-fg-max font-semibold">{fmtFr(p.scoring.global, 1)}</span>
                   <span className="text-muted">/5</span>
                 </span>
               </div>
@@ -430,7 +430,7 @@ export default function ReviewPage({ params }: Props) {
                     href={p.ratings.trustpilotUrl}
                     target="_blank"
                     rel="nofollow noopener noreferrer"
-                    className="underline decoration-dotted underline-offset-2 hover:text-white"
+                    className="underline decoration-dotted underline-offset-2 hover:text-fg-max"
                   >
                     Trustpilot
                   </a>
@@ -468,7 +468,7 @@ export default function ReviewPage({ params }: Props) {
               <div className="mt-2 rounded-lg border border-accent-green/30 bg-accent-green/5 px-3 py-2">
                 <div className="flex items-center gap-2">
                   <Gift className="h-4 w-4 text-accent-green" />
-                  <span className="text-sm text-white">{p.bonus.welcome}</span>
+                  <span className="text-sm text-fg-max">{p.bonus.welcome}</span>
                 </div>
               </div>
             )}
@@ -490,7 +490,7 @@ export default function ReviewPage({ params }: Props) {
                 : paidKind === "referral"
                   ? "Publicité — lien de parrainage personnel du fondateur, sans surcoût pour vous. "
                   : `Lien direct vers le site officiel de ${p.name}. `}
-              {paidKind ? "Cela ne change pas notre note" : "Notre note suit une méthodologie publique"} (cf. <Link href="/methodologie" className="underline hover:text-white">méthodologie</Link> et <Link href="/transparence" className="underline hover:text-white">page transparence</Link>).
+              {paidKind ? "Cela ne change pas notre note" : "Notre note suit une méthodologie publique"} (cf. <Link href="/methodologie" className="underline hover:text-fg-max">méthodologie</Link> et <Link href="/transparence" className="underline hover:text-fg-max">page transparence</Link>).
             </p>
             )}
           </aside>
@@ -502,18 +502,18 @@ export default function ReviewPage({ params }: Props) {
           <div className="text-xs uppercase tracking-wide text-primary-glow font-semibold">
             Verdict express — 3 lignes
           </div>
-          <ul className="mt-3 space-y-2 text-sm sm:text-base text-white/85 leading-relaxed">
+          <ul className="mt-3 space-y-2 text-sm sm:text-base text-fg-max/85 leading-relaxed">
             <li className="flex gap-2">
               <span className="text-primary-glow shrink-0">·</span>
-              <span><strong className="text-white">Note globale :</strong> {fmtFr(p.scoring.global, 1)}/5 — {p.badge ?? p.tagline}.</span>
+              <span><strong className="text-fg-max">Note globale :</strong> {fmtFr(p.scoring.global, 1)}/5 — {p.badge ?? p.tagline}.</span>
             </li>
             <li className="flex gap-2">
               <span className="text-primary-glow shrink-0">·</span>
-              <span><strong className="text-white">Idéal pour :</strong> {p.idealFor}.</span>
+              <span><strong className="text-fg-max">Idéal pour :</strong> {p.idealFor}.</span>
             </li>
             <li className="flex gap-2">
               <span className="text-primary-glow shrink-0">·</span>
-              <span><strong className="text-white">À éviter si :</strong> {(p.weaknesses[0] ?? "aucun point rédhibitoire").replace(/\.$/, "")}.</span>
+              <span><strong className="text-fg-max">À éviter si :</strong> {(p.weaknesses[0] ?? "aucun point rédhibitoire").replace(/\.$/, "")}.</span>
             </li>
           </ul>
           <div className="mt-5">
@@ -542,7 +542,7 @@ export default function ReviewPage({ params }: Props) {
                   <CheckCircle2 className="h-4 w-4" />
                   Fait pour vous si…
                 </div>
-                <ul className="mt-3 space-y-2 text-sm text-white/85">
+                <ul className="mt-3 space-y-2 text-sm text-fg-max/85">
                   {p.scoring.fees >= 4.4 && (
                     <li className="flex gap-2"><span className="text-accent-green">•</span> Les frais sont votre premier critère (sous-note frais : {fmtFr(p.scoring.fees, 1)}/5).</li>
                   )}
@@ -568,7 +568,7 @@ export default function ReviewPage({ params }: Props) {
                   <XCircle className="h-4 w-4" />
                   Pas pour vous si…
                 </div>
-                <ul className="mt-3 space-y-2 text-sm text-white/85">
+                <ul className="mt-3 space-y-2 text-sm text-fg-max/85">
                   {p.weaknesses.slice(0, 3).map((w) => (
                     <li key={w} className="flex gap-2"><span className="text-danger-fg">•</span> {w}.</li>
                   ))}
@@ -604,7 +604,7 @@ export default function ReviewPage({ params }: Props) {
                   {verdictLabel}
                 </span>
               </div>
-              <div className="mt-1 text-lg font-bold text-white">{v.realCostPct}</div>
+              <div className="mt-1 text-lg font-bold text-fg-max">{v.realCostPct}</div>
               {v.note && (
                 <p className="mt-1 text-xs text-muted leading-snug">{v.note}</p>
               )}
@@ -613,7 +613,7 @@ export default function ReviewPage({ params }: Props) {
                   href={v.source}
                   target="_blank"
                   rel="nofollow noopener noreferrer"
-                  className="underline hover:text-white"
+                  className="underline hover:text-fg-max"
                 >
                   Source
                 </a>{" "}
@@ -633,21 +633,21 @@ export default function ReviewPage({ params }: Props) {
                 <CostTile label={cardCostLabel(p)} cost={cardCost} />
                 <div className="rounded-xl border border-border bg-elevated p-4">
                   <div className="text-xs uppercase tracking-wide text-muted">Ordre limité (taker)</div>
-                  <div className="mt-1 text-2xl font-bold text-white tabular-nums">
+                  <div className="mt-1 text-2xl font-bold text-fg-max tabular-nums">
                     {fmtFr((1000 * p.fees.spotTaker / 100), 2)} €
                   </div>
                   <div className="mt-1 text-xs text-fg/60">{fmtNb(p.fees.spotTaker)}% sur 1 000 €</div>
                 </div>
                 <div className="rounded-xl border border-border bg-elevated p-4">
                   <div className="text-xs uppercase tracking-wide text-muted">Ordre limité (maker)</div>
-                  <div className="mt-1 text-2xl font-bold text-white tabular-nums">
+                  <div className="mt-1 text-2xl font-bold text-fg-max tabular-nums">
                     {fmtFr((1000 * p.fees.spotMaker / 100), 2)} €
                   </div>
                   <div className="mt-1 text-xs text-fg/60">{fmtNb(p.fees.spotMaker)}% sur 1 000 €</div>
                 </div>
               </div>
               <p className="mt-4 text-xs text-muted leading-relaxed">
-                <strong className="text-fg/80">Lecture :</strong> {cardCostSentence(p)} Après un virement, un ordre limité maker sur le marché spot coûte <strong className="text-white">{fmtFr((1000 * p.fees.spotMaker / 100), 2)} €</strong> pour 1 000 €. Spread observé en plus : {p.fees.spread}.
+                <strong className="text-fg/80">Lecture :</strong> {cardCostSentence(p)} Après un virement, un ordre limité maker sur le marché spot coûte <strong className="text-fg-max">{fmtFr((1000 * p.fees.spotMaker / 100), 2)} €</strong> pour 1 000 €. Spread observé en plus : {p.fees.spread}.
               </p>
             </>
           ) : (
@@ -658,7 +658,7 @@ export default function ReviewPage({ params }: Props) {
                 ) : (
                   <div className="rounded-xl border border-border bg-elevated p-4">
                     <div className="text-xs uppercase tracking-wide text-muted">Frais d&apos;achat (courtier)</div>
-                    <div className="mt-1 text-2xl font-bold text-white tabular-nums">
+                    <div className="mt-1 text-2xl font-bold text-fg-max tabular-nums">
                       {fmtFr((1000 * p.fees.instantBuy / 100), 2)} €
                     </div>
                     <div className="mt-1 text-xs text-fg/60">{fmtNb(p.fees.instantBuy)} % sur 1 000 €, hors frais de paiement par carte</div>
@@ -667,7 +667,7 @@ export default function ReviewPage({ params }: Props) {
                 <CostTile label={cardCostLabel(p)} cost={cardCost} />
                 <div className="rounded-xl border border-border bg-elevated p-4">
                   <div className="text-xs uppercase tracking-wide text-muted">Retrait SEPA</div>
-                  <div className="mt-1 text-2xl font-bold text-white tabular-nums">
+                  <div className="mt-1 text-2xl font-bold text-fg-max tabular-nums">
                     {typeof p.fees.withdrawalFiatSepa === "number"
                       ? p.fees.withdrawalFiatSepa === 0
                         ? "Gratuit"
@@ -688,7 +688,7 @@ export default function ReviewPage({ params }: Props) {
         <section className="mt-12">
           <h2 className="text-2xl font-bold tracking-tight">Notre scoring détaillé</h2>
           <p className="mt-2 text-sm text-muted max-w-2xl">
-            Six critères pondérés, chacun mesuré sur des données vérifiables (frais affichés par la plateforme, registres de l&apos;AMF et de l&apos;ESMA, avis Trustpilot). Détails dans la <Link href="/methodologie" className="underline hover:text-white">méthodologie publique</Link>.
+            Six critères pondérés, chacun mesuré sur des données vérifiables (frais affichés par la plateforme, registres de l&apos;AMF et de l&apos;ESMA, avis Trustpilot). Détails dans la <Link href="/methodologie" className="underline hover:text-fg-max">méthodologie publique</Link>.
           </p>
           <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             <Score value={p.scoring.fees} label="Frais" />
@@ -706,7 +706,7 @@ export default function ReviewPage({ params }: Props) {
             <Wallet className="h-6 w-6 text-primary" />
             Frais sur {p.name}
           </h2>
-          <p className="mt-3 text-white/80 leading-relaxed">
+          <p className="mt-3 text-fg-max/80 leading-relaxed">
             {mt
               ? `La structure de frais de ${p.name} compte trois étages qu'il faut comprendre séparément avant de signer : les frais d'exécution sur le marché spot, le surcoût d'un achat payé par carte bancaire, et les frais ponctuels (dépôt SEPA, retrait crypto vers un wallet externe). Pour la plupart des utilisateurs grand public, c'est l'achat par carte qui pèse le plus sur la rentabilité réelle : c'est le plus utilisé et le plus cher.`
               : `${p.name} est un courtier : un achat coûte un frais unique (souvent assorti d'un spread intégré au prix), auquel s'ajoutent les frais ponctuels (dépôt par carte, retrait en euros, retrait de crypto vers un wallet externe).`}
@@ -770,7 +770,7 @@ export default function ReviewPage({ params }: Props) {
             <ShieldCheck className="h-6 w-6 text-primary" />
             Sécurité et conformité
           </h2>
-          <p className="mt-3 text-white/80 leading-relaxed">
+          <p className="mt-3 text-fg-max/80 leading-relaxed">
             {isWallet
               ? `${p.name} est un portefeuille matériel : vous conservez vous-même vos clés, il n'est donc pas soumis à l'agrément MiCA, qui encadre les prestataires qui gardent ou échangent les cryptos de leurs clients.`
               : available
@@ -780,27 +780,27 @@ export default function ReviewPage({ params }: Props) {
           <div className="mt-5 grid gap-4 sm:grid-cols-2">
             <div className="rounded-xl border border-border bg-surface p-4">
               <div className="text-xs uppercase tracking-wide text-muted">Cold storage</div>
-              <div className="mt-1 text-2xl font-bold text-white">{fmtNb(p.security.coldStoragePct)}%</div>
-              <p className="mt-2 text-sm text-white/70">
+              <div className="mt-1 text-2xl font-bold text-fg-max">{fmtNb(p.security.coldStoragePct)}%</div>
+              <p className="mt-2 text-sm text-fg-max/70">
                 Pourcentage des fonds clients conservés hors-ligne. Au-dessus de 95% est considéré comme une bonne pratique.
               </p>
             </div>
             <div className="rounded-xl border border-border bg-surface p-4">
               <div className="text-xs uppercase tracking-wide text-muted">Statut MiCA</div>
-              <div className="mt-1 text-sm font-semibold text-white">{p.mica.status}</div>
-              <p className="mt-2 text-sm text-white/70">
+              <div className="mt-1 text-sm font-semibold text-fg-max">{p.mica.status}</div>
+              <p className="mt-2 text-sm text-fg-max/70">
                 Enregistré le {p.mica.registrationDate ? new Date(p.mica.registrationDate).toLocaleDateString("fr-FR") : "—"}. Vérifié par Cryptoreflex le {new Date(p.mica.lastVerified).toLocaleDateString("fr-FR")}.
               </p>
             </div>
             <div className="rounded-xl border border-border bg-surface p-4">
               <div className="text-xs uppercase tracking-wide text-muted">Assurance</div>
-              <div className="mt-1 text-sm font-semibold text-white">
+              <div className="mt-1 text-sm font-semibold text-fg-max">
                 {p.security.insurance ? "Oui — police dédiée" : "Non documentée"}
               </div>
             </div>
             <div className="rounded-xl border border-border bg-surface p-4">
               <div className="text-xs uppercase tracking-wide text-muted">Dernier incident</div>
-              <div className="mt-1 text-sm text-white/90">
+              <div className="mt-1 text-sm text-fg-max/90">
                 {p.security.lastIncident ?? "Aucun à date"}
               </div>
             </div>
@@ -810,10 +810,10 @@ export default function ReviewPage({ params }: Props) {
         {/* CTA milieu — après section sécurité (pic d'engagement) */}
         <section className="mt-10 rounded-2xl border border-primary/30 bg-primary/5 p-5 sm:p-6 flex flex-col sm:flex-row items-start sm:items-center gap-4 justify-between">
           <div>
-            <div className="text-base font-bold text-white">
+            <div className="text-base font-bold text-fg-max">
               {available ? `Ouvrir le site de ${p.name}` : "Cherchez une plateforme autorisée en France"}
             </div>
-            <p className="mt-1 text-sm text-white/70 max-w-xl">
+            <p className="mt-1 text-sm text-fg-max/70 max-w-xl">
               {isWallet ? "Portefeuille matériel, hors champ MiCA" : available ? "Plateforme agréée MiCA" : "Non autorisée en France"} · vérifié le {new Date(p.mica.lastVerified).toLocaleDateString("fr-FR")}.
             </p>
           </div>
@@ -837,27 +837,27 @@ export default function ReviewPage({ params }: Props) {
             <Coins className="h-6 w-6 text-primary" />
             Catalogue crypto et staking
           </h2>
-          <p className="mt-3 text-white/80 leading-relaxed">
+          <p className="mt-3 text-fg-max/80 leading-relaxed">
             {p.name} liste {fmtFr(p.cryptos.totalCount, 0)} cryptomonnaie{p.cryptos.totalCount > 1 ? "s" : ""} selon nos données.{" "}
             {`Vérifiez sur le site de ${p.name} qu'une crypto précise y est proposée avant d'ouvrir un compte.`}
           </p>
           {p.cryptos.stakingAvailable ? (
             <div className="mt-5 rounded-xl border border-border bg-surface p-5">
-              <div className="flex items-center gap-2 text-sm font-semibold text-white">
+              <div className="flex items-center gap-2 text-sm font-semibold text-fg-max">
                 <CheckCircle2 className="h-4 w-4 text-accent-green" />
                 Staking disponible
               </div>
-              <p className="mt-2 text-sm text-white/70">
+              <p className="mt-2 text-sm text-fg-max/70">
                 Cryptos éligibles : {p.cryptos.stakingCryptos.join(", ")}. APY variables selon la crypto et le marché. Voir nos <Link href="/staking/ethereum" className="text-primary-glow hover:underline">guides staking dédiés</Link> pour les rendements actuels.
               </p>
             </div>
           ) : (
             <div className="mt-5 rounded-xl border border-border bg-surface p-5">
-              <div className="flex items-center gap-2 text-sm font-semibold text-white">
+              <div className="flex items-center gap-2 text-sm font-semibold text-fg-max">
                 <XCircle className="h-4 w-4 text-accent-rose" />
                 Pas de staking
               </div>
-              <p className="mt-2 text-sm text-white/70">
+              <p className="mt-2 text-sm text-fg-max/70">
                 {p.name} ne propose pas de staking. Si c'est un critère bloquant, voir Coinbase, Kraken ou Bitpanda.
               </p>
             </div>
@@ -887,13 +887,13 @@ export default function ReviewPage({ params }: Props) {
             </div>
             <div className="rounded-xl border border-border bg-surface p-4">
               <div className="text-xs uppercase tracking-wide text-muted">Délai de réponse</div>
-              <div className="mt-1 text-sm font-semibold text-white">{supportDelayLabel(p.support)}</div>
+              <div className="mt-1 text-sm font-semibold text-fg-max">{supportDelayLabel(p.support)}</div>
             </div>
           </div>
           {p.support.note && p.support.source && p.support.verified ? (
-            <p className="mt-3 text-sm text-white/75 leading-relaxed">
+            <p className="mt-3 text-sm text-fg-max/75 leading-relaxed">
               {p.support.note.replace(/\.$/, "")}.{" "}
-              <a href={p.support.source} target="_blank" rel="noopener noreferrer" className="underline decoration-dotted underline-offset-2 hover:text-white">
+              <a href={p.support.source} target="_blank" rel="noopener noreferrer" className="underline decoration-dotted underline-offset-2 hover:text-fg-max">
                 Page d&apos;assistance officielle
               </a>{" "}
               relevée le {frDate(p.support.verified)}
@@ -903,7 +903,7 @@ export default function ReviewPage({ params }: Props) {
                   {p.support.otherSources.map((u, i) => (
                     <span key={u}>
                       {i > 0 && ", "}
-                      <a href={u} target="_blank" rel="noopener noreferrer" className="underline decoration-dotted underline-offset-2 hover:text-white">
+                      <a href={u} target="_blank" rel="noopener noreferrer" className="underline decoration-dotted underline-offset-2 hover:text-fg-max">
                         {i + 2}
                       </a>
                     </span>
@@ -928,9 +928,9 @@ export default function ReviewPage({ params }: Props) {
             Bonus de bienvenue
           </h2>
           <div className="mt-4 rounded-xl border border-accent-green/30 bg-accent-green/5 p-5">
-            <div className="text-sm font-semibold text-white">{p.bonus.welcome}</div>
+            <div className="text-sm font-semibold text-fg-max">{p.bonus.welcome}</div>
             {p.bonus.conditions && (
-              <p className="mt-2 text-sm text-white/70">
+              <p className="mt-2 text-sm text-fg-max/70">
                 <span className="text-muted">Conditions :</span> {p.bonus.conditions}
               </p>
             )}
@@ -951,7 +951,7 @@ export default function ReviewPage({ params }: Props) {
             </h3>
             <ul className="mt-4 space-y-3">
               {p.strengths.map((s) => (
-                <li key={s} className="flex items-start gap-2 text-sm text-white/85">
+                <li key={s} className="flex items-start gap-2 text-sm text-fg-max/85">
                   <CheckCircle2 className="h-4 w-4 text-accent-green shrink-0 mt-0.5" />
                   <span>{s}</span>
                 </li>
@@ -964,7 +964,7 @@ export default function ReviewPage({ params }: Props) {
             </h3>
             <ul className="mt-4 space-y-3">
               {p.weaknesses.map((w) => (
-                <li key={w} className="flex items-start gap-2 text-sm text-white/85">
+                <li key={w} className="flex items-start gap-2 text-sm text-fg-max/85">
                   <XCircle className="h-4 w-4 text-accent-rose shrink-0 mt-0.5" />
                   <span>{w}</span>
                 </li>
@@ -976,8 +976,8 @@ export default function ReviewPage({ params }: Props) {
         {/* RÉSUMÉ À PARTIR DES DONNÉES — A-C0-3 (06/10/2026) : remplace le « Verdict Cryptoreflex » rédigé par du code. */}
         <section className="mt-12 rounded-2xl border border-primary/30 bg-primary/5 p-6">
           <h2 className="text-2xl font-bold tracking-tight">Résumé à partir des données ci-dessus</h2>
-          <p className="mt-3 text-base text-white/85 leading-relaxed">{summary.headline}</p>
-          <ul className="mt-4 space-y-2 text-sm text-white/80 leading-relaxed">
+          <p className="mt-3 text-base text-fg-max/85 leading-relaxed">{summary.headline}</p>
+          <ul className="mt-4 space-y-2 text-sm text-fg-max/80 leading-relaxed">
             {summary.facts.map((f) => (
               <li key={f} className="flex gap-2">
                 <span className="text-primary-glow shrink-0">·</span>
@@ -988,11 +988,11 @@ export default function ReviewPage({ params }: Props) {
           <div className="mt-5 grid gap-3 sm:grid-cols-2">
             <div>
               <div className="text-xs uppercase tracking-wide text-muted">Idéal pour</div>
-              <div className="mt-1 text-sm text-white/90">{summary.ideal}</div>
+              <div className="mt-1 text-sm text-fg-max/90">{summary.ideal}</div>
             </div>
             <div>
               <div className="text-xs uppercase tracking-wide text-muted">À éviter si</div>
-              <div className="mt-1 text-sm text-white/90">{summary.avoid}</div>
+              <div className="mt-1 text-sm text-fg-max/90">{summary.avoid}</div>
             </div>
           </div>
           <div className="mt-6">
@@ -1018,11 +1018,11 @@ export default function ReviewPage({ params }: Props) {
                 key={item.q}
                 className="group rounded-xl border border-border bg-surface px-5 py-4 open:bg-elevated"
               >
-                <summary className="cursor-pointer list-none font-semibold text-white flex items-center justify-between">
+                <summary className="cursor-pointer list-none font-semibold text-fg-max flex items-center justify-between">
                   {item.q}
                   <span className="text-muted group-open:rotate-180 transition-transform">▾</span>
                 </summary>
-                <p className="mt-3 text-sm text-white/80 leading-relaxed">{item.a}</p>
+                <p className="mt-3 text-sm text-fg-max/80 leading-relaxed">{item.a}</p>
               </details>
             ))}
           </div>
@@ -1047,7 +1047,7 @@ export default function ReviewPage({ params }: Props) {
                     href={`/comparatif/${c.slug}`}
                     className="rounded-xl border border-border bg-surface p-4 hover:border-primary/40 transition-colors"
                   >
-                    <div className="text-sm font-semibold text-white">
+                    <div className="text-sm font-semibold text-fg-max">
                       {p.name} vs {otherPlat?.name ?? other}
                     </div>
                     <div className="mt-1 text-xs text-muted">
@@ -1089,9 +1089,9 @@ export default function ReviewPage({ params }: Props) {
                   className="rounded-xl border border-border bg-surface p-4 hover:border-primary/40 transition-colors flex flex-col"
                 >
                   <div className="flex items-center justify-between gap-2">
-                    <div className="text-sm font-semibold text-white">{op.name}</div>
-                    <div className="flex items-center gap-1 text-xs text-amber-300">
-                      <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
+                    <div className="text-sm font-semibold text-fg-max">{op.name}</div>
+                    <div className="flex items-center gap-1 text-xs text-primary-soft">
+                      <Star className="h-3 w-3 fill-primary-glow text-primary-glow" />
                       <span className="font-mono tabular-nums">{fmtFr(op.scoring.global, 1)}</span>
                     </div>
                   </div>
@@ -1131,7 +1131,7 @@ export default function ReviewPage({ params }: Props) {
                 : available
                   ? `Les liens vers ${p.name} mènent à son site officiel`
                   : `${p.name} n'étant pas autorisée en France, cette page ne renvoie pas vers son site`}{" "}
-            — méthodologie publique sur <Link href="/methodologie" className="underline hover:text-white">/methodologie</Link>. Investir dans les cryptoactifs comporte un risque de perte en capital. Cette page ne constitue pas un conseil en investissement.
+            — méthodologie publique sur <Link href="/methodologie" className="underline hover:text-fg-max">/methodologie</Link>. Investir dans les cryptoactifs comporte un risque de perte en capital. Cette page ne constitue pas un conseil en investissement.
           </p>
         </section>
       </div>

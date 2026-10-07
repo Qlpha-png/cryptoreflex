@@ -35,7 +35,7 @@ export default function TaxResult({ result, totalCessionsAnnee }: TaxResultProps
         <div>
           <h3
             id="tax-result-title"
-            className="font-display font-bold text-xl text-white"
+            className="font-display font-bold text-xl text-fg-max"
           >
             Votre estimation fiscale
           </h3>
@@ -92,7 +92,7 @@ export default function TaxResult({ result, totalCessionsAnnee }: TaxResultProps
           />
           <div>
             <p className="font-semibold text-danger-fg">Moins-value constatée</p>
-            <p className="text-white/80">
+            <p className="text-fg-max/80">
               Cette moins-value est imputable uniquement sur les plus-values crypto
               de la <strong>même année</strong>. Pour les particuliers, elle{" "}
               <strong>n'est pas reportable</strong> sur les années suivantes
@@ -136,7 +136,7 @@ export default function TaxResult({ result, totalCessionsAnnee }: TaxResultProps
             <p className="text-xs uppercase tracking-wide text-primary-soft font-semibold">
               Flat tax due (PFU 31,4 %)
             </p>
-            <p className="mt-1 font-mono font-bold text-3xl text-white">
+            <p className="mt-1 font-mono font-bold text-3xl text-fg-max">
               {formatEur(flat.totalFlatTax)}
             </p>
           </div>
@@ -202,7 +202,7 @@ function Tile({
       ? "text-primary-soft"
       : tone === "rose"
       ? "text-danger-fg"
-      : "text-white";
+      : "text-fg-max";
   return (
     <div className="rounded-xl border border-border bg-elevated/40 p-4">
       <dt className="text-xs uppercase tracking-wide text-muted">{label}</dt>

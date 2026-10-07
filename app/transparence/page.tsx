@@ -556,9 +556,9 @@ export default function TransparencePage() {
         </section>
 
         {/* BANDEAU LÉGAL ---------------------------------------------------- */}
-        <aside className="mt-16 rounded-2xl border border-amber-500/30 bg-amber-500/5 p-6 sm:p-7">
+        <aside className="mt-16 rounded-2xl border border-warning/30 bg-warning/5 p-6 sm:p-7">
           <div className="flex items-start gap-3">
-            <AlertTriangle className="h-5 w-5 text-amber-300 shrink-0 mt-1" />
+            <AlertTriangle className="h-5 w-5 text-primary-soft shrink-0 mt-1" />
             <div>
               <h2 className="text-base font-bold text-amber-100">
                 Cadre légal de cette page
@@ -666,7 +666,7 @@ function PartnershipRow({
     <tr className="hover:bg-surface/50">
       <td className="px-4 py-3 align-top">
         <div className="flex items-center gap-2.5">
-          <span className="relative inline-flex h-7 w-7 items-center justify-center rounded-md bg-white/5 ring-1 ring-border overflow-hidden">
+          <span className="relative inline-flex h-7 w-7 items-center justify-center rounded-md bg-fg-max/5 ring-1 ring-border overflow-hidden">
             {row.logo ? (
               <Image
                 src={row.logo}
@@ -706,7 +706,7 @@ function PartnershipRow({
       </td>
       <td className="px-4 py-3 align-top text-xs">
         {isReview ? (
-          <span className="inline-flex items-center gap-1 rounded-full bg-amber-500/15 px-2 py-0.5 text-[11px] font-medium text-amber-200">
+          <span className="inline-flex items-center gap-1 rounded-full bg-warning/15 px-2 py-0.5 text-[11px] font-medium text-amber-200">
             <Clock className="h-3 w-3" /> {row.partnership.since}
           </span>
         ) : (

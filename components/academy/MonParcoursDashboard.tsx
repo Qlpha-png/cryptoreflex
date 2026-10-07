@@ -286,13 +286,13 @@ export default function MonParcoursDashboard() {
       {reviewItems.length > 0 && (
         <section
           aria-labelledby="review-h"
-          className="mt-6 rounded-2xl border border-sky-400/30 bg-sky-400/5 p-5 sm:p-6"
+          className="mt-6 rounded-2xl border border-ice/30 bg-ice/5 p-5 sm:p-6"
         >
           <h2
             id="review-h"
             className="flex items-center gap-2 text-base font-bold text-fg"
           >
-            <RefreshCw className="h-4 w-4 text-sky-300" aria-hidden="true" />
+            <RefreshCw className="h-4 w-4 text-info-fg" aria-hidden="true" />
             À réviser
           </h2>
           <p className="mt-1 text-xs text-muted">
@@ -304,10 +304,10 @@ export default function MonParcoursDashboard() {
               <li key={track.id}>
                 <Link
                   href={`/academie/${track.id}`}
-                  className="flex items-center justify-between gap-2 rounded-lg border border-border bg-background/40 px-4 py-2.5 text-sm text-fg/90 transition-colors hover:border-sky-400/40"
+                  className="flex items-center justify-between gap-2 rounded-lg border border-border bg-background/40 px-4 py-2.5 text-sm text-fg/90 transition-colors hover:border-ice/40"
                 >
                   <span>{track.title}</span>
-                  <span className="shrink-0 text-[11px] font-medium text-sky-300">
+                  <span className="shrink-0 text-[11px] font-medium text-info-fg">
                     validé il y a {days} j
                   </span>
                 </Link>
@@ -321,13 +321,13 @@ export default function MonParcoursDashboard() {
       {reviewNotions.length > 0 && (
         <section
           aria-labelledby="notions-h"
-          className="mt-6 rounded-2xl border border-amber-400/30 bg-amber-400/5 p-5 sm:p-6"
+          className="mt-6 rounded-2xl border border-primary-glow/30 bg-primary-glow/5 p-5 sm:p-6"
         >
           <h2
             id="notions-h"
             className="flex items-center gap-2 text-base font-bold text-fg"
           >
-            <Target className="h-4 w-4 text-amber-300" aria-hidden="true" />
+            <Target className="h-4 w-4 text-primary-soft" aria-hidden="true" />
             Notions à revoir
           </h2>
           <p className="mt-1 text-xs text-muted">
@@ -351,7 +351,7 @@ export default function MonParcoursDashboard() {
                 <ul role="list" className="mt-1.5 space-y-1">
                   {quizWrong.map((m) => (
                     <li key={m.id} className="flex gap-2 text-xs text-fg/70">
-                      <span className="text-amber-300" aria-hidden="true">
+                      <span className="text-primary-soft" aria-hidden="true">
                         •
                       </span>
                       <span>{m.q}</span>
@@ -376,7 +376,7 @@ export default function MonParcoursDashboard() {
           {rows.map(({ track, pct, certified, doneCount }) => {
             const Icon = ICONS[track.iconKey];
             const status = certified
-              ? { label: "Quiz validé", cls: "text-amber-300 border-amber-400/40 bg-amber-400/10" }
+              ? { label: "Quiz validé", cls: "text-primary-soft border-primary-glow/40 bg-primary-glow/10" }
               : pct === 100
                 ? { label: "Terminé", cls: "text-emerald-300 border-emerald-400/40 bg-emerald-400/10" }
                 : pct > 0
@@ -444,13 +444,13 @@ export default function MonParcoursDashboard() {
       {certifiedCount > 0 && (
         <section
           aria-labelledby="certs-h"
-          className="mt-10 rounded-2xl border border-amber-400/30 bg-amber-400/5 p-6"
+          className="mt-10 rounded-2xl border border-primary-glow/30 bg-primary-glow/5 p-6"
         >
           <h2
             id="certs-h"
             className="flex items-center gap-2 text-lg font-bold text-fg"
           >
-            <Award className="h-5 w-5 text-amber-300" aria-hidden="true" />
+            <Award className="h-5 w-5 text-primary-soft" aria-hidden="true" />
             Vos quiz validés ({certifiedCount})
           </h2>
           <ul role="list" className="mt-4 grid gap-2 sm:grid-cols-2">
@@ -460,7 +460,7 @@ export default function MonParcoursDashboard() {
                 <li key={track.id}>
                   <Link
                     href={`/academie/${track.id}/quiz`}
-                    className="flex items-center justify-between gap-2 rounded-lg border border-border bg-background/40 px-4 py-2.5 text-sm text-fg/90 transition-colors hover:border-amber-400/40"
+                    className="flex items-center justify-between gap-2 rounded-lg border border-border bg-background/40 px-4 py-2.5 text-sm text-fg/90 transition-colors hover:border-primary-glow/40"
                   >
                     <span>{track.title}</span>
                     <ArrowRight className="h-3.5 w-3.5 shrink-0 text-muted" aria-hidden="true" />

@@ -82,7 +82,7 @@ export default function FiscalToolCard({
         <div className="flex-1 min-w-0">
           <h3
             id={`fiscal-tool-${tool.id}-name`}
-            className="font-display font-bold text-lg text-white leading-tight"
+            className="font-display font-bold text-lg text-fg-max leading-tight"
           >
             {tool.name}
           </h3>
@@ -104,7 +104,7 @@ export default function FiscalToolCard({
       {/* Prix de départ */}
       <p className="mt-4 text-sm">
         <span className="text-muted">Tarif : </span>
-        <strong className="text-white">{startingPrice}</strong>
+        <strong className="text-fg-max">{startingPrice}</strong>
         {tool.freeTrial && (
           <span className="ml-2 inline-flex items-center rounded-full bg-success/15 px-2 py-0.5 text-[10px] font-semibold text-success">
             Essai gratuit
@@ -113,7 +113,7 @@ export default function FiscalToolCard({
       </p>
 
       {/* Pros (3) */}
-      <ul className="mt-4 space-y-1.5 text-sm text-white/80">
+      <ul className="mt-4 space-y-1.5 text-sm text-fg-max/80">
         {topPros.map((pro) => (
           <li key={pro} className="flex gap-2">
             <Check
@@ -127,7 +127,7 @@ export default function FiscalToolCard({
 
       {/* Con (1) */}
       {topCon && (
-        <p className="mt-3 flex gap-2 text-sm text-white/60">
+        <p className="mt-3 flex gap-2 text-sm text-fg-max/60">
           <X
             className="h-4 w-4 shrink-0 text-danger-fg mt-0.5"
             aria-hidden="true"

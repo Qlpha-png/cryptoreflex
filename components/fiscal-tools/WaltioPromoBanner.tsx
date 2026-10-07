@@ -84,9 +84,9 @@ export default function WaltioPromoBanner() {
               className="h-4 w-4 shrink-0 text-primary-soft"
               aria-hidden="true"
             />
-            <p className="truncate text-white/90">
+            <p className="truncate text-fg-max/90">
               <span aria-hidden="true">💸 </span>
-              <strong className="text-white">-30 % sur Waltio</strong>
+              <strong className="text-fg-max">-30 % sur Waltio</strong>
               <span className="hidden sm:inline">
                 {" "}jusqu'au 31 mai 2026 — Code{" "}
               </span>
@@ -113,7 +113,7 @@ export default function WaltioPromoBanner() {
               type="button"
               onClick={handleDismiss}
               aria-label="Fermer la promotion Waltio"
-              className="inline-flex h-7 w-7 items-center justify-center rounded-full text-white/70 hover:text-white hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-primary/40"
+              className="inline-flex h-7 w-7 items-center justify-center rounded-full text-fg-max/70 hover:text-fg-max hover:bg-fg-max/10 focus:outline-none focus:ring-2 focus:ring-primary/40"
             >
               <X className="h-4 w-4" aria-hidden="true" />
             </button>

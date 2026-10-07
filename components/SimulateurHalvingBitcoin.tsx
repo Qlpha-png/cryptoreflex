@@ -89,8 +89,8 @@ export default function SimulateurHalvingBitcoin() {
       <div className="glass rounded-2xl p-4 sm:p-6 flex items-center gap-4">
         <Calendar className="h-6 w-6 text-primary-soft" />
         <div className="flex-1">
-          <p className="text-xs uppercase tracking-wide text-white/60">Prochain halving</p>
-          <p className="text-white font-bold">
+          <p className="text-xs uppercase tracking-wide text-fg-max/60">Prochain halving</p>
+          <p className="text-fg-max font-bold">
             Avril 2028 — dans <span className="text-primary-soft">{daysLeft} jours</span>
           </p>
         </div>
@@ -100,7 +100,7 @@ export default function SimulateurHalvingBitcoin() {
       <div className="glass rounded-2xl p-6 sm:p-8">
         <div className="grid gap-6 sm:grid-cols-3">
           <div>
-            <label htmlFor="halving-amount" className="block text-xs font-semibold uppercase tracking-wide text-white/60">
+            <label htmlFor="halving-amount" className="block text-xs font-semibold uppercase tracking-wide text-fg-max/60">
               Montant DCA (EUR)
             </label>
             <input
@@ -113,16 +113,16 @@ export default function SimulateurHalvingBitcoin() {
                 setAmountEur(Number(e.target.value) || 0);
                 setHasRun(true);
               }}
-              className="mt-2 w-full rounded-xl border border-border bg-elevated px-3 py-2 text-white"
+              className="mt-2 w-full rounded-xl border border-border bg-elevated px-3 py-2 text-fg-max"
               placeholder="100"
             />
-            <p className="mt-1 text-[11px] text-white/50">
+            <p className="mt-1 text-[11px] text-fg-max/50">
               {frequency === "monthly" ? "par mois" : "par semaine"}
             </p>
           </div>
 
           <div>
-            <label className="block text-xs font-semibold uppercase tracking-wide text-white/60">
+            <label className="block text-xs font-semibold uppercase tracking-wide text-fg-max/60">
               Fréquence
             </label>
             <div className="mt-2 grid grid-cols-2 gap-2">
@@ -137,7 +137,7 @@ export default function SimulateurHalvingBitcoin() {
                   className={`rounded-xl border px-3 py-2 text-sm font-semibold ${
                     frequency === f.id
                       ? "border-primary bg-primary/15 text-primary-soft"
-                      : "border-border bg-elevated text-white/70 hover:border-primary/40"
+                      : "border-border bg-elevated text-fg-max/70 hover:border-primary/40"
                   }`}
                 >
                   {f.label}
@@ -147,7 +147,7 @@ export default function SimulateurHalvingBitcoin() {
           </div>
 
           <div>
-            <label htmlFor="halving-start" className="block text-xs font-semibold uppercase tracking-wide text-white/60">
+            <label htmlFor="halving-start" className="block text-xs font-semibold uppercase tracking-wide text-fg-max/60">
               Date de début
             </label>
             <input
@@ -158,7 +158,7 @@ export default function SimulateurHalvingBitcoin() {
                 setStartDate(e.target.value);
                 setHasRun(true);
               }}
-              className="mt-2 w-full rounded-xl border border-border bg-elevated px-3 py-2 text-white"
+              className="mt-2 w-full rounded-xl border border-border bg-elevated px-3 py-2 text-fg-max"
             />
           </div>
         </div>
@@ -201,10 +201,10 @@ export default function SimulateurHalvingBitcoin() {
           <div className="grid gap-6 sm:grid-cols-[1fr_auto] items-center">
             <div>
               <span className="badge-info">Notre choix DCA Bitcoin</span>
-              <h3 className="mt-3 text-xl font-bold text-white">
+              <h3 className="mt-3 text-xl font-bold text-fg-max">
                 Bitstack — DCA Bitcoin auto dès 1 €/jour
               </h3>
-              <p className="mt-2 text-sm text-white/70">
+              <p className="mt-2 text-sm text-fg-max/70">
                 Programme vos achats récurrents et accumule des sats à chaque halving
                 sans devoir te connecter. Application FR conforme MiCA.
               </p>
@@ -224,9 +224,9 @@ export default function SimulateurHalvingBitcoin() {
       )}
 
       {/* Disclaimer YMYL */}
-      <div className="rounded-xl border border-amber-400/30 bg-amber-400/5 p-4 text-xs text-white/70">
+      <div className="rounded-xl border border-primary-glow/30 bg-primary-glow/5 p-4 text-xs text-fg-max/70">
         <div className="flex gap-2">
-          <Info className="h-4 w-4 shrink-0 text-amber-300" />
+          <Info className="h-4 w-4 shrink-0 text-primary-soft" />
           <p>
             <strong className="text-amber-200">Avertissement :</strong>{" "}
             les projections affichées sont des <strong>scénarios mathématiques</strong>{" "}
@@ -261,21 +261,21 @@ function ScenarioCard({
   return (
     <div className={`glass rounded-2xl p-5 border ${color} ${highlight ? "ring-1 ring-primary/40" : ""}`}>
       <div className="flex items-center gap-2">
-        <TrendingUp className="h-4 w-4 text-white/60" />
-        <h4 className="font-bold text-white">{title}</h4>
+        <TrendingUp className="h-4 w-4 text-fg-max/60" />
+        <h4 className="font-bold text-fg-max">{title}</h4>
       </div>
-      <p className="mt-2 text-xs text-white/60 leading-relaxed">{description}</p>
+      <p className="mt-2 text-xs text-fg-max/60 leading-relaxed">{description}</p>
       <div className="mt-4 grid grid-cols-2 gap-3 text-xs">
         <div>
-          <p className="text-white/50">Investi</p>
-          <p className="font-bold text-white">{formatEur(invested)}</p>
+          <p className="text-fg-max/50">Investi</p>
+          <p className="font-bold text-fg-max">{formatEur(invested)}</p>
         </div>
         <div>
-          <p className="text-white/50">Valeur estimée</p>
+          <p className="text-fg-max/50">Valeur estimée</p>
           <p className="font-bold text-primary-soft">{formatEur(value)}</p>
         </div>
       </div>
-      <p className="mt-3 text-xs text-white/70">
+      <p className="mt-3 text-xs text-fg-max/70">
         ROI : <span className={roi >= 0 ? "text-accent-green" : "text-red-400"}>{fmtFr(roi, 0)} %</span>
       </p>
     </div>
@@ -312,8 +312,8 @@ function HalvingChart({ data }: { data: ChartPoint[] }) {
 
   return (
     <div className="glass rounded-2xl p-4 sm:p-6">
-      <h3 className="font-bold text-white">Projection portfolio aux 3 prochains halvings</h3>
-      <p className="mt-1 text-xs text-white/60">3 scénarios — du plus prudent au plus bullish.</p>
+      <h3 className="font-bold text-fg-max">Projection portfolio aux 3 prochains halvings</h3>
+      <p className="mt-1 text-xs text-fg-max/60">3 scénarios — du plus prudent au plus bullish.</p>
       <div className="mt-4 flex flex-wrap gap-3 text-xs">
         <Legend color="#9CA3AF" label="Total investi" dashed />
         <Legend color="#3b82f6" label="Conservateur" />
@@ -371,7 +371,7 @@ function HalvingChart({ data }: { data: ChartPoint[] }) {
 
 function Legend({ color, label, dashed }: { color: string; label: string; dashed?: boolean }) {
   return (
-    <span className="inline-flex items-center gap-1.5 text-white/70">
+    <span className="inline-flex items-center gap-1.5 text-fg-max/70">
       <svg width="16" height="2">
         <line
           x1="0"

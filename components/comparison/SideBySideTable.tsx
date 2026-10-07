@@ -142,10 +142,10 @@ export default function SideBySideTable({ a, b }: Props) {
               <th scope="col" className="sticky left-0 z-10 bg-elevated px-4 py-3 text-xs font-semibold uppercase tracking-wide text-muted">
                 Critère
               </th>
-              <th scope="col" className="px-4 py-3 text-xs font-semibold uppercase tracking-wide text-white">
+              <th scope="col" className="px-4 py-3 text-xs font-semibold uppercase tracking-wide text-fg-max">
                 {a.name}
               </th>
-              <th scope="col" className="px-4 py-3 text-xs font-semibold uppercase tracking-wide text-white">
+              <th scope="col" className="px-4 py-3 text-xs font-semibold uppercase tracking-wide text-fg-max">
                 {b.name}
               </th>
             </tr>
@@ -153,8 +153,8 @@ export default function SideBySideTable({ a, b }: Props) {
           <tbody>
             {rows.map((row, idx) => {
               const winner = determineWinner(row);
-              const aClass = winner === "a" ? "bg-accent-green/10 text-white font-semibold" : "text-white/85";
-              const bClass = winner === "b" ? "bg-accent-green/10 text-white font-semibold" : "text-white/85";
+              const aClass = winner === "a" ? "bg-accent-green/10 text-fg-max font-semibold" : "text-fg-max/85";
+              const bClass = winner === "b" ? "bg-accent-green/10 text-fg-max font-semibold" : "text-fg-max/85";
               const isGroupStart = !!row.group;
               return (
                 <>

@@ -255,7 +255,7 @@ export default function MiniInvestSimulator() {
             {/* FIX P0 audit-fonctionnel-live-final #2 : disclaimer si CoinGecko
                 a tronqué le dataset (free tier limite >365j). */}
             {clamped && (
-              <p className="mt-2 text-[11px] text-amber-300/90">
+              <p className="mt-2 text-[11px] text-primary-soft/90">
                 Données limitées par CoinGecko free tier — résultat indicatif
                 sur la période disponible.
               </p>

@@ -308,7 +308,7 @@ export default function CalculateurFiscalitePage() {
           {/* Breadcrumb visuel — le BreadcrumbList JSON-LD est dans fiscaliteNodes */}
           <nav
             aria-label="Fil d'Ariane"
-            className="mb-6 text-xs text-white/60"
+            className="mb-6 text-xs text-fg-max/60"
           >
             <ol className="flex items-center gap-2">
               <li>
@@ -323,7 +323,7 @@ export default function CalculateurFiscalitePage() {
                 </Link>
               </li>
               <li aria-hidden="true">/</li>
-              <li className="text-white/80" aria-current="page">
+              <li className="text-fg-max/80" aria-current="page">
                 Calculateur fiscalité crypto
               </li>
             </ol>
@@ -341,13 +341,13 @@ export default function CalculateurFiscalitePage() {
                 Téléchargez votre simulation en PDF
               </span>
             </div>
-            <h1 className="mt-4 font-display text-4xl sm:text-5xl font-extrabold tracking-tight text-white">
+            <h1 className="mt-4 font-display text-4xl sm:text-5xl font-extrabold tracking-tight text-fg-max">
               Calculateur fiscalité crypto 2026 —{" "}
               <span className="gradient-text">
                 PFU 31,4 %, Barème, Cerfa 2086 / 3916-bis
               </span>
             </h1>
-            <p className="mt-4 text-lg text-white/80">
+            <p className="mt-4 text-lg text-fg-max/80">
               Estimez votre impôt sur les plus-values crypto en 2 min selon le
               régime fiscal applicable : <strong>PFU 31,4 %</strong>,{" "}
               <strong>barème progressif IR</strong> ou{" "}
@@ -362,7 +362,7 @@ export default function CalculateurFiscalitePage() {
                 { icon: FileText, label: "Aide Cerfa 2086 + 2042-C par email" },
                 { icon: ShieldCheck, label: "Seuil 305 € pris en compte" },
               ].map(({ icon: Icon, label }) => (
-                <li key={label} className="flex items-center gap-2 text-white/80">
+                <li key={label} className="flex items-center gap-2 text-fg-max/80">
                   <Icon
                     className="h-4 w-4 text-primary-soft"
                     aria-hidden="true"
@@ -376,7 +376,7 @@ export default function CalculateurFiscalitePage() {
           {/* Disclaimer obligatoire */}
           <div
             role="note"
-            className="mt-8 max-w-3xl rounded-xl border border-warning/40 bg-warning/10 p-4 flex gap-3 text-sm text-white/90"
+            className="mt-8 max-w-3xl rounded-xl border border-warning/40 bg-warning/10 p-4 flex gap-3 text-sm text-fg-max/90"
           >
             <AlertTriangle
               className="h-5 w-5 shrink-0 text-warning-fg mt-0.5"
@@ -406,10 +406,10 @@ export default function CalculateurFiscalitePage() {
       >
         <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
           <span className="badge-info">Formule de l'article 150 VH bis</span>
-          <h2 className="mt-4 font-display text-3xl sm:text-4xl font-extrabold tracking-tight text-white">
+          <h2 className="mt-4 font-display text-3xl sm:text-4xl font-extrabold tracking-tight text-fg-max">
             Comment calculer son impôt crypto en France en 2026 ?
           </h2>
-          <div className="mt-6 space-y-4 text-white/80 text-sm sm:text-base leading-relaxed">
+          <div className="mt-6 space-y-4 text-fg-max/80 text-sm sm:text-base leading-relaxed">
             <p>
               La fiscalité des plus-values crypto en France repose sur l'
               <strong>article 150 VH bis du CGI</strong>, complété par le BOFiP
@@ -424,7 +424,7 @@ export default function CalculateurFiscalitePage() {
               intérêts (option 2OP distincte).
             </p>
 
-            <h3 className="text-xl font-bold text-white mt-8">
+            <h3 className="text-xl font-bold text-fg-max mt-8">
               La formule officielle (article 150 VH bis)
             </h3>
             <p>
@@ -451,7 +451,7 @@ export default function CalculateurFiscalitePage() {
               le fait ligne par ligne.
             </p>
 
-            <h3 className="text-xl font-bold text-white mt-8">
+            <h3 className="text-xl font-bold text-fg-max mt-8">
               Exemple chiffré rapide
             </h3>
             <p>
@@ -472,7 +472,7 @@ export default function CalculateurFiscalitePage() {
               .
             </p>
 
-            <h3 className="text-xl font-bold text-white mt-8">
+            <h3 className="text-xl font-bold text-fg-max mt-8">
               Le seuil 305 € — exonération totale
             </h3>
             <p>
@@ -485,7 +485,7 @@ export default function CalculateurFiscalitePage() {
               imposable, pas seulement la fraction au-dessus du seuil.
             </p>
 
-            <h3 className="text-xl font-bold text-white mt-8">
+            <h3 className="text-xl font-bold text-fg-max mt-8">
               Cas particulier — swap crypto contre crypto
             </h3>
             <p>
@@ -500,7 +500,7 @@ export default function CalculateurFiscalitePage() {
               l'imposition.
             </p>
 
-            <h3 className="text-xl font-bold text-white mt-8">
+            <h3 className="text-xl font-bold text-fg-max mt-8">
               Frais déductibles ou pas ?
             </h3>
             <p>
@@ -520,7 +520,7 @@ export default function CalculateurFiscalitePage() {
               .
             </p>
 
-            <h3 className="text-xl font-bold text-white mt-8">
+            <h3 className="text-xl font-bold text-fg-max mt-8">
               Et si j'ai des moins-values ?
             </h3>
             <p>
@@ -541,7 +541,7 @@ export default function CalculateurFiscalitePage() {
               .
             </p>
 
-            <h3 className="text-xl font-bold text-white mt-8">
+            <h3 className="text-xl font-bold text-fg-max mt-8">
               Régime BNC — quand bascule-t-on ?
             </h3>
             <p>
@@ -570,10 +570,10 @@ export default function CalculateurFiscalitePage() {
       >
         <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
           <span className="badge-info">Comparatif</span>
-          <h2 className="mt-4 font-display text-3xl sm:text-4xl font-extrabold tracking-tight text-white">
+          <h2 className="mt-4 font-display text-3xl sm:text-4xl font-extrabold tracking-tight text-fg-max">
             Différence PFU 31,4 % vs barème progressif : que choisir ?
           </h2>
-          <div className="mt-6 space-y-4 text-white/80 text-sm sm:text-base leading-relaxed">
+          <div className="mt-6 space-y-4 text-fg-max/80 text-sm sm:text-base leading-relaxed">
             <p>
               Par défaut, vos plus-values crypto sont imposées au PFU 31,4 %
               (12,8 % d'IR + 18,6 % de prélèvements sociaux). Mais vous pouvez{" "}
@@ -585,7 +585,7 @@ export default function CalculateurFiscalitePage() {
               elle est désastreuse.
             </p>
 
-            <h3 className="text-xl font-bold text-white mt-8">
+            <h3 className="text-xl font-bold text-fg-max mt-8">
               Tableau comparatif par TMI
             </h3>
             <div className="overflow-x-auto">
@@ -597,17 +597,17 @@ export default function CalculateurFiscalitePage() {
                       data a son header lors de la navigation cellule par
                       cellule (tableau de comparaison fiscal = critique). */}
                   <tr className="border-b border-border/60">
-                    <th scope="col" className="px-3 py-2 text-left text-white">TMI</th>
-                    <th scope="col" className="px-3 py-2 text-left text-white">PFU 31,4 %</th>
-                    <th scope="col" className="px-3 py-2 text-left text-white">
+                    <th scope="col" className="px-3 py-2 text-left text-fg-max">TMI</th>
+                    <th scope="col" className="px-3 py-2 text-left text-fg-max">PFU 31,4 %</th>
+                    <th scope="col" className="px-3 py-2 text-left text-fg-max">
                       Barème + PS
                     </th>
-                    <th scope="col" className="px-3 py-2 text-left text-white">
+                    <th scope="col" className="px-3 py-2 text-left text-fg-max">
                       Régime gagnant
                     </th>
                   </tr>
                 </thead>
-                <tbody className="text-white/80">
+                <tbody className="text-fg-max/80">
                   <tr className="border-b border-border/40">
                     <td className="px-3 py-2">0 %</td>
                     <td className="px-3 py-2">31,4 %</td>
@@ -652,7 +652,7 @@ export default function CalculateurFiscalitePage() {
               </table>
             </div>
 
-            <h3 className="text-xl font-bold text-white mt-8">Règle pratique</h3>
+            <h3 className="text-xl font-bold text-fg-max mt-8">Règle pratique</h3>
             <p>
               Le PFU est avantageux dès que votre TMI dépasse{" "}
               <strong>12,8 %</strong>, c'est-à-dire à partir de la tranche 30 %
@@ -666,7 +666,7 @@ export default function CalculateurFiscalitePage() {
               officiel d'impots.gouv.
             </p>
 
-            <h3 className="text-xl font-bold text-white mt-8">
+            <h3 className="text-xl font-bold text-fg-max mt-8">
               Case 3CN : ce que l'option couvre vraiment
             </h3>
             <p>
@@ -680,7 +680,7 @@ export default function CalculateurFiscalitePage() {
               peut vous faire passer en TMI 30 %.
             </p>
 
-            <h3 className="text-xl font-bold text-white mt-8">
+            <h3 className="text-xl font-bold text-fg-max mt-8">
               Comparatif détaillé
             </h3>
             <p>
@@ -712,10 +712,10 @@ export default function CalculateurFiscalitePage() {
       >
         <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
           <span className="badge-info">Déclaration 2026</span>
-          <h2 className="mt-4 font-display text-3xl sm:text-4xl font-extrabold tracking-tight text-white">
+          <h2 className="mt-4 font-display text-3xl sm:text-4xl font-extrabold tracking-tight text-fg-max">
             Déclaration crypto : étapes 2086 + 3916-bis pas-à-pas
           </h2>
-          <div className="mt-6 space-y-4 text-white/80 text-sm sm:text-base leading-relaxed">
+          <div className="mt-6 space-y-4 text-fg-max/80 text-sm sm:text-base leading-relaxed">
             <p>
               Une fois votre calcul effectué, deux formulaires obligatoires à
               déposer avec votre déclaration de revenus 2026 (sur les revenus
@@ -727,7 +727,7 @@ export default function CalculateurFiscalitePage() {
               par compte (art. 1736 X CGI).
             </p>
 
-            <h3 className="text-xl font-bold text-white mt-8">
+            <h3 className="text-xl font-bold text-fg-max mt-8">
               Étape 1 — Récupérez vos données
             </h3>
             <p>
@@ -739,7 +739,7 @@ export default function CalculateurFiscalitePage() {
               Solscan) reconstitue votre historique.
             </p>
 
-            <h3 className="text-xl font-bold text-white mt-8">
+            <h3 className="text-xl font-bold text-fg-max mt-8">
               Étape 2 — Calculez votre plus-value avec notre outil
             </h3>
             <p>
@@ -750,7 +750,7 @@ export default function CalculateurFiscalitePage() {
               sous barème progressif. Calcul 100 % local, aucune donnée envoyée.
             </p>
 
-            <h3 className="text-xl font-bold text-white mt-8">
+            <h3 className="text-xl font-bold text-fg-max mt-8">
               Étape 3 — Connectez-vous sur impots.gouv.fr
             </h3>
             <p>
@@ -767,7 +767,7 @@ export default function CalculateurFiscalitePage() {
               ou moins-value (224).
             </p>
 
-            <h3 className="text-xl font-bold text-white mt-8">
+            <h3 className="text-xl font-bold text-fg-max mt-8">
               Étape 4 — Remplissez le Cerfa 2086 ligne par ligne
             </h3>
             <p>
@@ -788,7 +788,7 @@ export default function CalculateurFiscalitePage() {
               .
             </p>
 
-            <h3 className="text-xl font-bold text-white mt-8">
+            <h3 className="text-xl font-bold text-fg-max mt-8">
               Étape 5 — Reportez le total sur le 2042-C
             </h3>
             <p>
@@ -799,7 +799,7 @@ export default function CalculateurFiscalitePage() {
               progressif, cochez aussi la <strong>case 3CN</strong> de la même déclaration.
             </p>
 
-            <h3 className="text-xl font-bold text-white mt-8">
+            <h3 className="text-xl font-bold text-fg-max mt-8">
               Étape 6 — N'oubliez pas le Cerfa 3916-bis
             </h3>
             <p>
@@ -819,7 +819,7 @@ export default function CalculateurFiscalitePage() {
               .
             </p>
 
-            <h3 className="text-xl font-bold text-white mt-8">
+            <h3 className="text-xl font-bold text-fg-max mt-8">
               Étape 7 — Calendrier et derniers contrôles
             </h3>
             <p>
@@ -841,10 +841,10 @@ export default function CalculateurFiscalitePage() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl">
             <span className="badge-info">Déclaration</span>
-            <h2 className="mt-4 font-display text-3xl sm:text-4xl font-extrabold tracking-tight text-white">
+            <h2 className="mt-4 font-display text-3xl sm:text-4xl font-extrabold tracking-tight text-fg-max">
               Aide pour remplir vos formulaires
             </h2>
-            <p className="mt-3 text-white/70">
+            <p className="mt-3 text-fg-max/70">
               Une fois le calcul effectué, deux formulaires à déposer avec
               votre déclaration de revenus.
             </p>
@@ -860,11 +860,11 @@ export default function CalculateurFiscalitePage() {
                   className="h-6 w-6 text-primary-soft"
                   aria-hidden="true"
                 />
-                <h3 className="font-display font-bold text-lg text-white">
+                <h3 className="font-display font-bold text-lg text-fg-max">
                   Formulaire 2086
                 </h3>
               </div>
-              <p className="mt-3 text-sm text-white/70">
+              <p className="mt-3 text-sm text-fg-max/70">
                 Tutoriel complet 2026 ligne par ligne, captures, exemple
                 Bitcoin entièrement rempli, erreurs fréquentes.
               </p>
@@ -883,11 +883,11 @@ export default function CalculateurFiscalitePage() {
                   className="h-6 w-6 text-primary-soft"
                   aria-hidden="true"
                 />
-                <h3 className="font-display font-bold text-lg text-white">
+                <h3 className="font-display font-bold text-lg text-fg-max">
                   Formulaire 3916-bis
                 </h3>
               </div>
-              <p className="mt-3 text-sm text-white/70">
+              <p className="mt-3 text-sm text-fg-max/70">
                 Déclaration des comptes crypto à l'étranger (Binance, Kraken,
                 Coinbase…). Obligatoire même sans vente. 750 € d'amende par
                 compte oublié (1 500 € si la valeur des comptes dépasse
@@ -910,10 +910,10 @@ export default function CalculateurFiscalitePage() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl">
             <span className="badge-info">Outils complémentaires</span>
-            <h2 className="mt-4 font-display text-3xl sm:text-4xl font-extrabold tracking-tight text-white">
+            <h2 className="mt-4 font-display text-3xl sm:text-4xl font-extrabold tracking-tight text-fg-max">
               Au-delà de 30 transactions, automatisez avec un logiciel dédié
             </h2>
-            <p className="mt-3 text-white/75">
+            <p className="mt-3 text-fg-max/75">
               Notre calculateur gratuit vous donne le montant d'impôt en 2 min,
               mais ne génère pas les formulaires Cerfa pré-remplis. Pour ça, on
               recommande <strong>Waltio</strong> (édité en France, rapport fiscal
@@ -933,10 +933,10 @@ export default function CalculateurFiscalitePage() {
                 <span className="inline-flex items-center gap-1.5 rounded-full border border-gold/40 bg-gold/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-gold">
                   Gratuit
                 </span>
-                <h3 className="mt-2 font-display font-bold text-lg text-white">
+                <h3 className="mt-2 font-display font-bold text-lg text-fg-max">
                   Vous voulez le PDF Cerfa 2086 pré-rempli ?
                 </h3>
-                <p className="mt-1 text-sm text-white/70">
+                <p className="mt-1 text-sm text-fg-max/70">
                   Remplissez notre modèle CSV avec tout votre historique et
                   recevez un récapitulatif Cerfa 2086 + 3916-bis ligne par ligne, à
                   vérifier avant dépôt. Gratuit, compte Cryptoreflex requis pour le PDF.
@@ -959,10 +959,10 @@ export default function CalculateurFiscalitePage() {
                 aria-hidden="true"
               />
               <div>
-                <h3 className="font-display font-bold text-lg text-white">
+                <h3 className="font-display font-bold text-lg text-fg-max">
                   Comparatif outils déclaration fiscale crypto 2026
                 </h3>
-                <p className="mt-1 text-sm text-white/70">
+                <p className="mt-1 text-sm text-fg-max/70">
                   Waltio vs Koinly vs CoinTracking : tarifs, support FR, exports
                   Cerfa, intégrations. 18 critères analysés.
                 </p>
@@ -983,7 +983,7 @@ export default function CalculateurFiscalitePage() {
       <section className="py-16 sm:py-20 border-t border-border/60">
         <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
           <span className="badge-info">FAQ</span>
-          <h2 className="mt-4 font-display text-3xl sm:text-4xl font-extrabold tracking-tight text-white">
+          <h2 className="mt-4 font-display text-3xl sm:text-4xl font-extrabold tracking-tight text-fg-max">
             Questions fréquentes — fiscalité crypto 2026
           </h2>
 
@@ -993,7 +993,7 @@ export default function CalculateurFiscalitePage() {
                 key={item.question}
                 className="group glass rounded-xl p-5 open:border-primary/40 transition-colors"
               >
-                <summary className="cursor-pointer list-none flex items-start justify-between gap-3 font-semibold text-white">
+                <summary className="cursor-pointer list-none flex items-start justify-between gap-3 font-semibold text-fg-max">
                   <span>{item.question}</span>
                   <span
                     className="text-primary-soft text-xl leading-none mt-0.5 transition-transform group-open:rotate-45"
@@ -1002,14 +1002,14 @@ export default function CalculateurFiscalitePage() {
                     +
                   </span>
                 </summary>
-                <p className="mt-3 text-sm text-white/75 leading-relaxed">
+                <p className="mt-3 text-sm text-fg-max/75 leading-relaxed">
                   {item.answer}
                 </p>
               </details>
             ))}
           </div>
 
-          <div className="mt-10 rounded-xl border border-warning/40 bg-warning/10 p-5 text-sm text-white/90 flex gap-3">
+          <div className="mt-10 rounded-xl border border-warning/40 bg-warning/10 p-5 text-sm text-fg-max/90 flex gap-3">
             <AlertTriangle
               className="h-5 w-5 shrink-0 text-warning-fg mt-0.5"
               aria-hidden="true"
@@ -1040,10 +1040,10 @@ export default function CalculateurFiscalitePage() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl">
             <span className="badge-info">Cluster fiscalité</span>
-            <h2 className="mt-4 font-display text-3xl sm:text-4xl font-extrabold tracking-tight text-white">
+            <h2 className="mt-4 font-display text-3xl sm:text-4xl font-extrabold tracking-tight text-fg-max">
               Articles connexes — cluster fiscalité crypto
             </h2>
-            <p className="mt-3 text-white/70">
+            <p className="mt-3 text-fg-max/70">
               Le calculateur ci-dessus s'appuie sur 10 guides détaillés
               (5 satellites long-tail + 5 piliers du silo). Approfondissez
               chaque cas spécifique selon votre situation fiscale.
@@ -1067,14 +1067,14 @@ export default function CalculateurFiscalitePage() {
                   >
                     {article.cluster === "satellite" ? "Satellite" : "Pilier"}
                   </span>
-                  <span className="text-xs text-white/60">
+                  <span className="text-xs text-fg-max/60">
                     {article.category}
                   </span>
                 </div>
-                <h3 className="mt-3 font-display font-bold text-base text-white group-hover:text-primary-soft transition-colors">
+                <h3 className="mt-3 font-display font-bold text-base text-fg-max group-hover:text-primary-soft transition-colors">
                   {article.title}
                 </h3>
-                <p className="mt-2 text-xs text-white/70 leading-relaxed line-clamp-3">
+                <p className="mt-2 text-xs text-fg-max/70 leading-relaxed line-clamp-3">
                   {article.description}
                 </p>
                 <span className="mt-3 inline-flex items-center gap-1 text-xs text-primary-soft group-hover:gap-2 transition-all">

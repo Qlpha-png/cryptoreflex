@@ -148,7 +148,7 @@ function CarteAVenir({ c, name, fiche }: { c: ReflexCard; name: string; fiche: s
             <CardVisual card={c} mode="back" day={0} width={288} />
           </div>
           <div>
-            <span className="inline-flex items-center gap-2 rounded-full border border-amber-400/40 bg-amber-400/10 px-3 py-1 text-xs font-semibold text-amber-300">
+            <span className="inline-flex items-center gap-2 rounded-full border border-primary-glow/40 bg-primary-glow/10 px-3 py-1 text-xs font-semibold text-primary-soft">
               <Sparkles className="h-3.5 w-3.5" /> Carte à venir · Saison 1
             </span>
             <h1 className="mt-4 text-3xl font-extrabold tracking-tight sm:text-4xl">{name} : carte Reflex à venir</h1>

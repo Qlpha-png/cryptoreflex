@@ -73,6 +73,7 @@ if (DIR && !globalThis.__bancFige) {
   };
   const DROP = new Set(["content-encoding", "content-length", "transfer-encoding", "connection", "set-cookie", "keep-alive", "date", "age"]);
   const stats = { rejouees: 0, enregistrees: 0, directes: 0, refusees: 0 };
+  const enCours = new Map(); // clé → promesse de l'enregistrement en cours (une seule requête en direct par clé)
   globalThis.__bancStats = stats;
 
   if (typeof realFetch === "function") {
@@ -99,32 +100,55 @@ if (DIR && !globalThis.__bancFige) {
       }
       const key = crypto.createHash("sha256").update(method + " " + url + "\n" + bodyKey(body)).digest("hex");
       const file = path.join(REQ, key + ".json");
-      let rec = null;
-      try { rec = JSON.parse(fs.readFileSync(file, "utf8")); } catch { /* absent */ }
-      if (rec) {
-        stats.rejouees++;
+      const lire = () => { try { return JSON.parse(fs.readFileSync(file, "utf8")); } catch { return null; } };
+      const rejouer = (rec) => {
         const buf = Buffer.from(rec.corps, "base64");
         const nullBody = rec.statut === 204 || rec.statut === 304 || method === "HEAD";
         return new Response(nullBody ? null : buf, { status: rec.statut, statusText: rec.texte || "", headers: rec.entetes });
-      }
+      };
+      let rec = lire();
+      if (rec) { stats.rejouees++; return rejouer(rec); }
       if (MODE === "strict") {
         stats.refusees++;
         return new Response("banc : requête inconnue du magasin (mode strict) " + caviarde(url), { status: 503 });
       }
-      const res = await realFetch(input, init);
-      const buf = Buffer.from(await res.arrayBuffer());
-      const entetes = {};
-      res.headers.forEach((v, k) => { if (!DROP.has(k.toLowerCase())) entetes[k] = v; });
-      // TOUT est enregistré, erreurs comprises (429 de CoinGecko, 5xx) : sinon l'appel repart en direct à chaque passe et
-      // la page change (succès une fois, repli sur une autre source la fois suivante). Pour reprendre des données
-      // fraîches : vider le magasin (nouvelle référence).
-      stats.enregistrees++;
-      const out = { methode: method, url: caviarde(url), statut: res.status, texte: res.statusText, entetes, corps: buf.toString("base64"), le: new Date().toISOString() };
-      const tmp = file + "." + process.pid + "." + crypto.randomBytes(4).toString("hex") + ".tmp";
-      try { fs.writeFileSync(tmp, JSON.stringify(out)); fs.renameSync(tmp, file); } catch { try { fs.unlinkSync(tmp); } catch { /* rien */ } }
-      try { fs.appendFileSync(path.join(DIR, "journal-direct.log"), `${process.pid} ${method} ${res.status} ${caviarde(url)}\n`); } catch { /* rien */ }
-      const nullBody = res.status === 204 || res.status === 304 || method === "HEAD";
-      return new Response(nullBody ? null : buf, { status: res.status, statusText: res.statusText, headers: entetes });
+      // Enregistrement SANS course : pendant un build, des dizaines de pages demandent la même URL au même moment, dans
+      // plusieurs processus. Avant, chacune partait en direct et gardait SA réponse (cours différent à la seconde près),
+      // puis la dernière écriture restait dans le magasin : la passe qui enregistre ne ressemblait pas aux suivantes.
+      // Maintenant : une seule requête en direct par clé dans ce processus (enCours), la PREMIÈRE écriture gagne entre
+      // processus (lien physique atomique : échoue si le fichier existe), et tout appelant reçoit la réponse DU MAGASIN.
+      let attente = enCours.get(key);
+      if (!attente) {
+        attente = (async () => {
+          const res = await realFetch(input, init);
+          const buf = Buffer.from(await res.arrayBuffer());
+          const entetes = {};
+          res.headers.forEach((v, k) => { if (!DROP.has(k.toLowerCase())) entetes[k] = v; });
+          // TOUT est enregistré, erreurs comprises (429 de CoinGecko, 5xx) : sinon l'appel repart en direct à chaque passe
+          // et la page change (succès une fois, repli sur une autre source la fois suivante). Pour reprendre des données
+          // fraîches : vider le magasin (nouvelle référence).
+          const out = { methode: method, url: caviarde(url), statut: res.status, texte: res.statusText, entetes, corps: buf.toString("base64"), le: new Date().toISOString() };
+          const tmp = file + "." + process.pid + "." + crypto.randomBytes(4).toString("hex") + ".tmp";
+          let issue = "gardée";
+          try {
+            fs.writeFileSync(tmp, JSON.stringify(out));
+            try { fs.linkSync(tmp, file); }
+            catch (e) {
+              if (e && e.code === "EEXIST") issue = "écartée (déjà enregistrée par un autre processus)";
+              else if (!fs.existsSync(file)) fs.renameSync(tmp, file); // système de fichiers sans liens physiques
+              else issue = "écartée (déjà enregistrée par un autre processus)";
+            }
+          } catch { issue = "non écrite"; }
+          try { fs.unlinkSync(tmp); } catch { /* déjà renommé ou absent */ }
+          if (issue === "gardée") stats.enregistrees++;
+          try { fs.appendFileSync(path.join(DIR, "journal-direct.log"), `${process.pid} ${method} ${res.status} ${caviarde(url)} ${issue}\n`); } catch { /* rien */ }
+          return out;
+        })().finally(() => enCours.delete(key));
+        enCours.set(key, attente);
+      }
+      const direct = await attente; // une erreur réseau remonte à l'appelant, comme un fetch normal
+      rec = lire() || direct; // la version du magasin fait foi ; « direct » seulement si l'écriture a échoué
+      return rejouer(rec);
     };
     globalThis.fetch = figee;
   }

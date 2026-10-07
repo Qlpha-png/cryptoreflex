@@ -417,7 +417,7 @@ function Pagination({
 /* -------------------------------------------------------------------------- */
 
 const FEATURED_BADGE: Record<string, string> = {
-  "Marché": "bg-amber-500/15 text-amber-200 ring-amber-500/30",
+  "Marché": "bg-warning/15 text-amber-200 ring-warning/30",
   "Régulation": "bg-rose-500/15 text-rose-200 ring-rose-500/30",
   Technologie: "bg-cyan-500/15 text-cyan-200 ring-cyan-500/30",
   Plateformes: "bg-fuchsia-500/15 text-fuchsia-200 ring-fuchsia-500/30",

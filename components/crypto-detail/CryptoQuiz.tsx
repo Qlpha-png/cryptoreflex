@@ -103,7 +103,7 @@ export default function CryptoQuiz({ cryptoId, cryptoName, cryptoSymbol, quiz }:
       return {
         title: "À retravailler",
         sub: "Quelques bases mais des trous à combler. La fiche ci-dessus est faite pour ça.",
-        color: "text-amber-300",
+        color: "text-primary-soft",
       };
     }
     return {
@@ -122,11 +122,11 @@ export default function CryptoQuiz({ cryptoId, cryptoName, cryptoSymbol, quiz }:
   return (
     <section
       id="quiz"
-      className="scroll-mt-24 rounded-3xl border border-amber-400/30 bg-gradient-to-br from-amber-500/5 via-background to-background p-6 sm:p-8"
+      className="scroll-mt-24 rounded-3xl border border-primary-glow/30 bg-gradient-to-br from-warning/5 via-background to-background p-6 sm:p-8"
     >
       <div className="flex items-start gap-3">
         {/* 06/10/2026 : icône « quiz de connaissances » au lieu du trophée. */}
-        <div className="shrink-0 grid place-items-center h-11 w-11 rounded-xl bg-amber-500/15 text-amber-300">
+        <div className="shrink-0 grid place-items-center h-11 w-11 rounded-xl bg-warning/15 text-primary-soft">
           <GraduationCap className="h-5 w-5" aria-hidden="true" />
         </div>
         <div className="flex-1 min-w-0">
@@ -146,7 +146,7 @@ export default function CryptoQuiz({ cryptoId, cryptoName, cryptoSymbol, quiz }:
           <button
             type="button"
             onClick={handleStart}
-            className="inline-flex items-center gap-2 rounded-xl bg-amber-400 px-6 py-3 text-base font-bold text-background hover:bg-amber-300 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+            className="inline-flex items-center gap-2 rounded-xl bg-primary-glow px-6 py-3 text-base font-bold text-background hover:bg-primary-soft transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-glow focus-visible:ring-offset-2 focus-visible:ring-offset-background"
           >
             <Sparkles className="h-4 w-4" />
             Commencer le quiz
@@ -174,7 +174,7 @@ export default function CryptoQuiz({ cryptoId, cryptoName, cryptoSymbol, quiz }:
             aria-valuenow={currentIdx + 1}
           >
             <div
-              className="h-full bg-gradient-to-r from-amber-400 to-primary transition-all duration-300"
+              className="h-full bg-gradient-to-r from-primary-glow to-primary transition-all duration-300"
               style={{ width: `${((currentIdx + 1) / totalQuestions) * 100}%` }}
             />
           </div>

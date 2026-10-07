@@ -36,8 +36,8 @@ export default function ContactForm({ defaultType = "general" }: ContactFormProp
         className="glass glow-border rounded-2xl p-6 text-center"
       >
         <CheckCircle2 className="h-10 w-10 text-success mx-auto" aria-hidden="true" />
-        <h3 className="mt-3 text-xl font-bold text-white">Message envoyé</h3>
-        <p className="mt-2 text-sm text-white/75">
+        <h3 className="mt-3 text-xl font-bold text-fg-max">Message envoyé</h3>
+        <p className="mt-2 text-sm text-fg-max/75">
           Merci. Kevin Voisin vous répond sous {DELAI_REPONSE}.
         </p>
         <button
@@ -61,14 +61,14 @@ export default function ContactForm({ defaultType = "general" }: ContactFormProp
         <legend className="sr-only">Formulaire de contact</legend>
 
         <div>
-          <label htmlFor="ct-type" className="block text-sm font-medium text-white mb-1.5">
+          <label htmlFor="ct-type" className="block text-sm font-medium text-fg-max mb-1.5">
             Type de demande
           </label>
           <select
             id="ct-type"
             name="type"
             defaultValue={defaultType}
-            className="w-full rounded-lg bg-elevated/60 border border-border px-3 py-2.5 text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+            className="w-full rounded-lg bg-elevated/60 border border-border px-3 py-2.5 text-fg-max focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
           >
             <option value="general">Question générale</option>
             <option value="partenariats">Partenariats / sponsoring</option>
@@ -78,7 +78,7 @@ export default function ContactForm({ defaultType = "general" }: ContactFormProp
 
         <div className="grid sm:grid-cols-2 gap-4">
           <div>
-            <label htmlFor="ct-name" className="block text-sm font-medium text-white mb-1.5">
+            <label htmlFor="ct-name" className="block text-sm font-medium text-fg-max mb-1.5">
               Nom
             </label>
             <input
@@ -87,12 +87,12 @@ export default function ContactForm({ defaultType = "general" }: ContactFormProp
               type="text"
               autoComplete="name"
               maxLength={120}
-              className="w-full rounded-lg bg-elevated/60 border border-border px-3 py-2.5 text-white placeholder:text-muted focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+              className="w-full rounded-lg bg-elevated/60 border border-border px-3 py-2.5 text-fg-max placeholder:text-muted focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
               placeholder="Optionnel"
             />
           </div>
           <div>
-            <label htmlFor="ct-email" className="block text-sm font-medium text-white mb-1.5">
+            <label htmlFor="ct-email" className="block text-sm font-medium text-fg-max mb-1.5">
               Email <span className="text-danger">*</span>
             </label>
             <input
@@ -105,14 +105,14 @@ export default function ContactForm({ defaultType = "general" }: ContactFormProp
               maxLength={200}
               aria-invalid={result?.ok === false}
               aria-describedby={result?.ok === false ? "ct-form-error" : undefined}
-              className="w-full rounded-lg bg-elevated/60 border border-border px-3 py-2.5 text-white placeholder:text-muted focus:outline-none focus-visible:ring-2 focus-visible:ring-primary aria-[invalid=true]:border-danger aria-[invalid=true]:ring-danger"
+              className="w-full rounded-lg bg-elevated/60 border border-border px-3 py-2.5 text-fg-max placeholder:text-muted focus:outline-none focus-visible:ring-2 focus-visible:ring-primary aria-[invalid=true]:border-danger aria-[invalid=true]:ring-danger"
               placeholder="contact@exemple.fr"
             />
           </div>
         </div>
 
         <div>
-          <label htmlFor="ct-subject" className="block text-sm font-medium text-white mb-1.5">
+          <label htmlFor="ct-subject" className="block text-sm font-medium text-fg-max mb-1.5">
             Sujet
           </label>
           <input
@@ -120,13 +120,13 @@ export default function ContactForm({ defaultType = "general" }: ContactFormProp
             name="subject"
             type="text"
             maxLength={200}
-            className="w-full rounded-lg bg-elevated/60 border border-border px-3 py-2.5 text-white placeholder:text-muted focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+            className="w-full rounded-lg bg-elevated/60 border border-border px-3 py-2.5 text-fg-max placeholder:text-muted focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
             placeholder="Bref résumé de votre demande"
           />
         </div>
 
         <div>
-          <label htmlFor="ct-message" className="block text-sm font-medium text-white mb-1.5">
+          <label htmlFor="ct-message" className="block text-sm font-medium text-fg-max mb-1.5">
             Message <span className="text-danger">*</span>
           </label>
           <textarea
@@ -138,7 +138,7 @@ export default function ContactForm({ defaultType = "general" }: ContactFormProp
             maxLength={4000}
             aria-invalid={result?.ok === false}
             aria-describedby={result?.ok === false ? "ct-form-error" : undefined}
-            className="w-full rounded-lg bg-elevated/60 border border-border px-3 py-2.5 text-white placeholder:text-muted focus:outline-none focus-visible:ring-2 focus-visible:ring-primary aria-[invalid=true]:border-danger aria-[invalid=true]:ring-danger"
+            className="w-full rounded-lg bg-elevated/60 border border-border px-3 py-2.5 text-fg-max placeholder:text-muted focus:outline-none focus-visible:ring-2 focus-visible:ring-primary aria-[invalid=true]:border-danger aria-[invalid=true]:ring-danger"
             placeholder={`Détaillez votre demande : réponse sous ${DELAI_REPONSE}.`}
           />
         </div>
@@ -152,7 +152,7 @@ export default function ContactForm({ defaultType = "general" }: ContactFormProp
             aria-required="true"
             className="mt-1 h-4 w-4 rounded border-border bg-elevated/60 text-primary focus-visible:ring-2 focus-visible:ring-primary"
           />
-          <label htmlFor="ct-consent" className="text-xs text-white/70 leading-relaxed">
+          <label htmlFor="ct-consent" className="text-xs text-fg-max/70 leading-relaxed">
             {/* 06/10/2026 : « l'équipe Cryptoreflex » était faux (une seule personne). Formulaire propre à /contact. */}
             J&apos;accepte que mon email et mon message soient envoyés à
             Kevin Voisin, éditeur de {BRAND.name}. Conservation 12 mois max. Suppression sur

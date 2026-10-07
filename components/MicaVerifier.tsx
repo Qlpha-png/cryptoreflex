@@ -117,7 +117,7 @@ export default function MicaVerifier({ initialPlatformId }: Props) {
       <form onSubmit={handleSubmit} className="relative" ref={containerRef}>
         <label
           htmlFor={inputId}
-          className="block text-sm font-semibold text-white/90 mb-2"
+          className="block text-sm font-semibold text-fg-max/90 mb-2"
         >
           Nom de la plateforme ou URL
         </label>
@@ -143,7 +143,7 @@ export default function MicaVerifier({ initialPlatformId }: Props) {
             }}
             onFocus={() => setOpen(true)}
             onKeyDown={handleKeyDown}
-            className="w-full rounded-xl border border-border bg-elevated/70 backdrop-blur-xl pl-12 pr-32 py-4 text-white placeholder:text-muted/70 focus:outline-none focus:border-primary/60 focus:ring-2 focus:ring-primary/20 transition"
+            className="w-full rounded-xl border border-border bg-elevated/70 backdrop-blur-xl pl-12 pr-32 py-4 text-fg-max placeholder:text-muted/70 focus:outline-none focus:border-primary/60 focus:ring-2 focus:ring-primary/20 transition"
           />
           <button
             type="submit"
@@ -173,7 +173,7 @@ export default function MicaVerifier({ initialPlatformId }: Props) {
                   }`}
                 >
                   <div className="flex items-center gap-3 min-w-0">
-                    <span className="font-semibold text-white truncate">
+                    <span className="font-semibold text-fg-max truncate">
                       {p.name}
                     </span>
                     <span className="text-xs text-muted truncate">
@@ -216,7 +216,7 @@ export default function MicaVerifier({ initialPlatformId }: Props) {
           className="w-full flex items-center justify-between gap-2 px-5 py-4 text-left"
           aria-expanded={showMethodology}
         >
-          <span className="flex items-center gap-2 text-sm font-semibold text-white">
+          <span className="flex items-center gap-2 text-sm font-semibold text-fg-max">
             <Info className="h-4 w-4 text-primary" />
             Méthodologie & sources
           </span>
@@ -227,7 +227,7 @@ export default function MicaVerifier({ initialPlatformId }: Props) {
           />
         </button>
         {showMethodology && (
-          <div className="border-t border-border px-5 py-4 text-sm text-white/75 space-y-3">
+          <div className="border-t border-border px-5 py-4 text-sm text-fg-max/75 space-y-3">
             <p>
               Notre registre repose sur deux sources officielles : le registre
               intérimaire MiCA de l'ESMA (prestataires agréés, autorité, date
@@ -319,7 +319,7 @@ function ResultCard({
       <header className="flex flex-wrap items-start justify-between gap-4">
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-3">
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-white truncate">
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-fg-max truncate">
               {platform.name}
             </h2>
             <span
@@ -386,7 +386,7 @@ function ResultCard({
             {platform.micaPassporting.map((c) => (
               <span
                 key={c}
-                className="rounded-md border border-border bg-surface px-2 py-0.5 text-xs font-mono text-white/80"
+                className="rounded-md border border-border bg-surface px-2 py-0.5 text-xs font-mono text-fg-max/80"
               >
                 {c}
               </span>
@@ -417,7 +417,7 @@ function ResultCard({
             Peut servir des clients en France ?{" "}
             {platform.atRiskJuly2026 ? "NON" : "OUI"}
           </div>
-          <p className="mt-0.5 text-white/75">
+          <p className="mt-0.5 text-fg-max/75">
             {platform.atRiskJuly2026
               ? "Depuis le 1er juillet 2026, fin de la période transitoire, seul un prestataire agréé MiCA avec accès à la France peut y fournir des services sur crypto-actifs. Cette plateforme n'en fait pas partie à la date de notre vérification."
               : platform.micaStatus === "out_of_scope"
@@ -430,14 +430,14 @@ function ResultCard({
       {/* Restrictions */}
       {platform.restrictions.length > 0 && (
         <div className="mt-4">
-          <h3 className="text-sm font-semibold text-white/90 mb-2">
+          <h3 className="text-sm font-semibold text-fg-max/90 mb-2">
             Restrictions et points d'attention
           </h3>
           <ul className="space-y-1.5">
             {platform.restrictions.map((r) => (
               <li
                 key={r}
-                className="flex items-start gap-2 text-sm text-white/80"
+                className="flex items-start gap-2 text-sm text-fg-max/80"
               >
                 <XCircle className="h-4 w-4 text-accent-rose shrink-0 mt-0.5" />
                 <span>{r}</span>
@@ -515,7 +515,7 @@ function Field({
         {label}
       </dt>
       <dd
-        className={`mt-1 text-white ${
+        className={`mt-1 text-fg-max ${
           mono ? "font-mono text-sm" : "text-sm font-medium"
         }`}
       >

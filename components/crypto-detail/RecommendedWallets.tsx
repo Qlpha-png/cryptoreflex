@@ -73,7 +73,7 @@ function levelColor(level: string): string {
   if (l.includes("recommandé")) return "text-accent-green border-accent-green/30 bg-accent-green/10";
   if (l.includes("alternative")) return "text-fg/70 border-border bg-surface/40";
   if (l.includes("court terme") || l.includes("uniquement"))
-    return "text-amber-400 border-amber-500/30 bg-amber-500/10";
+    return "text-primary-glow border-warning/30 bg-warning/10";
   return "text-fg/70 border-border bg-surface/40";
 }
 

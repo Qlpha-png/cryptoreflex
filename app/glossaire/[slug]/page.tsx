@@ -130,18 +130,18 @@ export default function GlossaryTermPage({ params }: PageProps) {
           <nav aria-label="Fil d'Ariane" className="text-sm text-muted">
             <ol className="flex flex-wrap items-center gap-1.5">
               <li>
-                <Link href="/" className="hover:text-white">
+                <Link href="/" className="hover:text-fg-max">
                   Accueil
                 </Link>
               </li>
               <li aria-hidden="true">/</li>
               <li>
-                <Link href="/glossaire" className="hover:text-white">
+                <Link href="/glossaire" className="hover:text-fg-max">
                   Glossaire
                 </Link>
               </li>
               <li aria-hidden="true">/</li>
-              <li className="text-white" aria-current="page">
+              <li className="text-fg-max" aria-current="page">
                 {term.term}
               </li>
             </ol>
@@ -179,16 +179,16 @@ export default function GlossaryTermPage({ params }: PageProps) {
               {term.term}
             </h1>
 
-            <p className="mt-4 text-lg text-white/80 leading-relaxed">
+            <p className="mt-4 text-lg text-fg-max/80 leading-relaxed">
               {term.shortDefinition}
             </p>
 
             {term.synonyms.length > 0 && (
               <p className="mt-3 text-sm text-muted">
-                <span className="text-white/60">Aussi appelé : </span>
+                <span className="text-fg-max/60">Aussi appelé : </span>
                 {term.synonyms.map((s, i) => (
                   <span key={s}>
-                    <em className="text-white/80 not-italic">{s}</em>
+                    <em className="text-fg-max/80 not-italic">{s}</em>
                     {i < term.synonyms.length - 1 ? ", " : ""}
                   </span>
                 ))}
@@ -198,11 +198,11 @@ export default function GlossaryTermPage({ params }: PageProps) {
 
           {/* Définition longue */}
           <section className="mt-10 rounded-2xl border border-border bg-elevated/40 p-6 sm:p-8">
-            <h2 className="flex items-center gap-2 text-xl font-bold text-white">
+            <h2 className="flex items-center gap-2 text-xl font-bold text-fg-max">
               <BookOpen className="h-5 w-5 text-primary" />
               Définition complète
             </h2>
-            <div className="mt-4 space-y-4 text-white/85 leading-relaxed">
+            <div className="mt-4 space-y-4 text-fg-max/85 leading-relaxed">
               {term.longDefinition.split("\n\n").map((para, i) => (
                 <p key={i}>{para}</p>
               ))}
@@ -216,14 +216,14 @@ export default function GlossaryTermPage({ params }: PageProps) {
                 <Lightbulb className="h-4 w-4" />
                 Exemple concret
               </h2>
-              <p className="mt-2 text-white/85 leading-relaxed">{term.example}</p>
+              <p className="mt-2 text-fg-max/85 leading-relaxed">{term.example}</p>
             </section>
           )}
 
           {/* Termes liés */}
           {related.length > 0 && (
             <section className="mt-10">
-              <h2 className="text-xl font-bold text-white">Termes liés</h2>
+              <h2 className="text-xl font-bold text-fg-max">Termes liés</h2>
               <p className="mt-1 text-sm text-muted">
                 Pour aller plus loin sur des concepts proches.
               </p>
@@ -235,10 +235,10 @@ export default function GlossaryTermPage({ params }: PageProps) {
                       className="group flex items-start gap-3 rounded-xl border border-border bg-elevated/40 p-4 hover:border-primary/60 hover:bg-elevated/70 transition-colors"
                     >
                       <div className="flex-1 min-w-0">
-                        <h3 className="font-semibold text-white group-hover:text-primary-soft">
+                        <h3 className="font-semibold text-fg-max group-hover:text-primary-soft">
                           {r.term}
                         </h3>
-                        <p className="mt-1 text-sm text-white/70 line-clamp-2">
+                        <p className="mt-1 text-sm text-fg-max/70 line-clamp-2">
                           {r.shortDefinition}
                         </p>
                       </div>
@@ -252,7 +252,7 @@ export default function GlossaryTermPage({ params }: PageProps) {
 
           {/* CTA bas de page */}
           <section className="mt-12 rounded-2xl border border-border bg-surface/40 p-6 text-center">
-            <p className="text-white/80">
+            <p className="text-fg-max/80">
               Vous débutez en crypto&nbsp;?{" "}
               <Link
                 href="/blog"

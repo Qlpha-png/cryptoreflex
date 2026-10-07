@@ -121,7 +121,7 @@ export default function CompareSurpriseMe({
       type="button"
       onClick={handleClick}
       disabled={loading}
-      className={`group inline-flex items-center justify-center gap-2 rounded-xl border border-amber-400/40 bg-amber-400/5 font-semibold text-amber-200 hover:border-amber-400/60 hover:bg-amber-400/10 disabled:opacity-60 transition-colors ${
+      className={`group inline-flex items-center justify-center gap-2 rounded-xl border border-primary-glow/40 bg-primary-glow/5 font-semibold text-amber-200 hover:border-primary-glow/60 hover:bg-primary-glow/10 disabled:opacity-60 transition-colors ${
         isCompact ? "px-3 py-1.5 text-xs" : "px-5 py-3 text-sm"
       }`}
       aria-label="Surprends-moi : pioche 4 cryptos au hasard, de catégories variées"

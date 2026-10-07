@@ -63,10 +63,10 @@ export default function TrackCard({ track }: TrackCardProps) {
       className={`card-obsidian group relative flex h-full flex-col rounded-2xl border bg-gradient-to-br p-6 transition-all hover:shadow-glow-gold focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background ${track.accentClass}`}
     >
       <div className="flex items-start justify-between gap-3">
-        <div className="inline-flex h-11 w-11 items-center justify-center rounded-xl border border-white/10 bg-background/40 text-primary-glow">
+        <div className="inline-flex h-11 w-11 items-center justify-center rounded-xl border border-fg-max/10 bg-background/40 text-primary-glow">
           <Icon className="h-5 w-5" aria-hidden="true" />
         </div>
-        <span className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-background/40 px-2.5 py-1 text-[11px] font-mono text-fg/80">
+        <span className="inline-flex items-center gap-1 rounded-full border border-fg-max/10 bg-background/40 px-2.5 py-1 text-[11px] font-mono text-fg/80">
           <Clock className="h-3 w-3" aria-hidden="true" />
           ~{track.estimatedHours}h
         </span>
@@ -81,7 +81,7 @@ export default function TrackCard({ track }: TrackCardProps) {
       </p>
 
       <dl className="mt-5 grid grid-cols-2 gap-3 text-xs">
-        <div className="rounded-lg border border-white/5 bg-background/30 p-2.5">
+        <div className="rounded-lg border border-fg-max/5 bg-background/30 p-2.5">
           <dt className="text-[10px] uppercase tracking-wider text-muted">
             Leçons
           </dt>
@@ -89,7 +89,7 @@ export default function TrackCard({ track }: TrackCardProps) {
             {lessonCount}
           </dd>
         </div>
-        <div className="rounded-lg border border-white/5 bg-background/30 p-2.5">
+        <div className="rounded-lg border border-fg-max/5 bg-background/30 p-2.5">
           <dt className="text-[10px] uppercase tracking-wider text-muted">
             Niveau
           </dt>

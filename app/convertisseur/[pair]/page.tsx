@@ -231,15 +231,15 @@ export default async function PairPage({ params }: PageProps) {
                 ← Tous les convertisseurs
               </Link>
             </p>
-            <h1 className="mt-3 text-4xl sm:text-5xl font-extrabold tracking-tight text-white">
+            <h1 className="mt-3 text-4xl sm:text-5xl font-extrabold tracking-tight text-fg-max">
               Convertir <span className="gradient-text">{fromUp}</span> en{" "}
               <span className="gradient-text">{toUp}</span>
             </h1>
-            <p className="mt-4 text-lg text-white/70">
+            <p className="mt-4 text-lg text-fg-max/70">
               {rate?.rate != null ? (
                 <>
                   Au taux actuel,{" "}
-                  <strong className="text-white">
+                  <strong className="text-fg-max">
                     1 {fromName} ={" "}
                     <span className="font-mono">{formatRate(rate.rate)} {toUp}</span>
                   </strong>
@@ -258,10 +258,10 @@ export default async function PairPage({ params }: PageProps) {
           {/* GRILLE DE MONTANTS + UN AN D'HISTORIQUE (04/10/2026, lot 2b) — rendu serveur, données réelles, deux sens */}
           {grid.length > 0 && (
             <section className="mt-10" aria-labelledby="grille-conversion">
-              <h2 id="grille-conversion" className="text-2xl font-bold text-white">
+              <h2 id="grille-conversion" className="text-2xl font-bold text-fg-max">
                 Combien valent vos {fromUp} en {toUp} ? Les repères
               </h2>
-              <p className="mt-2 text-sm text-white/70">
+              <p className="mt-2 text-sm text-fg-max/70">
                 {liveRate ? "Au taux du moment" : "Au dernier cours quotidien connu"}, 1 {fromUp} = {formatConverted(grid[0].value)} {toUp}. Repères
                 arrondis, mis à jour chaque jour ; le convertisseur ci-dessus donne le montant exact à la seconde.
               </p>
@@ -278,8 +278,8 @@ export default async function PairPage({ params }: PageProps) {
                     <tbody>
                       {grid.map((r) => (
                         <tr key={r.amount} className="border-t border-border/70">
-                          <th scope="row" className="whitespace-nowrap px-4 py-2 font-medium text-white/85 tabular-nums">{formatAmount(r.amount)} {fromUp}</th>
-                          <td className="whitespace-nowrap px-4 py-2 text-right tabular-nums text-white">{formatConverted(r.value)} {toUp}</td>
+                          <th scope="row" className="whitespace-nowrap px-4 py-2 font-medium text-fg-max/85 tabular-nums">{formatAmount(r.amount)} {fromUp}</th>
+                          <td className="whitespace-nowrap px-4 py-2 text-right tabular-nums text-fg-max">{formatConverted(r.value)} {toUp}</td>
                         </tr>
                       ))}
                     </tbody>
@@ -298,8 +298,8 @@ export default async function PairPage({ params }: PageProps) {
                       <tbody>
                         {gridInverse.map((r) => (
                           <tr key={r.amount} className="border-t border-border/70">
-                            <th scope="row" className="whitespace-nowrap px-4 py-2 font-medium text-white/85 tabular-nums">{formatAmount(r.amount)} {toUp}</th>
-                            <td className="whitespace-nowrap px-4 py-2 text-right tabular-nums text-white">{formatConverted(r.value)} {fromUp}</td>
+                            <th scope="row" className="whitespace-nowrap px-4 py-2 font-medium text-fg-max/85 tabular-nums">{formatAmount(r.amount)} {toUp}</th>
+                            <td className="whitespace-nowrap px-4 py-2 text-right tabular-nums text-fg-max">{formatConverted(r.value)} {fromUp}</td>
                           </tr>
                         ))}
                       </tbody>
@@ -312,7 +312,7 @@ export default async function PairPage({ params }: PageProps) {
 
           {stats && (
             <section className="mt-10" aria-labelledby="un-an">
-              <h2 id="un-an" className="text-2xl font-bold text-white">
+              <h2 id="un-an" className="text-2xl font-bold text-fg-max">
                 {fromUp}/{toUp} sur un an
               </h2>
               <dl className="mt-4 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
@@ -323,7 +323,7 @@ export default async function PairPage({ params }: PageProps) {
                 <StatCell label="Plus bas 1 an" value={`${formatConverted(stats.min)} ${toUp}`} sub={formatDay(stats.minAt)} />
                 <StatCell label="Variation 30 j / 1 an" value={`${signedPct(stats.chg30)} / ${signedPct(stats.chg365)}`} tone={stats.chg30} />
               </dl>
-              <p className="mt-3 text-sm text-white/70 leading-relaxed">
+              <p className="mt-3 text-sm text-fg-max/70 leading-relaxed">
                 Sur les {stats.days} derniers jours couverts (depuis le {formatDay(stats.firstAt)}), le taux {fromUp}/{toUp} a oscillé entre{" "}
                 {formatConverted(stats.min)} et {formatConverted(stats.max)} {toUp}.
                 {vsAvg != null ? (
@@ -341,8 +341,8 @@ export default async function PairPage({ params }: PageProps) {
           )}
 
           <div className="mt-10 max-w-3xl">
-            <h2 className="text-2xl font-bold text-white">À quoi sert la conversion {fromUp} → {toUp} ?</h2>
-            <p className="mt-3 text-white/70 leading-relaxed">{pairUseText(kind, fromName, toName, fromUp, toUp)}</p>
+            <h2 className="text-2xl font-bold text-fg-max">À quoi sert la conversion {fromUp} → {toUp} ?</h2>
+            <p className="mt-3 text-fg-max/70 leading-relaxed">{pairUseText(kind, fromName, toName, fromUp, toUp)}</p>
           </div>
 
           {/* À propos des actifs de la paire (FIX 2026-06-13) — blocs uniques
@@ -352,19 +352,19 @@ export default async function PairPage({ params }: PageProps) {
           {(fromCrypto || toCrypto) && (
             <div className="mt-10 max-w-3xl space-y-3">
               {fromCrypto && (
-                <p className="text-white/70 leading-relaxed">
-                  <strong className="text-white">À propos de {fromName} :</strong>{" "}
+                <p className="text-fg-max/70 leading-relaxed">
+                  <strong className="text-fg-max">À propos de {fromName} :</strong>{" "}
                   {fromCrypto.tagline}. {firstSentence(fromCrypto.what)}{" "}
-                  <span className="text-white/60">
+                  <span className="text-fg-max/60">
                     Usage principal : {firstSentence(fromCrypto.useCase)}
                   </span>
                 </p>
               )}
               {toCrypto && (
-                <p className="text-white/70 leading-relaxed">
-                  <strong className="text-white">À propos de {toName} :</strong>{" "}
+                <p className="text-fg-max/70 leading-relaxed">
+                  <strong className="text-fg-max">À propos de {toName} :</strong>{" "}
                   {toCrypto.tagline}. {firstSentence(toCrypto.what)}{" "}
-                  <span className="text-white/60">
+                  <span className="text-fg-max/60">
                     Usage principal : {firstSentence(toCrypto.useCase)}
                   </span>
                 </p>
@@ -374,18 +374,18 @@ export default async function PairPage({ params }: PageProps) {
 
           {/* Texte SEO */}
           <div className="mt-12 max-w-3xl prose prose-invert">
-            <h2 className="text-2xl font-bold text-white">
+            <h2 className="text-2xl font-bold text-fg-max">
               Convertisseur {fromName} → {toName}
             </h2>
-            <p className="text-white/70">
+            <p className="text-fg-max/70">
               Cette page vous permet de convertir{" "}
-              <strong className="text-white">{fromName} ({fromUp})</strong> en{" "}
-              <strong className="text-white">{toName} ({toUp})</strong> avec le taux
+              <strong className="text-fg-max">{fromName} ({fromUp})</strong> en{" "}
+              <strong className="text-fg-max">{toName} ({toUp})</strong> avec le taux
               de change marché actuel. Le taux vient directement des places de marché
               (Binance, Kraken, Coinbase…), avec CoinGecko en secours ; il date au plus
               de quelques minutes.
             </p>
-            <p className="text-white/70 mt-3">
+            <p className="text-fg-max/70 mt-3">
               Pour une conversion réelle (achat / vente), passez par une plateforme
               régulée MiCA en France. Notre{" "}
               <Link href="/comparatif" className="text-primary-soft hover:text-primary-glow">
@@ -398,13 +398,13 @@ export default async function PairPage({ params }: PageProps) {
           {/* Suggestions */}
           {suggestions.length > 0 && (
             <div className="mt-12">
-              <h2 className="text-2xl font-bold text-white">Autres conversions</h2>
+              <h2 className="text-2xl font-bold text-fg-max">Autres conversions</h2>
               <div className="mt-4 grid grid-cols-2 sm:grid-cols-4 gap-2.5">
                 {suggestions.map((p) => (
                   <Link
                     key={`${p.from}-${p.to}`}
                     href={`/convertisseur/${p.from}-${p.to}`}
-                    className="rounded-lg border border-border bg-elevated/50 px-3 py-2.5 text-sm font-semibold text-white/80 hover:border-primary/60 hover:text-white transition-colors flex items-center justify-between gap-2"
+                    className="rounded-lg border border-border bg-elevated/50 px-3 py-2.5 text-sm font-semibold text-fg-max/80 hover:border-primary/60 hover:text-fg-max transition-colors flex items-center justify-between gap-2"
                   >
                     <span>
                       {p.from.toUpperCase()} → {p.to.toUpperCase()}
@@ -418,20 +418,20 @@ export default async function PairPage({ params }: PageProps) {
 
           {/* FAQ */}
           <div className="mt-12 max-w-3xl">
-            <h2 className="text-2xl font-bold text-white">Questions fréquentes</h2>
+            <h2 className="text-2xl font-bold text-fg-max">Questions fréquentes</h2>
             <div className="mt-4 space-y-3">
               {faqItems.map((item) => (
                 <details
                   key={item.question}
                   className="group rounded-xl border border-border bg-elevated/40 p-5 open:border-primary/40"
                 >
-                  <summary className="flex cursor-pointer items-center justify-between gap-3 font-semibold text-white">
+                  <summary className="flex cursor-pointer items-center justify-between gap-3 font-semibold text-fg-max">
                     {item.question}
                     <span className="text-primary transition-transform group-open:rotate-45">
                       +
                     </span>
                   </summary>
-                  <p className="mt-3 text-sm text-white/70 leading-relaxed">
+                  <p className="mt-3 text-sm text-fg-max/70 leading-relaxed">
                     {item.answer}
                   </p>
                 </details>
@@ -461,7 +461,7 @@ export default async function PairPage({ params }: PageProps) {
 const isFiatSym = (sym: string): boolean => Object.prototype.hasOwnProperty.call(FIAT_EUR_PRICE, sym);
 
 function StatCell({ label, value, sub, tone }: { label: string; value: string; sub?: string; tone?: number | null }) {
-  const color = tone == null || tone === 0 ? "text-white" : tone > 0 ? "text-accent-green" : "text-danger-fg";
+  const color = tone == null || tone === 0 ? "text-fg-max" : tone > 0 ? "text-accent-green" : "text-danger-fg";
   return (
     <div className="rounded-xl border border-border bg-elevated/40 px-3 py-2.5">
       <dt className="text-[11px] uppercase tracking-wider text-muted">{label}</dt>

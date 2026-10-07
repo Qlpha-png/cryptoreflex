@@ -750,7 +750,7 @@ function DesktopTable({
             <span
               className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ${
                 c.kind === "hidden-gem"
-                  ? "border border-amber-400/30 bg-amber-400/10 text-amber-300"
+                  ? "border border-primary-glow/30 bg-primary-glow/10 text-primary-soft"
                   : "border border-primary/30 bg-primary/10 text-primary-soft"
               }`}
             >
@@ -885,7 +885,7 @@ function DesktopTable({
 
         <RowLabel
           label="Faiblesses / Risques"
-          icon={<AlertTriangle className="h-3.5 w-3.5 text-amber-400" />}
+          icon={<AlertTriangle className="h-3.5 w-3.5 text-primary-glow" />}
         />
         {cryptos.map((c) => {
           const items =
@@ -1122,7 +1122,7 @@ function MobileCard({
       {/* Faiblesses */}
       <div>
         <div className="text-[11px] uppercase tracking-wider text-muted flex items-center gap-1.5">
-          <AlertTriangle className="h-3.5 w-3.5 text-amber-400" />{" "}
+          <AlertTriangle className="h-3.5 w-3.5 text-primary-glow" />{" "}
           {c.kind === "top10" ? "Faiblesses" : "Risques"}
         </div>
         <ul className="mt-2 space-y-1.5 text-xs text-fg/85">

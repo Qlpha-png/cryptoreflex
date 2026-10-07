@@ -25,7 +25,7 @@ export default function FaqAccordion({ items, title }: FaqAccordionProps) {
       <StructuredData data={faqSchema(items)} id="faq-mdx" />
 
       {title && (
-        <h2 className="mb-4 text-2xl font-bold tracking-tight text-white">
+        <h2 className="mb-4 text-2xl font-bold tracking-tight text-fg-max">
           {title}
         </h2>
       )}
@@ -36,7 +36,7 @@ export default function FaqAccordion({ items, title }: FaqAccordionProps) {
             key={i}
             className="group [&[open]_.faq-icon]:rotate-180"
           >
-            <summary className="flex cursor-pointer list-none items-center justify-between gap-4 px-5 py-4 font-medium text-white hover:bg-elevated">
+            <summary className="flex cursor-pointer list-none items-center justify-between gap-4 px-5 py-4 font-medium text-fg-max hover:bg-elevated">
               <span>{item.question}</span>
               <ChevronDown
                 className="faq-icon h-4 w-4 shrink-0 text-muted transition-transform"
@@ -44,7 +44,7 @@ export default function FaqAccordion({ items, title }: FaqAccordionProps) {
               />
             </summary>
             <div
-              className="border-t border-border px-5 py-4 text-sm leading-relaxed text-white/80 [&_a]:text-primary-glow [&_a:hover]:underline"
+              className="border-t border-border px-5 py-4 text-sm leading-relaxed text-fg-max/80 [&_a]:text-primary-glow [&_a:hover]:underline"
               // Permet du HTML simple dans la réponse (cf. type FaqItem.answer).
               dangerouslySetInnerHTML={{ __html: item.answer }}
             />

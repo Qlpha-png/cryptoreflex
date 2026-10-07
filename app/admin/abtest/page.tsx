@@ -176,7 +176,7 @@ export default async function AdminAbTestPage() {
 
         <header className="mt-6 flex items-start justify-between gap-4 flex-wrap">
           <div>
-            <span className="inline-flex items-center gap-2 rounded-full border border-amber-400/40 bg-amber-400/10 px-3 py-1 text-xs font-bold text-amber-300">
+            <span className="inline-flex items-center gap-2 rounded-full border border-primary-glow/40 bg-primary-glow/10 px-3 py-1 text-xs font-bold text-primary-soft">
               <Crown className="h-3.5 w-3.5" />
               ADMIN — A/B testing
             </span>
@@ -188,7 +188,7 @@ export default async function AdminAbTestPage() {
               {SIGNIFICANCE_THRESHOLD}. Seuil minimal{" "}
               {MIN_EXPOSURES_PER_VARIANT} exposures / variant pour décider.{" "}
               {kv.mocked && (
-                <span className="text-amber-300">
+                <span className="text-primary-soft">
                   ⚠ KV en mode mocked — données perdues à chaque cold start.
                 </span>
               )}
@@ -302,7 +302,7 @@ function ExperimentSection({ stats }: { stats: ExperimentStats }) {
             Min / variant :{" "}
             <span
               className={`font-mono tabular-nums ${
-                insufficient ? "text-amber-300" : "text-emerald-300"
+                insufficient ? "text-primary-soft" : "text-emerald-300"
               }`}
             >
               {minExposures.toLocaleString("fr-FR")}
@@ -312,7 +312,7 @@ function ExperimentSection({ stats }: { stats: ExperimentStats }) {
       </header>
 
       {insufficient ? (
-        <div className="p-5 sm:p-6 bg-amber-500/5 border-t border-amber-500/20">
+        <div className="p-5 sm:p-6 bg-warning/5 border-t border-warning/20">
           <p className="text-sm text-amber-200">
             <strong>Données insuffisantes — collecte en cours.</strong>{" "}
             Atteindre au moins {MIN_EXPOSURES_PER_VARIANT} exposures par variant

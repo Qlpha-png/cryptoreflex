@@ -159,7 +159,7 @@ export default function ComparatifPage() {
 
             <details className="group rounded-2xl border border-border bg-surface p-4">
               <summary className="flex cursor-pointer list-none items-center justify-between gap-3 text-base font-bold text-fg">
-                <span className="inline-flex items-center gap-2"><ShieldAlert className="h-5 w-5 text-red-300" aria-hidden="true" /> À éviter en France ({blocked.length})</span>
+                <span className="inline-flex items-center gap-2"><ShieldAlert className="h-5 w-5 text-danger-fg" aria-hidden="true" /> À éviter en France ({blocked.length})</span>
                 <ChevronDown className="h-5 w-5 text-muted transition-transform group-open:rotate-180" aria-hidden="true" />
               </summary>
               <p className="mt-3 text-sm text-fg/80">Ces plateformes ne peuvent pas (ou plus) servir les résidents français.</p>

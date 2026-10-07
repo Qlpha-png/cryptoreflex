@@ -52,6 +52,16 @@ if (cmd === "start" && process.env.BANC_DONNEES_MODE) env.BANC_DONNEES_MODE = pr
 const next = path.join(ROOT, "node_modules/next/dist/bin/next");
 const port = String(a.port || 3180);
 if (cmd === "start" && !/^318\d$/.test(port)) { console.error("banc : ports 3180-3189 seulement"); process.exit(2); }
+if (cmd === "build") {
+  // Caches de Next qui survivent d'un build à l'autre (.next/cache) : leurs entrées sont datées par le système de fichiers
+  // (horloge RÉELLE), donc toujours « fraîches » pour l'horloge figée du banc, qui est dans le passé. Sans ce nettoyage,
+  // un build reprendrait les réponses d'une passe antérieure (autre magasin, autre jour, réponses edge en direct) au lieu
+  // du magasin : les données des pages dépendraient de l'historique du dossier. On repart du magasin seul.
+  for (const d of ["fetch-cache", "images"]) {
+    const p = path.join(ROOT, ".next", "cache", d);
+    if (fs.existsSync(p)) { fs.rmSync(p, { recursive: true, force: true }); console.log(`banc : cache ${path.relative(ROOT, p)} vidé (données = magasin seul)`); }
+  }
+}
 const argv = cmd === "build" ? [next, "build"] : [next, "start", "-p", port, "-H", "127.0.0.1"];
 console.log(`banc : next ${cmd}${cmd === "start" ? " sur http://127.0.0.1:" + port : ""} · magasin ${donnees}`);
 const child = spawn(process.execPath, argv, { cwd: ROOT, env, stdio: "inherit" });

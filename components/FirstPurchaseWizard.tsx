@@ -200,7 +200,7 @@ export default function FirstPurchaseWizard({ platforms }: Props) {
                 className={`shrink-0 inline-flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-full text-xs sm:text-sm font-bold border transition-colors
                             ${
                               isDone
-                                ? "bg-primary border-primary text-background" /* a11y 2026-05-08 : 14:1 vs text-white 2.04:1 */
+                                ? "bg-primary border-primary text-background" /* a11y 2026-05-08 : 14:1 vs text-fg-max 2.04:1 */
                                 : isCurrent
                                 ? "bg-primary/15 border-primary text-primary-soft"
                                 : "bg-elevated border-border text-muted"
@@ -443,7 +443,7 @@ function Step1Why({
       {/* Disclaimer */}
       <div
         role="note"
-        className="mt-6 flex items-start gap-2 rounded-xl border border-amber-500/30 bg-amber-500/5 p-4 text-amber-100 text-xs sm:text-sm"
+        className="mt-6 flex items-start gap-2 rounded-xl border border-warning/30 bg-warning/5 p-4 text-amber-100 text-xs sm:text-sm"
       >
         <AlertTriangle className="h-4 w-4 shrink-0 mt-0.5" aria-hidden="true" />
         <p className="leading-relaxed">

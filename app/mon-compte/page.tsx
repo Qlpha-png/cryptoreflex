@@ -77,7 +77,7 @@ export default async function AccountPage() {
             {user.isAdmin && (
               <Link
                 href="/admin"
-                className="inline-flex items-center gap-1.5 rounded-full border border-amber-400/40 bg-amber-400/10 px-3 py-1 text-xs font-bold text-amber-300 hover:bg-amber-400/20 transition-colors"
+                className="inline-flex items-center gap-1.5 rounded-full border border-primary-glow/40 bg-primary-glow/10 px-3 py-1 text-xs font-bold text-primary-soft hover:bg-primary-glow/20 transition-colors"
                 aria-label="Accéder au dashboard admin"
               >
                 <ShieldCheck className="h-3.5 w-3.5" aria-hidden="true" />
@@ -128,7 +128,7 @@ export default async function AccountPage() {
               className="spotlight-card group rounded-xl border border-border bg-surface p-4 hover:border-primary/50 hover:shadow-[0_8px_24px_-12px_rgba(245,165,36,0.4)] transition-all"
             >
               <div className="flex items-start gap-3">
-                <div className="shrink-0 grid place-items-center h-9 w-9 rounded-xl bg-amber-500/15 text-amber-400 group-hover:bg-amber-500/25 transition-colors">
+                <div className="shrink-0 grid place-items-center h-9 w-9 rounded-xl bg-warning/15 text-primary-glow group-hover:bg-warning/25 transition-colors">
                   <FileText className="h-4 w-4" aria-hidden="true" />
                 </div>
                 <div className="flex-1 min-w-0">

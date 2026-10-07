@@ -86,7 +86,7 @@ export default function EmbedSnippet({
       </div>
       <pre
         id={`snippet-${slug}`}
-        className="overflow-x-auto p-3 text-xs leading-relaxed text-white/85 bg-background/40 font-mono whitespace-pre-wrap break-all"
+        className="overflow-x-auto p-3 text-xs leading-relaxed text-fg-max/85 bg-background/40 font-mono whitespace-pre-wrap break-all"
       >
         {snippet}
       </pre>

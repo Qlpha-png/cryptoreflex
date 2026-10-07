@@ -157,7 +157,7 @@ export default function EmbedPage() {
       <StructuredData id="embed-jsonld" data={jsonLd} />
 
       {/* Hero */}
-      <section className="border-b border-white/5 bg-gradient-to-b from-cyan-500/5 to-transparent">
+      <section className="border-b border-fg-max/5 bg-gradient-to-b from-cyan-500/5 to-transparent">
         <div className="mx-auto max-w-5xl px-4 py-16 sm:px-6 lg:px-8">
           <nav className="mb-6 text-sm text-slate-400" aria-label="Fil d'Ariane">
             <Link href="/" className="hover:text-cyan-300">
@@ -183,19 +183,19 @@ export default function EmbedPage() {
           </p>
 
           <div className="mt-6 flex flex-wrap gap-3 text-sm">
-            <span className="inline-flex items-center gap-1.5 rounded-md border border-white/10 bg-white/5 px-3 py-1.5 text-slate-300">
+            <span className="inline-flex items-center gap-1.5 rounded-md border border-fg-max/10 bg-fg-max/5 px-3 py-1.5 text-slate-300">
               <ShieldCheck className="h-4 w-4 text-emerald-400" />
               Aucune inscription
             </span>
-            <span className="inline-flex items-center gap-1.5 rounded-md border border-white/10 bg-white/5 px-3 py-1.5 text-slate-300">
+            <span className="inline-flex items-center gap-1.5 rounded-md border border-fg-max/10 bg-fg-max/5 px-3 py-1.5 text-slate-300">
               <Globe2 className="h-4 w-4 text-cyan-400" />
               CORS *
             </span>
-            <span className="inline-flex items-center gap-1.5 rounded-md border border-white/10 bg-white/5 px-3 py-1.5 text-slate-300">
+            <span className="inline-flex items-center gap-1.5 rounded-md border border-fg-max/10 bg-fg-max/5 px-3 py-1.5 text-slate-300">
               <Code2 className="h-4 w-4 text-indigo-400" />
               &lt; 5 Ko gzippé
             </span>
-            <span className="inline-flex items-center gap-1.5 rounded-md border border-white/10 bg-white/5 px-3 py-1.5 text-slate-300">
+            <span className="inline-flex items-center gap-1.5 rounded-md border border-fg-max/10 bg-fg-max/5 px-3 py-1.5 text-slate-300">
               <Layers className="h-4 w-4 text-fuchsia-400" />
               Vanilla JS (zéro dépendance)
             </span>
@@ -204,36 +204,36 @@ export default function EmbedPage() {
       </section>
 
       {/* Quick install */}
-      <section className="border-b border-white/5 bg-white/[0.02]">
+      <section className="border-b border-fg-max/5 bg-fg-max/[0.02]">
         <div className="mx-auto max-w-5xl px-4 py-12 sm:px-6 lg:px-8">
           <h2 className="text-2xl font-bold tracking-tight">
             Installation en 30 secondes
           </h2>
           <ol className="mt-6 grid gap-4 sm:grid-cols-3">
-            <li className="rounded-2xl border border-white/10 bg-white/[0.02] p-5">
+            <li className="rounded-2xl border border-fg-max/10 bg-fg-max/[0.02] p-5">
               <div className="flex h-9 w-9 items-center justify-center rounded-full bg-cyan-500/15 text-cyan-300 font-bold">
                 1
               </div>
-              <h3 className="mt-3 font-semibold text-white">Copiez le snippet</h3>
+              <h3 className="mt-3 font-semibold text-fg-max">Copiez le snippet</h3>
               <p className="mt-1 text-sm text-slate-400">
                 Choisissez l'un des 3 widgets ci-dessous et copiez le snippet.
               </p>
             </li>
-            <li className="rounded-2xl border border-white/10 bg-white/[0.02] p-5">
+            <li className="rounded-2xl border border-fg-max/10 bg-fg-max/[0.02] p-5">
               <div className="flex h-9 w-9 items-center justify-center rounded-full bg-cyan-500/15 text-cyan-300 font-bold">
                 2
               </div>
-              <h3 className="mt-3 font-semibold text-white">Collez dans votre article</h3>
+              <h3 className="mt-3 font-semibold text-fg-max">Collez dans votre article</h3>
               <p className="mt-1 text-sm text-slate-400">
                 Dans la zone HTML brut de votre CMS (WordPress, Ghost, Webflow,
                 Notion-pages, etc.).
               </p>
             </li>
-            <li className="rounded-2xl border border-white/10 bg-white/[0.02] p-5">
+            <li className="rounded-2xl border border-fg-max/10 bg-fg-max/[0.02] p-5">
               <div className="flex h-9 w-9 items-center justify-center rounded-full bg-cyan-500/15 text-cyan-300 font-bold">
                 3
               </div>
-              <h3 className="mt-3 font-semibold text-white">Publiez. C'est tout.</h3>
+              <h3 className="mt-3 font-semibold text-fg-max">Publiez. C'est tout.</h3>
               <p className="mt-1 text-sm text-slate-400">
                 Le widget se rend automatiquement et se met à jour
                 mensuellement avec nos data.
@@ -251,10 +251,10 @@ export default function EmbedPage() {
             <article
               key={s.id}
               id={s.id}
-              className="rounded-2xl border border-white/10 bg-white/[0.02] p-6"
+              className="rounded-2xl border border-fg-max/10 bg-fg-max/[0.02] p-6"
             >
               <header>
-                <h3 className="text-xl font-bold text-white">{s.title}</h3>
+                <h3 className="text-xl font-bold text-fg-max">{s.title}</h3>
                 <p className="mt-2 text-sm text-slate-300">{s.description}</p>
               </header>
 
@@ -262,7 +262,7 @@ export default function EmbedPage() {
                 <div className="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">
                   Snippet à copier-coller
                 </div>
-                <pre className="overflow-x-auto rounded-lg border border-white/10 bg-black/40 p-4 font-mono text-xs text-slate-200">
+                <pre className="overflow-x-auto rounded-lg border border-fg-max/10 bg-scrim/40 p-4 font-mono text-xs text-slate-200">
                   <code>{s.snippet}</code>
                 </pre>
               </div>
@@ -288,7 +288,7 @@ export default function EmbedPage() {
                 <div className="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">
                   Aperçu live
                 </div>
-                <div className="rounded-lg border border-white/10 bg-white p-4">
+                <div className="rounded-lg border border-fg-max/10 bg-white p-4">
                   {s.id === "psan-checker" && (
                     <div data-cryptoreflex-widget="psan-checker" data-platform="coinbase" />
                   )}
@@ -306,16 +306,16 @@ export default function EmbedPage() {
       </section>
 
       {/* FAQ */}
-      <section className="border-t border-white/5 bg-white/[0.02]">
+      <section className="border-t border-fg-max/5 bg-fg-max/[0.02]">
         <div className="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8">
           <h2 className="text-2xl font-bold tracking-tight">FAQ</h2>
           <div className="mt-8 space-y-3">
             {FAQ.map((item) => (
               <details
                 key={item.question}
-                className="group rounded-xl border border-white/10 bg-white/[0.02] p-5 open:border-cyan-500/30"
+                className="group rounded-xl border border-fg-max/10 bg-fg-max/[0.02] p-5 open:border-cyan-500/30"
               >
-                <summary className="cursor-pointer list-none flex items-center justify-between gap-4 font-medium text-white">
+                <summary className="cursor-pointer list-none flex items-center justify-between gap-4 font-medium text-fg-max">
                   {item.question}
                   <span className="text-cyan-300 transition group-open:rotate-45">+</span>
                 </summary>

@@ -207,7 +207,7 @@ export default function CryptoQuickSwitcher({
                     <span
                       className={`inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-lg ${
                         isGem
-                          ? "bg-amber-400/15 text-amber-300"
+                          ? "bg-primary-glow/15 text-primary-soft"
                           : "bg-primary/15 text-primary-soft"
                       }`}
                       aria-hidden="true"

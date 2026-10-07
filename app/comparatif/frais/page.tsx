@@ -145,13 +145,13 @@ function VerdictBadge({ verdict }: { verdict?: Verified["verdict"] }) {
     );
   if (verdict === "douteux")
     return (
-      <span className="inline-flex items-center gap-1 rounded-md border border-amber-400/30 bg-amber-400/10 px-1.5 py-0.5 text-[10px] font-bold text-amber-300">
+      <span className="inline-flex items-center gap-1 rounded-md border border-primary-glow/30 bg-primary-glow/10 px-1.5 py-0.5 text-[10px] font-bold text-primary-soft">
         <AlertTriangle className="h-3 w-3" /> À vérifier
       </span>
     );
   if (verdict === "indisponible")
     return (
-      <span className="inline-flex items-center gap-1 rounded-md border border-red-400/30 bg-red-400/10 px-1.5 py-0.5 text-[10px] font-bold text-red-300">
+      <span className="inline-flex items-center gap-1 rounded-md border border-red-400/30 bg-red-400/10 px-1.5 py-0.5 text-[10px] font-bold text-danger-fg">
         <Ban className="h-3 w-3" /> Fermé FR
       </span>
     );
@@ -293,7 +293,7 @@ export default function ComparatifFraisPage() {
             de frais ({fmtPct(cheapestTrade.spotTaker)}). En{" "}
             <strong className="text-fg">achat simple</strong> chez{" "}
             <strong className="text-fg">{dearestBuy.name}</strong>, c&apos;est{" "}
-            <strong className="text-amber-300">{dearestBuy.simpleText}</strong>{" "}
+            <strong className="text-primary-soft">{dearestBuy.simpleText}</strong>{" "}
             (coût relevé le plus élevé de notre base).{" "}
             Même crypto, même montant : l&apos;écart vient de <em>comment</em> vous achetez.
           </p>
@@ -433,7 +433,7 @@ export default function ComparatifFraisPage() {
         {/* Plateformes hors classement (fermées FR / CFD) */}
         {flagged.length > 0 && (
           <section className="mt-6 rounded-2xl border border-red-400/20 bg-red-400/5 p-5">
-            <div className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-wider text-red-300">
+            <div className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-wider text-danger-fg">
               <Ban className="h-3.5 w-3.5" /> Sorties du classement
             </div>
             <ul className="mt-3 space-y-2 text-sm text-fg/85">
@@ -479,9 +479,9 @@ export default function ComparatifFraisPage() {
               <strong className="text-fg">Badge :</strong>{" "}
               <BadgeCheck className="inline h-3.5 w-3.5 text-accent-green" /> vérifié
               sur grille officielle ·{" "}
-              <AlertTriangle className="inline h-3.5 w-3.5 text-amber-300" /> à
+              <AlertTriangle className="inline h-3.5 w-3.5 text-primary-soft" /> à
               vérifier (source non confirmée, aucun chiffre inventé) ·{" "}
-              <Ban className="inline h-3.5 w-3.5 text-red-300" /> fermé au marché FR.
+              <Ban className="inline h-3.5 w-3.5 text-danger-fg" /> fermé au marché FR.
             </li>
           </ul>
           <p className="mt-4 text-sm text-muted">
@@ -564,7 +564,7 @@ function Stat({
   const styles = {
     green: "border-accent-green/30 bg-accent-green/5 text-accent-green",
     primary: "border-primary/30 bg-primary/5 text-primary-soft",
-    amber: "border-amber-400/30 bg-amber-400/5 text-amber-300",
+    amber: "border-primary-glow/30 bg-primary-glow/5 text-primary-soft",
   };
   return (
     <div className={`rounded-2xl border p-4 ${styles[tone]}`}>

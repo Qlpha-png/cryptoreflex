@@ -101,7 +101,7 @@ export default function UserLevelBadge() {
       <Trophy className="h-3 w-3" aria-hidden="true" />
       <span className="tabular-nums">Lv {progress.level}</span>
       {progress.streakDays > 0 && (
-        <span className="inline-flex items-center gap-0.5 ml-0.5 pl-1.5 border-l border-primary/30 text-amber-300">
+        <span className="inline-flex items-center gap-0.5 ml-0.5 pl-1.5 border-l border-primary/30 text-primary-soft">
           <Flame className="h-3 w-3" aria-hidden="true" />
           <span className="tabular-nums">{progress.streakDays}</span>
         </span>

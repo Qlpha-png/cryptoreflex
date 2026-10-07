@@ -21,7 +21,7 @@
 import fs from "node:fs";
 import http from "node:http";
 import path from "node:path";
-import { args, sortieHorsDepot, dossierDonnees, horlogeFigee, lancerNavigateur, contexteBanc, stabiliser, marquerZonesVivantes, ecrireJson, sha256, pause } from "./lib/commun.mjs";
+import { args, sortieHorsDepot, dossierDonnees, horlogeFigee, lancerNavigateur, contexteBanc, stabiliser, marquerZonesVivantes, marquerCoinsFlous, retirerCoinsFlous, ecrireJson, sha256, pause } from "./lib/commun.mjs";
 import { resoudreEchantillon, chargerEchantillon } from "./lib/echantillon.mjs";
 import { mesurerPage, debordements } from "./lib/mesures-page.mjs";
 
@@ -64,19 +64,24 @@ if (pages.some((p) => p.iframe && !p.absente) && LOCALE) {
 
 const browser = await lancerNavigateur();
 const resultats = [];
+const journaux = {}; // requêtes du navigateur par visite (id@largeur) → requetes-navigateur.json
 const t0 = Date.now();
 let premiere = true;
 
 async function capturer(page, p, w) {
   let nMasques = await marquerZonesVivantes(page, { iframes: !p.iframe });
+  // coins des cartes à backdrop-filter (anticrénelage instable) : masque ciblé, retiré juste après la capture
+  let nCoins = await marquerCoinsFlous(page).catch(() => 0);
+  const cadres = p.iframe ? page.frames().filter((f) => f !== page.mainFrame()) : [];
   const masques = [page.locator("[data-banc-masque]")];
   if (p.iframe) {
-    for (const f of page.frames()) if (f !== page.mainFrame()) nMasques += await marquerZonesVivantes(f).catch(() => 0);
+    for (const f of cadres) { nMasques += await marquerZonesVivantes(f).catch(() => 0); nCoins += await marquerCoinsFlous(f).catch(() => 0); }
     masques.push(page.frameLocator("iframe").locator("[data-banc-masque]"));
   }
   const fichier = `${p.id}@${w}.png`;
   const buf = await page.screenshot({ path: path.join(OUT, fichier), fullPage: true, animations: "disabled", caret: "hide", scale: "css", mask: masques, maskColor: "#FF00FF" });
-  return { fichier, sha256: sha256(buf), masques: nMasques };
+  for (const c of [page, ...cadres]) await retirerCoinsFlous(c);
+  return { fichier, sha256: sha256(buf), masques: nMasques, coinsMasques: nCoins };
 }
 
 for (const p of pages) {
@@ -87,7 +92,9 @@ for (const p of pages) {
   const visites = PROD ? [LARGEURS.slice().sort((x, y) => y - x)] : LARGEURS.map((w) => [w]);
   for (const groupe of visites) {
     const w0 = groupe[0];
-    const ctx = await contexteBanc(browser, { largeur: w0, dpr: DPR, figer: FIGER, donnees: DONNEES, horloge: HORLOGE, consentement: !p.banniere });
+    const journal = [];
+    journaux[`${p.id}@${w0}`] = journal;
+    const ctx = await contexteBanc(browser, { largeur: w0, dpr: DPR, figer: FIGER, donnees: DONNEES, horloge: HORLOGE, consentement: !p.banniere, journal });
     const page = await ctx.newPage();
     const erreurs = [];
     page.on("pageerror", (e) => erreurs.push(String(e.message || e).slice(0, 200)));
@@ -128,4 +135,6 @@ const synthese = {
   absentes: resultats.filter((r) => r.absente).map((r) => r.id),
 };
 ecrireJson(path.join(OUT, "captures.json"), { synthese, resultats });
+// liste triée et dédoublonnée par visite : deux passes du même code doivent demander exactement les mêmes URL
+ecrireJson(path.join(OUT, "requetes-navigateur.json"), Object.fromEntries(Object.entries(journaux).map(([k, v]) => [k, [...new Set(v)].sort()])));
 console.log("\nSYNTHÈSE " + JSON.stringify(synthese, null, 1));

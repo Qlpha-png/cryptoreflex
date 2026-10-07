@@ -23,10 +23,10 @@ export default function WhitepaperTldr() {
           <Info className="h-5 w-5" />
         </div>
         <div>
-          <h2 className="text-xl font-bold text-white">
+          <h2 className="text-xl font-bold text-fg-max">
             Analyseur de whitepaper indisponible
           </h2>
-          <p className="mt-2 text-sm text-white/70 leading-relaxed">
+          <p className="mt-2 text-sm text-fg-max/70 leading-relaxed">
             Cet outil n&apos;est plus proposé. Pour évaluer un projet, consulte
             les fiches crypto de Cryptoreflex (synthèse du whitepaper, points
             clés, sources officielles) et croise toujours avec une lecture

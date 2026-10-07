@@ -134,12 +134,12 @@ export function statusMeta(status: AirdropStatus): {
   if (status === "upcoming")
     return {
       label: "A venir",
-      color: "border-amber-400/40 bg-amber-400/10 text-amber-300",
+      color: "border-primary-glow/40 bg-primary-glow/10 text-primary-soft",
     };
   if (status === "expired")
     return {
       label: "Expire",
-      color: "border-red-400/30 bg-red-400/5 text-red-300/80",
+      color: "border-red-400/30 bg-red-400/5 text-danger-fg/80",
     };
   return {
     label: "Cloture",

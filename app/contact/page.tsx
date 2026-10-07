@@ -178,11 +178,11 @@ export default function ContactPage() {
               </span>
               <h2
                 id={`contact-${c.title}`}
-                className="mt-4 text-xl font-extrabold text-white"
+                className="mt-4 text-xl font-extrabold text-fg-max"
               >
                 {c.title}
               </h2>
-              <p className="mt-2 text-sm text-white/70 flex-1">{c.description}</p>
+              <p className="mt-2 text-sm text-fg-max/70 flex-1">{c.description}</p>
 
               <a
                 href={`mailto:${c.email}?subject=${encodeURIComponent(c.title)} - ${BRAND.name}`}
@@ -196,7 +196,7 @@ export default function ContactPage() {
               {c.cta && (
                 <Link
                   href={c.cta.href}
-                  className="mt-3 inline-flex items-center gap-1 text-xs text-muted hover:text-white"
+                  className="mt-3 inline-flex items-center gap-1 text-xs text-muted hover:text-fg-max"
                 >
                   {c.cta.label}
                   <ArrowRight className="h-3 w-3" aria-hidden="true" />

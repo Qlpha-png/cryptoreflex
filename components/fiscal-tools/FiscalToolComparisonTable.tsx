@@ -120,7 +120,7 @@ function formatCell(value: CellValue): React.ReactNode {
       </span>
     );
   }
-  return <span className="font-mono text-sm text-white/90">{value}</span>;
+  return <span className="font-mono text-sm text-fg-max/90">{value}</span>;
 }
 
 export default function FiscalToolComparisonTable({
@@ -156,7 +156,7 @@ export default function FiscalToolComparisonTable({
                               ${
                                 tool.recommended
                                   ? "text-primary-soft bg-primary/5"
-                                  : "text-white/85"
+                                  : "text-fg-max/85"
                               }`}
                 >
                   {tool.name}
@@ -174,7 +174,7 @@ export default function FiscalToolComparisonTable({
               <tr key={row.label} className="hover:bg-elevated/30 transition-colors">
                 <th
                   scope="row"
-                  className="px-4 py-3 text-left font-medium text-white/85 align-top"
+                  className="px-4 py-3 text-left font-medium text-fg-max/85 align-top"
                 >
                   {row.label}
                   {row.hint && (
@@ -198,7 +198,7 @@ export default function FiscalToolComparisonTable({
             ))}
             {/* CTA row */}
             <tr className="bg-elevated/30">
-              <th scope="row" className="px-4 py-4 text-left font-semibold text-white">
+              <th scope="row" className="px-4 py-4 text-left font-semibold text-fg-max">
                 Tester gratuitement
               </th>
               {tools.map((tool) => (
@@ -212,7 +212,7 @@ export default function FiscalToolComparisonTable({
                                 ${
                                   tool.recommended
                                     ? "bg-primary text-background hover:bg-primary/90"
-                                    : "border border-border text-white/85 hover:border-primary/50"
+                                    : "border border-border text-fg-max/85 hover:border-primary/50"
                                 }`}
                     showCaption={false}
                   >
@@ -238,7 +238,7 @@ export default function FiscalToolComparisonTable({
             }`}
           >
             <div className="flex items-baseline justify-between">
-              <h3 className="font-display font-bold text-white">
+              <h3 className="font-display font-bold text-fg-max">
                 {tool.name}
                 {tool.recommended && (
                   <span className="ml-2 text-xs text-primary-soft">★ Recommandé</span>
@@ -254,7 +254,7 @@ export default function FiscalToolComparisonTable({
                   key={row.label}
                   className="flex justify-between gap-3 border-b border-border/40 pb-1.5"
                 >
-                  <dt className="text-white/65">{row.label}</dt>
+                  <dt className="text-fg-max/65">{row.label}</dt>
                   <dd className="text-right">{formatCell(row.get(tool))}</dd>
                 </div>
               ))}

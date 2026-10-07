@@ -249,9 +249,9 @@ export default function ExchangeConnect() {
 
   if (!cryptoConfigured) {
     return (
-      <section className="rounded-2xl border border-amber-500/30 bg-amber-500/5 p-5">
+      <section className="rounded-2xl border border-warning/30 bg-warning/5 p-5">
         <div className="flex items-start gap-3">
-          <ShieldAlert className="h-5 w-5 text-amber-400 shrink-0 mt-0.5" />
+          <ShieldAlert className="h-5 w-5 text-primary-glow shrink-0 mt-0.5" />
           <div>
             <h3 className="font-bold text-fg text-sm">
               Service indisponible temporairement
@@ -412,11 +412,11 @@ export default function ExchangeConnect() {
             </div>
           ) : (
             <form onSubmit={handleConnect} className="space-y-4">
-              <div className="rounded-xl border border-amber-500/30 bg-amber-500/5 p-3 text-xs text-amber-200/90 leading-relaxed">
+              <div className="rounded-xl border border-warning/30 bg-warning/5 p-3 text-xs text-amber-200/90 leading-relaxed">
                 <div className="flex items-start gap-2">
-                  <ShieldCheck className="h-4 w-4 shrink-0 mt-0.5 text-amber-400" />
+                  <ShieldCheck className="h-4 w-4 shrink-0 mt-0.5 text-primary-glow" />
                   <div>
-                    <strong className="text-amber-300">
+                    <strong className="text-primary-soft">
                       Crée une clé READ-ONLY uniquement
                     </strong>{" "}
                     sur Binance → Account → API Management.

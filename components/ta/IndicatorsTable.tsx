@@ -45,7 +45,7 @@ function toneClasses(tone: "bullish" | "bearish" | "neutral"): string {
     case "bearish":
       return "text-rose-300";
     default:
-      return "text-amber-300";
+      return "text-primary-soft";
   }
 }
 
@@ -148,7 +148,7 @@ export default function IndicatorsTable({ indicators, currentPrice }: Props) {
             Position : {fmtFr(bbPosition, 0)}%
           </span>
         </div>
-        <div className="relative h-2 rounded-full bg-gradient-to-r from-rose-500/20 via-amber-500/20 to-emerald-500/20 overflow-hidden">
+        <div className="relative h-2 rounded-full bg-gradient-to-r from-rose-500/20 via-warning/20 to-emerald-500/20 overflow-hidden">
           <div
             className="absolute top-0 h-full w-1 rounded-full bg-primary shadow-[0_0_8px_rgba(245,165,36,0.8)]"
             style={{ left: `calc(${bbPosition}% - 2px)` }}

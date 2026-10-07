@@ -71,8 +71,8 @@ const STORIES = [
     eyebrow: "Story 1",
     title: "Votre meilleure perf 2026",
     blurb: "Quelle crypto vous a fait gagner le plus, à quel moment, et pourquoi.",
-    color: "text-amber-300",
-    bg: "bg-amber-400/15",
+    color: "text-primary-soft",
+    bg: "bg-primary-glow/15",
   },
   {
     Icon: TrendingUp,

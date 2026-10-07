@@ -103,10 +103,10 @@ export default function StickyWaltioCta() {
             <Sparkles className="h-5 w-5 text-background" />
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-semibold text-white truncate">
+            <p className="text-sm font-semibold text-fg-max truncate">
               Automatisez votre déclaration crypto
             </p>
-            <p className="hidden sm:block text-xs text-white/70 truncate">
+            <p className="hidden sm:block text-xs text-fg-max/70 truncate">
               Waltio (FR) génère votre Cerfa 2086 + 3916-bis automatiquement —
               <span className="text-primary-soft font-semibold">
                 {" "}
@@ -131,7 +131,7 @@ export default function StickyWaltioCta() {
             type="button"
             onClick={handleDismiss}
             aria-label="Fermer le bandeau Waltio"
-            className="shrink-0 inline-flex h-8 w-8 items-center justify-center rounded-full text-muted hover:text-white hover:bg-white/5 focus:outline-none focus:ring-2 focus:ring-primary/40"
+            className="shrink-0 inline-flex h-8 w-8 items-center justify-center rounded-full text-muted hover:text-fg-max hover:bg-fg-max/5 focus:outline-none focus:ring-2 focus:ring-primary/40"
           >
             <X className="h-4 w-4" aria-hidden="true" />
           </button>

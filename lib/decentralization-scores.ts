@@ -68,6 +68,6 @@ export function formatDecentralizationVerdict(score: number): string {
 export function decentralizationColor(score: number): string {
   if (score >= 9) return "text-accent-green border-accent-green/30 bg-accent-green/10";
   if (score >= 7) return "text-primary border-primary/30 bg-primary/10";
-  if (score >= 5) return "text-amber-300 border-amber-500/30 bg-amber-500/10";
+  if (score >= 5) return "text-primary-soft border-warning/30 bg-warning/10";
   return "text-accent-rose border-accent-rose/30 bg-accent-rose/10";
 }

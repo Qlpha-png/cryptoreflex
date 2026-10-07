@@ -101,10 +101,10 @@ export default function ConvertisseurPage() {
               <Zap className="h-3.5 w-3.5" />
               Temps réel — taux du marché
             </span>
-            <h1 className="mt-4 text-4xl sm:text-5xl font-extrabold tracking-tight text-white">
+            <h1 className="mt-4 text-4xl sm:text-5xl font-extrabold tracking-tight text-fg-max">
               Convertisseur <span className="gradient-text">crypto</span>
             </h1>
-            <p className="mt-4 text-lg text-white/70">
+            <p className="mt-4 text-lg text-fg-max/70">
               15 cryptos, 2 fiats, toutes les combinaisons possibles. Taux
               à jour à quelques minutes près, sans pub ni inscription.
             </p>
@@ -116,10 +116,10 @@ export default function ConvertisseurPage() {
 
           {/* Top pairs SEO */}
           <div className="mt-16">
-            <h2 className="text-2xl sm:text-3xl font-bold text-white">
+            <h2 className="text-2xl sm:text-3xl font-bold text-fg-max">
               Conversions les plus recherchées
             </h2>
-            <p className="mt-2 text-white/70">
+            <p className="mt-2 text-fg-max/70">
               Accédez directement aux pages dédiées avec historique et
               graphique pour les paires populaires.
             </p>
@@ -128,7 +128,7 @@ export default function ConvertisseurPage() {
                 <Link
                   key={`${from}-${to}`}
                   href={`/convertisseur/${from}-${to}`}
-                  className="rounded-lg border border-border bg-elevated/50 px-3 py-2.5 text-sm font-semibold text-white/80 hover:border-primary/60 hover:text-white transition-colors flex items-center justify-between gap-2"
+                  className="rounded-lg border border-border bg-elevated/50 px-3 py-2.5 text-sm font-semibold text-fg-max/80 hover:border-primary/60 hover:text-fg-max transition-colors flex items-center justify-between gap-2"
                 >
                   <span>
                     {from.toUpperCase()} → {to.toUpperCase()}
@@ -160,7 +160,7 @@ export default function ConvertisseurPage() {
 
           {/* FAQ */}
           <div className="mt-16">
-            <h2 className="text-2xl sm:text-3xl font-bold text-white">
+            <h2 className="text-2xl sm:text-3xl font-bold text-fg-max">
               Questions fréquentes
             </h2>
             <div className="mt-6 space-y-3">
@@ -169,13 +169,13 @@ export default function ConvertisseurPage() {
                   key={item.question}
                   className="group rounded-xl border border-border bg-elevated/40 p-5 open:border-primary/40"
                 >
-                  <summary className="flex cursor-pointer items-center justify-between gap-3 font-semibold text-white">
+                  <summary className="flex cursor-pointer items-center justify-between gap-3 font-semibold text-fg-max">
                     {item.question}
                     <span className="text-primary transition-transform group-open:rotate-45">
                       +
                     </span>
                   </summary>
-                  <p className="mt-3 text-sm text-white/70 leading-relaxed">
+                  <p className="mt-3 text-sm text-fg-max/70 leading-relaxed">
                     {item.answer}
                   </p>
                 </details>
@@ -209,8 +209,8 @@ function Card({
       <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/15 text-primary-soft">
         {icon}
       </div>
-      <h3 className="mt-4 font-bold text-white">{title}</h3>
-      <p className="mt-2 text-sm text-white/70 leading-relaxed">{text}</p>
+      <h3 className="mt-4 font-bold text-fg-max">{title}</h3>
+      <p className="mt-2 text-sm text-fg-max/70 leading-relaxed">{text}</p>
     </div>
   );
 }

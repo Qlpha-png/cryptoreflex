@@ -126,7 +126,7 @@ export default async function CartesPage() {
           </nav>
           <div className="mt-6 grid items-center gap-10 lg:grid-cols-[1fr,auto]">
             <div className="max-w-xl">
-              <span className="inline-flex items-center gap-2 rounded-full border border-amber-400/40 bg-amber-400/10 px-3 py-1 text-xs font-semibold text-amber-300">
+              <span className="inline-flex items-center gap-2 rounded-full border border-primary-glow/40 bg-primary-glow/10 px-3 py-1 text-xs font-semibold text-primary-soft">
                 <Sparkles className="h-3.5 w-3.5" /> {day >= 1 ? "Saison 1 « Genèse » · en cours" : "Bientôt · Saison 1 « Genèse »"}
               </span>
               <h1 className="mt-4 text-4xl font-extrabold tracking-tight sm:text-5xl">
@@ -228,7 +228,7 @@ export default async function CartesPage() {
               { icon: Landmark, t: "Aucune valeur marchande", d: "Les cartes ne s'achètent pas, ne se vendent pas et ne sont pas un conseil en investissement." },
             ].map(({ icon: Icon, t, d }) => (
               <div key={t} className="rounded-2xl border border-border bg-surface p-5">
-                <Icon className="h-5 w-5 text-amber-300" />
+                <Icon className="h-5 w-5 text-primary-soft" />
                 <h3 className="mt-3 font-bold text-fg">{t}</h3>
                 <p className="mt-1 text-sm text-fg/70">{d}</p>
               </div>
@@ -277,7 +277,7 @@ export default async function CartesPage() {
       <section id="calendrier" className="scroll-mt-24 py-10">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <h2 className="flex items-center gap-2 text-2xl font-bold sm:text-3xl">
-            <CalendarDays className="h-6 w-6 text-amber-300" /> Le calendrier de la saison 1
+            <CalendarDays className="h-6 w-6 text-primary-soft" /> Le calendrier de la saison 1
           </h2>
           <p className="mt-2 max-w-3xl text-fg/70">
             4 collections (Genèse, Ascension, Éclipse, Apogée), chacune en 3 parties ; les parties suivantes sortiront plus tard dans la saison. Chaque partie mélange les familles et a sa Légendaire en tête d&apos;affiche. Une carte se tire dès sa sortie ; les nouveautés se fabriquent avec des éclats 7 jours plus tard.

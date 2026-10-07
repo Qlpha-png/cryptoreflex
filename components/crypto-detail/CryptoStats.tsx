@@ -61,10 +61,10 @@ export default function CryptoStats({
     return (
       <section
         aria-label="Statistiques temporairement indisponibles"
-        className="rounded-2xl border border-amber-500/30 bg-amber-500/5 p-5 sm:p-6"
+        className="rounded-2xl border border-warning/30 bg-warning/5 p-5 sm:p-6"
       >
         <div className="flex items-start gap-3">
-          <div className="shrink-0 grid place-items-center h-9 w-9 rounded-xl bg-amber-500/15 text-amber-400">
+          <div className="shrink-0 grid place-items-center h-9 w-9 rounded-xl bg-warning/15 text-primary-glow">
             ⏱
           </div>
           <div className="flex-1">

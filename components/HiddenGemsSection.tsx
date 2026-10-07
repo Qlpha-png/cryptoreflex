@@ -89,7 +89,7 @@ function GemCard({ gem }: { gem: HiddenGem }) {
     score >= 8.5
       ? "text-accent-green border-accent-green/40 bg-accent-green/10"
       : score >= 7
-      ? "text-amber-300 border-amber-400/40 bg-amber-400/10"
+      ? "text-primary-soft border-primary-glow/40 bg-primary-glow/10"
       : "text-danger-fg border-accent-rose/40 bg-accent-rose/10";
 
   return (
@@ -192,16 +192,16 @@ function GemCard({ gem }: { gem: HiddenGem }) {
       */}
       <details className="mt-4 group">
         <summary
-          className="cursor-pointer text-sm font-semibold text-amber-300 hover:text-amber-200
+          className="cursor-pointer text-sm font-semibold text-primary-soft hover:text-amber-200
                      inline-flex items-center gap-1.5 min-h-[44px] py-2 px-1 -mx-1 rounded-lg
-                     active:bg-amber-500/10
+                     active:bg-warning/10
                      focus:outline-none focus-visible:ring-2 focus-visible:ring-primary
                      focus-visible:ring-offset-2 focus-visible:ring-offset-surface"
         >
           <AlertTriangle className="h-4 w-4" aria-hidden="true" />
           Voir les risques ({gem.risks.length})
         </summary>
-        <ul className="mt-2 space-y-1.5 text-sm text-fg/75 pl-5 list-disc marker:text-amber-400/60 leading-relaxed">
+        <ul className="mt-2 space-y-1.5 text-sm text-fg/75 pl-5 list-disc marker:text-primary-glow/60 leading-relaxed">
           {gem.risks.map((risk) => (
             <li key={risk}>{risk}</li>
           ))}

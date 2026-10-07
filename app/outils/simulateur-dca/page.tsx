@@ -118,10 +118,10 @@ export default function SimulateurDcaPage() {
               <TrendingUp className="h-3.5 w-3.5" />
               Backtest réel — données CoinGecko
             </span>
-            <h1 className="mt-4 text-4xl sm:text-5xl font-extrabold tracking-tight text-white">
+            <h1 className="mt-4 text-4xl sm:text-5xl font-extrabold tracking-tight text-fg-max">
               Simulateur <span className="gradient-text">DCA crypto</span>
             </h1>
-            <p className="mt-4 text-lg text-white/70">
+            <p className="mt-4 text-lg text-fg-max/70">
               Combien auriez-vous aujourd'hui en investissant 100 € par mois en Bitcoin
               depuis 3 ans ? Réponse en 2 secondes — données réelles, pas de
               projection magique.
@@ -135,7 +135,7 @@ export default function SimulateurDcaPage() {
 
           {/* Pourquoi le DCA */}
           <div className="mt-16 grid lg:grid-cols-3 gap-6">
-            <h2 className="lg:col-span-3 text-2xl sm:text-3xl font-bold text-white">
+            <h2 className="lg:col-span-3 text-2xl sm:text-3xl font-bold text-fg-max">
               Pourquoi le DCA ?
             </h2>
             <Card
@@ -162,10 +162,10 @@ export default function SimulateurDcaPage() {
                 <BookOpen className="h-6 w-6" />
               </div>
               <div className="flex-1">
-                <h3 className="font-bold text-white text-lg">
+                <h3 className="font-bold text-fg-max text-lg">
                   Guide complet : le DCA crypto pour débutants
                 </h3>
-                <p className="mt-1 text-sm text-white/70">
+                <p className="mt-1 text-sm text-fg-max/70">
                   Comment mettre en place un DCA automatique, choisir la bonne
                   plateforme, gérer la fiscalité — tout ce qu'il faut savoir avant
                   de démarrer.
@@ -187,10 +187,10 @@ export default function SimulateurDcaPage() {
               <div className="grid sm:grid-cols-[1fr_auto] gap-6 items-center">
                 <div>
                   <span className="badge-info">Notre choix DCA</span>
-                  <h3 className="mt-3 font-bold text-white text-xl">
+                  <h3 className="mt-3 font-bold text-fg-max text-xl">
                     Bitstack — leader du DCA Bitcoin en France
                   </h3>
-                  <p className="mt-2 text-sm text-white/70">
+                  <p className="mt-2 text-sm text-fg-max/70">
                     Achats automatiques dès 1 €/jour, application mobile
                     française, conforme MiCA. La référence pour démarrer un
                     DCA Bitcoin sans se prendre la tête.
@@ -215,7 +215,7 @@ export default function SimulateurDcaPage() {
 
           {/* FAQ */}
           <div className="mt-16">
-            <h2 className="text-2xl sm:text-3xl font-bold text-white">
+            <h2 className="text-2xl sm:text-3xl font-bold text-fg-max">
               Questions fréquentes
             </h2>
             <div className="mt-6 space-y-3">
@@ -224,13 +224,13 @@ export default function SimulateurDcaPage() {
                   key={item.question}
                   className="group rounded-xl border border-border bg-elevated/40 p-5 open:border-primary/40"
                 >
-                  <summary className="flex cursor-pointer items-center justify-between gap-3 font-semibold text-white">
+                  <summary className="flex cursor-pointer items-center justify-between gap-3 font-semibold text-fg-max">
                     {item.question}
                     <span className="text-primary transition-transform group-open:rotate-45">
                       +
                     </span>
                   </summary>
-                  <p className="mt-3 text-sm text-white/70 leading-relaxed">
+                  <p className="mt-3 text-sm text-fg-max/70 leading-relaxed">
                     {item.answer}
                   </p>
                 </details>
@@ -264,8 +264,8 @@ function Card({
       <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/15 text-primary-soft">
         {icon}
       </div>
-      <h3 className="mt-4 font-bold text-white">{title}</h3>
-      <p className="mt-2 text-sm text-white/70 leading-relaxed">{text}</p>
+      <h3 className="mt-4 font-bold text-fg-max">{title}</h3>
+      <p className="mt-2 text-sm text-fg-max/70 leading-relaxed">{text}</p>
     </div>
   );
 }

@@ -189,7 +189,7 @@ export default function PdfModal({
       role="dialog"
       aria-modal="true"
       aria-labelledby="pdf-modal-title"
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4 animate-[fadeIn_0.18s_ease-out]"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-scrim/70 backdrop-blur-sm p-4 animate-[fadeIn_0.18s_ease-out]"
       onClick={(e) => {
         // Click backdrop → close (sauf si dans la modal)
         if (e.target === e.currentTarget) onClose();

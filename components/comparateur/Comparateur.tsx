@@ -176,7 +176,7 @@ export default function Comparateur({ rows, duelSlugs }: { rows: Row[]; duelSlug
                         <span className={`${c.fee == null ? "text-lg" : "text-2xl"} font-extrabold tabular-nums text-fg`}>{costLabel(c).main}</span>
                         {c.fee != null && <span className="text-xs text-fg/60">de frais</span>}
                       </div>
-                      {costLabel(c).suffix && <p className="mt-0.5 text-xs font-semibold text-amber-300">{costLabel(c).suffix}</p>}
+                      {costLabel(c).suffix && <p className="mt-0.5 text-xs font-semibold text-primary-soft">{costLabel(c).suffix}</p>}
                       {goal !== "carte" && (
                         <p className="mt-0.5 text-xs text-fg/55">{card ? `Par carte : ${cell(card)}` : "Pas d'achat par carte"}</p>
                       )}

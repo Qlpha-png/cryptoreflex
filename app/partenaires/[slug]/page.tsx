@@ -374,7 +374,7 @@ function PartnerHero({
             >
               <div className="flex items-start justify-between gap-3 mb-6">
                 <span
-                  className="inline-flex h-16 w-16 items-center justify-center rounded-2xl border border-white/10 overflow-hidden shrink-0"
+                  className="inline-flex h-16 w-16 items-center justify-center rounded-2xl border border-fg-max/10 overflow-hidden shrink-0"
                   aria-hidden="true"
                 >
                   <Image
@@ -400,7 +400,7 @@ function PartnerHero({
                 {partner.priceFrom}
               </p>
 
-              <ul className="mt-6 space-y-2.5 border-t border-white/10 pt-5">
+              <ul className="mt-6 space-y-2.5 border-t border-fg-max/10 pt-5">
                 {partner.pros.slice(0, 3).map((p, i) => (
                   <li
                     key={p}
@@ -483,7 +483,7 @@ function MiniStat({
   icon: typeof Star;
 }) {
   return (
-    <div className="rounded-xl bg-elevated/40 border border-white/5 px-2 py-3">
+    <div className="rounded-xl bg-elevated/40 border border-fg-max/5 px-2 py-3">
       <Icon
         className="h-3 w-3 text-muted mx-auto mb-1.5"
         aria-hidden="true"

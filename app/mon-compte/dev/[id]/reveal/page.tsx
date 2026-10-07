@@ -69,7 +69,7 @@ export default async function RevealKeyPage({
 
   return (
     <div className="container max-w-3xl mx-auto px-4 py-8 sm:py-12">
-      <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-green-500/30 bg-green-500/10 px-3 py-1 text-xs font-medium text-green-700">
+      <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-success/30 bg-success/10 px-3 py-1 text-xs font-medium text-green-700">
         <ShieldCheck className="size-4" />
         Clé créée avec succès
       </div>
@@ -84,7 +84,7 @@ export default async function RevealKeyPage({
         quitter cette page.
       </p>
 
-      <div className="mb-8 rounded-xl border border-amber-500/30 bg-amber-500/5 p-4 flex gap-3">
+      <div className="mb-8 rounded-xl border border-warning/30 bg-warning/5 p-4 flex gap-3">
         <AlertTriangle className="size-5 text-amber-600 shrink-0 mt-0.5" />
         <div className="text-sm">
           <p className="font-medium text-amber-900">Sécurité :</p>
@@ -92,7 +92,7 @@ export default async function RevealKeyPage({
             <li>Ne committez jamais la clé dans un repo public.</li>
             <li>
               Transmettez-la uniquement via header{" "}
-              <code className="px-1 rounded bg-amber-500/10">
+              <code className="px-1 rounded bg-warning/10">
                 Authorization: Bearer
               </code>
               , jamais en query string.

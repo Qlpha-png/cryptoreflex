@@ -174,7 +174,7 @@ export default async function AlertesPage() {
               RGPD &amp; opt-out direct
             </li>
             <li className="inline-flex items-center gap-1.5">
-              <Zap className="h-3.5 w-3.5 text-amber-400" aria-hidden="true" />
+              <Zap className="h-3.5 w-3.5 text-primary-glow" aria-hidden="true" />
               Prix du marché · vérifiés toutes les 15 minutes
             </li>
             <li className="inline-flex items-center gap-1.5">

@@ -33,13 +33,13 @@ export default function PriceCards({ prices }: Props) {
                 size={36}
               />
               <div className="min-w-0">
-                <div className="font-semibold text-white truncate">{coin.name}</div>
+                <div className="font-semibold text-fg-max truncate">{coin.name}</div>
                 <div className="text-xs text-muted font-mono">{coin.symbol}/USD</div>
               </div>
             </div>
 
             {/* Price */}
-            <div className="mt-4 font-mono text-2xl font-bold text-white tracking-tight">
+            <div className="mt-4 font-mono text-2xl font-bold text-fg-max tracking-tight">
               {formatUsd(coin.price)}
             </div>
 

@@ -890,7 +890,7 @@ export default async function CryptoPage({ params }: Props) {
           </div>
           <Link
             href={`/alertes?cryptoId=${c.id}`}
-            // FIX 2026-05-07 — audit Lighthouse a11y : `text-white` sur `bg-primary`
+            // FIX 2026-05-07 — audit Lighthouse a11y : `text-fg-max` sur `bg-primary`
             // (or #f5a524) = contraste 2.04:1 (echec WCAG AA 4.5:1). Aligne sur le
             // pattern .btn-primary du design system (text-background = 14:1).
             className="shrink-0 inline-flex items-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-bold text-background hover:bg-primary-glow focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
@@ -974,10 +974,10 @@ export default async function CryptoPage({ params }: Props) {
         {c.id === "bitcoin" && (
           <section
             aria-label="Halving Bitcoin"
-            className="mt-8 rounded-2xl border border-amber-500/30 bg-amber-500/5 p-6"
+            className="mt-8 rounded-2xl border border-warning/30 bg-warning/5 p-6"
           >
             <h2 className="text-lg font-bold text-fg flex items-center gap-2">
-              <Clock className="h-5 w-5 text-amber-300" aria-hidden="true" />
+              <Clock className="h-5 w-5 text-primary-soft" aria-hidden="true" />
               À savoir sur le Bitcoin
             </h2>
             <p className="mt-2 text-sm text-fg/85 leading-relaxed">
@@ -1383,8 +1383,8 @@ function HiddenGemSections({ gem }: { gem: HiddenGem }) {
       </section>
 
       {/* Risques détaillés */}
-      <section className="mt-12 rounded-2xl border border-amber-500/30 bg-amber-500/5 p-6">
-        <h2 className="text-2xl font-bold tracking-tight flex items-center gap-2 text-amber-300">
+      <section className="mt-12 rounded-2xl border border-warning/30 bg-warning/5 p-6">
+        <h2 className="text-2xl font-bold tracking-tight flex items-center gap-2 text-primary-soft">
           <AlertTriangle className="h-6 w-6" />
           Risques détaillés
         </h2>
@@ -1395,7 +1395,7 @@ function HiddenGemSections({ gem }: { gem: HiddenGem }) {
         <ul className="mt-4 space-y-2">
           {gem.risks.map((risk, idx) => (
             <li key={risk} className="flex items-start gap-3 text-sm text-fg/85">
-              <span className="mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-amber-500/20 text-xs font-bold text-amber-300">
+              <span className="mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-warning/20 text-xs font-bold text-primary-soft">
                 {idx + 1}
               </span>
               <span>{risk}</span>

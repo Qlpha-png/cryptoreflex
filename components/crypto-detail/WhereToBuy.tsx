@@ -46,7 +46,7 @@ export default function WhereToBuy({ cryptoName, platformNames }: Props) {
             ? `${note}.`
             : `À notre connaissance, aucune plateforme agréée MiCA avec un accès à la France ne propose ${cryptoName} aujourd'hui.`}{" "}
           Vérifiez le statut de toute plateforme avec notre{" "}
-          <Link href="/outils/verificateur-mica" className="underline hover:text-white">
+          <Link href="/outils/verificateur-mica" className="underline hover:text-fg-max">
             vérificateur MiCA
           </Link>{" "}
           avant d&apos;y déposer des fonds.
@@ -85,7 +85,7 @@ export default function WhereToBuy({ cryptoName, platformNames }: Props) {
             Seuls les liens marqués « Publicité » sont rémunérés (affiliation ou
             parrainage) — cela ne change ni le classement, ni la note attribuée
             (cf.{" "}
-            <Link href="/transparence" className="underline hover:text-white">
+            <Link href="/transparence" className="underline hover:text-fg-max">
               page transparence
             </Link>
             ).{" "}

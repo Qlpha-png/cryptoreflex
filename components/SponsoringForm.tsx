@@ -43,8 +43,8 @@ export default function SponsoringForm() {
         className="glass glow-border rounded-2xl p-6 text-center"
       >
         <CheckCircle2 className="h-10 w-10 text-success mx-auto" aria-hidden="true" />
-        <h3 className="mt-3 text-xl font-bold text-white">Demande envoyée</h3>
-        <p className="mt-2 text-sm text-white/75">
+        <h3 className="mt-3 text-xl font-bold text-fg-max">Demande envoyée</h3>
+        <p className="mt-2 text-sm text-fg-max/75">
           Merci ! Le fondateur vous répond personnellement sous {DELAI_REPONSE}
           avec un devis détaillé et un planning de publication.
         </p>
@@ -78,7 +78,7 @@ export default function SponsoringForm() {
 
         <div className="grid sm:grid-cols-2 gap-4">
           <div>
-            <label htmlFor="sp-company" className="block text-sm font-medium text-white mb-1.5">
+            <label htmlFor="sp-company" className="block text-sm font-medium text-fg-max mb-1.5">
               Société / marque <span className="text-danger">*</span>
             </label>
             <input
@@ -89,12 +89,12 @@ export default function SponsoringForm() {
               aria-required="true"
               autoComplete="organization"
               maxLength={120}
-              className="w-full rounded-lg bg-elevated/60 border border-border px-3 py-2.5 text-white placeholder:text-muted focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+              className="w-full rounded-lg bg-elevated/60 border border-border px-3 py-2.5 text-fg-max placeholder:text-muted focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
               placeholder="Ex: BitNova SAS"
             />
           </div>
           <div>
-            <label htmlFor="sp-contact" className="block text-sm font-medium text-white mb-1.5">
+            <label htmlFor="sp-contact" className="block text-sm font-medium text-fg-max mb-1.5">
               Nom du contact
             </label>
             <input
@@ -103,14 +103,14 @@ export default function SponsoringForm() {
               type="text"
               autoComplete="name"
               maxLength={120}
-              className="w-full rounded-lg bg-elevated/60 border border-border px-3 py-2.5 text-white placeholder:text-muted focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+              className="w-full rounded-lg bg-elevated/60 border border-border px-3 py-2.5 text-fg-max placeholder:text-muted focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
               placeholder="Ex: Sophie Martin"
             />
           </div>
         </div>
 
         <div>
-          <label htmlFor="sp-email" className="block text-sm font-medium text-white mb-1.5">
+          <label htmlFor="sp-email" className="block text-sm font-medium text-fg-max mb-1.5">
             Email professionnel <span className="text-danger">*</span>
           </label>
           <input
@@ -121,21 +121,21 @@ export default function SponsoringForm() {
             aria-required="true"
             autoComplete="email"
             maxLength={200}
-            className="w-full rounded-lg bg-elevated/60 border border-border px-3 py-2.5 text-white placeholder:text-muted focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+            className="w-full rounded-lg bg-elevated/60 border border-border px-3 py-2.5 text-fg-max placeholder:text-muted focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
             placeholder="contact@bitnova.fr"
           />
         </div>
 
         <div className="grid sm:grid-cols-2 gap-4">
           <div>
-            <label htmlFor="sp-offer" className="block text-sm font-medium text-white mb-1.5">
+            <label htmlFor="sp-offer" className="block text-sm font-medium text-fg-max mb-1.5">
               Offre souhaitée
             </label>
             <select
               id="sp-offer"
               name="offer"
               defaultValue=""
-              className="w-full rounded-lg bg-elevated/60 border border-border px-3 py-2.5 text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+              className="w-full rounded-lg bg-elevated/60 border border-border px-3 py-2.5 text-fg-max focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
             >
               <option value="" disabled>
                 — Sélectionnez —
@@ -148,14 +148,14 @@ export default function SponsoringForm() {
             </select>
           </div>
           <div>
-            <label htmlFor="sp-budget" className="block text-sm font-medium text-white mb-1.5">
+            <label htmlFor="sp-budget" className="block text-sm font-medium text-fg-max mb-1.5">
               Budget indicatif
             </label>
             <select
               id="sp-budget"
               name="budget"
               defaultValue=""
-              className="w-full rounded-lg bg-elevated/60 border border-border px-3 py-2.5 text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+              className="w-full rounded-lg bg-elevated/60 border border-border px-3 py-2.5 text-fg-max focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
             >
               <option value="" disabled>
                 — Sélectionnez —
@@ -170,7 +170,7 @@ export default function SponsoringForm() {
         </div>
 
         <div>
-          <label htmlFor="sp-message" className="block text-sm font-medium text-white mb-1.5">
+          <label htmlFor="sp-message" className="block text-sm font-medium text-fg-max mb-1.5">
             Brief & contexte
           </label>
           <textarea
@@ -178,7 +178,7 @@ export default function SponsoringForm() {
             name="message"
             rows={5}
             maxLength={2000}
-            className="w-full rounded-lg bg-elevated/60 border border-border px-3 py-2.5 text-white placeholder:text-muted focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+            className="w-full rounded-lg bg-elevated/60 border border-border px-3 py-2.5 text-fg-max placeholder:text-muted focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
             placeholder="Présentez brièvement votre produit, l'objectif (acquisition, awareness, lancement), la cible idéale et la deadline souhaitée."
           />
         </div>
@@ -192,7 +192,7 @@ export default function SponsoringForm() {
             aria-required="true"
             className="mt-1 h-4 w-4 rounded border-border bg-elevated/60 text-primary focus-visible:ring-2 focus-visible:ring-primary"
           />
-          <label htmlFor="sp-consent" className="text-xs text-white/70 leading-relaxed">
+          <label htmlFor="sp-consent" className="text-xs text-fg-max/70 leading-relaxed">
             J&apos;accepte que les informations soumises soient transmises à
             Kevin Voisin, éditeur de {BRAND.name}, dans le seul but d&apos;étudier
             cette demande commerciale. Conservation 24 mois max. Droits RGPD via{" "}

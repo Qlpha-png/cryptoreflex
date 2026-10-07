@@ -112,12 +112,12 @@ export const CATEGORY_LABEL: Record<EventCategory, string> = {
 
 /** Classes Tailwind pré-générées par catégorie (purge-safe). */
 export const CATEGORY_BADGE: Record<EventCategory, string> = {
-  halving:        "bg-amber-500/15 text-amber-200 ring-amber-500/30",
+  halving:        "bg-warning/15 text-amber-200 ring-warning/30",
   "etf-deadline": "bg-emerald-500/15 text-emerald-200 ring-emerald-500/30",
   "mainnet-launch":"bg-fuchsia-500/15 text-fuchsia-200 ring-fuchsia-500/30",
   unlock:         "bg-rose-500/15 text-rose-200 ring-rose-500/30",
   regulation:     "bg-info/15 text-info-fg ring-info/30",
-  conference:     "bg-sky-500/15 text-sky-200 ring-sky-500/30",
+  conference:     "bg-info/15 text-sky-200 ring-info/30",
 };
 
 /* -------------------------------------------------------------------------- */

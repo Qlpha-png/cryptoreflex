@@ -155,7 +155,7 @@ export default function AirdropsPage() {
 
         {/* Header */}
         <header className="mt-6 max-w-3xl">
-          <div className="inline-flex items-center gap-2 rounded-full border border-amber-400/40 bg-amber-400/10 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-amber-300">
+          <div className="inline-flex items-center gap-2 rounded-full border border-primary-glow/40 bg-primary-glow/10 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-primary-soft">
             <Gift className="h-3.5 w-3.5" />
             Agenda airdrops
           </div>
@@ -259,7 +259,7 @@ export default function AirdropsPage() {
         {upcoming.length > 0 && (
           <section className="mt-10">
             <h2 className="text-xl sm:text-2xl font-bold text-fg flex items-center gap-2">
-              <Clock className="h-5 w-5 text-amber-300" />À venir —{" "}
+              <Clock className="h-5 w-5 text-primary-soft" />À venir —{" "}
               {upcoming.length} airdrop{upcoming.length > 1 ? "s" : ""}
             </h2>
             <p className="mt-1 text-sm text-muted">
@@ -447,7 +447,7 @@ function Stat({
   const styles = {
     green: "border-accent-green/30 bg-accent-green/5 text-accent-green",
     primary: "border-primary/30 bg-primary/5 text-primary-soft",
-    amber: "border-amber-400/30 bg-amber-400/5 text-amber-300",
+    amber: "border-primary-glow/30 bg-primary-glow/5 text-primary-soft",
   };
   return (
     <div className={`rounded-2xl border p-4 ${styles[tone]}`}>

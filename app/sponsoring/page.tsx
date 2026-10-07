@@ -322,10 +322,10 @@ export default function SponsoringPage() {
                 className="h-6 w-6 text-accent-cyan mb-3"
                 aria-hidden="true"
               />
-              <div className="text-2xl font-bold text-white tabular-nums">
+              <div className="text-2xl font-bold text-fg-max tabular-nums">
                 {s.value}
               </div>
-              <div className="text-sm text-white/80 mt-1">{s.label}</div>
+              <div className="text-sm text-fg-max/80 mt-1">{s.label}</div>
               <div className="text-xs text-muted mt-1">{s.hint}</div>
             </div>
           ))}
@@ -342,7 +342,7 @@ export default function SponsoringPage() {
             className="h-5 w-5 text-warning shrink-0 mt-0.5"
             aria-hidden="true"
           />
-          <div className="text-sm text-white/90 leading-relaxed">
+          <div className="text-sm text-fg-max/90 leading-relaxed">
             <strong className="text-warning-fg">Engagement éditorial.</strong>{" "}
             Le sponsoring n&apos;influence ni notre note, ni notre verdict, ni
             le classement de nos comparatifs. Tout sponso est{" "}
@@ -385,7 +385,7 @@ export default function SponsoringPage() {
               Conditions d&apos;acceptation strictes
             </h2>
           </div>
-          <ul className="space-y-2 text-sm text-white/85" role="list">
+          <ul className="space-y-2 text-sm text-fg-max/85" role="list">
             {CONDITIONS.map((c) => (
               <li key={c} className="flex items-start gap-2">
                 <span

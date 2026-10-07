@@ -434,7 +434,7 @@ export default function HalvingPage() {
         </section>
 
         {/* DISCLAIMER */}
-        <div className="mt-10 rounded-xl border border-amber-500/30 bg-amber-500/5 p-4 text-sm text-amber-200/85 leading-relaxed flex items-start gap-3">
+        <div className="mt-10 rounded-xl border border-warning/30 bg-warning/5 p-4 text-sm text-amber-200/85 leading-relaxed flex items-start gap-3">
           <AlertTriangle className="h-5 w-5 shrink-0 mt-0.5" aria-hidden="true" />
           <p>
             Cette page est purement éducative et ne constitue pas un conseil en

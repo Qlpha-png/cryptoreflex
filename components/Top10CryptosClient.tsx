@@ -85,7 +85,7 @@ export interface TopCrypto {
 const RISK_COLORS: Record<TopCrypto["riskLevel"], string> = {
   "Très faible": "text-accent-green",
   Faible: "text-accent-green",
-  Modéré: "text-amber-400",
+  Modéré: "text-primary-glow",
   Élevé: "text-danger-fg",
   "Très élevé": "text-danger-fg",
 };
@@ -162,11 +162,11 @@ const FILTERS: Array<{ value: Bucket; label: string; tech: string }> = [
  */
 const CATEGORY_VISUAL: Record<Exclude<Bucket, "all">, { Icon: LucideIcon; color: string }> = {
   layer1: { Icon: Layers, color: "text-indigo-300 bg-indigo-400/10 border-indigo-400/30" },
-  smartcontract: { Icon: FileCode, color: "text-sky-300 bg-sky-400/10 border-sky-400/30" },
+  smartcontract: { Icon: FileCode, color: "text-info-fg bg-ice/10 border-ice/30" },
   defi: { Icon: LineChart, color: "text-emerald-300 bg-emerald-400/10 border-emerald-400/30" },
   stablecoins: { Icon: Anchor, color: "text-slate-300 bg-slate-400/10 border-slate-400/30" },
   memecoins: { Icon: Sparkles, color: "text-fuchsia-300 bg-fuchsia-400/10 border-fuchsia-400/30" },
-  exchange: { Icon: CoinsIcon, color: "text-amber-300 bg-amber-400/10 border-amber-400/30" },
+  exchange: { Icon: CoinsIcon, color: "text-primary-soft bg-primary-glow/10 border-primary-glow/30" },
   privacy: { Icon: EyeOff, color: "text-violet-300 bg-violet-400/10 border-violet-400/30" },
   other: { Icon: CoinsIcon, color: "text-fg/60 bg-elevated border-border/60" },
 };
@@ -601,7 +601,7 @@ function CryptoCard({ crypto }: { crypto: TopCrypto }) {
                     ? riskLevel <= 2
                       ? "bg-accent-green"
                       : riskLevel === 3
-                        ? "bg-amber-400"
+                        ? "bg-primary-glow"
                         : "bg-accent-rose"
                     : "bg-border"
                 }`}

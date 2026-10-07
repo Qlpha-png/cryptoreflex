@@ -84,7 +84,7 @@ export default function UniversHub({ accounts }: { accounts: boolean }) {
           </nav>
           <div className="mt-6 grid items-center gap-10 lg:grid-cols-[1fr,auto]">
             <div className="max-w-xl">
-              <span className="inline-flex items-center gap-2 rounded-full border border-amber-400/40 bg-amber-400/10 px-3 py-1 text-xs font-semibold text-amber-300">
+              <span className="inline-flex items-center gap-2 rounded-full border border-primary-glow/40 bg-primary-glow/10 px-3 py-1 text-xs font-semibold text-primary-soft">
                 <Sparkles className="h-3.5 w-3.5" /> Saison 1 · {fr(total)} cartes
               </span>
               <h1 className="mt-4 text-4xl font-extrabold tracking-tight sm:text-5xl">
@@ -164,7 +164,7 @@ export default function UniversHub({ accounts }: { accounts: boolean }) {
       {/* Éditions spéciales */}
       <section className="py-10">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-          <h2 className="flex items-center gap-2 text-2xl font-bold sm:text-3xl"><Crown className="h-6 w-6 text-amber-300" /> Au-dessus des Légendaires</h2>
+          <h2 className="flex items-center gap-2 text-2xl font-bold sm:text-3xl"><Crown className="h-6 w-6 text-primary-soft" /> Au-dessus des Légendaires</h2>
           <p className="mt-2 max-w-3xl text-fg/70">
             Les éditions spéciales ne se fabriquent pas : on les trouve en booster, ou jamais. Chacun des 8 chapitres a les siennes.
           </p>
@@ -199,7 +199,7 @@ export default function UniversHub({ accounts }: { accounts: boolean }) {
               { icon: Landmark, t: "Aucune valeur marchande", d: "Les cartes ne s'achètent pas, ne se vendent pas et ne sont pas un conseil en investissement." },
             ].map(({ icon: Icon, t, d }) => (
               <div key={t} className="rounded-2xl border border-border bg-surface p-5">
-                <Icon className="h-5 w-5 text-amber-300" />
+                <Icon className="h-5 w-5 text-primary-soft" />
                 <h3 className="mt-3 font-bold text-fg">{t}</h3>
                 <p className="mt-1 text-sm text-fg/70">{d}</p>
               </div>

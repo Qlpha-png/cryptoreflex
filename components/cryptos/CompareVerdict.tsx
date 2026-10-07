@@ -89,10 +89,10 @@ function VerdictCard({ verdict }: { verdict: Verdict }) {
       text: "text-accent-green",
     },
     amber: {
-      border: "border-amber-400/30",
-      bg: "bg-amber-400/5",
-      icon: "text-amber-300",
-      text: "text-amber-300",
+      border: "border-primary-glow/30",
+      bg: "bg-primary-glow/5",
+      icon: "text-primary-soft",
+      text: "text-primary-soft",
     },
   };
   const a = accentMap[verdict.accent];

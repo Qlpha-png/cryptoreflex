@@ -72,7 +72,7 @@ const AMF_AUTHORIZED = AUTHORIZED.filter((p) => p.mica.amfRegistration);
 const STATS = [
   { value: String(PLATFORMS.length), label: "plateformes suivies par Cryptoreflex", color: "text-cyan-400" },
   { value: String(AUTHORIZED.length), label: "agréées MiCA avec accès à la France", color: "text-emerald-400" },
-  { value: String(NOT_AUTHORIZED.length), label: "non autorisées en France", color: "text-amber-400" },
+  { value: String(NOT_AUTHORIZED.length), label: "non autorisées en France", color: "text-primary-glow" },
   { value: String(AMF_AUTHORIZED.length), label: "agréées directement par l'AMF", color: "text-indigo-400" },
 ];
 
@@ -162,7 +162,7 @@ export default function MicaStudyPage() {
       <StructuredData id="mica-study-jsonld" data={jsonLd} />
 
       {/* Hero */}
-      <section className="border-b border-white/5 bg-gradient-to-b from-amber-500/5 to-transparent">
+      <section className="border-b border-fg-max/5 bg-gradient-to-b from-warning/5 to-transparent">
         <div className="mx-auto max-w-4xl px-4 py-12 sm:px-6 lg:px-8">
           <nav className="mb-6 text-sm text-slate-400" aria-label="Fil d'Ariane">
             <Link href="/" className="hover:text-cyan-300">
@@ -176,7 +176,7 @@ export default function MicaStudyPage() {
             <span className="text-slate-300">MiCA juillet 2026</span>
           </nav>
 
-          <div className="inline-flex items-center gap-2 rounded-full border border-amber-500/30 bg-amber-500/10 px-3 py-1 text-xs font-medium text-amber-300">
+          <div className="inline-flex items-center gap-2 rounded-full border border-warning/30 bg-warning/10 px-3 py-1 text-xs font-medium text-primary-soft">
             <BookOpen className="h-3.5 w-3.5" />
             Étude réglementaire — Cryptoreflex Research
           </div>
@@ -220,7 +220,7 @@ export default function MicaStudyPage() {
 
           <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-4">
             {STATS.map((s) => (
-              <div key={s.label} className="rounded-xl border border-white/10 bg-white/[0.03] p-4">
+              <div key={s.label} className="rounded-xl border border-fg-max/10 bg-fg-max/[0.03] p-4">
                 <div className={`text-2xl font-bold ${s.color}`}>{s.value}</div>
                 <div className="mt-1 text-xs text-slate-400 leading-snug">{s.label}</div>
               </div>
@@ -230,7 +230,7 @@ export default function MicaStudyPage() {
       </section>
 
       {/* TOC */}
-      <section className="border-b border-white/5 bg-white/[0.02]">
+      <section className="border-b border-fg-max/5 bg-fg-max/[0.02]">
         <div className="mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:px-8">
           <h2 className="text-sm font-semibold uppercase tracking-wider text-slate-400">Sommaire</h2>
           <ol className="mt-4 grid gap-2 sm:grid-cols-2 text-sm">
@@ -247,7 +247,7 @@ export default function MicaStudyPage() {
       </section>
 
       {/* Body */}
-      <article className="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8 prose prose-invert prose-slate prose-headings:tracking-tight prose-headings:text-white prose-p:text-slate-300 prose-li:text-slate-300 prose-a:text-cyan-300 prose-strong:text-white">
+      <article className="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8 prose prose-invert prose-slate prose-headings:tracking-tight prose-headings:text-fg-max prose-p:text-slate-300 prose-li:text-slate-300 prose-a:text-cyan-300 prose-strong:text-fg-max">
         <section id="tldr">
           <h2 className="text-2xl font-bold tracking-tight">Résumé</h2>
           <ul className="mt-4 space-y-2 list-none p-0">
@@ -259,7 +259,7 @@ export default function MicaStudyPage() {
               </span>
             </li>
             <li className="flex items-start gap-2">
-              <AlertTriangle className="mt-1 h-4 w-4 shrink-0 text-amber-400" />
+              <AlertTriangle className="mt-1 h-4 w-4 shrink-0 text-primary-glow" />
               <span>
                 <strong>{NOT_AUTHORIZED.length} plateformes</strong> ne peuvent plus servir de clients français, dont Binance,
                 qui a cessé ses services en France le 1er juillet 2026.
@@ -308,7 +308,7 @@ export default function MicaStudyPage() {
               <div key={p.id} className="rounded-xl border border-emerald-500/15 bg-emerald-500/[0.04] p-5">
                 <div className="flex flex-wrap items-center gap-3">
                   <CheckCircle2 className="h-5 w-5 text-emerald-400" />
-                  <h3 className="text-lg font-bold text-white">
+                  <h3 className="text-lg font-bold text-fg-max">
                     <Link href={`/avis/${p.id}`} className="hover:text-cyan-300">
                       {p.name}
                     </Link>
@@ -344,10 +344,10 @@ export default function MicaStudyPage() {
           </p>
           <div className="my-6 not-prose space-y-3">
             {NOT_AUTHORIZED.map((p) => (
-              <div key={p.id} className="rounded-xl border border-amber-500/20 bg-amber-500/[0.04] p-5">
+              <div key={p.id} className="rounded-xl border border-warning/20 bg-warning/[0.04] p-5">
                 <div className="flex flex-wrap items-center gap-3">
-                  <XCircle className="h-5 w-5 text-amber-400" />
-                  <h3 className="text-lg font-bold text-white">
+                  <XCircle className="h-5 w-5 text-primary-glow" />
+                  <h3 className="text-lg font-bold text-fg-max">
                     <Link href={`/avis/${p.id}`} className="hover:text-cyan-300">
                       {p.name}
                     </Link>
@@ -369,11 +369,11 @@ export default function MicaStudyPage() {
             {STABLECOINS.map((s) => (
               <div
                 key={s.name}
-                className={`rounded-xl border p-5 ${s.ok ? "border-emerald-500/15 bg-emerald-500/[0.04]" : "border-amber-500/20 bg-amber-500/[0.04]"}`}
+                className={`rounded-xl border p-5 ${s.ok ? "border-emerald-500/15 bg-emerald-500/[0.04]" : "border-warning/20 bg-warning/[0.04]"}`}
               >
                 <div className="flex items-center gap-3">
-                  {s.ok ? <CheckCircle2 className="h-5 w-5 text-emerald-400" /> : <XCircle className="h-5 w-5 text-amber-400" />}
-                  <h3 className="text-base font-bold text-white">{s.name}</h3>
+                  {s.ok ? <CheckCircle2 className="h-5 w-5 text-emerald-400" /> : <XCircle className="h-5 w-5 text-primary-glow" />}
+                  <h3 className="text-base font-bold text-fg-max">{s.name}</h3>
                 </div>
                 <p className="mt-2 text-sm text-slate-300 leading-relaxed">{s.detail}</p>
               </div>
@@ -408,10 +408,10 @@ export default function MicaStudyPage() {
           <h2>6. FAQ</h2>
           <div className="my-6 not-prose space-y-3">
             {FAQ.map((item) => (
-              <details key={item.q} className="group rounded-xl border border-white/10 bg-white/[0.02] p-5 open:border-amber-500/30">
-                <summary className="cursor-pointer list-none flex items-start justify-between gap-4 font-semibold text-white">
+              <details key={item.q} className="group rounded-xl border border-fg-max/10 bg-fg-max/[0.02] p-5 open:border-warning/30">
+                <summary className="cursor-pointer list-none flex items-start justify-between gap-4 font-semibold text-fg-max">
                   <span>{item.q}</span>
-                  <span className="text-amber-300 transition group-open:rotate-45 mt-0.5 shrink-0">+</span>
+                  <span className="text-primary-soft transition group-open:rotate-45 mt-0.5 shrink-0">+</span>
                 </summary>
                 <p className="mt-3 text-sm text-slate-300 leading-relaxed">{item.a}</p>
               </details>
@@ -456,7 +456,7 @@ export default function MicaStudyPage() {
         </section>
       </article>
 
-      <section className="border-t border-white/5 bg-white/[0.02]">
+      <section className="border-t border-fg-max/5 bg-fg-max/[0.02]">
         <div className="mx-auto max-w-3xl px-4 py-12 sm:px-6 lg:px-8">
           <NewsletterInline
             source="bottom-article"
@@ -469,15 +469,15 @@ export default function MicaStudyPage() {
         </div>
       </section>
 
-      <section className="border-t border-white/5">
+      <section className="border-t border-fg-max/5">
         <div className="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8 text-center">
           <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">Continuer</h2>
           <div className="mt-8 grid gap-4 sm:grid-cols-2">
             <Link
               href="/outils/verificateur-mica"
-              className="group rounded-2xl border border-white/10 bg-white/[0.02] p-6 text-left hover:border-cyan-500/30 transition"
+              className="group rounded-2xl border border-fg-max/10 bg-fg-max/[0.02] p-6 text-left hover:border-cyan-500/30 transition"
             >
-              <h3 className="text-lg font-bold text-white group-hover:text-cyan-300">Vérificateur MiCA</h3>
+              <h3 className="text-lg font-bold text-fg-max group-hover:text-cyan-300">Vérificateur MiCA</h3>
               <p className="mt-2 text-sm text-slate-300">Le statut de {getAllMicaPlatforms().length} plateformes et portefeuilles, à partir des registres officiels.</p>
               <div className="mt-3 inline-flex items-center gap-1.5 text-sm font-medium text-cyan-300">
                 Vérifier une plateforme
@@ -486,9 +486,9 @@ export default function MicaStudyPage() {
             </Link>
             <Link
               href="/comparatif/frais"
-              className="group rounded-2xl border border-white/10 bg-white/[0.02] p-6 text-left hover:border-cyan-500/30 transition"
+              className="group rounded-2xl border border-fg-max/10 bg-fg-max/[0.02] p-6 text-left hover:border-cyan-500/30 transition"
             >
-              <h3 className="text-lg font-bold text-white group-hover:text-cyan-300">Comparatif des frais</h3>
+              <h3 className="text-lg font-bold text-fg-max group-hover:text-cyan-300">Comparatif des frais</h3>
               <p className="mt-2 text-sm text-slate-300">Les frais réels des plateformes autorisées en France, sourcés et datés.</p>
               <div className="mt-3 inline-flex items-center gap-1.5 text-sm font-medium text-cyan-300">
                 Voir le comparatif

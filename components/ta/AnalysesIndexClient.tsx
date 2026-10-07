@@ -285,7 +285,7 @@ function AnalysisCard({ article }: { article: TAArticleSummary }) {
   const changeColor = change > 0 ? "text-emerald-400" : change < 0 ? "text-rose-400" : "text-muted";
   const changeSign = change > 0 ? "+" : change < 0 ? "" : "";
   const rsi = article.rsi;
-  const rsiColor = rsi >= 70 ? "bg-rose-500" : rsi <= 30 ? "bg-emerald-500" : "bg-amber-500";
+  const rsiColor = rsi >= 70 ? "bg-rose-500" : rsi <= 30 ? "bg-emerald-500" : "bg-warning";
   const rsiLabel = rsi >= 70 ? "Survente possible" : rsi <= 30 ? "Achat possible" : "Neutre";
   const today = isToday(article.date);
 

@@ -80,7 +80,7 @@ const RISK_LABELS: Record<StakingPair["risk"], { label: string; color: string; d
   },
   3: {
     label: "Modéré",
-    color: "text-amber-400",
+    color: "text-primary-glow",
     description: "Protocole jeune ou risques techniques (reweighting, lock-up long). Diversifier reste prudent.",
   },
   4: {
@@ -237,7 +237,7 @@ export default function StakingDetailPage({ params }: Props) {
             </p>
 
             {platforms.length === 0 ? (
-              <div className="mt-6 rounded-2xl border border-amber-400/40 bg-amber-400/10 p-6 text-sm text-amber-100">
+              <div className="mt-6 rounded-2xl border border-primary-glow/40 bg-primary-glow/10 p-6 text-sm text-amber-100">
                 Aucune plateforme régulée MiCA ne propose actuellement le staking {pair.name} de façon fiable
                 en France. Surveillez les annonces des principaux exchanges régulés.
               </div>
@@ -344,14 +344,14 @@ export default function StakingDetailPage({ params }: Props) {
                 }
                 level={pair.lockUpDays === 0 ? "Faible" : pair.lockUpDays > 14 ? "Élevé" : "Modéré"}
                 levelClass={
-                  pair.lockUpDays === 0 ? "text-accent-green" : pair.lockUpDays > 14 ? "text-danger-fg" : "text-amber-400"
+                  pair.lockUpDays === 0 ? "text-accent-green" : pair.lockUpDays > 14 ? "text-danger-fg" : "text-primary-glow"
                 }
               />
               <RiskCard
                 title="Risque de contrepartie"
                 description={`En passant par un exchange centralisé (CEX), vous confiez vos ${pair.symbol} à la plateforme pendant le staking. Si elle fait faillite (cf. FTX 2022), vos tokens peuvent être bloqués. Privilégiez les exchanges MiCA avec assurance et cold storage majoritaire.`}
                 level="Modéré"
-                levelClass="text-amber-400"
+                levelClass="text-primary-glow"
               />
             </div>
           </section>

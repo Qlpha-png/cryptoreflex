@@ -62,8 +62,8 @@ export const CATEGORY_DESCRIPTION: Record<EventCategory, string> = {
  * On les déclare en strings entières pour que le scanner Tailwind les détecte.
  */
 export const CATEGORY_BADGE: Record<EventCategory, string> = {
-  Halving: "bg-amber-500/15 text-amber-200 ring-amber-500/30",
-  FOMC: "bg-sky-500/15 text-sky-200 ring-sky-500/30",
+  Halving: "bg-warning/15 text-amber-200 ring-warning/30",
+  FOMC: "bg-info/15 text-sky-200 ring-info/30",
   ETF: "bg-emerald-500/15 text-emerald-200 ring-emerald-500/30",
   Listing: "bg-fuchsia-500/15 text-fuchsia-200 ring-fuchsia-500/30",
   Update: "bg-indigo-500/15 text-indigo-200 ring-indigo-500/30",
@@ -93,15 +93,15 @@ export const IMPORTANCE_LABEL: Record<Importance, string> = {
 /** Couleur dot/badge alignée avec le design system. */
 export const IMPORTANCE_COLOR: Record<Importance, string> = {
   1: "bg-slate-300",
-  2: "bg-amber-500",
-  3: "bg-amber-400",
+  2: "bg-warning",
+  3: "bg-primary-glow",
 };
 
 /** Couleur de bordure / ring pour cards. */
 export const IMPORTANCE_RING: Record<Importance, string> = {
   1: "ring-slate-400/20",
-  2: "ring-amber-500/30",
-  3: "ring-amber-400/50",
+  2: "ring-warning/30",
+  3: "ring-primary-glow/50",
 };
 
 /* -------------------------------------------------------------------------- */

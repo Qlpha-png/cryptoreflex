@@ -132,7 +132,7 @@ export default function EditHoldingDialog({
             type="button"
             aria-label="Fermer"
             onClick={onClose}
-            className="absolute inset-0 bg-black/70 backdrop-blur-md"
+            className="absolute inset-0 bg-scrim/70 backdrop-blur-md"
             tabIndex={-1}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -160,7 +160,7 @@ export default function EditHoldingDialog({
             type="button"
             onClick={onClose}
             aria-label="Fermer"
-            className="inline-flex items-center justify-center h-9 w-9 rounded-lg text-muted hover:bg-white/5 hover:text-white transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+            className="inline-flex items-center justify-center h-9 w-9 rounded-lg text-muted hover:bg-fg-max/5 hover:text-fg-max transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
           >
             <X className="h-4 w-4" aria-hidden="true" />
           </button>
@@ -221,13 +221,13 @@ export default function EditHoldingDialog({
             <button
               type="button"
               onClick={onClose}
-              className="text-sm px-4 py-2 rounded-lg text-fg/85 hover:bg-white/5 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 min-h-[40px]"
+              className="text-sm px-4 py-2 rounded-lg text-fg/85 hover:bg-fg-max/5 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 min-h-[40px]"
             >
               Annuler
             </button>
             <button
               type="submit"
-              // FIX 2026-05-08 — a11y batch : text-white sur bg-primary = 2.04:1.
+              // FIX 2026-05-08 — a11y batch : text-fg-max sur bg-primary = 2.04:1.
               // Aligne sur .btn-primary du DS (text-background = 14:1 WCAG AA).
               className="inline-flex items-center justify-center gap-2 rounded-lg bg-primary text-background font-bold text-sm px-4 py-2 min-h-[40px] hover:bg-primary-glow transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-elevated"
             >

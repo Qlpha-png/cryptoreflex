@@ -48,10 +48,10 @@ export default async function PreviewPdfPage({ params }: PageProps) {
           <div className="mx-auto inline-flex h-12 w-12 items-center justify-center rounded-full bg-warning/15 text-warning-fg">
             <AlertTriangle className="h-6 w-6" aria-hidden="true" />
           </div>
-          <h1 className="mt-4 font-display text-xl sm:text-2xl font-bold text-white">
+          <h1 className="mt-4 font-display text-xl sm:text-2xl font-bold text-fg-max">
             Cet aperçu n'est plus disponible
           </h1>
-          <p className="mt-2 text-sm text-white/75">
+          <p className="mt-2 text-sm text-fg-max/75">
             Le lien a expiré (validité 1 heure) ou il est invalide. Refais une
             simulation pour récupérer un nouveau PDF.
           </p>

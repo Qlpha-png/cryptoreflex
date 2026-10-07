@@ -116,11 +116,11 @@ export default function GamificationPanel() {
           id="progression-title"
           className="text-xl sm:text-2xl font-bold text-fg flex items-center gap-2"
         >
-          <Trophy className="h-5 w-5 text-amber-400" />
+          <Trophy className="h-5 w-5 text-primary-glow" />
           Votre progression
         </h2>
         {degraded && (
-          <span className="text-xs text-amber-300/80">
+          <span className="text-xs text-primary-soft/80">
             Données indisponibles temporairement.
           </span>
         )}
@@ -183,8 +183,8 @@ export default function GamificationPanel() {
         </div>
 
         {/* Streak */}
-        <div className="rounded-xl border border-amber-400/30 bg-amber-500/5 p-4">
-          <div className="flex items-center gap-2 text-amber-300 mb-1">
+        <div className="rounded-xl border border-primary-glow/30 bg-warning/5 p-4">
+          <div className="flex items-center gap-2 text-primary-soft mb-1">
             <Flame className="h-4 w-4" />
             <span className="text-xs uppercase tracking-wider font-semibold">
               Streak actuel
@@ -211,7 +211,7 @@ export default function GamificationPanel() {
             <span className="ml-1 text-sm font-normal text-fg/60">jours</span>
           </div>
           {progress.bestStreak >= 365 && (
-            <div className="mt-1 text-[11px] text-amber-300">
+            <div className="mt-1 text-[11px] text-primary-soft">
               Insider — 1 an+ 🏆
             </div>
           )}
@@ -234,7 +234,7 @@ export default function GamificationPanel() {
                 key={b.id}
                 className={`rounded-xl border p-3 transition-colors ${
                   b.unlocked
-                    ? "border-amber-400/40 bg-amber-500/5"
+                    ? "border-primary-glow/40 bg-warning/5"
                     : "border-border/60 bg-elevated/20 opacity-60"
                 }`}
                 title={b.description}
@@ -243,7 +243,7 @@ export default function GamificationPanel() {
                   <div
                     className={`grid place-items-center h-7 w-7 rounded-lg ${
                       b.unlocked
-                        ? "bg-amber-500/15 text-amber-400"
+                        ? "bg-warning/15 text-primary-glow"
                         : "bg-elevated/60 text-fg/60"
                     }`}
                   >

@@ -178,7 +178,7 @@ export function LLMFicheView({ fiche, knownIds }: { fiche: CryptoFicheRow; known
             générées automatiquement (sources publiques) et NON vérifiées une à
             une. On le signale clairement (à l'origine, 62 % des coingeckoId
             LLM étaient hallucinés) pour ne jamais tromper le lecteur. */}
-        <p className="mt-5 flex items-start gap-2 rounded-lg border border-amber-500/30 bg-amber-500/5 p-3 text-xs leading-relaxed text-amber-100/90">
+        <p className="mt-5 flex items-start gap-2 rounded-lg border border-warning/30 bg-warning/5 p-3 text-xs leading-relaxed text-amber-100/90">
           <Bot className="size-4 shrink-0 mt-0.5" aria-hidden="true" />
           <span>
             <strong>Fiche générée automatiquement</strong> à partir de sources publiques,
@@ -269,7 +269,7 @@ export function LLMFicheView({ fiche, knownIds }: { fiche: CryptoFicheRow; known
             {llm.risks.map((r, i) => (
               <li
                 key={i}
-                className="rounded-xl border border-amber-500/30 bg-amber-500/5 p-4"
+                className="rounded-xl border border-warning/30 bg-warning/5 p-4"
               >
                 <div className="flex items-baseline justify-between mb-1">
                   <span className="text-sm font-semibold">{r.category}</span>

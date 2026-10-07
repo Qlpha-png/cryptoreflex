@@ -80,21 +80,21 @@ export default function ComparateurPersonnalise() {
             style={{ width: `${((step + 1) / TOTAL_STEPS) * 100}%` }}
           />
         </div>
-        <span className="text-xs text-white/60 whitespace-nowrap">
+        <span className="text-xs text-fg-max/60 whitespace-nowrap">
           {step + 1} / {TOTAL_STEPS}
         </span>
       </div>
 
       {/* Question */}
       <div className="glass rounded-2xl p-6 sm:p-8">
-        <h3 className="text-xl font-bold text-white">{question.label}</h3>
+        <h3 className="text-xl font-bold text-fg-max">{question.label}</h3>
         <div className="mt-4 grid gap-3">
           {question.options.map((opt) => (
             <button
               key={String(opt.value)}
               type="button"
               onClick={() => selectOption(opt.value)}
-              className="rounded-xl border border-border bg-elevated/40 px-4 py-3 text-left text-white hover:border-primary/60 hover:bg-primary/5 transition-colors"
+              className="rounded-xl border border-border bg-elevated/40 px-4 py-3 text-left text-fg-max hover:border-primary/60 hover:bg-primary/5 transition-colors"
             >
               {opt.label}
             </button>
@@ -108,14 +108,14 @@ export default function ComparateurPersonnalise() {
           <button
             type="button"
             onClick={() => setStep(step - 1)}
-            className="inline-flex items-center gap-1 text-sm text-white/70 hover:text-white"
+            className="inline-flex items-center gap-1 text-sm text-fg-max/70 hover:text-fg-max"
           >
             <ChevronLeft className="h-4 w-4" /> Précédent
           </button>
           <button
             type="button"
             onClick={reset}
-            className="text-xs text-white/50 hover:text-white/80"
+            className="text-xs text-fg-max/50 hover:text-fg-max/80"
           >
             Recommencer
           </button>
@@ -146,10 +146,10 @@ function Results({ answers, onReset }: { answers: QuizAnswers; onReset: () => vo
           <Sparkles className="h-6 w-6 text-primary-soft" />
           <div>
             <span className="badge-info">Reco personnalisée</span>
-            <h3 className="mt-2 text-xl font-bold text-white">
+            <h3 className="mt-2 text-xl font-bold text-fg-max">
               Vos 3 plateformes les plus adaptées
             </h3>
-            <p className="mt-1 text-sm text-white/70">
+            <p className="mt-1 text-sm text-fg-max/70">
               Calculé à partir de vos 5 réponses : {answers.monthlyAmountEur} €/mois,
               priorité {answers.priority}, profil {answers.experience}, usage {answers.intent}.
             </p>
@@ -166,8 +166,8 @@ function Results({ answers, onReset }: { answers: QuizAnswers; onReset: () => vo
       {/* 06/10/2026 : « Recevez ces recommandations par email — récap PDF + alertes » était une promesse sans envoi
           derrière (le bouton menait à /ressources, aucun récap ni alerte n'existe). Remplacé par un renvoi honnête. */}
       <div className="glass rounded-2xl p-6">
-        <h4 className="font-bold text-white">Aller plus loin</h4>
-        <p className="mt-1 text-sm text-white/70">
+        <h4 className="font-bold text-fg-max">Aller plus loin</h4>
+        <p className="mt-1 text-sm text-fg-max/70">
           Guides et outils gratuits pour la suite : fiscalité, vérificateur MiCA, simulateur DCA.
         </p>
         <Link
@@ -183,7 +183,7 @@ function Results({ answers, onReset }: { answers: QuizAnswers; onReset: () => vo
         <button
           type="button"
           onClick={onReset}
-          className="text-sm text-white/70 hover:text-white"
+          className="text-sm text-fg-max/70 hover:text-fg-max"
         >
           Refaire le questionnaire
         </button>
@@ -193,9 +193,9 @@ function Results({ answers, onReset }: { answers: QuizAnswers; onReset: () => vo
       </div>
 
       {/* Disclaimer YMYL */}
-      <div className="rounded-xl border border-amber-400/30 bg-amber-400/5 p-4 text-xs text-white/70">
+      <div className="rounded-xl border border-primary-glow/30 bg-primary-glow/5 p-4 text-xs text-fg-max/70">
         <div className="flex gap-2">
-          <Info className="h-4 w-4 shrink-0 text-amber-300" />
+          <Info className="h-4 w-4 shrink-0 text-primary-soft" />
           <p>
             <strong className="text-amber-200">Reco indicative :</strong>{" "}
             ce comparateur est un outil d'aide à la décision basé sur l'audit
@@ -220,13 +220,13 @@ function RecoCard({ reco, rank }: { reco: PlatformRecommendation; rank: number }
         <div>
           <div className="flex items-center gap-2">
             <span className="text-2xl font-extrabold text-primary-soft">#{rank}</span>
-            <h4 className="text-lg font-bold text-white">{reco.platform.name}</h4>
+            <h4 className="text-lg font-bold text-fg-max">{reco.platform.name}</h4>
           </div>
-          <p className="mt-1 text-sm text-white/70">{reco.platform.reasonShort}</p>
+          <p className="mt-1 text-sm text-fg-max/70">{reco.platform.reasonShort}</p>
         </div>
         <div className="text-right">
           <p className="text-2xl font-extrabold text-primary-soft">{reco.finalScore}</p>
-          <p className="text-[10px] uppercase tracking-wide text-white/50">Score perso</p>
+          <p className="text-[10px] uppercase tracking-wide text-fg-max/50">Score perso</p>
         </div>
       </div>
       <div className="mt-4 grid grid-cols-3 gap-2 text-center text-xs">
@@ -261,8 +261,8 @@ function RecoCard({ reco, rank }: { reco: PlatformRecommendation; rank: number }
 function ScoreBadge({ label, value }: { label: string; value: number }) {
   return (
     <div className="rounded-lg border border-border bg-elevated/40 px-2 py-2">
-      <p className="text-[10px] uppercase tracking-wide text-white/50">{label}</p>
-      <p className="font-bold text-white">{value}/10</p>
+      <p className="text-[10px] uppercase tracking-wide text-fg-max/50">{label}</p>
+      <p className="font-bold text-fg-max">{value}/10</p>
     </div>
   );
 }

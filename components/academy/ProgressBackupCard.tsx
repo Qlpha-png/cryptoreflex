@@ -192,7 +192,7 @@ export default function ProgressBackupCard() {
           />
 
           {importState.kind === "error" && (
-            <div className="flex items-start gap-2 rounded-xl border border-red-400/40 bg-red-400/10 p-3 text-sm text-red-300">
+            <div className="flex items-start gap-2 rounded-xl border border-red-400/40 bg-red-400/10 p-3 text-sm text-danger-fg">
               <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
               {importState.msg}
             </div>

@@ -18,7 +18,7 @@ export default function CorrectionNotice({ slug }: { slug: string }) {
   return (
     <aside
       aria-label="Corrections apportées à cet article"
-      className="not-prose mt-10 rounded-xl border border-amber-500/30 bg-amber-500/5 p-4 text-sm text-fg/85"
+      className="not-prose mt-10 rounded-xl border border-warning/30 bg-warning/5 p-4 text-sm text-fg/85"
     >
       <ul className="space-y-2">
         {corrections.map((c, i) => (

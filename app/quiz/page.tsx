@@ -101,7 +101,7 @@ const QUIZZES: QuizCard[] = [
       "Pas de conseil financier — juste pédagogie",
     ],
     icon: Coins,
-    accent: "from-amber-500/20 to-orange-500/20 border-amber-500/30",
+    accent: "from-warning/20 to-orange-500/20 border-warning/30",
   },
 ];
 

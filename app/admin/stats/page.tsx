@@ -295,7 +295,7 @@ export default async function AdminStatsPage({ searchParams }: PageProps) {
       </header>
 
       {/* ---- Newsletter ---- */}
-      <section className="mb-10 rounded-xl border border-border bg-white/[0.02] p-5">
+      <section className="mb-10 rounded-xl border border-border bg-fg-max/[0.02] p-5">
         <h2 className="text-lg font-semibold mb-3">Newsletter (Beehiiv)</h2>
         {newsletter.configured ? (
           <p className="text-sm text-muted">
@@ -313,11 +313,11 @@ export default async function AdminStatsPage({ searchParams }: PageProps) {
         ) : (
           <p className="text-sm text-muted">
             Beehiiv non configuré. Définir{" "}
-            <code className="rounded bg-white/5 px-1.5 py-0.5 text-xs">
+            <code className="rounded bg-fg-max/5 px-1.5 py-0.5 text-xs">
               BEEHIIV_API_KEY
             </code>{" "}
             et{" "}
-            <code className="rounded bg-white/5 px-1.5 py-0.5 text-xs">
+            <code className="rounded bg-fg-max/5 px-1.5 py-0.5 text-xs">
               BEEHIIV_PUBLICATION_ID
             </code>{" "}
             dans Vercel env vars.
@@ -326,7 +326,7 @@ export default async function AdminStatsPage({ searchParams }: PageProps) {
       </section>
 
       {/* ---- Alertes prix ---- */}
-      <section className="mb-10 rounded-xl border border-border bg-white/[0.02] p-5">
+      <section className="mb-10 rounded-xl border border-border bg-fg-max/[0.02] p-5">
         <h2 className="text-lg font-semibold mb-3">Alertes prix</h2>
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
           <Stat label="Actives" value={alerts.active} />
@@ -336,7 +336,7 @@ export default async function AdminStatsPage({ searchParams }: PageProps) {
       </section>
 
       {/* ---- Affiliate clicks ---- */}
-      <section className="mb-10 rounded-xl border border-border bg-white/[0.02] p-5">
+      <section className="mb-10 rounded-xl border border-border bg-fg-max/[0.02] p-5">
         <h2 className="text-lg font-semibold mb-3">
           Affiliate clicks — top {affClicks.stats.length} plateformes
         </h2>
@@ -373,7 +373,7 @@ export default async function AdminStatsPage({ searchParams }: PageProps) {
       </section>
 
       {/* ---- A/B tests ---- */}
-      <section className="mb-10 rounded-xl border border-border bg-white/[0.02] p-5">
+      <section className="mb-10 rounded-xl border border-border bg-fg-max/[0.02] p-5">
         <h2 className="text-lg font-semibold mb-3">A/B tests</h2>
         {abTests.length === 0 ? (
           <p className="text-sm text-muted">Aucune expérience configurée.</p>
@@ -420,14 +420,14 @@ export default async function AdminStatsPage({ searchParams }: PageProps) {
       </section>
 
       {/* ---- Top pages search (V2) ---- */}
-      <section className="mb-10 rounded-xl border border-border bg-white/[0.02] p-5">
+      <section className="mb-10 rounded-xl border border-border bg-fg-max/[0.02] p-5">
         <h2 className="text-lg font-semibold mb-3">Top pages requêtes /api/search</h2>
         <p className="text-sm text-muted">
           Non tracké en V1. Pour activer : ajouter une INCR KV
-          <code className="rounded bg-white/5 px-1.5 py-0.5 text-xs">
+          <code className="rounded bg-fg-max/5 px-1.5 py-0.5 text-xs">
             search:query:&#123;q&#125;
           </code>{" "}
-          dans <code className="rounded bg-white/5 px-1.5 py-0.5 text-xs">app/api/search/route.ts</code>{" "}
+          dans <code className="rounded bg-fg-max/5 px-1.5 py-0.5 text-xs">app/api/search/route.ts</code>{" "}
           puis exposer le top 20 ici.
         </p>
       </section>
@@ -443,7 +443,7 @@ export default async function AdminStatsPage({ searchParams }: PageProps) {
 /** Carte de statistique simple (label + valeur). */
 function Stat({ label, value }: { label: string; value: number }) {
   return (
-    <div className="rounded-lg border border-border/60 bg-white/[0.02] p-4">
+    <div className="rounded-lg border border-border/60 bg-fg-max/[0.02] p-4">
       <div className="text-2xl font-bold tabular-nums">{value}</div>
       <div className="mt-1 text-xs text-muted">{label}</div>
     </div>

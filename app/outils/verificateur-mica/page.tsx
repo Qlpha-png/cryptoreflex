@@ -143,11 +143,11 @@ export default function VerificateurMicaPage({ searchParams }: PageProps) {
               <Sparkles className="h-3.5 w-3.5" />
               Outil exclusif Cryptoreflex
             </span>
-            <h1 className="mt-4 text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white">
+            <h1 className="mt-4 text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-fg-max">
               Cet exchange est-il vraiment{" "}
               <span className="gradient-text">régulé en France</span> ?
             </h1>
-            <p className="mt-4 text-lg text-white/75">
+            <p className="mt-4 text-lg text-fg-max/75">
               Vérifiez en 3 secondes l'agrément MiCA et l'accès à la France de
               n'importe quelle plateforme crypto. Données croisées depuis les
               registres officiels AMF, ESMA, BaFin — mises à jour mensuellement.
@@ -178,10 +178,10 @@ export default function VerificateurMicaPage({ searchParams }: PageProps) {
       {/* TOP 20 EXCHANGES */}
       <section className="border-b border-border">
         <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-white">
+          <h2 className="text-2xl sm:text-3xl font-extrabold text-fg-max">
             Les 20 plateformes les plus consultées
           </h2>
-          <p className="mt-2 text-white/70">
+          <p className="mt-2 text-fg-max/70">
             Cliquez sur une plateforme pour ouvrir directement sa fiche
             réglementaire.
           </p>
@@ -192,7 +192,7 @@ export default function VerificateurMicaPage({ searchParams }: PageProps) {
                   href={`/outils/verificateur-mica?p=${p.id}#${p.id}`}
                   className="group flex items-center justify-between gap-2 rounded-xl border border-border bg-elevated/60 hover:border-primary/40 hover:bg-elevated px-4 py-3 transition"
                 >
-                  <span className="font-semibold text-white truncate">
+                  <span className="font-semibold text-fg-max truncate">
                     {p.name}
                   </span>
                   <ArrowRight className="h-4 w-4 text-muted group-hover:text-primary-soft shrink-0" />
@@ -206,10 +206,10 @@ export default function VerificateurMicaPage({ searchParams }: PageProps) {
       {/* MÉTHODOLOGIE PUBLIQUE */}
       <section className="border-b border-border">
         <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-white">
+          <h2 className="text-2xl sm:text-3xl font-extrabold text-fg-max">
             Notre méthodologie
           </h2>
-          <p className="mt-2 text-white/70 max-w-3xl">
+          <p className="mt-2 text-fg-max/70 max-w-3xl">
             Transparence totale sur les sources et critères de classification.
           </p>
 
@@ -236,10 +236,10 @@ export default function VerificateurMicaPage({ searchParams }: PageProps) {
           </div>
 
           <div className="mt-8 rounded-2xl border border-border bg-elevated/40 p-6">
-            <h3 className="text-lg font-bold text-white">
+            <h3 className="text-lg font-bold text-fg-max">
               Que signifient les statuts affichés ?
             </h3>
-            <ul className="mt-4 space-y-3 text-sm text-white/80">
+            <ul className="mt-4 space-y-3 text-sm text-fg-max/80">
               <li className="flex gap-3">
                 <span className="badge border-accent-green/40 bg-accent-green/10 text-accent-green shrink-0 mt-0.5">
                   Agréé MiCA
@@ -286,7 +286,7 @@ export default function VerificateurMicaPage({ searchParams }: PageProps) {
       {/* FAQ */}
       <section>
         <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-white">
+          <h2 className="text-2xl sm:text-3xl font-extrabold text-fg-max">
             Questions fréquentes
           </h2>
           <div className="mt-8 space-y-3">
@@ -296,12 +296,12 @@ export default function VerificateurMicaPage({ searchParams }: PageProps) {
                 className="group rounded-2xl border border-border bg-elevated/40 px-5 py-4 open:bg-elevated/60"
               >
                 <summary className="flex items-center justify-between gap-4 cursor-pointer list-none">
-                  <span className="font-semibold text-white">{item.q}</span>
+                  <span className="font-semibold text-fg-max">{item.q}</span>
                   <span className="text-muted group-open:rotate-180 transition-transform">
                     <ArrowRight className="h-4 w-4 rotate-90" />
                   </span>
                 </summary>
-                <p className="mt-3 text-sm text-white/80 leading-relaxed">
+                <p className="mt-3 text-sm text-fg-max/80 leading-relaxed">
                   {item.a}
                 </p>
               </details>
@@ -334,8 +334,8 @@ function MethodCard({
       <div className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 border border-primary/30">
         <Icon className="h-5 w-5 text-primary-soft" />
       </div>
-      <h3 className="mt-3 font-bold text-white">{title}</h3>
-      <p className="mt-2 text-sm text-white/75">{text}</p>
+      <h3 className="mt-3 font-bold text-fg-max">{title}</h3>
+      <p className="mt-2 text-sm text-fg-max/75">{text}</p>
     </div>
   );
 }

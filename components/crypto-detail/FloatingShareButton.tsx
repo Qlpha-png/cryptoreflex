@@ -197,7 +197,7 @@ export default function FloatingShareButton({
             rel="noopener noreferrer"
             aria-label={s.label}
             className={[
-              "inline-flex h-10 w-10 items-center justify-center rounded-full text-white shadow-e2 transition-transform hover:scale-105 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+              "inline-flex h-10 w-10 items-center justify-center rounded-full text-fg-max shadow-e2 transition-transform hover:scale-105 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background",
               s.bg,
             ].join(" ")}
           >

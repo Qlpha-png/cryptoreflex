@@ -311,7 +311,7 @@ export default function ComparatifSecuritePage() {
                           {r.micaStatus.length > 30 ? "Agréée MiCA" : r.micaStatus}
                         </span>
                       ) : (
-                        <span className="inline-flex items-center gap-1 rounded-md border border-amber-400/30 bg-amber-400/10 px-2 py-0.5 text-[10px] font-bold text-amber-300">
+                        <span className="inline-flex items-center gap-1 rounded-md border border-primary-glow/30 bg-primary-glow/10 px-2 py-0.5 text-[10px] font-bold text-primary-soft">
                           <AlertTriangle className="h-3 w-3" />
                           Non autorisée en France
                         </span>
@@ -323,7 +323,7 @@ export default function ComparatifSecuritePage() {
                           {r.lastIncident ? shortLabel(r.lastIncident) : "Aucun signalé"}
                         </span>
                       ) : (
-                        <span className="text-amber-300" title={r.lastIncident ?? ""}>
+                        <span className="text-primary-soft" title={r.lastIncident ?? ""}>
                           {r.lastIncident ? shortLabel(r.lastIncident) : null}
                         </span>
                       )}
@@ -348,8 +348,8 @@ export default function ComparatifSecuritePage() {
               mais c&apos;est un bon signe de maturité.
             </p>
           </div>
-          <div className="rounded-2xl border border-amber-400/30 bg-amber-400/5 p-5">
-            <div className="text-[11px] font-bold uppercase tracking-wider text-amber-300">
+          <div className="rounded-2xl border border-primary-glow/30 bg-primary-glow/5 p-5">
+            <div className="text-[11px] font-bold uppercase tracking-wider text-primary-soft">
               Important
             </div>
             <p className="mt-2 text-sm text-fg/85">
@@ -412,7 +412,7 @@ function Stat({
   const styles = {
     green: "border-accent-green/30 bg-accent-green/5 text-accent-green",
     primary: "border-primary/30 bg-primary/5 text-primary-soft",
-    amber: "border-amber-400/30 bg-amber-400/5 text-amber-300",
+    amber: "border-primary-glow/30 bg-primary-glow/5 text-primary-soft",
   };
   return (
     <div className={`rounded-2xl border p-4 ${styles[tone]}`}>

@@ -29,7 +29,7 @@ const TYPE_META: Record<
 > = {
   article: { label: "Article", Icon: FileText, color: "text-blue-300" },
   platform: { label: "Plateforme", Icon: Building2, color: "text-primary-glow" },
-  crypto: { label: "Crypto", Icon: Coins, color: "text-amber-300" },
+  crypto: { label: "Crypto", Icon: Coins, color: "text-primary-soft" },
   comparatif: { label: "Comparatif", Icon: GitCompare, color: "text-cyan-300" },
   outil: { label: "Outil", Icon: Wrench, color: "text-emerald-300" },
   glossary: { label: "Glossaire", Icon: BookOpen, color: "text-purple-300" },

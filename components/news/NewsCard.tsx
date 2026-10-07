@@ -33,7 +33,7 @@ interface Props {
  *  Après : clés alignées sur les valeurs canoniques accentuées.
  */
 const CATEGORY_BADGE: Record<string, string> = {
-  "Marché":     "bg-amber-500/15 text-amber-200 ring-amber-500/30",
+  "Marché":     "bg-warning/15 text-amber-200 ring-warning/30",
   "Régulation": "bg-rose-500/15 text-rose-200 ring-rose-500/30",
   Technologie:  "bg-cyan-500/15 text-cyan-200 ring-cyan-500/30",
   Plateformes:  "bg-fuchsia-500/15 text-fuchsia-200 ring-fuchsia-500/30",
@@ -41,7 +41,7 @@ const CATEGORY_BADGE: Record<string, string> = {
 
 /** Gradient cover fallback si image absente. */
 const CATEGORY_GRADIENT: Record<string, string> = {
-  "Marché":     "from-amber-500/40 to-orange-600/40",
+  "Marché":     "from-warning/40 to-orange-600/40",
   "Régulation": "from-rose-500/40 to-pink-600/40",
   Technologie:  "from-cyan-500/40 to-blue-600/40",
   Plateformes:  "from-fuchsia-500/40 to-purple-600/40",

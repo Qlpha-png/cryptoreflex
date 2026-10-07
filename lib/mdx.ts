@@ -36,7 +36,7 @@ export interface ArticleFrontmatter {
   readTime: string;        // ex: "8 min"
   author: string;
   keywords: string[];
-  /** Tailwind gradient utilities pour la cover (ex: "from-amber-500/40 to-orange-600/40"). */
+  /** Tailwind gradient utilities pour la cover (ex: "from-warning/40 to-orange-600/40"). */
   gradient: string;
   /** Optionnel : chemin vers une image de cover (`/blog/foo.jpg`). */
   cover?: string;
@@ -58,11 +58,11 @@ export interface ArticleSummary extends ArticleFrontmatter {
 const ARTICLES_DIR = path.join(process.cwd(), "content", "articles");
 
 /** Gradient par défaut si l'article n'en spécifie pas. */
-const DEFAULT_GRADIENT = "from-amber-500/40 to-orange-600/40";
+const DEFAULT_GRADIENT = "from-warning/40 to-orange-600/40";
 
 /** Cycle de gradients pour combler les articles sans cover. */
 const FALLBACK_GRADIENTS = [
-  "from-amber-500/40 to-orange-600/40",
+  "from-warning/40 to-orange-600/40",
   "from-cyan-500/40 to-blue-600/40",
   "from-emerald-500/40 to-teal-600/40",
   "from-fuchsia-500/40 to-pink-600/40",

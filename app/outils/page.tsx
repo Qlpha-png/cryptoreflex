@@ -68,7 +68,7 @@ const CATEGORIES: Array<{
     label: "Fiscalité crypto FR",
     icon: FileText,
     desc: "Cerfa 2086, 3916-bis, PFU 31,4 %, déclaration impots.gouv.fr",
-    accent: "from-amber-500/20",
+    accent: "from-warning/20",
   },
   {
     id: "ia",
@@ -410,7 +410,7 @@ function ToolCard({ tool }: { tool: Tool }) {
       <div className="flex items-center justify-between gap-2 mb-3 min-h-[24px]">
         {/* Left : badge NOUVEAU (new) ou BIENTÔT (soon), sinon spacer invisible */}
         {tool.status === "new" ? (
-          <span className="inline-flex items-center gap-1 rounded-full bg-amber-400 px-2 py-0.5 text-[9px] font-extrabold uppercase tracking-wider text-background motion-safe:animate-pulse">
+          <span className="inline-flex items-center gap-1 rounded-full bg-primary-glow px-2 py-0.5 text-[9px] font-extrabold uppercase tracking-wider text-background motion-safe:animate-pulse">
             <Sparkles className="h-2.5 w-2.5" aria-hidden="true" />
             Nouveau
           </span>

@@ -220,7 +220,7 @@ export default function YieldStablecoinsPage() {
                                 y.regulation === "MiCA"
                                   ? "border-success/30 bg-success/10 text-success"
                                   : y.regulation === "PSAN"
-                                    ? "border-amber-400/30 bg-amber-400/10 text-amber-300"
+                                    ? "border-primary-glow/30 bg-primary-glow/10 text-primary-soft"
                                     : "border-warning/30 bg-warning/10 text-warning-fg"
                               }`}
                             >
@@ -247,7 +247,7 @@ export default function YieldStablecoinsPage() {
                                 y.risk <= 2
                                   ? "bg-success/15 text-success"
                                   : y.risk === 3
-                                    ? "bg-amber-400/15 text-amber-300"
+                                    ? "bg-primary-glow/15 text-primary-soft"
                                     : "bg-danger/15 text-danger"
                               }`}
                             >

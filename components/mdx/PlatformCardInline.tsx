@@ -48,7 +48,7 @@ export default function PlatformCardInline({
           <div>
             <Link
               href={`/avis/${p.id}`}
-              className="text-base font-semibold text-white hover:text-primary-glow"
+              className="text-base font-semibold text-fg-max hover:text-primary-glow"
             >
               {p.name}
             </Link>
@@ -56,7 +56,7 @@ export default function PlatformCardInline({
           </div>
         </div>
 
-        <div className="flex flex-1 flex-wrap items-center gap-3 text-xs text-white/80 sm:justify-end">
+        <div className="flex flex-1 flex-wrap items-center gap-3 text-xs text-fg-max/80 sm:justify-end">
           <span className="inline-flex items-center gap-1 rounded-full bg-elevated px-2.5 py-1 font-semibold">
             <Star className="h-3.5 w-3.5 text-primary-glow" aria-hidden />
             {fmtFr(p.scoring.global, 1)} / 5
@@ -93,7 +93,7 @@ export default function PlatformCardInline({
             <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-emerald-300">
               Points forts
             </p>
-            <ul className="space-y-1 text-white/80">
+            <ul className="space-y-1 text-fg-max/80">
               {p.strengths.slice(0, 3).map((s) => (
                 <li key={s}>+ {s}</li>
               ))}
@@ -103,7 +103,7 @@ export default function PlatformCardInline({
             <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-rose-300">
               Points faibles
             </p>
-            <ul className="space-y-1 text-white/80">
+            <ul className="space-y-1 text-fg-max/80">
               {p.weaknesses.slice(0, 3).map((s) => (
                 <li key={s}>− {s}</li>
               ))}
@@ -125,7 +125,7 @@ function Stat({ label, value }: { label: string; value: string }) {
   return (
     <div className="bg-surface px-4 py-2.5">
       <dt className="text-[11px] uppercase tracking-wide text-muted">{label}</dt>
-      <dd className="mt-0.5 font-semibold text-white tabular-nums">{value}</dd>
+      <dd className="mt-0.5 font-semibold text-fg-max tabular-nums">{value}</dd>
     </div>
   );
 }

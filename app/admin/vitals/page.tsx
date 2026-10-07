@@ -172,7 +172,7 @@ export default async function AdminVitalsPage() {
 
         <header className="mt-6 flex items-start justify-between gap-4 flex-wrap">
           <div>
-            <span className="inline-flex items-center gap-2 rounded-full border border-amber-400/40 bg-amber-400/10 px-3 py-1 text-xs font-bold text-amber-300">
+            <span className="inline-flex items-center gap-2 rounded-full border border-primary-glow/40 bg-primary-glow/10 px-3 py-1 text-xs font-bold text-primary-soft">
               <Crown className="h-3.5 w-3.5" />
               ADMIN — Core Web Vitals
             </span>
@@ -182,7 +182,7 @@ export default async function AdminVitalsPage() {
             <p className="mt-2 text-sm text-muted">
               p75 calculé sur les 1000 derniers samples (recalcul auto toutes les 50 valeurs).{" "}
               {kv.mocked && (
-                <span className="text-amber-300">
+                <span className="text-primary-soft">
                   ⚠ KV en mode mocked — données perdues à chaque cold start.
                 </span>
               )}
@@ -304,7 +304,7 @@ function RatingPill({ rating }: { rating: Rating }) {
     },
     "needs-improvement": {
       label: "Needs improvement",
-      cls: "border-amber-500/40 bg-amber-500/10 text-amber-300",
+      cls: "border-warning/40 bg-warning/10 text-primary-soft",
     },
     poor: {
       label: "Poor",
@@ -331,7 +331,7 @@ function LegendCard({
 }) {
   const accent = {
     good: "from-emerald-500/15 border-emerald-500/30",
-    "needs-improvement": "from-amber-500/15 border-amber-500/30",
+    "needs-improvement": "from-warning/15 border-warning/30",
     poor: "from-rose-500/15 border-rose-500/30",
   }[rating];
   return (

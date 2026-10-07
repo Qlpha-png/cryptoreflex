@@ -298,7 +298,7 @@ export default function AcheterPaysPage({ params }: Props) {
         <section className="mt-10">
           <h2 className="text-2xl font-bold tracking-tight">Plateformes recommandées</h2>
           {warning && (
-            <p className="mt-3 rounded-xl border border-amber-500/30 bg-amber-500/5 p-4 text-xs text-amber-200">
+            <p className="mt-3 rounded-xl border border-warning/30 bg-warning/5 p-4 text-xs text-amber-200">
               {warning}
             </p>
           )}
@@ -364,7 +364,7 @@ export default function AcheterPaysPage({ params }: Props) {
                 className="rounded-2xl border border-border bg-surface p-5"
               >
                 <div className="flex items-start gap-4">
-                  {/* FIX a11y 2026-05-08 : text-background sur or = 14:1 (text-white = 2.04) */}
+                  {/* FIX a11y 2026-05-08 : text-background sur or = 14:1 (text-fg-max = 2.04) */}
                   <span className="mt-0.5 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-sm font-bold text-background">
                     {idx + 1}
                   </span>
@@ -520,12 +520,12 @@ function CryptoEditorialBlocks({ c }: { c: AnyCrypto }) {
                 </div>
               )}
               {c.weaknesses.length > 0 && (
-                <div className="rounded-xl border border-amber-500/25 bg-amber-500/5 p-4">
-                  <h3 className="text-sm font-bold text-amber-300">Points de vigilance</h3>
+                <div className="rounded-xl border border-warning/25 bg-warning/5 p-4">
+                  <h3 className="text-sm font-bold text-primary-soft">Points de vigilance</h3>
                   <ul className="mt-2 space-y-1.5">
                     {c.weaknesses.map((w) => (
                       <li key={w} className="text-sm text-fg/80 flex gap-2">
-                        <span aria-hidden className="text-amber-300">!</span>
+                        <span aria-hidden className="text-primary-soft">!</span>
                         {w}
                       </li>
                     ))}
@@ -571,12 +571,12 @@ function CryptoEditorialBlocks({ c }: { c: AnyCrypto }) {
             </div>
           )}
           {c.risks.length > 0 && (
-            <div className="rounded-xl border border-amber-500/25 bg-amber-500/5 p-4">
-              <h3 className="text-sm font-bold text-amber-300">Risques à connaître</h3>
+            <div className="rounded-xl border border-warning/25 bg-warning/5 p-4">
+              <h3 className="text-sm font-bold text-primary-soft">Risques à connaître</h3>
               <ul className="mt-2 space-y-1.5">
                 {c.risks.map((r) => (
                   <li key={r} className="text-sm text-fg/80 flex gap-2">
-                    <span aria-hidden className="text-amber-300">!</span>
+                    <span aria-hidden className="text-primary-soft">!</span>
                     {r}
                   </li>
                 ))}

@@ -179,10 +179,10 @@ export default function DcaSimulator() {
     <div id="simulateur" className="glass glow-border rounded-2xl p-6 sm:p-8">
       <div className="flex items-center gap-3 mb-6">
         <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-accent-cyan">
-          <TrendingUp className="h-5 w-5 text-white" />
+          <TrendingUp className="h-5 w-5 text-fg-max" />
         </div>
         <div>
-          <h2 className="font-bold text-xl text-white">Simulateur DCA</h2>
+          <h2 className="font-bold text-xl text-fg-max">Simulateur DCA</h2>
           <p className="text-sm text-muted">
             Backtest réel sur les prix CoinGecko des 5 dernières années
           </p>
@@ -219,7 +219,7 @@ export default function DcaSimulator() {
                   className={`rounded-lg border px-3 py-2 text-sm font-semibold transition-colors min-h-[44px] focus:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
                     coin === opt.id
                       ? "border-primary bg-primary/10 text-primary-soft"
-                      : "border-border bg-background text-white/70 hover:border-primary/50"
+                      : "border-border bg-background text-fg-max/70 hover:border-primary/50"
                   }`}
                 >
                   {opt.symbol}
@@ -255,7 +255,7 @@ export default function DcaSimulator() {
                     className={`rounded-lg border px-3 py-2 text-sm font-semibold transition-colors min-h-[44px] focus:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
                       months === opt.months
                         ? "border-primary bg-primary/10 text-primary-soft"
-                        : "border-border bg-background text-white/70 hover:border-primary/50"
+                        : "border-border bg-background text-fg-max/70 hover:border-primary/50"
                     } ${disabled ? "opacity-40 cursor-not-allowed" : ""}`}
                   >
                     {opt.label}
@@ -272,7 +272,7 @@ export default function DcaSimulator() {
           {clamped && (
             <div
               role="note"
-              className="rounded-lg border border-amber-500/40 bg-amber-500/10 p-3 text-xs text-amber-200"
+              className="rounded-lg border border-warning/40 bg-warning/10 p-3 text-xs text-amber-200"
             >
               <strong className="text-amber-100">Données limitées</strong> à
               {" "}
@@ -285,7 +285,7 @@ export default function DcaSimulator() {
 
           <div className="rounded-lg border border-border bg-background/50 p-3 text-xs text-muted">
             <p>
-              <strong className="text-white/80">Hypothèse :</strong> 1 achat le 1er
+              <strong className="text-fg-max/80">Hypothèse :</strong> 1 achat le 1er
               du mois, frais ignorés (typiquement 0,5-1 % chez Bitstack/Coinbase).
             </p>
           </div>
@@ -343,13 +343,13 @@ export default function DcaSimulator() {
               <Chart series={result.series} symbol={symbol} />
 
               <div className="rounded-xl border border-border bg-background/50 p-4">
-                <h4 className="font-semibold text-white text-sm mb-3">
+                <h4 className="font-semibold text-fg-max text-sm mb-3">
                   DCA vs Achat unique (lump sum)
                 </h4>
                 <div className="grid grid-cols-2 gap-3 text-sm">
                   <div>
                     <div className="text-xs text-muted">DCA progressif</div>
-                    <div className="font-mono text-white">
+                    <div className="font-mono text-fg-max">
                       {fmtEur(result.finalValue)}
                     </div>
                     <div
@@ -365,7 +365,7 @@ export default function DcaSimulator() {
                     <div className="text-xs text-muted">
                       Achat unique au mois 1
                     </div>
-                    <div className="font-mono text-white">
+                    <div className="font-mono text-fg-max">
                       {fmtEur(result.lumpSumFinalValue)}
                     </div>
                     <div
@@ -429,7 +429,7 @@ function Field({
         step={step}
         min={0}
         onChange={(e) => onChange(parseFloat(e.target.value) || 0)}
-        className="mt-1 w-full rounded-lg bg-background border border-border px-3 py-2.5 font-mono text-white min-h-[44px]
+        className="mt-1 w-full rounded-lg bg-background border border-border px-3 py-2.5 font-mono text-fg-max min-h-[44px]
                    focus:border-primary/60 focus:outline-none focus:ring-2 focus:ring-primary/40"
       />
     </label>
@@ -452,7 +452,7 @@ function Stat({
       ? "text-accent-green"
       : tone === "negative"
       ? "text-danger-fg"
-      : "text-white";
+      : "text-fg-max";
   return (
     <div className="rounded-xl border border-border bg-elevated/40 p-3">
       <div className="text-[10px] font-semibold text-muted uppercase tracking-wide">
@@ -505,7 +505,7 @@ function Chart({
   return (
     <div className="rounded-xl border border-border bg-background/50 p-4">
       <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
-        <h4 className="font-semibold text-white text-sm">
+        <h4 className="font-semibold text-fg-max text-sm">
           Évolution sur {series.length} mois — {symbol}
         </h4>
         <div className="flex flex-wrap gap-3 text-xs">

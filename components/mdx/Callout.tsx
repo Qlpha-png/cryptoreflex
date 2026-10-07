@@ -30,10 +30,10 @@ const STYLES: Record<
     Icon: AlertTriangle,
   },
   tip: {
-    bg: "bg-amber-500/10",
-    border: "border-amber-500/30",
-    iconBg: "bg-amber-500/20",
-    iconColor: "text-amber-300",
+    bg: "bg-warning/10",
+    border: "border-warning/30",
+    iconBg: "bg-warning/20",
+    iconColor: "text-primary-soft",
     defaultTitle: "Astuce",
     Icon: Lightbulb,
   },
@@ -76,7 +76,7 @@ export default function Callout({ type = "info", title, children }: CalloutProps
       </div>
       <div className="flex-1 text-sm sm:text-[15px]">
         <p className={`font-semibold ${style.iconColor}`}>{heading}</p>
-        <div className="mt-1 text-white/80 leading-relaxed [&>p]:my-1.5 [&>ul]:my-1.5 [&>ul]:list-disc [&>ul]:pl-5 [&_a]:text-primary-glow [&_a:hover]:underline">
+        <div className="mt-1 text-fg-max/80 leading-relaxed [&>p]:my-1.5 [&>ul]:my-1.5 [&>ul]:list-disc [&>ul]:pl-5 [&_a]:text-primary-glow [&_a:hover]:underline">
           {children}
         </div>
       </div>

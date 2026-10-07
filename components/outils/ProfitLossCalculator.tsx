@@ -255,8 +255,8 @@ export default function ProfitLossCalculator() {
           </dl>
 
           {/* Disclaimer compact */}
-          <div className="rounded-xl border border-amber-400/30 bg-amber-400/5 p-3 text-[11px] text-amber-100/85 flex items-start gap-2">
-            <AlertCircle className="h-4 w-4 text-amber-300 shrink-0 mt-0.5" />
+          <div className="rounded-xl border border-primary-glow/30 bg-primary-glow/5 p-3 text-[11px] text-amber-100/85 flex items-start gap-2">
+            <AlertCircle className="h-4 w-4 text-primary-soft shrink-0 mt-0.5" />
             <p>
               <strong className="text-amber-200">Estimation éducative.</strong>{" "}
               Le PFU 31,4% ne s&apos;applique qu&apos;aux{" "}

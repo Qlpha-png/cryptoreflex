@@ -86,10 +86,10 @@ export default function Converter({
     <div id="converter" className="glass glow-border rounded-2xl p-6 sm:p-8">
       <div className="flex items-center gap-3 mb-6">
         <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-accent-cyan">
-          <ArrowDownUp className="h-5 w-5 text-white" />
+          <ArrowDownUp className="h-5 w-5 text-fg-max" />
         </div>
         <div>
-          <h2 className="font-bold text-xl text-white">Convertisseur Crypto</h2>
+          <h2 className="font-bold text-xl text-fg-max">Convertisseur Crypto</h2>
           <p className="text-sm text-muted">
             Taux du marché (Binance, Kraken, Coinbase…) — supporte cross-crypto et fiat
           </p>
@@ -112,7 +112,7 @@ export default function Converter({
           <button
             type="button"
             onClick={swap}
-            className="flex h-10 w-10 items-center justify-center rounded-full border border-border bg-background hover:border-primary/60 hover:text-primary transition-colors text-white/70"
+            className="flex h-10 w-10 items-center justify-center rounded-full border border-border bg-background hover:border-primary/60 hover:text-primary transition-colors text-fg-max/70"
             aria-label="Inverser les devises"
           >
             <ArrowDownUp className="h-4 w-4" />
@@ -137,7 +137,7 @@ export default function Converter({
             <span className="text-danger-fg">{error}</span>
           ) : rate !== null ? (
             <>
-              <span className="font-mono text-white/80">
+              <span className="font-mono text-fg-max/80">
                 1 {from.toUpperCase()} = {formatRate(rate)} {to.toUpperCase()}
               </span>
               {lastUpdated && (
@@ -217,11 +217,11 @@ function Row({
             inputMode="decimal"
             aria-label={`Montant ${label}`}
             onChange={(e) => onAmountChange?.(parseFloat(e.target.value) || 0)}
-            className="w-full min-w-0 bg-transparent text-xl sm:flex-1 sm:text-2xl font-mono font-bold text-white focus:outline-none"
+            className="w-full min-w-0 bg-transparent text-xl sm:flex-1 sm:text-2xl font-mono font-bold text-fg-max focus:outline-none"
           />
         ) : (
           <div
-            className="w-full min-w-0 overflow-x-auto whitespace-nowrap text-xl sm:flex-1 sm:text-2xl font-mono font-bold text-white"
+            className="w-full min-w-0 overflow-x-auto whitespace-nowrap text-xl sm:flex-1 sm:text-2xl font-mono font-bold text-fg-max"
             role="status"
             aria-live="polite"
             aria-label={loading ? "Conversion en cours" : `Résultat : ${formatAmount(amount, isFiat)} ${symbol.toUpperCase()}`}
@@ -239,7 +239,7 @@ function Row({
           value={symbol}
           onChange={(e) => onSymbolChange(e.target.value)}
           aria-label={`Devise ${label}`}
-          className="w-full min-w-0 sm:w-auto rounded-lg border border-border bg-elevated px-3 py-2 font-semibold text-white focus:border-primary/60 focus:outline-none focus:ring-2 focus:ring-primary/20"
+          className="w-full min-w-0 sm:w-auto rounded-lg border border-border bg-elevated px-3 py-2 font-semibold text-fg-max focus:border-primary/60 focus:outline-none focus:ring-2 focus:ring-primary/20"
         >
           <optgroup label="Crypto">
             {CRYPTO_OPTIONS.map((s) => (

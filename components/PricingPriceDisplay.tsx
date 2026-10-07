@@ -23,7 +23,7 @@ interface PricingPriceDisplayProps {
 export default function PricingPriceDisplay(_props: PricingPriceDisplayProps) {
   return (
     <div className="mt-5 flex items-baseline gap-1">
-      <span className="text-3xl sm:text-4xl font-extrabold text-white">
+      <span className="text-3xl sm:text-4xl font-extrabold text-fg-max">
         Gratuit
       </span>
     </div>

@@ -263,7 +263,7 @@ export default function ApiPubliquePage() {
       <StructuredData id="api-publique-jsonld" data={jsonLd} />
 
       {/* Hero */}
-      <section className="border-b border-white/5 bg-gradient-to-b from-cyan-500/5 to-transparent">
+      <section className="border-b border-fg-max/5 bg-gradient-to-b from-cyan-500/5 to-transparent">
         <div className="mx-auto max-w-5xl px-4 py-16 sm:px-6 lg:px-8">
           <nav className="mb-6 text-sm text-slate-400" aria-label="Fil d'Ariane">
             <Link href="/" className="hover:text-cyan-300">
@@ -297,19 +297,19 @@ export default function ApiPubliquePage() {
           </p>
 
           <div className="mt-6 flex flex-wrap gap-3 text-sm">
-            <span className="inline-flex items-center gap-1.5 rounded-md border border-white/10 bg-white/5 px-3 py-1.5 text-slate-300">
+            <span className="inline-flex items-center gap-1.5 rounded-md border border-fg-max/10 bg-fg-max/5 px-3 py-1.5 text-slate-300">
               <ShieldCheck className="h-4 w-4 text-emerald-400" />
               Sans clé API
             </span>
-            <span className="inline-flex items-center gap-1.5 rounded-md border border-white/10 bg-white/5 px-3 py-1.5 text-slate-300">
+            <span className="inline-flex items-center gap-1.5 rounded-md border border-fg-max/10 bg-fg-max/5 px-3 py-1.5 text-slate-300">
               <Globe2 className="h-4 w-4 text-cyan-400" />
               CORS *
             </span>
-            <span className="inline-flex items-center gap-1.5 rounded-md border border-white/10 bg-white/5 px-3 py-1.5 text-slate-300">
+            <span className="inline-flex items-center gap-1.5 rounded-md border border-fg-max/10 bg-fg-max/5 px-3 py-1.5 text-slate-300">
               <Database className="h-4 w-4 text-indigo-400" />
               Cache CDN 24h
             </span>
-            <span className="inline-flex items-center gap-1.5 rounded-md border border-white/10 bg-white/5 px-3 py-1.5 text-slate-300">
+            <span className="inline-flex items-center gap-1.5 rounded-md border border-fg-max/10 bg-fg-max/5 px-3 py-1.5 text-slate-300">
               <Code2 className="h-4 w-4 text-fuchsia-400" />
               JSON UTF-8
             </span>
@@ -321,18 +321,18 @@ export default function ApiPubliquePage() {
       <section className="mx-auto max-w-5xl px-4 py-16 sm:px-6 lg:px-8">
         <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">Endpoints disponibles</h2>
         <p className="mt-2 text-slate-400">
-          Tous renvoient un JSON UTF-8 avec un objet <code className="rounded bg-white/5 px-1.5 py-0.5 text-xs text-cyan-300">_meta</code> (license, source, lastUpdated, attribution) et le payload nommé.
+          Tous renvoient un JSON UTF-8 avec un objet <code className="rounded bg-fg-max/5 px-1.5 py-0.5 text-xs text-cyan-300">_meta</code> (license, source, lastUpdated, attribution) et le payload nommé.
         </p>
 
         <div className="mt-8 space-y-6">
           {ENDPOINTS.map((ep) => (
             <article
               key={ep.path}
-              className="rounded-xl border border-white/10 bg-white/[0.02] p-6 transition hover:border-cyan-500/30"
+              className="rounded-xl border border-fg-max/10 bg-fg-max/[0.02] p-6 transition hover:border-cyan-500/30"
             >
               <header className="flex flex-wrap items-start justify-between gap-3">
                 <div>
-                  <h3 className="text-lg font-semibold text-white">{ep.title}</h3>
+                  <h3 className="text-lg font-semibold text-fg-max">{ep.title}</h3>
                   <p className="mt-1 text-sm text-slate-400">{ep.description}</p>
                 </div>
                 <span className="inline-flex shrink-0 items-center rounded-md border border-emerald-500/20 bg-emerald-500/10 px-2 py-1 text-xs font-medium text-emerald-300">
@@ -340,7 +340,7 @@ export default function ApiPubliquePage() {
                 </span>
               </header>
 
-              <div className="mt-4 overflow-x-auto rounded-lg border border-white/5 bg-black/40 p-3 font-mono text-xs">
+              <div className="mt-4 overflow-x-auto rounded-lg border border-fg-max/5 bg-scrim/40 p-3 font-mono text-xs">
                 <div className="flex items-center gap-2 text-emerald-400">
                   <span className="rounded bg-emerald-500/10 px-1.5 py-0.5 text-[10px] uppercase tracking-wide">
                     GET
@@ -356,7 +356,7 @@ export default function ApiPubliquePage() {
                 <summary className="cursor-pointer text-slate-400 hover:text-slate-200">
                   Schéma de réponse
                 </summary>
-                <pre className="mt-2 overflow-x-auto rounded border border-white/5 bg-black/40 p-3 font-mono text-[11px] text-slate-300">
+                <pre className="mt-2 overflow-x-auto rounded border border-fg-max/5 bg-scrim/40 p-3 font-mono text-[11px] text-slate-300">
                   <code>{ep.responseShape}</code>
                 </pre>
               </details>
@@ -377,7 +377,7 @@ export default function ApiPubliquePage() {
       </section>
 
       {/* OpenAPI / Postman / Swagger */}
-      <section className="border-y border-white/5 bg-white/[0.02]">
+      <section className="border-y border-fg-max/5 bg-fg-max/[0.02]">
         <div className="mx-auto max-w-5xl px-4 py-12 sm:px-6 lg:px-8">
           <div className="rounded-2xl border border-indigo-500/20 bg-gradient-to-br from-indigo-500/10 to-cyan-500/10 p-6 sm:p-8">
             <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -400,7 +400,7 @@ export default function ApiPubliquePage() {
                 openapi.json
               </a>
             </div>
-            <div className="mt-4 rounded-lg border border-white/10 bg-black/40 p-3 font-mono text-xs">
+            <div className="mt-4 rounded-lg border border-fg-max/10 bg-scrim/40 p-3 font-mono text-xs">
               <span className="text-slate-400">curl -s </span>
               <span className="text-cyan-300">{baseUrl}/api/public/openapi.json</span>
               <span className="text-slate-400"> {">"} cryptoreflex-openapi.json</span>
@@ -410,7 +410,7 @@ export default function ApiPubliquePage() {
       </section>
 
       {/* Code examples */}
-      <section className="border-y border-white/5 bg-white/[0.02]">
+      <section className="border-y border-fg-max/5 bg-fg-max/[0.02]">
         <div className="mx-auto max-w-5xl px-4 py-16 sm:px-6 lg:px-8">
           <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">Exemples d'utilisation</h2>
           <p className="mt-2 text-slate-400">
@@ -418,7 +418,7 @@ export default function ApiPubliquePage() {
           </p>
 
           <div className="mt-8 grid gap-4 lg:grid-cols-3">
-            <div className="rounded-xl border border-white/10 bg-black/40 p-5">
+            <div className="rounded-xl border border-fg-max/10 bg-scrim/40 p-5">
               <div className="mb-3 text-xs font-semibold uppercase tracking-wider text-slate-400">
                 cURL
               </div>
@@ -427,7 +427,7 @@ export default function ApiPubliquePage() {
               </pre>
             </div>
 
-            <div className="rounded-xl border border-white/10 bg-black/40 p-5">
+            <div className="rounded-xl border border-fg-max/10 bg-scrim/40 p-5">
               <div className="mb-3 text-xs font-semibold uppercase tracking-wider text-slate-400">
                 JavaScript
               </div>
@@ -439,7 +439,7 @@ const data = await r.json();`}</code>
               </pre>
             </div>
 
-            <div className="rounded-xl border border-white/10 bg-black/40 p-5">
+            <div className="rounded-xl border border-fg-max/10 bg-scrim/40 p-5">
               <div className="mb-3 text-xs font-semibold uppercase tracking-wider text-slate-400">
                 Python
               </div>
@@ -467,28 +467,28 @@ data = r.json()`}</code>
 
         <div className="mt-6 rounded-xl border border-cyan-500/20 bg-cyan-500/5 p-6">
           <div className="text-sm font-semibold text-cyan-300">Attribution recommandée (HTML)</div>
-          <pre className="mt-3 overflow-x-auto rounded border border-white/5 bg-black/40 p-3 font-mono text-xs text-slate-200">
+          <pre className="mt-3 overflow-x-auto rounded border border-fg-max/5 bg-scrim/40 p-3 font-mono text-xs text-slate-200">
             <code>{`<a href="https://cryptoreflex.fr" rel="dofollow">Données Cryptoreflex</a> — CC-BY 4.0`}</code>
           </pre>
 
           <div className="mt-6 text-sm font-semibold text-cyan-300">Attribution recommandée (texte)</div>
-          <pre className="mt-3 overflow-x-auto rounded border border-white/5 bg-black/40 p-3 font-mono text-xs text-slate-200">
+          <pre className="mt-3 overflow-x-auto rounded border border-fg-max/5 bg-scrim/40 p-3 font-mono text-xs text-slate-200">
             <code>Données Cryptoreflex (https://cryptoreflex.fr) — CC-BY 4.0</code>
           </pre>
         </div>
       </section>
 
       {/* FAQ */}
-      <section className="border-t border-white/5 bg-white/[0.02]">
+      <section className="border-t border-fg-max/5 bg-fg-max/[0.02]">
         <div className="mx-auto max-w-5xl px-4 py-16 sm:px-6 lg:px-8">
           <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">FAQ</h2>
           <div className="mt-8 space-y-3">
             {FAQ.map((item) => (
               <details
                 key={item.question}
-                className="group rounded-xl border border-white/10 bg-white/[0.02] p-5 open:border-cyan-500/30"
+                className="group rounded-xl border border-fg-max/10 bg-fg-max/[0.02] p-5 open:border-cyan-500/30"
               >
-                <summary className="cursor-pointer list-none font-medium text-white">
+                <summary className="cursor-pointer list-none font-medium text-fg-max">
                   <span className="flex items-center justify-between gap-4">
                     {item.question}
                     <span className="text-cyan-300 transition group-open:rotate-45">+</span>

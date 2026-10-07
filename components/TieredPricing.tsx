@@ -126,7 +126,7 @@ export default function TieredPricing({
 
               <h3
                 id={`tier-${tier.id}-name`}
-                className="text-xl font-extrabold text-white"
+                className="text-xl font-extrabold text-fg-max"
               >
                 {tier.name}
               </h3>
@@ -138,7 +138,7 @@ export default function TieredPricing({
               )}
 
               {tier.description && (
-                <p className="mt-2 text-sm text-white/70">{tier.description}</p>
+                <p className="mt-2 text-sm text-fg-max/70">{tier.description}</p>
               )}
 
               {tier.abTestKey === "pricing_display_v1" &&
@@ -151,16 +151,16 @@ export default function TieredPricing({
                 />
               ) : (
                 <div className="mt-5 flex items-baseline gap-1">
-                  <span className="text-3xl sm:text-4xl font-extrabold text-white tabular-nums">
+                  <span className="text-3xl sm:text-4xl font-extrabold text-fg-max tabular-nums">
                     {tier.price}
                   </span>
-                  <span className="text-sm text-white/60">{tier.priceUnit}</span>
+                  <span className="text-sm text-fg-max/60">{tier.priceUnit}</span>
                 </div>
               )}
 
               <ul className="mt-5 space-y-2 text-sm flex-1" role="list">
                 {tier.features.map((f) => (
-                  <li key={f} className="flex items-start gap-2 text-white/90">
+                  <li key={f} className="flex items-start gap-2 text-fg-max/90">
                     <Check
                       className="h-4 w-4 mt-0.5 text-success shrink-0"
                       aria-hidden="true"
@@ -171,10 +171,10 @@ export default function TieredPricing({
                 {tier.excluded?.map((f) => (
                   <li
                     key={f}
-                    className="flex items-start gap-2 text-white/60 line-through"
+                    className="flex items-start gap-2 text-fg-max/60 line-through"
                   >
                     <span
-                      className="mt-1.5 h-1.5 w-1.5 rounded-full bg-white/30 shrink-0"
+                      className="mt-1.5 h-1.5 w-1.5 rounded-full bg-fg-max/30 shrink-0"
                       aria-hidden="true"
                     />
                     <span>{f}</span>

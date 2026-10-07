@@ -135,7 +135,7 @@ export default function PlatformCard({ platform, placement, index = 0 }: Props) 
           <PlatformLogo id={id} name={name} size={48} rounded={false} priority={isPriorityLogo} />
         </div>
         <div className="min-w-0 flex-1">
-          <h3 id={titleId} className="font-extrabold text-[17px] tracking-tight text-white truncate">
+          <h3 id={titleId} className="font-extrabold text-[17px] tracking-tight text-fg-max truncate">
             {name}
           </h3>
           {/* Audit SEO/CRO P0 trust signal : badge MiCA · AMF visible
@@ -161,12 +161,12 @@ export default function PlatformCard({ platform, placement, index = 0 }: Props) 
                 className={`h-[14px] w-[14px] star-fill ${i < Math.round(rating) ? "fill-yellow-400 text-yellow-400 star-on" : "text-border"}`}
               />
             ))}
-            <span className="ml-1 text-[13px] font-bold tabular-nums text-white/90" aria-hidden="true">
+            <span className="ml-1 text-[13px] font-bold tabular-nums text-fg-max/90" aria-hidden="true">
               {ratingFr}
             </span>
-            <span className="text-[11px] text-white/60 font-normal" aria-hidden="true">/5</span>
+            <span className="text-[11px] text-fg-max/60 font-normal" aria-hidden="true">/5</span>
             {social && social.count != null && social.count > 0 && (
-              <span className="ml-1.5 text-[10px] text-white/50" aria-hidden="true">
+              <span className="ml-1.5 text-[10px] text-fg-max/50" aria-hidden="true">
                 · {social.label} {socialRatingFr}/5 ({social.count.toLocaleString("fr-FR")} avis
                 {socialDate ? `, relevé le ${socialDate}` : ""})
               </span>
@@ -177,8 +177,8 @@ export default function PlatformCard({ platform, placement, index = 0 }: Props) 
 
       {/* Tagline (idealFor du JSON est plus actionnable que la tagline générique).
           Audit Mobile : hidden mobile pour gain hauteur (tagline = description riche desktop). */}
-      <p className="mt-3 text-[13px] leading-[1.55] text-white/65 hidden sm:block">
-        {idealFor ? <><strong className="text-white/90">Pour qui ?</strong> {idealFor}</> : tagline}
+      <p className="mt-3 text-[13px] leading-[1.55] text-fg-max/65 hidden sm:block">
+        {idealFor ? <><strong className="text-fg-max/90">Pour qui ?</strong> {idealFor}</> : tagline}
       </p>
 
       {/* Bloc info concrète : frais spot (au lieu du "Bonus voir conditions" creux).
@@ -188,7 +188,7 @@ export default function PlatformCard({ platform, placement, index = 0 }: Props) 
           <div className="text-[10px] text-accent-cyan font-semibold uppercase tracking-wider">
             Frais spot
           </div>
-          <div className="text-sm text-white font-medium tabular-nums">
+          <div className="text-sm text-fg-max font-medium tabular-nums">
             {fees.spotMaker}% maker · {fees.spotTaker}% taker
           </div>
         </div>
@@ -197,7 +197,7 @@ export default function PlatformCard({ platform, placement, index = 0 }: Props) 
       {/* Features list — Audit Visual : checkmarks gold pastille + Audit Mobile :
           features 3rd hidden mobile (gain hauteur). */}
       <ul
-        className="mt-4 space-y-2.5 text-[13px] text-white/75 flex-1"
+        className="mt-4 space-y-2.5 text-[13px] text-fg-max/75 flex-1"
         aria-label={`Caractéristiques de ${name}`}
       >
         {features.map((f, idx) => (

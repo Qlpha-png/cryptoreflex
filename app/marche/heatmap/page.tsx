@@ -211,7 +211,7 @@ export default async function HeatmapPage() {
             votre tableau de bord ou votre agrégateur, avec un lien vers Cryptoreflex. Les
             données de marché restent celles de leurs fournisseurs, cités dans le cadre.
           </p>
-          <pre className="mt-3 overflow-x-auto rounded-lg border border-border bg-background/60 p-3 text-[11px] leading-relaxed text-white/85 font-mono whitespace-pre-wrap break-all">
+          <pre className="mt-3 overflow-x-auto rounded-lg border border-border bg-background/60 p-3 text-[11px] leading-relaxed text-fg-max/85 font-mono whitespace-pre-wrap break-all">
 {`<iframe src="https://www.cryptoreflex.fr/embed/heatmap" width="100%" height="620" frameborder="0" loading="lazy" title="Heatmap crypto live — Cryptoreflex"></iframe>`}
           </pre>
           <Link

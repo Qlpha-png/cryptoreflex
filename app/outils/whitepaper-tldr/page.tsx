@@ -141,11 +141,11 @@ export default function WhitepaperTldrPage() {
               <Sparkles className="h-3.5 w-3.5" />
               Outil signature Cryptoreflex
             </span>
-            <h1 className="mt-4 text-4xl sm:text-5xl font-extrabold tracking-tight text-white">
+            <h1 className="mt-4 text-4xl sm:text-5xl font-extrabold tracking-tight text-fg-max">
               <span className="gradient-text">Whitepaper TL;DR</span> — la grille
               de red flags pour décoder un whitepaper crypto
             </h1>
-            <p className="mt-4 text-lg text-white/70 leading-relaxed">
+            <p className="mt-4 text-lg text-fg-max/70 leading-relaxed">
               La méthode publique Cryptoreflex pour lire un whitepaper crypto avec
               un œil critique : une grille de 15 red flags (tokenomics, équipe,
               vesting, audits) et une logique de <strong>score BS sur 100</strong>{" "}
@@ -171,10 +171,10 @@ export default function WhitepaperTldrPage() {
           {/* ----------------------------------------------------------- */}
           <div className="mt-10 max-w-5xl">
             <div className="glass rounded-2xl p-6 sm:p-8 border border-border text-center">
-              <h2 className="text-xl sm:text-2xl font-bold text-white">
+              <h2 className="text-xl sm:text-2xl font-bold text-fg-max">
                 Analyseur interactif en refonte
               </h2>
-              <p className="mt-2 text-sm text-white/70 max-w-2xl mx-auto leading-relaxed">
+              <p className="mt-2 text-sm text-fg-max/70 max-w-2xl mx-auto leading-relaxed">
                 L&apos;outil qui analyse automatiquement un whitepaper collé est
                 temporairement indisponible, le temps d&apos;une refonte. En
                 attendant, la grille de red flags ci-dessous est entièrement
@@ -190,11 +190,11 @@ export default function WhitepaperTldrPage() {
           <div className="mt-20 max-w-5xl">
             <div className="flex items-center gap-3 mb-6">
               <ListChecks className="h-7 w-7 text-accent-cyan" />
-              <h2 className="text-2xl sm:text-3xl font-bold text-white">
+              <h2 className="text-2xl sm:text-3xl font-bold text-fg-max">
                 Les 15 red flags détectés
               </h2>
             </div>
-            <p className="text-white/70 max-w-3xl">
+            <p className="text-fg-max/70 max-w-3xl">
               Cette grille publique réunit des critères connus pour identifier
               les projets crypto douteux. Plus un whitepaper accumule de red
               flags, plus son score BS est élevé.
@@ -208,7 +208,7 @@ export default function WhitepaperTldrPage() {
                   <div className="flex items-start justify-between gap-3">
                     <div>
                       <p className="text-xs font-mono text-muted">{rf.id}</p>
-                      <p className="mt-0.5 font-semibold text-white">
+                      <p className="mt-0.5 font-semibold text-fg-max">
                         {rf.label}
                       </p>
                     </div>
@@ -227,7 +227,7 @@ export default function WhitepaperTldrPage() {
           <div className="mt-20 max-w-3xl">
             <div className="flex items-center gap-3 mb-6">
               <ClipboardList className="h-7 w-7 text-accent-cyan" />
-              <h2 className="text-2xl sm:text-3xl font-bold text-white">
+              <h2 className="text-2xl sm:text-3xl font-bold text-fg-max">
                 Questions fréquentes
               </h2>
             </div>
@@ -237,7 +237,7 @@ export default function WhitepaperTldrPage() {
                   key={item.question}
                   className="group glass rounded-xl p-5"
                 >
-                  <summary className="cursor-pointer font-semibold text-white list-none flex items-start justify-between gap-4">
+                  <summary className="cursor-pointer font-semibold text-fg-max list-none flex items-start justify-between gap-4">
                     <span>{item.question}</span>
                     {/* BATCH 45a fix visuel : ASCII 'v' remplace par icone
                         Lucide ChevronDown smooth (rotate 180 quand open via
@@ -247,7 +247,7 @@ export default function WhitepaperTldrPage() {
                       aria-hidden="true"
                     />
                   </summary>
-                  <p className="mt-3 text-sm text-white/75 leading-relaxed">
+                  <p className="mt-3 text-sm text-fg-max/75 leading-relaxed">
                     {item.answer}
                   </p>
                 </details>
@@ -262,10 +262,10 @@ export default function WhitepaperTldrPage() {
             <div className="glass rounded-2xl p-6 sm:p-8 flex flex-col sm:flex-row items-start sm:items-center gap-4">
               <Wand2 className="h-10 w-10 text-accent-cyan flex-none" />
               <div className="flex-1">
-                <h3 className="font-bold text-white text-lg">
+                <h3 className="font-bold text-fg-max text-lg">
                   Découvrez les autres outils Cryptoreflex
                 </h3>
-                <p className="text-sm text-white/70">
+                <p className="text-sm text-fg-max/70">
                   Calculateur de profits, simulateur DCA, convertisseur crypto
                   et bien plus — tous gratuits, sans inscription.
                 </p>

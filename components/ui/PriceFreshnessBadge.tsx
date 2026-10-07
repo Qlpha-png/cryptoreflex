@@ -112,7 +112,7 @@ export default function PriceFreshnessBadge({
   // delayed (2 h - 6 h)
   return (
     <span
-      className={`inline-flex items-center gap-1 rounded-full bg-amber-500/15 px-2 py-0.5 text-[10px] font-medium text-amber-300 ${className}`}
+      className={`inline-flex items-center gap-1 rounded-full bg-warning/15 px-2 py-0.5 text-[10px] font-medium text-primary-soft ${className}`}
       title={`Prix mis à jour ${ageLabel}. Données potentiellement retardées : vérifiez auprès de la plateforme avant toute décision.`}
     >
       <AlertTriangle className="h-3 w-3" aria-hidden="true" />

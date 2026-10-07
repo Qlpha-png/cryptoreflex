@@ -124,7 +124,7 @@ export default function HeroPriceChart({ prices, sparklines, updatedAt }: Props)
                 className={`inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-semibold transition-colors min-h-tap ${
                   sel
                     ? "bg-primary/15 text-primary-soft ring-1 ring-primary/30"
-                    : "text-muted hover:text-fg hover:bg-white/5"
+                    : "text-muted hover:text-fg hover:bg-fg-max/5"
                 }`}
               >
                 <CryptoLogo symbol={c.symbol} coingeckoId={c.id} imageUrl={c.image} size={16} priority={sel} />

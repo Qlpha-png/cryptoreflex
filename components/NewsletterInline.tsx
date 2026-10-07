@@ -356,7 +356,7 @@ export default function NewsletterInline({
         {status === "success" && !showPopin && (
           <p
             className={`mt-2 text-xs inline-flex items-center gap-1.5 ${
-              mocked ? "text-amber-300" : "text-accent-green"
+              mocked ? "text-primary-soft" : "text-accent-green"
             }`}
           >
             <CheckCircle2 className="h-3.5 w-3.5" />
@@ -370,7 +370,7 @@ export default function NewsletterInline({
       {/* Pop-in succès — overlay accessible (role=dialog, focus trap basique) */}
       {showPopin && (
         <div
-          className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-fade-in-up"
+          className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-scrim/70 backdrop-blur-sm animate-fade-in-up"
           onClick={(e) => {
             if (e.target === e.currentTarget) setShowPopin(false);
           }}

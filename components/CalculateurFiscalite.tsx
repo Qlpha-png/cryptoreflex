@@ -269,7 +269,7 @@ export default function CalculateurFiscalite() {
         <div className="flex-1">
           <h2
             id="calc-fiscalite-title"
-            className="font-display font-bold text-xl text-white"
+            className="font-display font-bold text-xl text-fg-max"
           >
             Calculez votre impôt crypto 2026
           </h2>
@@ -332,7 +332,7 @@ export default function CalculateurFiscalite() {
 
         {/* Régime fiscal */}
         <fieldset>
-          <legend className="block text-sm font-semibold text-white mb-2">
+          <legend className="block text-sm font-semibold text-fg-max mb-2">
             Régime fiscal applicable
           </legend>
           <div role="radiogroup" className="grid sm:grid-cols-3 gap-2">
@@ -360,7 +360,7 @@ export default function CalculateurFiscalite() {
           </div>
           {/* Art. 92, 2-1° bis CGI depuis le 01/01/2023 ; BOFiP BOI-BNC-CHAMP-10-10-20-40 § 1080 (« cas d'espèce exceptionnels »). */}
           {form.regime === "bnc" && (
-            <p className="mt-3 rounded-xl border border-warning/40 bg-warning/10 p-3 text-sm text-white/90">
+            <p className="mt-3 rounded-xl border border-warning/40 bg-warning/10 p-3 text-sm text-fg-max/90">
               Régime rare, réservé à celui qui trade toute l&apos;année comme un professionnel
               (opérations nombreuses, outils et techniques de trader), sans que ce soit son métier.
               En cas de doute, c&apos;est le PFU qui s&apos;applique. Si le trading est votre métier
@@ -374,7 +374,7 @@ export default function CalculateurFiscalite() {
           <div>
             <label
               htmlFor="tmi-select"
-              className="block text-sm font-semibold text-white"
+              className="block text-sm font-semibold text-fg-max"
             >
               Tranche marginale d'imposition (TMI)
             </label>
@@ -388,7 +388,7 @@ export default function CalculateurFiscalite() {
               onChange={(e) =>
                 update("tmi", parseFloat(e.target.value) as TmiRate)
               }
-              className="mt-2 w-full rounded-xl bg-background border border-border px-4 py-3 text-white
+              className="mt-2 w-full rounded-xl bg-background border border-border px-4 py-3 text-fg-max
                          focus:border-primary/60 focus:outline-none focus:ring-2 focus:ring-primary/20"
             >
               {TMI_VALUES.map((rate) => (
@@ -585,12 +585,12 @@ function WaltioPostResultCta({
         <div className="flex-1">
           <h4
             id="waltio-post-result-title"
-            className="font-display font-bold text-white"
+            className="font-display font-bold text-fg-max"
           >
             <span aria-hidden="true">🎯 </span>
             {headline}
           </h4>
-          <p className="mt-2 text-sm text-white/75">
+          <p className="mt-2 text-sm text-fg-max/75">
             {pitch}{" "}
             <strong className="text-primary-soft">
               Rapport fiscal dès 39 €/an
@@ -600,7 +600,7 @@ function WaltioPostResultCta({
 
           {/* Trust strip — bénéfices clés (à remplacer par vrais témoignages
               quand collectés ; volontairement factuel et conservateur). */}
-          <ul className="mt-3 grid sm:grid-cols-3 gap-2 text-xs text-white/70">
+          <ul className="mt-3 grid sm:grid-cols-3 gap-2 text-xs text-fg-max/70">
             <li className="flex items-center gap-1.5">
               <CheckCircle2
                 className="h-3.5 w-3.5 shrink-0 text-success"
@@ -684,7 +684,7 @@ function NumericField({
   const hintId = `${id}-hint`;
   return (
     <div>
-      <label htmlFor={id} className="block text-sm font-semibold text-white">
+      <label htmlFor={id} className="block text-sm font-semibold text-fg-max">
         {label}
       </label>
       {hint && (
@@ -706,7 +706,7 @@ function NumericField({
           aria-invalid={Boolean(error)}
           aria-describedby={`${hint ? hintId : ""} ${error ? errorId : ""}`.trim()}
           className={`w-full rounded-xl bg-background border px-4 py-3 pr-10
-                     font-mono text-base text-white
+                     font-mono text-base text-fg-max
                      focus:outline-none focus:ring-2
                      ${
                        error
@@ -755,8 +755,8 @@ function RegimeOption({
                   focus-within:ring-2 focus-within:ring-primary/40
                   ${
                     checked
-                      ? "border-primary/60 bg-primary/10 text-white"
-                      : "border-border bg-background hover:border-primary/40 text-white/85"
+                      ? "border-primary/60 bg-primary/10 text-fg-max"
+                      : "border-border bg-background hover:border-primary/40 text-fg-max/85"
                   }`}
     >
       <input
@@ -817,10 +817,10 @@ function ResultPanel({
   if (result.exonere) {
     return (
       <div className="space-y-6">
-        <h3 className="font-display text-lg sm:text-xl font-bold text-white">
+        <h3 className="font-display text-lg sm:text-xl font-bold text-fg-max">
           Vous êtes exonéré d'impôt sur vos plus-values crypto
         </h3>
-        <div className="rounded-xl border border-success/40 bg-success/10 p-5 text-sm text-white/90 flex gap-3">
+        <div className="rounded-xl border border-success/40 bg-success/10 p-5 text-sm text-fg-max/90 flex gap-3">
           <CheckCircle2
             className="h-5 w-5 shrink-0 text-success mt-0.5"
             aria-hidden="true"
@@ -847,10 +847,10 @@ function ResultPanel({
   if (result.deficit) {
     return (
       <div className="space-y-6">
-        <h3 className="font-display text-lg sm:text-xl font-bold text-white">
+        <h3 className="font-display text-lg sm:text-xl font-bold text-fg-max">
           Vous êtes en moins-value cette année
         </h3>
-        <div className="rounded-xl border border-info/40 bg-info/10 p-5 text-sm text-white/90 flex gap-3">
+        <div className="rounded-xl border border-info/40 bg-info/10 p-5 text-sm text-fg-max/90 flex gap-3">
           <Info
             className="h-5 w-5 shrink-0 text-info-fg mt-0.5"
             aria-hidden="true"
@@ -894,7 +894,7 @@ function ResultPanel({
             <> — TMI {formatPercent(tmi, 0)}</>
           )}
         </p>
-        <h3 className="mt-1 font-display text-lg sm:text-2xl font-bold text-white">
+        <h3 className="mt-1 font-display text-lg sm:text-2xl font-bold text-fg-max">
           Impôt total estimé :{" "}
           {/* BATCH 37 — animation count-up sur le résultat principal (audit
               Motion Expert) : effet "machine à sous" qui crée anticipation +
@@ -937,7 +937,7 @@ function ResultPanel({
       </div>
 
       {isBnc && (
-        <div className="rounded-xl border border-warning/40 bg-warning/10 p-4 text-sm text-white/90 flex gap-3">
+        <div className="rounded-xl border border-warning/40 bg-warning/10 p-4 text-sm text-fg-max/90 flex gap-3">
           <Info
             className="h-5 w-5 shrink-0 text-warning-fg mt-0.5"
             aria-hidden="true"
@@ -954,7 +954,7 @@ function ResultPanel({
       {/* Décote (art. 197 CGI, revenus 2025 : 897 € / 1 483 € − 45,25 % de l'impôt brut) : à TMI 11 %, chaque euro ajouté coûte
           alors ≈ 16 % d'IR, plus que les 12,8 % du PFU ; le calcul « TMI × plus-value » l'ignore (05/10/2026). */}
       {result.regime === "bareme" && tmi <= 0.11 && (
-        <div className="rounded-xl border border-warning/40 bg-warning/10 p-4 text-sm text-white/90 flex gap-3">
+        <div className="rounded-xl border border-warning/40 bg-warning/10 p-4 text-sm text-fg-max/90 flex gap-3">
           <Info
             className="h-5 w-5 shrink-0 text-warning-fg mt-0.5"
             aria-hidden="true"
@@ -997,7 +997,7 @@ function SummaryTile({
       ? "text-success-fg"
       : tone === "rose"
       ? "text-danger-fg"
-      : "text-white";
+      : "text-fg-max";
   return (
     <div className="rounded-xl border border-border bg-elevated/50 p-3">
       <div className="text-[11px] uppercase tracking-wider text-muted">
@@ -1100,11 +1100,11 @@ function Row({
     ? "text-danger-fg"
     : positive
     ? "text-success-fg"
-    : "text-white/90";
+    : "text-fg-max/90";
   const fontClass = emphasis ? "font-bold" : "";
   return (
     <tr>
-      <td className={`px-2 py-2 ${fontClass} text-white/85`}>{label}</td>
+      <td className={`px-2 py-2 ${fontClass} text-fg-max/85`}>{label}</td>
       <td
         className={`px-2 py-2 text-right font-mono whitespace-nowrap ${fontClass} ${colorClass}`}
       >
@@ -1135,7 +1135,7 @@ function EmailCapture({
     return (
       <div
         role="status"
-        className="rounded-2xl border border-success/40 bg-success/10 p-5 text-sm text-white/90 flex gap-3"
+        className="rounded-2xl border border-success/40 bg-success/10 p-5 text-sm text-fg-max/90 flex gap-3"
       >
         <CheckCircle2
           className="h-5 w-5 shrink-0 text-success mt-0.5"
@@ -1168,11 +1168,11 @@ function EmailCapture({
         <div className="flex-1">
           <h4
             id="lead-magnet-title"
-            className="font-display font-bold text-white"
+            className="font-display font-bold text-fg-max"
           >
             La checklist Cerfa 2086 + déclaration 2042-C (PDF)
           </h4>
-          <p className="mt-1 text-sm text-white/75">
+          <p className="mt-1 text-sm text-fg-max/75">
             Pas-à-pas pour reporter vos cessions sur les bons formulaires, avec
             les pièges à éviter. Gratuite, téléchargeable dès votre inscription.
           </p>
@@ -1196,7 +1196,7 @@ function EmailCapture({
               aria-invalid={state === "error"}
               aria-describedby={message ? "lead-msg" : undefined}
               disabled={state === "loading"}
-              className="flex-1 rounded-xl bg-background border border-border px-4 py-3 text-white
+              className="flex-1 rounded-xl bg-background border border-border px-4 py-3 text-fg-max
                          focus:border-primary/60 focus:outline-none focus:ring-2 focus:ring-primary/20
                          disabled:opacity-50"
             />

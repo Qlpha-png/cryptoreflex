@@ -25,7 +25,7 @@ export default function OfflinePage() {
     <section className="container mx-auto max-w-2xl px-4 py-20 text-center">
       <div
         aria-hidden
-        className="mx-auto mb-8 grid h-20 w-20 place-items-center rounded-full bg-amber-500/10 ring-1 ring-amber-500/30"
+        className="mx-auto mb-8 grid h-20 w-20 place-items-center rounded-full bg-warning/10 ring-1 ring-warning/30"
       >
         <svg
           width="36"
@@ -36,7 +36,7 @@ export default function OfflinePage() {
           strokeWidth="2"
           strokeLinecap="round"
           strokeLinejoin="round"
-          className="text-amber-400"
+          className="text-primary-glow"
         >
           <path d="M1 1l22 22" />
           <path d="M16.72 11.06A10.94 10.94 0 0119 12.55" />
@@ -65,7 +65,7 @@ export default function OfflinePage() {
       <div className="mb-12 flex flex-col items-center justify-center gap-3 sm:flex-row">
         <Link
           href="/"
-          className="inline-flex items-center justify-center gap-2 rounded-lg bg-amber-500 px-6 py-3 text-sm font-semibold text-neutral-950 transition hover:bg-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-300 focus:ring-offset-2 focus:ring-offset-neutral-950"
+          className="inline-flex items-center justify-center gap-2 rounded-lg bg-warning px-6 py-3 text-sm font-semibold text-neutral-950 transition hover:bg-primary-glow focus:outline-none focus:ring-2 focus:ring-primary-soft focus:ring-offset-2 focus:ring-offset-neutral-950"
         >
           <svg
             width="16"
@@ -100,7 +100,7 @@ export default function OfflinePage() {
           <li>
             <Link
               href="/"
-              className="text-amber-400 hover:text-amber-300 hover:underline"
+              className="text-primary-glow hover:text-primary-soft hover:underline"
             >
               Accueil — comparatif plateformes
             </Link>
@@ -108,7 +108,7 @@ export default function OfflinePage() {
           <li>
             <Link
               href="/outils"
-              className="text-amber-400 hover:text-amber-300 hover:underline"
+              className="text-primary-glow hover:text-primary-soft hover:underline"
             >
               Outils crypto (calculateurs)
             </Link>
@@ -116,7 +116,7 @@ export default function OfflinePage() {
           <li>
             <Link
               href="/blog"
-              className="text-amber-400 hover:text-amber-300 hover:underline"
+              className="text-primary-glow hover:text-primary-soft hover:underline"
             >
               Blog & guides
             </Link>

@@ -18,7 +18,7 @@ import { BookOpen, FileText, ShieldCheck, TrendingUp, Zap, Wallet, Coins, Layers
 interface Props {
   category: string;
   title: string;
-  /** Tailwind gradient utilities ex: "from-amber-500/40 to-orange-600/40". */
+  /** Tailwind gradient utilities ex: "from-warning/40 to-orange-600/40". */
   gradient: string;
   /** Tailwind height (défaut "h-40"). Passe "h-full" si le parent contraint. */
   height?: string;
@@ -85,7 +85,7 @@ export default function ArticleHero({
       {/* Watermark initiales (huge, low opacity) */}
       {initials && (
         <div
-          className="absolute -bottom-4 -right-2 select-none font-extrabold tracking-tighter text-white/15"
+          className="absolute -bottom-4 -right-2 select-none font-extrabold tracking-tighter text-fg-max/15"
           style={{ fontSize: 96, lineHeight: 1 }}
         >
           {initials}
@@ -93,8 +93,8 @@ export default function ArticleHero({
       )}
       {/* Icône catégorie centrale */}
       <div className="absolute inset-0 flex items-center justify-center">
-        <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-white/15 backdrop-blur-sm border border-white/20 shadow-lg">
-          <Icon className="h-8 w-8 text-white" />
+        <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-fg-max/15 backdrop-blur-sm border border-fg-max/20 shadow-lg">
+          <Icon className="h-8 w-8 text-fg-max" />
         </div>
       </div>
       {/* Badge catégorie en haut */}

@@ -266,7 +266,7 @@ export default function PushOptIn({
       )}
 
       {status === "denied" && (
-        <div className="rounded-lg border border-amber-500/40 bg-amber-500/10 p-3 text-xs text-amber-300">
+        <div className="rounded-lg border border-warning/40 bg-warning/10 p-3 text-xs text-primary-soft">
           <AlertCircle className="inline h-3.5 w-3.5 mr-1 align-text-bottom" aria-hidden="true" />
           Vous avez refusé les notifications dans votre navigateur. Pour les réactiver :
           cliquez sur l&apos;icône cadenas (ou ⓘ) à gauche de l&apos;URL → autorisez
@@ -336,7 +336,7 @@ function StatusBadge({ status }: { status: Status }) {
     },
     denied: {
       label: "Bloqué",
-      cls: "bg-amber-500/10 text-amber-300 border-amber-500/30",
+      cls: "bg-warning/10 text-primary-soft border-warning/30",
       Icon: AlertCircle,
     },
     error: {

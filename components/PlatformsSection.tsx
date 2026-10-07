@@ -74,7 +74,7 @@ export default function PlatformsSection() {
               Sélection éditoriale —{" "}
               <span className="gradient-text">top {shown} sur {totalAvailable}</span>
             </h3>
-            <p className="mt-3 text-sm text-white/70 leading-relaxed">
+            <p className="mt-3 text-sm text-fg-max/70 leading-relaxed">
               Triées par score global : les {shown} premières ici, les{" "}
               {totalAvailable} dans le comparatif complet (méthodologie publique,
               frais réels, conformité MiCA vérifiée).

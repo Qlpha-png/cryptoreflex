@@ -194,7 +194,7 @@ export default function ChecklistPage() {
       />
 
       {/* Hero */}
-      <section className="border-b border-white/5 bg-gradient-to-b from-emerald-500/5 to-transparent">
+      <section className="border-b border-fg-max/5 bg-gradient-to-b from-emerald-500/5 to-transparent">
         <div className="mx-auto max-w-3xl px-4 py-12 sm:px-6 lg:px-8">
           <nav className="mb-6 text-sm text-slate-400 no-print" aria-label="Fil d'Ariane">
             <Link href="/" className="hover:text-cyan-300">
@@ -248,14 +248,14 @@ export default function ChecklistPage() {
           <div className="mt-6 flex flex-wrap gap-3 no-print">
             <a
               href="/outils/cerfa-2086-auto"
-              className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-emerald-500 to-cyan-500 px-5 py-2.5 text-sm font-bold text-white shadow-lg shadow-emerald-500/25 transition hover:shadow-emerald-500/40"
+              className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-emerald-500 to-cyan-500 px-5 py-2.5 text-sm font-bold text-fg-max shadow-lg shadow-emerald-500/25 transition hover:shadow-emerald-500/40"
             >
               Lancer l'outil Cerfa 2086
               <ArrowRight className="h-4 w-4" />
             </a>
             <button
               type="button"
-              className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-5 py-2.5 text-sm font-medium text-slate-200 hover:bg-white/10"
+              className="inline-flex items-center gap-2 rounded-xl border border-fg-max/10 bg-fg-max/5 px-5 py-2.5 text-sm font-medium text-slate-200 hover:bg-fg-max/10"
               onClick={undefined}
               // Le formatter est purement Server Component — bouton fonctionne via
               // le pattern progressif suivant : on encapsule l'action dans un
@@ -286,14 +286,14 @@ export default function ChecklistPage() {
             <li
               key={s.n}
               id={`step-${s.n}`}
-              className="print-card rounded-2xl border border-white/10 bg-white/[0.02] p-6"
+              className="print-card rounded-2xl border border-fg-max/10 bg-fg-max/[0.02] p-6"
             >
               <div className="flex items-start gap-4">
                 <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-emerald-500/15 text-emerald-300 font-bold">
                   {s.n}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h2 className="text-lg font-bold tracking-tight text-white print-h1">
+                  <h2 className="text-lg font-bold tracking-tight text-fg-max print-h1">
                     <CheckSquare
                       className="mr-2 inline h-4 w-4 align-text-bottom text-emerald-400"
                       aria-hidden="true"
@@ -303,13 +303,13 @@ export default function ChecklistPage() {
                   <p className="mt-3 text-sm text-slate-300 leading-relaxed print-muted">
                     {s.detail}
                   </p>
-                  <p className="mt-3 inline-flex items-start gap-2 rounded-lg bg-white/5 px-3 py-2 text-xs text-slate-300 print-muted">
+                  <p className="mt-3 inline-flex items-start gap-2 rounded-lg bg-fg-max/5 px-3 py-2 text-xs text-slate-300 print-muted">
                     <AlertTriangle
-                      className="mt-0.5 h-3.5 w-3.5 shrink-0 text-amber-400"
+                      className="mt-0.5 h-3.5 w-3.5 shrink-0 text-primary-glow"
                       aria-hidden="true"
                     />
                     <span>
-                      <strong className="text-amber-300">Pourquoi.</strong>{" "}
+                      <strong className="text-primary-soft">Pourquoi.</strong>{" "}
                       {s.why}
                     </span>
                   </p>
@@ -341,7 +341,7 @@ export default function ChecklistPage() {
           </p>
           <Link
             href="/outils/cerfa-2086-auto"
-            className="mt-5 inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-cyan-500 to-emerald-500 px-6 py-3 font-bold text-white shadow-lg shadow-cyan-500/25 hover:shadow-cyan-500/40 transition"
+            className="mt-5 inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-cyan-500 to-emerald-500 px-6 py-3 font-bold text-fg-max shadow-lg shadow-cyan-500/25 hover:shadow-cyan-500/40 transition"
           >
             Lancer l'outil
             <ArrowRight className="h-5 w-5" />
@@ -350,7 +350,7 @@ export default function ChecklistPage() {
       </section>
 
       {/* Newsletter capture */}
-      <section className="border-t border-white/5 bg-white/[0.02] no-print">
+      <section className="border-t border-fg-max/5 bg-fg-max/[0.02] no-print">
         <div className="mx-auto max-w-3xl px-4 py-12 sm:px-6 lg:px-8">
           <NewsletterInline
             source="bottom-article"
@@ -372,15 +372,15 @@ export default function ChecklistPage() {
       </section>
 
       {/* Cross-links */}
-      <section className="border-t border-white/5 no-print">
+      <section className="border-t border-fg-max/5 no-print">
         <div className="mx-auto max-w-3xl px-4 py-12 sm:px-6 lg:px-8">
           <h2 className="text-lg font-bold tracking-tight">Pour aller plus loin</h2>
           <div className="mt-4 grid gap-3 sm:grid-cols-2 text-sm">
             <Link
               href="/etudes/fiscalite-crypto-france-2026-guide-cerfa"
-              className="rounded-xl border border-white/10 bg-white/[0.02] p-4 hover:border-emerald-500/30 hover:text-emerald-300 transition"
+              className="rounded-xl border border-fg-max/10 bg-fg-max/[0.02] p-4 hover:border-emerald-500/30 hover:text-emerald-300 transition"
             >
-              <div className="font-semibold text-white">
+              <div className="font-semibold text-fg-max">
                 Étude complète — Fiscalité crypto FR 2026
               </div>
               <div className="mt-1 text-slate-400">
@@ -390,9 +390,9 @@ export default function ChecklistPage() {
             </Link>
             <Link
               href="/etudes/mica-juillet-2026-etat-des-lieux"
-              className="rounded-xl border border-white/10 bg-white/[0.02] p-4 hover:border-amber-500/30 hover:text-amber-300 transition"
+              className="rounded-xl border border-fg-max/10 bg-fg-max/[0.02] p-4 hover:border-warning/30 hover:text-primary-soft transition"
             >
-              <div className="font-semibold text-white">
+              <div className="font-semibold text-fg-max">
                 Étude — MiCA juillet 2026
               </div>
               <div className="mt-1 text-slate-400">

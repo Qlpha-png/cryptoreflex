@@ -79,8 +79,8 @@ function colorForChange(value: number | null): string {
 /** Texte clair/foncé selon l'intensité du fond pour rester lisible. */
 function textForChange(value: number | null): string {
   if (value === null || Number.isNaN(value)) return "text-fg/85";
-  if (value >= 5 || value < -5) return "text-white";
-  if (value >= 2 || value < -2) return "text-white";
+  if (value >= 5 || value < -5) return "text-fg-max";
+  if (value >= 2 || value < -2) return "text-fg-max";
   return "text-fg";
 }
 

@@ -208,7 +208,7 @@ export default function CryptosBrowser({ items }: { items: UnifiedCrypto[] }) {
           </div>
           <Link
             href={`/cryptos/comparer?ids=${compareList.join(",")}`}
-            className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-white hover:bg-primary/90 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+            className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-fg-max hover:bg-primary/90 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
           >
             Ouvrir le comparatif
             <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
@@ -264,8 +264,8 @@ export default function CryptosBrowser({ items }: { items: UnifiedCrypto[] }) {
               onClick={() => setCategory(active ? "" : g.name)}
               className={`inline-flex items-center gap-1 rounded-full border px-3 py-1.5 text-xs font-medium transition-colors min-h-[36px] shrink-0 snap-start ${
                 active
-                  ? "border-amber-400/50 bg-amber-400/10 text-amber-300"
-                  : "border-border bg-surface text-muted hover:text-fg hover:border-amber-400/30"
+                  ? "border-primary-glow/50 bg-primary-glow/10 text-primary-soft"
+                  : "border-border bg-surface text-muted hover:text-fg hover:border-primary-glow/30"
               }`}
               aria-pressed={active}
             >
@@ -385,7 +385,7 @@ function CryptoCard({ crypto }: { crypto: AnyCrypto }) {
             <span
               className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ${
                 isGem
-                  ? "border border-amber-400/30 bg-amber-400/10 text-amber-300"
+                  ? "border border-primary-glow/30 bg-primary-glow/10 text-primary-soft"
                   : "border border-primary/30 bg-primary/10 text-primary-soft"
               }`}
             >

@@ -66,31 +66,31 @@ const mdxComponents = {
   // (ArticleToc liste les `h2[id]`).
   h1: ({ id: _slugId, ...props }: ComponentProps<"h1">) => (
     <h2
-      className="mt-12 scroll-mt-24 border-l-4 border-primary pl-3 text-2xl font-bold tracking-tight text-white sm:text-3xl"
+      className="mt-12 scroll-mt-24 border-l-4 border-primary pl-3 text-2xl font-bold tracking-tight text-fg-max sm:text-3xl"
       {...props}
     />
   ),
   h2: (props: ComponentProps<"h2">) => (
     <h2
-      className="mt-12 scroll-mt-24 border-l-4 border-primary pl-3 text-2xl font-bold tracking-tight text-white sm:text-3xl"
+      className="mt-12 scroll-mt-24 border-l-4 border-primary pl-3 text-2xl font-bold tracking-tight text-fg-max sm:text-3xl"
       {...props}
     />
   ),
   h3: (props: ComponentProps<"h3">) => (
     <h3
-      className="mt-8 scroll-mt-24 text-xl font-semibold text-white sm:text-2xl"
+      className="mt-8 scroll-mt-24 text-xl font-semibold text-fg-max sm:text-2xl"
       {...props}
     />
   ),
   h4: (props: ComponentProps<"h4">) => (
     <h4
-      className="mt-6 scroll-mt-24 text-lg font-semibold text-white"
+      className="mt-6 scroll-mt-24 text-lg font-semibold text-fg-max"
       {...props}
     />
   ),
 
   p: (props: ComponentProps<"p">) => (
-    <p className="leading-relaxed text-white/80" {...props} />
+    <p className="leading-relaxed text-fg-max/80" {...props} />
   ),
 
   ul: (props: ComponentProps<"ul">) => (
@@ -106,12 +106,12 @@ const mdxComponents = {
     />
   ),
   li: (props: ComponentProps<"li">) => (
-    <li className="text-white/80" {...props} />
+    <li className="text-fg-max/80" {...props} />
   ),
 
   blockquote: (props: ComponentProps<"blockquote">) => (
     <blockquote
-      className="my-6 rounded-r-lg border-l-4 border-primary bg-primary/5 px-5 py-3 italic text-white/90"
+      className="my-6 rounded-r-lg border-l-4 border-primary bg-primary/5 px-5 py-3 italic text-fg-max/90"
       {...props}
     />
   ),
@@ -119,11 +119,11 @@ const mdxComponents = {
   hr: () => <hr className="my-10 border-border" />,
 
   strong: (props: ComponentProps<"strong">) => (
-    <strong className="font-semibold text-white" {...props} />
+    <strong className="font-semibold text-fg-max" {...props} />
   ),
 
   em: (props: ComponentProps<"em">) => (
-    <em className="italic text-white/90" {...props} />
+    <em className="italic text-fg-max/90" {...props} />
   ),
 
   code: (props: ComponentProps<"code">) => (
@@ -135,7 +135,7 @@ const mdxComponents = {
 
   pre: (props: ComponentProps<"pre">) => (
     <pre
-      className="my-6 overflow-x-auto rounded-xl border border-border bg-surface p-4 text-sm leading-relaxed [&_code]:bg-transparent [&_code]:p-0 [&_code]:text-white/90"
+      className="my-6 overflow-x-auto rounded-xl border border-border bg-surface p-4 text-sm leading-relaxed [&_code]:bg-transparent [&_code]:p-0 [&_code]:text-fg-max/90"
       {...props}
     />
   ),
@@ -160,7 +160,7 @@ const mdxComponents = {
     </ScrollableTable>
   ),
   thead: (props: ComponentProps<"thead">) => (
-    <thead className="bg-elevated text-left text-xs uppercase tracking-wide text-white/70" {...props} />
+    <thead className="bg-elevated text-left text-xs uppercase tracking-wide text-fg-max/70" {...props} />
   ),
   tbody: (props: ComponentProps<"tbody">) => (
     <tbody className="divide-y divide-border" {...props} />
@@ -172,7 +172,7 @@ const mdxComponents = {
     <th className="border-b border-border px-4 py-2.5 font-semibold" {...props} />
   ),
   td: (props: ComponentProps<"td">) => (
-    <td className="px-4 py-2.5 align-top text-white/85" {...props} />
+    <td className="px-4 py-2.5 align-top text-fg-max/85" {...props} />
   ),
 
   img: (props: ComponentProps<"img">) => (
@@ -207,10 +207,10 @@ export default function MdxContent({ source, components }: MdxContentProps) {
         "prose prose-invert max-w-none min-w-0 w-full break-words",
         "prose-headings:font-display prose-headings:tracking-tight",
         "prose-a:text-primary-glow prose-a:no-underline hover:prose-a:underline",
-        "prose-strong:text-white",
+        "prose-strong:text-fg-max",
         "prose-code:before:content-none prose-code:after:content-none",
         "prose-pre:bg-surface prose-pre:border prose-pre:border-border",
-        "prose-blockquote:border-primary prose-blockquote:text-white/90",
+        "prose-blockquote:border-primary prose-blockquote:text-fg-max/90",
         "prose-li:marker:text-primary/70",
       ].join(" ")}
     >

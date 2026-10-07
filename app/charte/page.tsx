@@ -371,19 +371,19 @@ export default function ChartePage() {
           {/* CORRECTIONS */}
           <section
             aria-labelledby="errata-title"
-            className="mt-8 rounded-2xl border border-amber-500/30 bg-amber-500/5 p-6 sm:p-8"
+            className="mt-8 rounded-2xl border border-warning/30 bg-warning/5 p-6 sm:p-8"
           >
             <h2
               id="errata-title"
               className="text-2xl font-bold text-fg flex items-center gap-2"
             >
               <AlertTriangle
-                className="h-6 w-6 text-amber-400"
+                className="h-6 w-6 text-primary-glow"
                 aria-hidden="true"
               />
               Erreur détectée ? Voici comment ça se passe
             </h2>
-            <ol className="mt-4 space-y-3 text-sm text-fg/85 list-decimal list-inside marker:text-amber-400 marker:font-bold">
+            <ol className="mt-4 space-y-3 text-sm text-fg/85 list-decimal list-inside marker:text-primary-glow marker:font-bold">
               <li>
                 Vous nous écrivez à{" "}
                 <a

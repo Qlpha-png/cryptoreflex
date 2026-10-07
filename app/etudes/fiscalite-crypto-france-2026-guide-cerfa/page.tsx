@@ -80,7 +80,7 @@ const STATS = [
   {
     value: "21 mai",
     label: "Deadline déclaration revenus 2026",
-    color: "text-amber-400",
+    color: "text-primary-glow",
   },
   {
     value: "305 €",
@@ -239,7 +239,7 @@ export default function FiscaliteCryptoStudyPage() {
       <StructuredData id="fiscalite-study-jsonld" data={jsonLd} />
 
       {/* Hero */}
-      <section className="border-b border-white/5 bg-gradient-to-b from-emerald-500/5 to-transparent">
+      <section className="border-b border-fg-max/5 bg-gradient-to-b from-emerald-500/5 to-transparent">
         <div className="mx-auto max-w-4xl px-4 py-12 sm:px-6 lg:px-8">
           <nav className="mb-6 text-sm text-slate-400" aria-label="Fil d'Ariane">
             <Link href="/" className="hover:text-cyan-300">
@@ -308,7 +308,7 @@ export default function FiscaliteCryptoStudyPage() {
             {STATS.map((s) => (
               <div
                 key={s.label}
-                className="rounded-xl border border-white/10 bg-white/[0.03] p-4"
+                className="rounded-xl border border-fg-max/10 bg-fg-max/[0.03] p-4"
               >
                 <div className={`text-2xl font-bold ${s.color}`}>{s.value}</div>
                 <div className="mt-1 text-[11px] uppercase tracking-wider text-slate-400 leading-tight">
@@ -322,7 +322,7 @@ export default function FiscaliteCryptoStudyPage() {
           <div className="mt-8">
             <Link
               href="/outils/cerfa-2086-auto"
-              className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-emerald-500 to-cyan-500 px-5 py-3 font-bold text-white shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 transition"
+              className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-emerald-500 to-cyan-500 px-5 py-3 font-bold text-fg-max shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 transition"
             >
               Outil gratuit Cerfa 2086 auto
               <ArrowRight className="h-5 w-5" />
@@ -332,7 +332,7 @@ export default function FiscaliteCryptoStudyPage() {
       </section>
 
       {/* TOC */}
-      <section className="border-b border-white/5 bg-white/[0.02]">
+      <section className="border-b border-fg-max/5 bg-fg-max/[0.02]">
         <div className="mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:px-8">
           <h2 className="text-sm font-semibold uppercase tracking-wider text-slate-400">
             Sommaire
@@ -354,7 +354,7 @@ export default function FiscaliteCryptoStudyPage() {
       </section>
 
       {/* Body */}
-      <article className="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8 prose prose-invert prose-slate prose-headings:tracking-tight prose-headings:text-white prose-p:text-slate-300 prose-li:text-slate-300 prose-a:text-cyan-300 prose-strong:text-white">
+      <article className="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8 prose prose-invert prose-slate prose-headings:tracking-tight prose-headings:text-fg-max prose-p:text-slate-300 prose-li:text-slate-300 prose-a:text-cyan-300 prose-strong:text-fg-max">
         {/* TL;DR */}
         <section id="tldr">
           <h2 className="text-2xl font-bold tracking-tight">Résumé exécutif</h2>
@@ -386,7 +386,7 @@ export default function FiscaliteCryptoStudyPage() {
               </span>
             </li>
             <li className="flex items-start gap-2">
-              <AlertTriangle className="mt-1 h-4 w-4 shrink-0 text-amber-400" />
+              <AlertTriangle className="mt-1 h-4 w-4 shrink-0 text-primary-glow" />
               <span>
                 <strong>Annexe 3916-bis obligatoire</strong> pour tout compte
                 ouvert chez un exchange étranger (Binance, Kraken, Coinbase,
@@ -417,7 +417,7 @@ export default function FiscaliteCryptoStudyPage() {
           </p>
           <div className="my-6 overflow-x-auto">
             <table className="w-full text-sm">
-              <thead className="border-b border-white/10 text-left text-xs uppercase tracking-wider text-slate-400">
+              <thead className="border-b border-fg-max/10 text-left text-xs uppercase tracking-wider text-slate-400">
                 <tr>
                   <th className="pb-3 pr-4">Date</th>
                   <th className="pb-3 pr-4">Action</th>
@@ -435,7 +435,7 @@ export default function FiscaliteCryptoStudyPage() {
                   <td className="py-3">Tous résidents fiscaux FR.</td>
                 </tr>
                 <tr>
-                  <td className="py-3 pr-4 font-mono text-amber-300">
+                  <td className="py-3 pr-4 font-mono text-primary-soft">
                     19 mai 2026
                   </td>
                   <td className="py-3 pr-4 font-medium">
@@ -444,7 +444,7 @@ export default function FiscaliteCryptoStudyPage() {
                   <td className="py-3">Contribuables sans accès internet.</td>
                 </tr>
                 <tr>
-                  <td className="py-3 pr-4 font-mono text-amber-300">
+                  <td className="py-3 pr-4 font-mono text-primary-soft">
                     21 mai 2026
                   </td>
                   <td className="py-3 pr-4 font-medium">
@@ -453,7 +453,7 @@ export default function FiscaliteCryptoStudyPage() {
                   <td className="py-3">Cible la plus précoce en ligne.</td>
                 </tr>
                 <tr>
-                  <td className="py-3 pr-4 font-mono text-amber-300">
+                  <td className="py-3 pr-4 font-mono text-primary-soft">
                     28 mai 2026
                   </td>
                   <td className="py-3 pr-4 font-medium">
@@ -462,7 +462,7 @@ export default function FiscaliteCryptoStudyPage() {
                   <td className="py-3">2ème vague.</td>
                 </tr>
                 <tr>
-                  <td className="py-3 pr-4 font-mono text-amber-300">
+                  <td className="py-3 pr-4 font-mono text-primary-soft">
                     4 juin 2026
                   </td>
                   <td className="py-3 pr-4 font-medium">
@@ -548,7 +548,7 @@ export default function FiscaliteCryptoStudyPage() {
             d’acquisition de tout le portefeuille qui correspond à la part
             vendue. Avec les numéros de lignes du formulaire 2086 :
           </p>
-          <pre className="not-prose rounded-lg border border-white/10 bg-black/40 p-4 font-mono text-xs text-slate-200 overflow-x-auto my-4">
+          <pre className="not-prose rounded-lg border border-fg-max/10 bg-scrim/40 p-4 font-mono text-xs text-slate-200 overflow-x-auto my-4">
             <code>{`PV (224) = Prix net (218) − Acquisition nette (223) × Prix de cession (217) / Valeur globale (212)`}</code>
           </pre>
           <p>Avec :</p>
@@ -849,7 +849,7 @@ export default function FiscaliteCryptoStudyPage() {
             </li>
           </ol>
           <p className="text-sm">
-            <strong className="text-amber-300">
+            <strong className="text-primary-soft">
               Recommandation pratique :
             </strong>{" "}
             si vous découvrez un oubli sur les années précédentes, déposez une
@@ -949,7 +949,7 @@ export default function FiscaliteCryptoStudyPage() {
             calcul et la déclaration :
           </p>
           <ul className="not-prose mt-4 space-y-3">
-            <li className="rounded-xl border border-white/10 bg-white/[0.02] p-4">
+            <li className="rounded-xl border border-fg-max/10 bg-fg-max/[0.02] p-4">
               <Link
                 href="/outils/cerfa-2086-auto"
                 className="block hover:text-cyan-300"
@@ -957,7 +957,7 @@ export default function FiscaliteCryptoStudyPage() {
                 <div className="flex items-start gap-3">
                   <Calculator className="mt-1 h-4 w-4 shrink-0 text-cyan-400" />
                   <div>
-                    <strong className="text-white">
+                    <strong className="text-fg-max">
                       /outils/cerfa-2086-auto
                     </strong>
                     <p className="mt-1 text-sm text-slate-300">
@@ -969,7 +969,7 @@ export default function FiscaliteCryptoStudyPage() {
                 </div>
               </Link>
             </li>
-            <li className="rounded-xl border border-white/10 bg-white/[0.02] p-4">
+            <li className="rounded-xl border border-fg-max/10 bg-fg-max/[0.02] p-4">
               <Link
                 href="/outils/calculateur-fiscalite"
                 className="block hover:text-cyan-300"
@@ -977,7 +977,7 @@ export default function FiscaliteCryptoStudyPage() {
                 <div className="flex items-start gap-3">
                   <FileText className="mt-1 h-4 w-4 shrink-0 text-cyan-400" />
                   <div>
-                    <strong className="text-white">
+                    <strong className="text-fg-max">
                       /outils/calculateur-fiscalite
                     </strong>
                     <p className="mt-1 text-sm text-slate-300">
@@ -999,9 +999,9 @@ export default function FiscaliteCryptoStudyPage() {
             {FAQ.map((item) => (
               <details
                 key={item.q}
-                className="group rounded-xl border border-white/10 bg-white/[0.02] p-5 open:border-emerald-500/30"
+                className="group rounded-xl border border-fg-max/10 bg-fg-max/[0.02] p-5 open:border-emerald-500/30"
               >
-                <summary className="cursor-pointer list-none flex items-start justify-between gap-4 font-semibold text-white">
+                <summary className="cursor-pointer list-none flex items-start justify-between gap-4 font-semibold text-fg-max">
                   <span>{item.q}</span>
                   <span className="text-emerald-300 transition group-open:rotate-45 mt-0.5 shrink-0">
                     +
@@ -1064,14 +1064,14 @@ export default function FiscaliteCryptoStudyPage() {
       </article>
 
       {/* Pack CTA — maillage interne pack 49€ (audit 2026-05-14) */}
-      <section className="border-t border-white/5">
+      <section className="border-t border-fg-max/5">
         <div className="mx-auto max-w-3xl px-4 py-4 sm:px-6 lg:px-8">
           <PackCTABlock fromPage="etude-fiscalite-cerfa" />
         </div>
       </section>
 
       {/* Newsletter capture */}
-      <section className="border-t border-white/5 bg-white/[0.02]">
+      <section className="border-t border-fg-max/5 bg-fg-max/[0.02]">
         <div className="mx-auto max-w-3xl px-4 py-12 sm:px-6 lg:px-8">
           <NewsletterInline
             source="bottom-article"
@@ -1087,7 +1087,7 @@ export default function FiscaliteCryptoStudyPage() {
       </section>
 
       {/* Final CTA */}
-      <section className="border-t border-white/5">
+      <section className="border-t border-fg-max/5">
         <div className="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8 text-center">
           <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">
             Poursuivez la lecture
@@ -1095,9 +1095,9 @@ export default function FiscaliteCryptoStudyPage() {
           <div className="mt-8 grid gap-4 sm:grid-cols-2">
             <Link
               href="/outils/cerfa-2086-auto"
-              className="group rounded-2xl border border-white/10 bg-white/[0.02] p-6 text-left hover:border-emerald-500/30 transition"
+              className="group rounded-2xl border border-fg-max/10 bg-fg-max/[0.02] p-6 text-left hover:border-emerald-500/30 transition"
             >
-              <h3 className="text-lg font-bold text-white group-hover:text-emerald-300">
+              <h3 className="text-lg font-bold text-fg-max group-hover:text-emerald-300">
                 Outil Cerfa 2086 + 3916-bis auto
               </h3>
               <p className="mt-2 text-sm text-slate-300">
@@ -1111,25 +1111,25 @@ export default function FiscaliteCryptoStudyPage() {
             </Link>
             <Link
               href="/etudes/mica-juillet-2026-etat-des-lieux"
-              className="group rounded-2xl border border-white/10 bg-white/[0.02] p-6 text-left hover:border-amber-500/30 transition"
+              className="group rounded-2xl border border-fg-max/10 bg-fg-max/[0.02] p-6 text-left hover:border-warning/30 transition"
             >
-              <h3 className="text-lg font-bold text-white group-hover:text-amber-300">
+              <h3 className="text-lg font-bold text-fg-max group-hover:text-primary-soft">
                 Étude MiCA juillet 2026
               </h3>
               <p className="mt-2 text-sm text-slate-300">
                 Quelles plateformes ne sont plus autorisées en France ? Comment
                 migrer ? Implications fiscales.
               </p>
-              <div className="mt-3 inline-flex items-center gap-1.5 text-sm font-medium text-amber-300">
+              <div className="mt-3 inline-flex items-center gap-1.5 text-sm font-medium text-primary-soft">
                 Lire l’étude
                 <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" />
               </div>
             </Link>
             <Link
               href="/blog/comment-declarer-crypto-impots-2026-guide-complet"
-              className="group rounded-2xl border border-white/10 bg-white/[0.02] p-6 text-left hover:border-cyan-500/30 transition"
+              className="group rounded-2xl border border-fg-max/10 bg-fg-max/[0.02] p-6 text-left hover:border-cyan-500/30 transition"
             >
-              <h3 className="text-lg font-bold text-white group-hover:text-cyan-300">
+              <h3 className="text-lg font-bold text-fg-max group-hover:text-cyan-300">
                 Guide pratique : déclarer pas-à-pas
               </h3>
               <p className="mt-2 text-sm text-slate-300">
@@ -1143,9 +1143,9 @@ export default function FiscaliteCryptoStudyPage() {
             </Link>
             <Link
               href="/blog/mica-regulation-europe-2026"
-              className="group rounded-2xl border border-white/10 bg-white/[0.02] p-6 text-left hover:border-emerald-500/30 transition"
+              className="group rounded-2xl border border-fg-max/10 bg-fg-max/[0.02] p-6 text-left hover:border-emerald-500/30 transition"
             >
-              <h3 className="text-lg font-bold text-white group-hover:text-emerald-300">
+              <h3 className="text-lg font-bold text-fg-max group-hover:text-emerald-300">
                 MiCA expliqué aux particuliers
               </h3>
               <p className="mt-2 text-sm text-slate-300">

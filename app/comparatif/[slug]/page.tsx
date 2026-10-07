@@ -330,11 +330,11 @@ export default function ComparisonPage({ params }: Props) {
 
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
         <nav aria-label="Fil d'Ariane" className="text-xs text-muted">
-          <Link href="/" className="hover:text-white">Accueil</Link>
+          <Link href="/" className="hover:text-fg-max">Accueil</Link>
           <span className="mx-2">/</span>
-          <span className="text-white/80">Comparatif</span>
+          <span className="text-fg-max/80">Comparatif</span>
           <span className="mx-2">/</span>
-          <span className="text-white/80">{a.name} vs {b.name}</span>
+          <span className="text-fg-max/80">{a.name} vs {b.name}</span>
         </nav>
 
         {/* HEADER VERSUS */}
@@ -343,7 +343,7 @@ export default function ComparisonPage({ params }: Props) {
             {a.name} <span className="text-muted font-normal">vs</span> {b.name}
             <span className="text-muted font-normal"> en 2026</span>
           </h1>
-          <p className="mt-3 text-lg text-white/70 max-w-3xl">
+          <p className="mt-3 text-lg text-fg-max/70 max-w-3xl">
             {spec.bucket === "fr-vs-international"
               ? `Acteur français face à un acteur international : on compare l'accompagnement local et la profondeur de marché.`
               : spec.bucket === "wallet-vs-wallet"
@@ -362,7 +362,7 @@ export default function ComparisonPage({ params }: Props) {
               ))}
               <p className="mt-1">
                 Depuis le 1er juillet 2026, seules les plateformes agréées MiCA avec accès à la France peuvent y proposer des services sur crypto-actifs. Ce comparatif reste en ligne à titre d&apos;information.{" "}
-                <Link href="/comparatif/frais" className="underline hover:text-white">
+                <Link href="/comparatif/frais" className="underline hover:text-fg-max">
                   Voir les plateformes autorisées →
                 </Link>
               </p>
@@ -378,7 +378,7 @@ export default function ComparisonPage({ params }: Props) {
               >
                 <div className="flex items-center justify-between">
                   <div>
-                    <div className="text-lg font-bold text-white">{plat.name}</div>
+                    <div className="text-lg font-bold text-fg-max">{plat.name}</div>
                     <div className="text-xs text-muted">{plat.tagline.slice(0, 70)}…</div>
                   </div>
                   <div className="text-right">
@@ -412,7 +412,7 @@ export default function ComparisonPage({ params }: Props) {
                       Site officiel de {plat.name}
                       <ExternalLink className="h-4 w-4" />
                     </a>
-                    <PaidLinkCaption platformId={plat.id} href={plat.affiliateUrl} className="text-center text-[11px] text-muted underline hover:text-white" />
+                    <PaidLinkCaption platformId={plat.id} href={plat.affiliateUrl} className="text-center text-[11px] text-muted underline hover:text-fg-max" />
                   </>
                 ) : (
                   <span className="mt-2 inline-flex items-center justify-center rounded-xl border border-red-400/40 bg-red-400/10 px-4 py-2.5 text-sm font-semibold text-red-200">
@@ -421,7 +421,7 @@ export default function ComparisonPage({ params }: Props) {
                 )}
                 <Link
                   href={`/avis/${plat.id}`}
-                  className="text-center text-xs text-muted hover:text-white"
+                  className="text-center text-xs text-muted hover:text-fg-max"
                 >
                   Lire l'avis détaillé →
                 </Link>
@@ -432,7 +432,7 @@ export default function ComparisonPage({ params }: Props) {
 
         {/* INTRO VERDICT */}
         <section className="mt-12 rounded-2xl border border-border bg-surface p-6">
-          <p className="text-base text-white/85 leading-relaxed">{verdict.intro}</p>
+          <p className="text-base text-fg-max/85 leading-relaxed">{verdict.intro}</p>
         </section>
 
         {/* TABLEAUX COMPARATIFS */}
@@ -449,7 +449,7 @@ export default function ComparisonPage({ params }: Props) {
               <section.icon className="h-6 w-6 text-primary" />
               {section.title}
             </h2>
-            <p className="mt-2 text-sm text-white/75 leading-relaxed">{section.intro}</p>
+            <p className="mt-2 text-sm text-fg-max/75 leading-relaxed">{section.intro}</p>
             <div className="mt-4 overflow-x-auto rounded-xl border border-border">
               <table className="w-full min-w-[640px] text-sm">
                 <thead className="bg-elevated">
@@ -469,10 +469,10 @@ export default function ComparisonPage({ params }: Props) {
                   {section.rows.map((row) => (
                     <tr key={row.label}>
                       <td className="px-4 py-3 text-muted">{row.label}</td>
-                      <td className={`px-4 py-3 text-right font-mono tabular-nums ${row.hint === "a" ? "text-white font-semibold" : "text-white/70"}`}>
+                      <td className={`px-4 py-3 text-right font-mono tabular-nums ${row.hint === "a" ? "text-fg-max font-semibold" : "text-fg-max/70"}`}>
                         {row.aDisplay} <WinnerBadge hint={row.hint} side="a" />
                       </td>
-                      <td className={`px-4 py-3 text-right font-mono tabular-nums ${row.hint === "b" ? "text-white font-semibold" : "text-white/70"}`}>
+                      <td className={`px-4 py-3 text-right font-mono tabular-nums ${row.hint === "b" ? "text-fg-max font-semibold" : "text-fg-max/70"}`}>
                         {row.bDisplay} <WinnerBadge hint={row.hint} side="b" />
                       </td>
                     </tr>
@@ -484,11 +484,11 @@ export default function ComparisonPage({ params }: Props) {
               <ul className="mt-3 space-y-1 text-xs text-muted leading-relaxed">
                 {[a, b].map((plat) => (
                   <li key={plat.id}>
-                    <span className="font-semibold text-white/80">{plat.name} :</span>{" "}
+                    <span className="font-semibold text-fg-max/80">{plat.name} :</span>{" "}
                     {plat.support.note && plat.support.source && plat.support.verified ? (
                       <>
                         {plat.support.note.replace(/\.$/, "")} (
-                        <a href={plat.support.source} target="_blank" rel="noopener noreferrer" className="underline decoration-dotted underline-offset-2 hover:text-white">
+                        <a href={plat.support.source} target="_blank" rel="noopener noreferrer" className="underline decoration-dotted underline-offset-2 hover:text-fg-max">
                           page d&apos;assistance officielle
                         </a>
                         , relevée le {fmtDateFr(plat.support.verified)}).
@@ -519,11 +519,11 @@ export default function ComparisonPage({ params }: Props) {
                 <div className="text-xs uppercase tracking-wide text-accent-green">
                   {plat.name}
                 </div>
-                <div className="mt-1 text-sm font-semibold text-white">
+                <div className="mt-1 text-sm font-semibold text-fg-max">
                   {verifiedBonus(plat) ?? "Aucune offre relevée"}
                 </div>
                 {verifiedBonus(plat) && plat.bonus.conditions && (
-                  <p className="mt-2 text-xs text-white/70">{plat.bonus.conditions}</p>
+                  <p className="mt-2 text-xs text-fg-max/70">{plat.bonus.conditions}</p>
                 )}
               </div>
             ))}
@@ -535,12 +535,12 @@ export default function ComparisonPage({ params }: Props) {
         <section className="mt-10 grid gap-6 lg:grid-cols-2">
           {[a, b].map((plat) => (
             <div key={plat.id} className="rounded-2xl border border-border bg-surface p-6">
-              <h3 className="text-lg font-bold text-white">
+              <h3 className="text-lg font-bold text-fg-max">
                 Ce que {plat.name} fait mieux
               </h3>
               <ul className="mt-4 space-y-2">
                 {plat.strengths.map((s) => (
-                  <li key={s} className="flex items-start gap-2 text-sm text-white/80">
+                  <li key={s} className="flex items-start gap-2 text-sm text-fg-max/80">
                     <Plus className="h-4 w-4 text-accent-green shrink-0 mt-0.5" />
                     <span>{s}</span>
                   </li>
@@ -551,7 +551,7 @@ export default function ComparisonPage({ params }: Props) {
               </h4>
               <ul className="mt-2 space-y-2">
                 {plat.weaknesses.map((w) => (
-                  <li key={w} className="flex items-start gap-2 text-sm text-white/70">
+                  <li key={w} className="flex items-start gap-2 text-sm text-fg-max/70">
                     <Minus className="h-4 w-4 text-accent-rose shrink-0 mt-0.5" />
                     <span>{w}</span>
                   </li>
@@ -566,13 +566,13 @@ export default function ComparisonPage({ params }: Props) {
           <h2 className="text-2xl font-bold tracking-tight">
             Verdict : {a.name} ou {b.name} ?
           </h2>
-          <p className="mt-3 text-sm text-white/85 leading-relaxed">{verdict.tradeoff}</p>
+          <p className="mt-3 text-sm text-fg-max/85 leading-relaxed">{verdict.tradeoff}</p>
           <div className="mt-6 grid gap-4 sm:grid-cols-2">
             <div className="rounded-xl border border-border bg-surface p-4">
               <div className="text-xs uppercase tracking-wide text-primary-glow">
                 {okA ? `Choisir ${a.name}` : a.name}
               </div>
-              <p className="mt-2 text-sm text-white/85 leading-relaxed">{verdict.pickA}</p>
+              <p className="mt-2 text-sm text-fg-max/85 leading-relaxed">{verdict.pickA}</p>
               {okA ? (
                 <>
                   <a
@@ -595,7 +595,7 @@ export default function ComparisonPage({ params }: Props) {
               <div className="text-xs uppercase tracking-wide text-primary-glow">
                 {okB ? `Choisir ${b.name}` : b.name}
               </div>
-              <p className="mt-2 text-sm text-white/85 leading-relaxed">{verdict.pickB}</p>
+              <p className="mt-2 text-sm text-fg-max/85 leading-relaxed">{verdict.pickB}</p>
               {okB ? (
                 <>
                   <a
@@ -632,7 +632,7 @@ export default function ComparisonPage({ params }: Props) {
                     href={`/comparatif/${c.slug}`}
                     className="rounded-xl border border-border bg-surface p-4 hover:border-primary/40 transition-colors"
                   >
-                    <div className="text-sm font-semibold text-white">
+                    <div className="text-sm font-semibold text-fg-max">
                       {ra.name} vs {rb.name}
                     </div>
                     <div className="mt-1 text-xs text-muted">Comparatif détaillé</div>
@@ -656,7 +656,7 @@ export default function ComparisonPage({ params }: Props) {
             Comparatif généré à partir de nos données ; Kevin Voisin, éditeur de {BRAND.name}, en est responsable. Statut MiCA vérifié le {new Date(a.mica.lastVerified).toLocaleDateString("fr-FR")}{a.fees.cost?.date ? `, frais relevés le ${new Date(a.fees.cost.date).toLocaleDateString("fr-FR")}` : ""}. {(okA && isPaidLink(a.id, a.affiliateUrl)) || (okB && isPaidLink(b.id, b.affiliateUrl))
               ? "Les liens marqués « Publicité » sont rémunérés (affiliation ou parrainage), sans surcoût pour vous, ce qui n'influence pas l'attribution du verdict"
               : "Les liens vers les plateformes mènent à leur site officiel ; le verdict suit notre méthodologie"}{" "}
-            — voir <Link href="/methodologie" className="underline hover:text-white">/methodologie</Link> et <Link href="/transparence" className="underline hover:text-white">/transparence</Link>. Investir dans les cryptoactifs présente un risque de perte en capital. Ce comparatif n'est pas un conseil en investissement.
+            — voir <Link href="/methodologie" className="underline hover:text-fg-max">/methodologie</Link> et <Link href="/transparence" className="underline hover:text-fg-max">/transparence</Link>. Investir dans les cryptoactifs présente un risque de perte en capital. Ce comparatif n'est pas un conseil en investissement.
           </p>
         </section>
       </div>

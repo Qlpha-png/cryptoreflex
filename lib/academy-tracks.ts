@@ -196,7 +196,7 @@ const TRACK_INTERMEDIAIRE: Track = {
     "Vous avez déjà votre premier portefeuille. On structure : DCA vs HODL vs trade, comprendre PoS/PoW, les Layer 2, configurer un Ledger, et faire le tri sur les plateformes post-MiCA.",
   level: "Intermediate",
   estimatedHours: 2.5,
-  accentClass: "from-amber-500/30 to-orange-600/20 border-amber-500/40",
+  accentClass: "from-warning/30 to-orange-600/20 border-warning/40",
   iconKey: "target",
   lessons: [
     {
@@ -439,7 +439,7 @@ const TRACK_SECURITE: Track = {
     "Vous détenez déjà des cryptos et vous voulez dormir tranquille. De l'hygiène 2FA au multisig : protégez votre patrimoine contre le hack d'exchange, le phishing et la perte de seed phrase.",
   level: "Intermediate",
   estimatedHours: 2,
-  accentClass: "from-sky-500/30 to-cyan-600/20 border-sky-500/40",
+  accentClass: "from-info/30 to-cyan-600/20 border-info/40",
   iconKey: "shield",
   lessons: [
     {
@@ -774,7 +774,7 @@ const TRACK_ARNAQUES: Track = {
     "Le parcours d'autodéfense crypto : les réflexes anti-arnaque universels, les grandes arnaques (rug pull, Ponzi, faux support, pump and dump, drainers, pig butchering) et les erreurs qu'on s'inflige soi-même. Pour protéger votre capital avant de vous faire avoir.",
   level: "Beginner",
   estimatedHours: 2,
-  accentClass: "from-red-500/30 to-rose-600/20 border-red-500/40",
+  accentClass: "from-danger/30 to-rose-600/20 border-danger/40",
   iconKey: "alert",
   lessons: [
     {
@@ -1057,7 +1057,7 @@ const TRACK_STABLECOINS: Track = {
     "Le pont entre la crypto et l'euro. Comprendre les stablecoins (USDT, USDC, DAI), comment en acheter, le cadre MiCA, leurs vrais risques (dépeg, réserves) et comment les utiliser — fiscalité française incluse.",
   level: "Intermediate",
   estimatedHours: 1.5,
-  accentClass: "from-sky-500/30 to-blue-600/20 border-sky-500/40",
+  accentClass: "from-info/30 to-blue-600/20 border-info/40",
   iconKey: "banknote",
   lessons: [
     { order: 1, articleSlug: "qu-est-ce-qu-un-stablecoin-guide-debutant-2026", title: "Qu'est-ce qu'un stablecoin ?", durationMin: 9, prereqs: [] },

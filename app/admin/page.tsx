@@ -251,7 +251,7 @@ export default async function AdminDashboard() {
 
         <header className="mt-6 flex items-start justify-between gap-4 flex-wrap">
           <div>
-            <span className="inline-flex items-center gap-2 rounded-full border border-amber-400/40 bg-amber-400/10 px-3 py-1 text-xs font-bold text-amber-300">
+            <span className="inline-flex items-center gap-2 rounded-full border border-primary-glow/40 bg-primary-glow/10 px-3 py-1 text-xs font-bold text-primary-soft">
               <Crown className="h-3.5 w-3.5" />
               ADMIN — Accès interne Kevin
             </span>
@@ -336,13 +336,13 @@ function StatBox({
     primary: "from-primary/15",
     emerald: "from-emerald-500/15",
     purple: "from-purple-500/15",
-    amber: "from-amber-500/15",
+    amber: "from-warning/15",
   }[accent];
   const text = {
     primary: "text-primary",
     emerald: "text-emerald-400",
     purple: "text-purple-400",
-    amber: "text-amber-400",
+    amber: "text-primary-glow",
   }[accent];
   return (
     <div className={`rounded-2xl border border-border bg-gradient-to-br ${bg} to-transparent p-4`}>

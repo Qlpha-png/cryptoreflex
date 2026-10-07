@@ -84,9 +84,9 @@ export default function PriceTicker({ initial }: Props) {
                 imageUrl={coin.image}
                 size={24}
               />
-              <span className="font-semibold text-white/90">{coin.symbol}</span>
+              <span className="font-semibold text-fg-max/90">{coin.symbol}</span>
               <PriceFlash price={coin.price}>
-                <span className="font-mono text-white">{formatUsd(coin.price)}</span>
+                <span className="font-mono text-fg-max">{formatUsd(coin.price)}</span>
               </PriceFlash>
               <span
                 className={`inline-flex items-center gap-1 text-sm font-medium ${

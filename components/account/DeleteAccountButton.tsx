@@ -137,7 +137,7 @@ export default function DeleteAccountButton() {
                 type="button"
                 onClick={handleDelete}
                 disabled={!isReady || loading}
-                className="flex-1 min-h-tap inline-flex items-center justify-center gap-2 rounded-lg bg-danger text-white font-semibold px-4 py-2 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-danger/90 transition-colors"
+                className="flex-1 min-h-tap inline-flex items-center justify-center gap-2 rounded-lg bg-danger text-fg-max font-semibold px-4 py-2 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-danger/90 transition-colors"
               >
                 {loading ? (
                   "Suppression en cours…"

@@ -50,7 +50,7 @@ export default function WaltioPromoCard({
 
   if (variant === "compact") {
     return (
-      <p className="rounded-xl border border-primary/40 bg-primary/5 p-4 text-sm text-white/85 flex items-start gap-3">
+      <p className="rounded-xl border border-primary/40 bg-primary/5 p-4 text-sm text-fg-max/85 flex items-start gap-3">
         <Target
           className="h-5 w-5 shrink-0 text-primary-soft mt-0.5"
           aria-hidden="true"
@@ -94,11 +94,11 @@ export default function WaltioPromoCard({
             </span>
             <h3
               id="waltio-banner-title"
-              className="mt-3 font-display text-xl sm:text-2xl font-bold text-white"
+              className="mt-3 font-display text-xl sm:text-2xl font-bold text-fg-max"
             >
               {finalHeadline}
             </h3>
-            <p className="mt-2 text-sm sm:text-base text-white/75 max-w-2xl">
+            <p className="mt-2 text-sm sm:text-base text-fg-max/75 max-w-2xl">
               {finalDescription}
             </p>
           </div>
@@ -145,14 +145,14 @@ export default function WaltioPromoCard({
         <div className="flex-1">
           <h4
             id="waltio-card-title"
-            className="font-display font-bold text-white"
+            className="font-display font-bold text-fg-max"
           >
             <span aria-hidden="true">🎯 </span>
             {finalHeadline}
           </h4>
-          <p className="mt-2 text-sm text-white/75">{finalDescription}</p>
+          <p className="mt-2 text-sm text-fg-max/75">{finalDescription}</p>
 
-          <ul className="mt-3 space-y-1 text-xs text-white/70">
+          <ul className="mt-3 space-y-1 text-xs text-fg-max/70">
             <li>· Connexion à 220+ exchanges et wallets (Binance, Kraken, Ledger…)</li>
             <li>· Pré-remplissage du formulaire 2086 + 3916-bis à recopier</li>
             <li>· Support client en français par chat (réponse &lt; 24h)</li>

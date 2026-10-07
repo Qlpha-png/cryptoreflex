@@ -113,7 +113,7 @@ function RoadmapItem({ event }: { event: RoadmapEvent }) {
     },
     planned: {
       icon: <Calendar className="h-4 w-4" />,
-      color: "text-amber-400 border-amber-500 bg-amber-500/10",
+      color: "text-primary-glow border-warning bg-warning/10",
       label: "Prévu",
     },
   } as const;

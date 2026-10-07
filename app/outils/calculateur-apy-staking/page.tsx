@@ -110,10 +110,10 @@ export default function CalculateurApyStakingPage() {
               <Coins className="h-3.5 w-3.5" />
               APY indicatifs Q1 2026
             </span>
-            <h1 className="mt-4 text-4xl sm:text-5xl font-extrabold tracking-tight text-white">
+            <h1 className="mt-4 text-4xl sm:text-5xl font-extrabold tracking-tight text-fg-max">
               Calculateur <span className="gradient-text">APY staking crypto</span>
             </h1>
-            <p className="mt-4 text-lg text-white/70">
+            <p className="mt-4 text-lg text-fg-max/70">
               Estimez vos récompenses de staking sur ETH, SOL, ADA, DOT, ATOM, NEAR.
               On compare staking direct, liquid staking (Lido, Marinade) et CEX
               (Coinbase, Kraken) en 1 clic.
@@ -127,7 +127,7 @@ export default function CalculateurApyStakingPage() {
 
           {/* Pourquoi staker */}
           <div className="mt-16 grid lg:grid-cols-3 gap-6">
-            <h2 className="lg:col-span-3 text-2xl sm:text-3xl font-bold text-white">
+            <h2 className="lg:col-span-3 text-2xl sm:text-3xl font-bold text-fg-max">
               Pourquoi staker ?
             </h2>
             <Card
@@ -154,10 +154,10 @@ export default function CalculateurApyStakingPage() {
                 <BookOpen className="h-6 w-6" />
               </div>
               <div className="flex-1">
-                <h3 className="font-bold text-white text-lg">
+                <h3 className="font-bold text-fg-max text-lg">
                   Guide complet : staking crypto débutant
                 </h3>
-                <p className="mt-1 text-sm text-white/70">
+                <p className="mt-1 text-sm text-fg-max/70">
                   Comment choisir entre staking direct, liquid et CEX, gérer la fiscalité
                   française, sécuriser vos clés privées via Ledger.
                 </p>
@@ -174,7 +174,7 @@ export default function CalculateurApyStakingPage() {
 
           {/* FAQ */}
           <div className="mt-16">
-            <h2 className="text-2xl sm:text-3xl font-bold text-white">
+            <h2 className="text-2xl sm:text-3xl font-bold text-fg-max">
               Questions fréquentes
             </h2>
             <div className="mt-6 space-y-3">
@@ -183,13 +183,13 @@ export default function CalculateurApyStakingPage() {
                   key={item.question}
                   className="group rounded-xl border border-border bg-elevated/40 p-5 open:border-primary/40"
                 >
-                  <summary className="flex cursor-pointer items-center justify-between gap-3 font-semibold text-white">
+                  <summary className="flex cursor-pointer items-center justify-between gap-3 font-semibold text-fg-max">
                     {item.question}
                     <span className="text-primary transition-transform group-open:rotate-45">
                       +
                     </span>
                   </summary>
-                  <p className="mt-3 text-sm text-white/70 leading-relaxed">
+                  <p className="mt-3 text-sm text-fg-max/70 leading-relaxed">
                     {item.answer}
                   </p>
                 </details>
@@ -222,8 +222,8 @@ function Card({
       <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/15 text-primary-soft">
         {icon}
       </div>
-      <h3 className="mt-4 font-bold text-white">{title}</h3>
-      <p className="mt-2 text-sm text-white/70 leading-relaxed">{text}</p>
+      <h3 className="mt-4 font-bold text-fg-max">{title}</h3>
+      <p className="mt-2 text-sm text-fg-max/70 leading-relaxed">{text}</p>
     </div>
   );
 }

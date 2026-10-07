@@ -90,7 +90,7 @@ export default function GlossaryIndexPage() {
             <h1 className="mt-4 text-4xl sm:text-5xl font-extrabold tracking-tight">
               Glossaire <span className="gradient-text">crypto</span>
             </h1>
-            <p className="mt-3 text-lg text-white/70">
+            <p className="mt-3 text-lg text-fg-max/70">
               {GLOSSARY_TERMS.length} termes expliqués simplement, sans jargon. De{" "}
               <Link
                 href="/glossaire/blockchain"
@@ -130,7 +130,7 @@ export default function GlossaryIndexPage() {
               return (
                 <span
                   key={cat}
-                  className="inline-flex items-center gap-1.5 rounded-full border border-border bg-elevated/60 px-3 py-1 text-xs text-white/80"
+                  className="inline-flex items-center gap-1.5 rounded-full border border-border bg-elevated/60 px-3 py-1 text-xs text-fg-max/80"
                 >
                   {cat}
                   <span className="text-muted">({count})</span>
@@ -152,7 +152,7 @@ export default function GlossaryIndexPage() {
                     {has ? (
                       <a
                         href={`#letter-${letter}`}
-                        className="inline-flex h-8 w-8 items-center justify-center rounded-md border border-border bg-elevated text-sm font-semibold text-white hover:border-primary hover:text-primary-soft transition-colors"
+                        className="inline-flex h-8 w-8 items-center justify-center rounded-md border border-border bg-elevated text-sm font-semibold text-fg-max hover:border-primary hover:text-primary-soft transition-colors"
                       >
                         {letter}
                       </a>
@@ -171,7 +171,7 @@ export default function GlossaryIndexPage() {
                 <li>
                   <a
                     href="#letter-num"
-                    className="inline-flex h-8 w-8 items-center justify-center rounded-md border border-border bg-elevated text-sm font-semibold text-white hover:border-primary hover:text-primary-soft transition-colors"
+                    className="inline-flex h-8 w-8 items-center justify-center rounded-md border border-border bg-elevated text-sm font-semibold text-fg-max hover:border-primary hover:text-primary-soft transition-colors"
                   >
                     #
                   </a>
@@ -225,13 +225,13 @@ function LetterSection({
               className="group block h-full rounded-xl border border-border bg-elevated/40 p-4 hover:border-primary/60 hover:bg-elevated/70 transition-colors"
             >
               <div className="flex items-start justify-between gap-3">
-                <h3 className="font-semibold text-white group-hover:text-primary-soft">
+                <h3 className="font-semibold text-fg-max group-hover:text-primary-soft">
                   {t.term}
                 </h3>
                 <ArrowRight className="h-4 w-4 text-muted shrink-0 mt-1 group-hover:text-primary group-hover:translate-x-0.5 transition-all" />
               </div>
               <p className="mt-1.5 text-xs text-muted">{t.category}</p>
-              <p className="mt-2 text-sm text-white/70 line-clamp-2">
+              <p className="mt-2 text-sm text-fg-max/70 line-clamp-2">
                 {t.shortDefinition}
               </p>
             </Link>

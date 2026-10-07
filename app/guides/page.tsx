@@ -60,7 +60,7 @@ const GUIDES: GuideCard[] = [
 const TOPIC_LABELS: Record<GuideCard["topic"], { label: string; color: string }> = {
   fiscalite: { label: "Fiscalité", color: "text-emerald-300" },
   securite: { label: "Sécurité", color: "text-cyan-300" },
-  regulation: { label: "Réglementation", color: "text-amber-300" },
+  regulation: { label: "Réglementation", color: "text-primary-soft" },
   trading: { label: "Trading", color: "text-indigo-300" },
 };
 
@@ -98,7 +98,7 @@ export default function GuidesHubPage() {
       <StructuredData id="guides-jsonld" data={jsonLd} />
 
       {/* Hero */}
-      <section className="border-b border-white/5 bg-gradient-to-b from-emerald-500/5 to-transparent">
+      <section className="border-b border-fg-max/5 bg-gradient-to-b from-emerald-500/5 to-transparent">
         <div className="mx-auto max-w-5xl px-4 py-16 sm:px-6 lg:px-8">
           <nav className="mb-6 text-sm text-slate-400" aria-label="Fil d'Ariane">
             <Link href="/" className="hover:text-cyan-300">
@@ -130,12 +130,12 @@ export default function GuidesHubPage() {
           {GUIDES.map((g) => (
             <article
               key={g.slug}
-              className="group rounded-2xl border border-white/10 bg-white/[0.02] p-6 transition hover:border-emerald-500/30"
+              className="group rounded-2xl border border-fg-max/10 bg-fg-max/[0.02] p-6 transition hover:border-emerald-500/30"
             >
               <header className="flex flex-wrap items-start justify-between gap-3">
                 <div className="flex items-center gap-3 text-xs">
                   <span
-                    className={`inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-2.5 py-1 font-medium ${TOPIC_LABELS[g.topic].color}`}
+                    className={`inline-flex items-center gap-1.5 rounded-full border border-fg-max/10 bg-fg-max/5 px-2.5 py-1 font-medium ${TOPIC_LABELS[g.topic].color}`}
                   >
                     {TOPIC_LABELS[g.topic].label}
                   </span>
@@ -155,7 +155,7 @@ export default function GuidesHubPage() {
               </header>
 
               <Link href={`/guides/${g.slug}`} className="block">
-                <h2 className="mt-4 text-2xl font-bold tracking-tight text-white group-hover:text-emerald-300 transition">
+                <h2 className="mt-4 text-2xl font-bold tracking-tight text-fg-max group-hover:text-emerald-300 transition">
                   {g.title}
                 </h2>
                 <p className="mt-3 text-sm text-slate-300 leading-relaxed">{g.subtitle}</p>

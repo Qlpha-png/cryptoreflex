@@ -310,7 +310,7 @@ function LessonRow({
           Article guidé
         </p>
         {prereqTitles.length > 0 && (
-          <p className="mt-1 text-[11px] text-amber-300/90">
+          <p className="mt-1 text-[11px] text-primary-soft/90">
             Recommandé avant : {prereqTitles.join(" · ")}
           </p>
         )}
