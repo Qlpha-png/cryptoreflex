@@ -284,14 +284,25 @@ async function cmcNetwork(path: string, revalidate: number, estimatedCredits: nu
  */
 export const CMC_MONTH_RESERVE = 300;
 export const CMC_KEY_INFO_TTL_MS = 10 * 60_000;
-type KeyUsage = { dayUsed: number; monthLeft: number } | null;
-let cmcKeyUsageMemo: { at: number; usage: Promise<KeyUsage> } | null = null;
+const DAY_MS = 86_400_000;
+/** monthUsed / monthLimit : facultatifs (lus pour le bilan de la sentinelle, pas nécessaires au garde-fou). */
+type KeyUsage = { dayUsed: number; monthLeft: number; monthUsed?: number; monthLimit?: number } | null;
+let cmcKeyUsageMemo: { at: number; ttl: number; usage: Promise<KeyUsage> } | null = null;
 
-/** Lecture partagée : une seule requête /v1/key/info en vol, resservie CMC_KEY_INFO_TTL_MS. */
+/**
+ * Lecture partagée : une seule requête /v1/key/info en vol, resservie CMC_KEY_INFO_TTL_MS.
+ * 07/10/2026 : nouvelle lecture dès que le jour UTC change (le compteur de la veille, resservi après minuit, était
+ * compté comme celui du jour : fausse alerte du bilan, garde-fou faussé), et un échec n'est resservi qu'une minute.
+ */
 function cmcKeyUsage(now: number): Promise<KeyUsage> {
-  if (cmcKeyUsageMemo && now - cmcKeyUsageMemo.at < CMC_KEY_INFO_TTL_MS) return cmcKeyUsageMemo.usage;
+  const m = cmcKeyUsageMemo;
+  if (m && now - m.at < m.ttl && Math.floor(now / DAY_MS) === Math.floor(m.at / DAY_MS)) return m.usage;
   const usage = cmcKeyUsageFetch();
-  cmcKeyUsageMemo = { at: now, usage };
+  const memo = { at: now, ttl: CMC_KEY_INFO_TTL_MS, usage };
+  cmcKeyUsageMemo = memo;
+  void usage.then((u) => {
+    if (!u) memo.ttl = CMC_INSTANCE_LIMITS.errorMemoMs;
+  });
   return usage;
 }
 
@@ -304,10 +315,21 @@ async function cmcKeyUsageFetch(): Promise<KeyUsage> {
       signal: AbortSignal.timeout(CMC_TIMEOUT_MS),
     });
     if (res.ok) {
-      const j = (await res.json()) as { data?: { usage?: { current_day?: { credits_used?: unknown }; current_month?: { credits_left?: unknown } } } };
+      const j = (await res.json()) as {
+        data?: {
+          plan?: { credit_limit_monthly?: unknown };
+          usage?: { current_day?: { credits_used?: unknown }; current_month?: { credits_used?: unknown; credits_left?: unknown } };
+        };
+      };
       const dayUsed = j?.data?.usage?.current_day?.credits_used;
       const monthLeft = j?.data?.usage?.current_month?.credits_left;
-      if (typeof dayUsed === "number" && typeof monthLeft === "number") usage = { dayUsed, monthLeft };
+      if (typeof dayUsed === "number" && typeof monthLeft === "number") {
+        usage = { dayUsed, monthLeft };
+        const monthUsed = num(j?.data?.usage?.current_month?.credits_used);
+        const monthLimit = pos(j?.data?.plan?.credit_limit_monthly);
+        if (monthUsed !== null) usage.monthUsed = monthUsed;
+        if (monthLimit !== null) usage.monthLimit = monthLimit;
+      }
     }
   } catch {
     usage = null;
@@ -335,6 +357,113 @@ export function cmcBudgetDecision(path: string, usage: KeyUsage, now: number): {
 
 async function cmcBudgetVerdict(path: string, now: number): Promise<{ ok: boolean; reason: string }> {
   return cmcBudgetDecision(path, await cmcKeyUsage(now), now);
+}
+
+/**
+ * BILAN DU BUDGET (07/10/2026, Kev : « contrôler la consommation de CoinMarketCap pour qu'on ait toujours les
+ * ressources pour 1 mois »). Servi par /api/diag/cmc-budget (protégé) et lu par la sentinelle toutes les heures.
+ * Le garde-fou ci-dessus empêche déjà d'épuiser le mois (il réduit puis coupe les appels) ; ce bilan prévient AVANT
+ * qu'il ait à couper, c'est-à-dire avant que les pages perdent les données CMC.
+ *  - rythme retenu = le plus élevé entre la moyenne du mois et le rythme du jour extrapolé (au moins 6 h comptées, pour
+ *    ne pas extrapoler les premières minutes du jour UTC) : estimation prudente ;
+ *  - besoin = rythme × jours restants, comparé aux crédits disponibles (restants − réserve) ;
+ *  - « alerte » : à ce rythme, le garde-fou couperait CMC avant la fin du mois, ou il le coupe déjà ;
+ *  - « attention » : plus de 80 % des crédits disponibles seraient consommés, ou mode économe déjà actif.
+ */
+export interface CmcBudgetBilan {
+  lu: true;
+  niveau: "ok" | "attention" | "alerte";
+  mode: "normal" | "économe" | "arrêt";
+  aujourdhui: number;
+  moisUtilises: number;
+  moisRestants: number;
+  moisPlafond: number;
+  joursRestants: number;
+  allocationJour: number;
+  rythmeJour: number;
+  besoinFinDeMois: number;
+  disponible: number;
+  /** AAAA-MM-JJ (UTC) si, à ce rythme, les crédits disponibles s'épuisent avant la fin du mois ; sinon null. */
+  epuisementPrevu: string | null;
+  raison: string;
+}
+
+const CMC_PATH_LOT = "/v2/cryptocurrency/quotes/latest";
+const CMC_PATH_CLASSEMENT = "/v1/cryptocurrency/listings/latest";
+
+/** Règle pure (testée) : bilan à partir du compteur officiel. */
+export function cmcBudgetBilan(usage: NonNullable<KeyUsage>, now: number): CmcBudgetBilan {
+  const d = new Date(now);
+  const debutMois = Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), 1);
+  const debutJour = Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate());
+  const plafond = usage.monthLimit ?? CMC_FREE_MONTHLY_CREDITS;
+  const moisUtilises = usage.monthUsed ?? Math.max(0, plafond - usage.monthLeft);
+  const rythmeMois = moisUtilises / Math.max(1, (now - debutMois) / DAY_MS);
+  const rythmeJourExtrapole = usage.dayUsed / Math.max(0.25, (now - debutJour) / DAY_MS);
+  const rythme = Math.max(rythmeMois, rythmeJourExtrapole);
+  // Jours restants du GARDE-FOU (au moins 1) pour l'allocation, et jours réellement restants (sans plancher) pour le
+  // besoin : le dernier jour, il ne reste que quelques heures à couvrir.
+  const joursRestants = cmcDaysLeftInMonth(now);
+  const joursReels = (Date.UTC(d.getUTCFullYear(), d.getUTCMonth() + 1, 1) - now) / DAY_MS;
+  const allocation = usage.monthLeft / joursRestants;
+  const besoin = rythme * joursReels;
+  const disponible = Math.max(0, usage.monthLeft - CMC_MONTH_RESERVE);
+  const mode: CmcBudgetBilan["mode"] = cmcBudgetDecision(CMC_PATH_LOT, usage, now).ok
+    ? "normal"
+    : cmcBudgetDecision(CMC_PATH_CLASSEMENT, usage, now).ok
+      ? "économe"
+      : "arrêt";
+  // Le garde-fou coupe dès que la consommation DU JOUR atteint l'allocation : si le rythme du jour la dépasse, la
+  // coupure tombe aujourd'hui, pas quand la réserve du mois sera atteinte.
+  const coupeAujourdhui = rythmeJourExtrapole >= allocation;
+  const joursAvantEpuisement = rythme > 0 ? disponible / rythme : Infinity;
+  const epuisementPrevu = coupeAujourdhui
+    ? new Date(debutJour).toISOString().slice(0, 10)
+    : joursAvantEpuisement < joursReels
+      ? new Date(now + joursAvantEpuisement * DAY_MS).toISOString().slice(0, 10)
+      : null;
+  let niveau: CmcBudgetBilan["niveau"] = "ok";
+  let raison = "rythme compatible avec la fin du mois";
+  if (mode === "arrêt") {
+    niveau = "alerte";
+    raison = `garde-fou actif : plus aucun appel CoinMarketCap (${cmcBudgetDecision(CMC_PATH_CLASSEMENT, usage, now).reason})`;
+  } else if (coupeAujourdhui) {
+    niveau = "alerte";
+    raison = `au rythme du jour (≈ ${Math.round(rythmeJourExtrapole)}/jour pour une allocation de ${Math.floor(allocation)}), le garde-fou coupera CoinMarketCap dès aujourd'hui`;
+  } else if (besoin > disponible) {
+    niveau = "alerte";
+    raison = `à ce rythme, le garde-fou couperait CoinMarketCap${epuisementPrevu ? ` vers le ${epuisementPrevu}` : ""}, avant la fin du mois`;
+  } else if (mode === "économe") {
+    niveau = "attention";
+    raison = `mode économe actif aujourd'hui (${cmcBudgetDecision(CMC_PATH_LOT, usage, now).reason})`;
+  } else if (besoin > 0.8 * disponible) {
+    niveau = "attention";
+    raison = `plus de 80 % des crédits disponibles seraient consommés d'ici la fin du mois`;
+  }
+  return {
+    lu: true,
+    niveau,
+    mode,
+    aujourdhui: usage.dayUsed,
+    moisUtilises,
+    moisRestants: usage.monthLeft,
+    moisPlafond: plafond,
+    joursRestants: Math.round(joursReels * 10) / 10,
+    allocationJour: Math.floor(allocation),
+    rythmeJour: Math.round(rythme),
+    besoinFinDeMois: Math.round(besoin),
+    disponible,
+    epuisementPrevu,
+    raison,
+  };
+}
+
+/** Bilan à partir du compteur officiel (même lecture partagée que le garde-fou : au plus 1 /v1/key/info par 10 min). */
+export async function cmcBudgetReport(now: number = Date.now()): Promise<CmcBudgetBilan | { lu: false; raison: string }> {
+  if (!cmcEnabled()) return { lu: false, raison: "clé CoinMarketCap absente de l'environnement" };
+  const usage = await cmcKeyUsage(now);
+  if (!usage) return { lu: false, raison: "compteur officiel (/v1/key/info) illisible" };
+  return cmcBudgetBilan(usage, now);
 }
 
 /** Tests uniquement. */

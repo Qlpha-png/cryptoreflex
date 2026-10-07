@@ -10,7 +10,8 @@
  *
  * Usage : node scripts/sentinelle.mjs [--full] [--site=https://www.cryptoreflex.fr]
  * Variables facultatives : KV_REST_API_URL / KV_REST_API_TOKEN (âge des prix), GITHUB_TOKEN + GITHUB_REPOSITORY
- * (échecs des robots), SENTINELLE_REPORT (fichier du rapport, défaut sentinelle-report.md).
+ * (échecs des robots), CRON_SECRET (budget CoinMarketCap), SENTINELLE_REPORT (fichier du rapport, défaut
+ * sentinelle-report.md).
  * Aucune donnée personnelle, aucun secret écrit dans le rapport.
  */
 import { readFileSync, writeFileSync } from "node:fs";
@@ -295,6 +296,46 @@ async function checkOrchestrator() {
   }
 }
 
+/* 07/10/2026 (Kev : « contrôler la consommation de CoinMarketCap pour qu'on ait toujours les ressources pour 1 mois ») :
+   compteur officiel de la clé lu par le site (/api/diag/cmc-budget, protégé par CRON_SECRET, 0 crédit). Défaut si, au
+   rythme actuel, le garde-fou devrait couper CMC avant la fin du mois (ou le coupe déjà) ; à surveiller au-delà de 80 %. */
+async function checkCmcBudget() {
+  const secret = (process.env.CRON_SECRET ?? "").trim(); // espaces de bord ignorés, comme le fait fetch pour un en-tête
+  if (!secret) return warn("quota", "budget CoinMarketCap non contrôlé (CRON_SECRET absent de l'environnement)");
+  /* Tickets PUBLICS : jamais la valeur du secret, ni un message d'erreur brut qui pourrait la recopier (fetch cite
+     l'en-tête refusé quand le secret contient un retour à la ligne). */
+  if (!/^[\x21-\x7e]+$/.test(secret)) return fail("quota", "budget CoinMarketCap non contrôlé : CRON_SECRET mal formé (espace, retour à la ligne ou caractère invisible)");
+  const lire = async () => {
+    const { res } = await get(SITE + "/api/diag/cmc-budget", { headers: { authorization: `Bearer ${secret}` }, timeout: 20_000 });
+    if (res.status !== 200) { await res.body?.cancel().catch(() => {}); return { http: res.status }; }
+    return { b: await res.json() };
+  };
+  let r;
+  try {
+    r = await lire();
+    // incident ponctuel (compteur ou route) : une seconde lecture une minute plus tard avant de conclure
+    if (r.http || !r.b?.lu) { await new Promise((fin) => setTimeout(fin, 65_000)); r = await lire(); }
+  } catch (e) {
+    return warn("quota", `budget CoinMarketCap illisible (${e?.name === "TimeoutError" ? "délai dépassé" : "erreur réseau"})`);
+  }
+  if (r.http) return fail("quota", `contrôle du budget CoinMarketCap impossible : la route répond HTTP ${r.http} (jeton CRON_SECRET différent entre GitHub et Vercel ?)`);
+  const b = r.b;
+  if (!b?.lu) {
+    // clé absente = CMC simplement pas utilisé ; compteur illisible = garde-fou du mois AVEUGLE (seul cas où le mois peut s'épuiser)
+    if (/clé/.test(b?.raison ?? "")) return warn("quota", `CoinMarketCap non utilisé : ${b.raison}`);
+    return fail("quota", "garde-fou mensuel CoinMarketCap aveugle : compteur officiel illisible (le site ne règle plus son rythme que par instance)");
+  }
+  const resume = `CoinMarketCap : ${fmt(b.aujourdhui)} crédits aujourd'hui, ${fmt(b.moisUtilises)} sur ${fmt(b.moisPlafond)} ce mois ; rythme ≈ ${fmt(b.rythmeJour)}/jour, soit ≈ ${fmt(b.besoinFinDeMois)} d'ici la fin du mois pour ${fmt(b.disponible)} disponibles (garde-fou : ${b.mode})`;
+  if (b.niveau === "alerte") {
+    // ligne ❌ STABLE (le ticket n'est complété que si l'ensemble des défauts change) ; chiffres du moment à part
+    fail("quota", b.mode === "arrêt"
+      ? "CoinMarketCap coupé par le garde-fou du mois : les pages passent sur les autres sources jusqu'à la remise à zéro"
+      : "au rythme actuel, le garde-fou couperait CoinMarketCap avant la fin du mois");
+    warn("quota", `${resume} — ${b.raison}`);
+  } else if (b.niveau === "attention") warn("quota", `${resume} — ${b.raison}`);
+  else ok("quota", resume);
+}
+
 /* ------------------------------------------------------------------ 4. documents fiscaux (nuit) */
 async function checkFiscal() {
   // Exemple officiel BOFiP (BOI-RPPM-PVBMC-30-20 §110) : 1 000 € investis ; cessions de 450 € puis 1 300 € →
@@ -419,6 +460,7 @@ await checkAnalyses();
 await checkRobots();
 await checkOrchestrator();
 await checkGameContent();
+await checkCmcBudget();
 if (FULL) {
   await checkFiscal();
   await checkPartners();
