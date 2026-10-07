@@ -7,7 +7,7 @@
  * autorisée en France depuis le 1er juillet 2026. Règle : une plateforme non autorisée en France (registre MiCA de
  * l'ESMA, liste blanche de l'AMF : isAvailableFr) ne reçoit aucune recommandation, comme dans buildPlatformSummary.
  */
-import { isAvailableFr, type Platform } from "@/lib/platforms";
+import { deNom, isAvailableFr, type Platform } from "@/lib/platforms";
 import { fmtNb } from "@/lib/format-fr";
 
 export interface DuelVerdict {
@@ -62,7 +62,7 @@ export function buildDuelVerdict(a: Platform, b: Platform): DuelVerdict {
     aFeesAdv > 0.3
       ? `Choisissez ${a.name} si vous tradez régulièrement en spot — vous économisez du capital à chaque opération sur les frais (${fmtNb(a.fees.spotMaker)}% vs ${fmtNb(b.fees.spotMaker)}% en maker). Sur 12 mois et 10 000€ de volume, l'écart devient mécanique.`
       : aSecAdv > 0.3
-        ? `Choisissez ${a.name} si la sécurité est votre priorité non-négociable. ${fmtNb(a.security.coldStoragePct)}% en cold storage et un score MiCA ${fmtNb(a.scoring.mica)}/5 placent la barre haut.`
+        ? `Choisissez ${a.name} si la sécurité est votre priorité non négociable : sa note de sécurité (${fmtNb(a.scoring.security)}/5 dans notre méthode) dépasse celle ${deNom(b.name)} (${fmtNb(b.scoring.security)}/5).`
         : aUxAdv > 0.3
           ? `Choisissez ${a.name} si l'expérience utilisateur est déterminante : sa sous-note UX est de ${fmtNb(a.scoring.ux)}/5, contre ${fmtNb(b.scoring.ux)}/5 pour ${b.name}.`
           : `Choisissez ${a.name} si vous valorisez : ${a.strengths[0].toLowerCase()}. C'est le critère où l'écart est le plus net face à ${b.name}.`;
@@ -71,7 +71,7 @@ export function buildDuelVerdict(a: Platform, b: Platform): DuelVerdict {
     aFeesAdv < -0.3
       ? `Choisissez ${b.name} si vous tradez régulièrement en spot — vous économisez du capital à chaque opération sur les frais (${fmtNb(b.fees.spotMaker)}% vs ${fmtNb(a.fees.spotMaker)}% en maker). Sur 12 mois et 10 000€ de volume, l'écart devient mécanique.`
       : aSecAdv < -0.3
-        ? `Choisissez ${b.name} si la sécurité est votre priorité non-négociable. ${fmtNb(b.security.coldStoragePct)}% en cold storage et un score MiCA ${fmtNb(b.scoring.mica)}/5 placent la barre haut.`
+        ? `Choisissez ${b.name} si la sécurité est votre priorité non négociable : sa note de sécurité (${fmtNb(b.scoring.security)}/5 dans notre méthode) dépasse celle ${deNom(a.name)} (${fmtNb(a.scoring.security)}/5).`
         : aUxAdv < -0.3
           ? `Choisissez ${b.name} si l'expérience utilisateur est déterminante : sa sous-note UX est de ${fmtNb(b.scoring.ux)}/5, contre ${fmtNb(a.scoring.ux)}/5 pour ${a.name}.`
           : `Choisissez ${b.name} si vous valorisez : ${b.strengths[0].toLowerCase()}. C'est le critère où l'écart est le plus net face à ${a.name}.`;

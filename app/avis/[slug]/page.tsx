@@ -22,12 +22,15 @@ import {
   cardCostSentence,
   cardCostLabel,
   cardFeeMeasured,
+  coldStorageLabel,
+  deNom,
   getAllPlatforms,
   getPlatformById,
+  insuranceLabel,
   isAvailableFr,
+  lcFirst,
   type Platform,
   type PurchaseCost,
-  hasNoIncident,
   purchaseCostText,
   simpleCost1000,
   supportChatLabel,
@@ -138,6 +141,35 @@ function Score({ value, label }: { value: number; label: string }) {
   );
 }
 
+/** Lien(s) vers la source d'une donnée de sécurité (page officielle, communiqué, article de presse). */
+function SecuritySource({ href }: { href?: string | string[] }) {
+  const urls = (Array.isArray(href) ? href : href ? [href] : []).filter(Boolean);
+  if (urls.length === 0) return null;
+  const cls = "underline decoration-fg-max/30 hover:text-fg-max";
+  return (
+    <>
+      {" "}
+      {urls.length === 1 ? (
+        <a href={urls[0]} target="_blank" rel="noopener noreferrer nofollow" className={cls}>
+          Source
+        </a>
+      ) : (
+        <>
+          Sources :{" "}
+          {urls.map((u, i) => (
+            <span key={u}>
+              {i > 0 && " · "}
+              <a href={u} target="_blank" rel="noopener noreferrer nofollow" className={cls}>
+                {i + 1}
+              </a>
+            </span>
+          ))}
+        </>
+      )}
+    </>
+  );
+}
+
 function Stars({ n }: { n: number }) {
   return (
     <div className="flex items-center gap-0.5">
@@ -187,6 +219,38 @@ function CostTile({ label, cost, normalCase = false }: { label: string; cost: Pu
 const frDate = (iso: string) =>
   new Date(iso).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric", timeZone: "Europe/Paris" });
 
+/**
+ * Réponse « piratage » construite UNIQUEMENT à partir des valeurs sourcées de data/ (06/10/2026). Avant : « Aucun
+ * incident de sécurité majeur n'est documenté » et « 95 % des fonds clients sont en cold storage » pour des plateformes
+ * qui ne publient aucun pourcentage, et même pour SwissBorg, touchée en septembre 2025.
+ */
+function securityFaqAnswer(p: Platform): string {
+  const s = p.security;
+  const when = frDate(s.verified);
+  const incident = s.lastIncident
+    ? `Oui. Ce que nous avons documenté, du plus récent au plus ancien : ${lcFirst(s.lastIncident).replace(/[\s.]*$/, ".")}`
+    : `Nous n'avons relevé aucun incident de sécurité documenté pour ${p.name} dans nos sources (communiqués officiels, presse reconnue) au ${when}. Ce n'est pas une garantie.`;
+  if (p.category === "wallet") {
+    return `${incident} ${p.name} fabrique des portefeuilles matériels : la société ne garde pas vos cryptos, vos clés restent sur l'appareil. Le risque principal tient à votre phrase de récupération et aux faux messages qui la réclament.`;
+  }
+  // « Sans objet » : la plateforme ne garde pas de cryptos (CFD, portefeuille non dépositaire, achat envoyé au client).
+  const noCustody = /^sans objet/i.test(s.coldStorageNote ?? "");
+  const cold =
+    s.coldStorageNote || s.coldStoragePct != null
+      ? `Conservation hors ligne : ${lcFirst(coldStorageLabel(p))}${s.coldStorageNote ? "" : ", selon la plateforme"}.`
+      : `${p.name} ne publie pas la part des cryptos de ses clients conservée hors ligne.`;
+  const insurance =
+    s.insurance != null
+      ? ` Assurance des cryptos : ${lcFirst(insuranceLabel(p))}.`
+      : noCustody
+        ? ""
+        : ` ${p.name} ne communique pas d'assurance couvrant les cryptos de ses clients.`;
+  const closing = noCustody
+    ? ""
+    : " Aucune plateforme n'est à l'abri d'un piratage : pour une épargne de long terme, un portefeuille dont vous gardez vous-même les clés supprime ce risque-là.";
+  return `${incident} ${cold}${insurance}${closing}`;
+}
+
 function buildFaq(p: Platform): { q: string; a: string }[] {
   const faq: { q: string; a: string }[] = [];
 
@@ -230,9 +294,7 @@ function buildFaq(p: Platform): { q: string; a: string }[] {
 
   faq.push({
     q: `${p.name} a-t-elle déjà subi un piratage ?`,
-    a: !hasNoIncident(p.security.lastIncident)
-      ? `Incident notable : ${p.security.lastIncident}. ${fmtNb(p.security.coldStoragePct)}% des fonds clients sont stockés à froid (cold wallet) et ${p.security.insurance ? "couverts par une assurance dédiée" : "non couverts par une assurance externe"}.`
-      : `Aucun incident de sécurité majeur n'est documenté à date sur ${p.name}. ${fmtNb(p.security.coldStoragePct)}% des fonds clients sont en cold storage, ${p.security.insurance ? "avec une couverture d'assurance" : "sans assurance externe formalisée"}.`,
+    a: securityFaqAnswer(p),
   });
 
   faq.push({
@@ -257,7 +319,8 @@ function buildFaq(p: Platform): { q: string; a: string }[] {
   if (p.name !== competitor) {
     faq.push({
       q: `${p.name} ou ${competitor} : lequel choisir en 2026 ?`,
-      a: `Tout dépend de votre priorité. ${p.name} se distingue par ${p.strengths[0]?.toLowerCase() ?? "son positionnement"}, là où ${competitor} mise sur ${competitor === "Coinbase" ? "une interface simple, avec un agrément MiCA délivré au Luxembourg" :"la sécurité (aucun piratage majeur, preuve de réserves auditée)"}. Notre comparatif détaillé tranche selon votre profil.`,
+      /* 06/10/2026 : l'absence de piratage n'était pas sourcée (la page sécurité de Kraken n'en dit rien) : retirée. */
+      a: `Tout dépend de votre priorité. ${p.name} se distingue par ${p.strengths[0]?.toLowerCase() ?? "son positionnement"}, là où ${competitor} mise sur ${competitor === "Coinbase" ? "une interface simple, avec un agrément MiCA délivré au Luxembourg" : "la sécurité et la transparence (preuve de réserves publiée régulièrement)"}. Notre comparatif détaillé tranche selon votre profil.`,
     });
   }
 
@@ -779,10 +842,17 @@ export default function ReviewPage({ params }: Props) {
           </p>
           <div className="mt-5 grid gap-4 sm:grid-cols-2">
             <div className="rounded-xl border border-border bg-surface p-4">
-              <div className="text-xs uppercase tracking-wide text-muted">Cold storage</div>
-              <div className="mt-1 text-2xl font-bold text-fg-max">{fmtNb(p.security.coldStoragePct)}%</div>
+              <div className="text-xs uppercase tracking-wide text-muted">Conservation hors ligne</div>
+              <div className={`mt-1 font-bold text-fg-max ${p.security.coldStoragePct != null && !p.security.coldStorageNote ? "text-2xl" : "text-sm"}`}>
+                {coldStorageLabel(p)}
+              </div>
               <p className="mt-2 text-sm text-fg-max/70">
-                Pourcentage des fonds clients conservés hors-ligne. Au-dessus de 95% est considéré comme une bonne pratique.
+                {isWallet
+                  ? "Un portefeuille matériel garde vos clés sur l'appareil : leur sécurité dépend de vous et de votre phrase de récupération."
+                  : p.security.coldStoragePct != null || p.security.coldStorageNote
+                    ? "Part des cryptos des clients conservée hors ligne, telle que publiée par la plateforme (non auditée par Cryptoreflex)."
+                    : "La plateforme ne publie pas la part des cryptos de ses clients conservée hors ligne."}
+                <SecuritySource href={p.security.source.coldStoragePct} />
               </p>
             </div>
             <div className="rounded-xl border border-border bg-surface p-4">
@@ -793,18 +863,35 @@ export default function ReviewPage({ params }: Props) {
               </p>
             </div>
             <div className="rounded-xl border border-border bg-surface p-4">
-              <div className="text-xs uppercase tracking-wide text-muted">Assurance</div>
-              <div className="mt-1 text-sm font-semibold text-fg-max">
-                {p.security.insurance ? "Oui — police dédiée" : "Non documentée"}
-              </div>
+              <div className="text-xs uppercase tracking-wide text-muted">Assurance des cryptos</div>
+              <div className="mt-1 text-sm font-semibold text-fg-max">{insuranceLabel(p)}</div>
+              <p className="mt-2 text-sm text-fg-max/70">
+                {isWallet
+                  ? "Vous détenez vous-même vos cryptos : la société ne les garde pas."
+                  : p.security.insurance == null
+                    ? "Rien de publié par la plateforme sur une assurance des cryptos de ses clients."
+                    : p.security.insurance
+                      ? "Telle que décrite par la plateforme : lisez-en la portée avant de vous y fier."
+                      : "D'après les documents officiels de la plateforme."}
+                <SecuritySource href={p.security.source.insurance} />
+              </p>
             </div>
             <div className="rounded-xl border border-border bg-surface p-4">
-              <div className="text-xs uppercase tracking-wide text-muted">Dernier incident</div>
+              <div className="text-xs uppercase tracking-wide text-muted">Dernier incident documenté</div>
               <div className="mt-1 text-sm text-fg-max/90">
-                {p.security.lastIncident ?? "Aucun à date"}
+                {p.security.lastIncident ?? "Aucun relevé dans nos sources"}
               </div>
+              <p className="mt-2 text-sm text-fg-max/70">
+                {p.security.lastIncident
+                  ? "Relevé dans un communiqué officiel ou la presse reconnue, du plus récent au plus ancien."
+                  : "Ce n'est pas une garantie : une plateforme peut être piratée demain."}
+                <SecuritySource href={p.security.source.lastIncident} />
+              </p>
             </div>
           </div>
+          <p className="mt-3 text-xs text-muted">
+            Données de sécurité relevées le {frDate(p.security.verified)} sur les pages officielles {deNom(p.name)} et, pour les incidents, dans des communiqués ou la presse reconnue.
+          </p>
         </section>
 
         {/* CTA milieu — après section sécurité (pic d'engagement) */}

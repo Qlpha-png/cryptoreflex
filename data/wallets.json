@@ -75,10 +75,17 @@
         "note": "Assistance par e-mail et, quand c'est possible, par chat en direct : LedgerBot (IA) répond d'abord, puis un expert sur demande (taper « Expert »). Ledger ne fournit pas d'assistance téléphonique ; langue des experts non précisée"
       },
       "security": {
-        "coldStoragePct": 100,
-        "insurance": false,
+        "coldStoragePct": null,
+        "insurance": null,
         "twoFA": true,
-        "lastIncident": "Juillet 2020 (fuite emails clients via prestataire e-commerce — pas d'atteinte aux fonds)"
+        "lastIncident": "En janvier 2026, le piratage de Global-e, prestataire de paiement de la boutique Ledger.com, a exposé les noms et coordonnées de clients ; selon Ledger, ses systèmes, les appareils et les phrases de récupération n'ont pas été touchés. En décembre 2023, une bibliothèque logicielle de Ledger piégée (Connect Kit) avait permis de voler environ 600 000 $ à des utilisateurs d'applications web3.",
+        "source": {
+          "lastIncident": [
+            "https://www.bleepingcomputer.com/news/security/ledger-customers-impacted-by-third-party-global-e-data-breach/",
+            "https://www.bleepingcomputer.com/news/security/ledger-dapp-supply-chain-attack-steals-600k-from-crypto-wallets/"
+          ]
+        },
+        "verified": "2026-10-07"
       },
       "bonus": {
         "welcome": "Pas de bonus inscription (achat matériel) — voir promotions sur la boutique officielle",
@@ -170,10 +177,17 @@
         "note": "Chat avec le robot Hal, qui transmet à l'équipe support ; langue des réponses non précisée"
       },
       "security": {
-        "coldStoragePct": 100,
-        "insurance": false,
+        "coldStoragePct": null,
+        "insurance": null,
         "twoFA": true,
-        "lastIncident": "Aucun fonds compromis ; vulnérabilité physique Kraken Labs (2020) sur Trezor One sans passphrase"
+        "lastIncident": "En septembre 2026, le piratage de Brevo, son prestataire d'e-mails, a permis d'envoyer un message d'hameçonnage depuis le compte de Trezor, après l'export de 347 149 contacts. En août 2026, celui de son logisticien ShipMonk a exposé les noms, coordonnées et adresses de 80 689 clients. Selon Trezor, ni ses systèmes, ni ses appareils, ni les clés privées n'ont été touchés.",
+        "source": {
+          "lastIncident": [
+            "https://trezor.io/blog/news/security-incident-at-brevo-our-third-party-email-provider",
+            "https://trezor.io/blog/news/recent-customer-data-exposed-in-shipping-provider-incident"
+          ]
+        },
+        "verified": "2026-10-07"
       },
       "bonus": {
         "welcome": "Pas de bonus inscription (achat matériel) — voir promotions sur la boutique officielle",

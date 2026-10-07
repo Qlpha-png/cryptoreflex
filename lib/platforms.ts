@@ -138,11 +138,31 @@ export interface Platform {
     /** Ce que dit la page (canaux, langue, horaires, conditions), prêt à afficher. */
     note: string | null;
   };
+  /**
+   * Sécurité, relevée les 06-07/10/2026 sur les sources officielles (page sécurité, rapport annuel, CGU) et, pour les
+   * incidents, sur un communiqué officiel ou la presse reconnue. Avant : 95 %, 99 %, « aucun incident »… jamais sourcés.
+   * null = rien de publié : le site affiche « non communiqué par la plateforme », jamais une promesse.
+   */
   security: {
-    coldStoragePct: number;
-    insurance: boolean;
+    /** Part des cryptos des clients conservée hors ligne, en %, telle que PUBLIÉE par la plateforme ; null sinon. */
+    coldStoragePct: number | null;
+    /** Formule publiée (« la majorité », « 95 % et plus ») ou « sans objet » (CFD, pas de garde) ; affichée telle quelle. */
+    coldStorageNote?: string;
+    /** true : assurance déclarée par la plateforme ; false : elle écrit qu'il n'y en a pas ; null : rien de publié. */
+    insurance: boolean | null;
+    /** Portée exacte de l'assurance publiée (ex. « contre le vol, une partie des actifs seulement »). */
+    insuranceNote?: string;
     twoFA: boolean;
+    /**
+     * Incident de sécurité documenté le plus récent (fonds ou données de clients touchés, ou intrusion dans la plateforme),
+     * plus, s'il est différent, le plus grave des dernières années ; phrases commençant par « En <mois> <année>, ».
+     * null = aucun relevé dans nos sources, ce qui n'est PAS « aucun incident ».
+     */
     lastIncident: string | null;
+    /** Source (URL) de chaque valeur non nulle, par champ ; une URL par fait cité pour les incidents. */
+    source: { coldStoragePct?: string; insurance?: string; lastIncident?: string[] };
+    /** Date du relevé (AAAA-MM-JJ). */
+    verified: string;
   };
   bonus: {
     welcome: string;
@@ -283,13 +303,40 @@ export function getPlatformById(id: string): Platform | undefined {
  * Audit 05/10/2026 : l'ancienne version prenait toutes les entrées (portefeuilles Ledger et Trezor compris) pour
  * les données structurées « plateformes régulées MiCA en France », et Binance (non autorisé) était 8e.
  */
-/**
- * Vrai si le libellé « dernier incident » signifie qu'il n'y en a pas (null, « Aucun incident majeur… »).
- * Audit du 05/10/2026 : ces libellés s'affichaient en orange et produisaient « Incident notable : Aucun incident majeur ».
- */
-export function hasNoIncident(lastIncident: string | null | undefined): boolean {
-  return !lastIncident || /^aucun\b/i.test(lastIncident.trim());
+/* ---------------------------------------------------------------------------------------------------------------- */
+/* Sécurité (06/10/2026) : chaque valeur affichée est publiée par la plateforme (ou documentée, pour les incidents) ;   */
+/* sinon on écrit qu'elle n'est pas communiquée. Plus de « Aucun incident à date » ni de « police dédiée » inventés.   */
+/* ---------------------------------------------------------------------------------------------------------------- */
+
+const pctFr = (n: number) => `${n.toLocaleString("fr-FR", { maximumFractionDigits: 2 })} %`;
+
+/** Minuscule initiale pour insérer un libellé en milieu de phrase (« « La majorité » » → « « la majorité » »), sauf sigle (« FBI »). */
+export const lcFirst = (t: string): string =>
+  t.replace(/^([«\s  ]*)(\p{Lu})(?=\p{Ll})/u, (_m, lead: string, c: string) => lead + c.toLowerCase());
+
+/** « de Kraken », « d'eToro », « d'OKX », « d'AnyCoin Direct » : préposition élidée devant une voyelle. */
+export const deNom = (name: string): string => (/^[aeiouyàâéèêëîïôöûùü]/i.test(name) ? `d'${name}` : `de ${name}`);
+
+/** Conservation hors ligne prête à afficher : « 98 % », « la majorité, selon la plateforme », « Non communiqué… ». */
+export function coldStorageLabel(p: Pick<Platform, "category" | "security">): string {
+  if (p.category === "wallet") return "Sans objet (vous gardez vous-même vos clés)";
+  const s = p.security;
+  if (s.coldStorageNote) return s.coldStorageNote;
+  if (s.coldStoragePct != null) return pctFr(s.coldStoragePct);
+  return "Non communiqué par la plateforme";
 }
+
+/** Assurance prête à afficher, avec sa portée quand elle est publiée. */
+export function insuranceLabel(p: Pick<Platform, "category" | "security">): string {
+  const s = p.security;
+  if (s.insurance === true) return s.insuranceNote ?? "Oui, selon la plateforme";
+  if (s.insurance === false) return s.insuranceNote ?? "Aucune, selon la plateforme";
+  if (p.category === "wallet") return "Sans objet (la société ne garde pas vos cryptos)";
+  return "Non communiquée par la plateforme";
+}
+
+/** Phrase courte qui rappelle qu'un incident non relevé n'est pas une garantie (tableaux, FAQ). */
+export const NO_INCIDENT_FOUND = "Aucun incident relevé dans nos sources, ce qui n'est pas une garantie";
 
 export function getTopPlatforms(n = 6): Platform[] {
   return getExchangePlatforms().filter(isAvailableFr).slice(0, n);

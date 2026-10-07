@@ -12,14 +12,14 @@ import {
   Snowflake,
 } from "lucide-react";
 
-import { getExchangePlatforms } from "@/lib/platforms";
+import { coldStorageLabel, getExchangePlatforms, insuranceLabel, NO_INCIDENT_FOUND } from "@/lib/platforms";
 import { formatMicaDate, getMicaMeta } from "@/lib/mica";
 import { getReviewHref } from "@/lib/programmatic";
 import PlatformName from "@/components/comparison/PlatformName";
 import { BRAND } from "@/lib/brand";
 import { withHreflang } from "@/lib/seo-alternates";
 import StructuredData from "@/components/StructuredData";
-import { fmtNb } from "@/lib/format-fr";
+import { fmtDateFr } from "@/lib/format-fr";
 import {
   breadcrumbSchema,
   faqSchema,
@@ -35,8 +35,9 @@ import {
  *
  * Pattern : Server Component, ranking par score securite, transparence
  * sur cold storage / assurance / 2FA / dernier incident. Donnees issues
- * de data/platforms.json (security.coldStoragePct, insurance, twoFA,
- * lastIncident).
+ * de data/platforms.json (security.*). 06/10/2026 : chaque valeur est sourcee
+ * (security.source) ou affichee « non communiquee » ; plus de moyenne de
+ * pourcentages inventes ni de « n'ont jamais ete victimes d'un incident ».
  *
  * SEO : indexable, hreflang, JSON-LD CollectionPage + FAQ riche.
  */
@@ -44,8 +45,6 @@ import {
 export const revalidate = 86400;
 
 const PAGE_PATH = "/comparatif/securite";
-/** « Aucun incident majeur… » n'est pas un incident : affiché en vert (avant : en orange, comme un piratage). */
-const isNoIncident = (t: string | null) => !t || /^aucun\b/i.test(t.trim());
 /** Libellé court, coupé à la fin d'un mot (jamais « création (… »). */
 const shortLabel = (t: string, max = 38) => {
   if (t.length <= max) return t;
@@ -97,10 +96,15 @@ interface SecurityRow {
   /** Fiche /avis/<id> si elle existe, sinon null (pas de lien). */
   href: string | null;
   securityScore: number;
-  coldStoragePct: number;
-  insurance: boolean;
+  /** Libellé publié (« 98 % », « la majorité, selon … ») ou « Non communiqué par la plateforme ». */
+  coldStorage: string;
+  coldStoragePublished: boolean;
+  insurance: boolean | null;
+  insuranceText: string;
   twoFA: boolean;
   lastIncident: string | null;
+  source: { coldStoragePct?: string; insurance?: string; lastIncident?: string[] };
+  verified: string;
   micaCompliant: boolean;
   micaStatus: string;
   amfRegistration: string | null;
@@ -115,10 +119,14 @@ function buildRows(): SecurityRow[] {
       // Audit 2026-10-02 : /comparatif/<id> n'existe pas (404) → fiche avis.
       href: getReviewHref(p.id),
       securityScore: p.scoring.security,
-      coldStoragePct: p.security.coldStoragePct,
+      coldStorage: coldStorageLabel(p),
+      coldStoragePublished: p.security.coldStoragePct != null || !!p.security.coldStorageNote,
       insurance: p.security.insurance,
+      insuranceText: insuranceLabel(p),
       twoFA: p.security.twoFA,
       lastIncident: p.security.lastIncident,
+      source: p.security.source,
+      verified: p.security.verified,
       micaCompliant: p.mica.micaCompliant,
       micaStatus: p.mica.status,
       amfRegistration: p.mica.amfRegistration,
@@ -129,10 +137,13 @@ function buildRows(): SecurityRow[] {
 export default function ComparatifSecuritePage() {
   const rows = buildRows();
   const top = rows[0];
-  const safeNoIncident = rows.filter((r) => isNoIncident(r.lastIncident)).length;
+  const withIncident = rows.filter((r) => r.lastIncident).length;
   const micaCompliantCount = rows.filter((r) => r.micaCompliant).length;
-  const avgColdStorage =
-    rows.reduce((acc, r) => acc + r.coldStoragePct, 0) / rows.length;
+  /* 06/10/2026 : la « moyenne de cold storage » (≈ 95 %) était calculée sur des pourcentages jamais publiés. */
+  // « Sans objet » (pas de garde : CFD, portefeuille non dépositaire, achat envoyé au client) ne décrit aucune conservation.
+  const describedCold = rows.filter((r) => r.coldStoragePublished && !/^sans objet/i.test(r.coldStorage)).length;
+  const figureCold = rows.filter((r) => r.coldStoragePublished && /\d\s?%/.test(r.coldStorage)).length;
+  const securityVerified = rows.map((r) => r.verified).sort().at(-1);
 
   const schemas = graphSchema([
     breadcrumbSchema([
@@ -147,7 +158,7 @@ export default function ComparatifSecuritePage() {
       },
       {
         question: "Qu'est-ce que le cold storage et pourquoi c'est important ?",
-        answer: "Le cold storage, c'est le stockage des cryptos dans des portefeuilles HORS LIGNE (portefeuilles matériels, machines jamais connectées). Si la plateforme est piratée, les fonds stockés hors ligne restent en général hors d'atteinte. Les grandes plateformes déclarent y conserver l'essentiel des fonds de leurs clients ; la part gardée en ligne (hot wallet) est la plus exposée en cas de piratage.",
+        answer: `Le cold storage, c'est le stockage des cryptos dans des portefeuilles HORS LIGNE (portefeuilles matériels, machines jamais connectées). Si la plateforme est piratée, les fonds stockés hors ligne restent en général hors d'atteinte ; la part gardée en ligne (hot wallet) est la plus exposée. Attention : seules ${figureCold} plateformes sur ${rows.length} de notre base publient un chiffre pour la part de fonds conservée hors ligne, et ce chiffre déclaré n'est pas audité.`,
       },
       {
         question: "L'assurance d'une plateforme couvre-t-elle vraiment mes fonds ?",
@@ -163,7 +174,7 @@ export default function ComparatifSecuritePage() {
       },
       {
         question: "Que faire en cas de hack de ma plateforme ?",
-        answer: "1) Changez votre mot de passe et fermez toutes les sessions actives. 2) Vérifiez l'historique des transactions et alertez le support. 3) En cas de vol confirmé : portez plainte (commissariat, gendarmerie, ou en ligne pour une escroquerie sur internet) et contactez l'assurance de la plateforme. 4) Côté impôts : un vol n'est pas une cession, aucune moins-value n'est déclarée ; gardez la plainte et les preuves, la valeur volée sort simplement de votre portefeuille.",
+        answer: "1) Changez votre mot de passe et fermez toutes les sessions actives. 2) Vérifiez l'historique des transactions et alertez le support. 3) En cas de vol confirmé : portez plainte (commissariat, gendarmerie, ou en ligne pour une escroquerie sur internet) et demandez par écrit à la plateforme sa procédure d'indemnisation. 4) Côté impôts : un vol n'est pas une cession, aucune moins-value n'est déclarée ; gardez la plainte et les preuves, la valeur volée sort simplement de votre portefeuille.",
       },
     ]),
   ]);
@@ -196,7 +207,8 @@ export default function ComparatifSecuritePage() {
             <strong className="text-fg">{rows.length} plateformes</strong>{" "}
             notées sur 5 axes : stockage hors ligne, assurance, double
             authentification, historique d&apos;incidents et agrément MiCA.
-            Classées de la plus sûre à la moins sûre.
+            Classées selon notre note de sécurité ; chaque donnée renvoie à sa
+            source.
           </p>
         </header>
 
@@ -210,9 +222,9 @@ export default function ComparatifSecuritePage() {
             icon={<Trophy className="h-4 w-4" />}
           />
           <Stat
-            label="Cold storage moyen"
-            value={`${avgColdStorage.toFixed(0)} %`}
-            sub="des fonds clients hors ligne"
+            label="Conservation hors ligne"
+            value={`${describedCold}/${rows.length}`}
+            sub={`plateformes décrivent leur conservation hors ligne, dont ${figureCold} avec un chiffre`}
             tone="primary"
             icon={<Snowflake className="h-4 w-4" />}
           />
@@ -227,36 +239,35 @@ export default function ComparatifSecuritePage() {
 
         {/* Table */}
         <div className="mt-10 overflow-x-auto rounded-2xl border border-border bg-surface">
-          <table className="w-full text-sm min-w-[820px]">
+          <table className="w-full text-sm min-w-[960px]">
             <thead>
               <tr className="bg-elevated/60 text-xs uppercase tracking-wider text-muted [&>th]:whitespace-nowrap">
                 <th className="px-4 py-3 text-left">#</th>
                 <th className="px-4 py-3 text-left">Plateforme</th>
                 <th className="px-4 py-3 text-right">Score</th>
-                <th className="px-4 py-3 text-right" title="Pourcentage de fonds clients en cold storage">
-                  Cold storage
+                <th className="px-4 py-3 text-left" title="Part des cryptos des clients conservée hors ligne, telle que publiée par la plateforme">
+                  Hors ligne (publié)
                 </th>
-                <th className="px-4 py-3 text-center" title="Assurance des fonds clients">
+                <th className="px-4 py-3 text-center" title="Assurance des cryptos des clients, telle que publiée par la plateforme">
                   Assurance
                 </th>
-                <th className="px-4 py-3 text-center" title="Hardware keys FIDO2 / U2F">
-                  2FA hardware
+                <th className="px-4 py-3 text-center" title="Double authentification proposée">
+                  2FA
                 </th>
                 <th className="px-4 py-3 text-left">MiCA / CASP</th>
-                <th className="px-4 py-3 text-left">Dernier incident</th>
+                <th className="px-4 py-3 text-left">Dernier incident documenté</th>
               </tr>
             </thead>
             <tbody>
               {rows.map((r, i) => {
                 const isBest = i === 0;
-                const noIncident = isNoIncident(r.lastIncident);
                 return (
                   <tr
                     key={r.id}
                     className={`border-t border-border ${isBest ? "bg-primary/5" : ""}`}
                   >
                     <td className="px-4 py-3 font-mono text-xs text-muted">{i + 1}</td>
-                    <td className="px-4 py-3">
+                    <td className="px-4 py-3 whitespace-nowrap">
                       <PlatformName
                         href={r.href}
                         className="inline-flex items-center gap-2 font-semibold text-fg"
@@ -282,19 +293,26 @@ export default function ComparatifSecuritePage() {
                         {note(r.securityScore)}/5
                       </span>
                     </td>
-                    <td className="px-4 py-3 text-right">
-                      <div className="font-mono tabular-nums text-fg">
-                        {fmtNb(r.coldStoragePct)} %
-                      </div>
-                      <div className="text-[10px] text-muted">
-                        {r.coldStoragePct >= 95 ? "Excellent" : r.coldStoragePct >= 80 ? "Bon" : "À surveiller"}
-                      </div>
+                    <td className="px-4 py-3 text-xs max-w-[190px]">
+                      {r.coldStoragePublished ? (
+                        <SourceLink href={r.source.coldStoragePct} className="text-fg">
+                          {r.coldStorage}
+                        </SourceLink>
+                      ) : (
+                        <span className="text-muted">Non publié</span>
+                      )}
                     </td>
                     <td className="px-4 py-3 text-center">
-                      {r.insurance ? (
-                        <CheckCircle2 className="inline h-4 w-4 text-accent-green" aria-label="Oui" />
+                      {r.insurance == null ? (
+                        <span className="text-muted" title={r.insuranceText}>—</span>
                       ) : (
-                        <XCircle className="inline h-4 w-4 text-muted" aria-label="Non" />
+                        <SourceLink href={r.source.insurance} title={r.insuranceText}>
+                          {r.insurance ? (
+                            <CheckCircle2 className="inline h-4 w-4 text-accent-green" aria-label={`Oui : ${r.insuranceText}`} />
+                          ) : (
+                            <XCircle className="inline h-4 w-4 text-muted" aria-label={r.insuranceText} />
+                          )}
+                        </SourceLink>
                       )}
                     </td>
                     <td className="px-4 py-3 text-center">
@@ -318,14 +336,12 @@ export default function ComparatifSecuritePage() {
                       )}
                     </td>
                     <td className="px-4 py-3 text-xs">
-                      {noIncident ? (
-                        <span className="text-accent-green" title={r.lastIncident ?? ""}>
-                          {r.lastIncident ? shortLabel(r.lastIncident) : "Aucun signalé"}
-                        </span>
+                      {r.lastIncident ? (
+                        <SourceLink href={r.source.lastIncident?.[0]} title={r.lastIncident} className="text-primary-soft">
+                          {shortLabel(r.lastIncident)}
+                        </SourceLink>
                       ) : (
-                        <span className="text-primary-soft" title={r.lastIncident ?? ""}>
-                          {r.lastIncident ? shortLabel(r.lastIncident) : null}
-                        </span>
+                        <span className="text-muted" title={NO_INCIDENT_FOUND}>—</span>
                       )}
                     </td>
                   </tr>
@@ -334,6 +350,12 @@ export default function ComparatifSecuritePage() {
             </tbody>
           </table>
         </div>
+        <p className="mt-3 text-xs text-muted leading-relaxed">
+          Conservation hors ligne et assurance : telles que publiées par chaque plateforme (cliquez pour la source),
+          non auditées par Cryptoreflex. Incidents : le plus récent trouvé dans un communiqué officiel ou la presse
+          reconnue ; « — » signifie que nous n&apos;en avons relevé aucun, ce qui n&apos;est pas une garantie.
+          Relevé du {fmtDateFr(securityVerified)}.
+        </p>
 
         {/* Insights */}
         <section className="mt-10 grid gap-3 sm:grid-cols-2">
@@ -342,10 +364,11 @@ export default function ComparatifSecuritePage() {
               Bon à savoir
             </div>
             <p className="mt-2 text-sm text-fg/85">
-              <strong className="text-fg">{safeNoIncident} plateformes</strong>{" "}
-              n&apos;ont jamais été victimes d&apos;un incident de sécurité
-              majeur à notre connaissance. Cela ne garantit pas l&apos;avenir,
-              mais c&apos;est un bon signe de maturité.
+              <strong className="text-fg">{withIncident} plateformes sur {rows.length}</strong>{" "}
+              ont au moins un incident de sécurité documenté (piratage, fuite de
+              données, accès abusif d&apos;employés). Pour les autres, nous
+              n&apos;en avons relevé aucun : ce n&apos;est pas une garantie, et
+              une plateforme peut être piratée demain.
             </p>
           </div>
           <div className="rounded-2xl border border-primary-glow/30 bg-primary-glow/5 p-5">
@@ -423,5 +446,31 @@ function Stat({
       <div className="mt-2 text-xl font-extrabold text-fg">{value}</div>
       <div className="mt-0.5 text-xs text-fg/70">{sub}</div>
     </div>
+  );
+}
+
+/** Valeur cliquable vers sa source (page officielle, communiqué, presse) ; texte simple sans source. */
+function SourceLink({
+  href,
+  title,
+  className,
+  children,
+}: {
+  href?: string;
+  title?: string;
+  className?: string;
+  children: React.ReactNode;
+}) {
+  if (!href) return <span title={title} className={className}>{children}</span>;
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer nofollow"
+      title={title}
+      className={`underline decoration-dotted underline-offset-2 hover:opacity-80 ${className ?? ""}`}
+    >
+      {children}
+    </a>
   );
 }

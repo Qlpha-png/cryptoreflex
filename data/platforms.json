@@ -107,10 +107,22 @@
         "note": "Numéro d'assistance pour la France, en anglais et en français, de 9 h à 18 h CET, publié dans le centre d'aide (la page française indique « tous les jours », sa version anglaise « du lundi au vendredi »). Chat en direct ou demande d'appel depuis la rubrique « Contactez-nous » (l'appel n'est pas proposé dans toutes les régions) ; langue du chat non précisée"
       },
       "security": {
-        "coldStoragePct": 98,
+        "coldStoragePct": null,
+        "coldStorageNote": "Au plus 2 % des actifs gardés en ligne, objectif publié par Coinbase (rapport annuel 2025)",
         "insurance": true,
+        "insuranceNote": "Contre la criminalité, bien inférieure au total des actifs des clients, selon Coinbase (rapport annuel 2025)",
         "twoFA": true,
-        "lastIncident": "Mai 2024 (fuite de données via un prestataire du support)"
+        "lastIncident": "En février 2026, Coinbase a confirmé qu'un prestataire avait consulté sans autorisation, en décembre 2025, les données d'environ 30 clients. En mai 2025, elle avait révélé que des criminels avaient payé des agents ou prestataires de son support, hors des États-Unis, pour obtenir des données de clients ; aucun mot de passe ni aucune clé privée n'ont été compromis, et Coinbase a versé 311,2 M$ en 2025 au titre de cet incident (remboursements volontaires de clients et frais juridiques).",
+        "source": {
+          "coldStoragePct": "https://s27.q4cdn.com/397450999/files/doc_financials/2025/q4/Form-10K-2025.pdf",
+          "insurance": "https://s27.q4cdn.com/397450999/files/doc_financials/2025/q4/Form-10K-2025.pdf",
+          "lastIncident": [
+            "https://www.bleepingcomputer.com/news/security/coinbase-confirms-insider-breach-linked-to-leaked-support-tool-screenshots/",
+            "https://www.sec.gov/Archives/edgar/data/1679788/000167978825000094/coin-20250514.htm",
+            "https://s27.q4cdn.com/397450999/files/doc_financials/2025/q4/Form-10K-2025.pdf"
+          ]
+        },
+        "verified": "2026-10-07"
       },
       "bonus": {
         "welcome": "Bonus actuel — voir conditions sur la plateforme",
@@ -220,10 +232,16 @@
         "note": "Chat avec un robot (IA), puis un agent sur demande ; Binance prévient qu'elle ne peut pas toujours répondre dans la langue choisie. Pas d'assistance par téléphone : le support n'existe que sur le site officiel, et toute personne qui appelle en se présentant comme Binance est un escroc, selon la plateforme"
       },
       "security": {
-        "coldStoragePct": 95,
-        "insurance": true,
+        "coldStoragePct": null,
+        "insurance": null,
         "twoFA": true,
-        "lastIncident": "Aucun incident majeur depuis le piratage de 2019 (couvert par le fonds SAFU)"
+        "lastIncident": "En mai 2019, plus de 7 000 BTC (plus de 40 M$) ont été volés à Binance, soit environ 2 % de ses bitcoins ; la plateforme a couvert les pertes des utilisateurs avec son fonds SAFU.",
+        "source": {
+          "lastIncident": [
+            "https://techcrunch.com/2019/05/07/binance-breach/"
+          ]
+        },
+        "verified": "2026-10-07"
       },
       "bonus": {
         "welcome": "Bonus actuel — voir conditions sur la plateforme",
@@ -350,10 +368,19 @@
         "note": "Support en français 24 h/24 et 7 j/7 : chat en direct (réponses d'une IA, puis un conseiller sur demande) et WhatsApp. Appel sur rendez-vous, du lundi au vendredi de 9 h à 17 h, en français, anglais, allemand ou italien : Bitpanda n'a pas de ligne entrante et rappelle à l'heure réservée"
       },
       "security": {
-        "coldStoragePct": 99,
-        "insurance": true,
+        "coldStoragePct": 95,
+        "coldStorageNote": "Plus de 95 %, selon Bitpanda",
+        "insurance": null,
         "twoFA": true,
-        "lastIncident": null
+        "lastIncident": "En février 2026, Bitpanda a prévenu des clients que leur nom, et parfois leur e-mail ou leur téléphone, avaient pu être exposés lors d'une intrusion survenue en juillet 2024 chez Sumsub, son prestataire de vérification d'identité ; selon Sumsub, les pièces d'identité n'étaient pas concernées.",
+        "source": {
+          "coldStoragePct": "https://www.bitpanda.com/fr/move-crypto",
+          "lastIncident": [
+            "https://cryptoast.fr/bitget-bybit-moonpay-bitpanda-donnees-personnelles-clients-pourraient-avoir-fuite-a-cause-fournisseur-kyc/",
+            "https://sumsub.com/newsroom/security-incident-update/"
+          ]
+        },
+        "verified": "2026-10-07"
       },
       "bonus": {
         "welcome": "Bonus actuel — voir conditions sur la plateforme",
@@ -480,10 +507,19 @@
         "note": "Support annoncé 24 h/24 et 7 j/7, joignable par chat depuis le centre de support ou l'application ; langue non précisée (Kraken dit seulement que son équipe parle « de nombreuses langues »). Aucun numéro publié : l'assistance vocale n'est accessible que depuis les applications mobiles Kraken, et seulement quand un appel est jugé adapté ; Kraken demande de considérer tout numéro trouvé en ligne à son nom comme une tentative d'hameçonnage potentielle"
       },
       "security": {
-        "coldStoragePct": 95,
-        "insurance": true,
+        "coldStoragePct": null,
+        "insurance": false,
+        "insuranceNote": "Aucune, sauf mention contraire pour un service précis, selon les conditions générales européennes de Kraken (juin 2026)",
         "twoFA": true,
-        "lastIncident": "Aucun piratage majeur depuis sa création (2011)"
+        "lastIncident": "En avril 2026, Kraken a révélé deux cas d'accès abusifs d'employés de son support aux données d'environ 2 000 comptes (premier signalement en février 2025), dont au moins un employé recruté par des criminels qui ont ensuite tenté de l'extorquer ; selon Kraken, ses systèmes n'ont pas été piratés et les fonds n'ont jamais été menacés. En juin 2024, une faille des dépôts avait permis de retirer environ 3 M$ de la trésorerie de Kraken ; selon Kraken, aucun actif de client n'a été menacé.",
+        "source": {
+          "insurance": "https://www.kraken.com/legal/eea-terms",
+          "lastIncident": [
+            "https://www.bleepingcomputer.com/news/security/crypto-exchange-kraken-extorted-by-hackers-after-insider-breach/",
+            "https://www.bleepingcomputer.com/news/security/researchers-exploit-kraken-exchange-bug-steal-3-million-in-crypto/"
+          ]
+        },
+        "verified": "2026-10-07"
       },
       "bonus": {
         "welcome": "Bonus actuel — voir conditions sur la plateforme",
@@ -502,7 +538,6 @@
       },
       "idealFor": "Investisseurs expérimentés priorisant sécurité, audit Proof-of-Reserves et staking",
       "strengths": [
-        "Aucun hack majeur en 14 ans",
         "Proof-of-Reserves audité",
         "Support annoncé 24 h/24 et 7 j/7"
       ],
@@ -590,10 +625,16 @@
         "note": "Service client en ligne « multilingue », annoncé 24 h/24 et 7 j/7, sans liste de langues. Aucun numéro d'assistance trouvé sur le site officiel"
       },
       "security": {
-        "coldStoragePct": 90,
-        "insurance": true,
+        "coldStoragePct": null,
+        "insurance": null,
         "twoFA": true,
-        "lastIncident": "Aucun piratage confirmé"
+        "lastIncident": "En septembre 2026, des pirates ont dérobé 387,5 M$ dans les portefeuilles en ligne de Bitget ; selon la plateforme, les soldes des clients ne sont pas touchés et son fonds de protection couvre la perte.",
+        "source": {
+          "lastIncident": [
+            "https://www.bleepingcomputer.com/news/security/bitget-resumes-bitcoin-withdrawals-after-3875-million-crypto-heist/"
+          ]
+        },
+        "verified": "2026-10-07"
       },
       "bonus": {
         "welcome": "Bonus actuel — voir conditions sur la plateforme",
@@ -713,10 +754,12 @@
         "note": "Chat en direct et téléphone 24 h/24 et 7 j/7 dans l'application, avec de vraies personnes, selon Trade Republic, qui précise que ce service client « sera déployé pour tout le monde prochainement ». Son communiqué du 15 avril 2026 parle de conseillers « dans huit langues différentes », non nommées"
       },
       "security": {
-        "coldStoragePct": 100,
-        "insurance": true,
+        "coldStoragePct": null,
+        "insurance": null,
         "twoFA": true,
-        "lastIncident": null
+        "lastIncident": null,
+        "source": {},
+        "verified": "2026-10-07"
       },
       "bonus": {
         "welcome": "Bonus actuel — voir conditions sur la plateforme",
@@ -838,10 +881,18 @@
         "note": "Société française, qui présente son « service client français ». Chat en ligne depuis l'espace client (web ou application), formulaire de contact, et téléphone du lundi au vendredi (9 h 30-12 h 30 et 13 h 30-18 h) ; selon l'affluence, Coinhouse peut rappeler dans la journée"
       },
       "security": {
-        "coldStoragePct": 100,
-        "insurance": true,
+        "coldStoragePct": 70,
+        "coldStorageNote": "Plus de 70 %, selon Coinhouse",
+        "insurance": null,
         "twoFA": true,
-        "lastIncident": null
+        "lastIncident": "En septembre 2019, des pirates ont récupéré des adresses e-mail de clients de Coinhouse pour les attirer vers un faux site ; selon Coinhouse, la plateforme elle-même n'a pas été attaquée et les fonds sont restés en sécurité.",
+        "source": {
+          "coldStoragePct": "https://support.coinhouse.com/hc/fr/articles/18657352145170-conservation-des-crypto-actifs-chez-coinhouse",
+          "lastIncident": [
+            "https://journalducoin.com/exchanges/coinhouse-victime-dune-attaque-de-type-phishing/"
+          ]
+        },
+        "verified": "2026-10-07"
       },
       "bonus": {
         "welcome": "Bonus actuel — voir conditions sur la plateforme",
@@ -954,10 +1005,15 @@
         "note": "Société française. Chat dans l'application (un robot, puis un agent humain sur demande) et e-mail ; équipe disponible du lundi au vendredi de 8 h à 22 h et le week-end de 9 h à 20 h (CET). Pas de support téléphonique : Bitstack n'a aucun numéro de téléphone"
       },
       "security": {
-        "coldStoragePct": 100,
-        "insurance": true,
+        "coldStoragePct": null,
+        "coldStorageNote": "« La majorité » des bitcoins, selon Bitstack",
+        "insurance": null,
         "twoFA": true,
-        "lastIncident": null
+        "lastIncident": null,
+        "source": {
+          "coldStoragePct": "https://help.bitstack-app.com/fr/articles/6377435-comment-mes-fonds-sont-ils-proteges"
+        },
+        "verified": "2026-10-07"
       },
       "bonus": {
         "welcome": "Bonus actuel — voir conditions sur la plateforme",
@@ -1080,10 +1136,17 @@
         "note": "Messagerie dans l'application : un assistant IA répond d'abord, puis ouvre un ticket vers l'équipe (7 j/7, sauf de 1 h à 5 h UTC). SwissBorg précise que ce n'est pas un chat en direct et qu'elle ne propose aucun canal d'assistance en direct, donc pas de téléphone ; langue des réponses non précisée"
       },
       "security": {
-        "coldStoragePct": 100,
-        "insurance": true,
+        "coldStoragePct": null,
+        "insurance": null,
         "twoFA": true,
-        "lastIncident": null
+        "lastIncident": "En septembre 2025, la compromission de Kiln, partenaire de staking de SwissBorg, a permis de détourner plus de 192 000 SOL (environ 41 M$) du programme SOL Earn ; selon SwissBorg, sa propre infrastructure n'a pas été piratée, et l'indemnisation des clients touchés restait partielle en décembre 2025.",
+        "source": {
+          "lastIncident": [
+            "https://swissborg.com/blog/swissborg-security-update-kiln-breach",
+            "https://swissborg.com/fr/blog/programme-de-soutien-solana-prochaines-etapes-pour-les-utilisateurs-impactes"
+          ]
+        },
+        "verified": "2026-10-07"
       },
       "bonus": {
         "welcome": "Bonus actuel — voir conditions sur la plateforme",
@@ -1207,10 +1270,19 @@
         "note": "Bybit EU : demande d'assistance par formulaire, avec une réponse « dans un délai de 5 jours ouvrables », et chat en direct annoncé 24 h/24 et 7 j/7 ; langue du chat non précisée. Pas d'assistance par téléphone : Bybit EU ne demande jamais d'appeler un numéro"
       },
       "security": {
-        "coldStoragePct": 90,
-        "insurance": true,
+        "coldStoragePct": 100,
+        "coldStorageNote": "« 100 % des actifs déposés », selon la FAQ de Bybit EU",
+        "insurance": null,
         "twoFA": true,
-        "lastIncident": "Février 2025 (piratage de 1,4 Md$, fonds clients couverts par les fonds propres et l'assurance)"
+        "lastIncident": "En février 2025, environ 1,5 Md$ en cryptos ont été volés à Bybit, un vol attribué par le FBI à la Corée du Nord ; Bybit a depuis reconstitué ses réserves d'ether.",
+        "source": {
+          "coldStoragePct": "https://www.bybit.eu/en-EU/help-center/article/Bybit-Deposit-FAQ",
+          "lastIncident": [
+            "https://www.ic3.gov/PSA/2025/PSA250226",
+            "https://www.bleepingcomputer.com/news/security/north-korean-hackers-linked-to-15-billion-bybit-crypto-heist/"
+          ]
+        },
+        "verified": "2026-10-07"
       },
       "bonus": {
         "welcome": "Bonus actuel — voir conditions sur la plateforme",
@@ -1234,7 +1306,7 @@
         "Plateforme options crypto complète"
       ],
       "weaknesses": [
-        "Hack majeur en février 2025 (résolu mais cicatrice de réputation)",
+        "Piratage d'environ 1,5 Md$ en février 2025 (réserves reconstituées depuis)",
         "Régulation MiCA via Autriche (jeune)",
         "Interface dense pour débutants"
       ],
@@ -1333,10 +1405,16 @@
         "note": "Messagerie dans l'application, 24 h/24 et 7 j/7, « dans plus de 100 langues » selon Revolut. Appels dans l'application pour certains abonnements payants seulement (l'aide Revolut cite Ultra, la page de l'offre Metal les mentionne aussi), et uniquement en anglais"
       },
       "security": {
-        "coldStoragePct": 95,
-        "insurance": true,
+        "coldStoragePct": null,
+        "insurance": null,
         "twoFA": true,
-        "lastIncident": "Septembre 2022 (vol interne de 20 M$, clients non touchés)"
+        "lastIncident": "En septembre 2026, Revolut a confirmé avoir transmis les données d'un nombre « limité » de clients (identité, coordonnées, copies de pièces d'identité) à un escroc qui se faisait passer pour une administration ; selon Revolut, ses systèmes et les fonds des clients n'ont pas été touchés.",
+        "source": {
+          "lastIncident": [
+            "https://techcrunch.com/2026/09/12/revolut-confirms-customer-data-breach-through-fake-government-requests/"
+          ]
+        },
+        "verified": "2026-10-07"
       },
       "bonus": {
         "welcome": "Bonus actuel — voir conditions sur la plateforme",
@@ -1460,9 +1538,19 @@
       },
       "security": {
         "coldStoragePct": 95,
-        "insurance": true,
+        "coldStorageNote": "Plus de 95 %, selon OKX",
+        "insurance": false,
+        "insuranceNote": "Aucune, selon les conditions générales d'OKX (septembre 2026)",
         "twoFA": true,
-        "lastIncident": "Aucun incident majeur depuis 2020"
+        "lastIncident": "En décembre 2023, un ancien contrat du DEX d'OKX (sa plateforme d'échange décentralisée) a été compromis et environ 2,7 M$ ont été dérobés à des utilisateurs ; OKX s'est engagée à les rembourser.",
+        "source": {
+          "coldStoragePct": "https://www.okx.com/learn/is-okx-safe",
+          "insurance": "https://www.okx.com/help/terms-of-service",
+          "lastIncident": [
+            "https://www.theblock.co/news/regulation/2023-12-13-okx-dex-suffers-apparent-2-7-million-exploit-following-suspected-private-key-leak-267405"
+          ]
+        },
+        "verified": "2026-10-07"
       },
       "bonus": {
         "welcome": "Bonus actuel — voir conditions sur la plateforme",
@@ -1588,10 +1676,21 @@
         "note": "Chat dans l'application Crypto.com et sur chat.crypto.com, avec un support client « 24/7 » annoncé ; langue du chat non précisée. Pas de numéro d'assistance générale pour l'Europe : la seule ligne européenne publiée est réservée aux titulaires de la carte prépayée (enregistrement de la carte dans un portefeuille mobile)"
       },
       "security": {
-        "coldStoragePct": 100,
+        "coldStoragePct": null,
+        "coldStorageNote": "« Tous les dépôts des utilisateurs », selon le centre d'aide de Crypto.com",
         "insurance": true,
+        "insuranceNote": "750 M$ au total pour les cryptos conservées chez Ledger Vault (vol, destruction), selon une annonce de Crypto.com de septembre 2021, non reconfirmée depuis",
         "twoFA": true,
-        "lastIncident": "Janvier 2022 (483 comptes compromis, fonds remboursés)"
+        "lastIncident": "En septembre 2025, Bloomberg a révélé qu'avant mars 2023, des pirates avaient eu accès au compte d'un employé et aux données personnelles d'un très petit nombre de clients, sans toucher aux fonds. En janvier 2022, 483 comptes avaient été vidés d'environ 34 M$, tous remboursés selon Crypto.com.",
+        "source": {
+          "coldStoragePct": "https://help.crypto.com/en/articles/2500695-crypto-withdrawals-general-information",
+          "insurance": "https://crypto.com/us/company-news/crypto-com-expands-insurance-programme-to-one-of-the-industrys-largest-at-usd-750-million",
+          "lastIncident": [
+            "https://www.theblock.co/news/business/2025-09-21-previously-unreported-attack-on-crypto-com-leaked-users-personal-data-bloomberg-371531",
+            "https://techcrunch.com/2022/01/20/2fa-compromise-led-to-34m-crypto-com-hack/"
+          ]
+        },
+        "verified": "2026-10-07"
       },
       "bonus": {
         "welcome": "Bonus actuel — voir conditions sur la plateforme",
@@ -1695,10 +1794,20 @@
         "note": "Gemini a fermé ses comptes européens en avril 2026. Toutes les demandes d'assistance passent par un formulaire (l'e-mail est son canal principal, aucun chat mentionné) ; un appel n'a lieu que dans des cas particuliers, sur demande, après un échange d'e-mails"
       },
       "security": {
-        "coldStoragePct": 99,
+        "coldStoragePct": null,
+        "coldStorageNote": "« La majorité » des actifs de la plateforme d'échange, selon Gemini",
         "insurance": true,
+        "insuranceNote": "125 M$ au total pour certains types de pertes (25 M$ pour le portefeuille en ligne, 100 M$ pour le stockage à froid), selon Gemini (mars 2024)",
         "twoFA": true,
-        "lastIncident": "Aucun incident majeur (audit Deloitte annuel)"
+        "lastIncident": "En juin 2024, une intrusion chez le prestataire de virements bancaires de Gemini a exposé le nom et les coordonnées bancaires d'environ 15 000 clients ; Gemini indique que ses propres systèmes n'ont pas été touchés.",
+        "source": {
+          "coldStoragePct": "https://www.gemini.com/custody",
+          "insurance": "https://www.gemini.com/custody",
+          "lastIncident": [
+            "https://www.bleepingcomputer.com/news/security/crypto-exchange-gemini-discloses-third-party-data-breach/"
+          ]
+        },
+        "verified": "2026-10-07"
       },
       "bonus": {
         "welcome": "Bonus actuel — voir conditions sur la plateforme",
@@ -1719,7 +1828,7 @@
       "strengths": [
         "Audit financier Deloitte annuel public",
         "Agréée MiCA à Malte (MFSA) et régulée par le NYDFS aux États-Unis",
-        "Sécurité cold storage 99 % avec insurance"
+        "Assurance publiée de 125 M$ au total pour certains types de pertes"
       ],
       "weaknesses": [
         "Catalogue restreint (~80 cryptos)",
@@ -1816,9 +1925,19 @@
       },
       "security": {
         "coldStoragePct": 95,
+        "coldStorageNote": "Environ 95 %, selon Bitstamp (2022)",
         "insurance": true,
+        "insuranceNote": "Contre la criminalité, pour les actifs en ligne et hors ligne, montant non publié, selon Bitstamp (2021)",
         "twoFA": true,
-        "lastIncident": "Janvier 2015 (19 000 BTC volés, clients remboursés)"
+        "lastIncident": "En janvier 2015, moins de 19 000 BTC (environ 5 M$) ont été volés dans des portefeuilles opérationnels de Bitstamp ; les soldes des clients ont été honorés en totalité.",
+        "source": {
+          "coldStoragePct": "https://blog.bitstamp.net/post/what-does-a-safe-exchange-look-like/",
+          "insurance": "https://blog.bitstamp.net/post/were-extending-our-crime-insurance-policy/",
+          "lastIncident": [
+            "https://techcrunch.com/2015/01/05/bitstamp-bitcoin-exchange-hack/"
+          ]
+        },
+        "verified": "2026-10-07"
       },
       "bonus": {
         "welcome": "Bonus actuel — voir conditions sur la plateforme",
@@ -1940,10 +2059,21 @@
         "note": "Chat en direct (application ou site) avec l'assistant IA Vavo, puis un agent humain de 7 h à 23 h (CET), 7 j/7, et e-mail ; Bitvavo dit s'efforcer de répondre sous 24 heures. Pas d'assistance téléphonique ; langue du chat non précisée"
       },
       "security": {
-        "coldStoragePct": 95,
-        "insurance": false,
+        "coldStoragePct": null,
+        "coldStorageNote": "« La grande majorité », selon Bitvavo",
+        "insurance": true,
+        "insuranceNote": "Prestataires de garde assurés jusqu'à 755 M$, selon Bitvavo",
         "twoFA": true,
-        "lastIncident": "Aucun incident majeur depuis 2018"
+        "lastIncident": "En octobre 2024, le compte X officiel de Bitvavo a été piraté pour promouvoir un faux jeton. En mai 2024, Bitvavo avait prévenu un « groupe limité » d'utilisateurs d'une fuite de leurs données (noms, adresses, numéros de compte bancaire) ; selon la plateforme, les fonds n'étaient pas touchés.",
+        "source": {
+          "coldStoragePct": "https://bitvavo.com/en/security",
+          "insurance": "https://bitvavo.com/en/security",
+          "lastIncident": [
+            "https://www.crypto-insiders.nl/nieuws/wallets-en-exchanges/pas-op-bitvavos-x-account-is-gehacked/",
+            "https://www.security.nl/posting/839956/Cryptobeurs+Bitvavo+lekt+persoonsgegevens+'beperkte+groep+gebruikers'"
+          ]
+        },
+        "verified": "2026-10-07"
       },
       "bonus": {
         "welcome": "Bonus actuel — voir conditions sur la plateforme",
@@ -1967,7 +2097,6 @@
         "Régulation DNB (Banque centrale Pays-Bas) très stricte"
       ],
       "weaknesses": [
-        "Pas d'assurance fonds clients (vs Coinbase/Kraken)",
         "Pas d'assistance téléphonique, langue du chat non précisée",
         "Catalogue 200 cryptos (vs 350 OKX/Binance)"
       ],
@@ -2061,10 +2190,15 @@
         "note": "Chat en direct après connexion (assistant IA, puis service client), annoncé 24 h/24 et 6 j/7, avec une assistance dans plus de 7 langues dont le français. Aucun numéro d'assistance pour la France trouvé sur le site officiel"
       },
       "security": {
-        "coldStoragePct": 90,
-        "insurance": true,
+        "coldStoragePct": null,
+        "insurance": false,
+        "insuranceNote": "Pas d'assurance contre le vol des cryptos, selon le rapport annuel 2025 d'eToro",
         "twoFA": true,
-        "lastIncident": "Aucun incident majeur"
+        "lastIncident": null,
+        "source": {
+          "insurance": "https://www.sec.gov/Archives/edgar/data/1493318/000121390026022034/ea0278371-20f_etoro.htm"
+        },
+        "verified": "2026-10-07"
       },
       "bonus": {
         "welcome": "Bonus actuel — voir conditions sur la plateforme",
@@ -2177,10 +2311,18 @@
         "note": "Société française. Support par ticket depuis l'espace client, ou par e-mail en cas de perte d'accès, du lundi au vendredi de 9 h à 18 h ; ni chat ni téléphone sur la page de contact"
       },
       "security": {
-        "coldStoragePct": 100,
-        "insurance": false,
+        "coldStoragePct": 98,
+        "coldStorageNote": "98 % des fonds, selon Paymium",
+        "insurance": null,
         "twoFA": true,
-        "lastIncident": "Aucun incident majeur depuis 2011"
+        "lastIncident": "En septembre 2026, Paymium a prévenu ses clients que le piratage de Brevo, son prestataire d'envoi d'e-mails, avait exposé des noms, dates de naissance, téléphones et adresses e-mail ; selon Paymium, aucun mot de passe, aucune clé d'API ni aucune donnée de portefeuille n'a été touché.",
+        "source": {
+          "coldStoragePct": "https://www.paymium.com/en/security-and-compliance",
+          "lastIncident": [
+            "https://journalducoin.com/actualites/piratage-brevo-trezor-donnees-clients-paymium/"
+          ]
+        },
+        "verified": "2026-10-07"
       },
       "bonus": {
         "welcome": "Bonus actuel — voir conditions sur la plateforme",
@@ -2201,7 +2343,7 @@
       "strengths": [
         "Plateforme française en activité depuis 2011",
         "Ancien enregistrement PSAN auprès de l'AMF",
-        "Support Bitcoin Lightning + 100 % cold storage"
+        "Support Bitcoin Lightning + 98 % des fonds hors ligne, selon Paymium"
       ],
       "weaknesses": [
         "Catalogue limité à 1 crypto (BTC uniquement)",
@@ -2293,10 +2435,15 @@
         "note": "Société française. Chat dans l'application (« le moyen le plus rapide ») et e-mail, avec une réponse annoncée en 12 h environ par e-mail ; pas de téléphone sur la page de contact, et Deblock ne contacte jamais ses clients par téléphone"
       },
       "security": {
-        "coldStoragePct": 100,
-        "insurance": false,
+        "coldStoragePct": null,
+        "coldStorageNote": "Sans objet (portefeuille non dépositaire : vous seul détenez les clés privées, selon les conditions générales de Deblock)",
+        "insurance": null,
         "twoFA": true,
-        "lastIncident": "Aucun incident majeur depuis 2024"
+        "lastIncident": null,
+        "source": {
+          "coldStoragePct": "https://cdn1.deblock.com/terms/personal-terms/FR/20260702-v3.0-Techblock-FR.pdf"
+        },
+        "verified": "2026-10-07"
       },
       "bonus": {
         "welcome": "Bonus actuel — voir conditions sur la plateforme",
@@ -2406,10 +2553,12 @@
         "note": "Chat et e-mail 24 h/24 et 7 j/7, langue non précisée. Un chargé de clientèle joignable par téléphone est réservé aux clients Private (portefeuille de 100 000 $ ou plus)"
       },
       "security": {
-        "coldStoragePct": 95,
-        "insurance": true,
+        "coldStoragePct": null,
+        "insurance": null,
         "twoFA": true,
-        "lastIncident": "Accord avec la SEC américaine en 2023 (45 M$, service Earn arrêté aux États-Unis ; UE non concernée)"
+        "lastIncident": null,
+        "source": {},
+        "verified": "2026-10-07"
       },
       "bonus": {
         "welcome": "Bonus actuel — voir conditions sur la plateforme",
@@ -2526,10 +2675,15 @@
         "note": "Chat via le widget du centre d'aide ; langue des réponses non précisée. La page de contact n'affiche aucun numéro de support client, seulement un numéro « Corporate » sous l'adresse de MoonPay USA"
       },
       "security": {
-        "coldStoragePct": 100,
-        "insurance": false,
+        "coldStoragePct": null,
+        "coldStorageNote": "Sans objet (MoonPay ne garde pas vos cryptos, elles partent vers votre portefeuille)",
+        "insurance": null,
         "twoFA": true,
-        "lastIncident": "Aucun incident majeur"
+        "lastIncident": null,
+        "source": {
+          "coldStoragePct": "https://www.moonpay.com/legal/terms_of_use"
+        },
+        "verified": "2026-10-07"
       },
       "bonus": {
         "welcome": "Pas de bonus on-ramp",
@@ -2643,10 +2797,18 @@
         "note": "Support général de N26 (pas de page propre à la crypto) : chat dans l'application, tous les jours de 7 h à 23 h, en français, anglais, allemand, italien ou espagnol. Appel depuis l'application réservé aux comptes Premium (Go, Smart, Metal) ; langue de l'appel non précisée"
       },
       "security": {
-        "coldStoragePct": 100,
-        "insurance": true,
+        "coldStoragePct": null,
+        "coldStorageNote": "Stockées hors ligne et gérées par Bitpanda, selon N26 (sans pourcentage)",
+        "insurance": null,
         "twoFA": true,
-        "lastIncident": "Aucun incident connu"
+        "lastIncident": "Fin 2019, selon la presse spécialisée, des employés de N26 sans habilitation ont pu consulter des données de comptes non chiffrées ; N26 a répondu ne tolérer aucune violation de ses règles de sécurité.",
+        "source": {
+          "coldStoragePct": "https://n26.com/fr-fr/crypto",
+          "lastIncident": [
+            "https://www.fintechfutures.com/data-privacy-security/n26-outed-for-2019-data-breach-employees-ask-for-works-council"
+          ]
+        },
+        "verified": "2026-10-07"
       },
       "bonus": {
         "welcome": "Bonus actuel — voir conditions sur la plateforme",
@@ -2757,10 +2919,20 @@
         "note": "Chat dans l'application ou sur le site, du lundi au vendredi de 9 h à 18 h et le week-end de 10 h à 14 h, avec un temps de réponse moyen annoncé de moins de 15 minutes ; site en anglais et en allemand, français non mentionné. Téléphone ou visio réservés à l'offre 21private (à partir de 100 000 €)"
       },
       "security": {
-        "coldStoragePct": 100,
-        "insurance": false,
+        "coldStoragePct": null,
+        "coldStorageNote": "« Principalement » à froid, chez BitGo Europe, selon 21bitcoin",
+        "insurance": true,
+        "insuranceNote": "Celle de l'infrastructure de garde de BitGo, jusqu'à 250 M$ au total, selon 21bitcoin",
         "twoFA": true,
-        "lastIncident": "Aucun incident majeur depuis 2021"
+        "lastIncident": "En août 2026, le piratage de Canny, prestataire relié à son support, a exposé les noms, e-mails, téléphones et dates de naissance d'utilisateurs de 21bitcoin, et parfois leur solde ; selon 21bitcoin, ses propres systèmes, les bitcoins et les euros des clients n'ont pas été touchés.",
+        "source": {
+          "coldStoragePct": "https://21bitcoin.app/en/security",
+          "insurance": "https://21bitcoin.app/en/security",
+          "lastIncident": [
+            "https://www.btc-echo.de/news/cyberangriff-auf-dienstleister-von-21bitcoin-nutzerdaten-betroffen-237080/"
+          ]
+        },
+        "verified": "2026-10-07"
       },
       "bonus": {
         "welcome": "Bonus actuel — voir conditions sur la plateforme",
@@ -2781,7 +2953,7 @@
       "strengths": [
         "DCA automatique simple à configurer",
         "Retrait on-chain BTC à 1 000 sats, quels que soient les frais du réseau",
-        "100 % cold storage"
+        "Garde « principalement » à froid chez BitGo Europe"
       ],
       "weaknesses": [
         "BTC uniquement (pas d'altcoins)",
@@ -2863,10 +3035,15 @@
         "note": "Chat dans l'application avec un agent du service client, et e-mail, selon les conditions Wirex One, qui précisent que les communications se font en anglais. Aucun numéro d'assistance publié"
       },
       "security": {
-        "coldStoragePct": 90,
-        "insurance": false,
+        "coldStoragePct": null,
+        "insurance": true,
+        "insuranceNote": "« Plus de 30 M$ » d'assurance des actifs numériques, selon Wirex, sans assureur ni portée précisés",
         "twoFA": true,
-        "lastIncident": "Octobre 2023 (incident de liquidité, résolu)"
+        "lastIncident": null,
+        "source": {
+          "insurance": "https://www.wirexapp.com/exchange"
+        },
+        "verified": "2026-10-07"
       },
       "bonus": {
         "welcome": "Bonus actuel — voir conditions sur la plateforme",
@@ -2890,7 +3067,6 @@
         "Multi-devises fiat + crypto dans 1 app"
       ],
       "weaknesses": [
-        "Réputation dégradée post-incident liquidité 2023",
         "Communications en anglais selon les conditions Wirex One",
         "Spread élevé"
       ],
@@ -2981,10 +3157,12 @@
         "note": "Le centre d'aide propose d'ouvrir un ticket ou d'écrire au support par e-mail ; nous n'y avons trouvé ni chat ni téléphone, et la langue des réponses n'est pas précisée"
       },
       "security": {
-        "coldStoragePct": 95,
-        "insurance": false,
+        "coldStoragePct": null,
+        "insurance": null,
         "twoFA": true,
-        "lastIncident": "Aucun incident majeur"
+        "lastIncident": null,
+        "source": {},
+        "verified": "2026-10-07"
       },
       "bonus": {
         "welcome": "Bonus actuel — voir conditions sur la plateforme",
@@ -3082,10 +3260,16 @@
         "note": "Chat avec l'assistant PayPal depuis la page « Nous contacter » de PayPal France : c'est le support général de PayPal, sans page dédiée à la crypto pour la France ; langue des réponses non précisée"
       },
       "security": {
-        "coldStoragePct": 100,
-        "insurance": true,
+        "coldStoragePct": null,
+        "insurance": null,
         "twoFA": true,
-        "lastIncident": "Aucun incident connu"
+        "lastIncident": "En décembre 2022, des pirates ont accédé à près de 35 000 comptes PayPal avec des identifiants volés ailleurs ; PayPal dit n'avoir trouvé aucune preuve qu'ils provenaient de ses propres systèmes.",
+        "source": {
+          "lastIncident": [
+            "https://therecord.media/nearly-35000-paypal-users-had-ssns-tax-info-leaked-during-december-cyberattack"
+          ]
+        },
+        "verified": "2026-10-07"
       },
       "bonus": {
         "welcome": "Pas de bonus crypto marketing",
@@ -3106,7 +3290,6 @@
       "idealFor": "Clients PayPal voulant acheter BTC/ETH/LTC/BCH avec leur solde PayPal en 30 secondes",
       "strengths": [
         "Achat simple depuis l'appli PayPal existante",
-        "Custody assurée par PayPal",
         "Service grand public éprouvé"
       ],
       "weaknesses": [
@@ -3189,10 +3372,19 @@
         "note": "Chat en direct (fenêtre sur chaque page du site) et tickets ; langue des réponses non précisée. Aucun numéro d'assistance trouvé sur le site officiel"
       },
       "security": {
-        "coldStoragePct": 99,
-        "insurance": false,
+        "coldStoragePct": 99.5,
+        "coldStorageNote": "Environ 99,5 %, selon Bitfinex",
+        "insurance": null,
         "twoFA": true,
-        "lastIncident": "Août 2016 (119 756 BTC volés ; pertes des clients compensées en 2017, une partie des bitcoins récupérée en 2022)"
+        "lastIncident": "En novembre 2023, l'hameçonnage d'un agent du support a exposé des informations partielles et anciennes de clients, sans toucher aux fonds ni aux systèmes centraux. En août 2016, 119 756 BTC (environ 72 M$) avaient été volés sur des comptes de clients.",
+        "source": {
+          "coldStoragePct": "https://www.bitfinex.com/security-policy/",
+          "lastIncident": [
+            "https://www.theblock.co/post/261561/bitfinex-suffered-minor-phishing-attack-will-notify-affected-users",
+            "https://fortune.com/2016/08/03/bitcoin-stolen-bitfinex-hack-hong-kong"
+          ]
+        },
+        "verified": "2026-10-07"
       },
       "bonus": {
         "welcome": "Pas de bonus retail",
@@ -3289,10 +3481,15 @@
         "note": "La page d'assistance renvoie vers la FAQ et vers le service client par e-mail ; ni chat ni téléphone n'y figurent, et la langue des réponses n'est pas précisée"
       },
       "security": {
-        "coldStoragePct": 100,
-        "insurance": true,
+        "coldStoragePct": null,
+        "coldStorageNote": "« La plus grande part » des actifs des clients, selon son dépositaire Boerse Stuttgart Digital Custody",
+        "insurance": null,
         "twoFA": true,
-        "lastIncident": "Aucun incident majeur depuis 2019"
+        "lastIncident": null,
+        "source": {
+          "coldStoragePct": "https://www.bsdigital.com/de/unsere-loesungen/boerse-stuttgart-digital-custody/verwahrstrategie/"
+        },
+        "verified": "2026-10-07"
       },
       "bonus": {
         "welcome": "Pas de bonus marketing",
@@ -3313,7 +3510,7 @@
       "strengths": [
         "Adossé à Boerse Stuttgart (place financière allemande)",
         "Régulation BaFin + MiCA",
-        "100 % cold storage"
+        "Portefeuilles hors ligne pour l'essentiel des cryptos des clients, selon son dépositaire"
       ],
       "weaknesses": [
         "Catalogue limité (~30 cryptos)",
@@ -3394,10 +3591,15 @@
         "note": "Chat en ligne et formulaire, 24 h/24 et 7 j/7 ; Plus500 n'a pas de centre d'appels et communique par écrit. Langue des réponses non précisée"
       },
       "security": {
-        "coldStoragePct": 0,
-        "insurance": true,
+        "coldStoragePct": null,
+        "coldStorageNote": "Sans objet (CFD : vous ne détenez pas de cryptos)",
+        "insurance": null,
         "twoFA": true,
-        "lastIncident": "Aucun (pas de garde de cryptos)"
+        "lastIncident": null,
+        "source": {
+          "coldStoragePct": "https://www.plus500.com/en-fr/trading/cryptocurrencies"
+        },
+        "verified": "2026-10-07"
       },
       "bonus": {
         "welcome": "Bonus actuel — voir conditions sur la plateforme",
@@ -3499,10 +3701,12 @@
         "note": "anycoindirect.eu renvoie vers Finst. Support Finst en français par chat en direct, e-mail et téléphone (numéro français), du lundi au vendredi de 9 h à 18 h"
       },
       "security": {
-        "coldStoragePct": 100,
-        "insurance": false,
+        "coldStoragePct": null,
+        "insurance": null,
         "twoFA": true,
-        "lastIncident": "Aucun incident connu"
+        "lastIncident": null,
+        "source": {},
+        "verified": "2026-10-07"
       },
       "bonus": {
         "welcome": "Bonus actuel — voir conditions sur la plateforme",
@@ -3523,7 +3727,6 @@
       "idealFor": "On-ramp simple pour 1er achat crypto avec retrait immédiat vers wallet personnel",
       "strengths": [
         "Achat → retrait wallet en 1 transaction (pas de stockage)",
-        "100 % cold storage transitoire",
         "Repris par Finst, agréé MiCA par l'AFM (Pays-Bas)"
       ],
       "weaknesses": [
@@ -3619,10 +3822,12 @@
         "note": "Contact par le formulaire officiel du centre d'aide ou depuis l'application (Support, puis Contact us), dont un chat, et par e-mail ; langue des réponses non précisée. Aucun numéro d'assistance trouvé sur le site officiel"
       },
       "security": {
-        "coldStoragePct": 0,
-        "insurance": true,
+        "coldStoragePct": null,
+        "insurance": null,
         "twoFA": true,
-        "lastIncident": "Aucun incident majeur"
+        "lastIncident": null,
+        "source": {},
+        "verified": "2026-10-07"
       },
       "bonus": {
         "welcome": "Bonus actuel — voir conditions sur la plateforme",
@@ -3719,10 +3924,15 @@
         "note": "Société française. Le service client répond par chat et par e-mail depuis le centre d'aide ; aucun numéro d'assistance trouvé sur le site officiel"
       },
       "security": {
-        "coldStoragePct": 100,
-        "insurance": false,
+        "coldStoragePct": null,
+        "coldStorageNote": "Coffres hors ligne séparés par client (option « Coffre »), sans pourcentage, selon StackinSat",
+        "insurance": null,
         "twoFA": true,
-        "lastIncident": "Aucun incident connu"
+        "lastIncident": null,
+        "source": {
+          "coldStoragePct": "https://www.stackinsat.com/en/bitcoin-storage"
+        },
+        "verified": "2026-10-07"
       },
       "bonus": {
         "welcome": "Bonus actuel — voir conditions sur la plateforme",
@@ -3840,10 +4050,12 @@
         "note": "Société française. Deux canaux : un chatbot (logo Meria en bas à droite) et un ticket sur le portail d'assistance, avec une réponse annoncée sous 2 jours ouvrés maximum ; aucun chat avec un conseiller ni langue de réponse précisés. Aucun numéro d'assistance trouvé sur le site officiel"
       },
       "security": {
-        "coldStoragePct": 90,
-        "insurance": false,
+        "coldStoragePct": null,
+        "insurance": null,
         "twoFA": true,
-        "lastIncident": "Aucun incident majeur"
+        "lastIncident": null,
+        "source": {},
+        "verified": "2026-10-07"
       },
       "bonus": {
         "welcome": "Bonus actuel — voir conditions sur la plateforme",
@@ -3960,10 +4172,12 @@
         "note": "Support par tickets, en français ou en anglais, avec un délai de réponse indicatif de huit jours selon les CGV ; chat et téléphone non vérifiés"
       },
       "security": {
-        "coldStoragePct": 90,
-        "insurance": false,
+        "coldStoragePct": null,
+        "insurance": null,
         "twoFA": true,
-        "lastIncident": "Aucun incident majeur"
+        "lastIncident": null,
+        "source": {},
+        "verified": "2026-10-07"
       },
       "bonus": {
         "welcome": "Bonus actuel — voir conditions sur la plateforme",

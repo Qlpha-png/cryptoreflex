@@ -19,8 +19,11 @@
 
 import {
   cardCost1000,
+  coldStorageLabel,
   frenchHelpLabel,
+  insuranceLabel,
   isAvailableFr,
+  lcFirst,
   purchaseCostText,
   type Platform,
   supportChatLabel,
@@ -91,6 +94,23 @@ function bestOnFee(a: Platform, b: Platform): { winner: Platform; loser: Platfor
   return { winner: b, loser: a, gap: `${fmtFr((ra - rb), 2)} point${ra - rb >= 2 ? "s" : ""}`, gapPct: ra - rb };
 }
 
+/** Faits de sécurité sourcés d'une plateforme, en une ou deux phrases (jamais « aucun incident », jamais un % non publié). */
+function secFacts(p: Platform): string {
+  const s = p.security;
+  const cold =
+    p.category === "wallet"
+      ? `${p.name} ne garde pas vos cryptos : vos clés restent sur l'appareil.`
+      : s.coldStorageNote || s.coldStoragePct != null
+        ? `Conservation hors ligne chez ${p.name} : ${lcFirst(coldStorageLabel(p))}${s.coldStorageNote ? "" : ", selon la plateforme"}.`
+        : `${p.name} ne publie pas la part des fonds clients conservée hors ligne.`;
+  const insurance =
+    p.category === "wallet" ? "" : s.insurance == null ? "" : ` Assurance des cryptos : ${lcFirst(insuranceLabel(p))}.`;
+  const incident = s.lastIncident
+    ? ` Incidents documentés, du plus récent au plus ancien : ${lcFirst(s.lastIncident).replace(/[\s.]*$/, ".")}`
+    : "";
+  return `${cold}${insurance}${incident}`;
+}
+
 function bestOnSecurity(a: Platform, b: Platform): { winner: Platform; loser: Platform } {
   if (a.scoring.security >= b.scoring.security) return { winner: a, loser: b };
   return { winner: b, loser: a };
@@ -158,7 +178,7 @@ function defaultFaq(a: Platform, b: Platform): FaqItem[] {
     },
     {
       question: `Quelle est la plus sécurisée entre ${a.name} et ${b.name} ?`,
-      answer: `${a.name} score ${fmtScore(a.scoring.security)} sur notre note sécurité, ${b.name} ${fmtScore(b.scoring.security)}. ${a.name} stocke ${a.security.coldStoragePct}% des fonds en cold storage, ${b.name} ${b.security.coldStoragePct}%. ${a.security.lastIncident ? `Dernier incident notable côté ${a.name} : ${a.security.lastIncident}.` : `${a.name} n'a connu aucun incident majeur rapporté.`} ${b.security.lastIncident ? `Côté ${b.name} : ${b.security.lastIncident}.` : `${b.name} n'a connu aucun incident majeur rapporté.`}`,
+      answer: `${a.name} score ${fmtScore(a.scoring.security)} sur notre note sécurité, ${b.name} ${fmtScore(b.scoring.security)}. ${secFacts(a)} ${secFacts(b)}`,
     },
     {
       question: `Combien de cryptos disponibles sur ${a.name} vs ${b.name} ?`,
@@ -277,7 +297,7 @@ const OVERRIDES: Record<string, SlugOverride> = {
     faq: (a, b) => [
       {
         question: `${a.name} ou ${b.name} : lequel est plus sécurisé ?`,
-        answer: `Les deux utilisent un élément sécurisé certifié (CC EAL5+ pour ${a.name}, EAL6+ pour le ${b.name} Safe 5). La différence majeure : ${b.name} est entièrement open source — le code peut être audité par n'importe quel chercheur. ${a.name} garde une partie propriétaire (controverse Ledger Recover en 2023). En pratique, aucun des deux n'a jamais perdu de fonds clients via une faille du device — les incidents passés relevaient de fuites annexes (emails Ledger 2020) ou d'attaques physiques en laboratoire.`,
+        answer: `Les deux utilisent un élément sécurisé certifié (CC EAL5+ pour ${a.name}, EAL6+ pour le ${b.name} Safe 5). La différence majeure : ${b.name} est entièrement open source — le code peut être audité par n'importe quel chercheur. ${a.name} garde une partie propriétaire (controverse Ledger Recover en 2023). Les incidents documentés ne venaient pas d'une faille des appareils : fuites de données de clients (${a.name} en 2020 et, via un prestataire, en 2026 ; ${b.name} via des prestataires en 2026), bibliothèque logicielle de ${a.name} piégée en décembre 2023 (Connect Kit, environ 600 000 $ volés à des utilisateurs d'applications web3), et attaque physique démontrée en laboratoire sur des Trezor en 2020, contrée par une passphrase.`,
       },
       {
         question: `Lequel supporte le plus de cryptos ?`,
@@ -300,11 +320,11 @@ const OVERRIDES: Record<string, SlugOverride> = {
   },
 
   "binance-vs-kraken": {
-    angle: "Catalogue géant + frais bas vs sécurité historique + Proof-of-Reserves",
+    angle: "Catalogue géant + frais bas vs preuve de réserves publiée régulièrement",
     pick: (a, b) =>
-      `Pour qui veut un acteur jamais piraté avec perte de fonds clients depuis 2011 : ${b.name}.`,
+      `Pour qui privilégie une preuve de réserves publiée régulièrement : ${b.name}.`,
     finalVerdict: (a, b) =>
-      `${b.name} (${fmtPct(b.fees.spotMaker)} maker / ${fmtPct(b.fees.spotTaker)} taker au premier palier) : aucun vol de fonds clients par piratage depuis 2011 à notre connaissance, preuve de réserves auditée. ${a.name} propose un catalogue plus large (${a.cryptos.totalCount} cryptos contre ${b.cryptos.totalCount}) et des frais plus bas (${fmtPct(a.fees.spotMaker)} / ${fmtPct(a.fees.spotTaker)}).`,
+      `${b.name} (${fmtPct(b.fees.spotMaker)} maker / ${fmtPct(b.fees.spotTaker)} taker au premier palier) : preuve de réserves auditée, publiée régulièrement ; deux incidents documentés (2024, 2026), sans perte de fonds pour ses clients selon Kraken. ${a.name} propose un catalogue plus large (${a.cryptos.totalCount} cryptos contre ${b.cryptos.totalCount}) et des frais plus bas (${fmtPct(a.fees.spotMaker)} / ${fmtPct(a.fees.spotTaker)}).`,
     faq: defaultFaq,
     profiles: defaultProfiles,
   },
@@ -373,11 +393,11 @@ const OVERRIDES: Record<string, SlugOverride> = {
   },
 
   "coinbase-vs-kraken": {
-    angle: "Marque grand public NASDAQ vs sécurité historique + Proof-of-Reserves",
+    angle: "Marque grand public NASDAQ vs preuve de réserves",
     pick: (a, b) =>
       `Pour une maison mère cotée au NASDAQ et des contenus pédagogiques pour débutants : ${a.name}. Pour la preuve de réserves auditée : ${b.name}.`,
     finalVerdict: (a, b) =>
-      `${a.name} et ${b.name} ont été fondés respectivement en 2012 et 2011, jamais hackés directement (incident ${a.name} 2024 = data breach via support tiers, fonds clients non touchés). ${a.name} a l'avantage de la marque grand public (cotée NASDAQ, plus connue auprès du non-initié) et de la pédagogie (Coinbase Earn, Coinbase Learn). ${b.name} met en avant sa preuve de réserves auditée. Côté frais, au premier palier, ${a.name} Advanced est à ${fmtPct(a.fees.spotMaker)} maker / ${fmtPct(a.fees.spotTaker)} taker contre ${fmtPct(b.fees.spotMaker)} / ${fmtPct(b.fees.spotTaker)} chez ${b.name} Pro. Verdict : ${b.name} pour qui veut une preuve de réserves auditée ; ${a.name} pour qui débute et veut une maison mère cotée en Bourse.`,
+      `${a.name} et ${b.name} ont été fondés respectivement en 2012 et 2011, et aucun des deux n'est à l'abri : en mai 2025, ${a.name} a révélé que des criminels avaient obtenu des données de clients en payant des agents de son support ; en avril 2026, ${b.name} a fait état d'accès abusifs d'employés de son support aux données d'environ 2 000 comptes. ${a.name} a l'avantage de la marque grand public (cotée NASDAQ, plus connue auprès du non-initié) et de la pédagogie (Coinbase Earn, Coinbase Learn). ${b.name} met en avant sa preuve de réserves auditée. Côté frais, au premier palier, ${a.name} Advanced est à ${fmtPct(a.fees.spotMaker)} maker / ${fmtPct(a.fees.spotTaker)} taker contre ${fmtPct(b.fees.spotMaker)} / ${fmtPct(b.fees.spotTaker)} chez ${b.name} Pro. Verdict : ${b.name} pour qui veut une preuve de réserves auditée ; ${a.name} pour qui débute et veut une maison mère cotée en Bourse.`,
     faq: defaultFaq,
     profiles: defaultProfiles,
   },
@@ -424,7 +444,7 @@ export function buildComparisonCopy(
   const tldrBullets = [
     `Frais spot : ${a.name} ${fmtPct(a.fees.spotMaker)}/${fmtPct(a.fees.spotTaker)} vs ${b.name} ${fmtPct(b.fees.spotMaker)}/${fmtPct(b.fees.spotTaker)} — avantage ${fees.winner.name}.`,
     `Catalogue : ${a.cryptos.totalCount} cryptos chez ${a.name} vs ${b.cryptos.totalCount} chez ${b.name} — avantage ${cat.winner.name}.`,
-    `Sécurité : score ${fmtScore(a.scoring.security)} vs ${fmtScore(b.scoring.security)} — ${sec.winner.name} en tête (${sec.winner.security.coldStoragePct} % cold storage).`,
+    `Sécurité : score ${fmtScore(a.scoring.security)} vs ${fmtScore(b.scoring.security)} — ${sec.winner.name} en tête dans notre méthode.`,
     `MiCA : ${a.mica.status.includes("MiCA") ? "✅" : "—"} ${a.name}${a.mica.amfRegistration ? ` (AMF ${a.mica.amfRegistration})` : ""} | ${b.mica.status.includes("MiCA") ? "✅" : "—"} ${b.name}${b.mica.amfRegistration ? ` (AMF ${b.mica.amfRegistration})` : ""}.`,
     `Aide en français : ${a.name} ${frenchHelpLabel(a.support).toLowerCase()} vs ${b.name} ${frenchHelpLabel(b.support).toLowerCase()} (pages d'assistance officielles).`,
   ];
@@ -450,9 +470,11 @@ export function buildComparisonCopy(
     `Côté achat de 1 000 € payé par carte bancaire (coût complet, frais de paiement compris), ${a.name} : ${lowerFirst(purchaseCostText(cardCost1000(a)))} ; ${b.name} : ${lowerFirst(purchaseCostText(cardCost1000(b)))}. Spread : ${a.name} ${a.fees.spread}, ${b.name} ${b.fees.spread}. Conseil pratique : pour des achats de plus de 100 €, un virement SEPA suivi d'un achat en mode « spot » ou « advanced » coûte nettement moins cher.`,
   ];
 
+  /* 06/10/2026 : « X % des fonds en cold storage », « assurance active », « 2FA obligatoire » et « aucun incident majeur »
+     n'étaient pas sourcés (Kraken ne publie aucun %, SwissBorg a été touchée en 2025). Seuls les faits relevés sont cités. */
   const securityAnalysis = [
-    `${sec.winner.name} prend l'avantage sécurité avec un score de ${fmtScore(sec.winner.scoring.security)} (vs ${fmtScore(sec.loser.scoring.security)} pour ${sec.loser.name}). Concrètement : ${sec.winner.security.coldStoragePct} % des fonds en cold storage hors-ligne, assurance ${sec.winner.security.insurance ? "active" : "inexistante"}, 2FA ${sec.winner.security.twoFA ? "obligatoire" : "optionnelle"}. ${sec.winner.security.lastIncident ? `Le dernier incident notable concerne ${sec.winner.security.lastIncident.toLowerCase()}.` : `Aucun incident majeur n'a été rapporté à ce jour.`}`,
-    `Côté ${sec.loser.name}, on retrouve ${sec.loser.security.coldStoragePct} % de cold storage et une assurance ${sec.loser.security.insurance ? "des fonds clients" : "absente"}. ${sec.loser.security.lastIncident ? `Incident historique à connaître : ${sec.loser.security.lastIncident}.` : `Aucun incident majeur rapporté.`} Rappel important : aucune plateforme custodiale n'égale jamais la sécurité d'un hardware wallet personnel — pour un capital >10 k€, la règle "not your keys, not your coins" reste pertinente.`,
+    `${sec.winner.name} prend l'avantage sécurité avec un score de ${fmtScore(sec.winner.scoring.security)} (vs ${fmtScore(sec.loser.scoring.security)} pour ${sec.loser.name}) dans notre méthode. ${secFacts(sec.winner)}`,
+    `Côté ${sec.loser.name} : ${lcFirst(secFacts(sec.loser))} Rappel important : aucune plateforme qui garde vos cryptos n'égale la sécurité d'un portefeuille dont vous détenez vous-même les clés — pour un capital important, la règle « pas vos clés, pas vos cryptos » reste pertinente.`,
   ];
 
   const micaAnalysis = [

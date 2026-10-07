@@ -11,7 +11,7 @@
  *   - SEO : mêmes Title/Description que la query, pas de bullshit générique
  */
 
-import { getAllPlatforms, getExchangePlatforms, isAvailableFr, type Platform } from "@/lib/platforms";
+import { coldStorageLabel, getAllPlatforms, getExchangePlatforms, isAvailableFr, lcFirst, type Platform } from "@/lib/platforms";
 import {
   getAllCryptos,
   getHiddenGems,
@@ -125,7 +125,7 @@ const PLATFORM_LISTICLES: PlatformListicle[] = [
     description:
       "Classement sécurité 2026 : cold storage, assurance, 2FA, historique d'incidents. Les exchanges les plus sûrs pour stocker vos crypto en France.",
     intro:
-      "Après l'effondrement de FTX en 2022, le critère sécurité est devenu le n°1 quand on choisit un exchange. Voici les 5 plateformes régulées MiCA avec les meilleurs standards : pourcentage de cold storage, assurance des dépôts, historique sans incident.",
+      "Après l'effondrement de FTX en 2022, le critère sécurité est devenu le n°1 quand on choisit un exchange. Voici les 5 plateformes agréées MiCA les mieux notées sur la sécurité dans notre méthode, avec ce qu'elles publient elles-mêmes sur la conservation hors ligne de vos cryptos.",
     monthlyVolumeFr: 480,
     difficulty: 21,
     select() {
@@ -136,7 +136,8 @@ const PLATFORM_LISTICLES: PlatformListicle[] = [
         .map((p, i) => ({
           rank: i + 1,
           data: p,
-          reason: `Score sécurité : ${fmtNb(p.scoring.security)}/5 — stockage à froid ${p.security.coldStoragePct} %, ${p.security.insurance ? "assurance" : "sans assurance"}.`,
+          /* 06/10/2026 : « stockage à froid 95 %, assurance » n'était pas sourcé ; on cite ce que la plateforme publie. */
+          reason: `Score sécurité : ${fmtNb(p.scoring.security)}/5 dans notre méthode — conservation hors ligne : ${lcFirst(coldStorageLabel(p))}${p.security.lastIncident ? " ; un incident est documenté sur sa fiche" : ""}.`,
         }));
     },
     highlightLabel: "Sécurité",

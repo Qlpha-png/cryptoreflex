@@ -16,12 +16,13 @@ import {
 } from "lucide-react";
 import {
   cardCost1000,
+  coldStorageLabel,
   getAllPlatforms,
   getPlatformById,
+  insuranceLabel,
   isAvailableFr,
   cardFeeMeasured,
   type Platform,
-  hasNoIncident,
   purchaseCostText,
   supportChatLabel,
   supportDelayLabel,
@@ -213,18 +214,22 @@ function buildRows(a: Platform, b: Platform): { fees: CompareRow[]; security: Co
     },
   ];
 
+  /* 06/10/2026 : conservation hors ligne et assurance sont DÉCLARÉES par les plateformes (souvent sans chiffre) :
+     on les affiche telles que publiées, sans désigner de gagnant. Avant : « 95 % » contre « 99 % », jamais sourcés. */
   const security: CompareRow[] = [
     {
-      label: "Cold storage",
-      aDisplay: `${fmtNb(a.security.coldStoragePct)}%`,
-      bDisplay: `${fmtNb(b.security.coldStoragePct)}%`,
-      hint: winner(a.security.coldStoragePct, b.security.coldStoragePct),
+      label: "Conservation hors ligne",
+      aDisplay: coldStorageLabel(a),
+      bDisplay: coldStorageLabel(b),
+      hint: "tie",
+      note: "Telle que publiée par chaque plateforme, non auditée.",
     },
     {
-      label: "Assurance",
-      aDisplay: a.security.insurance ? "Oui" : "Non",
-      bDisplay: b.security.insurance ? "Oui" : "Non",
-      hint: a.security.insurance && !b.security.insurance ? "a" : !a.security.insurance && b.security.insurance ? "b" : "tie",
+      label: "Assurance des cryptos",
+      aDisplay: insuranceLabel(a),
+      bDisplay: insuranceLabel(b),
+      hint: "tie",
+      note: "Portée telle que publiée par chaque plateforme.",
     },
     {
       label: "Score MiCA",
@@ -239,10 +244,11 @@ function buildRows(a: Platform, b: Platform): { fees: CompareRow[]; security: Co
       hint: winner(a.scoring.security, b.scoring.security),
     },
     {
-      label: "Dernier incident",
-      aDisplay: a.security.lastIncident ?? "Aucun",
-      bDisplay: b.security.lastIncident ?? "Aucun",
-      hint: hasNoIncident(a.security.lastIncident) && !hasNoIncident(b.security.lastIncident) ? "a" : !hasNoIncident(a.security.lastIncident) && hasNoIncident(b.security.lastIncident) ? "b" : "tie",
+      label: "Dernier incident documenté",
+      aDisplay: a.security.lastIncident ?? "Aucun relevé dans nos sources",
+      bDisplay: b.security.lastIncident ?? "Aucun relevé dans nos sources",
+      hint: "tie",
+      note: "Aucun incident relevé ne veut pas dire aucun incident : ce n'est pas une garantie.",
     },
   ];
 
@@ -458,7 +464,7 @@ export default function ComparisonPage({ params }: Props) {
         {(
           [
             { title: "Frais", icon: Wallet, rows: rows.fees, intro: `Sur les frais, ${a.name} affiche ${fmtNb(a.fees.spotMaker)}% en maker contre ${fmtNb(b.fees.spotMaker)}% pour ${b.name}. La différence paraît mineure jusqu'à ce qu'on la projette sur 10 000€ de volume mensuel — auquel cas elle devient le critère dominant pour un trader actif.` },
-            { title: "Sécurité & MiCA", icon: ShieldCheck, rows: rows.security, intro: `${a.category !== "wallet" && b.category !== "wallet" && isAvailableFr(a) && isAvailableFr(b) ? "Les deux plateformes sont agréées MiCA avec accès à la France. " : ""}La granularité de la comparaison se joue sur le pourcentage de cold storage, l'existence d'une assurance dédiée et l'historique d'incidents.` },
+            { title: "Sécurité & MiCA", icon: ShieldCheck, rows: rows.security, intro: `${a.category !== "wallet" && b.category !== "wallet" && isAvailableFr(a) && isAvailableFr(b) ? "Les deux plateformes sont agréées MiCA avec accès à la France. " : ""}Conservation hors ligne et assurance sont présentées telles que les plateformes les publient, sans audit de notre part ; les incidents, tels que documentés par un communiqué officiel ou la presse reconnue. « Aucun relevé » ne veut pas dire « aucun incident ».` },
             { title: "Expérience utilisateur", icon: Coins, rows: rows.ux, intro: `Sous-note UX de notre méthodologie, note Trustpilot (datée) et taille du catalogue. Ces métriques ne pèsent pas pareil selon votre profil : un investisseur passif regardera surtout la simplicité, un trader actif le catalogue.` },
             { title: "Support client", icon: HeadphonesIcon, rows: rows.support, intro: `En cas de problème (vérification d'identité bloquée, retrait en attente, suspicion de fraude), savoir comment joindre la plateforme compte. Canaux relevés sur les pages officielles d'assistance ; un délai n'est indiqué que si la plateforme l'annonce elle-même.` },
           ] as const
@@ -487,7 +493,7 @@ export default function ComparisonPage({ params }: Props) {
                 <tbody className="divide-y divide-border">
                   {section.rows.map((row) => (
                     <tr key={row.label}>
-                      <td className="px-4 py-3 text-muted">{row.label}</td>
+                      <td className="px-4 py-3 text-muted min-w-[9rem]">{row.label}</td>
                       <td className={`px-4 py-3 text-right font-mono tabular-nums ${row.hint === "a" ? "text-fg-max font-semibold" : "text-fg-max/70"}`}>
                         {row.aDisplay} <WinnerBadge hint={row.hint} side="a" />
                       </td>

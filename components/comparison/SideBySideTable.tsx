@@ -12,6 +12,8 @@
 
 import { Check, Minus, X } from "lucide-react";
 import {
+  coldStorageLabel,
+  insuranceLabel,
   type Platform,
   supportChatLabel,
   supportDelayLabel,
@@ -103,10 +105,11 @@ function buildRows(a: Platform, b: Platform): Row[] {
     { label: "Cryptos stakables", a: a.cryptos.stakingCryptos.length ? a.cryptos.stakingCryptos.join(", ") : "—", b: b.cryptos.stakingCryptos.length ? b.cryptos.stakingCryptos.join(", ") : "—", direction: "none" },
 
     // GROUP : SÉCURITÉ
-    { group: "Sécurité", label: "Cold storage", a: `${fmtNb(a.security.coldStoragePct)} %`, b: `${fmtNb(b.security.coldStoragePct)} %`, aRaw: a.security.coldStoragePct, bRaw: b.security.coldStoragePct, direction: "higher" },
-    { label: "Assurance fonds clients", a: a.security.insurance, b: b.security.insurance, aRaw: a.security.insurance, bRaw: b.security.insurance, direction: "bool" },
-    { label: "2FA obligatoire", a: a.security.twoFA, b: b.security.twoFA, aRaw: a.security.twoFA, bRaw: b.security.twoFA, direction: "bool" },
-    { label: "Dernier incident notable", a: a.security.lastIncident ?? "Aucun rapporté", b: b.security.lastIncident ?? "Aucun rapporté", direction: "none" },
+    // 06/10/2026 : valeurs telles que publiées (lib/platforms : coldStorageLabel, insuranceLabel), sans désigner de gagnant.
+    { group: "Sécurité", label: "Conservation hors ligne (publiée)", a: coldStorageLabel(a), b: coldStorageLabel(b), direction: "none" },
+    { label: "Assurance des cryptos (publiée)", a: insuranceLabel(a), b: insuranceLabel(b), direction: "none" },
+    { label: "Double authentification", a: a.security.twoFA, b: b.security.twoFA, aRaw: a.security.twoFA, bRaw: b.security.twoFA, direction: "bool" },
+    { label: "Dernier incident documenté", a: a.security.lastIncident ?? "Aucun relevé (pas une garantie)", b: b.security.lastIncident ?? "Aucun relevé (pas une garantie)", direction: "none" },
 
     // GROUP : MICA / RÉGLEMENTATION
     { group: "Réglementation", label: "Statut MiCA", a: a.mica.status, b: b.mica.status, direction: "none" },

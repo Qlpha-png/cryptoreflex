@@ -16,7 +16,7 @@ import {
 } from "lucide-react";
 
 import { STAKING_PAIRS, getStakingPair, type StakingPair } from "@/lib/programmatic";
-import { getPlatformById, isAvailableFr, type Platform } from "@/lib/platforms";
+import { coldStorageLabel, getPlatformById, isAvailableFr, lcFirst, type Platform } from "@/lib/platforms";
 import { BRAND } from "@/lib/brand";
 import StructuredData from "@/components/StructuredData";
 import AmfDisclaimer from "@/components/AmfDisclaimer";
@@ -261,7 +261,8 @@ export default function StakingDetailPage({ params }: Props) {
                       </li>
                       <li className="flex items-center gap-1.5">
                         <CheckCircle2 className="h-3.5 w-3.5 text-accent-green shrink-0" />
-                        Cold storage {fmtNb(p.security.coldStoragePct)}% · 2FA · {p.security.insurance ? "Assurance" : "Sans assurance"}
+                        {/* 06/10/2026 : « Cold storage 95 % · Assurance » n'était pas sourcé. */}
+                        Hors ligne : {lcFirst(coldStorageLabel(p))} · 2FA
                       </li>
                     </ul>
                     <div className="mt-4 flex items-center justify-between gap-2">
