@@ -170,7 +170,7 @@ export default function CryptoQuickSwitcher({
           /* BATCH 38 — fix audit Mobile UX P0 : text-sm (14px) déclenchait
              le zoom auto iOS Safari au focus. Passé à text-base (16px) sur
              mobile (sm:text-sm sur desktop pour préserver le design). */
-          className="w-full rounded-xl border border-border bg-surface pl-10 pr-4 py-2.5 text-base sm:text-sm text-fg placeholder:text-muted/80 focus:border-primary/50 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/30 transition-colors"
+          className="w-full rounded-xl border border-border bg-surface pl-10 pr-4 py-2.5 text-base sm:text-sm text-fg placeholder:text-fg-4 focus:border-primary/50 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/30 transition-colors"
         />
       </div>
 
@@ -240,7 +240,7 @@ export default function CryptoQuickSwitcher({
               );
             })}
           </ul>
-          <div className="px-3 py-2 text-xs text-muted/80 bg-surface/40 border-t border-border flex items-center justify-between">
+          <div className="px-3 py-2 text-xs text-fg-4 bg-surface/40 border-t border-border flex items-center justify-between">
             <span>↑↓ naviguer · Enter ouvrir · Esc fermer</span>
             <Link
               href="/cryptos"

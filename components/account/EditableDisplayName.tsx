@@ -105,7 +105,7 @@ export default function EditableDisplayName({ initialName }: Props) {
       <button
         type="button"
         onClick={() => setEditing(true)}
-        className="opacity-0 group-hover:opacity-100 transition-opacity grid place-items-center h-7 w-7 rounded-lg bg-elevated/60 text-fg/60 hover:text-primary hover:bg-elevated"
+        className="opacity-0 group-hover:opacity-100 transition-opacity grid place-items-center h-7 w-7 rounded-lg bg-elevated/60 text-fg-4 hover:text-primary hover:bg-elevated"
         aria-label="Modifier mon nom"
         title="Modifier mon nom"
       >

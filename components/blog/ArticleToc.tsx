@@ -219,7 +219,7 @@ export default function ArticleToc({
                   className={`block leading-snug py-1 border-l-2 pl-3 -ml-px transition-colors ${
                     isActive
                       ? "border-primary text-fg font-semibold"
-                      : "border-transparent text-fg/65 hover:text-fg hover:border-border"
+                      : "border-transparent text-muted hover:text-fg hover:border-border"
                   }`}
                 >
                   {h.text}

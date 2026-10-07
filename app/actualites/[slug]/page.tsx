@@ -232,7 +232,7 @@ export default async function NewsDetailPage({ params }: PageProps) {
                 month: "long",
                 year: "numeric",
               })}
-              {relDate && <span className="ml-2 text-muted/60">· {relDate}</span>}
+              {relDate && <span className="ml-2 text-fg-4">· {relDate}</span>}
             </time>
             {/* Temps de lecture — ~200 mots/min, calculé sur le body MDX */}
             <span className="text-xs text-muted">

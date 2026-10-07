@@ -187,7 +187,7 @@ export default function LeadMagnetCard({
               {errorMsg}
             </p>
           ) : null}
-          <p className="text-xs leading-snug text-muted/70">
+          <p className="text-xs leading-snug text-fg-4">
             Newsletter Cryptoreflex, facultative. Désinscription en 1 clic depuis
             chaque email.{" "}
             <Link href="/confidentialite" className="underline hover:text-muted">

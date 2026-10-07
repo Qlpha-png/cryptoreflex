@@ -238,7 +238,7 @@ export default function Heatmap({ coins, internalSlugs }: Props) {
                     ? "bg-primary text-background"
                     : enabled
                     ? "text-muted hover:text-fg"
-                    : "text-muted/40 cursor-not-allowed",
+                    : "text-fg-4 cursor-not-allowed",
                 ].join(" ")}
                 title={enabled ? undefined : "Donnée indisponible"}
               >

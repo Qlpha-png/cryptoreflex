@@ -10,8 +10,8 @@ import plugin from "tailwindcss/plugin";
  *  - 4-base spacing (Tailwind par défaut, vérifié OK)
  *  - Typography scale nommée (caption/small/body/lead/h1..h6/display)
  *  - Couleurs sémantiques (success/warning/danger/info) en plus de la palette brand
- *  - 5 niveaux d'élévation (shadow.e1..e5)
- *  - Radii nommés (sm/md/lg/xl/2xl/3xl) alignés 6/10/14/18/24/32
+ *  - 5 niveaux d'élévation (shadow.e1..e5) → 3 élévations du kit C+ (lot B2)
+ *  - Radii nommés (sm/md/lg/xl/2xl/3xl) alignés 6/12/12/16/16/16 (kit C+, lot B2)
  *  - Motion tokens (duration.fast/normal/slow + easings nommés)
  */
 
@@ -221,9 +221,34 @@ const config: Config = {
       // B1 reprise (jury ronde 1) : corps de lecture des articles et des actus (MdxContent, pages légales) = --fs-read du kit C+
       // (18 px mobile, 20 px dès lg), interligne 1,65, mesure 34em (≈ 62 à 68 signes). Le plugin typography a ses propres
       // tailles : le remap de text-base ne l'atteignait pas. Ne touche que les composants, pas le MDX.
+      // Lot B2 : couleurs du plugin branchées sur les jetons (les deux thèmes) ; prose-invert (10 usages) pointe sur les
+      // mêmes variables (il donnait du gris clair, illisible sur Papier). Liens de texte C+ : couleur link, soulignement
+      // link-line 2 px sous les jambages (kit : .lnk), 3 px au survol.
       typography: {
         DEFAULT: {
           css: {
+            ...Object.fromEntries(
+              (
+                [
+                  ["body", "fg-2"], ["headings", "fg"], ["lead", "muted"], ["links", "link"], ["bold", "fg"],
+                  ["counters", "fg-4"], ["bullets", "border-strong"], ["hr", "border"], ["quotes", "fg"],
+                  ["quote-borders", "border-strong"], ["captions", "fg-4"], ["kbd", "fg"], ["code", "fg"],
+                  ["pre-code", "fg-2"], ["pre-bg", "sunken"], ["th-borders", "border-strong"], ["td-borders", "border"],
+                ] as const
+              ).flatMap(([cle, jeton]) => [
+                [`--tw-prose-${cle}`, `rgb(var(--c-${jeton}))`],
+                [`--tw-prose-invert-${cle}`, `rgb(var(--c-${jeton}))`],
+              ]),
+            ),
+            a: {
+              color: "rgb(var(--c-link))",
+              fontWeight: "inherit",
+              textDecorationLine: "underline",
+              textDecorationColor: "rgb(var(--c-link-line))",
+              textDecorationThickness: "2px",
+              textUnderlineOffset: "0.28em",
+            },
+            "a:hover": { color: "rgb(var(--c-link-hover))", textDecorationThickness: "3px" },
             fontSize: "1.125rem",
             lineHeight: "1.65",
             p: { maxWidth: "34em" },
@@ -237,31 +262,37 @@ const config: Config = {
       // ---------------------------------------------------------------
       // RADII — échelle nommée (px values aligned with design system)
       // ---------------------------------------------------------------
+      // Lot B2 (kit C+, bloc 0 de la spec qui fait foi : 6 / 12 / 16 / 999) : sm 6, md et lg 12, xl à 3xl 16, full 999.
+      // Avant : 6 / 10 / 14 / 18 / 24 / 32. rounded (4 px) et rounded-none ne changent pas.
       borderRadius: {
         sm: "6px",
-        md: "10px",
-        lg: "14px",
-        xl: "18px",
-        "2xl": "24px",
-        "3xl": "32px",
+        md: "12px",
+        lg: "12px",
+        xl: "16px",
+        "2xl": "16px",
+        "3xl": "16px",
+        full: "999px",
       },
 
       // ---------------------------------------------------------------
-      // SHADOWS — 5 niveaux d'élévation + tokens spéciaux brand
+      // SHADOWS — lot B2 : les 5 niveaux pointent sur les 3 élévations du kit C+ (--shadow-1/2/3 de tokens.css, une
+      // valeur par thème : filet intérieur + ombre portée en Encre, ombre encre douce en Papier).
+      // e1-e2 = cartes (shadow-1), e3-e4 = menus, popovers (shadow-2), e5 = dialogues (shadow-3).
+      // glow-gold / glow-ice : plus aucun halo en C+ (ombre nulle et transparente, pas « none » : la liste
+      // box-shadow de Tailwind y ajoute les anneaux, « none » la rendrait invalide).
       // ---------------------------------------------------------------
       boxShadow: {
-        // Elevation scale — du plus subtil (e1) au plus prononcé (e5)
-        e1: "0 1px 2px 0 rgba(0, 0, 0, 0.25)",
-        e2: "0 2px 6px -1px rgba(0, 0, 0, 0.30), 0 1px 2px 0 rgba(0, 0, 0, 0.20)",
-        e3: "0 6px 16px -4px rgba(0, 0, 0, 0.40), 0 2px 4px -2px rgba(0, 0, 0, 0.25)",
-        e4: "0 12px 28px -8px rgba(0, 0, 0, 0.45), 0 4px 8px -4px rgba(0, 0, 0, 0.30)",
-        e5: "0 24px 48px -12px rgba(0, 0, 0, 0.55), 0 8px 16px -8px rgba(0, 0, 0, 0.35)",
+        e1: "var(--shadow-1)",
+        e2: "var(--shadow-1)",
+        e3: "var(--shadow-2)",
+        e4: "var(--shadow-2)",
+        e5: "var(--shadow-3)",
+        action: "var(--shadow-action)",
 
-        // Brand-specific
-        "glow-gold": "0 0 60px -10px rgba(245, 165, 36, 0.4)",
-        "glow-ice": "0 0 60px -10px rgba(56, 189, 248, 0.35)",
-        // Backward compat (alias) — préférer e3
-        card: "0 8px 24px -8px rgba(0, 0, 0, 0.4)",
+        "glow-gold": "0 0 0 0 transparent",
+        "glow-ice": "0 0 0 0 transparent",
+        // Ancien alias de e3 (2 usages, cartes) : élévation des cartes.
+        card: "var(--shadow-1)",
       },
 
       // ---------------------------------------------------------------

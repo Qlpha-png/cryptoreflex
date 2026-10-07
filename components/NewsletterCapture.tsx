@@ -252,7 +252,7 @@ export default function NewsletterCapture() {
                     aria-describedby={status === "error" ? "newsletter-error" : "newsletter-hint"}
                     disabled={status === "loading"}
                     className={`w-full rounded-xl bg-background border px-4 py-3 pr-10 text-fg
-                                placeholder:text-fg/60 focus:outline-none
+                                placeholder:text-fg-4 focus:outline-none
                                 focus:ring-2 focus:ring-primary/30 disabled:opacity-50
                                 ${
                                   emailValid === true
@@ -289,7 +289,7 @@ export default function NewsletterCapture() {
               </form>
 
               {/* Trust signals déplacés sous le form (visible mais pas encombrant le top) */}
-              <div id="newsletter-hint" className="mt-3 flex flex-wrap items-center gap-2 text-xs text-fg/65">
+              <div id="newsletter-hint" className="mt-3 flex flex-wrap items-center gap-2 text-xs text-muted">
                 {/* Pas de compteur d'inscrits : le seul chiffre honnête serait mesuré en base.
                     Le « +250 inscrits cette semaine » écrit en dur a été retiré (audit 03/10/2026). */}
                 <span className="inline-flex items-center gap-1">
@@ -379,7 +379,7 @@ export default function NewsletterCapture() {
               </div>
 
               {/* Tap target 44px (Audit Mobile) */}
-              <p className="mt-5 text-xs text-fg/65">
+              <p className="mt-5 text-xs text-muted">
                 Pas reçu l&apos;email après 5 min ? Vérifiez vos spams ou{" "}
                 <button
                   type="button"

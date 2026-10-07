@@ -213,7 +213,7 @@ export default async function AdminVitalsPage() {
                         <Gauge className="h-4 w-4 text-muted" />
                         {row.name}
                       </div>
-                      <p className="mt-1 text-xs text-fg/60 leading-snug max-w-md">
+                      <p className="mt-1 text-xs text-fg-4 leading-snug max-w-md">
                         {row.description}
                       </p>
                     </td>
@@ -231,12 +231,12 @@ export default async function AdminVitalsPage() {
                         <div>
                           <div className="font-mono">
                             {fmt(lastSample.value, row.unit)} ·{" "}
-                            <span className="text-fg/65">{lastSample.rating}</span>
+                            <span className="text-muted">{lastSample.rating}</span>
                           </div>
-                          <div className="mt-0.5 text-fg/65 truncate max-w-[200px]" title={lastSample.url}>
+                          <div className="mt-0.5 text-muted truncate max-w-[200px]" title={lastSample.url}>
                             {lastSample.url}
                           </div>
-                          <div className="mt-0.5 text-fg/60">{relativeTime(lastSample.ts)}</div>
+                          <div className="mt-0.5 text-fg-4">{relativeTime(lastSample.ts)}</div>
                         </div>
                       ) : (
                         <span className="text-muted">aucun sample</span>

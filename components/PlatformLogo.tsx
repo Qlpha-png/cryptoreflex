@@ -44,6 +44,13 @@ import { Coins } from "lucide-react";
  * favicon.app/io ; fichier favicon.app retournait emoji 🔥, pas le
  * vrai logo). Coinbase reste en `.svg` aussi (vérifier manuellement).
  */
+/**
+ * Reprise B2 : logos servis dont le dessin est BLANC sur fond transparent (relevé des remplissages de public/logos/*.svg,
+ * scratchpad b2/reprise/logos-blancs.mjs ; binance, bitpanda, revolut et trade-republic sont servis en PNG foncé).
+ * Invisibles sur Papier : posés sur la plaque encre du kit (jeton plate-ink, sombre dans les 2 thèmes).
+ */
+const LOGOS_BLANCS = new Set<string>(["coinbase"]);
+
 const ID_EXTENSIONS: Record<string, "svg" | "png"> = {
   // PNG officiels confirmés (téléchargés depuis Google Favicons + CMC CDN)
   coinbase: "svg",        // à vérifier — peut-être inventé aussi
@@ -166,7 +173,7 @@ export default function PlatformLogo({
       alt={`Logo ${name}`}
       width={size}
       height={size}
-      className={`${baseClass} object-contain`}
+      className={`${baseClass} object-contain${LOGOS_BLANCS.has(normalized) && ext === "svg" ? " bg-plate-ink" : ""}`}
       style={{
         width: size,
         height: size,

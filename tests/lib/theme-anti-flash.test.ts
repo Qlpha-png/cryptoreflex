@@ -96,14 +96,37 @@ describe("script avant affichage (phase Encre seule)", () => {
     expect(r.attrs.has("data-theme")).toBe(false);
   });
 
+  // Lot B2 : adresse de l'essai donnée au jury (même mécanique que ?apparence, même clé cr-essai-clair).
+  it("?theme=papier pose cr-essai-clair=1 et data-theme=light ; la page suivante le garde sans paramètre", () => {
+    const r = executer("/?theme=papier");
+    expect(r.stockage.get(CLE_ESSAI_CLAIR)).toBe("1");
+    expect(r.attrs.get("data-theme")).toBe("light");
+    expect(executer("/avis/kraken", "normal", Object.fromEntries(r.stockage)).attrs.get("data-theme")).toBe("light");
+  });
+
+  it("?theme=encre retire l'essai (Encre, aucun attribut) sans toucher cr-theme", () => {
+    const r = executer("/cryptos/bitcoin?theme=encre", "normal", { [CLE_ESSAI_CLAIR]: "1", [CLE_THEME]: "light" });
+    expect(r.stockage.has(CLE_ESSAI_CLAIR)).toBe(false);
+    expect(r.stockage.get(CLE_THEME)).toBe("light");
+    expect(r.attrs.has("data-theme")).toBe(false);
+  });
+
+  it("?theme=light|dark|autre sur une page du site : sans effet (réservé aux widgets)", () => {
+    for (const v of ["light", "dark", "Papier", "clair", ""]) {
+      expect(executer(`/?theme=${v}`).stockage.size).toBe(0);
+      expect(executer(`/?theme=${v}`).attrs.has("data-theme")).toBe(false);
+      expect(executer(`/?theme=${v}`, "normal", { [CLE_ESSAI_CLAIR]: "1" }).attrs.get("data-theme")).toBe("light");
+    }
+  });
+
   it("autre valeur de ?apparence : mémoire inchangée", () => {
     expect(executer("/?apparence=clair", "normal").stockage.size).toBe(0);
     expect(executer("/?apparence=clair", "normal", { [CLE_ESSAI_CLAIR]: "1" }).attrs.get("data-theme")).toBe("light");
   });
 
   for (const mode of ["absent", "leve-acces", "leve-operations"] as const) {
-    it(`stockage ${mode} : aucune exception, aucun attribut, même avec ?apparence=essai-clair`, () => {
-      for (const url of ["/", "/?apparence=essai-clair", "/?apparence=normal"]) {
+    it(`stockage ${mode} : aucune exception, aucun attribut, même avec ?apparence=essai-clair ou ?theme=papier`, () => {
+      for (const url of ["/", "/?apparence=essai-clair", "/?apparence=normal", "/?theme=papier", "/?theme=encre"]) {
         const r: Array<ReturnType<typeof executer>> = [];
         expect(() => { r.push(executer(url, mode)); }).not.toThrow();
         expect(r.length).toBe(1);

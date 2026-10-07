@@ -30,9 +30,9 @@ export default function PlatformCardInline({
 
   if (!p) {
     return (
-      <div className="not-prose my-6 rounded-xl border border-rose-500/30 bg-rose-500/10 p-4 text-sm text-rose-200">
+      <div className="not-prose my-6 rounded-xl border border-danger-border bg-danger-soft p-4 text-sm text-danger">
         <strong>PlatformCardInline :</strong> aucune plateforme trouvée pour l'id{" "}
-        <code className="rounded bg-rose-500/20 px-1.5 py-0.5">{id}</code>.
+        <code className="rounded bg-danger/15 px-1.5 py-0.5">{id}</code>.
       </div>
     );
   }
@@ -62,7 +62,7 @@ export default function PlatformCardInline({
             {fmtFr(p.scoring.global, 1)} / 5
           </span>
           {p.mica.micaCompliant && (
-            <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/15 px-2.5 py-1 font-semibold text-emerald-300">
+            <span className="inline-flex items-center gap-1 rounded-full bg-success-soft px-2.5 py-1 font-semibold text-success">
               <ShieldCheck className="h-3.5 w-3.5" aria-hidden />
               MiCA
             </span>
@@ -90,7 +90,7 @@ export default function PlatformCardInline({
       {showProsCons && (
         <div className="grid gap-4 border-t border-border p-5 text-sm sm:grid-cols-2">
           <div>
-            <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-emerald-300">
+            <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-success">
               Points forts
             </p>
             <ul className="space-y-1 text-fg-max/80">
@@ -100,7 +100,7 @@ export default function PlatformCardInline({
             </ul>
           </div>
           <div>
-            <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-rose-300">
+            <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-danger">
               Points faibles
             </p>
             <ul className="space-y-1 text-fg-max/80">

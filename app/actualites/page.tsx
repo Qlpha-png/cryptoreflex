@@ -387,7 +387,7 @@ function Pagination({
             Précédent
           </Link>
         ) : (
-          <span className="inline-flex items-center gap-1 whitespace-nowrap rounded-lg border border-border/40 bg-surface/40 px-3 py-1.5 text-xs font-semibold text-muted/50">
+          <span className="inline-flex items-center gap-1 whitespace-nowrap rounded-lg border border-border/40 bg-surface/40 px-3 py-1.5 text-xs font-semibold text-fg-4">
             <ChevronLeft className="h-3.5 w-3.5" aria-hidden="true" />
             Précédent
           </span>
@@ -402,7 +402,7 @@ function Pagination({
             <ChevronRight className="h-3.5 w-3.5" aria-hidden="true" />
           </Link>
         ) : (
-          <span className="inline-flex items-center gap-1 whitespace-nowrap rounded-lg border border-border/40 bg-surface/40 px-3 py-1.5 text-xs font-semibold text-muted/50">
+          <span className="inline-flex items-center gap-1 whitespace-nowrap rounded-lg border border-border/40 bg-surface/40 px-3 py-1.5 text-xs font-semibold text-fg-4">
             Suivant
             <ChevronRight className="h-3.5 w-3.5" aria-hidden="true" />
           </span>
@@ -416,17 +416,18 @@ function Pagination({
 /* À la une — carte vedette grand format (magazine)                           */
 /* -------------------------------------------------------------------------- */
 
+// Reprise B2 : même pastille que NewsCard (plaque encre opaque à 85 %, bloc .theme-encre, texte sur jeton d'état).
 const FEATURED_BADGE: Record<string, string> = {
-  "Marché": "bg-warning/15 text-amber-200 ring-warning/30",
-  "Régulation": "bg-rose-500/15 text-rose-200 ring-rose-500/30",
-  Technologie: "bg-cyan-500/15 text-cyan-200 ring-cyan-500/30",
-  Plateformes: "bg-fuchsia-500/15 text-fuchsia-200 ring-fuchsia-500/30",
+  "Marché": "bg-background/85 text-warning ring-warning/40",
+  "Régulation": "bg-background/85 text-danger ring-danger/40",
+  Technologie: "bg-background/85 text-info ring-info/40",
+  Plateformes: "bg-background/85 text-fg ring-border-strong",
 };
 
 function FeaturedNews({ news }: { news: NewsSummary }) {
   const relDate = formatRelativeFr(news.date);
   const catLabel = NEWS_CATEGORY_LABELS[news.category];
-  const badge = FEATURED_BADGE[news.category] ?? "bg-muted/15 text-muted ring-border";
+  const badge = FEATURED_BADGE[news.category] ?? "bg-background/85 text-muted ring-border";
 
   return (
     <Link
@@ -448,7 +449,7 @@ function FeaturedNews({ news }: { news: NewsSummary }) {
           height={630}
         />
         <span
-          className={`absolute left-4 top-4 z-10 inline-flex items-center rounded-full px-3 py-1 text-xs
+          className={`theme-encre absolute left-4 top-4 z-10 inline-flex items-center rounded-full px-3 py-1 text-xs
                       font-semibold uppercase tracking-wider ring-1 backdrop-blur-sm ${badge}`}
         >
           {catLabel}

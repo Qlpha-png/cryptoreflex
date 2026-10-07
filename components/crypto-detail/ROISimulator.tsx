@@ -409,7 +409,7 @@ export default function ROISimulator({
             aria-label="Slider montant investi"
             className="mt-2 w-full accent-primary cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 rounded"
           />
-          <div className="mt-1 flex justify-between text-xs text-muted/80 font-mono">
+          <div className="mt-1 flex justify-between text-xs text-fg-4 font-mono">
             <span>{AMOUNT_MIN} €</span>
             <span>{AMOUNT_MAX.toLocaleString("fr-FR")} €</span>
           </div>
@@ -441,7 +441,7 @@ export default function ROISimulator({
             aria-valuetext={formattedStartDate}
             className="mt-2 w-full accent-primary cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 rounded"
           />
-          <div className="mt-1 flex justify-between text-xs text-muted/80 font-mono">
+          <div className="mt-1 flex justify-between text-xs text-fg-4 font-mono">
             <span>
               {new Date(effectiveFloor).toLocaleDateString("fr-FR", {
                 month: "short",

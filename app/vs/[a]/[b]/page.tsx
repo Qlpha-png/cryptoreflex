@@ -788,7 +788,7 @@ export default async function CryptoPairPage({ params }: Props) {
               </p>
             </div>
           </div>
-          <p className="mt-5 text-xs text-fg/60 leading-relaxed">
+          <p className="mt-5 text-xs text-fg-4 leading-relaxed">
             ⚠️ Ces correspondances sont DÉRIVÉES des données factuelles (risque, ancienneté,
             disponibilité). Ce n'est PAS un conseil en investissement individualisé. Voir notre{" "}
             <Link href="/methodologie" className="underline font-semibold hover:text-primary-soft">

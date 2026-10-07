@@ -308,7 +308,7 @@ export default function TrackQuiz({
                         ? "border-success-fg/50 bg-success-fg/10 text-fg"
                         : isUserChoice
                           ? "border-danger-fg/50 bg-danger-fg/10 text-fg"
-                          : "border-border bg-background/30 text-fg/55";
+                          : "border-border bg-background/30 text-fg-4";
                       return (
                         <li
                           key={origIdx}

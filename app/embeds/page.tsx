@@ -318,7 +318,7 @@ export default function EmbedsLandingPage() {
                 Notifier Cryptoreflex de votre intégration (optionnel)
               </a>
             </div>
-            <p className="mt-4 text-xs text-fg/60 leading-relaxed">
+            <p className="mt-4 text-xs text-fg-4 leading-relaxed">
               <strong>Pourquoi nous notifier ?</strong> Pour qu&apos;on suive
               l&apos;adoption des widgets, qu&apos;on remercie les sites
               intégrateurs (mention dans notre page Partenaires si vous acceptez),

@@ -59,7 +59,7 @@ export default async function HomeMarketToday({
           <div>
             <HomeLivePrices coins={coins} />
             {sourceLabel && (
-              <p className="mt-1 text-xs text-fg/60">
+              <p className="mt-1 text-xs text-fg-4">
                 {sourceLabel.text}
                 {sourceLabel.link && (
                   <>
@@ -95,7 +95,7 @@ export default async function HomeMarketToday({
                     href={`/actualites/${n.slug}`}
                     className="block rounded-xl border border-border bg-surface px-4 py-3 hover:border-primary/50"
                   >
-                    <span className="text-xs text-fg/60">
+                    <span className="text-xs text-fg-4">
                       {fmtDate(n.date)} · {n.category}
                     </span>
                     <span className="mt-1 block text-sm font-semibold leading-snug text-fg">{n.title}</span>

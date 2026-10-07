@@ -181,7 +181,7 @@ function GemCard({ gem }: { gem: HiddenGem }) {
             aria-hidden="true"
           />
           Audité par : <span className="text-fg">{gem.reliability.auditedBy.join(", ")}</span>{" "}
-          <span className="text-muted/70">({gem.reliability.lastAuditDate})</span>
+          <span className="text-fg-4">({gem.reliability.lastAuditDate})</span>
         </div>
       )}
 

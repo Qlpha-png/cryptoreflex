@@ -154,7 +154,7 @@ export default function Comparateur({ rows, duelSlugs }: { rows: Row[]; duelSlug
                   <PlatformLogo id={r.id} name={r.name} size={40} />
                   <div className="min-w-0">
                     <h3 className="truncate text-base font-extrabold text-fg">{r.name}</h3>
-                    <p className="mt-0.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-fg/65">
+                    <p className="mt-0.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-muted">
                       <span className="inline-flex items-center gap-1 rounded-full border border-accent-green/30 bg-accent-green/10 px-2 py-0.5 font-semibold text-accent-green">
                         <Check className="h-3 w-3" aria-hidden="true" /> {r.french ? "Agréée par l'AMF" : `Agréée MiCA · ${r.country}`}
                       </span>
@@ -172,18 +172,18 @@ export default function Comparateur({ rows, duelSlugs }: { rows: Row[]; duelSlug
                   {c ? (
                     <>
                       <div className="flex items-baseline gap-2">
-                        {costLabel(c).prefix && <span className="text-xs font-semibold text-fg/60">{costLabel(c).prefix}</span>}
+                        {costLabel(c).prefix && <span className="text-xs font-semibold text-fg-4">{costLabel(c).prefix}</span>}
                         <span className={`${c.fee == null ? "text-lg" : "text-2xl"} font-extrabold tabular-nums text-fg`}>{costLabel(c).main}</span>
-                        {c.fee != null && <span className="text-xs text-fg/60">de frais</span>}
+                        {c.fee != null && <span className="text-xs text-fg-4">de frais</span>}
                       </div>
                       {costLabel(c).suffix && <p className="mt-0.5 text-xs font-semibold text-primary-soft">{costLabel(c).suffix}</p>}
                       {goal !== "carte" && (
-                        <p className="mt-0.5 text-xs text-fg/55">{card ? `Par carte : ${cell(card)}` : "Pas d'achat par carte"}</p>
+                        <p className="mt-0.5 text-xs text-fg-4">{card ? `Par carte : ${cell(card)}` : "Pas d'achat par carte"}</p>
                       )}
-                      {r.note && <p className="mt-1 text-xs leading-snug text-fg/55">{r.note}</p>}
+                      {r.note && <p className="mt-1 text-xs leading-snug text-fg-4">{r.note}</p>}
                     </>
                   ) : (
-                    <p className="text-sm text-fg/60">Pas d&apos;achat par carte</p>
+                    <p className="text-sm text-fg-4">Pas d&apos;achat par carte</p>
                   )}
                 </div>
                 <div className="col-span-2 flex flex-wrap items-center gap-2 md:col-span-1 md:justify-end">

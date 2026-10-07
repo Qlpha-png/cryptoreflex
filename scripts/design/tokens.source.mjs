@@ -2,16 +2,20 @@
 /**
  * SOURCE UNIQUE des jetons de couleur du site (plan de migration §2.1, lot A1).
  *
- *   node scripts/design/tokens.source.mjs [--phase legacy]   → écrit app/styles/tokens.css
- *   node scripts/design/tokens.source.mjs --verifier          → n'écrit rien ; code 1 si tokens.css n'est pas à jour
+ *   node scripts/design/tokens.source.mjs [--phase encre|legacy]   → écrit app/styles/tokens.css (défaut : PHASE_ACTIVE)
+ *   node scripts/design/tokens.source.mjs --verifier                → n'écrit rien ; code 1 si tokens.css n'est pas à jour
  *
  * Format : canaux « R G B » (--c-primary: 245 165 36), lus par Tailwind en rgb(var(--c-x) / <alpha-value>) : les
  * 3 642 classes à opacité (bg-primary/10, text-fg/70…) continuent de fonctionner. Exceptions : les couleurs d'état
  * douces et leurs bordures (*-soft, *-border de success, warning, danger, info, ice) portent la couleur COMPLÈTE
- * (rgba en phase legacy) : pas d'opacité /NN possible sur elles (Tailwind ignorerait le /NN sans erreur).
+ * (rgba) : pas d'opacité /NN possible sur elles (Tailwind ignorerait le /NN sans erreur).
  *
- * Phases : legacy = valeurs ACTUELLES du site (lot A1, rendu identique au pixel). « encre » (B2) et « final » (B11)
- * prendront les valeurs du kit C+ (cplus/systeme/tokens.source.mjs) quand il sera figé : pas encore ici.
+ * Phases :
+ *  - legacy (lot A1) = valeurs de l'ancien thème sombre, rendu identique au pixel (gardée pour un retour arrière) ;
+ *  - encre (lot B2, ACTIVE) = valeurs du kit C+ figé (cplus/systeme/tokens.source.mjs, recopiées dans KIT ci-dessous) :
+ *    :root = « Encre » (sombre bleu-nuit), :root[data-theme="light"] = « Papier » (posé seulement par l'interrupteur
+ *    d'essai ?theme=papier, lib/theme/anti-flash.ts) ;
+ *  - final (lot B11) = Papier par défaut + Encre par choix ou préférence système : pas encore ici.
  *
  * Aucun code hexadécimal n'est écrit dans tokens.css (le cliquet « hex » de tests/lib/design-cliquets.test.ts compte
  * app/) : les valeurs hexadécimales vivent ici seulement.
@@ -112,10 +116,153 @@ export const LEGACY = [
   ["ed-icon", "#E8D49A", "Édition Icônes (texte)"],
   ["ed-myth", "#FF2D6F", "Édition Mythiques (texte)"],
   ["ed-relic", "#F7D774", "Édition Reliques (texte)"],
+  // Lot B2 : dégradé du soleil de l'emblème (components/Logo.tsx), teintes du logo du kit C+ (symbole cr-logo), mêmes
+  // valeurs dans tous les thèmes. Aucun usage avant B2.
+  ["logo-sun-hi", "#FFE3A3", "Soleil de l'emblème : centre clair du dégradé"],
+  ["logo-sun-lo", "#DB860A", "Soleil de l'emblème : bord sombre du dégradé"],
 ];
 
-/** Jetons sans nom Tailwind (collision avec des classes déjà écrites dans le code : voir rôle). */
-export const SANS_NOM_TAILWIND = new Set(["gold"]);
+/** Jetons sans nom Tailwind (collision avec des classes déjà écrites dans le code, ou réservés au SVG du logo). */
+export const SANS_NOM_TAILWIND = new Set(["gold", "logo-sun-hi", "logo-sun-lo"]);
+
+/** Phase écrite dans app/styles/tokens.css (lue par les tests et par --verifier). */
+export const PHASE_ACTIVE = "encre";
+
+/**
+ * Kit C+ figé le 06/10/2026 (cplus/systeme/tokens.source.mjs, tableau COLORS) : [nom, Papier, Encre, rôle].
+ * Recopié tel quel (aucune valeur retouchée) ; logo-sun-* ajoutés (teintes du symbole cr-logo des maquettes).
+ */
+export const KIT = [
+  ["background", "#F0EBE1", "#111A2B", "Fond de page (papier doux / encre bleu-nuit)"],
+  ["surface", "#F5F1E8", "#172235", "Cartes, panneaux"],
+  ["elevated", "#F7F4ED", "#1E2A40", "Menus, popovers, en-tête collant"],
+  ["sunken", "#E7E1D5", "#0C1322", "Bandes, champs, zébrures, pistes de jauge"],
+  ["heat-flat", "#E7E1D5", "#34425E", "Case neutre de la carte des hausses"],
+  ["logo-plate", "#F7F4ED", "#D9D3C7", "Plaque des logos de plateformes et de cryptos (jamais blanc pur, atténuée en sombre)"],
+  ["scroll-shadow", "#172033", "#000000", "Ombre qui signale un défilement horizontal"],
+  ["scrim", "#172033", "#000000", "Voile des feuilles et dialogues"],
+  ["on-plate", "#172033", "#172033", "Monogramme de repli sur la plaque des logos"],
+  ["plate-ink", "#172033", "#172033", "Plaque encre des logos blancs"],
+  ["border", "#D9D0BF", "#26324A", "Filets décoratifs"],
+  ["border-strong", "#BFB29B", "#34425E", "Filets appuyés, séparateurs de tableau"],
+  ["border-input", "#81786A", "#6D7A93", "Contour des champs et cases (≥ 3:1, WCAG 1.4.11)"],
+  ["fg", "#172033", "#F3EDE2", "Titres, texte fort, encre"],
+  ["fg-2", "#2C3445", "#D2CDC3", "Corps de texte"],
+  ["muted", "#4A5163", "#A7ADBA", "Texte secondaire (fg-3)"],
+  ["fg-4", "#5A6070", "#8B93A3", "Mentions, légendes, aides (≥ 4,5:1 sur tous les fonds)"],
+  ["primary", "#835700", "#F4B03C", "Or LISIBLE en texte (surtitres, mots accentués)"],
+  ["primary-hover", "#6B4700", "#F8C468", "Or lisible au survol"],
+  ["gold", "#F5A524", "#F5A524", "Or de marque en APLAT seulement — jamais en texte sur clair"],
+  ["gold-soft", "#F3DFB4", "#3A2E16", "Fond doux or (badge Nouveauté, surlignage)"],
+  ["on-gold", "#172033", "#172033", "Texte/icône sur aplat or"],
+  ["action", "#172033", "#F5A524", "Bouton principal : encre sur papier, or sur encre"],
+  ["action-hover", "#26324C", "#F7B54D", "Bouton principal au survol"],
+  ["on-action", "#F7F4ED", "#172033", "Texte du bouton principal"],
+  ["action-chip", "#F5A524", "#172033", "Pastille-flèche du bouton principal"],
+  ["on-action-chip", "#172033", "#F5A524", "Flèche dans la pastille"],
+  ["link", "#172033", "#F3EDE2", "Texte de lien (toujours souligné)"],
+  ["link-line", "#A86D0A", "#F5A524", "Soulignement de lien (≥ 3:1 contre le fond)"],
+  ["link-hover", "#6B4700", "#F8C468", "Lien au survol"],
+  ["success", "#1D6A43", "#6CCB98", "Succès / MiCA : texte et icône"],
+  ["success-soft", "#DCE9DD", "#15302A", "Succès : fond doux"],
+  ["success-border", "#9DC3A8", "#2D5E4B", "Succès : bordure"],
+  ["warning", "#8F4300", "#F2A766", "Alerte : texte et icône"],
+  ["warning-soft", "#F3E0CB", "#382717", "Alerte : fond doux"],
+  ["warning-border", "#E0B98F", "#6B4A26", "Alerte : bordure"],
+  ["danger", "#A1281D", "#FF9585", "Danger / Non disponible : texte et icône"],
+  ["danger-soft", "#F3DDD7", "#3A1E25", "Danger : fond doux"],
+  ["danger-border", "#E2ACA2", "#6E3540", "Danger : bordure"],
+  ["info", "#22538A", "#93BDF2", "Info : texte et icône"],
+  ["info-soft", "#DDE4EC", "#182A45", "Info : fond doux"],
+  ["info-border", "#A9BCD3", "#2F4C78", "Info : bordure"],
+  ["up", "#1D6A43", "#6CCB98", "Hausse (toujours avec signe + flèche)"],
+  ["down", "#A1281D", "#FF9585", "Baisse (toujours avec signe − + flèche)"],
+  ["flat", "#4A5163", "#A7ADBA", "Variation nulle ou indisponible"],
+  ["chart-line", "#4A5163", "#A7ADBA", "Mini-courbe : trait NEUTRE (jamais vert/or)"],
+  ["chart-ref", "#81786A", "#6D7A93", "Mini-courbe : ligne de référence (cours il y a 7 j)"],
+  ["focus", "#835700", "#F4B03C", "Anneau de focus (3 px, décalé de 2 px)"],
+  ["logo-accent", "#9A6100", "#F5A524", "« reflex » du mot-symbole (logo : exempté WCAG, gardé ≥ 3:1)"],
+  ["logo-reflet", "#E39512", "#F5A524", "Reflets de l'emblème"],
+  ["r-c", "#9AA3B2", "#9AA3B2", "Commune (aplat)"],
+  ["r-pc", "#34D399", "#34D399", "Peu commune (aplat)"],
+  ["r-r", "#38BDF8", "#38BDF8", "Rare (aplat)"],
+  ["r-sr", "#A78BFA", "#A78BFA", "Super rare (aplat)"],
+  ["r-ur", "#FB923C", "#FB923C", "Ultra rare (aplat)"],
+  ["r-l", "#F5B52A", "#F5B52A", "Légendaire (aplat)"],
+  ["r-c-text", "#59616F", "#9AA3B2", "Commune (texte)"],
+  ["r-pc-text", "#126E4C", "#34D399", "Peu commune (texte)"],
+  ["r-r-text", "#0B6390", "#38BDF8", "Rare (texte)"],
+  ["r-sr-text", "#6544B8", "#A78BFA", "Super rare (texte)"],
+  ["r-ur-text", "#A0460B", "#FB923C", "Ultra rare (texte)"],
+  ["r-l-text", "#7F5A10", "#F5B52A", "Légendaire (texte)"],
+  ["ed-icon", "#6E5718", "#E8D49A", "Édition Icônes (texte)"],
+  ["ed-myth", "#B0124A", "#FF5C8C", "Édition Mythiques (texte)"],
+  ["ed-relic", "#73590C", "#F7D774", "Édition Reliques (texte)"],
+  ["logo-sun-hi", "#FFE3A3", "#FFE3A3", "Soleil de l'emblème : centre clair du dégradé"],
+  ["logo-sun-lo", "#DB860A", "#DB860A", "Soleil de l'emblème : bord sombre du dégradé"],
+];
+
+/**
+ * Noms Tailwind HÉRITÉS (sans équivalent dans le kit) → jeton C+ dont ils prennent la valeur (plan §2.1, table).
+ * Écart voulu à la spec §9 : primary-soft = primary (654/673 usages sont du TEXTE ; gold-soft en texte serait illisible).
+ */
+export const ALIAS_KIT = {
+  "primary-glow": "primary-hover",
+  "primary-soft": "primary",
+  "accent-cyan": "info",
+  ice: "info",
+  "ice-fg": "info",
+  "ice-soft": "info-soft",
+  "ice-border": "info-border",
+  "success-fg": "success",
+  "warning-fg": "warning",
+  "danger-fg": "danger",
+  "info-fg": "info",
+  "fg-max": "fg",
+};
+
+/** Ombres du kit C+ (élévations 1 à 3 + ombre du bouton principal), par thème. Aucun code hexadécimal. */
+export const OMBRES = {
+  papier: {
+    "shadow-1": "0 1px 2px rgb(23 32 51 / .06), 0 1px 1px rgb(23 32 51 / .04)",
+    "shadow-2": "0 1px 2px rgb(23 32 51 / .05), 0 14px 32px -14px rgb(23 32 51 / .22)",
+    "shadow-3": "0 2px 6px rgb(23 32 51 / .06), 0 30px 60px -28px rgb(23 32 51 / .38)",
+    "shadow-action": "0 12px 24px -14px rgb(23 32 51 / .65)",
+  },
+  encre: {
+    "shadow-1": "inset 0 1px 0 rgb(255 255 255 / .04), 0 1px 2px rgb(0 0 0 / .35)",
+    "shadow-2": "inset 0 1px 0 rgb(255 255 255 / .05), 0 16px 34px -14px rgb(0 0 0 / .65)",
+    "shadow-3": "inset 0 1px 0 rgb(255 255 255 / .06), 0 32px 64px -28px rgb(0 0 0 / .8)",
+    "shadow-action": "0 12px 28px -14px rgb(245 165 36 / .55)",
+  },
+};
+
+/**
+ * Grain d'encre / de papier du fond (kit C+ : composants.css --grain), image SVG en data: URI (aucune requête, tuile
+ * 180 px rastérisée une fois). Opacité moyenne visée 2 à 4 % : coefficient alpha 0,05 en Encre (kit), 0,07 en Papier
+ * (kit : 0,09, ≈ 4,5 % en moyenne ; ramené dans la fourchette du lot B2).
+ */
+const grain = (r, g, b, a) =>
+  `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 ${r} 0 0 0 0 ${g} 0 0 0 0 ${b} 0 0 0 ${a} 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`;
+export const GRAIN = { papier: grain(0.09, 0.13, 0.2, ".07"), encre: grain(0.95, 0.93, 0.88, ".05") };
+
+const versRgba = (h) => `rgba(${[1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16)).join(", ")}, 1)`;
+
+/**
+ * Liste [nom, valeur, rôle] d'un thème de la phase « encre » (mêmes noms, même ordre que LEGACY) : valeur du kit
+ * (directe ou par ALIAS_KIT) ; les couleurs complètes de la phase legacy (rgba) restent complètes (rgba opaque).
+ */
+export function jetonsKit(theme) {
+  const col = theme === "papier" ? 1 : 2;
+  return LEGACY.map(([nom, ancienne, role]) => {
+    const source = ALIAS_KIT[nom] ?? nom;
+    const ligne = KIT.find(([n]) => n === source);
+    if (!ligne) throw new Error(`jeton ${nom} : aucune valeur dans le kit C+ (ni alias)`);
+    const hex = ligne[col];
+    const roleKit = ALIAS_KIT[nom] ? `nom hérité = ${source} du kit (${role})` : ligne[3];
+    return [nom, estComplete(ancienne) ? versRgba(hex) : hex, roleKit];
+  });
+}
 
 /**
  * Lot B1 — polices auto-hébergées (fichiers du kit C+ copiés tels quels dans public/fonts/cplus-v1/, licence SIL OFL 1.1
@@ -225,14 +372,21 @@ export function verifierSource(liste = LEGACY) {
   }
 }
 
-export function genererCss(phase = "legacy") {
-  if (phase !== "legacy")
-    throw new Error(`phase « ${phase} » : pas encore (lots B2/B11, valeurs du kit C+ figé). Seule « legacy » existe en A1.`);
-  verifierSource(LEGACY);
-  const lignes = LEGACY.map(([nom, valeur, role]) =>
-    `  --c-${nom}: ${estComplete(valeur) ? valeur : hexEnCanaux(valeur)}; /* ${role.replace(/\*\//g, "* /")} */`);
-  return `/* =====================================================================
-   Cryptoreflex — jetons de couleur (phase « ${phase} » : valeurs actuelles du site, rendu identique)
+/** Jetons écrits par une phase : { theme: [[nom, valeur, rôle]] } (legacy : un seul thème). */
+export function jetonsPhase(phase = PHASE_ACTIVE) {
+  if (phase === "legacy") return { legacy: LEGACY };
+  if (phase === "encre") return { encre: jetonsKit("encre"), papier: jetonsKit("papier") };
+  throw new Error(`phase « ${phase} » : pas encore (lot B11). Phases disponibles : legacy, encre.`);
+}
+
+const ligneJeton = ([nom, valeur, role], retrait = "  ") =>
+  `${retrait}--c-${nom}: ${estComplete(valeur) ? valeur : hexEnCanaux(valeur)}; /* ${role.replace(/\*\//g, "* /")} */`;
+
+export function genererCss(phase = PHASE_ACTIVE) {
+  const jeux = jetonsPhase(phase);
+  for (const liste of Object.values(jeux)) verifierSource(liste);
+  const entete = (titre) => `/* =====================================================================
+   Cryptoreflex — jetons de couleur (phase « ${phase} » : ${titre})
    GÉNÉRÉ par scripts/design/tokens.source.mjs : ne pas modifier à la main.
    Régénérer : node scripts/design/tokens.source.mjs --phase ${phase}
    Format canaux « R G B » : rgb(var(--c-x) / <alpha-value>) dans tailwind.config.ts.
@@ -241,10 +395,43 @@ export function genererCss(phase = "legacy") {
    ===================================================================== */
 
 ${genererPolices()}
-
+`;
+  const piles = PILES.map(([nom, pile, role]) => `  --${nom}: ${pile}; /* ${role} */`).join("\n");
+  if (phase === "legacy")
+    return `${entete("valeurs de l'ancien thème sombre, rendu identique")}
 :root {
-${PILES.map(([nom, pile, role]) => `  --${nom}: ${pile}; /* ${role} */`).join("\n")}
-${lignes.join("\n")}
+${piles}
+${LEGACY.map((j) => ligneJeton(j)).join("\n")}
+}
+`;
+  const ombres = (t) => Object.entries(OMBRES[t]).map(([k, v]) => `  --${k}: ${v};`).join("\n");
+  return `${entete("kit C+ — « Encre » par défaut, « Papier » sous [data-theme=\"light\"]")}
+/* Encre : thème sombre bleu-nuit, rendu par défaut (aucun attribut). */
+:root {
+  color-scheme: dark;
+${piles}
+${jeux.encre.map((j) => ligneJeton(j)).join("\n")}
+${ombres("encre")}
+  --grain: ${GRAIN.encre};
+}
+
+/* Papier : thème clair, posé seulement par l'interrupteur d'essai ?theme=papier (lib/theme/anti-flash.ts) jusqu'au lot B11. */
+:root[data-theme="light"] {
+  color-scheme: light;
+${jeux.papier.map((j) => ligneJeton(j)).join("\n")}
+${ombres("papier")}
+  --grain: ${GRAIN.papier};
+}
+
+/* Encre forcée localement (.theme-encre, reprise B2) : blocs dessinés pour un fond sombre quel que soit le thème
+   (carte des hausses aux cases sombres, pastilles posées sur une photo). Sous Papier, ils gardent les valeurs Encre
+   (texte, focus, info-bulles) ; sous Encre, la classe ne change rien. :where() = spécificité nulle : une classe de
+   couleur posée sur le même élément (text-warning…) garde la main sur la couleur par défaut. */
+:where(:root[data-theme="light"] .theme-encre) {
+  color-scheme: dark;
+  color: rgb(var(--c-fg));
+${jeux.encre.map((j) => ligneJeton(j)).join("\n")}
+${ombres("encre")}
 }
 `;
 }
@@ -253,7 +440,7 @@ const estPrincipal = process.argv[1] && path.resolve(process.argv[1]) === fileUR
 if (estPrincipal) {
   const argv = process.argv.slice(2);
   const iPhase = argv.indexOf("--phase");
-  const phase = iPhase >= 0 ? argv[iPhase + 1] : "legacy";
+  const phase = iPhase >= 0 ? argv[iPhase + 1] : PHASE_ACTIVE;
   let css;
   try { css = genererCss(phase); } catch (e) { console.error(String(e.message || e)); process.exit(2); }
   if (argv.includes("--verifier")) {

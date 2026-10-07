@@ -172,7 +172,7 @@ function PlatformRow({
           platform={p.id}
           placement="crypto-detail-where-to-buy"
           showCaption={false}
-          className="inline-flex flex-1 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-primary to-primary-glow px-3 py-2 text-xs font-semibold text-background hover:opacity-90 transition"
+          className="inline-flex flex-1 items-center justify-center gap-2 rounded-[22px] bg-action shadow-action px-3 py-2 text-xs font-semibold text-on-action hover:bg-action-hover transition-colors"
         >
           Acheter {cryptoName} sur {p.name}
           <ExternalLink className="h-3.5 w-3.5" />

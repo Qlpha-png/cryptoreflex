@@ -246,16 +246,19 @@ export const metadata: Metadata = {
     // Favicon onglet navigateur — sans cette ligne explicite, déclarer apple/other
     // SUPPRIME l'auto-discovery de app/icon.svg + app/icon.tsx => onglet montre
     // l'icône globe par défaut. On force le pointage vers les 2 sources.
+    // Lot B2 (logo C+) : NOUVELLES adresses (fichiers versionnés public/brand/*-v1.svg, ?v=b2 sur les PNG générés) :
+    // un favicon déjà en cache chez le visiteur ou dans le service worker n'est jamais réutilisé pour le nouveau dessin.
+    // Icône Apple en PNG (app/apple-icon.tsx) : iOS ignore les apple-touch-icon en SVG.
     icon: [
-      { url: "/icon.svg", type: "image/svg+xml" },
-      { url: "/icon", type: "image/png", sizes: "32x32" },
+      { url: "/brand/cr-favicon-v1.svg", type: "image/svg+xml" },
+      { url: "/icon?v=b2", type: "image/png", sizes: "32x32" },
     ],
-    shortcut: [{ url: "/icon.svg" }],
+    shortcut: [{ url: "/brand/cr-favicon-v1.svg" }],
     apple: [
-      { url: "/icons/apple-touch-icon.svg", sizes: "180x180", type: "image/svg+xml" },
+      { url: "/apple-icon?v=b2", sizes: "180x180", type: "image/png" },
     ],
     other: [
-      { rel: "mask-icon", url: "/icons/icon-512.svg", color: "#FCD34D" },
+      { rel: "mask-icon", url: "/brand/cr-icon-512-v1.svg", color: "#F5A524" },
     ],
   },
   // manifest.webmanifest est exposé automatiquement via app/manifest.ts.
@@ -268,9 +271,10 @@ export const viewport: Viewport = {
   // Lot A6 : tableau à 2 media (clair / sombre), MÊME valeur dans les deux tant que le thème clair n'est pas ouvert
   // (aucun changement pour personne). Au lot B11 : valeur Papier pour light ; le script avant affichage corrige
   // les 2 balises quand un choix est mémorisé.
+  // Lot B2 : fond « Encre » du kit C+ (--c-background) dans les deux (Papier n'est qu'un essai sans bouton).
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#0B0D10" },
-    { media: "(prefers-color-scheme: dark)", color: "#0B0D10" },
+    { media: "(prefers-color-scheme: light)", color: "#111A2B" },
+    { media: "(prefers-color-scheme: dark)", color: "#111A2B" },
   ],
   width: "device-width",
   initialScale: 1,
@@ -301,8 +305,8 @@ export default function RootLayout({
         {/* Lot A6 — thème : script EN LIGNE et SYNCHRONE, avant toute peinture (jamais next/script
             afterInteractive/lazyOnload). Seul ce script pose data-theme sur <html> (jamais le JSX) ;
             suppressHydrationWarning ci-dessus couvre l'attribut ajouté. Phase « Encre seule » : il ne pose
-            data-theme="light" que sous l'interrupteur d'essai (?apparence=essai-clair), sans effet visible tant
-            que Papier n'existe pas. Détail et tests : lib/theme/anti-flash.ts. CSP : script-src 'unsafe-inline'. */}
+            data-theme="light" que sous l'interrupteur d'essai (?theme=papier, mémorisé ; ?theme=encre revient),
+            qui affiche Papier depuis le lot B2. Détail et tests : lib/theme/anti-flash.ts. CSP : script-src 'unsafe-inline'. */}
         <script dangerouslySetInnerHTML={{ __html: SCRIPT_AVANT_AFFICHAGE }} />
         {/* Lot B1 finitions F1 : pas de <link rel="preload"> sur les polices (mesuré plus lent, voir plus haut). */}
         {/* Lighthouse perf audit 26/04/2026 (Agent Mobile 2) win #2 :

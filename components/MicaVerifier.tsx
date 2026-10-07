@@ -143,7 +143,7 @@ export default function MicaVerifier({ initialPlatformId }: Props) {
             }}
             onFocus={() => setOpen(true)}
             onKeyDown={handleKeyDown}
-            className="w-full rounded-xl border border-border bg-elevated/70 backdrop-blur-xl pl-12 pr-32 py-4 text-fg-max placeholder:text-muted/70 focus:outline-none focus:border-primary/60 focus:ring-2 focus:ring-primary/20 transition"
+            className="w-full rounded-xl border border-border bg-elevated/70 backdrop-blur-xl pl-12 pr-32 py-4 text-fg-max placeholder:text-fg-4 focus:outline-none focus:border-primary/60 focus:ring-2 focus:ring-primary/20 transition"
           />
           <button
             type="submit"

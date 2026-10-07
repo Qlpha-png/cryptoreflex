@@ -80,7 +80,7 @@ export default function LessonNotes({ slug }: LessonNotesProps) {
         onChange={handleChange}
         rows={4}
         placeholder="Ex : penser à activer la 2FA avant de déposer des fonds…"
-        className="mt-3 w-full resize-y rounded-xl border border-border bg-background/60 p-3 text-sm text-fg/90 placeholder:text-muted/50 focus:outline-none focus:ring-2 focus:ring-primary"
+        className="mt-3 w-full resize-y rounded-xl border border-border bg-background/60 p-3 text-sm text-fg/90 placeholder:text-fg-4 focus:outline-none focus:ring-2 focus:ring-primary"
         aria-label="Mes notes personnelles sur cette leçon"
       />
     </section>

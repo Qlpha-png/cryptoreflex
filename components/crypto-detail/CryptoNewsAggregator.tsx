@@ -274,16 +274,16 @@ function NewsCard({ item }: { item: CryptoNewsItem }) {
       <div className="flex items-start justify-between gap-3">
         <div className="flex flex-wrap items-center gap-x-2 gap-y-1 min-w-0">
           <SentimentBadge sentiment={item.sentiment} />
-          <span className="min-w-0 text-xs uppercase tracking-wider font-mono text-muted/80 break-words">
+          <span className="min-w-0 text-xs uppercase tracking-wider font-mono text-fg-4 break-words">
             {item.source}
           </span>
-          <span className="text-xs text-muted/60">·</span>
-          <span className="text-xs text-muted/80 whitespace-nowrap">
+          <span className="text-xs text-fg-4">·</span>
+          <span className="text-xs text-fg-4 whitespace-nowrap">
             {formatRelativeFr(item.publishedAt)}
           </span>
         </div>
         <ExternalLink
-          className="h-3.5 w-3.5 text-muted/60 group-hover:text-primary flex-shrink-0 transition-colors"
+          className="h-3.5 w-3.5 text-fg-4 group-hover:text-primary flex-shrink-0 transition-colors"
           aria-hidden="true"
         />
       </div>

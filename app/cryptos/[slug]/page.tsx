@@ -1395,7 +1395,7 @@ function HiddenGemSections({ gem }: { gem: HiddenGem }) {
         <ul className="mt-4 space-y-2">
           {gem.risks.map((risk, idx) => (
             <li key={risk} className="flex items-start gap-3 text-sm text-fg/85">
-              <span className="mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-warning/20 text-xs font-bold text-primary-soft">
+              <span className="mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-gold-soft text-xs font-bold text-primary">
                 {idx + 1}
               </span>
               <span>{risk}</span>

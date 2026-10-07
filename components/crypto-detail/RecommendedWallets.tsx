@@ -83,7 +83,7 @@ function WalletRow({ wallet }: { wallet: WalletRecommendation }) {
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="min-w-0">
           <div className="flex items-center gap-2">
-            <span className="text-fg/60">{iconForType(wallet.type)}</span>
+            <span className="text-fg-4">{iconForType(wallet.type)}</span>
             <h3 className="text-base font-bold text-fg">{wallet.name}</h3>
           </div>
           <p className="mt-0.5 text-xs uppercase tracking-wider text-muted">

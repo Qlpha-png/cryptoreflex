@@ -159,7 +159,7 @@ export default function GlossaryIndexPage() {
                     ) : (
                       <span
                         aria-hidden="true"
-                        className="inline-flex h-8 w-8 items-center justify-center rounded-md border border-border/40 text-sm font-semibold text-muted/40 cursor-not-allowed"
+                        className="inline-flex h-8 w-8 items-center justify-center rounded-md border border-border/40 text-sm font-semibold text-fg-4 cursor-not-allowed"
                       >
                         {letter}
                       </span>

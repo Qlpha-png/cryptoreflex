@@ -32,11 +32,13 @@ interface Props {
  *  rendu cassé silencieux).
  *  Après : clés alignées sur les valeurs canoniques accentuées.
  */
+// Reprise B2 : pastille posée sur la PHOTO → plaque encre opaque à 85 % (bloc .theme-encre : mêmes valeurs dans les
+// 2 thèmes) et texte sur jeton d'état ; ≥ 4,5:1 même sur une photo blanche (pâle sur translucide avant : 1,0 à 1,4:1).
 const CATEGORY_BADGE: Record<string, string> = {
-  "Marché":     "bg-warning/15 text-amber-200 ring-warning/30",
-  "Régulation": "bg-rose-500/15 text-rose-200 ring-rose-500/30",
-  Technologie:  "bg-cyan-500/15 text-cyan-200 ring-cyan-500/30",
-  Plateformes:  "bg-fuchsia-500/15 text-fuchsia-200 ring-fuchsia-500/30",
+  "Marché":     "bg-background/85 text-warning ring-warning/40",
+  "Régulation": "bg-background/85 text-danger ring-danger/40",
+  Technologie:  "bg-background/85 text-info ring-info/40",
+  Plateformes:  "bg-background/85 text-fg ring-border-strong",
 };
 
 /** Gradient cover fallback si image absente. */
@@ -48,7 +50,7 @@ const CATEGORY_GRADIENT: Record<string, string> = {
 };
 
 export default function NewsCard({ news }: Props) {
-  const badgeClasses = CATEGORY_BADGE[news.category] ?? "bg-muted/15 text-muted ring-border";
+  const badgeClasses = CATEGORY_BADGE[news.category] ?? "bg-background/85 text-muted ring-border";
   // CATEGORY_GRADIENT plus utilise depuis BATCH 56#12 (OG image dynamique au
   // lieu de gradient fallback). Garde la constante au cas ou on voudrait
   // refaire un fallback CSS si l'OG echoue.
@@ -77,7 +79,7 @@ export default function NewsCard({ news }: Props) {
           height={630}
         />
         <span
-          className={`absolute left-3 top-3 z-10 inline-flex items-center rounded-full px-2.5 py-0.5 text-xs
+          className={`theme-encre absolute left-3 top-3 z-10 inline-flex items-center rounded-full px-2.5 py-0.5 text-xs
                       font-semibold uppercase tracking-wider ring-1 backdrop-blur-sm ${badgeClasses}`}
         >
           {catLabel}

@@ -171,7 +171,7 @@ export default function SearchClient() {
                   isActive
                     ? "border-primary bg-primary/15 text-primary-glow"
                     : disabled
-                    ? "border-border/50 bg-surface/30 text-muted/50 cursor-not-allowed"
+                    ? "border-border/50 bg-surface/30 text-fg-4 cursor-not-allowed"
                     : "border-border bg-surface text-fg/70 hover:border-primary/40 hover:text-fg"
                 }`}
               >

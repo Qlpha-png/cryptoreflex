@@ -107,7 +107,7 @@ export default function PfuQuickCalc({ symbol, cryptoName, priceUsd, usdToEur = 
             Simulation PFU 31,4% (article 150 VH bis CGI) — calcul indicatif par opération.
           </p>
         </div>
-        <span className="inline-flex items-center gap-1 rounded-md border border-primary/30 bg-primary/10 px-2 py-0.5 text-xs font-mono font-bold uppercase tracking-wider text-primary">
+        <span className="inline-flex items-center gap-1 rounded-md border border-primary/30 bg-gold-soft px-2 py-0.5 text-xs font-mono font-bold uppercase tracking-wider text-primary">
           🇫🇷 Spécifique FR
         </span>
       </header>
@@ -266,7 +266,7 @@ function ResultCell({
         {value}
       </div>
       {hint && (
-        <div className="mt-0.5 text-xs text-muted/80 font-mono">{hint}</div>
+        <div className="mt-0.5 text-xs text-fg-4 font-mono">{hint}</div>
       )}
     </div>
   );

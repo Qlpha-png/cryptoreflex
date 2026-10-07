@@ -308,7 +308,7 @@ export default function CalculateurFiscalitePage() {
           {/* Breadcrumb visuel — le BreadcrumbList JSON-LD est dans fiscaliteNodes */}
           <nav
             aria-label="Fil d'Ariane"
-            className="mb-6 text-xs text-fg-max/60"
+            className="mb-6 text-xs text-fg-4"
           >
             <ol className="flex items-center gap-2">
               <li>
@@ -1067,7 +1067,7 @@ export default function CalculateurFiscalitePage() {
                   >
                     {article.cluster === "satellite" ? "Satellite" : "Pilier"}
                   </span>
-                  <span className="text-xs text-fg-max/60">
+                  <span className="text-xs text-fg-4">
                     {article.category}
                   </span>
                 </div>

@@ -650,7 +650,7 @@ function WaltioPostResultCta({
               <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </a>
           </div>
-          <p className="mt-2 text-xs text-muted/70">
+          <p className="mt-2 text-xs text-fg-4">
             Publicité — Cryptoreflex perçoit une commission.{" "}
             <a href="/transparence" className="underline">En savoir plus</a>.
           </p>

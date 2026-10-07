@@ -90,7 +90,7 @@ export default function CalculateurApyStaking() {
         <div className="grid gap-6 sm:grid-cols-3">
           {/* Crypto */}
           <div>
-            <label htmlFor="apy-coin" className="block text-xs font-semibold uppercase tracking-wide text-fg-max/60">
+            <label htmlFor="apy-coin" className="block text-xs font-semibold uppercase tracking-wide text-fg-4">
               Crypto à staker
             </label>
             <select
@@ -112,7 +112,7 @@ export default function CalculateurApyStaking() {
 
           {/* Montant */}
           <div>
-            <label htmlFor="apy-amount" className="block text-xs font-semibold uppercase tracking-wide text-fg-max/60">
+            <label htmlFor="apy-amount" className="block text-xs font-semibold uppercase tracking-wide text-fg-4">
               Montant à staker (EUR)
             </label>
             <input
@@ -132,7 +132,7 @@ export default function CalculateurApyStaking() {
 
           {/* Durée */}
           <div>
-            <label className="block text-xs font-semibold uppercase tracking-wide text-fg-max/60">
+            <label className="block text-xs font-semibold uppercase tracking-wide text-fg-4">
               Durée
             </label>
             <div className="mt-2 grid grid-cols-4 gap-2">
@@ -185,7 +185,7 @@ export default function CalculateurApyStaking() {
           <div className="glass rounded-2xl overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
-                <thead className="bg-elevated/60 text-xs uppercase tracking-wide text-fg-max/60">
+                <thead className="bg-elevated/60 text-xs uppercase tracking-wide text-fg-4">
                   <tr>
                     <th className="px-4 py-3 text-left">Provider</th>
                     <th className="px-4 py-3 text-left">Méthode</th>
@@ -205,8 +205,8 @@ export default function CalculateurApyStaking() {
                         </span>
                       </td>
                       <td className="px-4 py-3 text-right text-fg-max/80">{fmtFr(r.apy, 2)} %</td>
-                      <td className="px-4 py-3 text-right text-fg-max/60">{r.feePct} %</td>
-                      <td className="px-4 py-3 text-right text-fg-max/60">
+                      <td className="px-4 py-3 text-right text-fg-4">{r.feePct} %</td>
+                      <td className="px-4 py-3 text-right text-fg-4">
                         {r.lockupDays === 0 ? "Liquide" : `${r.lockupDays} j`}
                       </td>
                       <td className="px-4 py-3 text-right font-bold text-primary-soft">
@@ -217,7 +217,7 @@ export default function CalculateurApyStaking() {
                 </tbody>
               </table>
             </div>
-            <p className="border-t border-border bg-elevated/40 px-4 py-2 text-xs text-fg-max/50">
+            <p className="border-t border-border bg-elevated/40 px-4 py-2 text-xs text-fg-4">
               APY indicatifs Q1 2026 — varient quotidiennement avec le réseau et les pools.
               Récompenses nettes affichées sans réinvestissement automatique.
             </p>

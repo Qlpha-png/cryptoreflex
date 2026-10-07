@@ -184,7 +184,7 @@ export default function AnalysesIndexClient({ articles }: Props) {
           ].join(" ")}
         >
           Toutes
-          <span className="text-xs text-fg/55 tabular-nums">({articles.length})</span>
+          <span className="text-xs text-fg-4 tabular-nums">({articles.length})</span>
         </button>
         {symbolsAvailable.map(([symbol, count]) => {
           const isActive = activeSymbol === symbol;
@@ -213,7 +213,7 @@ export default function AnalysesIndexClient({ articles }: Props) {
                 className="ring-0"
               />
               {symbol}
-              <span className="text-xs text-fg/55 tabular-nums">({count})</span>
+              <span className="text-xs text-fg-4 tabular-nums">({count})</span>
             </button>
           );
         })}
@@ -338,7 +338,7 @@ function AnalysisCard({ article }: { article: TAArticleSummary }) {
       {/* RSI mini-bar avec label sémantique */}
       <div className="mt-3">
         <div className="flex items-center justify-between mb-1">
-          <span className="text-xs uppercase tracking-wide text-fg/65 font-semibold">
+          <span className="text-xs uppercase tracking-wide text-muted font-semibold">
             RSI · {rsiLabel}
           </span>
           <span className="text-xs font-mono font-semibold text-fg/85 tabular-nums">
@@ -363,7 +363,7 @@ function AnalysisCard({ article }: { article: TAArticleSummary }) {
         </div>
       </div>
 
-      <footer className="mt-4 flex items-center justify-between text-xs text-fg/65">
+      <footer className="mt-4 flex items-center justify-between text-xs text-muted">
         <span className="inline-flex items-center gap-1">
           <Clock className="h-3 w-3" aria-hidden="true" focusable="false" />
           {formatDate(article.date)}

@@ -183,7 +183,7 @@ export default function Hero({ prices, sparklines, updatedAt, fearGreed }: HeroP
           </p>
 
           {/* Disclaimer AMF — above the fold, inchangé */}
-          <p className="mt-5 text-xs leading-relaxed text-fg/55 max-w-xl animate-hero-fade-up animate-hero-fade-up-delay-4">
+          <p className="mt-5 text-xs leading-relaxed text-muted max-w-xl animate-hero-fade-up animate-hero-fade-up-delay-4">
             <ShieldAlert className="inline h-3 w-3 mr-1 -mt-0.5 text-primary-soft/70" aria-hidden="true" />
             Investir en cryptomonnaies comporte un risque de perte en capital.
             Liens partenaires rémunérés signalés.{" "}

@@ -101,7 +101,7 @@ export default function MarketTableClient({ coins, limit, internalSlugs }: Props
             <h2 id="market-title" className="mt-3 text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight">
               Top {limit} <span className="gradient-text">cryptomonnaies</span>
             </h2>
-            <p className="mt-2 text-sm text-fg/65">
+            <p className="mt-2 text-sm text-muted">
               {/* Audit UX F6 : sous-titre vulgarisé pour débutants */}
               Capitalisation, volume et variations, sources citées sous le tableau.
               <span className="hidden sm:inline">{" "}Repère les cryptos en hausse <span className="text-accent-green font-semibold">(vert)</span> ou en baisse <span className="text-danger-fg font-semibold">(rouge)</span> sur 24h.</span>

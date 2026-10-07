@@ -58,10 +58,10 @@ const GUIDES: GuideCard[] = [
 ];
 
 const TOPIC_LABELS: Record<GuideCard["topic"], { label: string; color: string }> = {
-  fiscalite: { label: "Fiscalité", color: "text-emerald-300" },
-  securite: { label: "Sécurité", color: "text-cyan-300" },
+  fiscalite: { label: "Fiscalité", color: "text-success" },
+  securite: { label: "Sécurité", color: "text-info" },
   regulation: { label: "Réglementation", color: "text-primary-soft" },
-  trading: { label: "Trading", color: "text-indigo-300" },
+  trading: { label: "Trading", color: "text-primary" },
 };
 
 const baseUrl = BRAND.url;
@@ -94,21 +94,21 @@ const jsonLd: JsonLd = graphSchema([breadcrumb, collection]);
 
 export default function GuidesHubPage() {
   return (
-    <div className="min-h-screen bg-[#05060A] text-slate-100">
+    <div className="min-h-screen bg-background text-fg">
       <StructuredData id="guides-jsonld" data={jsonLd} />
 
       {/* Hero */}
-      <section className="border-b border-fg-max/5 bg-gradient-to-b from-emerald-500/5 to-transparent">
+      <section className="border-b border-fg-max/5 bg-gradient-to-b from-success/5 to-transparent">
         <div className="mx-auto max-w-5xl px-4 py-16 sm:px-6 lg:px-8">
-          <nav className="mb-6 text-sm text-slate-400" aria-label="Fil d'Ariane">
-            <Link href="/" className="hover:text-cyan-300">
+          <nav className="mb-6 text-sm text-muted" aria-label="Fil d'Ariane">
+            <Link href="/" className="hover:text-info">
               Accueil
             </Link>
-            <span className="mx-2 text-slate-600">/</span>
-            <span className="text-slate-300">Guides</span>
+            <span className="mx-2 text-fg-4">/</span>
+            <span className="text-fg-2">Guides</span>
           </nav>
 
-          <div className="inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-xs font-medium text-emerald-300">
+          <div className="inline-flex items-center gap-2 rounded-full border border-success/30 bg-success/10 px-3 py-1 text-xs font-medium text-success">
             <BookOpenCheck className="h-3.5 w-3.5" />
             Guides pas-à-pas — actionnables
           </div>
@@ -116,7 +116,7 @@ export default function GuidesHubPage() {
           <h1 className="mt-4 text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl">
             Guides pratiques
           </h1>
-          <p className="mt-4 max-w-[34em] text-lg text-slate-300">
+          <p className="mt-4 max-w-[34em] text-lg text-fg-2">
             Vous avez déjà compris le sujet ? Passe à l'action. Ces guides sont
             courts (5-10 min), structurés en étapes à cocher, imprimables, et
             terminent toujours par un CTA concret.
@@ -130,7 +130,7 @@ export default function GuidesHubPage() {
           {GUIDES.map((g) => (
             <article
               key={g.slug}
-              className="group rounded-2xl border border-fg-max/10 bg-fg-max/[0.02] p-6 transition hover:border-emerald-500/30"
+              className="group rounded-2xl border border-fg-max/10 bg-fg-max/[0.02] p-6 transition hover:border-success/30"
             >
               <header className="flex flex-wrap items-start justify-between gap-3">
                 <div className="flex items-center gap-3 text-xs">
@@ -139,7 +139,7 @@ export default function GuidesHubPage() {
                   >
                     {TOPIC_LABELS[g.topic].label}
                   </span>
-                  <span className="inline-flex items-center gap-1 text-slate-400">
+                  <span className="inline-flex items-center gap-1 text-muted">
                     <Calendar className="h-3.5 w-3.5" />
                     {new Date(g.date).toLocaleDateString("fr-FR", {
                       day: "numeric",
@@ -147,7 +147,7 @@ export default function GuidesHubPage() {
                       year: "numeric",
                     })}
                   </span>
-                  <span className="inline-flex items-center gap-1 text-slate-400">
+                  <span className="inline-flex items-center gap-1 text-muted">
                     <Clock className="h-3.5 w-3.5" />
                     {g.duration}
                   </span>
@@ -155,12 +155,12 @@ export default function GuidesHubPage() {
               </header>
 
               <Link href={`/guides/${g.slug}`} className="block">
-                <h2 className="mt-4 text-2xl font-bold tracking-tight text-fg-max group-hover:text-emerald-300 transition">
+                <h2 className="mt-4 text-2xl font-bold tracking-tight text-fg-max group-hover:text-success transition">
                   {g.title}
                 </h2>
-                <p className="mt-3 text-sm text-slate-300 leading-relaxed">{g.subtitle}</p>
+                <p className="mt-3 text-sm text-fg-2 leading-relaxed">{g.subtitle}</p>
 
-                <div className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-emerald-300">
+                <div className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-success">
                   Lire le guide
                   <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" />
                 </div>

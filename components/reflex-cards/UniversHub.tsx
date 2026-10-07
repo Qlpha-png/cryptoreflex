@@ -3,7 +3,7 @@ import { ArrowRight, Crown, Gift, Landmark, Scale, ShieldCheck, Smartphone, Spar
 
 import CardVisual from "@/components/reflex-cards/CardVisual";
 import { getCard, oddsText, seasonDay } from "@/lib/reflex-cards/data";
-import { FAM, PIPS, RC, RNAME } from "@/lib/reflex-cards/render";
+import { FAM, PIPS, RNAME } from "@/lib/reflex-cards/render";
 import { CATS, CAT_LABEL, universById, universCards, universOvr, universStats, type Cat } from "@/lib/reflex-cards/univers";
 import { RULES, universCardP } from "@/lib/reflex-cards/engine";
 import { rareCard } from "@/lib/reflex-cards/rare";
@@ -151,7 +151,7 @@ export default function UniversHub({ accounts }: { accounts: boolean }) {
                 <Link href={`/cartes/${id}`} aria-label={`Carte ${card.name}`}>
                   <CardVisual card={card} day={day} width={150} uid={`uh-${r}`} chance={pCat(r, universById(id)?.cat ?? "crypto")} ft={ft} />
                 </Link>
-                <p className="mt-3 text-sm font-bold" style={{ color: RC[r] }}>
+                <p className="mt-3 text-sm font-bold" style={{ color: `rgb(var(--c-r-${r.toLowerCase()}-text))` }}>
                   {RNAME[r]} <span className="text-xs">{PIPS[r]}</span>
                 </p>
                 <p className="text-xs text-muted">{fr(tot[r])} cartes · {pct1(pCard(r) * tot[r])} des tirages</p>
@@ -234,7 +234,7 @@ export default function UniversHub({ accounts }: { accounts: boolean }) {
                     <span className="shrink-0 text-right text-xs text-muted">
                       <b className="text-fg">{fr(s.total)}</b> cartes
                       <span className="block">{pct1(catShare(cat))} des tirages</span>
-                      <span className="block" style={{ color: RC.L }}>{fr(s.L ?? 0)} Légendaires</span>
+                      <span className="block" style={{ color: "rgb(var(--c-r-l-text))" }}>{fr(s.L ?? 0)} Légendaires</span>
                     </span>
                   </summary>
                   <ul className="flex flex-wrap gap-2 px-5 pb-5">
@@ -242,7 +242,7 @@ export default function UniversHub({ accounts }: { accounts: boolean }) {
                       <li key={c.id}>
                         <Link href={`/cartes/${c.id}`} className="inline-flex items-center gap-1.5 rounded-lg border border-border px-2.5 py-1 text-xs text-fg/85 hover:border-primary/50 hover:text-fg">
                           {c.nom}
-                          <span style={{ color: RC[c.r] }} title={RNAME[c.r]}>{PIPS[c.r]}</span>
+                          <span style={{ color: `rgb(var(--c-r-${c.r.toLowerCase()}-text))` }} title={RNAME[c.r]}>{PIPS[c.r]}</span>
                         </Link>
                       </li>
                     ))}

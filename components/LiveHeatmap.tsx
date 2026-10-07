@@ -44,7 +44,6 @@ import {
 import { useLivePrices } from "@/lib/hooks/useLivePrices";
 import DataSourceLine from "@/components/DataSourceLine";
 import { ALLOWED_PRICE_STREAM_IDS } from "@/lib/binance-mapping";
-import { useThemeColors } from "@/lib/theme/colors";
 
 type Period = "1h" | "24h" | "7d";
 
@@ -80,8 +79,9 @@ const RED_STOPS: readonly ColorStop[] = [
 const GREEN_STOPS: readonly ColorStop[] = [
   [0.3, NEUTRAL_RGB],
   [1.5, [47, 100, 73]],
-  [4, [35, 116, 71]],
-  [8, [23, 128, 63]],
+  // Reprise B2 : verts foncés d'un cran (le texte est le blanc chaud d'Encre, plus le blanc pur) : ≥ 4,88:1 partout.
+  [4, [35, 112, 68]],
+  [8, [23, 118, 58]],
 ];
 
 function colorForChange(value: number | null): string {
@@ -348,7 +348,6 @@ export default function LiveHeatmap({
   heading = "Heatmap crypto en direct",
 }: Props) {
   const [period, setPeriod] = useState<Period>("24h");
-  const tc = useThemeColors();
   const [hovered, setHovered] = useState<string | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [size, setSize] = useState<{ w: number; h: number }>({
@@ -467,6 +466,9 @@ export default function LiveHeatmap({
         ref={containerRef}
         role="region"
         aria-label={`Heatmap des ${coins.length} plus grosses cryptos, mise à jour en direct`}
+        // Reprise B2 : cases sombres dessinées pour un texte clair → bloc en Encre forcé (texte, focus, info-bulle),
+        // y compris sous l'essai Papier. Les jetons dataviz --heat-* du kit arrivent au lot B5.
+        className="theme-encre"
         style={{
           position: "relative",
           width: "100%",
@@ -474,7 +476,7 @@ export default function LiveHeatmap({
           minHeight: 420,
           borderRadius: 12,
           overflow: "hidden",
-          background: "rgba(20,24,32,0.6)",
+          background: "rgb(var(--c-background))",
         }}
       >
         {coins.map((coin) => {
@@ -494,8 +496,9 @@ export default function LiveHeatmap({
           const price = live ? live.price : coin.currentPrice;
 
           const bg = colorForChange(change);
-          // 06/10/2026 — blanc pur partout (≥ 5:1 garanti par la palette).
-          const fg = tc("fg-max");
+          // Reprise B2 : texte = jeton fg-max lu DANS le bloc .theme-encre (cases sombres dans les 2 thèmes), donc le
+          // blanc chaud d'Encre même sous l'essai Papier (≥ 4,5:1 sur toute l'échelle, voir GREEN_STOPS).
+          const fg = "rgb(var(--c-fg-max))";
           const hasPage = slugSet.has(coin.id);
           const changeText = change === null ? "—" : formatPct(change);
           const cellLabel = `${coin.name} (${coin.symbol}), variation ${periodLabel} ${
@@ -748,10 +751,10 @@ function LiveStatusBadge({
       : "HORS LIGNE";
   const color =
     status === "live" || status === "fallback"
-      ? "#34d399"
+      ? "rgb(var(--c-up))"
       : status === "connecting"
       ? "rgb(var(--c-fg-4))"
-      : "#f87171";
+      : "rgb(var(--c-down))";
 
   return (
     <span

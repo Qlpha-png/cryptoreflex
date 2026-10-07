@@ -153,21 +153,21 @@ ${SCRIPT_TAG}`,
 
 export default function EmbedPage() {
   return (
-    <div className="min-h-screen bg-[#05060A] text-slate-100">
+    <div className="min-h-screen bg-background text-fg">
       <StructuredData id="embed-jsonld" data={jsonLd} />
 
       {/* Hero */}
-      <section className="border-b border-fg-max/5 bg-gradient-to-b from-cyan-500/5 to-transparent">
+      <section className="border-b border-fg-max/5 bg-gradient-to-b from-info/5 to-transparent">
         <div className="mx-auto max-w-5xl px-4 py-16 sm:px-6 lg:px-8">
-          <nav className="mb-6 text-sm text-slate-400" aria-label="Fil d'Ariane">
-            <Link href="/" className="hover:text-cyan-300">
+          <nav className="mb-6 text-sm text-muted" aria-label="Fil d'Ariane">
+            <Link href="/" className="hover:text-info">
               Accueil
             </Link>
-            <span className="mx-2 text-slate-600">/</span>
-            <span className="text-slate-300">Widgets embed</span>
+            <span className="mx-2 text-fg-4">/</span>
+            <span className="text-fg-2">Widgets embed</span>
           </nav>
 
-          <div className="inline-flex items-center gap-2 rounded-full border border-cyan-500/20 bg-cyan-500/10 px-3 py-1 text-xs font-medium text-cyan-300">
+          <div className="inline-flex items-center gap-2 rounded-full border border-info/20 bg-info/10 px-3 py-1 text-xs font-medium text-info">
             <Sparkles className="h-3.5 w-3.5" />
             Widgets gratuits — CC-BY 4.0 — sans inscription
           </div>
@@ -175,7 +175,7 @@ export default function EmbedPage() {
           <h1 className="mt-4 text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl">
             Widgets JavaScript Cryptoreflex
           </h1>
-          <p className="mt-4 max-w-[34em] text-lg text-slate-300">
+          <p className="mt-4 max-w-[34em] text-lg text-fg-2">
             3 widgets prêts à copier-coller dans votre blog FR : statut MiCA d'une
             plateforme, encart « MiCA en vigueur », top 10 cryptos
             vulgarisées. <strong>5 minutes d'install</strong>, &lt; 5 Ko
@@ -183,20 +183,20 @@ export default function EmbedPage() {
           </p>
 
           <div className="mt-6 flex flex-wrap gap-3 text-sm">
-            <span className="inline-flex items-center gap-1.5 rounded-md border border-fg-max/10 bg-fg-max/5 px-3 py-1.5 text-slate-300">
-              <ShieldCheck className="h-4 w-4 text-emerald-400" />
+            <span className="inline-flex items-center gap-1.5 rounded-md border border-fg-max/10 bg-fg-max/5 px-3 py-1.5 text-fg-2">
+              <ShieldCheck className="h-4 w-4 text-success" />
               Aucune inscription
             </span>
-            <span className="inline-flex items-center gap-1.5 rounded-md border border-fg-max/10 bg-fg-max/5 px-3 py-1.5 text-slate-300">
-              <Globe2 className="h-4 w-4 text-cyan-400" />
+            <span className="inline-flex items-center gap-1.5 rounded-md border border-fg-max/10 bg-fg-max/5 px-3 py-1.5 text-fg-2">
+              <Globe2 className="h-4 w-4 text-info" />
               CORS *
             </span>
-            <span className="inline-flex items-center gap-1.5 rounded-md border border-fg-max/10 bg-fg-max/5 px-3 py-1.5 text-slate-300">
-              <Code2 className="h-4 w-4 text-indigo-400" />
+            <span className="inline-flex items-center gap-1.5 rounded-md border border-fg-max/10 bg-fg-max/5 px-3 py-1.5 text-fg-2">
+              <Code2 className="h-4 w-4 text-primary" />
               &lt; 5 Ko gzippé
             </span>
-            <span className="inline-flex items-center gap-1.5 rounded-md border border-fg-max/10 bg-fg-max/5 px-3 py-1.5 text-slate-300">
-              <Layers className="h-4 w-4 text-fuchsia-400" />
+            <span className="inline-flex items-center gap-1.5 rounded-md border border-fg-max/10 bg-fg-max/5 px-3 py-1.5 text-fg-2">
+              <Layers className="h-4 w-4 text-primary" />
               Vanilla JS (zéro dépendance)
             </span>
           </div>
@@ -211,30 +211,30 @@ export default function EmbedPage() {
           </h2>
           <ol className="mt-6 grid gap-4 sm:grid-cols-3">
             <li className="rounded-2xl border border-fg-max/10 bg-fg-max/[0.02] p-5">
-              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-cyan-500/15 text-cyan-300 font-bold">
+              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-info/15 text-info font-bold">
                 1
               </div>
               <h3 className="mt-3 font-semibold text-fg-max">Copiez le snippet</h3>
-              <p className="mt-1 text-sm text-slate-400">
+              <p className="mt-1 text-sm text-muted">
                 Choisissez l'un des 3 widgets ci-dessous et copiez le snippet.
               </p>
             </li>
             <li className="rounded-2xl border border-fg-max/10 bg-fg-max/[0.02] p-5">
-              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-cyan-500/15 text-cyan-300 font-bold">
+              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-info/15 text-info font-bold">
                 2
               </div>
               <h3 className="mt-3 font-semibold text-fg-max">Collez dans votre article</h3>
-              <p className="mt-1 text-sm text-slate-400">
+              <p className="mt-1 text-sm text-muted">
                 Dans la zone HTML brut de votre CMS (WordPress, Ghost, Webflow,
                 Notion-pages, etc.).
               </p>
             </li>
             <li className="rounded-2xl border border-fg-max/10 bg-fg-max/[0.02] p-5">
-              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-cyan-500/15 text-cyan-300 font-bold">
+              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-info/15 text-info font-bold">
                 3
               </div>
               <h3 className="mt-3 font-semibold text-fg-max">Publiez. C'est tout.</h3>
-              <p className="mt-1 text-sm text-slate-400">
+              <p className="mt-1 text-sm text-muted">
                 Le widget se rend automatiquement et suit nos données
                 à chaque mise à jour.
               </p>
@@ -255,26 +255,26 @@ export default function EmbedPage() {
             >
               <header>
                 <h3 className="text-xl font-bold text-fg-max">{s.title}</h3>
-                <p className="mt-2 text-sm text-slate-300">{s.description}</p>
+                <p className="mt-2 text-sm text-fg-2">{s.description}</p>
               </header>
 
               <div className="mt-5">
-                <div className="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">
+                <div className="text-xs font-semibold uppercase tracking-wider text-muted mb-2">
                   Snippet à copier-coller
                 </div>
-                <pre className="overflow-x-auto rounded-lg border border-fg-max/10 bg-scrim/40 p-4 font-mono text-xs text-slate-200">
+                <pre className="overflow-x-auto rounded-lg border border-fg-max/10 bg-sunken p-4 font-mono text-xs text-fg-2">
                   <code>{s.snippet}</code>
                 </pre>
               </div>
 
               <div className="mt-5">
-                <div className="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">
+                <div className="text-xs font-semibold uppercase tracking-wider text-muted mb-2">
                   Notes
                 </div>
-                <ul className="space-y-1.5 text-sm text-slate-300">
+                <ul className="space-y-1.5 text-sm text-fg-2">
                   {s.notes.map((n, i) => (
                     <li key={i} className="flex items-start gap-2">
-                      <Copy className="mt-0.5 h-3.5 w-3.5 shrink-0 text-cyan-400" />
+                      <Copy className="mt-0.5 h-3.5 w-3.5 shrink-0 text-info" />
                       <span>{n}</span>
                     </li>
                   ))}
@@ -285,7 +285,7 @@ export default function EmbedPage() {
                   -- the actual widget script will hydrate it client-side on this
                   same page when it loads our own /embed/v1.js below). */}
               <div className="mt-5">
-                <div className="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">
+                <div className="text-xs font-semibold uppercase tracking-wider text-muted mb-2">
                   Aperçu live
                 </div>
                 <div className="rounded-lg border border-fg-max/10 bg-white p-4">
@@ -313,13 +313,13 @@ export default function EmbedPage() {
             {FAQ.map((item) => (
               <details
                 key={item.question}
-                className="group rounded-xl border border-fg-max/10 bg-fg-max/[0.02] p-5 open:border-cyan-500/30"
+                className="group rounded-xl border border-fg-max/10 bg-fg-max/[0.02] p-5 open:border-info/30"
               >
                 <summary className="cursor-pointer list-none flex items-center justify-between gap-4 font-medium text-fg-max">
                   {item.question}
-                  <span className="text-cyan-300 transition group-open:rotate-45">+</span>
+                  <span className="text-info transition group-open:rotate-45">+</span>
                 </summary>
-                <p className="mt-3 text-sm text-slate-300 leading-relaxed">{item.answer}</p>
+                <p className="mt-3 text-sm text-fg-2 leading-relaxed">{item.answer}</p>
               </details>
             ))}
           </div>

@@ -99,7 +99,7 @@ export default function CryptoHero({
               aria-hidden="true"
             />
             {kindLabel}
-            <span className="text-muted/80 normal-case font-normal">· {theme.label}</span>
+            <span className="text-fg-4 normal-case font-normal">· {theme.label}</span>
           </span>
         )}
         <div className="mt-3 flex items-center gap-4">
@@ -180,7 +180,7 @@ export default function CryptoHero({
                 }`}
               >
                 {positive ? <TrendingUp className="h-4 w-4" /> : <TrendingDown className="h-4 w-4" />}
-                {formatPct(change24h)} <span className="opacity-70">24h</span>
+                {formatPct(change24h)} <span className="font-medium">24h</span>
               </span>
             ) : (
               <span className="text-sm text-muted">Variation 24h indisponible</span>

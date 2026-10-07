@@ -356,7 +356,7 @@ export default function AddHoldingDialog({
                   }
                   autoComplete="off"
                   spellCheck={false}
-                  className="w-full pl-9 pr-3 py-2.5 rounded-lg border border-border bg-surface text-fg text-sm placeholder:text-muted/70 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                  className="w-full pl-9 pr-3 py-2.5 rounded-lg border border-border bg-surface text-fg text-sm placeholder:text-fg-4 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
                 />
                 {filtered.length > 0 && (
                   <ul
@@ -420,7 +420,7 @@ export default function AddHoldingDialog({
               onChange={(e) => setQuantity(e.target.value)}
               placeholder="0.05"
               autoComplete="off"
-              className="w-full px-3 py-2.5 rounded-lg border border-border bg-surface text-fg text-sm placeholder:text-muted/70 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary font-mono"
+              className="w-full px-3 py-2.5 rounded-lg border border-border bg-surface text-fg text-sm placeholder:text-fg-4 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary font-mono"
             />
           </div>
 
@@ -442,7 +442,7 @@ export default function AddHoldingDialog({
               onChange={(e) => setPrice(e.target.value)}
               placeholder="60000"
               autoComplete="off"
-              className="w-full px-3 py-2.5 rounded-lg border border-border bg-surface text-fg text-sm placeholder:text-muted/70 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary font-mono"
+              className="w-full px-3 py-2.5 rounded-lg border border-border bg-surface text-fg text-sm placeholder:text-fg-4 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary font-mono"
             />
             <p className="mt-1.5 text-xs text-muted">
               Votre PRU (prix de revient unitaire) en EUR. Mettez 0 si la position

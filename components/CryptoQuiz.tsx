@@ -670,7 +670,7 @@ function ResultView({
               </div>
               <h3 className="mt-1 text-3xl sm:text-4xl font-extrabold tracking-tight">
                 <span className="gradient-text">{top.name}</span>{" "}
-                <span className="text-fg/60 font-mono text-2xl">{top.symbol}</span>
+                <span className="text-fg-4 font-mono text-2xl">{top.symbol}</span>
               </h3>
               <p className="mt-2 text-fg/80 max-w-xl">{top.tagline}</p>
             </div>

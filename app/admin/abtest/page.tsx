@@ -376,7 +376,7 @@ function StatsTable({
               <>
                 <th className="px-3 py-2 text-right">
                   Taux primaire
-                  <div className="text-xs normal-case text-muted/70">
+                  <div className="text-xs normal-case text-fg-4">
                     {primaryMetric}
                   </div>
                 </th>

@@ -355,7 +355,7 @@ export default async function PairPage({ params }: PageProps) {
                 <p className="text-fg-max/70 leading-relaxed">
                   <strong className="text-fg-max">À propos de {fromName} :</strong>{" "}
                   {fromCrypto.tagline}. {firstSentence(fromCrypto.what)}{" "}
-                  <span className="text-fg-max/60">
+                  <span className="text-fg-4">
                     Usage principal : {firstSentence(fromCrypto.useCase)}
                   </span>
                 </p>
@@ -364,7 +364,7 @@ export default async function PairPage({ params }: PageProps) {
                 <p className="text-fg-max/70 leading-relaxed">
                   <strong className="text-fg-max">À propos de {toName} :</strong>{" "}
                   {toCrypto.tagline}. {firstSentence(toCrypto.what)}{" "}
-                  <span className="text-fg-max/60">
+                  <span className="text-fg-4">
                     Usage principal : {firstSentence(toCrypto.useCase)}
                   </span>
                 </p>

@@ -327,7 +327,7 @@ function AirdropCard({ airdrop: a }: { airdrop: Airdrop }) {
         <div className="min-w-0">
           <div className="flex items-center gap-2 flex-wrap">
             <h3 className="text-base font-bold text-fg">{a.name}</h3>
-            <span className="font-mono text-xs text-fg/60">{a.ticker}</span>
+            <span className="font-mono text-xs text-fg-4">{a.ticker}</span>
           </div>
           <p className="mt-0.5 text-xs text-muted">{a.category}</p>
         </div>

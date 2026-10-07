@@ -185,7 +185,7 @@ export default function GlossaryTermPage({ params }: PageProps) {
 
             {term.synonyms.length > 0 && (
               <p className="mt-3 text-sm text-muted">
-                <span className="text-fg-max/60">Aussi appelé : </span>
+                <span className="text-fg-4">Aussi appelé : </span>
                 {term.synonyms.map((s, i) => (
                   <span key={s}>
                     <em className="text-fg-max/80 not-italic">{s}</em>

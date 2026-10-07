@@ -375,7 +375,7 @@ export default function CommandPalette() {
               value={query}
               onValueChange={setQuery}
               placeholder="Rechercher ou exécuter une action…"
-              className="w-full bg-transparent text-base text-fg placeholder:text-muted/70 focus:outline-none"
+              className="w-full bg-transparent text-base text-fg placeholder:text-fg-4 focus:outline-none"
               autoComplete="off"
               spellCheck={false}
             />
@@ -498,7 +498,7 @@ export default function CommandPalette() {
           </Command.List>
 
           {/* Footer raccourcis clavier — minimal, juste pour rappel */}
-          <div className="flex items-center justify-between gap-3 border-t border-border/60 px-4 py-2 text-xs text-muted/80">
+          <div className="flex items-center justify-between gap-3 border-t border-border/60 px-4 py-2 text-xs text-fg-4">
             <div className="flex items-center gap-3">
               <span className="inline-flex items-center gap-1">
                 <kbd className="inline-flex items-center justify-center h-4 px-1 rounded bg-background/60 border border-border/60 font-mono text-xs">
@@ -543,11 +543,11 @@ function GroupHeading({
   count?: number;
 }) {
   return (
-    <div className="px-3 pt-2 pb-1 text-xs uppercase tracking-wider text-muted/80 font-semibold flex items-center gap-1.5">
+    <div className="px-3 pt-2 pb-1 text-xs uppercase tracking-wider text-fg-4 font-semibold flex items-center gap-1.5">
       {icon}
       <span>{label}</span>
       {typeof count === "number" && (
-        <span className="text-muted/70 font-normal">({count})</span>
+        <span className="text-fg-4 font-normal">({count})</span>
       )}
     </div>
   );

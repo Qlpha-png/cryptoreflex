@@ -186,7 +186,7 @@ function MetricCards({ metrics }: { metrics: OnChainMetrics }) {
             </div>
             {c.source && (
               // Reprise B1 (jury visiteur) : la source ne se coupe plus au milieu du mot (« CoinGe / cko »).
-              <span className="shrink-0 whitespace-nowrap text-xs text-muted/70 font-mono">{c.source}</span>
+              <span className="shrink-0 whitespace-nowrap text-xs text-fg-4 font-mono">{c.source}</span>
             )}
           </div>
           <div className="mt-2 font-mono text-lg font-bold text-fg tabular-nums truncate">

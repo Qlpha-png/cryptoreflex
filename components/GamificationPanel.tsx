@@ -192,10 +192,10 @@ export default function GamificationPanel() {
           </div>
           <div className="text-3xl font-extrabold text-fg tabular-nums">
             {progress.streakDays}
-            <span className="ml-1 text-sm font-normal text-fg/60">jours</span>
+            <span className="ml-1 text-sm font-normal text-fg-4">jours</span>
           </div>
           {progress.streakDays === 0 && (
-            <div className="mt-1 text-xs text-fg/60">
+            <div className="mt-1 text-xs text-fg-4">
               Visite chaque jour pour démarrer.
             </div>
           )}
@@ -208,7 +208,7 @@ export default function GamificationPanel() {
           </div>
           <div className="text-3xl font-extrabold text-fg tabular-nums">
             {progress.bestStreak}
-            <span className="ml-1 text-sm font-normal text-fg/60">jours</span>
+            <span className="ml-1 text-sm font-normal text-fg-4">jours</span>
           </div>
           {progress.bestStreak >= 365 && (
             <div className="mt-1 text-xs text-primary-soft">
@@ -244,7 +244,7 @@ export default function GamificationPanel() {
                     className={`grid place-items-center h-7 w-7 rounded-lg ${
                       b.unlocked
                         ? "bg-warning/15 text-primary-glow"
-                        : "bg-elevated/60 text-fg/60"
+                        : "bg-elevated/60 text-fg-4"
                     }`}
                   >
                     {b.unlocked ? (
@@ -255,13 +255,13 @@ export default function GamificationPanel() {
                   </div>
                   <span
                     className={`text-xs font-bold ${
-                      b.unlocked ? "text-fg" : "text-fg/60"
+                      b.unlocked ? "text-fg" : "text-fg-4"
                     }`}
                   >
                     {b.name}
                   </span>
                 </div>
-                <div className="text-xs text-fg/65 leading-snug line-clamp-2">
+                <div className="text-xs text-muted leading-snug line-clamp-2">
                   {b.description}
                 </div>
               </div>

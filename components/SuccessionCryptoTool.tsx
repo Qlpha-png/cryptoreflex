@@ -38,7 +38,7 @@ import {
 
 const MAX_WALLETS = 30;
 const INPUT =
-  "mt-1.5 w-full rounded-lg border border-border bg-elevated/60 px-3 py-2 text-sm text-fg placeholder:text-fg/40 focus:outline-none focus:ring-2 focus:ring-primary";
+  "mt-1.5 w-full rounded-lg border border-border bg-elevated/60 px-3 py-2 text-sm text-fg placeholder:text-fg-4 focus:outline-none focus:ring-2 focus:ring-primary";
 
 /** Attributs posés sur chaque champ libre : rien ne doit partir vers un correcteur ou un gestionnaire de saisie. */
 const PRIVATE_FIELD = {
@@ -106,7 +106,7 @@ function Field({
   return (
     <div>
       <label htmlFor={id} className="block text-sm font-semibold text-fg">
-        {label} {hint && <span className="font-normal text-fg/60">{hint}</span>}
+        {label} {hint && <span className="font-normal text-fg-4">{hint}</span>}
       </label>
       {rows ? (
         <textarea {...common} rows={rows} onChange={(e) => onChange(e.target.value)} />
@@ -275,7 +275,7 @@ export default function SuccessionCryptoTool() {
                 <button
                   type="button"
                   onClick={() => removeWallet(w.id)}
-                  className="mt-3 inline-flex items-center gap-1.5 text-xs font-semibold text-fg/60 hover:text-danger-fg"
+                  className="mt-3 inline-flex items-center gap-1.5 text-xs font-semibold text-fg-4 hover:text-danger-fg"
                 >
                   <Trash2 className="h-3.5 w-3.5" aria-hidden="true" /> Retirer ce portefeuille
                 </button>
@@ -434,7 +434,7 @@ export default function SuccessionCryptoTool() {
                   onChange={(e) => setChecked((c) => c.map((v, j) => (j === i ? e.target.checked : v)))}
                   className="mt-0.5 h-4 w-4 shrink-0 accent-primary"
                 />
-                <span className={checked[i] ? "text-fg/60 line-through" : ""}>{item}</span>
+                <span className={checked[i] ? "text-fg-4 line-through" : ""}>{item}</span>
               </label>
             </li>
           ))}

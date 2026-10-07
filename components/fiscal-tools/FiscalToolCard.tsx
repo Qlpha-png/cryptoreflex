@@ -127,7 +127,7 @@ export default function FiscalToolCard({
 
       {/* Con (1) */}
       {topCon && (
-        <p className="mt-3 flex gap-2 text-sm text-fg-max/60">
+        <p className="mt-3 flex gap-2 text-sm text-fg-4">
           <X
             className="h-4 w-4 shrink-0 text-danger-fg mt-0.5"
             aria-hidden="true"

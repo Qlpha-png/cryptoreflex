@@ -302,14 +302,14 @@ export default function BurgerMenu({ open, onClose }: Props) {
                     <div className="flex-1 min-w-0">
                       <div className="text-xs font-bold text-fg flex items-center gap-2">
                         {sec.title}
-                        <span className="text-xs font-mono text-muted/70">({sec.items.length})</span>
+                        <span className="text-xs font-mono text-fg-4">({sec.items.length})</span>
                       </div>
                       {sec.intro && (
                         <div className="text-xs text-muted mt-0.5">{sec.intro}</div>
                       )}
                     </div>
                     <ChevronDown
-                      className={`h-4 w-4 text-fg/50 transition-transform duration-300 ${isOpen ? "rotate-180" : ""}`}
+                      className={`h-4 w-4 text-fg-4 transition-transform duration-300 ${isOpen ? "rotate-180" : ""}`}
                       strokeWidth={2}
                     />
                   </button>
@@ -334,7 +334,7 @@ export default function BurgerMenu({ open, onClose }: Props) {
                                 </span>
                               </div>
                               {item.desc && (
-                                <div className="text-xs text-fg/55 mt-0.5 leading-snug">
+                                <div className="text-xs text-fg-4 mt-0.5 leading-snug">
                                   {item.desc}
                                 </div>
                               )}

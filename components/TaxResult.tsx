@@ -212,7 +212,7 @@ function Tile({
         {value}
       </dd>
       {help && (
-        <p className="mt-1 text-xs text-muted/80 font-mono">{help}</p>
+        <p className="mt-1 text-xs text-fg-4 font-mono">{help}</p>
       )}
     </div>
   );

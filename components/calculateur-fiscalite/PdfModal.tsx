@@ -270,7 +270,7 @@ export default function PdfModal({
               </button>
             </form>
 
-            <div className="mt-4 flex items-start gap-2 rounded-lg border border-border/60 bg-background/40 p-3 text-xs text-fg/60">
+            <div className="mt-4 flex items-start gap-2 rounded-lg border border-border/60 bg-background/40 p-3 text-xs text-fg-4">
               <ShieldCheck
                 className="h-4 w-4 shrink-0 text-primary-soft mt-0.5"
                 aria-hidden="true"
@@ -379,7 +379,7 @@ export default function PdfModal({
                     Génère mes formulaires Cerfa avec Waltio
                     <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
                   </a>
-                  <p className="mt-1 text-xs text-muted/70">
+                  <p className="mt-1 text-xs text-fg-4">
                     Publicité — Cryptoreflex perçoit une commission.
                   </p>
                 </div>

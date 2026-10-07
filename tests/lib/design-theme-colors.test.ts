@@ -8,8 +8,11 @@ import path from "node:path";
 import { THEME_FALLBACK, toRgb, readThemeChannels, THEME_EVENT } from "@/lib/theme/colors";
 
 const css = fs.readFileSync(path.resolve(__dirname, "../../app/styles/tokens.css"), "utf8");
+// Lot B2 : seul le PREMIER bloc :root (thème par défaut, Encre) sert de repli ; le bloc [data-theme="light"] (Papier)
+// est lu après montage par readThemeChannels, comme tout changement de thème.
+const blocDefaut = /\n:root \{([\s\S]*?)\n\}/.exec(css)![1];
 const jetons: Record<string, string> = {};
-for (const m of css.matchAll(/--c-([a-z0-9-]+):\s*([^;]+);/g)) jetons[m[1]] = m[2].trim();
+for (const m of blocDefaut.matchAll(/--c-([a-z0-9-]+):\s*([^;]+);/g)) jetons[m[1]] = m[2].trim();
 
 describe("lib/theme/colors : repli = tokens.css", () => {
   for (const [nom, canaux] of Object.entries(THEME_FALLBACK))

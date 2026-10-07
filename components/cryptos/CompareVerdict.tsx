@@ -108,7 +108,7 @@ function VerdictCard({ verdict }: { verdict: Verdict }) {
       </div>
       <div className={`mt-3 text-lg font-extrabold ${a.text}`}>
         {verdict.winnerName}
-        <span className="ml-2 font-mono text-xs text-fg/60">
+        <span className="ml-2 font-mono text-xs text-fg-4">
           {verdict.winnerSymbol}
         </span>
       </div>

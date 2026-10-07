@@ -166,7 +166,7 @@ const jsonLd: JsonLd = graphSchema([breadcrumb, howTo]);
 
 export default function ChecklistPage() {
   return (
-    <div className="min-h-screen bg-[#05060A] text-slate-100">
+    <div className="min-h-screen bg-background text-fg">
       <StructuredData id="checklist-jsonld" data={jsonLd} />
 
       {/* Print stylesheet — page imprimable proprement */}
@@ -194,21 +194,21 @@ export default function ChecklistPage() {
       />
 
       {/* Hero */}
-      <section className="border-b border-fg-max/5 bg-gradient-to-b from-emerald-500/5 to-transparent">
+      <section className="border-b border-fg-max/5 bg-gradient-to-b from-success/5 to-transparent">
         <div className="mx-auto max-w-3xl px-4 py-12 sm:px-6 lg:px-8">
-          <nav className="mb-6 text-sm text-slate-400 no-print" aria-label="Fil d'Ariane">
-            <Link href="/" className="hover:text-cyan-300">
+          <nav className="mb-6 text-sm text-muted no-print" aria-label="Fil d'Ariane">
+            <Link href="/" className="hover:text-info">
               Accueil
             </Link>
-            <span className="mx-2 text-slate-600">/</span>
-            <Link href="/guides" className="hover:text-cyan-300">
+            <span className="mx-2 text-fg-4">/</span>
+            <Link href="/guides" className="hover:text-info">
               Guides
             </Link>
-            <span className="mx-2 text-slate-600">/</span>
-            <span className="text-slate-300">Checklist déclaration 2026</span>
+            <span className="mx-2 text-fg-4">/</span>
+            <span className="text-fg-2">Checklist déclaration 2026</span>
           </nav>
 
-          <div className="inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-xs font-medium text-emerald-300 no-print">
+          <div className="inline-flex items-center gap-2 rounded-full border border-success/30 bg-success/10 px-3 py-1 text-xs font-medium text-success no-print">
             <BookOpenCheck className="h-3.5 w-3.5" />
             Guide pratique — checklist imprimable
           </div>
@@ -217,7 +217,7 @@ export default function ChecklistPage() {
             Checklist déclaration crypto 2026 :<br className="hidden sm:block" /> 8 étapes avant votre déclaration
           </h1>
 
-          <div className="mt-5 flex flex-wrap items-center gap-3 text-xs text-slate-400 print-muted no-print">
+          <div className="mt-5 flex flex-wrap items-center gap-3 text-xs text-muted print-muted no-print">
             <span className="inline-flex items-center gap-1.5">
               <Calendar className="h-3.5 w-3.5" />
               Publié le{" "}
@@ -233,11 +233,11 @@ export default function ChecklistPage() {
             </span>
           </div>
 
-          <p className="mt-6 text-lg text-slate-300 leading-relaxed print-muted">
+          <p className="mt-6 text-lg text-fg-2 leading-relaxed print-muted">
             Vous avez déjà compris la fiscalité crypto FR (sinon, lisez l'
             <Link
               href="/etudes/fiscalite-crypto-france-2026-guide-cerfa"
-              className="text-cyan-300 hover:underline"
+              className="text-info hover:underline"
             >
               étude complète
             </Link>
@@ -248,14 +248,14 @@ export default function ChecklistPage() {
           <div className="mt-6 flex flex-wrap gap-3 no-print">
             <a
               href="/outils/cerfa-2086-auto"
-              className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-emerald-500 to-cyan-500 px-5 py-2.5 text-sm font-bold text-fg-max shadow-lg shadow-emerald-500/25 transition hover:shadow-emerald-500/40"
+              className="inline-flex items-center gap-2 rounded-[22px] bg-action px-5 py-2.5 text-sm font-bold text-on-action shadow-action transition-colors hover:bg-action-hover"
             >
               Lancer l'outil Cerfa 2086
               <ArrowRight className="h-4 w-4" />
             </a>
             <button
               type="button"
-              className="inline-flex items-center gap-2 rounded-xl border border-fg-max/10 bg-fg-max/5 px-5 py-2.5 text-sm font-medium text-slate-200 hover:bg-fg-max/10"
+              className="inline-flex items-center gap-2 rounded-xl border border-fg-max/10 bg-fg-max/5 px-5 py-2.5 text-sm font-medium text-fg-2 hover:bg-fg-max/10"
               onClick={undefined}
               // Le formatter est purement Server Component — bouton fonctionne via
               // le pattern progressif suivant : on encapsule l'action dans un
@@ -289,21 +289,21 @@ export default function ChecklistPage() {
               className="print-card rounded-2xl border border-fg-max/10 bg-fg-max/[0.02] p-6"
             >
               <div className="flex items-start gap-4">
-                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-emerald-500/15 text-emerald-300 font-bold">
+                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-success/15 text-success font-bold">
                   {s.n}
                 </div>
                 <div className="flex-1 min-w-0">
                   <h2 className="text-lg font-bold tracking-tight text-fg-max print-h1">
                     <CheckSquare
-                      className="mr-2 inline h-4 w-4 align-text-bottom text-emerald-400"
+                      className="mr-2 inline h-4 w-4 align-text-bottom text-success"
                       aria-hidden="true"
                     />
                     {s.title}
                   </h2>
-                  <p className="mt-3 text-sm text-slate-300 leading-relaxed print-muted">
+                  <p className="mt-3 text-sm text-fg-2 leading-relaxed print-muted">
                     {s.detail}
                   </p>
-                  <p className="mt-3 inline-flex items-start gap-2 rounded-lg bg-fg-max/5 px-3 py-2 text-xs text-slate-300 print-muted">
+                  <p className="mt-3 inline-flex items-start gap-2 rounded-lg bg-fg-max/5 px-3 py-2 text-xs text-fg-2 print-muted">
                     <AlertTriangle
                       className="mt-0.5 h-3.5 w-3.5 shrink-0 text-primary-glow"
                       aria-hidden="true"
@@ -316,7 +316,7 @@ export default function ChecklistPage() {
                   {s.link && (
                     <Link
                       href={s.link.href}
-                      className="mt-3 inline-flex items-center gap-1 text-sm font-medium text-cyan-300 hover:underline no-print"
+                      className="mt-3 inline-flex items-center gap-1 text-sm font-medium text-info hover:underline no-print"
                     >
                       {s.link.label}
                       <ArrowRight className="h-3.5 w-3.5" />
@@ -329,11 +329,11 @@ export default function ChecklistPage() {
         </ol>
 
         {/* CTA primaire */}
-        <div className="mt-12 rounded-2xl border border-cyan-500/20 bg-gradient-to-br from-cyan-500/10 to-emerald-500/10 p-8 text-center no-print">
+        <div className="mt-12 rounded-2xl border border-info/20 bg-gradient-to-br from-info/10 to-success/10 p-8 text-center no-print">
           <h2 className="text-2xl font-bold tracking-tight">
             Vous voulez automatiser les étapes 2 et 3 ?
           </h2>
-          <p className="mt-2 max-w-xl mx-auto text-slate-300">
+          <p className="mt-2 max-w-xl mx-auto text-fg-2">
             Recopiez vos opérations dans le modèle CSV de l&apos;outil Cryptoreflex :
             il calcule chaque plus-value selon l&apos;article 150 VH bis et vous
             donne le récapitulatif Cerfa 2086 + les fiches 3916-bis à recopier.
@@ -341,7 +341,7 @@ export default function ChecklistPage() {
           </p>
           <Link
             href="/outils/cerfa-2086-auto"
-            className="mt-5 inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-cyan-500 to-emerald-500 px-6 py-3 font-bold text-fg-max shadow-lg shadow-cyan-500/25 hover:shadow-cyan-500/40 transition"
+            className="mt-5 inline-flex items-center gap-2 rounded-[22px] bg-action px-6 py-3 font-bold text-on-action shadow-action hover:bg-action-hover transition-colors"
           >
             Lancer l'outil
             <ArrowRight className="h-5 w-5" />
@@ -378,12 +378,12 @@ export default function ChecklistPage() {
           <div className="mt-4 grid gap-3 sm:grid-cols-2 text-sm">
             <Link
               href="/etudes/fiscalite-crypto-france-2026-guide-cerfa"
-              className="rounded-xl border border-fg-max/10 bg-fg-max/[0.02] p-4 hover:border-emerald-500/30 hover:text-emerald-300 transition"
+              className="rounded-xl border border-fg-max/10 bg-fg-max/[0.02] p-4 hover:border-success/30 hover:text-success transition"
             >
               <div className="font-semibold text-fg-max">
                 Étude complète — Fiscalité crypto FR 2026
               </div>
-              <div className="mt-1 text-slate-400">
+              <div className="mt-1 text-muted">
                 Le guide académique : 22 min, sources BOFiP, cas particuliers
                 staking/NFT/DeFi.
               </div>
@@ -395,7 +395,7 @@ export default function ChecklistPage() {
               <div className="font-semibold text-fg-max">
                 Étude — MiCA juillet 2026
               </div>
-              <div className="mt-1 text-slate-400">
+              <div className="mt-1 text-muted">
                 Quelles plateformes ne sont plus autorisées en France ?
                 Implications fiscales de la migration.
               </div>

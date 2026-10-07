@@ -259,21 +259,21 @@ const jsonLd: JsonLd = graphSchema([breadcrumb, faq, datasetSchema]);
 
 export default function ApiPubliquePage() {
   return (
-    <div className="min-h-screen bg-[#05060A] text-slate-100">
+    <div className="min-h-screen bg-background text-fg">
       <StructuredData id="api-publique-jsonld" data={jsonLd} />
 
       {/* Hero */}
-      <section className="border-b border-fg-max/5 bg-gradient-to-b from-cyan-500/5 to-transparent">
+      <section className="border-b border-fg-max/5 bg-gradient-to-b from-info/5 to-transparent">
         <div className="mx-auto max-w-5xl px-4 py-16 sm:px-6 lg:px-8">
-          <nav className="mb-6 text-sm text-slate-400" aria-label="Fil d'Ariane">
-            <Link href="/" className="hover:text-cyan-300">
+          <nav className="mb-6 text-sm text-muted" aria-label="Fil d'Ariane">
+            <Link href="/" className="hover:text-info">
               Accueil
             </Link>
-            <span className="mx-2 text-slate-600">/</span>
-            <span className="text-slate-300">API publique</span>
+            <span className="mx-2 text-fg-4">/</span>
+            <span className="text-fg-2">API publique</span>
           </nav>
 
-          <div className="inline-flex items-center gap-2 rounded-full border border-cyan-500/20 bg-cyan-500/10 px-3 py-1 text-xs font-medium text-cyan-300">
+          <div className="inline-flex items-center gap-2 rounded-full border border-info/20 bg-info/10 px-3 py-1 text-xs font-medium text-info">
             <Sparkles className="h-3.5 w-3.5" />
             Open data crypto FR — gratuit, sans inscription
           </div>
@@ -281,13 +281,13 @@ export default function ApiPubliquePage() {
           <h1 className="mt-4 text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl">
             API publique Cryptoreflex
           </h1>
-          <p className="mt-4 max-w-[34em] text-lg text-slate-300">
+          <p className="mt-4 max-w-[34em] text-lg text-fg-2">
             5 endpoints JSON sous licence{" "}
             <a
               href="https://creativecommons.org/licenses/by/4.0/deed.fr"
               target="_blank"
               rel="noreferrer noopener"
-              className="text-cyan-300 underline-offset-2 hover:underline"
+              className="text-info underline-offset-2 hover:underline"
             >
               CC-BY 4.0
             </a>{" "}
@@ -297,20 +297,20 @@ export default function ApiPubliquePage() {
           </p>
 
           <div className="mt-6 flex flex-wrap gap-3 text-sm">
-            <span className="inline-flex items-center gap-1.5 rounded-md border border-fg-max/10 bg-fg-max/5 px-3 py-1.5 text-slate-300">
-              <ShieldCheck className="h-4 w-4 text-emerald-400" />
+            <span className="inline-flex items-center gap-1.5 rounded-md border border-fg-max/10 bg-fg-max/5 px-3 py-1.5 text-fg-2">
+              <ShieldCheck className="h-4 w-4 text-success" />
               Sans clé API
             </span>
-            <span className="inline-flex items-center gap-1.5 rounded-md border border-fg-max/10 bg-fg-max/5 px-3 py-1.5 text-slate-300">
-              <Globe2 className="h-4 w-4 text-cyan-400" />
+            <span className="inline-flex items-center gap-1.5 rounded-md border border-fg-max/10 bg-fg-max/5 px-3 py-1.5 text-fg-2">
+              <Globe2 className="h-4 w-4 text-info" />
               CORS *
             </span>
-            <span className="inline-flex items-center gap-1.5 rounded-md border border-fg-max/10 bg-fg-max/5 px-3 py-1.5 text-slate-300">
-              <Database className="h-4 w-4 text-indigo-400" />
+            <span className="inline-flex items-center gap-1.5 rounded-md border border-fg-max/10 bg-fg-max/5 px-3 py-1.5 text-fg-2">
+              <Database className="h-4 w-4 text-primary" />
               Cache CDN 24h
             </span>
-            <span className="inline-flex items-center gap-1.5 rounded-md border border-fg-max/10 bg-fg-max/5 px-3 py-1.5 text-slate-300">
-              <Code2 className="h-4 w-4 text-fuchsia-400" />
+            <span className="inline-flex items-center gap-1.5 rounded-md border border-fg-max/10 bg-fg-max/5 px-3 py-1.5 text-fg-2">
+              <Code2 className="h-4 w-4 text-primary" />
               JSON UTF-8
             </span>
           </div>
@@ -320,43 +320,43 @@ export default function ApiPubliquePage() {
       {/* Endpoints */}
       <section className="mx-auto max-w-5xl px-4 py-16 sm:px-6 lg:px-8">
         <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">Endpoints disponibles</h2>
-        <p className="mt-2 text-slate-400">
-          Tous renvoient un JSON UTF-8 avec un objet <code className="rounded bg-fg-max/5 px-1.5 py-0.5 text-xs text-cyan-300">_meta</code> (license, source, lastUpdated, attribution) et le payload nommé.
+        <p className="mt-2 text-muted">
+          Tous renvoient un JSON UTF-8 avec un objet <code className="rounded bg-fg-max/5 px-1.5 py-0.5 text-xs text-info">_meta</code> (license, source, lastUpdated, attribution) et le payload nommé.
         </p>
 
         <div className="mt-8 space-y-6">
           {ENDPOINTS.map((ep) => (
             <article
               key={ep.path}
-              className="rounded-xl border border-fg-max/10 bg-fg-max/[0.02] p-6 transition hover:border-cyan-500/30"
+              className="rounded-xl border border-fg-max/10 bg-fg-max/[0.02] p-6 transition hover:border-info/30"
             >
               <header className="flex flex-wrap items-start justify-between gap-3">
                 <div>
                   <h3 className="text-lg font-semibold text-fg-max">{ep.title}</h3>
-                  <p className="mt-1 text-sm text-slate-400">{ep.description}</p>
+                  <p className="mt-1 text-sm text-muted">{ep.description}</p>
                 </div>
-                <span className="inline-flex shrink-0 items-center rounded-md border border-emerald-500/20 bg-emerald-500/10 px-2 py-1 text-xs font-medium text-emerald-300">
+                <span className="inline-flex shrink-0 items-center rounded-md border border-success/20 bg-success/10 px-2 py-1 text-xs font-medium text-success">
                   {ep.updateFrequency}
                 </span>
               </header>
 
-              <div className="mt-4 overflow-x-auto rounded-lg border border-fg-max/5 bg-scrim/40 p-3 font-mono text-xs">
-                <div className="flex items-center gap-2 text-emerald-400">
-                  <span className="rounded bg-emerald-500/10 px-1.5 py-0.5 text-xs uppercase tracking-wide">
+              <div className="mt-4 overflow-x-auto rounded-lg border border-fg-max/5 bg-sunken p-3 font-mono text-xs">
+                <div className="flex items-center gap-2 text-success">
+                  <span className="rounded bg-success/10 px-1.5 py-0.5 text-xs uppercase tracking-wide">
                     GET
                   </span>
-                  <span className="text-slate-200">
+                  <span className="text-fg-2">
                     {baseUrl}
-                    <span className="text-cyan-300">{ep.path}</span>
+                    <span className="text-info">{ep.path}</span>
                   </span>
                 </div>
               </div>
 
               <details className="group mt-3 text-xs">
-                <summary className="cursor-pointer text-slate-400 hover:text-slate-200">
+                <summary className="cursor-pointer text-muted hover:text-fg-2">
                   Schéma de réponse
                 </summary>
-                <pre className="mt-2 overflow-x-auto rounded border border-fg-max/5 bg-scrim/40 p-3 font-mono text-xs text-slate-300">
+                <pre className="mt-2 overflow-x-auto rounded border border-fg-max/5 bg-sunken p-3 font-mono text-xs text-fg-2">
                   <code>{ep.responseShape}</code>
                 </pre>
               </details>
@@ -366,7 +366,7 @@ export default function ApiPubliquePage() {
                   href={ep.path}
                   target="_blank"
                   rel="noreferrer noopener"
-                  className="inline-flex items-center rounded-md border border-cyan-500/30 bg-cyan-500/10 px-3 py-1.5 font-medium text-cyan-300 hover:bg-cyan-500/20"
+                  className="inline-flex items-center rounded-md border border-info/30 bg-info/10 px-3 py-1.5 font-medium text-info hover:bg-info/20"
                 >
                   Tester l'endpoint
                 </a>
@@ -379,13 +379,13 @@ export default function ApiPubliquePage() {
       {/* OpenAPI / Postman / Swagger */}
       <section className="border-y border-fg-max/5 bg-fg-max/[0.02]">
         <div className="mx-auto max-w-5xl px-4 py-12 sm:px-6 lg:px-8">
-          <div className="rounded-2xl border border-indigo-500/20 bg-gradient-to-br from-indigo-500/10 to-cyan-500/10 p-6 sm:p-8">
+          <div className="rounded-2xl border border-primary/20 bg-gradient-to-br from-primary/10 to-info/10 p-6 sm:p-8">
             <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between">
               <div>
                 <h2 className="text-xl font-bold tracking-tight sm:text-2xl">
                   Spec OpenAPI 3.0 disponible
                 </h2>
-                <p className="mt-2 max-w-2xl text-sm text-slate-300">
+                <p className="mt-2 max-w-2xl text-sm text-fg-2">
                   Importez directement dans Postman / Insomnia / Swagger UI.
                   Schémas de réponse complets, exemples de requêtes, types des
                   champs documentés.
@@ -395,15 +395,15 @@ export default function ApiPubliquePage() {
                 href="/api/public/openapi.json"
                 target="_blank"
                 rel="noreferrer noopener"
-                className="inline-flex items-center gap-2 rounded-lg border border-cyan-500/30 bg-cyan-500/10 px-4 py-2 text-sm font-medium text-cyan-300 hover:bg-cyan-500/20"
+                className="inline-flex items-center gap-2 rounded-lg border border-info/30 bg-info/10 px-4 py-2 text-sm font-medium text-info hover:bg-info/20"
               >
                 openapi.json
               </a>
             </div>
-            <div className="mt-4 rounded-lg border border-fg-max/10 bg-scrim/40 p-3 font-mono text-xs">
-              <span className="text-slate-400">curl -s </span>
-              <span className="text-cyan-300">{baseUrl}/api/public/openapi.json</span>
-              <span className="text-slate-400"> {">"} cryptoreflex-openapi.json</span>
+            <div className="mt-4 rounded-lg border border-fg-max/10 bg-sunken p-3 font-mono text-xs">
+              <span className="text-muted">curl -s </span>
+              <span className="text-info">{baseUrl}/api/public/openapi.json</span>
+              <span className="text-muted"> {">"} cryptoreflex-openapi.json</span>
             </div>
           </div>
         </div>
@@ -413,25 +413,25 @@ export default function ApiPubliquePage() {
       <section className="border-y border-fg-max/5 bg-fg-max/[0.02]">
         <div className="mx-auto max-w-5xl px-4 py-16 sm:px-6 lg:px-8">
           <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">Exemples d'utilisation</h2>
-          <p className="mt-2 text-slate-400">
+          <p className="mt-2 text-muted">
             Copiez-collez ces snippets pour démarrer en moins d'une minute.
           </p>
 
           <div className="mt-8 grid gap-4 lg:grid-cols-3">
-            <div className="rounded-xl border border-fg-max/10 bg-scrim/40 p-5">
-              <div className="mb-3 text-xs font-semibold uppercase tracking-wider text-slate-400">
+            <div className="rounded-xl border border-fg-max/10 bg-sunken p-5">
+              <div className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted">
                 cURL
               </div>
-              <pre className="overflow-x-auto font-mono text-xs text-slate-200">
+              <pre className="overflow-x-auto font-mono text-xs text-fg-2">
                 <code>{`curl -s ${baseUrl}/api/public/platforms | jq .`}</code>
               </pre>
             </div>
 
-            <div className="rounded-xl border border-fg-max/10 bg-scrim/40 p-5">
-              <div className="mb-3 text-xs font-semibold uppercase tracking-wider text-slate-400">
+            <div className="rounded-xl border border-fg-max/10 bg-sunken p-5">
+              <div className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted">
                 JavaScript
               </div>
-              <pre className="overflow-x-auto font-mono text-xs text-slate-200">
+              <pre className="overflow-x-auto font-mono text-xs text-fg-2">
                 <code>{`const r = await fetch(
   "${baseUrl}/api/public/platforms"
 );
@@ -439,11 +439,11 @@ const data = await r.json();`}</code>
               </pre>
             </div>
 
-            <div className="rounded-xl border border-fg-max/10 bg-scrim/40 p-5">
-              <div className="mb-3 text-xs font-semibold uppercase tracking-wider text-slate-400">
+            <div className="rounded-xl border border-fg-max/10 bg-sunken p-5">
+              <div className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted">
                 Python
               </div>
-              <pre className="overflow-x-auto font-mono text-xs text-slate-200">
+              <pre className="overflow-x-auto font-mono text-xs text-fg-2">
                 <code>{`import requests
 r = requests.get(
   "${baseUrl}/api/public/platforms"
@@ -460,19 +460,19 @@ data = r.json()`}</code>
         <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">
           Comment créditer Cryptoreflex
         </h2>
-        <p className="mt-2 text-slate-400">
+        <p className="mt-2 text-muted">
           La licence CC-BY 4.0 vous autorise à réutiliser librement (même
           commercialement) à condition de citer la source.
         </p>
 
-        <div className="mt-6 rounded-xl border border-cyan-500/20 bg-cyan-500/5 p-6">
-          <div className="text-sm font-semibold text-cyan-300">Attribution recommandée (HTML)</div>
-          <pre className="mt-3 overflow-x-auto rounded border border-fg-max/5 bg-scrim/40 p-3 font-mono text-xs text-slate-200">
+        <div className="mt-6 rounded-xl border border-info/20 bg-info/5 p-6">
+          <div className="text-sm font-semibold text-info">Attribution recommandée (HTML)</div>
+          <pre className="mt-3 overflow-x-auto rounded border border-fg-max/5 bg-sunken p-3 font-mono text-xs text-fg-2">
             <code>{`<a href="https://cryptoreflex.fr" rel="dofollow">Données Cryptoreflex</a> — CC-BY 4.0`}</code>
           </pre>
 
-          <div className="mt-6 text-sm font-semibold text-cyan-300">Attribution recommandée (texte)</div>
-          <pre className="mt-3 overflow-x-auto rounded border border-fg-max/5 bg-scrim/40 p-3 font-mono text-xs text-slate-200">
+          <div className="mt-6 text-sm font-semibold text-info">Attribution recommandée (texte)</div>
+          <pre className="mt-3 overflow-x-auto rounded border border-fg-max/5 bg-sunken p-3 font-mono text-xs text-fg-2">
             <code>Données Cryptoreflex (https://cryptoreflex.fr) — CC-BY 4.0</code>
           </pre>
         </div>
@@ -486,15 +486,15 @@ data = r.json()`}</code>
             {FAQ.map((item) => (
               <details
                 key={item.question}
-                className="group rounded-xl border border-fg-max/10 bg-fg-max/[0.02] p-5 open:border-cyan-500/30"
+                className="group rounded-xl border border-fg-max/10 bg-fg-max/[0.02] p-5 open:border-info/30"
               >
                 <summary className="cursor-pointer list-none font-medium text-fg-max">
                   <span className="flex items-center justify-between gap-4">
                     {item.question}
-                    <span className="text-cyan-300 transition group-open:rotate-45">+</span>
+                    <span className="text-info transition group-open:rotate-45">+</span>
                   </span>
                 </summary>
-                <p className="mt-3 text-sm text-slate-300">{item.answer}</p>
+                <p className="mt-3 text-sm text-fg-2">{item.answer}</p>
               </details>
             ))}
           </div>
@@ -503,20 +503,20 @@ data = r.json()`}</code>
 
       {/* Contact / B2B */}
       <section className="mx-auto max-w-5xl px-4 py-16 sm:px-6 lg:px-8">
-        <div className="rounded-2xl border border-indigo-500/20 bg-gradient-to-br from-indigo-500/10 to-cyan-500/10 p-8">
+        <div className="rounded-2xl border border-primary/20 bg-gradient-to-br from-primary/10 to-info/10 p-8">
           <div className="flex flex-col items-start gap-4 lg:flex-row lg:items-center lg:justify-between">
             <div>
               <h2 className="text-xl font-bold tracking-tight sm:text-2xl">
                 Un besoin particulier (données historiques, gros volume) ?
               </h2>
-              <p className="mt-2 max-w-2xl text-slate-300">
+              <p className="mt-2 max-w-2xl text-fg-2">
                 Il n&apos;existe pas d&apos;offre professionnelle pour l&apos;instant.
                 Écrivez-nous : nous regarderons ce qu&apos;il est possible de faire.
               </p>
             </div>
             <a
               href={`mailto:${BRAND.partnersEmail}?subject=API%20Cryptoreflex%20B2B`}
-              className="inline-flex items-center gap-2 rounded-lg border border-cyan-500/30 bg-cyan-500/10 px-5 py-3 font-medium text-cyan-300 hover:bg-cyan-500/20"
+              className="inline-flex items-center gap-2 rounded-lg border border-info/30 bg-info/10 px-5 py-3 font-medium text-info hover:bg-info/20"
             >
               <Mail className="h-4 w-4" />
               {BRAND.partnersEmail}

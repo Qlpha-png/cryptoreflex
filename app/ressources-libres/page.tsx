@@ -169,7 +169,7 @@ export default function RessourcesLibresPage() {
                 <h3 className="font-display font-bold text-fg text-base leading-tight">
                   {tool.shortName}
                 </h3>
-                <p className="mt-2 text-xs text-fg/60 leading-relaxed">
+                <p className="mt-2 text-xs text-fg-4 leading-relaxed">
                   {tool.description}
                 </p>
                 <span className="mt-3 inline-flex items-center gap-1 text-xs text-primary-soft group-hover:gap-2 transition-all">

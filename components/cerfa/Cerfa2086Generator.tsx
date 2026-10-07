@@ -355,7 +355,7 @@ export default function Cerfa2086Generator({ cryptoId: _cryptoId }: Props) {
                 className={`shrink-0 inline-flex h-7 w-7 items-center justify-center rounded-full text-xs font-bold ${
                   step.done
                     ? "bg-success text-background"
-                    : "bg-primary/15 text-primary"
+                    : "bg-gold-soft text-primary"
                 }`}
                 aria-hidden="true"
               >
@@ -363,7 +363,7 @@ export default function Cerfa2086Generator({ cryptoId: _cryptoId }: Props) {
               </span>
               <h3 className="font-bold text-fg">{step.title}</h3>
             </div>
-            <p className="text-xs text-fg/65 leading-relaxed">{step.desc}</p>
+            <p className="text-xs text-muted leading-relaxed">{step.desc}</p>
           </li>
         ))}
       </ol>
@@ -465,7 +465,7 @@ export default function Cerfa2086Generator({ cryptoId: _cryptoId }: Props) {
             </div>
           ))}
         </div>
-        <p className="mt-3 text-xs text-fg/55">
+        <p className="mt-3 text-xs text-fg-4">
           Gardez tout votre historique dans le même fichier, années précédentes comprises : la ligne 220
           additionne tous vos achats depuis le premier, et la ligne 221 tient compte de vos ventes passées.
         </p>
@@ -493,7 +493,7 @@ export default function Cerfa2086Generator({ cryptoId: _cryptoId }: Props) {
         </label>
         <label className="block">
           <span className="text-sm font-semibold text-fg">
-            Nom du contribuable <span className="text-fg/65 font-normal">(optionnel)</span>
+            Nom du contribuable <span className="text-muted font-normal">(optionnel)</span>
           </span>
           <input
             type="text"
@@ -542,10 +542,10 @@ export default function Cerfa2086Generator({ cryptoId: _cryptoId }: Props) {
         <p className="mt-3 font-semibold text-fg">
           Déposez votre fichier (le modèle CSV rempli)
         </p>
-        <p className="mt-1 text-xs text-fg/60">
+        <p className="mt-1 text-xs text-fg-4">
           ou cliquez pour parcourir — max 5 Mo, 1000 lignes
         </p>
-        <p className="mt-3 text-xs text-fg/55">
+        <p className="mt-3 text-xs text-fg-4">
           Colonnes attendues :{" "}
           <code className="font-mono">date, type, asset, quantity, price_eur, fees, exchange</code>
           {" "}· sur les ventes, <code className="font-mono">portfolio_value_eur</code> (valeur du
@@ -665,10 +665,10 @@ export default function Cerfa2086Generator({ cryptoId: _cryptoId }: Props) {
               </dl>
 
               {preview.foreignExchanges.length > 0 && (
-                <div className="text-xs text-fg/65">
+                <div className="text-xs text-muted">
                   <strong className="text-fg/80">Plateformes étrangères détectées :</strong>{" "}
                   {preview.foreignExchanges.join(", ")}
-                  <span className="ml-2 text-fg/65">
+                  <span className="ml-2 text-muted">
                     (une fiche de préparation 3916-bis par compte, à recopier dans votre déclaration en ligne)
                   </span>
                 </div>
@@ -870,7 +870,7 @@ function PreviewRow({ label, value, tone = "default", strong = false }: PreviewR
         : tone === "primary"
           ? "text-primary"
           : tone === "muted"
-            ? "text-fg/60"
+            ? "text-fg-4"
             : "text-fg";
   return (
     <div className="flex items-center justify-between gap-3 rounded-lg border border-border/60 bg-elevated/40 px-3 py-2">

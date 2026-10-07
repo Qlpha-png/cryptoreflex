@@ -40,7 +40,7 @@ import { FOOTER_KEY_LINKS, FOOTER_LEGAL, visibleSections } from "@/lib/nav";
  */
 
 const FOOTER_LINK_CLASS =
-  "group/flink inline-flex items-center gap-1.5 hover:text-white hover:translate-x-0.5 transition-all duration-150 rounded " +
+  "group/flink inline-flex items-center gap-1.5 hover:text-fg hover:translate-x-0.5 transition-all duration-150 rounded " +
   "focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background";
 
 const CURRENT_YEAR = new Date().getFullYear();
@@ -100,7 +100,7 @@ export default async function Footer() {
               conso). Reformulé en "MiCA · info publique" qui décrit
               factuellement notre rôle d'éditeur (pas régulé directement,
               mais traite de la régulation MiCA). */}
-          <span className="inline-flex items-center gap-1 rounded-full border border-emerald-500/30 bg-emerald-500/5 px-2 py-0.5 text-xs font-mono font-bold text-emerald-300/90 uppercase tracking-wider">
+          <span className="inline-flex items-center gap-1 rounded-full border border-success-border bg-success-soft px-2 py-0.5 text-xs font-mono font-bold text-success uppercase tracking-wider">
             <ShieldCheck className="h-2.5 w-2.5" strokeWidth={2.5} aria-hidden="true" focusable="false" />
             MiCA · info publique
           </span>
@@ -114,7 +114,7 @@ export default async function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8">
           {/* Col Brand (lg:col-span-3) */}
           <div className="lg:col-span-3">
-            <Logo variant="full" height={36} className="mb-3" asLink={false} title="Cryptoreflex" />
+            <Logo variant="full" height={30} className="mb-3" asLink={false} title="Cryptoreflex" />
             <p className="text-sm text-fg/80 max-w-md">
               Votre guide pour naviguer dans l&apos;univers crypto. Comparatifs de plateformes,
               guides pour débutants et outils gratuits — sans jargon.
@@ -155,7 +155,7 @@ export default async function Footer() {
 
           {/* L'essentiel : les 4 liens les plus utiles */}
           <nav aria-labelledby="footer-key-heading" className="lg:col-span-2">
-            <h3 id="footer-key-heading" className="font-semibold mb-3 text-white/90 text-sm">L&apos;essentiel</h3>
+            <h3 id="footer-key-heading" className="font-semibold mb-3 text-fg text-sm">L&apos;essentiel</h3>
             <ul className="space-y-2 text-sm text-fg/75">
               {FOOTER_KEY_LINKS.map((link) => (
                 <li key={link.href}>
@@ -170,7 +170,7 @@ export default async function Footer() {
             {GROUPS.map((group) => (
               <nav key={group.id} aria-labelledby={`footer-${group.id}`}>
                 <h3 id={`footer-${group.id}`} className="font-semibold text-sm md:mb-3">
-                  <Link href={group.href} className="text-white/90 hover:text-white">{group.title}</Link>
+                  <Link href={group.href} className="text-fg hover:text-link-hover">{group.title}</Link>
                 </h3>
                 <ul className="hidden md:block space-y-2 text-sm text-fg/75">
                   {group.links.slice(0, MAX_LINKS).map((link) => (
@@ -193,7 +193,7 @@ export default async function Footer() {
           <ul className="flex flex-wrap gap-x-4 gap-y-2 text-xs text-fg/70">
             {FOOTER_LEGAL.map((link) => (
               <li key={link.href}>
-                <Link href={link.href} className="hover:text-white">{link.label}</Link>
+                <Link href={link.href} className="hover:text-fg">{link.label}</Link>
               </li>
             ))}
           </ul>
@@ -232,9 +232,9 @@ export default async function Footer() {
           </div>
           <p
             role="note"
-            className="leading-relaxed border border-amber-500/30 bg-amber-500/5 rounded-lg p-3 text-xs sm:text-xs text-amber-100"
+            className="leading-relaxed border border-warning-border bg-warning-soft rounded-lg p-3 text-xs sm:text-xs text-fg-2"
           >
-            <strong className="text-amber-200">
+            <strong className="text-warning">
               <span aria-hidden="true">⚠️ </span>Avertissement légal
             </strong>{" "}
             — L&apos;investissement en cryptoactifs comporte un risque élevé de perte partielle ou
@@ -246,7 +246,7 @@ export default async function Footer() {
             « Publicité », sont rémunérés (affiliation ou parrainage personnel du fondateur) —{" "}
             <Link
               href="/transparence"
-              className="underline hover:text-white rounded
+              className="underline hover:text-fg rounded
                          focus:outline-none focus-visible:ring-2 focus-visible:ring-primary
                          focus-visible:ring-offset-2 focus-visible:ring-offset-background"
             >

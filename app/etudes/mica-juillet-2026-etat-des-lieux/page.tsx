@@ -70,10 +70,10 @@ const NOT_AUTHORIZED = PLATFORMS.filter((p) => !isAvailableFr(p)).sort((a, b) =>
 const AMF_AUTHORIZED = AUTHORIZED.filter((p) => p.mica.amfRegistration);
 
 const STATS = [
-  { value: String(PLATFORMS.length), label: "plateformes suivies par Cryptoreflex", color: "text-cyan-400" },
-  { value: String(AUTHORIZED.length), label: "agréées MiCA avec accès à la France", color: "text-emerald-400" },
+  { value: String(PLATFORMS.length), label: "plateformes suivies par Cryptoreflex", color: "text-info" },
+  { value: String(AUTHORIZED.length), label: "agréées MiCA avec accès à la France", color: "text-success" },
   { value: String(NOT_AUTHORIZED.length), label: "non autorisées en France", color: "text-primary-glow" },
-  { value: String(AMF_AUTHORIZED.length), label: "agréées directement par l'AMF", color: "text-indigo-400" },
+  { value: String(AMF_AUTHORIZED.length), label: "agréées directement par l'AMF", color: "text-primary" },
 ];
 
 const TOC = [
@@ -158,22 +158,22 @@ const jsonLd: JsonLd = graphSchema([breadcrumb, article, faq]);
 
 export default function MicaStudyPage() {
   return (
-    <div className="min-h-screen bg-[#05060A] text-slate-100">
+    <div className="min-h-screen bg-background text-fg">
       <StructuredData id="mica-study-jsonld" data={jsonLd} />
 
       {/* Hero */}
       <section className="border-b border-fg-max/5 bg-gradient-to-b from-warning/5 to-transparent">
         <div className="mx-auto max-w-4xl px-4 py-12 sm:px-6 lg:px-8">
-          <nav className="mb-6 text-sm text-slate-400" aria-label="Fil d'Ariane">
-            <Link href="/" className="hover:text-cyan-300">
+          <nav className="mb-6 text-sm text-muted" aria-label="Fil d'Ariane">
+            <Link href="/" className="hover:text-info">
               Accueil
             </Link>
-            <span className="mx-2 text-slate-600">/</span>
-            <Link href="/etudes" className="hover:text-cyan-300">
+            <span className="mx-2 text-fg-4">/</span>
+            <Link href="/etudes" className="hover:text-info">
               Études
             </Link>
-            <span className="mx-2 text-slate-600">/</span>
-            <span className="text-slate-300">MiCA juillet 2026</span>
+            <span className="mx-2 text-fg-4">/</span>
+            <span className="text-fg-2">MiCA juillet 2026</span>
           </nav>
 
           <div className="inline-flex items-center gap-2 rounded-full border border-warning/30 bg-warning/10 px-3 py-1 text-xs font-medium text-primary-soft">
@@ -185,7 +185,7 @@ export default function MicaStudyPage() {
             MiCA juillet 2026 :<br className="hidden sm:block" /> état des lieux des plateformes crypto en France
           </h1>
 
-          <div className="mt-5 flex flex-wrap items-center gap-3 text-xs text-slate-400">
+          <div className="mt-5 flex flex-wrap items-center gap-3 text-xs text-muted">
             <span className="inline-flex items-center gap-1.5">
               <Calendar className="h-3.5 w-3.5" />
               Publié le {frDate(PUBLISHED_DATE)}
@@ -196,23 +196,23 @@ export default function MicaStudyPage() {
             <span className="inline-flex items-center gap-1.5">Mis à jour le {frDate(LAST_UPDATED)}</span>
             <span className="inline-flex items-center gap-1.5">
               Auteur :{" "}
-              <Link href="/a-propos" className="text-cyan-300 hover:underline">
+              <Link href="/a-propos" className="text-info hover:underline">
                 Kevin Voisin
               </Link>
             </span>
           </div>
 
-          <div role="note" className="mt-6 rounded-xl border border-cyan-500/30 bg-cyan-500/[0.06] p-4 text-sm text-slate-200 leading-relaxed">
-            <strong className="text-cyan-200">Mise à jour du {frDate(LAST_UPDATED)}.</strong> La première version de cette étude
+          <div role="note" className="mt-6 rounded-xl border border-info/30 bg-info/[0.06] p-4 text-sm text-fg-2 leading-relaxed">
+            <strong className="text-info">Mise à jour du {frDate(LAST_UPDATED)}.</strong> La première version de cette étude
             décrivait la situation avant la fin de la période transitoire. Elle a été entièrement réécrite : tous les statuts
             ci-dessous viennent du registre MiCA de l&apos;ESMA (données au {REGISTER_AS_OF}) et de la liste blanche de l&apos;AMF.
           </div>
 
-          <p className="mt-6 text-lg text-slate-300 leading-relaxed">
+          <p className="mt-6 text-lg text-fg-2 leading-relaxed">
             Depuis le 1er juillet 2026, une plateforme crypto doit être agréée MiCA, avec un accès à la France, pour servir des
             clients français. Sur les {PLATFORMS.length} plateformes que nous suivons, {AUTHORIZED.length} remplissent cette
             condition et {NOT_AUTHORIZED.length} ne la remplissent pas. Données réutilisables sous licence{" "}
-            <Link href="/api-publique" className="text-cyan-300 underline-offset-2 hover:underline">
+            <Link href="/api-publique" className="text-info underline-offset-2 hover:underline">
               CC-BY 4.0
             </Link>
             .
@@ -222,7 +222,7 @@ export default function MicaStudyPage() {
             {STATS.map((s) => (
               <div key={s.label} className="rounded-xl border border-fg-max/10 bg-fg-max/[0.03] p-4">
                 <div className={`text-2xl font-bold ${s.color}`}>{s.value}</div>
-                <div className="mt-1 text-xs text-slate-400 leading-snug">{s.label}</div>
+                <div className="mt-1 text-xs text-muted leading-snug">{s.label}</div>
               </div>
             ))}
           </div>
@@ -232,12 +232,12 @@ export default function MicaStudyPage() {
       {/* TOC */}
       <section className="border-b border-fg-max/5 bg-fg-max/[0.02]">
         <div className="mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:px-8">
-          <h2 className="text-sm font-semibold uppercase tracking-wider text-slate-400">Sommaire</h2>
+          <h2 className="text-sm font-semibold uppercase tracking-wider text-muted">Sommaire</h2>
           <ol className="mt-4 grid gap-2 sm:grid-cols-2 text-sm">
             {TOC.map((item) => (
               <li key={item.id}>
-                <a href={`#${item.id}`} className="inline-flex items-center gap-2 text-slate-300 hover:text-cyan-300 transition">
-                  <ChevronRight className="h-3.5 w-3.5 text-cyan-500" />
+                <a href={`#${item.id}`} className="inline-flex items-center gap-2 text-fg-2 hover:text-info transition">
+                  <ChevronRight className="h-3.5 w-3.5 text-info" />
                   {item.label}
                 </a>
               </li>
@@ -247,12 +247,12 @@ export default function MicaStudyPage() {
       </section>
 
       {/* Body */}
-      <article className="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8 prose prose-invert prose-slate prose-headings:tracking-tight prose-headings:text-fg-max prose-p:text-slate-300 prose-li:text-slate-300 prose-a:text-cyan-300 prose-strong:text-fg-max">
+      <article className="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8 prose prose-invert prose-slate prose-headings:tracking-tight prose-headings:text-fg-max prose-p:text-fg-2 prose-li:text-fg-2 prose-a:text-info prose-strong:text-fg-max">
         <section id="tldr">
           <h2 className="text-2xl font-bold tracking-tight">Résumé</h2>
           <ul className="mt-4 space-y-2 list-none p-0">
             <li className="flex items-start gap-2">
-              <CheckCircle2 className="mt-1 h-4 w-4 shrink-0 text-emerald-400" />
+              <CheckCircle2 className="mt-1 h-4 w-4 shrink-0 text-success" />
               <span>
                 <strong>{AUTHORIZED.length} plateformes</strong> sur {PLATFORMS.length} sont agréées MiCA avec un accès à la
                 France, dont {AMF_AUTHORIZED.length} agréées directement par l&apos;AMF.
@@ -266,14 +266,14 @@ export default function MicaStudyPage() {
               </span>
             </li>
             <li className="flex items-start gap-2">
-              <ShieldCheck className="mt-1 h-4 w-4 shrink-0 text-cyan-400" />
+              <ShieldCheck className="mt-1 h-4 w-4 shrink-0 text-info" />
               <span>
                 Côté stablecoins, <strong>USDC, EURC et EURCV</strong> ont un émetteur inscrit au registre de l&apos;ESMA ;
                 USDT n&apos;en a pas.
               </span>
             </li>
             <li className="flex items-start gap-2">
-              <BookOpen className="mt-1 h-4 w-4 shrink-0 text-indigo-400" />
+              <BookOpen className="mt-1 h-4 w-4 shrink-0 text-primary" />
               <span>
                 L&apos;ancien statut <strong>PSAN</strong> ne vaut plus autorisation : seul compte l&apos;agrément{" "}
                 <strong>MiCA (CASP)</strong>.
@@ -305,28 +305,28 @@ export default function MicaStudyPage() {
           </p>
           <div className="my-6 not-prose space-y-3">
             {AUTHORIZED.map((p) => (
-              <div key={p.id} className="rounded-xl border border-emerald-500/15 bg-emerald-500/[0.04] p-5">
+              <div key={p.id} className="rounded-xl border border-success/15 bg-success/[0.04] p-5">
                 <div className="flex flex-wrap items-center gap-3">
-                  <CheckCircle2 className="h-5 w-5 text-emerald-400" />
+                  <CheckCircle2 className="h-5 w-5 text-success" />
                   <h3 className="text-lg font-bold text-fg-max">
-                    <Link href={`/avis/${p.id}`} className="hover:text-cyan-300">
+                    <Link href={`/avis/${p.id}`} className="hover:text-info">
                       {p.name}
                     </Link>
                   </h3>
-                  {p.mica.legalEntity && <span className="text-xs text-slate-400">{p.mica.legalEntity}</span>}
+                  {p.mica.legalEntity && <span className="text-xs text-muted">{p.mica.legalEntity}</span>}
                 </div>
                 <div className="mt-3 grid gap-2 sm:grid-cols-3 text-sm">
                   <div>
-                    <div className="text-xs uppercase tracking-wider text-slate-500">Autorité</div>
-                    <div className="text-slate-200">{p.mica.authority ?? "—"}</div>
+                    <div className="text-xs uppercase tracking-wider text-fg-4">Autorité</div>
+                    <div className="text-fg-2">{p.mica.authority ?? "—"}</div>
                   </div>
                   <div>
-                    <div className="text-xs uppercase tracking-wider text-slate-500">Agrément MiCA</div>
-                    <div className="text-slate-200">{frDate(p.mica.registrationDate)}</div>
+                    <div className="text-xs uppercase tracking-wider text-fg-4">Agrément MiCA</div>
+                    <div className="text-fg-2">{frDate(p.mica.registrationDate)}</div>
                   </div>
                   <div>
-                    <div className="text-xs uppercase tracking-wider text-slate-500">Accès à la France</div>
-                    <div className="text-slate-200">
+                    <div className="text-xs uppercase tracking-wider text-fg-4">Accès à la France</div>
+                    <div className="text-fg-2">
                       {p.mica.amfRegistration ? `Agrément AMF n° ${p.mica.amfRegistration}` : "Passeport européen"}
                     </div>
                   </div>
@@ -348,12 +348,12 @@ export default function MicaStudyPage() {
                 <div className="flex flex-wrap items-center gap-3">
                   <XCircle className="h-5 w-5 text-primary-glow" />
                   <h3 className="text-lg font-bold text-fg-max">
-                    <Link href={`/avis/${p.id}`} className="hover:text-cyan-300">
+                    <Link href={`/avis/${p.id}`} className="hover:text-info">
                       {p.name}
                     </Link>
                   </h3>
                 </div>
-                <p className="mt-2 text-sm text-slate-300 leading-relaxed">{p.mica.status}</p>
+                <p className="mt-2 text-sm text-fg-2 leading-relaxed">{p.mica.status}</p>
               </div>
             ))}
           </div>
@@ -369,13 +369,13 @@ export default function MicaStudyPage() {
             {STABLECOINS.map((s) => (
               <div
                 key={s.name}
-                className={`rounded-xl border p-5 ${s.ok ? "border-emerald-500/15 bg-emerald-500/[0.04]" : "border-warning/20 bg-warning/[0.04]"}`}
+                className={`rounded-xl border p-5 ${s.ok ? "border-success/15 bg-success/[0.04]" : "border-warning/20 bg-warning/[0.04]"}`}
               >
                 <div className="flex items-center gap-3">
-                  {s.ok ? <CheckCircle2 className="h-5 w-5 text-emerald-400" /> : <XCircle className="h-5 w-5 text-primary-glow" />}
+                  {s.ok ? <CheckCircle2 className="h-5 w-5 text-success" /> : <XCircle className="h-5 w-5 text-primary-glow" />}
                   <h3 className="text-base font-bold text-fg-max">{s.name}</h3>
                 </div>
-                <p className="mt-2 text-sm text-slate-300 leading-relaxed">{s.detail}</p>
+                <p className="mt-2 text-sm text-fg-2 leading-relaxed">{s.detail}</p>
               </div>
             ))}
           </div>
@@ -413,7 +413,7 @@ export default function MicaStudyPage() {
                   <span>{item.q}</span>
                   <span className="text-primary-soft transition group-open:rotate-45 mt-0.5 shrink-0">+</span>
                 </summary>
-                <p className="mt-3 text-sm text-slate-300 leading-relaxed">{item.a}</p>
+                <p className="mt-3 text-sm text-fg-2 leading-relaxed">{item.a}</p>
               </details>
             ))}
           </div>
@@ -430,8 +430,8 @@ export default function MicaStudyPage() {
           <ul className="not-prose mt-4 space-y-2">
             {SOURCES.map((s) => (
               <li key={s.url} className="flex items-start gap-2 text-sm">
-                <ExternalLink className="mt-1 h-3.5 w-3.5 shrink-0 text-cyan-400" />
-                <a href={s.url} target="_blank" rel="noreferrer noopener" className="text-cyan-300 hover:underline">
+                <ExternalLink className="mt-1 h-3.5 w-3.5 shrink-0 text-info" />
+                <a href={s.url} target="_blank" rel="noreferrer noopener" className="text-info hover:underline">
                   {s.name}
                 </a>
               </li>
@@ -444,12 +444,12 @@ export default function MicaStudyPage() {
           </p>
           <p className="mt-4 text-sm">
             <strong>Une erreur ?</strong> Écrivez-nous :{" "}
-            <a href={`mailto:${BRAND.partnersEmail}`} className="text-cyan-300">
+            <a href={`mailto:${BRAND.partnersEmail}`} className="text-info">
               {BRAND.partnersEmail}
             </a>
             .
           </p>
-          <p className="mt-4 text-xs text-slate-500 leading-relaxed">
+          <p className="mt-4 text-xs text-fg-4 leading-relaxed">
             <strong>Avertissement.</strong> Cette étude est publiée à titre d&apos;information. Cryptoreflex ne fournit ni conseil
             en investissement ni conseil juridique. Investir dans les crypto-actifs comporte un risque de perte en capital.
           </p>
@@ -475,22 +475,22 @@ export default function MicaStudyPage() {
           <div className="mt-8 grid gap-4 sm:grid-cols-2">
             <Link
               href="/outils/verificateur-mica"
-              className="group rounded-2xl border border-fg-max/10 bg-fg-max/[0.02] p-6 text-left hover:border-cyan-500/30 transition"
+              className="group rounded-2xl border border-fg-max/10 bg-fg-max/[0.02] p-6 text-left hover:border-info/30 transition"
             >
-              <h3 className="text-lg font-bold text-fg-max group-hover:text-cyan-300">Vérificateur MiCA</h3>
-              <p className="mt-2 text-sm text-slate-300">Le statut de {getAllMicaPlatforms().length} plateformes et portefeuilles, à partir des registres officiels.</p>
-              <div className="mt-3 inline-flex items-center gap-1.5 text-sm font-medium text-cyan-300">
+              <h3 className="text-lg font-bold text-fg-max group-hover:text-info">Vérificateur MiCA</h3>
+              <p className="mt-2 text-sm text-fg-2">Le statut de {getAllMicaPlatforms().length} plateformes et portefeuilles, à partir des registres officiels.</p>
+              <div className="mt-3 inline-flex items-center gap-1.5 text-sm font-medium text-info">
                 Vérifier une plateforme
                 <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" />
               </div>
             </Link>
             <Link
               href="/comparatif/frais"
-              className="group rounded-2xl border border-fg-max/10 bg-fg-max/[0.02] p-6 text-left hover:border-cyan-500/30 transition"
+              className="group rounded-2xl border border-fg-max/10 bg-fg-max/[0.02] p-6 text-left hover:border-info/30 transition"
             >
-              <h3 className="text-lg font-bold text-fg-max group-hover:text-cyan-300">Comparatif des frais</h3>
-              <p className="mt-2 text-sm text-slate-300">Les frais réels des plateformes autorisées en France, sourcés et datés.</p>
-              <div className="mt-3 inline-flex items-center gap-1.5 text-sm font-medium text-cyan-300">
+              <h3 className="text-lg font-bold text-fg-max group-hover:text-info">Comparatif des frais</h3>
+              <p className="mt-2 text-sm text-fg-2">Les frais réels des plateformes autorisées en France, sourcés et datés.</p>
+              <div className="mt-3 inline-flex items-center gap-1.5 text-sm font-medium text-info">
                 Voir le comparatif
                 <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" />
               </div>

@@ -28,7 +28,12 @@
 // le HTTP cache de Firefox pouvait re-servir un vieux HTML pointant vers
 // d'anciens chunks. no-store garantit un HTML toujours frais ; le bump v4
 // purge tous les caches v3 existants à l'activate.
-const CACHE_VERSION = "v4";
+//
+// 2026-10-07 (lot B2, thème C+ « Encre ») — bump v4 → v5 : nouveau logo, nouvelles couleurs de l'accueil hors ligne.
+// Les images sont servies « cache d'abord, mise à jour silencieuse » : sans ce bump, l'ancien logo et l'ancienne
+// page d'accueil s'afficheraient encore au moins une fois. Les nouveaux fichiers de marque ont de NOUVEAUX noms
+// (public/brand/*-v1.svg) : aucun fichier déjà en cache n'est écrasé.
+const CACHE_VERSION = "v5";
 const STATIC_CACHE = `cryptoreflex-static-${CACHE_VERSION}`;
 const RUNTIME_CACHE = `cryptoreflex-runtime-${CACHE_VERSION}`;
 
@@ -37,12 +42,10 @@ const PRECACHE_URLS = [
   "/",
   "/offline",
   "/manifest.webmanifest",
-  "/icons/icon-192.svg",
-  "/icons/icon-512.svg",
-  "/icons/apple-touch-icon.svg",
-  "/icons/maskable-icon.svg",
-  "/logo.svg",
-  "/logo-mark.svg",
+  "/brand/cr-icon-192-v1.svg",
+  "/brand/cr-icon-512-v1.svg",
+  "/brand/cr-icon-maskable-v1.svg",
+  "/brand/cr-favicon-v1.svg",
 ];
 
 // ------------------- Lifecycle -------------------
@@ -203,8 +206,8 @@ self.addEventListener("push", (event) => {
   const title = data.title || "Cryptoreflex";
   const options = {
     body: data.body || "",
-    icon: data.icon || "/icons/icon-192.svg",
-    badge: "/icons/icon-192.svg",
+    icon: data.icon || "/brand/cr-icon-192-v1.svg",
+    badge: "/brand/cr-icon-192-v1.svg",
     tag: data.tag,
     data: { url: data.url || "/" },
   };

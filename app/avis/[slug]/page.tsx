@@ -203,7 +203,7 @@ function CostTile({ label, cost, normalCase = false }: { label: string; cost: Pu
           <span className="text-base">{purchaseCostText(cost)}</span>
         )}
       </div>
-      <div className="mt-1 text-xs text-fg/60">
+      <div className="mt-1 text-xs text-fg-4">
         sur 1 000 €
         {cost.status === "ok" && (cost.kind === "partiel" || cost.kind === "max-partiel") ? ", plus une marge non publiée" : ""}
         {cost.status !== "non-releve" ? ` · relevé le ${fmtDateFr(cost.date)}` : ""}
@@ -393,7 +393,7 @@ export default function ReviewPage({ params }: Props) {
       : "Non vérifiable";
   const verdictClass =
     v?.verdict === "fiable"
-      ? "bg-accent-green/15 text-accent-green"
+      ? "bg-success-soft text-success"
       : v?.verdict === "douteux"
       ? "bg-primary-glow/15 text-primary-soft"
       : v?.verdict === "indisponible"
@@ -541,7 +541,7 @@ export default function ReviewPage({ params }: Props) {
               placement="avis-sidebar"
               ctaText={ctaLabel(`Aller sur ${p.name}`, "Voir les plateformes autorisées")}
               showCaption={false}
-              className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-primary to-primary-glow px-4 py-3 text-sm font-semibold text-background hover:opacity-90 transition"
+              className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-[22px] bg-action shadow-action px-4 py-3 text-sm font-semibold text-on-action hover:bg-action-hover transition-colors"
             >
               {ctaLabel(`Aller sur ${p.name}`, "Voir les plateformes autorisées")}
               <ExternalLink className="h-4 w-4" />
@@ -699,14 +699,14 @@ export default function ReviewPage({ params }: Props) {
                   <div className="mt-1 text-2xl font-bold text-fg-max tabular-nums">
                     {fmtFr((1000 * p.fees.spotTaker / 100), 2)} €
                   </div>
-                  <div className="mt-1 text-xs text-fg/60">{fmtNb(p.fees.spotTaker)}% sur 1 000 €</div>
+                  <div className="mt-1 text-xs text-fg-4">{fmtNb(p.fees.spotTaker)}% sur 1 000 €</div>
                 </div>
                 <div className="rounded-xl border border-border bg-elevated p-4">
                   <div className="text-xs uppercase tracking-wide text-muted">Ordre limité (maker)</div>
                   <div className="mt-1 text-2xl font-bold text-fg-max tabular-nums">
                     {fmtFr((1000 * p.fees.spotMaker / 100), 2)} €
                   </div>
-                  <div className="mt-1 text-xs text-fg/60">{fmtNb(p.fees.spotMaker)}% sur 1 000 €</div>
+                  <div className="mt-1 text-xs text-fg-4">{fmtNb(p.fees.spotMaker)}% sur 1 000 €</div>
                 </div>
               </div>
               <p className="mt-4 text-xs text-muted leading-relaxed">
@@ -724,7 +724,7 @@ export default function ReviewPage({ params }: Props) {
                     <div className="mt-1 text-2xl font-bold text-fg-max tabular-nums">
                       {fmtFr((1000 * p.fees.instantBuy / 100), 2)} €
                     </div>
-                    <div className="mt-1 text-xs text-fg/60">{fmtNb(p.fees.instantBuy)} % sur 1 000 €, hors frais de paiement par carte</div>
+                    <div className="mt-1 text-xs text-fg-4">{fmtNb(p.fees.instantBuy)} % sur 1 000 €, hors frais de paiement par carte</div>
                   </div>
                 )}
                 <CostTile label={cardCostLabel(p)} cost={cardCost} />
@@ -737,7 +737,7 @@ export default function ReviewPage({ params }: Props) {
                         : `${fmtNb(p.fees.withdrawalFiatSepa)} €`
                       : p.fees.withdrawalFiatSepa}
                   </div>
-                  <div className="mt-1 text-xs text-fg/60">par retrait</div>
+                  <div className="mt-1 text-xs text-fg-4">par retrait</div>
                 </div>
               </div>
               <p className="mt-4 text-xs text-muted leading-relaxed">
@@ -910,7 +910,7 @@ export default function ReviewPage({ params }: Props) {
               platform={p.id}
               placement="avis-mid-content"
               ctaText={ctaLabel(`Ouvrir un compte ${p.name}`, "Comparer les plateformes autorisées")}
-              className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-primary to-primary-glow px-4 py-2.5 text-sm font-semibold text-background hover:opacity-90 transition shrink-0"
+              className="inline-flex items-center gap-2 rounded-[22px] bg-action shadow-action px-4 py-2.5 text-sm font-semibold text-on-action hover:bg-action-hover transition-colors shrink-0"
             >
               {ctaLabel(`Ouvrir un compte ${p.name}`, "Comparer les plateformes autorisées")}
               <ExternalLink className="h-4 w-4" />
@@ -1088,7 +1088,7 @@ export default function ReviewPage({ params }: Props) {
               platform={p.id}
               placement="avis-verdict-final"
               ctaText={ctaLabel(`S'inscrire sur ${p.name}`, "Voir les plateformes autorisées")}
-              className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-primary to-primary-glow px-5 py-3 text-sm font-semibold text-background hover:opacity-90 transition"
+              className="inline-flex items-center gap-2 rounded-[22px] bg-action shadow-action px-5 py-3 text-sm font-semibold text-on-action hover:bg-action-hover transition-colors"
             >
               {ctaLabel(`S'inscrire sur ${p.name}`, "Voir les plateformes autorisées")}
               <ExternalLink className="h-4 w-4" />
@@ -1183,7 +1183,7 @@ export default function ReviewPage({ params }: Props) {
                     </div>
                   </div>
                   <div className="mt-1 text-xs text-muted">{op.tagline}</div>
-                  <div className="mt-3 flex items-center gap-3 text-xs text-fg/60">
+                  <div className="mt-3 flex items-center gap-3 text-xs text-fg-4">
                     <span>Frais : {fmtNb(op.fees.spotTaker)}%</span>
                     <span>·</span>
                     <span>{op.cryptos.totalCount} cryptos</span>

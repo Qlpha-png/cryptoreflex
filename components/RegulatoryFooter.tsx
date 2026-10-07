@@ -44,7 +44,7 @@ export default function RegulatoryFooter({
     >
       <div className="flex items-start gap-3">
         <ShieldCheck
-          className="h-4 w-4 shrink-0 mt-0.5 text-fg/50"
+          className="h-4 w-4 shrink-0 mt-0.5 text-fg-4"
           aria-hidden="true"
         />
         <p>
@@ -82,7 +82,7 @@ export default function RegulatoryFooter({
           {context ? (
             <>
               {" "}
-              <span className="text-fg/60">Contexte : {context}.</span>
+              <span className="text-fg-4">Contexte : {context}.</span>
             </>
           ) : null}
         </p>

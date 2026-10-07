@@ -254,7 +254,7 @@ export default function FiscalToolComparisonTable({
                   key={row.label}
                   className="flex justify-between gap-3 border-b border-border/40 pb-1.5"
                 >
-                  <dt className="text-fg-max/65">{row.label}</dt>
+                  <dt className="text-muted">{row.label}</dt>
                   <dd className="text-right">{formatCell(row.get(tool))}</dd>
                 </div>
               ))}

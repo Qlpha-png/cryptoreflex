@@ -1,7 +1,7 @@
 /* =====================================================================
-   Cryptoreflex — jetons de couleur (phase « legacy » : valeurs actuelles du site, rendu identique)
+   Cryptoreflex — jetons de couleur (phase « encre » : kit C+ — « Encre » par défaut, « Papier » sous [data-theme="light"])
    GÉNÉRÉ par scripts/design/tokens.source.mjs : ne pas modifier à la main.
-   Régénérer : node scripts/design/tokens.source.mjs --phase legacy
+   Régénérer : node scripts/design/tokens.source.mjs --phase encre
    Format canaux « R G B » : rgb(var(--c-x) / <alpha-value>) dans tailwind.config.ts.
    Exceptions (couleur complète, pas d'opacité /NN) : *-soft et *-border des couleurs d'état.
    Polices (lot B1) : fichiers locaux /fonts/cplus-v1/ + replis mesurés (voir REPLIS dans tokens.source.mjs).
@@ -138,71 +138,73 @@
   line-gap-override: 0%;
 }
 
+/* Encre : thème sombre bleu-nuit, rendu par défaut (aucun attribut). */
 :root {
+  color-scheme: dark;
   --font-sans: "Inter", "Inter Fallback", system-ui, sans-serif; /* Texte courant (Tailwind font-sans et font-mono) */
   --font-serif: "Newsreader", "Newsreader Fallback", Georgia, serif; /* Titres éditoriaux (Tailwind font-display et font-serif) */
-  --c-background: 11 13 16; /* Fond de page */
-  --c-surface: 22 25 31; /* Cartes, panneaux */
-  --c-elevated: 31 36 44; /* Menus, popovers */
-  --c-border: 38 43 51; /* Filets */
-  --c-fg: 244 245 247; /* Texte principal */
-  --c-muted: 176 183 195; /* Texte secondaire (aussi --color-muted depuis A1 : fin de la désynchronisation) */
-  --c-primary: 245 165 36; /* Or de marque */
-  --c-primary-glow: 251 191 36; /* Or clair (163/205 usages en texte) */
-  --c-primary-soft: 252 211 77; /* Or pâle (654/673 usages en texte) */
-  --c-accent-cyan: 14 116 144; /* accent-cyan (accent-green = success, accent-rose = danger : valeurs identiques) */
-  --c-ice: 56 189 248; /* Glacier : données */
-  --c-ice-fg: 125 211 252; /* Glacier : texte */
-  --c-ice-soft: rgba(56, 189, 248, 0.10); /* Glacier : fond doux (couleur complète) */
-  --c-ice-border: rgba(56, 189, 248, 0.35); /* Glacier : bordure (couleur complète) */
-  --c-success: 34 197 94; /* Succès (et accent-green) */
-  --c-success-fg: 134 239 172; /* Succès : texte clair */
-  --c-success-soft: rgba(34, 197, 94, 0.10); /* Succès : fond doux (couleur complète) */
-  --c-success-border: rgba(34, 197, 94, 0.40); /* Succès : bordure (couleur complète) */
-  --c-warning: 245 158 11; /* Alerte */
-  --c-warning-fg: 252 211 77; /* Alerte : texte clair */
-  --c-warning-soft: rgba(245, 158, 11, 0.10); /* Alerte : fond doux (couleur complète) */
-  --c-warning-border: rgba(245, 158, 11, 0.40); /* Alerte : bordure (couleur complète) */
-  --c-danger: 239 68 68; /* Danger (et accent-rose) */
-  --c-danger-fg: 252 165 165; /* Danger : texte clair */
-  --c-danger-soft: rgba(239, 68, 68, 0.10); /* Danger : fond doux (couleur complète) */
-  --c-danger-border: rgba(239, 68, 68, 0.40); /* Danger : bordure (couleur complète) */
-  --c-info: 14 165 233; /* Info */
-  --c-info-fg: 125 211 252; /* Info : texte clair */
-  --c-info-soft: rgba(14, 165, 233, 0.10); /* Info : fond doux (couleur complète) */
-  --c-info-border: rgba(14, 165, 233, 0.40); /* Info : bordure (couleur complète) */
-  --c-fg-max: 255 255 255; /* Blanc pur : cible mécanique du blanc en dur (A4) ; = fg en C+ */
-  --c-scrim: 0 0 0; /* Voiles : cible mécanique du noir en dur (A4) */
-  --c-on-gold: 0 0 0; /* Texte sur aplat or : cible mécanique du noir en dur sur or (A4) */
-  --c-fg-4: 155 163 175; /* Mentions, surtitres : ancienne valeur de --color-muted (.section-eyebrow, .hero-pulse-chip-live) */
-  --c-fg-2: 244 245 247; /* Corps de texte (aujourd'hui = fg) */
-  --c-sunken: 11 13 16; /* Bandes, champs (aujourd'hui = background) */
-  --c-heat-flat: 38 43 51; /* Case neutre de la carte des hausses (approchée : border) */
-  --c-border-strong: 42 47 58; /* Filets appuyés (valeur du pouce de défilement de globals.css) */
-  --c-border-input: 38 43 51; /* Contour des champs (aujourd'hui = border, < 3:1 : corrigé en B2) */
-  --c-primary-hover: 251 191 36; /* Or au survol (= primary-glow) */
-  --c-gold: 245 165 36; /* Or de marque en aplat. PAS de nom Tailwind en A1 : text-gold, border-gold/40, from-gold/10 existent déjà (morts) dans 3 pages d'outils */
-  --c-gold-soft: 34 28 18; /* Fond doux or (≈ bg-primary/10 sur background) */
-  --c-action: 245 165 36; /* Bouton principal (.btn-primary : bg-primary) */
-  --c-action-hover: 251 191 36; /* Bouton principal au survol (hover:bg-primary-glow) */
-  --c-on-action: 11 13 16; /* Texte du bouton principal (text-background) */
-  --c-action-chip: 11 13 16; /* Pastille-flèche du bouton principal (approchée) */
-  --c-on-action-chip: 245 165 36; /* Flèche dans la pastille (approchée) */
-  --c-link: 252 211 77; /* Texte de lien (aujourd'hui surtout text-primary-soft) */
-  --c-link-line: 245 165 36; /* Soulignement de lien (approchée) */
-  --c-link-hover: 251 191 36; /* Lien au survol (approchée) */
-  --c-up: 34 197 94; /* Hausse (= success) */
-  --c-down: 239 68 68; /* Baisse (= danger) */
-  --c-flat: 176 183 195; /* Variation nulle (= muted) */
-  --c-chart-line: 176 183 195; /* Mini-courbe : trait neutre (approchée : muted) */
-  --c-chart-ref: 155 163 175; /* Mini-courbe : référence (approchée : fg-4) */
-  --c-focus: 245 165 36; /* Anneau de focus (focus-visible:ring-primary) */
-  --c-logo-accent: 245 165 36; /* « reflex » du mot-symbole */
+  --c-background: 17 26 43; /* Fond de page (papier doux / encre bleu-nuit) */
+  --c-surface: 23 34 53; /* Cartes, panneaux */
+  --c-elevated: 30 42 64; /* Menus, popovers, en-tête collant */
+  --c-border: 38 50 74; /* Filets décoratifs */
+  --c-fg: 243 237 226; /* Titres, texte fort, encre */
+  --c-muted: 167 173 186; /* Texte secondaire (fg-3) */
+  --c-primary: 244 176 60; /* Or LISIBLE en texte (surtitres, mots accentués) */
+  --c-primary-glow: 248 196 104; /* nom hérité = primary-hover du kit (Or clair (163/205 usages en texte)) */
+  --c-primary-soft: 244 176 60; /* nom hérité = primary du kit (Or pâle (654/673 usages en texte)) */
+  --c-accent-cyan: 147 189 242; /* nom hérité = info du kit (accent-cyan (accent-green = success, accent-rose = danger : valeurs identiques)) */
+  --c-ice: 147 189 242; /* nom hérité = info du kit (Glacier : données) */
+  --c-ice-fg: 147 189 242; /* nom hérité = info du kit (Glacier : texte) */
+  --c-ice-soft: rgba(24, 42, 69, 1); /* nom hérité = info-soft du kit (Glacier : fond doux (couleur complète)) */
+  --c-ice-border: rgba(47, 76, 120, 1); /* nom hérité = info-border du kit (Glacier : bordure (couleur complète)) */
+  --c-success: 108 203 152; /* Succès / MiCA : texte et icône */
+  --c-success-fg: 108 203 152; /* nom hérité = success du kit (Succès : texte clair) */
+  --c-success-soft: rgba(21, 48, 42, 1); /* Succès : fond doux */
+  --c-success-border: rgba(45, 94, 75, 1); /* Succès : bordure */
+  --c-warning: 242 167 102; /* Alerte : texte et icône */
+  --c-warning-fg: 242 167 102; /* nom hérité = warning du kit (Alerte : texte clair) */
+  --c-warning-soft: rgba(56, 39, 23, 1); /* Alerte : fond doux */
+  --c-warning-border: rgba(107, 74, 38, 1); /* Alerte : bordure */
+  --c-danger: 255 149 133; /* Danger / Non disponible : texte et icône */
+  --c-danger-fg: 255 149 133; /* nom hérité = danger du kit (Danger : texte clair) */
+  --c-danger-soft: rgba(58, 30, 37, 1); /* Danger : fond doux */
+  --c-danger-border: rgba(110, 53, 64, 1); /* Danger : bordure */
+  --c-info: 147 189 242; /* Info : texte et icône */
+  --c-info-fg: 147 189 242; /* nom hérité = info du kit (Info : texte clair) */
+  --c-info-soft: rgba(24, 42, 69, 1); /* Info : fond doux */
+  --c-info-border: rgba(47, 76, 120, 1); /* Info : bordure */
+  --c-fg-max: 243 237 226; /* nom hérité = fg du kit (Blanc pur : cible mécanique du blanc en dur (A4) ; = fg en C+) */
+  --c-scrim: 0 0 0; /* Voile des feuilles et dialogues */
+  --c-on-gold: 23 32 51; /* Texte/icône sur aplat or */
+  --c-fg-4: 139 147 163; /* Mentions, légendes, aides (≥ 4,5:1 sur tous les fonds) */
+  --c-fg-2: 210 205 195; /* Corps de texte */
+  --c-sunken: 12 19 34; /* Bandes, champs, zébrures, pistes de jauge */
+  --c-heat-flat: 52 66 94; /* Case neutre de la carte des hausses */
+  --c-border-strong: 52 66 94; /* Filets appuyés, séparateurs de tableau */
+  --c-border-input: 109 122 147; /* Contour des champs et cases (≥ 3:1, WCAG 1.4.11) */
+  --c-primary-hover: 248 196 104; /* Or lisible au survol */
+  --c-gold: 245 165 36; /* Or de marque en APLAT seulement — jamais en texte sur clair */
+  --c-gold-soft: 58 46 22; /* Fond doux or (badge Nouveauté, surlignage) */
+  --c-action: 245 165 36; /* Bouton principal : encre sur papier, or sur encre */
+  --c-action-hover: 247 181 77; /* Bouton principal au survol */
+  --c-on-action: 23 32 51; /* Texte du bouton principal */
+  --c-action-chip: 23 32 51; /* Pastille-flèche du bouton principal */
+  --c-on-action-chip: 245 165 36; /* Flèche dans la pastille */
+  --c-link: 243 237 226; /* Texte de lien (toujours souligné) */
+  --c-link-line: 245 165 36; /* Soulignement de lien (≥ 3:1 contre le fond) */
+  --c-link-hover: 248 196 104; /* Lien au survol */
+  --c-up: 108 203 152; /* Hausse (toujours avec signe + flèche) */
+  --c-down: 255 149 133; /* Baisse (toujours avec signe − + flèche) */
+  --c-flat: 167 173 186; /* Variation nulle ou indisponible */
+  --c-chart-line: 167 173 186; /* Mini-courbe : trait NEUTRE (jamais vert/or) */
+  --c-chart-ref: 109 122 147; /* Mini-courbe : ligne de référence (cours il y a 7 j) */
+  --c-focus: 244 176 60; /* Anneau de focus (3 px, décalé de 2 px) */
+  --c-logo-accent: 245 165 36; /* « reflex » du mot-symbole (logo : exempté WCAG, gardé ≥ 3:1) */
   --c-logo-reflet: 245 165 36; /* Reflets de l'emblème */
-  --c-logo-plate: 244 245 247; /* Plaque des logos (approchée : fg) */
-  --c-on-plate: 11 13 16; /* Monogramme sur la plaque (approchée : background) */
-  --c-plate-ink: 11 13 16; /* Plaque encre des logos blancs (approchée : background) */
-  --c-scroll-shadow: 0 0 0; /* Ombre de défilement horizontal */
+  --c-logo-plate: 217 211 199; /* Plaque des logos de plateformes et de cryptos (jamais blanc pur, atténuée en sombre) */
+  --c-on-plate: 23 32 51; /* Monogramme de repli sur la plaque des logos */
+  --c-plate-ink: 23 32 51; /* Plaque encre des logos blancs */
+  --c-scroll-shadow: 0 0 0; /* Ombre qui signale un défilement horizontal */
   --c-r-c: 154 163 178; /* Commune (aplat) */
   --c-r-pc: 52 211 153; /* Peu commune (aplat) */
   --c-r-r: 56 189 248; /* Rare (aplat) */
@@ -216,6 +218,194 @@
   --c-r-ur-text: 251 146 60; /* Ultra rare (texte) */
   --c-r-l-text: 245 181 42; /* Légendaire (texte) */
   --c-ed-icon: 232 212 154; /* Édition Icônes (texte) */
-  --c-ed-myth: 255 45 111; /* Édition Mythiques (texte) */
+  --c-ed-myth: 255 92 140; /* Édition Mythiques (texte) */
   --c-ed-relic: 247 215 116; /* Édition Reliques (texte) */
+  --c-logo-sun-hi: 255 227 163; /* Soleil de l'emblème : centre clair du dégradé */
+  --c-logo-sun-lo: 219 134 10; /* Soleil de l'emblème : bord sombre du dégradé */
+  --shadow-1: inset 0 1px 0 rgb(255 255 255 / .04), 0 1px 2px rgb(0 0 0 / .35);
+  --shadow-2: inset 0 1px 0 rgb(255 255 255 / .05), 0 16px 34px -14px rgb(0 0 0 / .65);
+  --shadow-3: inset 0 1px 0 rgb(255 255 255 / .06), 0 32px 64px -28px rgb(0 0 0 / .8);
+  --shadow-action: 0 12px 28px -14px rgb(245 165 36 / .55);
+  --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.95 0 0 0 0 0.93 0 0 0 0 0.88 0 0 0 .05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Papier : thème clair, posé seulement par l'interrupteur d'essai ?theme=papier (lib/theme/anti-flash.ts) jusqu'au lot B11. */
+:root[data-theme="light"] {
+  color-scheme: light;
+  --c-background: 240 235 225; /* Fond de page (papier doux / encre bleu-nuit) */
+  --c-surface: 245 241 232; /* Cartes, panneaux */
+  --c-elevated: 247 244 237; /* Menus, popovers, en-tête collant */
+  --c-border: 217 208 191; /* Filets décoratifs */
+  --c-fg: 23 32 51; /* Titres, texte fort, encre */
+  --c-muted: 74 81 99; /* Texte secondaire (fg-3) */
+  --c-primary: 131 87 0; /* Or LISIBLE en texte (surtitres, mots accentués) */
+  --c-primary-glow: 107 71 0; /* nom hérité = primary-hover du kit (Or clair (163/205 usages en texte)) */
+  --c-primary-soft: 131 87 0; /* nom hérité = primary du kit (Or pâle (654/673 usages en texte)) */
+  --c-accent-cyan: 34 83 138; /* nom hérité = info du kit (accent-cyan (accent-green = success, accent-rose = danger : valeurs identiques)) */
+  --c-ice: 34 83 138; /* nom hérité = info du kit (Glacier : données) */
+  --c-ice-fg: 34 83 138; /* nom hérité = info du kit (Glacier : texte) */
+  --c-ice-soft: rgba(221, 228, 236, 1); /* nom hérité = info-soft du kit (Glacier : fond doux (couleur complète)) */
+  --c-ice-border: rgba(169, 188, 211, 1); /* nom hérité = info-border du kit (Glacier : bordure (couleur complète)) */
+  --c-success: 29 106 67; /* Succès / MiCA : texte et icône */
+  --c-success-fg: 29 106 67; /* nom hérité = success du kit (Succès : texte clair) */
+  --c-success-soft: rgba(220, 233, 221, 1); /* Succès : fond doux */
+  --c-success-border: rgba(157, 195, 168, 1); /* Succès : bordure */
+  --c-warning: 143 67 0; /* Alerte : texte et icône */
+  --c-warning-fg: 143 67 0; /* nom hérité = warning du kit (Alerte : texte clair) */
+  --c-warning-soft: rgba(243, 224, 203, 1); /* Alerte : fond doux */
+  --c-warning-border: rgba(224, 185, 143, 1); /* Alerte : bordure */
+  --c-danger: 161 40 29; /* Danger / Non disponible : texte et icône */
+  --c-danger-fg: 161 40 29; /* nom hérité = danger du kit (Danger : texte clair) */
+  --c-danger-soft: rgba(243, 221, 215, 1); /* Danger : fond doux */
+  --c-danger-border: rgba(226, 172, 162, 1); /* Danger : bordure */
+  --c-info: 34 83 138; /* Info : texte et icône */
+  --c-info-fg: 34 83 138; /* nom hérité = info du kit (Info : texte clair) */
+  --c-info-soft: rgba(221, 228, 236, 1); /* Info : fond doux */
+  --c-info-border: rgba(169, 188, 211, 1); /* Info : bordure */
+  --c-fg-max: 23 32 51; /* nom hérité = fg du kit (Blanc pur : cible mécanique du blanc en dur (A4) ; = fg en C+) */
+  --c-scrim: 23 32 51; /* Voile des feuilles et dialogues */
+  --c-on-gold: 23 32 51; /* Texte/icône sur aplat or */
+  --c-fg-4: 90 96 112; /* Mentions, légendes, aides (≥ 4,5:1 sur tous les fonds) */
+  --c-fg-2: 44 52 69; /* Corps de texte */
+  --c-sunken: 231 225 213; /* Bandes, champs, zébrures, pistes de jauge */
+  --c-heat-flat: 231 225 213; /* Case neutre de la carte des hausses */
+  --c-border-strong: 191 178 155; /* Filets appuyés, séparateurs de tableau */
+  --c-border-input: 129 120 106; /* Contour des champs et cases (≥ 3:1, WCAG 1.4.11) */
+  --c-primary-hover: 107 71 0; /* Or lisible au survol */
+  --c-gold: 245 165 36; /* Or de marque en APLAT seulement — jamais en texte sur clair */
+  --c-gold-soft: 243 223 180; /* Fond doux or (badge Nouveauté, surlignage) */
+  --c-action: 23 32 51; /* Bouton principal : encre sur papier, or sur encre */
+  --c-action-hover: 38 50 76; /* Bouton principal au survol */
+  --c-on-action: 247 244 237; /* Texte du bouton principal */
+  --c-action-chip: 245 165 36; /* Pastille-flèche du bouton principal */
+  --c-on-action-chip: 23 32 51; /* Flèche dans la pastille */
+  --c-link: 23 32 51; /* Texte de lien (toujours souligné) */
+  --c-link-line: 168 109 10; /* Soulignement de lien (≥ 3:1 contre le fond) */
+  --c-link-hover: 107 71 0; /* Lien au survol */
+  --c-up: 29 106 67; /* Hausse (toujours avec signe + flèche) */
+  --c-down: 161 40 29; /* Baisse (toujours avec signe − + flèche) */
+  --c-flat: 74 81 99; /* Variation nulle ou indisponible */
+  --c-chart-line: 74 81 99; /* Mini-courbe : trait NEUTRE (jamais vert/or) */
+  --c-chart-ref: 129 120 106; /* Mini-courbe : ligne de référence (cours il y a 7 j) */
+  --c-focus: 131 87 0; /* Anneau de focus (3 px, décalé de 2 px) */
+  --c-logo-accent: 154 97 0; /* « reflex » du mot-symbole (logo : exempté WCAG, gardé ≥ 3:1) */
+  --c-logo-reflet: 227 149 18; /* Reflets de l'emblème */
+  --c-logo-plate: 247 244 237; /* Plaque des logos de plateformes et de cryptos (jamais blanc pur, atténuée en sombre) */
+  --c-on-plate: 23 32 51; /* Monogramme de repli sur la plaque des logos */
+  --c-plate-ink: 23 32 51; /* Plaque encre des logos blancs */
+  --c-scroll-shadow: 23 32 51; /* Ombre qui signale un défilement horizontal */
+  --c-r-c: 154 163 178; /* Commune (aplat) */
+  --c-r-pc: 52 211 153; /* Peu commune (aplat) */
+  --c-r-r: 56 189 248; /* Rare (aplat) */
+  --c-r-sr: 167 139 250; /* Super rare (aplat) */
+  --c-r-ur: 251 146 60; /* Ultra rare (aplat) */
+  --c-r-l: 245 181 42; /* Légendaire (aplat) */
+  --c-r-c-text: 89 97 111; /* Commune (texte) */
+  --c-r-pc-text: 18 110 76; /* Peu commune (texte) */
+  --c-r-r-text: 11 99 144; /* Rare (texte) */
+  --c-r-sr-text: 101 68 184; /* Super rare (texte) */
+  --c-r-ur-text: 160 70 11; /* Ultra rare (texte) */
+  --c-r-l-text: 127 90 16; /* Légendaire (texte) */
+  --c-ed-icon: 110 87 24; /* Édition Icônes (texte) */
+  --c-ed-myth: 176 18 74; /* Édition Mythiques (texte) */
+  --c-ed-relic: 115 89 12; /* Édition Reliques (texte) */
+  --c-logo-sun-hi: 255 227 163; /* Soleil de l'emblème : centre clair du dégradé */
+  --c-logo-sun-lo: 219 134 10; /* Soleil de l'emblème : bord sombre du dégradé */
+  --shadow-1: 0 1px 2px rgb(23 32 51 / .06), 0 1px 1px rgb(23 32 51 / .04);
+  --shadow-2: 0 1px 2px rgb(23 32 51 / .05), 0 14px 32px -14px rgb(23 32 51 / .22);
+  --shadow-3: 0 2px 6px rgb(23 32 51 / .06), 0 30px 60px -28px rgb(23 32 51 / .38);
+  --shadow-action: 0 12px 24px -14px rgb(23 32 51 / .65);
+  --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.09 0 0 0 0 0.13 0 0 0 0 0.2 0 0 0 .07 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Encre forcée localement (.theme-encre, reprise B2) : blocs dessinés pour un fond sombre quel que soit le thème
+   (carte des hausses aux cases sombres, pastilles posées sur une photo). Sous Papier, ils gardent les valeurs Encre
+   (texte, focus, info-bulles) ; sous Encre, la classe ne change rien. :where() = spécificité nulle : une classe de
+   couleur posée sur le même élément (text-warning…) garde la main sur la couleur par défaut. */
+:where(:root[data-theme="light"] .theme-encre) {
+  color-scheme: dark;
+  color: rgb(var(--c-fg));
+  --c-background: 17 26 43; /* Fond de page (papier doux / encre bleu-nuit) */
+  --c-surface: 23 34 53; /* Cartes, panneaux */
+  --c-elevated: 30 42 64; /* Menus, popovers, en-tête collant */
+  --c-border: 38 50 74; /* Filets décoratifs */
+  --c-fg: 243 237 226; /* Titres, texte fort, encre */
+  --c-muted: 167 173 186; /* Texte secondaire (fg-3) */
+  --c-primary: 244 176 60; /* Or LISIBLE en texte (surtitres, mots accentués) */
+  --c-primary-glow: 248 196 104; /* nom hérité = primary-hover du kit (Or clair (163/205 usages en texte)) */
+  --c-primary-soft: 244 176 60; /* nom hérité = primary du kit (Or pâle (654/673 usages en texte)) */
+  --c-accent-cyan: 147 189 242; /* nom hérité = info du kit (accent-cyan (accent-green = success, accent-rose = danger : valeurs identiques)) */
+  --c-ice: 147 189 242; /* nom hérité = info du kit (Glacier : données) */
+  --c-ice-fg: 147 189 242; /* nom hérité = info du kit (Glacier : texte) */
+  --c-ice-soft: rgba(24, 42, 69, 1); /* nom hérité = info-soft du kit (Glacier : fond doux (couleur complète)) */
+  --c-ice-border: rgba(47, 76, 120, 1); /* nom hérité = info-border du kit (Glacier : bordure (couleur complète)) */
+  --c-success: 108 203 152; /* Succès / MiCA : texte et icône */
+  --c-success-fg: 108 203 152; /* nom hérité = success du kit (Succès : texte clair) */
+  --c-success-soft: rgba(21, 48, 42, 1); /* Succès : fond doux */
+  --c-success-border: rgba(45, 94, 75, 1); /* Succès : bordure */
+  --c-warning: 242 167 102; /* Alerte : texte et icône */
+  --c-warning-fg: 242 167 102; /* nom hérité = warning du kit (Alerte : texte clair) */
+  --c-warning-soft: rgba(56, 39, 23, 1); /* Alerte : fond doux */
+  --c-warning-border: rgba(107, 74, 38, 1); /* Alerte : bordure */
+  --c-danger: 255 149 133; /* Danger / Non disponible : texte et icône */
+  --c-danger-fg: 255 149 133; /* nom hérité = danger du kit (Danger : texte clair) */
+  --c-danger-soft: rgba(58, 30, 37, 1); /* Danger : fond doux */
+  --c-danger-border: rgba(110, 53, 64, 1); /* Danger : bordure */
+  --c-info: 147 189 242; /* Info : texte et icône */
+  --c-info-fg: 147 189 242; /* nom hérité = info du kit (Info : texte clair) */
+  --c-info-soft: rgba(24, 42, 69, 1); /* Info : fond doux */
+  --c-info-border: rgba(47, 76, 120, 1); /* Info : bordure */
+  --c-fg-max: 243 237 226; /* nom hérité = fg du kit (Blanc pur : cible mécanique du blanc en dur (A4) ; = fg en C+) */
+  --c-scrim: 0 0 0; /* Voile des feuilles et dialogues */
+  --c-on-gold: 23 32 51; /* Texte/icône sur aplat or */
+  --c-fg-4: 139 147 163; /* Mentions, légendes, aides (≥ 4,5:1 sur tous les fonds) */
+  --c-fg-2: 210 205 195; /* Corps de texte */
+  --c-sunken: 12 19 34; /* Bandes, champs, zébrures, pistes de jauge */
+  --c-heat-flat: 52 66 94; /* Case neutre de la carte des hausses */
+  --c-border-strong: 52 66 94; /* Filets appuyés, séparateurs de tableau */
+  --c-border-input: 109 122 147; /* Contour des champs et cases (≥ 3:1, WCAG 1.4.11) */
+  --c-primary-hover: 248 196 104; /* Or lisible au survol */
+  --c-gold: 245 165 36; /* Or de marque en APLAT seulement — jamais en texte sur clair */
+  --c-gold-soft: 58 46 22; /* Fond doux or (badge Nouveauté, surlignage) */
+  --c-action: 245 165 36; /* Bouton principal : encre sur papier, or sur encre */
+  --c-action-hover: 247 181 77; /* Bouton principal au survol */
+  --c-on-action: 23 32 51; /* Texte du bouton principal */
+  --c-action-chip: 23 32 51; /* Pastille-flèche du bouton principal */
+  --c-on-action-chip: 245 165 36; /* Flèche dans la pastille */
+  --c-link: 243 237 226; /* Texte de lien (toujours souligné) */
+  --c-link-line: 245 165 36; /* Soulignement de lien (≥ 3:1 contre le fond) */
+  --c-link-hover: 248 196 104; /* Lien au survol */
+  --c-up: 108 203 152; /* Hausse (toujours avec signe + flèche) */
+  --c-down: 255 149 133; /* Baisse (toujours avec signe − + flèche) */
+  --c-flat: 167 173 186; /* Variation nulle ou indisponible */
+  --c-chart-line: 167 173 186; /* Mini-courbe : trait NEUTRE (jamais vert/or) */
+  --c-chart-ref: 109 122 147; /* Mini-courbe : ligne de référence (cours il y a 7 j) */
+  --c-focus: 244 176 60; /* Anneau de focus (3 px, décalé de 2 px) */
+  --c-logo-accent: 245 165 36; /* « reflex » du mot-symbole (logo : exempté WCAG, gardé ≥ 3:1) */
+  --c-logo-reflet: 245 165 36; /* Reflets de l'emblème */
+  --c-logo-plate: 217 211 199; /* Plaque des logos de plateformes et de cryptos (jamais blanc pur, atténuée en sombre) */
+  --c-on-plate: 23 32 51; /* Monogramme de repli sur la plaque des logos */
+  --c-plate-ink: 23 32 51; /* Plaque encre des logos blancs */
+  --c-scroll-shadow: 0 0 0; /* Ombre qui signale un défilement horizontal */
+  --c-r-c: 154 163 178; /* Commune (aplat) */
+  --c-r-pc: 52 211 153; /* Peu commune (aplat) */
+  --c-r-r: 56 189 248; /* Rare (aplat) */
+  --c-r-sr: 167 139 250; /* Super rare (aplat) */
+  --c-r-ur: 251 146 60; /* Ultra rare (aplat) */
+  --c-r-l: 245 181 42; /* Légendaire (aplat) */
+  --c-r-c-text: 154 163 178; /* Commune (texte) */
+  --c-r-pc-text: 52 211 153; /* Peu commune (texte) */
+  --c-r-r-text: 56 189 248; /* Rare (texte) */
+  --c-r-sr-text: 167 139 250; /* Super rare (texte) */
+  --c-r-ur-text: 251 146 60; /* Ultra rare (texte) */
+  --c-r-l-text: 245 181 42; /* Légendaire (texte) */
+  --c-ed-icon: 232 212 154; /* Édition Icônes (texte) */
+  --c-ed-myth: 255 92 140; /* Édition Mythiques (texte) */
+  --c-ed-relic: 247 215 116; /* Édition Reliques (texte) */
+  --c-logo-sun-hi: 255 227 163; /* Soleil de l'emblème : centre clair du dégradé */
+  --c-logo-sun-lo: 219 134 10; /* Soleil de l'emblème : bord sombre du dégradé */
+  --shadow-1: inset 0 1px 0 rgb(255 255 255 / .04), 0 1px 2px rgb(0 0 0 / .35);
+  --shadow-2: inset 0 1px 0 rgb(255 255 255 / .05), 0 16px 34px -14px rgb(0 0 0 / .65);
+  --shadow-3: inset 0 1px 0 rgb(255 255 255 / .06), 0 32px 64px -28px rgb(0 0 0 / .8);
+  --shadow-action: 0 12px 28px -14px rgb(245 165 36 / .55);
 }

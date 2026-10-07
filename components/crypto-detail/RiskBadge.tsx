@@ -61,7 +61,7 @@ function RiskTile({ riskLevel }: { riskLevel: RiskLevel }) {
     <div className={`rounded-2xl border p-4 ${colors[riskLevel]}`}>
       <div className="flex items-center gap-2">
         <ShieldAlert className="h-4 w-4" />
-        <div className="text-xs uppercase tracking-wider opacity-80">Niveau de risque</div>
+        <div className="text-xs uppercase tracking-wider">Niveau de risque</div>
       </div>
       <div className="mt-2 text-xl font-bold">{riskLevel}</div>
       <p className="mt-1 text-xs text-fg/70 leading-snug">
@@ -83,10 +83,10 @@ function ReliabilityTile({ score }: { score: number }) {
     <div className={`rounded-2xl border p-4 ${tone}`}>
       <div className="flex items-center gap-2">
         <ShieldCheck className="h-4 w-4" />
-        <div className="text-xs uppercase tracking-wider opacity-80">Score fiabilité</div>
+        <div className="text-xs uppercase tracking-wider">Score fiabilité</div>
       </div>
       <div className="mt-2 font-mono text-2xl font-bold tabular-nums">
-        {score.toLocaleString("fr-FR", { minimumFractionDigits: 1, maximumFractionDigits: 1 })}<span className="text-base text-fg/60">/10</span>
+        {score.toLocaleString("fr-FR", { minimumFractionDigits: 1, maximumFractionDigits: 1 })}<span className="text-base text-fg-4">/10</span>
       </div>
       <p className="mt-1 text-xs text-fg/70 leading-snug">
         Équipe + open source + audits + années + incidents.
@@ -101,7 +101,7 @@ function BeginnerTile({ score }: { score: number }) {
     <div className="rounded-2xl border border-primary/30 bg-primary/5 p-4 text-primary-soft">
       <div className="flex items-center gap-2">
         <AlertTriangle className="h-4 w-4" />
-        <div className="text-xs uppercase tracking-wider opacity-80">Accessible aux débutants</div>
+        <div className="text-xs uppercase tracking-wider">Accessible aux débutants</div>
       </div>
       <div className="mt-2 flex items-center gap-1">
         {dots.map((_, i) => (

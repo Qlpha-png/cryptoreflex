@@ -25,13 +25,15 @@ const dateFr = (t: string) => (/^\d{4}-\d{2}-\d{2}/.test(t) ? new Date(t.slice(0
 export default function UniversCarte({ c, chance }: { c: UCard; chance: number }) {
   const d = universDesc(c.id);
   const col = RC[c.r];
+  // Reprise B2 : TEXTE de rareté sur le jeton r-*-text (= RC en Encre, foncé en Papier) ; col reste la teinte d'aplat.
+  const colTxt = `rgb(var(--c-r-${c.r.toLowerCase()}-text))`;
   const label = CAT_LABEL[c.cat];
   const total = universStats()[c.cat].total;
   const linked = d?.l ? universById(d.l) : undefined;
   const near = universCards().filter((x) => x.cat === c.cat && Math.abs(x.rank - c.rank) <= 4 && x.id !== c.id).sort((a, b) => a.rank - b.rank).slice(0, 8);
   const schema = graphSchema([breadcrumbSchema([{ name: "Accueil", url: "/" }, { name: "Reflex Cards", url: "/cartes" }, { name: c.nom, url: `/cartes/${c.id}` }])]);
   const facts: [string, React.ReactNode][] = [
-    ["Rareté", <span key="r" style={{ color: col }}>{RNAME[c.r]} {PIPS[c.r]}</span>],
+    ["Rareté", <span key="r" style={{ color: colTxt }}>{RNAME[c.r]} {PIPS[c.r]}</span>],
     ["Catégorie (chapitre)", label],
     ["Place dans la catégorie", `n° ${fr(c.rank)} sur ${fr(total)}`],
     ...(sousFr(c) ? ([["Type", sousFr(c)]] as [string, string][]) : []),
@@ -64,17 +66,17 @@ export default function UniversCarte({ c, chance }: { c: UCard; chance: number }
                 </div>
                 <div className="mt-5 text-xl font-extrabold leading-tight">{c.nom}</div>
                 <div className="mt-1 text-xs uppercase tracking-wide text-muted">{c.sym || sousFr(c) || label}</div>
-                <div className="mt-4 rounded-full border px-3 py-1 text-xs font-bold" style={{ borderColor: `${col}66`, background: `${col}1a`, color: col }}>{RNAME[c.r]} {PIPS[c.r]}</div>
+                <div className="mt-4 rounded-full border px-3 py-1 text-xs font-bold" style={{ borderColor: `${col}66`, background: `${col}1a`, color: colTxt }}>{RNAME[c.r]} {PIPS[c.r]}</div>
                 <div className="mt-auto pt-4 text-xs text-muted">{label} · {fr(c.rank)} / {fr(total)}</div>
               </div>
               <p className="mt-3 max-w-[288px] text-center text-xs text-muted">La carte complète, avec sa matière de rareté, se découvre dans le jeu.</p>
             </div>
             <div>
-              <span className="inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-semibold" style={{ borderColor: `${col}66`, background: `${col}1a`, color: col }}>
+              <span className="inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-semibold" style={{ borderColor: `${col}66`, background: `${col}1a`, color: colTxt }}>
                 <Sparkles className="h-3.5 w-3.5" /> Carte {RNAME[c.r]} · {label}
               </span>
               <h1 className="mt-4 text-3xl font-extrabold tracking-tight sm:text-4xl">
-                {c.nom} {c.sym && c.sym.toLowerCase() !== c.nom.toLowerCase() && <span className="text-2xl text-fg/50 sm:text-3xl">({c.sym})</span>}
+                {c.nom} {c.sym && c.sym.toLowerCase() !== c.nom.toLowerCase() && <span className="text-2xl text-fg-4 sm:text-3xl">({c.sym})</span>}
               </h1>
               <p className="mt-3 text-fg/75">
                 {c.nom} est {CAT_INTRO[c.cat]}. Dans Reflex Cards, c&apos;est une carte {RNAME[c.r].toLowerCase()} du chapitre {label} : {c.rank === 1 ? "la plus connue" : `la ${fr(c.rank)}e plus connue`} des {fr(total)} cartes de ce chapitre.
@@ -127,7 +129,7 @@ export default function UniversCarte({ c, chance }: { c: UCard; chance: number }
                   <li key={x.id}>
                     <Link href={`/cartes/${x.id}`} className="flex items-center justify-between gap-3 rounded-xl border border-border bg-surface px-4 py-3 text-sm hover:border-primary/50">
                       <span className="truncate text-fg">{x.nom}</span>
-                      <span className="shrink-0 text-xs" style={{ color: RC[x.r] }} title={RNAME[x.r]}>{PIPS[x.r]}</span>
+                      <span className="shrink-0 text-xs" style={{ color: `rgb(var(--c-r-${x.r.toLowerCase()}-text))` }} title={RNAME[x.r]}>{PIPS[x.r]}</span>
                     </Link>
                   </li>
                 ))}

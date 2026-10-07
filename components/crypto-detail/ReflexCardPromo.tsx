@@ -28,6 +28,11 @@ export default async function ReflexCardPromo({ coingeckoIds, className }: { coi
   const name = cleanName(legacy?.name ?? univ!.nom);
   const rare = rareCard(id);
   const col = rare ? (rare.form === "myth" ? "#ff2d6f" : rare.form === "icon" ? "#e8d49a" : "#f7d774") : RC[r];
+  // Reprise B2 : TEXTE sur jetons (r-*-text pour la rareté, ed-* pour les éditions rares) : identiques aux teintes
+  // d'aplat en Encre (sauf Mythique : ed-myth du kit), foncés en Papier ; col reste la teinte du filet et du halo.
+  const colTxt = rare
+    ? `rgb(var(--c-ed-${rare.form === "myth" ? "myth" : rare.form === "icon" ? "icon" : "relic"}))`
+    : `rgb(var(--c-r-${r.toLowerCase()}-text))`;
   const chance = UNIVERS_ON() ? universCardP(day, r, univ ? CAT_LABEL[univ.cat] : undefined) : todayChance(legacy!, day);
   const visual = rare ? (
     // eslint-disable-next-line @next/next/no-img-element
@@ -48,18 +53,18 @@ export default async function ReflexCardPromo({ coingeckoIds, className }: { coi
         </Link>
       )}
       <div className="min-w-0 flex-1">
-        <span className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide" style={{ color: col }}>
+        <span className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide" style={{ color: colTxt }}>
           <Sparkles className="h-3.5 w-3.5" /> Reflex Cards · le jeu de cartes crypto gratuit
         </span>
         <p className="mt-1 text-base font-bold text-fg sm:text-lg">
-          {name} a sa carte {RNAME[r]} <span className="text-sm" style={{ color: RC[r] }}>{PIPS[r]}</span>
+          {name} a sa carte {RNAME[r]} <span className="text-sm" style={{ color: `rgb(var(--c-r-${r.toLowerCase()}-text))` }}>{PIPS[r]}</span>
         </p>
         {rare && (
           <p className="mt-1 text-sm text-fg/85">
-            Sa version la plus rare : <strong style={{ color: col }}>{rare.label}</strong>, {rare.phrase}.
+            Sa version la plus rare : <strong style={{ color: colTxt }}>{rare.label}</strong>, {rare.phrase}.
           </p>
         )}
-        <p className="mt-1 text-xs text-fg/65 sm:text-sm">
+        <p className="mt-1 text-xs text-muted sm:text-sm">
           À trouver dans les boosters gratuits : {oddsText(chance)} tirée. Un booster offert toutes les 15 minutes, sans achat.
         </p>
         <div className="mt-3 flex flex-wrap gap-2">

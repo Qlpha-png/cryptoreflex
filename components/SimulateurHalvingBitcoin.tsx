@@ -89,7 +89,7 @@ export default function SimulateurHalvingBitcoin() {
       <div className="glass rounded-2xl p-4 sm:p-6 flex items-center gap-4">
         <Calendar className="h-6 w-6 text-primary-soft" />
         <div className="flex-1">
-          <p className="text-xs uppercase tracking-wide text-fg-max/60">Prochain halving</p>
+          <p className="text-xs uppercase tracking-wide text-fg-4">Prochain halving</p>
           <p className="text-fg-max font-bold">
             Avril 2028 — dans <span className="text-primary-soft">{daysLeft} jours</span>
           </p>
@@ -100,7 +100,7 @@ export default function SimulateurHalvingBitcoin() {
       <div className="glass rounded-2xl p-6 sm:p-8">
         <div className="grid gap-6 sm:grid-cols-3">
           <div>
-            <label htmlFor="halving-amount" className="block text-xs font-semibold uppercase tracking-wide text-fg-max/60">
+            <label htmlFor="halving-amount" className="block text-xs font-semibold uppercase tracking-wide text-fg-4">
               Montant DCA (EUR)
             </label>
             <input
@@ -116,13 +116,13 @@ export default function SimulateurHalvingBitcoin() {
               className="mt-2 w-full rounded-xl border border-border bg-elevated px-3 py-2 text-fg-max"
               placeholder="100"
             />
-            <p className="mt-1 text-xs text-fg-max/50">
+            <p className="mt-1 text-xs text-fg-4">
               {frequency === "monthly" ? "par mois" : "par semaine"}
             </p>
           </div>
 
           <div>
-            <label className="block text-xs font-semibold uppercase tracking-wide text-fg-max/60">
+            <label className="block text-xs font-semibold uppercase tracking-wide text-fg-4">
               Fréquence
             </label>
             <div className="mt-2 grid grid-cols-2 gap-2">
@@ -147,7 +147,7 @@ export default function SimulateurHalvingBitcoin() {
           </div>
 
           <div>
-            <label htmlFor="halving-start" className="block text-xs font-semibold uppercase tracking-wide text-fg-max/60">
+            <label htmlFor="halving-start" className="block text-xs font-semibold uppercase tracking-wide text-fg-4">
               Date de début
             </label>
             <input
@@ -261,17 +261,17 @@ function ScenarioCard({
   return (
     <div className={`glass rounded-2xl p-5 border ${color} ${highlight ? "ring-1 ring-primary/40" : ""}`}>
       <div className="flex items-center gap-2">
-        <TrendingUp className="h-4 w-4 text-fg-max/60" />
+        <TrendingUp className="h-4 w-4 text-fg-4" />
         <h4 className="font-bold text-fg-max">{title}</h4>
       </div>
-      <p className="mt-2 text-xs text-fg-max/60 leading-relaxed">{description}</p>
+      <p className="mt-2 text-xs text-fg-4 leading-relaxed">{description}</p>
       <div className="mt-4 grid grid-cols-2 gap-3 text-xs">
         <div>
-          <p className="text-fg-max/50">Investi</p>
+          <p className="text-fg-4">Investi</p>
           <p className="font-bold text-fg-max">{formatEur(invested)}</p>
         </div>
         <div>
-          <p className="text-fg-max/50">Valeur estimée</p>
+          <p className="text-fg-4">Valeur estimée</p>
           <p className="font-bold text-primary-soft">{formatEur(value)}</p>
         </div>
       </div>
@@ -313,7 +313,7 @@ function HalvingChart({ data }: { data: ChartPoint[] }) {
   return (
     <div className="glass rounded-2xl p-4 sm:p-6">
       <h3 className="font-bold text-fg-max">Projection portfolio aux 3 prochains halvings</h3>
-      <p className="mt-1 text-xs text-fg-max/60">3 scénarios — du plus prudent au plus bullish.</p>
+      <p className="mt-1 text-xs text-fg-4">3 scénarios — du plus prudent au plus bullish.</p>
       <div className="mt-4 flex flex-wrap gap-3 text-xs">
         <Legend color="#9CA3AF" label="Total investi" dashed />
         <Legend color="#3b82f6" label="Conservateur" />

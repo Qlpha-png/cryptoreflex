@@ -122,7 +122,7 @@ export default function OutilsSearchFilter() {
           placeholder="Rechercher un outil (ex: fiscalité, DCA, MiCA, glossaire…)"
           // text-base sur mobile pour eviter le zoom auto iOS Safari (focus
           // sur input <16px = zoom force, casse le scroll). Desktop sm:text-sm.
-          className="w-full rounded-xl border border-border bg-surface pl-10 pr-10 py-3 text-base sm:text-sm text-fg placeholder:text-muted/80 focus:border-primary/50 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/30 transition-colors"
+          className="w-full rounded-xl border border-border bg-surface pl-10 pr-10 py-3 text-base sm:text-sm text-fg placeholder:text-fg-4 focus:border-primary/50 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/30 transition-colors"
         />
         {query && (
           <button

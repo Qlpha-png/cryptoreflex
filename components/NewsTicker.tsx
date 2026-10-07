@@ -108,7 +108,7 @@ function NewsItem({
         strokeWidth={1.75}
         aria-hidden="true"
       />
-      <span className="text-xs uppercase tracking-wider text-muted/80 font-medium shrink-0 font-mono">
+      <span className="text-xs uppercase tracking-wider text-fg-4 font-medium shrink-0 font-mono">
         {formatRelative(article.date)}
       </span>
       <span className="text-fg/85 group-hover:text-fg max-w-[34ch] truncate">

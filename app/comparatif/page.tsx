@@ -186,7 +186,7 @@ export default function ComparatifPage() {
                 {blocked.map((p) => (
                   <li key={p.id} className="flex flex-col gap-0.5 py-2 sm:flex-row sm:items-baseline sm:gap-3">
                     <Link href={`/avis/${p.id}`} className="shrink-0 font-semibold text-fg hover:text-primary">{p.name}</Link>
-                    <span className="text-xs text-fg/65">{p.mica.status}</span>
+                    <span className="text-xs text-muted">{p.mica.status}</span>
                   </li>
                 ))}
               </ul>

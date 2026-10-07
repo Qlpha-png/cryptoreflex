@@ -17,6 +17,14 @@
   code, kbd, samp, pre {
     font-family: theme("fontFamily.code");
   }
+  /* Reprise B2 : placeholder par défaut = jeton fg-4 (≥ 4,5:1 sur les 4 fonds, 2 thèmes) au lieu du gris du
+     gris-400 du préréglage Tailwind (2,1 à 2,3:1 sur Papier) ; même spécificité que le préréglage, écrit après lui.
+     Les classes placeholder:text-* gardent la main (couche utilities). */
+  input::placeholder,
+  textarea::placeholder {
+    color: rgb(var(--c-fg-4));
+    opacity: 1;
+  }
 }
 
 :root {
@@ -99,45 +107,14 @@ body {
 }
 
 /* ============================================================
- * DA OBSIDIAN 2026-06-11 — fond multi-couches (feedback Kev :
- * « le fond juste jaune c'est trop simple »).
- * Avant : un seul halo gold plein haut qui jaunissait tout le site.
- * Après, de haut en bas dans le stacking des background-image :
- *   1. vignettage — assombrit les bords, creuse la profondeur
- *   2. glacier (froid) en haut droite — le 2e accent signature
- *   3. bleu nuit ambiant large — donne la teinte "obsidienne"
- *   4. pointe d'or résiduelle haut gauche — le brand, en retrait
- * Toutes les opacités ≤ 0.06 : on doit SENTIR la profondeur sans
- * voir les gradients. background-attachment fixed (ignoré iOS = OK,
- * fallback scroll sans dégât visuel).
+ * Lot B2 (kit C+) — fond PLAT : plus aucun dégradé radial (vignettage, halos glacier / bleu nuit / or de la DA
+ * Obsidian). Seul un grain d'encre très léger (--grain de tokens.css : image SVG en data: URI, tuile de 180 px
+ * rastérisée une fois, aucune requête ; 2 à 4 % d'opacité moyenne) donne la matière du papier ou de l'encre.
+ * Le grain reste sur le fond : cartes et surfaces de lecture sont opaques (bg-surface) et le couvrent.
+ * PAS de background-attachment: fixed (re-rastérisation à chaque défilement).
  * ============================================================ */
 body {
-  background-image:
-    radial-gradient(
-      ellipse 120% 90% at 50% 10%,
-      transparent 55%,
-      rgb(var(--c-scrim) / 0.42) 100%
-    ),
-    radial-gradient(
-      ellipse 45% 32% at 82% -4%,
-      rgb(var(--c-ice) / 0.055),
-      transparent 62%
-    ),
-    radial-gradient(
-      ellipse 95% 55% at 50% -12%,
-      rgba(30, 41, 59, 0.5),
-      transparent 70%
-    ),
-    radial-gradient(
-      ellipse 38% 26% at 12% -2%,
-      rgb(var(--c-primary) / 0.04),
-      transparent 60%
-    );
-  /* PAS de background-attachment: fixed — combiné aux backdrop-filter des
-     cards, il force Chrome à re-rasteriser tout le backdrop à chaque
-     scroll (renderer freeze constaté au contrôle local sur /marche).
-     Sans fixed : les couches scrollent avec la page, le haut (là où il y
-     a de la lumière) reste identique, le bas est sobre — et 60 fps. */
+  background-image: var(--grain);
 }
 
 /* ================================================================
@@ -299,10 +276,13 @@ h3:not(.uppercase, .font-mono, .font-code, .titre-libre) {
 }
 
 @layer components {
+  /* Lot B2 — .glass (202 usages) = CARTE PLATE C+ : surface opaque, filet, élévation 1. Plus de backdrop-blur (202 flous
+     coûteux en moins) ni de fond translucide. Le rayon reste celui de chaque usage (rounded-*). */
   .glass {
-    @apply bg-elevated/70 backdrop-blur-xl border border-border;
+    @apply bg-surface border border-border;
+    box-shadow: var(--shadow-1);
   }
-  /* Highlight d'identité : un seul accent gold, pas de gradient multi-couleurs */
+  /* Lot B2 — accent de titre : or LISIBLE plein (primary), aucun dégradé. */
   .gradient-text {
     @apply text-primary;
   }
@@ -310,36 +290,38 @@ h3:not(.uppercase, .font-mono, .font-code, .titre-libre) {
   .glow-border {
     @apply border border-primary/30;
   }
+  /* Lot B2 — BOUTON D'ACTION C+ (kit : .btn .btn-primary) : encre sur papier, or sur encre (jeton action), texte
+     on-action (≥ 4,5:1 dans les 2 thèmes, test de contraste), rayon 22 px, graisse 600, ombre d'action, aucun halo ni
+     soulèvement. min-h-tap = 44 px (WCAG 2.5.5). Le focus est l'anneau commun (3 px, couleur focus, plus bas). */
   .btn-primary {
-    /* min-h-tap = 44px = guideline Apple HIG / WCAG 2.5.5 (tap target).
-       Audit a11y 26/04/2026 : avant text-white sur bg-primary (#f5a524 or)
-       donnait un contraste 2.04:1, sous le seuil WCAG AA 4.5:1. Texte
-       passe à text-background (#0B0D10) qui donne ~9.5:1 sur fond or.
-       Bonus visuel : look "prix d'or sur fond or" plus pro et plus fort. */
-    @apply inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3 font-extrabold
+    @apply inline-flex items-center justify-center gap-2 rounded-[22px] px-5 py-2.5 font-semibold no-underline
            min-h-tap
-           bg-primary text-background shadow-e2
-           transition-all duration-normal ease-emphasized
-           hover:bg-primary-glow hover:shadow-[0_8px_24px_-8px_rgb(var(--c-primary)/0.5)] hover:-translate-y-[1px]
-           active:bg-primary active:translate-y-0 active:shadow-none
-           focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background;
+           bg-action text-on-action shadow-action
+           transition-colors duration-normal ease-emphasized
+           hover:bg-action-hover
+           disabled:cursor-not-allowed disabled:bg-sunken disabled:text-fg-4 disabled:shadow-none;
+    border: 1.5px solid transparent;
   }
+  /* Lot B2 — BOUTON SECONDAIRE C+ (kit : .btn-secondary) : contour encre (fg) 1,5 px, texte fg, voile fg 7 % au survol. */
   .btn-ghost {
-    @apply inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3 font-semibold
+    @apply inline-flex items-center justify-center gap-2 rounded-[22px] px-5 py-2.5 font-semibold no-underline
            min-h-tap
-           border border-border text-white/90
-           transition-all duration-normal ease-emphasized
-           hover:border-primary/60 hover:text-white hover:bg-primary/5
-           focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50;
+           border-[1.5px] border-fg text-fg
+           transition-colors duration-normal ease-emphasized
+           hover:bg-fg/[0.07];
   }
+  /* Lot B2 — BADGES C+ (kit : .badge) : filet appuyé par défaut, graisse 600 ; .badge-trust = badge MiCA (succès doux),
+     .badge-info = badge Nouveauté (or lisible sur fond or doux, filet or 70 %). Les classes de couleur posées à côté
+     (utilitaires) gardent la main. */
   .badge {
-    @apply inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-caption font-medium;
+    @apply inline-flex items-center gap-1.5 rounded-full border border-border-strong px-2.5 py-1 text-caption font-semibold;
   }
   .badge-trust {
-    @apply badge border-success/40 bg-success/10 text-success;
+    @apply badge border-success-border bg-success-soft text-success;
   }
   .badge-info {
-    @apply badge border-primary/40 bg-primary/10 text-primary-soft;
+    @apply badge bg-gold-soft text-primary;
+    border-color: rgb(var(--c-gold) / 0.7);
   }
   /* Conteneur scroll horizontal mobile (évite que le table cassée le layout global) */
   .mobile-scroll-x {
@@ -354,60 +336,34 @@ h3:not(.uppercase, .font-mono, .font-code, .titre-libre) {
    * ============================================================ */
 
   /*
-   * Card premium : depth multi-shadow + ring subtil gold + bg gradient
-   * subtil (linear top-down). À utiliser sur les cartes "phares".
+   * Lot B2 — carte « phare » = CARTE PLATE C+ : surface opaque, filet, élévation 1 ; au survol filet appuyé et
+   * élévation 2. Plus de dégradé de fond, d'anneau or, de halo ni de backdrop-filter, plus de soulèvement.
    */
   .card-premium {
-    background:
-      linear-gradient(180deg, rgb(var(--c-elevated) / 0.85) 0%, rgb(var(--c-surface) / 0.85) 100%);
-    border: 1px solid rgb(var(--c-border) / 0.9);
-    box-shadow:
-      inset 0 1px 0 0 rgb(var(--c-fg-max) / 0.04),
-      0 8px 24px -8px rgb(var(--c-scrim) / 0.4),
-      0 2px 4px -2px rgb(var(--c-scrim) / 0.25);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    @apply rounded-2xl ring-1 ring-primary/10;
+    background: rgb(var(--c-surface));
+    border: 1px solid rgb(var(--c-border));
+    box-shadow: var(--shadow-1);
+    @apply rounded-2xl;
     transition:
-      transform 220ms cubic-bezier(0.22, 1, 0.36, 1),
-      box-shadow 220ms cubic-bezier(0.22, 1, 0.36, 1),
-      border-color 220ms ease;
+      box-shadow 200ms cubic-bezier(0.22, 1, 0.36, 1),
+      border-color 200ms ease;
   }
   @media (hover: hover) {
     .card-premium:hover {
-      transform: translateY(-3px);
-      border-color: rgb(var(--c-primary) / 0.25);
-      box-shadow:
-        inset 0 1px 0 0 rgb(var(--c-fg-max) / 0.06),
-        0 16px 36px -10px rgb(var(--c-scrim) / 0.55),
-        0 4px 8px -4px rgb(var(--c-scrim) / 0.3),
-        0 0 32px -12px rgb(var(--c-primary) / 0.35);
+      border-color: rgb(var(--c-border-strong));
+      box-shadow: var(--shadow-2);
     }
   }
 
   /*
-   * Texte gradient gold — highlights premium (h1, h2 marketing).
+   * Lot B2 — « texte or » des titres marketing : or LISIBLE plein (primary, ≥ 4,5:1 dans les 2 thèmes). Plus de
+   * dégradé or criard (bg-clip-text, 3 teintes, animation de 8 s) : il passait sous 3:1 sur Papier.
    */
-  /* FIX 2026-05-02 audit user — bug visuel "portefeuille crypto" invisible.
-   * Cause : `bg-clip-text + text-transparent` rendait le texte INVISIBLE sur
-   * certains navigateurs/contextes (extension, dark reader, prefers-contrast,
-   * mobiles low-end) où background-clip:text n'est pas appliqué correctement.
-   * Le texte restait alors transparent sans fallback.
-   * Fix : couleur `--primary` solide systématique en fallback ; le gradient
-   * n'override que si `background-clip: text` est SUPPORTÉ (@supports). */
   .text-gradient-gold {
     color: rgb(var(--c-primary));
   }
-  @supports ((-webkit-background-clip: text) or (background-clip: text)) {
-    .text-gradient-gold {
-      @apply bg-clip-text text-transparent bg-gradient-to-r from-primary via-primary-soft to-primary-glow;
-      background-size: 200% auto;
-      will-change: background-position;
-    }
-  }
   .text-gradient-gold-animate {
     @apply text-gradient-gold;
-    animation: gradient-shift 8s ease-in-out infinite;
   }
 }
 
@@ -490,17 +446,8 @@ h3:not(.uppercase, .font-mono, .font-code, .titre-libre) {
   /* DA POULS 2026-06-11 (panel createur) — fini l'homeopathie : les
      opacites 0.06-0.07 etaient indetectables a l'oeil (diagnostic panel,
      verifie au screenshot). x2.5 : la lumiere se VOIT, le noir domine. */
-  background:
-    radial-gradient(
-      ellipse 52% 40% at 18% 22%,
-      rgb(var(--c-primary) / 0.18),
-      transparent 60%
-    ),
-    radial-gradient(
-      ellipse 38% 32% at 86% 10%,
-      rgb(var(--c-ice) / 0.14),
-      transparent 64%
-    );
+  /* Lot B2 (kit C+) : plus aucun halo (or derrière le titre, glacier en haut à droite) : fond à plat. */
+  background: none;
 }
 
 /* DESIGN 2026-06-11 — grain photographique subtil (feedback Kev : les
@@ -511,8 +458,8 @@ h3:not(.uppercase, .font-mono, .font-code, .titre-libre) {
   position: absolute;
   inset: 0;
   pointer-events: none;
-  opacity: 0.03;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  /* Lot B2 : le grain C+ du body (--grain, teinté par thème) le remplace ; un second grain gris noircissait Papier. */
+  background-image: none;
   z-index: 1;
 }
 
@@ -540,12 +487,8 @@ h3:not(.uppercase, .font-mono, .font-code, .titre-libre) {
   position: absolute;
   inset: 0;
   pointer-events: none;
-  background: radial-gradient(
-    120% 90% at 50% 30%,
-    #0e1116 0%,
-    rgb(var(--c-background)) 55%,
-    #07080a 100%
-  );
+  /* Lot B2 (kit C+) : fond à plat, plus de vignette radiale (ses teintes noires en dur faisaient une tache sur Papier). */
+  background: none;
 }
 
 /* H1 monumental — le token display servait enfin a quelque chose */
@@ -554,11 +497,9 @@ h3:not(.uppercase, .font-mono, .font-code, .titre-libre) {
   line-height: 1.02;
   letter-spacing: -0.025em; /* B1 finitions F2 : -0,035 → -0,025 (spec C+, Newsreader 500) */
 }
+/* Lot B2 : or LISIBLE plein (primary, ≥ 4,5:1 dans les 2 thèmes) ; plus de dégradé vers la crème. */
 .hero-h1-accent {
-  background-image: linear-gradient(100deg, rgb(var(--c-primary)) 0%, rgb(var(--c-primary-glow)) 45%, #ffe9c2 75%, rgb(var(--c-primary-glow)) 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  color: rgb(var(--c-primary));
   padding-bottom: 0.05em;
   display: inline-block;
 }
@@ -622,7 +563,7 @@ h3:not(.uppercase, .font-mono, .font-code, .titre-libre) {
   border-radius: 9999px;
   font-size: 14px; /* B1 : 13 → 14 px */
   color: var(--color-fg);
-  background: rgba(14, 17, 22, 0.82);
+  background: rgb(var(--c-elevated) / 0.92); /* lot B2 : jeton (était un noir en dur) */
   border: 1px solid rgb(var(--c-ice-fg) / 0.28);
   box-shadow:
     inset 0 1px 0 rgb(var(--c-fg-max) / 0.06),
@@ -668,9 +609,10 @@ h3:not(.uppercase, .font-mono, .font-code, .titre-libre) {
   inset: 0;
   pointer-events: none;
   z-index: 1;
+  /* Lot B2 : voile couleur du FOND (et non noir) : il estompe la courbe derrière le texte dans les 2 thèmes. */
   background: radial-gradient(
     85% 70% at 28% 32%,
-    rgba(7, 8, 10, 0.55),
+    rgb(var(--c-background) / 0.72),
     transparent 70%
   );
 }
@@ -2085,4 +2027,37 @@ html {
    animeraient le changement de couleurs (vague de 150 ms). Sans l'attribut : aucun effet. */
 [data-theme-switch] * {
   transition: none !important;
+}
+
+/* ================================================================
+ * Lot B2 — ANNEAU DE FOCUS C+ partout : 3 px, couleur focus (or lisible, ≥ 3:1 sur les 4 fonds des 2 thèmes),
+ * décalé de 2 px. !important : il bat les 241 focus:outline-none du code et remplace les ≈ 300 anneaux
+ * focus(-visible):ring-* (anneau Tailwind neutralisé pendant le focus : un seul anneau, le même partout).
+ * :focus-visible seulement : aucun anneau au clic de souris sur un bouton ou un lien.
+ * ================================================================ */
+:focus-visible {
+  outline: 3px solid rgb(var(--c-focus)) !important;
+  outline-offset: 2px !important;
+  --tw-ring-offset-shadow: 0 0 0 0 transparent !important;
+  --tw-ring-shadow: 0 0 0 0 transparent !important;
+}
+
+/* ================================================================
+ * Lot B2 — LIENS DE TEXTE C+ dans le contenu (kit : .lnk) : couleur link, soulignés en link-line (2 px, sous les
+ * jambages), 3 px et link-hover au survol. Seulement les liens des paragraphes et cellules de <main> : ni la
+ * navigation, ni l'en-tête, ni le pied de page, ni les boutons et pastilles (liens à marge interne, fond ou bordure :
+ * px-, py-, bg-, border). Articles : thème typography
+ * (tailwind.config.ts). Spécificité (0,0,1) : bat la base de Tailwind (a { color: inherit }), mais toute classe
+ * posée sur le lien (text-*, no-underline…) garde la main.
+ * ================================================================ */
+:where(main p, main dd, main figcaption, main blockquote, main td) a:not(:where(.btn-primary, .btn-ghost, [role="button"], [class*="px-"], [class*="py-"], [class*="bg-"], [class*="border"])) {
+  color: rgb(var(--c-link));
+  text-decoration-line: underline;
+  text-decoration-color: rgb(var(--c-link-line));
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.28em;
+}
+:where(main p, main dd, main figcaption, main blockquote, main td) a:not(:where(.btn-primary, .btn-ghost, [role="button"], [class*="px-"], [class*="py-"], [class*="bg-"], [class*="border"])):hover {
+  color: rgb(var(--c-link-hover));
+  text-decoration-thickness: 3px;
 }

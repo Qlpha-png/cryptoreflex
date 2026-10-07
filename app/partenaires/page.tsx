@@ -445,7 +445,7 @@ function ProductTile({
         <h4 className="text-sm font-extrabold text-fg leading-tight mb-1">
           {product.name}
         </h4>
-        <p className="text-xs text-fg/65 leading-relaxed mb-3 line-clamp-2">
+        <p className="text-xs text-muted leading-relaxed mb-3 line-clamp-2">
           {product.description}
         </p>
 
@@ -466,7 +466,7 @@ function ProductTile({
           <span className="text-base font-extrabold text-primary font-mono tabular-nums">
             {product.price}
           </span>
-          <span className="text-xs text-fg/60 inline-flex items-center gap-1 group-hover/tile:text-primary transition-colors">
+          <span className="text-xs text-fg-4 inline-flex items-center gap-1 group-hover/tile:text-primary transition-colors">
             Voir
             <ArrowRight className="h-3 w-3 transition-transform group-hover/tile:translate-x-0.5" />
           </span>

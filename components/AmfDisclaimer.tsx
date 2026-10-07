@@ -111,7 +111,7 @@ const VARIANTS: Record<AmfVariant, VariantConfig> = {
 };
 
 const toneClasses: Record<VariantConfig["tone"], string> = {
-  info: "border-accent-cyan/30 bg-accent-cyan/5 text-accent-cyan",
+  info: "border-info-border bg-info-soft text-info",
   warn: "border-primary/30 bg-primary/5 text-primary-soft",
   danger: "border-warning/30 bg-warning/5 text-primary-soft",
   neutral: "border-border bg-elevated/40 text-muted",

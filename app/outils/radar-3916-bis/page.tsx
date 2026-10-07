@@ -420,7 +420,7 @@ export default function RadarPage() {
                 <span className="flex items-baseline gap-3 min-w-0 flex-1">
                   <span
                     aria-hidden="true"
-                    className="text-xs font-mono tabular-nums text-muted/60 shrink-0"
+                    className="text-xs font-mono tabular-nums text-fg-4 shrink-0"
                   >
                     0{idx + 1}
                   </span>

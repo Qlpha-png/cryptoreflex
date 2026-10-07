@@ -35,7 +35,7 @@ const fmtPct = (v: number) => {
 };
 const pctClass = (v: number) => {
   const r = round2(v);
-  return r > 0 ? "text-success-fg" : r < 0 ? "text-danger-fg" : "text-fg/60";
+  return r > 0 ? "text-success-fg" : r < 0 ? "text-danger-fg" : "text-fg-4";
 };
 
 export default function HomeLivePrices({ coins }: { coins: HomeCoin[] }) {
@@ -45,7 +45,9 @@ export default function HomeLivePrices({ coins }: { coins: HomeCoin[] }) {
   const [broken, setBroken] = useState<Record<string, true>>({});
   return (
     <div>
-      <ul className={`divide-y divide-border/60 rounded-2xl border border-border bg-surface ${live ? "" : "opacity-80"}`}>
+      {/* Reprise B2 : plus de voile opacity-80 en attente du direct (textes à 3,3-3,9:1 sur Papier) ; la légende sous la
+          liste dit déjà « Cours indicatifs, en attente du direct… ». */}
+      <ul className="divide-y divide-border/60 rounded-2xl border border-border bg-surface">
         {coins.map((c) => {
           const lp = prices[c.id];
           const price = lp?.price ?? c.price;
@@ -73,8 +75,8 @@ export default function HomeLivePrices({ coins }: { coins: HomeCoin[] }) {
                 )}
                 <span className="flex-1 min-w-0">
                   <span className="block truncate text-sm font-semibold text-fg">{c.name}</span>
-                  {/* fg/65 (06/10/2026) : fg/55 sous l'opacity-80 d'attente donnait 4,08:1, sous le seuil AA */}
-                  <span className="block text-xs uppercase text-fg/65">{c.symbol}</span>
+                  {/* muted (reprise B2) : fg/65 sous l'ancien voile d'attente tombait à 3,3:1 sur Papier */}
+                  <span className="block text-xs uppercase text-muted">{c.symbol}</span>
                 </span>
                 <span className="text-right tabular-nums">
                   <span className="block text-sm font-semibold text-fg">{fmtPrice(price)}</span>
@@ -85,7 +87,7 @@ export default function HomeLivePrices({ coins }: { coins: HomeCoin[] }) {
           );
         })}
       </ul>
-      <p className="mt-2 text-xs text-fg/60" aria-live="polite">
+      <p className="mt-2 text-xs text-fg-4" aria-live="polite">
         {live
           ? `En direct · mis à jour à ${lastUpdate!.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" })}`
           : status === "error"

@@ -164,9 +164,9 @@ export default function PlatformCard({ platform, placement, index = 0 }: Props) 
             <span className="ml-1 text-xs font-bold tabular-nums text-fg-max/90" aria-hidden="true">
               {ratingFr}
             </span>
-            <span className="text-xs text-fg-max/60 font-normal" aria-hidden="true">/5</span>
+            <span className="text-xs text-fg-4 font-normal" aria-hidden="true">/5</span>
             {social && social.count != null && social.count > 0 && (
-              <span className="ml-1.5 text-xs text-fg-max/50" aria-hidden="true">
+              <span className="ml-1.5 text-xs text-fg-4" aria-hidden="true">
                 · {social.label} {socialRatingFr}/5 ({social.count.toLocaleString("fr-FR")} avis
                 {socialDate ? `, relevé le ${socialDate}` : ""})
               </span>
@@ -177,7 +177,7 @@ export default function PlatformCard({ platform, placement, index = 0 }: Props) 
 
       {/* Tagline (idealFor du JSON est plus actionnable que la tagline générique).
           Audit Mobile : hidden mobile pour gain hauteur (tagline = description riche desktop). */}
-      <p className="mt-3 text-xs leading-[1.55] text-fg-max/65 hidden sm:block">
+      <p className="mt-3 text-xs leading-[1.55] text-muted hidden sm:block">
         {idealFor ? <><strong className="text-fg-max/90">Pour qui ?</strong> {idealFor}</> : tagline}
       </p>
 

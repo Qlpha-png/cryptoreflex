@@ -17,21 +17,24 @@ import { useCallback, useEffect, useState } from "react";
 /** Événement de changement de thème (window), émis à partir du lot A6. */
 export const THEME_EVENT = "cr-theme";
 
-/** Repli legacy (phase « legacy » de tokens.css). Ne lister que les jetons utilisés par du JS. */
+/**
+ * Repli = thème par défaut de tokens.css (lot B2 : « Encre », premier bloc :root). Ne lister que les jetons utilisés
+ * par du JS. Sous l'essai Papier (?theme=papier), les vraies valeurs sont relues après montage.
+ */
 export const THEME_FALLBACK = {
-  background: "11 13 16",
-  surface: "22 25 31",
-  border: "38 43 51",
-  fg: "244 245 247",
-  "fg-4": "155 163 175",
-  "fg-max": "255 255 255",
+  background: "17 26 43",
+  surface: "23 34 53",
+  border: "38 50 74",
+  fg: "243 237 226",
+  "fg-4": "139 147 163",
+  "fg-max": "243 237 226",
   scrim: "0 0 0",
-  primary: "245 165 36",
-  "primary-glow": "251 191 36",
-  "accent-cyan": "14 116 144",
-  success: "34 197 94",
-  warning: "245 158 11",
-  danger: "239 68 68",
+  primary: "244 176 60",
+  "primary-glow": "248 196 104",
+  "accent-cyan": "147 189 242",
+  success: "108 203 152",
+  warning: "242 167 102",
+  danger: "255 149 133",
 } as const;
 
 export type ThemeColorName = keyof typeof THEME_FALLBACK;

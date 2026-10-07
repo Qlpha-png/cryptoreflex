@@ -80,7 +80,7 @@ export default function PackCTABlock({
           </p>
           <Link
             href={href}
-            className="mt-4 inline-flex items-center gap-2 rounded-xl bg-primary/15 px-4 py-2 text-sm font-semibold text-primary-soft hover:bg-primary/25 transition"
+            className="mt-4 inline-flex items-center gap-2 rounded-xl bg-gold-soft px-4 py-2 text-sm font-semibold text-primary hover:bg-primary/25 transition"
           >
             Voir le pack 2026
             <ArrowRight className="h-4 w-4" />

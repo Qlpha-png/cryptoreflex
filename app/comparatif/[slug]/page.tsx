@@ -433,7 +433,7 @@ export default function ComparisonPage({ params }: Props) {
                       href={plat.affiliateUrl}
                       target="_blank"
                       rel={outboundRel(plat.id, plat.affiliateUrl)}
-                      className="mt-2 inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-primary to-primary-glow px-4 py-2.5 text-sm font-semibold text-background hover:opacity-90 transition"
+                      className="mt-2 inline-flex items-center justify-center gap-2 rounded-[22px] bg-action shadow-action px-4 py-2.5 text-sm font-semibold text-on-action hover:bg-action-hover transition-colors"
                     >
                       Site officiel de {plat.name}
                       <ExternalLink className="h-4 w-4" />

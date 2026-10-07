@@ -243,7 +243,7 @@ export default function PairConverter({
             {formatFiatAmount(fiatRate, fiat)}
           </span>
           {" — "}
-          <span className="text-muted/80">prix indicatif{priceLabel ? ` (${priceLabel})` : ""}</span>
+          <span className="text-fg-4">prix indicatif{priceLabel ? ` (${priceLabel})` : ""}</span>
         </span>
         <span className="font-mono">
           {direction === "fiat-to-crypto" ? (

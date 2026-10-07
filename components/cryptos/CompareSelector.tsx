@@ -203,7 +203,7 @@ export default function CompareSelector({ selected, catalog }: Props) {
               </span>
             )}
             <span>{c.name}</span>
-            <span className="font-mono text-xs text-fg/60">{c.symbol}</span>
+            <span className="font-mono text-xs text-fg-4">{c.symbol}</span>
             <button
               type="button"
               onClick={() => handleRemove(c.id)}

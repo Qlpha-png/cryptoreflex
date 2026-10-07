@@ -25,7 +25,7 @@ import {
   seasonDay,
   shareText,
 } from "@/lib/reflex-cards/data";
-import { PIPS, RC, RNAME } from "@/lib/reflex-cards/render";
+import { PIPS, RNAME } from "@/lib/reflex-cards/render";
 import { reflexAccountsMode } from "@/lib/reflex-cards/flag";
 import { dayDate } from "@/lib/reflex-cards/season";
 import { applyReleases, FUTURE_LABEL } from "@/lib/reflex-cards/releases";
@@ -202,7 +202,7 @@ export default async function CartesPage() {
                   <Link href={`/cartes/${c.id}`} aria-label={`Carte ${cleanName(c.name)}`}>
                     <CardVisual card={c} day={day} width={160} uid={`rar-${c.r}`} />
                   </Link>
-                  <p className="mt-3 text-sm font-bold" style={{ color: RC[c.r] }}>
+                  <p className="mt-3 text-sm font-bold" style={{ color: `rgb(var(--c-r-${c.r.toLowerCase()}-text))` }}>
                     {RNAME[c.r]} <span className="text-xs">{PIPS[c.r]}</span>
                   </p>
                   <p className="text-xs text-muted">{info.n} cartes · {shareText(info.chance)}</p>
@@ -373,7 +373,7 @@ export default async function CartesPage() {
                         className="inline-flex items-center gap-1.5 rounded-lg border border-border px-2.5 py-1 text-xs text-fg/85 hover:border-primary/50 hover:text-fg"
                       >
                         {cleanName(c.name)}
-                        <span style={{ color: RC[c.r] }} title={RNAME[c.r]}>{PIPS[c.r]}</span>
+                        <span style={{ color: `rgb(var(--c-r-${c.r.toLowerCase()}-text))` }} title={RNAME[c.r]}>{PIPS[c.r]}</span>
                       </Link>
                     </li>
                   ))}

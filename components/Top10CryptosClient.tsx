@@ -168,7 +168,7 @@ const CATEGORY_VISUAL: Record<Exclude<Bucket, "all">, { Icon: LucideIcon; color:
   memecoins: { Icon: Sparkles, color: "text-fuchsia-300 bg-fuchsia-400/10 border-fuchsia-400/30" },
   exchange: { Icon: CoinsIcon, color: "text-primary-soft bg-primary-glow/10 border-primary-glow/30" },
   privacy: { Icon: EyeOff, color: "text-violet-300 bg-violet-400/10 border-violet-400/30" },
-  other: { Icon: CoinsIcon, color: "text-fg/60 bg-elevated border-border/60" },
+  other: { Icon: CoinsIcon, color: "text-fg-4 bg-elevated border-border/60" },
 };
 
 /* -------------------------------------------------------------------------- */
@@ -346,7 +346,7 @@ export default function Top10CryptosClient({
             <span aria-hidden="true">→</span>
           </a>
           {/* E-E-A-T freshness en discret à droite */}
-          <span className="text-xs text-fg/45 ml-auto hidden sm:inline">
+          <span className="text-xs text-fg-4 ml-auto hidden sm:inline">
             Mis à jour <time dateTime="2026-04-26">26 avril 2026</time>
           </span>
         </div>
@@ -385,12 +385,12 @@ export default function Top10CryptosClient({
                     active
                       ? "border-primary bg-primary/15 text-primary-glow"
                       : isDisabled
-                        ? "border-border/40 bg-surface/50 text-fg/55 opacity-60"
+                        ? "border-border/40 bg-surface/50 text-fg-4 opacity-60"
                         : "border-border bg-surface text-fg/75 hover:border-primary/40 hover:text-fg",
                   ].join(" ")}
                 >
                   {f.label}
-                  <span className="text-xs text-fg/55 tabular-nums">({n})</span>
+                  <span className="text-xs text-fg-4 tabular-nums">({n})</span>
                 </button>
               );
             })}
@@ -433,7 +433,7 @@ export default function Top10CryptosClient({
                   "focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-surface",
                   view === "grid"
                     ? "bg-primary/15 text-primary-glow"
-                    : "text-fg/60 hover:text-fg",
+                    : "text-fg-4 hover:text-fg",
                 ].join(" ")}
               >
                 <Grid2X2 className="h-4 w-4" strokeWidth={1.75} aria-hidden="true" />
@@ -449,7 +449,7 @@ export default function Top10CryptosClient({
                   "focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-surface",
                   view === "list"
                     ? "bg-primary/15 text-primary-glow"
-                    : "text-fg/60 hover:text-fg",
+                    : "text-fg-4 hover:text-fg",
                 ].join(" ")}
               >
                 <ListIcon className="h-4 w-4" strokeWidth={1.75} aria-hidden="true" />
@@ -580,7 +580,7 @@ function CryptoCard({ crypto }: { crypto: TopCrypto }) {
             <div className={`mt-1 inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-xs font-semibold uppercase tracking-wider ${catVisual.color}`}>
               <CatIcon className="h-2.5 w-2.5" strokeWidth={2.5} aria-hidden="true" focusable="false" />
               {crypto.category}
-              <span className="text-fg/65 font-normal normal-case">· {crypto.yearCreated}</span>
+              <span className="text-muted font-normal normal-case">· {crypto.yearCreated}</span>
             </div>
           </div>
         </div>
@@ -704,10 +704,10 @@ function CryptoListRow({ crypto }: { crypto: TopCrypto }) {
             {crypto.symbol}
           </span>
         </div>
-        <div className="text-xs text-fg/55 truncate">{crypto.tagline}</div>
+        <div className="text-xs text-fg-4 truncate">{crypto.tagline}</div>
       </div>
 
-      <div className="hidden sm:block text-xs text-fg/55 shrink-0 max-w-[180px] truncate">
+      <div className="hidden sm:block text-xs text-fg-4 shrink-0 max-w-[180px] truncate">
         {crypto.category}
       </div>
 
@@ -720,7 +720,7 @@ function CryptoListRow({ crypto }: { crypto: TopCrypto }) {
         {crypto.riskLevel}
       </div>
 
-      <div className="hidden md:flex items-center gap-1 text-xs text-fg/55 shrink-0">
+      <div className="hidden md:flex items-center gap-1 text-xs text-fg-4 shrink-0">
         <span>Débutant</span>
         <span className="font-bold text-fg">{crypto.beginnerFriendly}/5</span>
       </div>

@@ -1108,7 +1108,7 @@ function ProductCard({
         <h3 className="text-lg font-extrabold text-fg leading-tight mb-1.5">
           {product.name}
         </h3>
-        <p className="text-sm text-fg/65 leading-relaxed mb-4 line-clamp-2">
+        <p className="text-sm text-muted leading-relaxed mb-4 line-clamp-2">
           {product.description}
         </p>
 

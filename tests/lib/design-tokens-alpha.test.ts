@@ -17,7 +17,7 @@ import postcss from "postcss";
 import tailwindcss from "tailwindcss";
 import resolveConfig from "tailwindcss/resolveConfig";
 import config from "../../tailwind.config";
-import { genererCss, LEGACY, SANS_NOM_TAILWIND, estComplete } from "../../scripts/design/tokens.source.mjs";
+import { genererCss, LEGACY, SANS_NOM_TAILWIND, estComplete, jetonsPhase, PHASE_ACTIVE } from "../../scripts/design/tokens.source.mjs";
 
 const ROOT = path.resolve(__dirname, "../..");
 const COULEURS = (config.theme?.extend?.colors ?? {}) as Record<string, string | Record<string, string>>;
@@ -56,18 +56,22 @@ async function compiler(classes: string[]): Promise<Map<string, string[]>> {
 
 describe("Jetons A1 : chaîne tokens.source.mjs → tokens.css → tailwind.config.ts", () => {
   it("app/styles/tokens.css est à jour (généré, jamais retouché à la main)", () => {
-    expect(fs.readFileSync(path.join(ROOT, "app/styles/tokens.css"), "utf8")).toBe(genererCss("legacy"));
+    expect(fs.readFileSync(path.join(ROOT, "app/styles/tokens.css"), "utf8")).toBe(genererCss(PHASE_ACTIVE));
   });
 
-  it("chaque var(--c-x) de la config est défini dans tokens.css, avec le bon format", () => {
-    const definis = new Map(LEGACY.map(([n, v]) => [n, v]));
-    for (const [nom, valeur] of Object.entries(NOMS)) {
-      const m = /^rgb\(var\(--c-([a-z0-9-]+)\) \/ <alpha-value>\)$/.exec(valeur) ?? /^var\(--c-([a-z0-9-]+)\)$/.exec(valeur);
-      expect(m, `${nom} : format inattendu « ${valeur} »`).not.toBeNull();
-      const jeton = m![1];
-      expect(definis.has(jeton), `${nom} → --c-${jeton} absent de tokens.source.mjs`).toBe(true);
-      // canaux R G B ⇔ <alpha-value> ; couleur complète (rgba) ⇔ var() nu
-      expect(valeur.includes("<alpha-value>"), `${nom} : <alpha-value> incohérent avec la valeur de --c-${jeton}`).toBe(!estComplete(definis.get(jeton)!));
+  it("chaque var(--c-x) de la config est défini dans tokens.css, avec le bon format (dans chaque thème de la phase active)", () => {
+    // Lot B2 : la phase active a deux thèmes (Encre, Papier) ; mêmes noms, même format dans les deux.
+    for (const [theme, liste] of Object.entries(jetonsPhase(PHASE_ACTIVE) as unknown as Record<string, [string, string, string][]>)) {
+      expect(liste.map(([n]) => n), `${theme} : mêmes noms que LEGACY`).toEqual(LEGACY.map(([n]) => n));
+      const definis = new Map(liste.map(([n, v]) => [n, v]));
+      for (const [nom, valeur] of Object.entries(NOMS)) {
+        const m = /^rgb\(var\(--c-([a-z0-9-]+)\) \/ <alpha-value>\)$/.exec(valeur) ?? /^var\(--c-([a-z0-9-]+)\)$/.exec(valeur);
+        expect(m, `${nom} : format inattendu « ${valeur} »`).not.toBeNull();
+        const jeton = m![1];
+        expect(definis.has(jeton), `${nom} → --c-${jeton} absent de tokens.source.mjs (${theme})`).toBe(true);
+        // canaux R G B ⇔ <alpha-value> ; couleur complète (rgba) ⇔ var() nu
+        expect(valeur.includes("<alpha-value>"), `${nom} : <alpha-value> incohérent avec la valeur de --c-${jeton} (${theme})`).toBe(!estComplete(definis.get(jeton)!));
+      }
     }
   });
 

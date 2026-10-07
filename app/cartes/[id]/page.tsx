@@ -202,6 +202,8 @@ export default async function CartePage({ params }: Props) {
   const revealed = u ? true : isRevealed(c);
   const info = c.fossil || u ? null : rarityInfo(c.r);
   const col = c.fossil ? "#a8927a" : RC[cv.r];
+  // Reprise B2 : TEXTE de rareté sur le jeton r-*-text (= RC en Encre, foncé en Papier) ; col reste la teinte d'aplat.
+  const colTxt = c.fossil ? col : `rgb(var(--c-r-${cv.r.toLowerCase()}-text))`;
   const chance = u ? universCardP(day, u.r, CAT_LABEL[u.cat]) : todayChance(c, day);
   const family = c.fossil ? [] : albumCards().filter((x) => x.fam === c.fam && isVisible(x, day));
   const idx = family.findIndex((x) => x.id === c.id);
@@ -223,7 +225,7 @@ export default async function CartePage({ params }: Props) {
         ["Chance", `${oddsText(chance)} tirée pour ce fossile`],
       ]
     : [
-        ["Rareté", <span key="r" style={{ color: col }}>{RNAME[cv.r]} {PIPS[cv.r]}</span>],
+        ["Rareté", <span key="r" style={{ color: colTxt }}>{RNAME[cv.r]} {PIPS[cv.r]}</span>],
         ...(u && st
           ? ([
               ["Chapitre", "Cryptos"],
@@ -283,13 +285,13 @@ export default async function CartePage({ params }: Props) {
             <div>
               <span
                 className="inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-semibold"
-                style={{ borderColor: `${col}66`, background: `${col}1a`, color: col }}
+                style={{ borderColor: `${col}66`, background: `${col}1a`, color: colTxt }}
               >
                 <Sparkles className="h-3.5 w-3.5" />
                 {c.fossil ? "Musée des Fossiles" : u ? `Carte ${RNAME[cv.r]} · chapitre Cryptos` : `Carte ${rarityArticle(c)} · Saison 1`}
               </span>
               <h1 className="mt-4 text-3xl font-extrabold tracking-tight sm:text-4xl">
-                {name} {c.sym.toLowerCase() !== name.toLowerCase() && <span className="text-fg/50 text-2xl sm:text-3xl">({c.sym})</span>}
+                {name} {c.sym.toLowerCase() !== name.toLowerCase() && <span className="text-fg-4 text-2xl sm:text-3xl">({c.sym})</span>}
               </h1>
               <p className="mt-3 text-fg/75">
                 {u && st
@@ -392,7 +394,7 @@ export default async function CartePage({ params }: Props) {
                   <li key={x.id}>
                     <Link href={`/cartes/${x.id}`} className="flex items-center justify-between gap-3 rounded-xl border border-border bg-surface px-4 py-3 text-sm hover:border-primary/50">
                       <span className="truncate text-fg">{cleanName(x.name)}</span>
-                      <span className="shrink-0 text-xs" style={{ color: RC[x.r] }} title={RNAME[x.r]}>{PIPS[x.r]}</span>
+                      <span className="shrink-0 text-xs" style={{ color: `rgb(var(--c-r-${x.r.toLowerCase()}-text))` }} title={RNAME[x.r]}>{PIPS[x.r]}</span>
                     </Link>
                   </li>
                 ))}

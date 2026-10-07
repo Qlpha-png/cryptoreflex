@@ -187,7 +187,7 @@ export default function ProgressBackupCard() {
             onChange={(e) => setImportCode(e.target.value)}
             rows={4}
             placeholder="Collez votre code ici…"
-            className="w-full resize-none rounded-xl border border-border bg-background/60 p-3 font-mono text-xs text-fg/90 placeholder:text-muted/50 focus:outline-none focus:ring-2 focus:ring-primary"
+            className="w-full resize-none rounded-xl border border-border bg-background/60 p-3 font-mono text-xs text-fg/90 placeholder:text-fg-4 focus:outline-none focus:ring-2 focus:ring-primary"
             aria-label="Code de sauvegarde à restaurer"
           />
 

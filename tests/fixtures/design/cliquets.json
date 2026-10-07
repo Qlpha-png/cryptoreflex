@@ -1,10 +1,10 @@
 {
  "_note": "Plafonds de dette de couleur (banc design, lot A0) : ne peuvent que baisser. Zone : app, components, lib, data/emails, hors jeu et hors content.",
  "plafonds": {
-  "palette": 773,
-  "blancNoir": 44,
-  "textWhite": 15,
+  "palette": 416,
+  "blancNoir": 35,
+  "textWhite": 6,
   "bgBlack": 3,
-  "hex": 644
+  "hex": 611
  }
 }

@@ -317,7 +317,7 @@ export default function RessourcesPage() {
           </div>
 
           {/* Disclaimer YMYL */}
-          <p className="mt-10 text-xs leading-relaxed text-muted/80">
+          <p className="mt-10 text-xs leading-relaxed text-fg-4">
             <strong>Information importante :</strong> les ressources mises à
             disposition (PDFs et outils) sont fournies à titre indicatif et ne
             constituent pas un conseil fiscal ou financier personnalisé. La

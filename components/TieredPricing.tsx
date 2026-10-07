@@ -154,7 +154,7 @@ export default function TieredPricing({
                   <span className="text-3xl sm:text-4xl font-extrabold text-fg-max tabular-nums">
                     {tier.price}
                   </span>
-                  <span className="text-sm text-fg-max/60">{tier.priceUnit}</span>
+                  <span className="text-sm text-fg-4">{tier.priceUnit}</span>
                 </div>
               )}
 
@@ -171,7 +171,7 @@ export default function TieredPricing({
                 {tier.excluded?.map((f) => (
                   <li
                     key={f}
-                    className="flex items-start gap-2 text-fg-max/60 line-through"
+                    className="flex items-start gap-2 text-fg-4 line-through"
                   >
                     <span
                       className="mt-1.5 h-1.5 w-1.5 rounded-full bg-fg-max/30 shrink-0"

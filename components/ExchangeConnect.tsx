@@ -237,7 +237,7 @@ export default function ExchangeConnect() {
             <h3 className="font-bold text-fg text-sm">
               Connectez votre compte Binance (lecture seule)
             </h3>
-            <p className="mt-1 text-xs text-fg/65 leading-relaxed">
+            <p className="mt-1 text-xs text-muted leading-relaxed">
               Connectez-vous à Cryptoreflex pour activer l&apos;import auto de vos
               balances Binance. Aucun CSV à uploader, sync 1-clic.
             </p>
@@ -256,7 +256,7 @@ export default function ExchangeConnect() {
             <h3 className="font-bold text-fg text-sm">
               Service indisponible temporairement
             </h3>
-            <p className="mt-1 text-xs text-fg/65 leading-relaxed">
+            <p className="mt-1 text-xs text-muted leading-relaxed">
               La connexion exchange n&apos;est pas configurée côté serveur. Reviens plus tard.
             </p>
           </div>

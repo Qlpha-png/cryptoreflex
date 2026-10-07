@@ -235,36 +235,30 @@ export default function Navbar() {
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className={`flex items-center justify-between transition-[height] duration-300 ease-out ${scrolled ? "h-12" : "h-16"}`}>
-          {/* Logo : full sur >=sm, mark seul sur mobile.
+          {/* Logo : mot-symbole complet, 28 px dès sm, 24 px sur mobile (lot B2).
               Audit Visual : .logo-mount = subtle scale + fade in 600ms au mount.
               .logo-shimmer-once = balaye gold 1× après 1.2s (signature Cryptoreflex). */}
           <Link
             href="/"
             onClick={() => setOpen(false)}
             aria-label="Cryptoreflex — retour à l'accueil"
-            className="logo-mount min-h-[44px] flex items-center rounded-lg group/logo
+            className="logo-mount min-h-[44px] min-w-0 flex items-center rounded-lg group/logo
                        focus:outline-none focus-visible:ring-2 focus-visible:ring-primary
                        focus-visible:ring-offset-2 focus-visible:ring-offset-background"
           >
-            {/* PERF 2026-05-07 — `priority={true}` sur le logo header car
-                il est above-the-fold sur 141 pages du site. Next.js le préload
-                avec `<link rel="preload">` au lieu de lazy-loading par défaut.
-                Gain LCP estimé : -100 à -300 ms. Aucun risque visuel/UX. */}
+            {/* Lot B2 : mot-symbole SVG du kit C+ (rapport 5,9:1), hauteur en CSS : 24 px mobile (141 px de large),
+                28 px dès sm, 20 px de md à xl (de 768 à 1 279 px, l'en-tête n'a pas la place d'un logo de 165 px : le
+                bouton d'action sortait de l'écran à 1 024 px), 28 px dès xl ; un cran plus bas une fois la page défilée.
+                L'ancien PNG carré du mobile masquait le nom de la marque. SVG en ligne : rien à précharger.
+                min-w-0 + max-w-full : comme l'ancienne image, le logo cède la place quand la rangée déborde (vers
+                1 024 px, rangée trop pleine depuis avant B2 : refonte de l'en-tête au lot B3), à l'échelle, sans déformation. */}
             <Logo
               variant="full"
-              height={scrolled ? 28 : 36}
-              className="hidden sm:inline-flex transition-[height] duration-300"
+              height={24}
+              className="min-w-0"
+              svgClassName={`w-auto max-w-full transition-[height] duration-300 ${scrolled ? "h-[22px] sm:h-6 md:h-5 xl:h-6" : "h-6 sm:h-7 md:h-5 xl:h-7"}`}
               asLink={false}
               title="Cryptoreflex"
-              priority
-            />
-            <Logo
-              variant="mark"
-              height={scrolled ? 26 : 32}
-              className="sm:hidden transition-[height] duration-300"
-              asLink={false}
-              title="Cryptoreflex"
-              priority
             />
           </Link>
 

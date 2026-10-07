@@ -195,6 +195,7 @@ export default function FearGreedGauge({
 function colorFor(v: number): { color: string; border: string; soft: string } {
   if (v <= 24) return { color: "#dc2626", border: "#dc262655", soft: "#dc262612" }; // red-600 — Extreme Fear
   if (v <= 49) return { color: "rgb(var(--c-warning))", border: "rgb(var(--c-warning) / 0.3333333)", soft: "rgb(var(--c-warning) / 0.0705882)" }; // amber-500 — Fear
-  if (v <= 74) return { color: "#eab308", border: "#eab30855", soft: "#eab30812" }; // yellow-500 — Neutral
+  // Reprise B2 : jaune #eab308 en dur illisible sur Papier (1,6:1) → or lisible du thème (jeton primary).
+  if (v <= 74) return { color: "rgb(var(--c-primary))", border: "rgb(var(--c-primary) / 0.3333333)", soft: "rgb(var(--c-primary) / 0.0705882)" }; // or — Neutral / Cupidité
   return { color: "rgb(var(--c-success))", border: "rgb(var(--c-success) / 0.3333333)", soft: "rgb(var(--c-success) / 0.0705882)" }; // green-500 — Greed/Extreme Greed
 }

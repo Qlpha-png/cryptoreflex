@@ -133,7 +133,7 @@ export default function WaltioPromoCard({
             >
               Voir le comparatif complet
             </Link>
-            <p className="text-xs text-muted/70">{caption}</p>
+            <p className="text-xs text-fg-4">{caption}</p>
           </div>
         </div>
       </section>
