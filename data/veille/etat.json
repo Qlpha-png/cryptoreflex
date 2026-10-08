@@ -1,6 +1,6 @@
 {
   "_lisezmoi": "État de référence relu et accepté des sources officielles (voir data/veille/sources.json). Réécrit par « node scripts/veille-officielle.mjs --enregistrer » : à ne lancer qu'après avoir mis le site à jour.",
-  "_enregistre": "2026-10-06",
+  "_enregistre": "2026-10-08",
   "legifrance": {
     "CGI art. 150 VH bis": {
       "id": "LEGIARTI000050366751",
@@ -313,11 +313,11 @@
         ]
       },
       "https://help.bitstack-app.com/fr/articles/6379341-quels-sont-les-modes-de-paiement-disponibles-sur-l-application": {
-        "phrases": "5c7e6a47b62ebf00",
+        "phrases": "7aaaf80fb3e778c5",
         "liste": [
           "Quels sont les prix et les frais pratiqués par Bitstack ?",
           "See the License for the specific language governing permissions and limitations under the License.",
-          "Écrit par Arthur 30 juillet 2026 Table des matières Les modes de paiement acceptés Bitstack prend en charge les modes de paiement suivants pour les clients euro"
+          "Écrit par Gerardo Mis à jour aujourd'hui Table des matières Les modes de paiement acceptés Bitstack prend en charge les modes de paiement suivants pour les clie"
         ]
       },
       "https://help.bitstack-app.com/fr/articles/12784290-comment-effectuer-un-virement-depuis-mon-compte-euro-bitstack": {
@@ -1016,33 +1016,6 @@
     "bitstamp": {},
     "bitvavo": {},
     "deblock": {
-      "https://deblock.com/fr/accords-juridiques": {
-        "mode": "navigateur",
-        "liens": "c964d128f2c9eaaf",
-        "liste": [
-          "https://cdn1.deblock.com/terms/Glossary/Glossaire-FR-EN.pdf",
-          "https://cdn1.deblock.com/terms/april-2026-BTC-Roundup/Terms_Automatic_RoundUp_FR_v1.1.pdf",
-          "https://cdn1.deblock.com/terms/btc-double/20260930_BTC_double_FR.pdf",
-          "https://cdn1.deblock.com/terms/crypto-wallet-import-terms/20260107_crypto_wallet_import_terms_v0_FR.pdf",
-          "https://cdn1.deblock.com/terms/feb-2026-500-bonus/20262302_Terms_500_bonus_FR.docx.pdf",
-          "https://cdn1.deblock.com/terms/fee_info/20231206-BETA-Fee_Information_Document-FR.pdf",
-          "https://cdn1.deblock.com/terms/fee_info/Fees_Pages_Deblock_FR_v6.3.pdf",
-          "https://cdn1.deblock.com/terms/fee_info/Fees_Pages_Deblock_FR_v6.4.3.pdf",
-          "https://cdn1.deblock.com/terms/game10k/10k_raffle_2025_rules_FR.pdf",
-          "https://cdn1.deblock.com/terms/inactive-accounts/20241231_inactive_accounts_website page_FR.pdf",
-          "https://cdn1.deblock.com/terms/jan-2026-design-contest/20260127_design_contest_terms_FR.pdf",
-          "https://cdn1.deblock.com/terms/jan-2026-onboarding-raffle/20260123_onboarding_raffle_FR.pdf",
-          "https://cdn1.deblock.com/terms/june-2026-welcome-bonus-btc/20260601-BTC-welcome-bonus-FR.pdf",
-          "https://cdn1.deblock.com/terms/may-2026-payment-groceries/Rules-Payment-groceries-FR.pdf",
-          "https://cdn1.deblock.com/terms/order-execution-policy/20250528-1.5-politique-dexecution-des-ordres.pdf",
-          "https://cdn1.deblock.com/terms/personal-terms/FR/20260223-v12.3-personal_terms-FR.pdf",
-          "https://cdn1.deblock.com/terms/personal-terms/FR/20260313-v13-personal-terms-FR.pdf",
-          "https://cdn1.deblock.com/terms/personal-terms/FR/20260918-v3_2-Techblock-FR.docx.pdf",
-          "https://cdn1.deblock.com/terms/referrals/FR/Continuous_referrals_terms_v1_FR.pdf",
-          "https://cdn1.deblock.com/terms/vaults/FR/20260610-v3.0-Techblock-FR.pdf",
-          "https://cdn1.deblock.com/terms/xPay/FR/20240507-v1-applepay-terms-fr.pdf"
-        ]
-      },
       "https://deblock.com/fr/abonnements": {
         "jetons": "b2527f6c98187023",
         "liste": [
@@ -1066,6 +1039,33 @@
       },
       "https://cdn1.deblock.com/terms/personal-terms/FR/20260313-v13-personal-terms-FR.pdf": {
         "pdf": "55e3de3ef7e6ef21"
+      },
+      "https://deblock.com/fr/accords-juridiques": {
+        "mode": "navigateur",
+        "liens": "913484e9b2a528b3",
+        "liste": [
+          "https://cdn1.deblock.com/terms/Glossary/Glossaire-FR-EN.pdf",
+          "https://cdn1.deblock.com/terms/april-2026-BTC-Roundup/Terms_Automatic_RoundUp_FR_v1.1.pdf",
+          "https://cdn1.deblock.com/terms/btc-double/20260930_BTC_double_FR.pdf",
+          "https://cdn1.deblock.com/terms/crypto-wallet-import-terms/20260107_crypto_wallet_import_terms_v0_FR.pdf",
+          "https://cdn1.deblock.com/terms/feb-2026-500-bonus/20262302_Terms_500_bonus_FR.docx.pdf",
+          "https://cdn1.deblock.com/terms/fee_info/20231206-BETA-Fee_Information_Document-FR.pdf",
+          "https://cdn1.deblock.com/terms/fee_info/Fees_Pages_Deblock_FR_v6.3.pdf",
+          "https://cdn1.deblock.com/terms/fee_info/Fees_Pages_Deblock_FR_v6.4.3.pdf",
+          "https://cdn1.deblock.com/terms/game10k/10k_raffle_2025_rules_FR.pdf",
+          "https://cdn1.deblock.com/terms/inactive-accounts/20241231_inactive_accounts_website page_FR.pdf",
+          "https://cdn1.deblock.com/terms/jan-2026-design-contest/20260127_design_contest_terms_FR.pdf",
+          "https://cdn1.deblock.com/terms/jan-2026-onboarding-raffle/20260123_onboarding_raffle_FR.pdf",
+          "https://cdn1.deblock.com/terms/june-2026-welcome-bonus-btc/20260601-BTC-welcome-bonus-FR.pdf",
+          "https://cdn1.deblock.com/terms/may-2026-payment-groceries/Rules-Payment-groceries-FR.pdf",
+          "https://cdn1.deblock.com/terms/order-execution-policy/20250528-1.5-politique-dexecution-des-ordres.pdf",
+          "https://cdn1.deblock.com/terms/personal-terms/FR/20260223-v12.3-personal_terms-FR.pdf",
+          "https://cdn1.deblock.com/terms/personal-terms/FR/20260313-v13-personal-terms-FR.pdf",
+          "https://cdn1.deblock.com/terms/personal-terms/FR/20260918-v3_2-Techblock-FR.docx.pdf",
+          "https://cdn1.deblock.com/terms/referrals/FR/Deblock_Referral_Terms_v1_FR.docx.pdf",
+          "https://cdn1.deblock.com/terms/vaults/FR/20260610-v3.0-Techblock-FR.pdf",
+          "https://cdn1.deblock.com/terms/xPay/FR/20240507-v1-applepay-terms-fr.pdf"
+        ]
       }
     },
     "young-platform": {
@@ -1244,33 +1244,6 @@
           "10%",
           "2€",
           "3%",
-          "525040€"
-        ]
-      },
-      "https://feel-mining.com/feel-mining-platinum": {
-        "mode": "navigateur",
-        "jetons": "10be3001291a0714",
-        "liste": [
-          "0,25%",
-          "0,5%",
-          "0,75%",
-          "1%",
-          "1,48€",
-          "1,5%",
-          "11,92€",
-          "12,06€",
-          "13,00€",
-          "14,20€",
-          "14,90€",
-          "14,99€",
-          "143,00€",
-          "15,32€",
-          "178,80€",
-          "2,80€",
-          "20%",
-          "33%",
-          "50%",
-          "50€",
           "525040€"
         ]
       },
