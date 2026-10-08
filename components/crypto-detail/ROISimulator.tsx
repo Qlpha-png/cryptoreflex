@@ -10,6 +10,8 @@ import {
   Repeat,
   Info,
 } from "lucide-react";
+import { sourceInfo } from "@/lib/data-sources/attribution";
+import type { SourceName } from "@/lib/data-sources/priorities";
 
 /**
  * ROISimulator — calculatrice "Et si tu avais investi X€ en {date} ?"
@@ -110,6 +112,8 @@ function ROISimulator({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<"unsupported" | "fetch" | null>(null);
   const [clamped, setClamped] = useState(false);
+  // 08/10/2026 (lot Z2) : source réelle de la série (renvoyée par /api/historical)
+  const [seriesSource, setSeriesSource] = useState<SourceName | null>(null);
   // FIX 2026-05-02 #2 — borne haute du slider date = premier timestamp pour
   // lequel on a un prix réel. Évite que le user demande "mai 2021" sur un coin
   // listé en 2024 → simulateur prenait le prix 2024 comme "prix 2021" → ROI
@@ -142,10 +146,12 @@ function ROISimulator({
           points: HistoricalPoint[];
           clamped?: boolean;
           firstAvailableTimestamp?: number | null;
+          source?: SourceName | null;
         };
         if (cancelled) return;
         setPoints(Array.isArray(data.points) ? data.points : []);
         setClamped(Boolean(data.clamped));
+        setSeriesSource(data.source ?? null);
         setFirstAvailableTs(
           typeof data.firstAvailableTimestamp === "number"
             ? data.firstAvailableTimestamp
@@ -528,13 +534,14 @@ function ROISimulator({
         {clamped && (
           <p className="text-xs text-warning-fg leading-snug inline-flex items-start gap-1.5">
             <Info className="h-3 w-3 mt-0.5 shrink-0" aria-hidden="true" />
-            Données limitées par CoinGecko free tier — résultat indicatif sur la
-            période disponible.
+            Historique disponible plus court que la période demandée — résultat
+            indicatif sur la période disponible.
           </p>
         )}
         <p className="text-xs text-muted leading-snug">
           Les performances passées ne préjugent pas des performances futures.
-          Calcul basé sur les prix CoinGecko en EUR. Action vs crypto =
+          Calcul basé sur l&apos;historique des prix en EUR
+          {sourceInfo(seriesSource) ? ` (données : ${sourceInfo(seriesSource)!.label})` : ""}. Action vs crypto =
           volatilité différente : la prime de risque crypto se paye en stress
           baissier équivalent.
         </p>

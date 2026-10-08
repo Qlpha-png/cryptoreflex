@@ -119,11 +119,16 @@ describe("table data/cmc-id-map.json", () => {
     expect(CMC_CHUNKS.flat().length).toBe(Object.keys(MAP).length);
   });
 
-  it("budget : plafond mensuel ≤ 70 % des 15 000 crédits gratuits (marge ≥ 30 %)", async () => {
-    const { cmcMaxMonthlyCredits } = await import("@/lib/coinmarketcap");
+  it("budget (lot Z2) : plan des robots ≤ 250 crédits/jour et ≤ 70 % des 15 000 crédits gratuits", async () => {
+    const { cmcMaxMonthlyCredits, cmcCreditsParJour, CMC_PLAFOND_ROBOTS_JOUR } = await import("@/lib/coinmarketcap");
+    const j = cmcCreditsParJour();
+    expect(j.detail["r1-classement"]).toBe(144); // 1 crédit (top 100) × 144 passages
+    expect(j.detail["r1-global"]).toBe(24);
+    expect(j.detail["r2-fiches"]).toBe(21); // 7 lots × 3 passages (lot Z3)
+    expect(j.total).toBe(191);
+    expect(j.total).toBeLessThanOrEqual(CMC_PLAFOND_ROBOTS_JOUR);
     const b = cmcMaxMonthlyCredits();
-    expect(b.detail.listings).toBe(2880); // 2 crédits × 48/jour × 30
-    expect(b.detail.global).toBe(720);
+    expect(b.detail["r1-classement"]).toBe(4320);
     expect(b.share).toBeLessThanOrEqual(0.7);
   });
 });
@@ -139,7 +144,8 @@ describe("client CoinMarketCap", () => {
     expect(await cmc.cmcGlobalMetrics()).toBeNull();
     expect(await cmc.cmcFearGreed()).toBeNull();
     expect((await cmc.cmcQuotesChunk(0)).size).toBe(0);
-    expect(coinmarketcapProvider.canHandle({ coingeckoId: "bitcoin", symbol: "BTC", name: "Bitcoin" })).toBe(false);
+    // lot Z2 : le fournisseur lit le relevé du robot R1 (KV absent ici) : aucune donnée, aucun appel
+    expect(await coinmarketcapProvider.fetch({ coingeckoId: "bitcoin", symbol: "BTC", name: "Bitcoin" })).toBeNull();
     expect(calls.length).toBe(0);
   });
 
@@ -152,7 +158,8 @@ describe("client CoinMarketCap", () => {
     const cmc = await import("@/lib/coinmarketcap");
     const rows = await cmc.cmcListingsTop();
     expect(calls.length).toBe(1);
-    expect(calls[0].url).toBe("https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest?start=1&limit=200&convert=USD");
+    // lot Z2 : top 100 (1 crédit), USD seul (Basic : une devise par appel)
+    expect(calls[0].url).toBe("https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest?start=1&limit=100&convert=USD");
     expect(calls[0].url).not.toContain(KEY);
     expect((calls[0].init?.headers as Record<string, string>)["X-CMC_PRO_API_KEY"]).toBe(KEY);
     expect(rows[0]).toMatchObject({ cmcId: 1, symbol: "BTC", priceUsd: 60_000, change1h: 0.1, change7d: -3.4, marketCap: 60_000 * 1_000_000 });

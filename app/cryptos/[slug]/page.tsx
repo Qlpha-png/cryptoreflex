@@ -33,6 +33,7 @@ import {
 import { getCryptoFiche } from "@/lib/cryptos-db";
 import { retirerMontantsFiges } from "@/lib/fiche-llm-texte";
 import VerifieLe from "@/components/ui/VerifieLe";
+import { coursSourceTexte } from "@/lib/data-sources/attribution";
 import { resolveSlugAlias } from "@/lib/crypto-slug-aliases";
 import { toCryptoPageSlug } from "@/lib/crypto-page-slug";
 import { fetchCoinDetail } from "@/lib/coingecko";
@@ -1202,7 +1203,8 @@ async function CryptoPage({ params }: Props) {
             "recommandées" → "présentées" pour alignement wording compliance
             (phase 2 — pas de signal d'achat personnalisé). */}
         <p className="mt-8 text-xs text-muted leading-relaxed">
-          Données de prix : plateformes d'échange, CoinMarketCap et CoinGecko, selon disponibilité.{" "}
+          {/* 08/10/2026 (lot Z2) : source réellement utilisée pour le cours, plus de liste écrite en dur */}
+          {coursSourceTexte(detail ? [{ sources: detail.sources }] : []) ? `${coursSourceTexte(detail ? [{ sources: detail.sources }] : [])}. ` : null}
           <VerifieLe date={FICHE_REVIEWED_DATE} famille="editorial" label="Données éditoriales vérifiées" age={false} /> par le
           fondateur {BRAND.name} (Kevin Voisin).{" "}
           {anyPaidPlatform

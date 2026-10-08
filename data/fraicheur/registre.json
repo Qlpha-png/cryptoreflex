@@ -5,23 +5,23 @@
   "familles": [
     {
       "id": "1",
-      "famille": "Cours du bandeau, de l'accueil et du top 50",
-      "source": "CoinGecko (S3, licence à trancher) ; CoinMarketCap Basic (S1) prévu au lot Z2",
+      "famille": "Cours du bandeau, de l'accueil et du top 100",
+      "source": "CoinMarketCap Basic (S1), top 100 en USD ; CoinGecko (S3) seulement si CoinMarketCap échoue (lot Z2)",
       "robot": "Vercel Cron refresh-ticker-prices (R1)",
       "cadence": "toutes les 10 min",
       "ageMaxH": 0.5,
       "critiqueH": 1.25,
-      "lecture": { "methode": "kv", "cle": "cg-ticker-prices:v1", "champ": "fetchedAt", "repliCle": "cg-ticker-prices:stale:v1", "explication": "champ fetchedAt de la clé KV cg-ticker-prices:v1 (secours : clé stale, écrite une fois par heure)" }
+      "lecture": { "methode": "kv", "cle": "cg-ticker-prices:v1", "champ": "fetchedAt", "repliCle": "cg-ticker-prices:stale:v1", "explication": "champ fetchedAt de la clé KV cg-ticker-prices:v1 (écrite par MSET, sans expiration : l'âge se lit sur fetchedAt ; l'ancienne clé stale n'est plus écrite)" }
     },
     {
       "id": "2",
       "famille": "Instantané de secours price-source:top-snapshot",
-      "source": "même source que n° 1",
-      "robot": "Vercel Cron update-static-prices",
-      "cadence": "toutes les heures",
-      "ageMaxH": 3,
+      "source": "même relevé que n° 1 (même commande MSET)",
+      "robot": "Vercel Cron refresh-ticker-prices (R1) ; update-static-prices supprimé au lot Z2",
+      "cadence": "toutes les 10 min",
+      "ageMaxH": 1,
       "critiqueH": 6,
-      "lecture": { "methode": "kv", "cle": "cron:update-static-prices:last", "champ": "at", "trace": true, "explication": "trace KV « dernier passage + résultat » (lib/cron-trace.ts) : heure et ok" }
+      "lecture": { "methode": "kv", "cle": "cron:refresh-ticker-prices:last", "champ": "at", "trace": true, "explication": "trace KV « dernier passage + résultat » de R1 (lib/cron-trace.ts) : heure et ok" }
     },
     {
       "id": "3",

@@ -128,7 +128,7 @@ const TOOLS: ToolMeta[] = [
   {
     title: "Convertisseur Crypto",
     description:
-      "Conversion temps réel BTC ↔ ETH ↔ SOL ↔ EUR/USD. 15 cryptos, taux CoinGecko.",
+      "Conversion BTC ↔ ETH ↔ SOL ↔ EUR/USD au taux du marché. 15 cryptos.",
     href: "/outils/convertisseur",
     Icon: ArrowDownUp,
   },

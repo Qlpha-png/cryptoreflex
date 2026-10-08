@@ -10,6 +10,7 @@ import { graphSchema, type JsonLd } from "@/lib/schema";
 
 import dynamic from "next/dynamic";
 import StructuredData from "@/components/StructuredData";
+import DataSourceLine from "@/components/DataSourceLine";
 import HeatmapEmpty from "./HeatmapEmpty";
 import { withHreflang } from "@/lib/seo-alternates";
 import Breadcrumbs from "@/components/Breadcrumbs";
@@ -47,7 +48,7 @@ const PAGE_URL = `${BRAND.url}/marche/heatmap`;
 export const metadata: Metadata = {
   title: "Heatmap crypto temps réel — Top 100 marché 2026",
   description:
-    "Visualisez en un coup d'œil les variations 24h du top 100 crypto. Heatmap interactive, vert/rouge, données CoinMarketCap et CoinGecko. 100 % gratuit.",
+    "Visualisez en un coup d'œil les variations 24h du top 100 crypto. Heatmap interactive, vert/rouge. 100 % gratuit.",
   alternates: withHreflang(PAGE_URL),
   openGraph: {
     title: "Heatmap crypto temps réel — Top 100",
@@ -128,8 +129,9 @@ async function HeatmapPage() {
           <p className="mt-3 text-base text-muted max-w-2xl">
             Visualisez en un coup d'œil quelles cryptos montent ou chutent
             aujourd'hui. Carrés colorés vert (hausse) / rouge (baisse), classés
-            par capitalisation. Données CoinMarketCap et CoinGecko ; prix mis à jour dans le navigateur.
+            par capitalisation ; prix mis à jour dans le navigateur.
           </p>
+          <DataSourceLine items={all} fields={["price"]} prefix="Cours :" releve className="mt-2 text-xs text-muted" />
         </header>
 
         {coins.length === 0 ? (
@@ -213,7 +215,7 @@ async function HeatmapPage() {
 
         {/* MENTIONS */}
         <p className="mt-8 text-xs text-muted leading-relaxed">
-          Données de marché fournies par CoinMarketCap, avec CoinGecko en relais (heure du relevé indiquée). Cette
+          Cette
           page est purement informative et ne constitue pas un conseil en
           investissement. Investir dans les cryptomonnaies comporte un risque de
           perte en capital. Voir notre{" "}

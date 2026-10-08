@@ -251,7 +251,7 @@ export default function PortfolioTracker() {
           <div>
             <h2 className="font-bold text-lg text-fg">Ajouter une crypto</h2>
             <p className="text-xs text-muted">
-              Top 100 par capitalisation, prix live CoinGecko (EUR).
+              Top 100 par capitalisation, prix en euros.
             </p>
           </div>
         </div>
@@ -408,9 +408,9 @@ export default function PortfolioTracker() {
         <Info className="h-5 w-5 text-info-fg mt-0.5 shrink-0" />
         <p className="text-sm text-fg leading-relaxed">
           <strong>100 % local :</strong> vos positions sont stockées
-          uniquement dans le localStorage de ce navigateur. Aucune donnée
-          n'est envoyée à Cryptoreflex ni à un tiers (hormis les requêtes
-          publiques CoinGecko pour les prix).
+          uniquement dans le localStorage de ce navigateur. Aucune quantité
+          n'est envoyée à Cryptoreflex ni à un tiers : pour les prix, seule
+          la liste des cryptos suivies est demandée à notre serveur.
         </p>
       </div>
     </div>

@@ -184,7 +184,7 @@ export default function EmbedsLandingPage() {
             <BenefitCard
               icon={<Code className="h-6 w-6" />}
               title="Zéro maintenance"
-              text="On gère les updates (taux CoinGecko, fiscalité 2026, MiCA…) côté serveur. Vous, vous gardez votre iframe — vous profitez des améliorations sans toucher à rien."
+              text="On gère les updates (taux du marché, fiscalité 2026, MiCA…) côté serveur. Vous, vous gardez votre iframe — vous profitez des améliorations sans toucher à rien."
             />
           </div>
         </div>

@@ -36,8 +36,8 @@
  */
 
 import { unstable_cache } from "next/cache";
-import { getKv } from "@/lib/kv";
 import { applySymbolOverride } from "@/lib/symbol-overrides";
+import { readMarcheSnapshot, readTickerCache, type TickerEntry } from "@/lib/kv-ticker";
 
 // PHASE 2 — Provider Pattern registry. La cascade live (Binance, Kraken,
 // Coinbase, KuCoin, DexScreener, CryptoCompare, CoinGecko, Static) est
@@ -51,7 +51,9 @@ import {
 } from "@/lib/price-providers";
 // 06/10/2026 — priorité PAR TYPE DE DONNÉE (table unique lib/data-sources/priorities.ts) + relais + disjoncteur.
 import { coingeckoSimplePrice } from "@/lib/price-providers/coingecko";
-import { cmcEnabled, cmcListingsTop, cmcQuoteForSite, cmcRowsWithSiteIds, getCmcEntry } from "@/lib/coinmarketcap";
+// 08/10/2026 (lot Z2) : plus aucun appel CoinMarketCap ici (lib/coinmarketcap.ts réservé aux robots) ; les données CMC
+// viennent du relevé du robot R1 écrit dans le KV (lib/kv-ticker.ts). getCmcEntry = table locale, sans réseau.
+import { getCmcEntry } from "@/lib/coinmarketcap";
 import { resolveMarketFields, type FieldSources, type LiveQuote, type MarketFieldDeps } from "@/lib/data-sources/market-fields";
 import { resolveWithRelay } from "@/lib/data-sources/resolve";
 import { checkList } from "@/lib/data-sources/sanity";
@@ -86,105 +88,24 @@ const DATA_META_LOOKUP: Record<string, { symbol: string; name: string }> = (() =
 })();
 
 /* -------------------------------------------------------------------------- */
-/*  KV snapshot — auto-update via cron /api/cron/update-static-prices         */
+/*  Instantané de secours (KV) — écrit par le robot R1 seulement               */
 /* -------------------------------------------------------------------------- */
-
-interface KvStaticSnapshot {
+/*
+ * 08/10/2026 (lot Z2) : l'instantané `price-source:top-snapshot` est écrit par le robot R1 (refresh-ticker-prices),
+ * dans la même commande MSET que le bandeau. L'ancien cron horaire update-static-prices et le rafraîchissement en
+ * arrière-plan déclenché par la lecture (doublon D9) sont supprimés : cette fonction ne fait plus que LIRE (≤ 24 h).
+ */
+async function _readKvSnapshot(): Promise<{
   snapshot: Record<string, { priceUsd: number; change24h: number; marketCap: number; volume24h: number }>;
+  /** Heure du relevé de R1 (ISO). Reprise Z2 : gardée pour ne jamais horodater ce secours « maintenant ». */
   updatedAt: string;
-  sourceCount: number;
-}
-
-/**
- * Lecture du snapshot KV. Plus lazy refresh fire-and-forget si stale.
- * Avantage : 0 dependance cron externe, le snapshot s'auto-rafraichit
- * naturellement quand un user atteint la fonction.
- */
-const KV_SNAPSHOT_KEY = "price-source:top-snapshot";
-const KV_REFRESH_LOCK_KEY = "price-source:refresh-lock";
-const KV_STALE_THRESHOLD_MS = 5 * 60 * 1000; // 5 min
-
-/**
- * Lit le snapshot KV. Si >5min stale, lance un refresh background
- * (fire-and-forget, ne bloque pas le caller). Lock pour eviter que
- * 100 users simultanes lancent 100 refreshs en parallele.
- */
-async function _readKvSnapshot(): Promise<Record<string, { priceUsd: number; change24h: number; marketCap: number; volume24h: number }> | null> {
+} | null> {
   try {
-    const kv = getKv();
-    const raw = await kv.get<string>(KV_SNAPSHOT_KEY);
-    if (!raw) {
-      // Snapshot inexistant -> fire refresh background (sans await)
-      void _refreshKvSnapshotIfNotLocked();
-      return null;
-    }
-    const parsed = typeof raw === "string" ? (JSON.parse(raw) as KvStaticSnapshot) : (raw as unknown as KvStaticSnapshot);
-    if (!parsed?.snapshot) return null;
-
-    // Check staleness
-    const updatedAt = parsed.updatedAt ? new Date(parsed.updatedAt).getTime() : 0;
-    const age = Date.now() - updatedAt;
-    if (age > KV_STALE_THRESHOLD_MS) {
-      // Stale -> trigger refresh background, mais on retourne quand meme
-      // le snapshot stale au caller pour eviter latency
-      void _refreshKvSnapshotIfNotLocked();
-    }
-    return parsed.snapshot;
+    const s = await readMarcheSnapshot();
+    if (!s?.snapshot || typeof s.updatedAt !== "string" || !Number.isFinite(Date.parse(s.updatedAt))) return null;
+    return { snapshot: s.snapshot, updatedAt: s.updatedAt };
   } catch {
     return null;
-  }
-}
-
-/**
- * Refresh le snapshot KV via getTopMarket (Binance + CoinCap aggregator).
- * Lock 60s pour eviter le thundering herd (100 users -> 100 fetchs).
- * Appele en fire-and-forget depuis _readKvSnapshot quand stale.
- */
-async function _refreshKvSnapshotIfNotLocked(): Promise<void> {
-  try {
-    const kv = getKv();
-    // Acquire lock (set + ex 60s + nx serait ideal mais l'API kv basique
-    // ne fait pas nx — on simule en check-then-set rudimentaire).
-    const existingLock = await kv.get<string>(KV_REFRESH_LOCK_KEY);
-    if (existingLock) return; // refresh deja en cours
-    await kv.set(KV_REFRESH_LOCK_KEY, "1", { ex: 60 });
-
-    // Fetch top 50 (separated cache key + flow direct)
-    const top = await _getTopMarket(50);
-    if (top.length < 10) {
-      await kv.del(KV_REFRESH_LOCK_KEY);
-      return;
-    }
-
-    const snapshot: Record<string, { priceUsd: number; change24h: number; marketCap: number; volume24h: number }> = {};
-    for (const c of top) {
-      snapshot[c.id] = {
-        priceUsd: c.priceUsd,
-        change24h: c.change24h,
-        marketCap: c.marketCap,
-        volume24h: c.volume24h,
-      };
-    }
-
-    await kv.set(
-      KV_SNAPSHOT_KEY,
-      JSON.stringify({
-        snapshot,
-        updatedAt: new Date().toISOString(),
-        sourceCount: top.length,
-      }),
-      { ex: 24 * 3600 }, // TTL 24h max
-    );
-
-    await kv.del(KV_REFRESH_LOCK_KEY);
-  } catch {
-    // Best effort, on ignore les erreurs (le hardcode fallback prend le relais)
-    try {
-      const kv = getKv();
-      await kv.del(KV_REFRESH_LOCK_KEY);
-    } catch {
-      /* noop */
-    }
   }
 }
 
@@ -351,8 +272,8 @@ async function _coincapTop(limit: number): Promise<CoinCapAsset[]> {
 // La table de prix figés de mai 2026 (BTC 63 662 $, ETH 1 667 $…) a été
 // retirée : ses valeurs arrivaient en production affichées comme un cours
 // courant dès que la cascade live échouait. Règle du site : aucun chiffre
-// faux. Derniers filets : cache KV du ticker (cron, TTL 6 h) et snapshot KV
-// (cron update-static-prices) ; sinon priceUsd 0 → « Prix indisponible ».
+// faux. Derniers filets : relevé KV du bandeau (robot R1, 6 h au plus) et instantané KV
+// (même robot, 24 h au plus) ; sinon priceUsd 0 → « Prix indisponible ».
 // Le supply servant à estimer les capitalisations reste dans
 // lib/price-providers/static.ts (STATIC_FALLBACK, jamais affiché).
 
@@ -398,26 +319,33 @@ const COIN_META: Record<string, { symbol: string; name: string }> = {
 /*  06/10/2026 — sources des champs d'ensemble (table lib/data-sources)       */
 /* -------------------------------------------------------------------------- */
 
-/** Appels utilisés par resolveMarketFields. CMC n'est branché que si CMC_API_KEY existe (sinon aucun appel). */
+/** Ligne CoinMarketCap du relevé R1 (KV) en champs de marché, ou null. */
+function _cmcFieldsFromTicker(e: TickerEntry | undefined) {
+  if (!e || e.unlinked || !(e.price > 0)) return null;
+  return {
+    priceUsd: e.price,
+    change1h: e.change1h ?? null,
+    change24h: e.change24h,
+    change7d: e.change7d ?? null,
+    marketCap: e.marketCap > 0 ? e.marketCap : null,
+    rank: e.rank ?? null,
+    circulatingSupply: e.circulatingSupply ?? null,
+    volume24h: e.volume24h ?? null,
+  };
+}
+
+/**
+ * Appels utilisés par resolveMarketFields. 08/10/2026 (lot Z2) : « cmc » = relevé CoinMarketCap du robot R1 LU dans le
+ * KV (top 100, 12 min au plus) ; aucune requête vers CoinMarketCap. Fiche hors du relevé : CMC n'est pas une source.
+ */
 function _marketFieldDeps(coingeckoId: string): MarketFieldDeps {
   return {
-    // Fiche absente de la table : CMC n'est PAS une source pour elle (aucun appel, et surtout aucun « succès » à vide
-    // qui refermerait le disjoncteur semi-ouvert sans rien avoir vérifié).
-    cmc: cmcEnabled() && getCmcEntry(coingeckoId)
+    // Fiche absente de la table : CMC n'est PAS une source pour elle (aucun « succès » à vide qui refermerait le
+    // disjoncteur semi-ouvert sans rien avoir vérifié). getCmcEntry = lecture de data/cmc-id-map.json, sans réseau.
+    cmc: getCmcEntry(coingeckoId)
       ? async (id: string) => {
-          const q = await cmcQuoteForSite(id);
-          return q
-            ? {
-                priceUsd: q.priceUsd,
-                change1h: q.change1h,
-                change24h: q.change24h,
-                change7d: q.change7d,
-                marketCap: q.marketCap,
-                rank: q.rank,
-                circulatingSupply: q.circulatingSupply,
-                volume24h: q.volume24h,
-              }
-            : null;
+          const t = await readTickerCache();
+          return t.source === "live" && t.provider === "coinmarketcap" ? _cmcFieldsFromTicker(t.record[id]) : null;
         }
       : undefined,
     // Même URL que le fournisseur CoinGecko de la cascade (cache Next partagé), délai réduit à 3 s.
@@ -452,16 +380,19 @@ function _triggerCrossCheck(top: readonly TopMarketCoin[]): void {
       import("@/lib/data-sources/cross-check"),
       import("@/lib/price-providers"),
     ]);
-    const exchanges = PROVIDERS.filter((p) => ["binance", "kraken", "coinbase", "kucoin"].includes(p.name));
+    // 08/10/2026 (lot Z2) : Coinbase et KuCoin ne servent plus de témoins ; le relevé CMC vient du KV du robot R1.
+    const exchanges = PROVIDERS.filter((p) => ["binance", "kraken"].includes(p.name));
     let cmcQuotedAt = new Map<string, { price: number; quotedAt: string | null }>();
     await maybeRunCrossCheck({
       coins: async () => {
-        if (cmcEnabled()) {
-          const rows = cmcRowsWithSiteIds(await cmcListingsTop())
-            .filter((r): r is typeof r & { siteId: string } => r.siteId !== null)
+        const t = await readTickerCache();
+        if (t.source === "live" && t.provider === "coinmarketcap") {
+          const rows = Object.values(t.record)
+            .filter((e) => !e.unlinked && e.price > 0)
+            .sort((a, b) => (a.rank ?? Infinity) - (b.rank ?? Infinity))
             .slice(0, 20);
-          cmcQuotedAt = new Map(rows.map((r) => [r.siteId, { price: r.priceUsd, quotedAt: r.lastUpdated }]));
-          return rows.map((r) => ({ id: r.siteId, symbol: r.symbol, name: r.name }));
+          cmcQuotedAt = new Map(rows.map((e) => [e.id, { price: e.price, quotedAt: t.fetchedAt }]));
+          return rows.map((e) => ({ id: e.id, symbol: e.symbol, name: e.name }));
         }
         return top.slice(0, 20).map((c) => ({ id: c.id, symbol: c.symbol, name: c.name }));
       },
@@ -544,19 +475,31 @@ async function _getPriceSnapshotInner(coingeckoId: string): Promise<PriceSnapsho
   // pas exposé dans PriceSnapshot pour ne pas casser le contrat existant,
   // mais source reste "static" pour signaler que ce n'est pas un live exchange.
   try {
-    const { readTickerCache } = await import("@/lib/kv-ticker");
-    const { record: cached, isStale, fetchedAt: tickerAt } = await readTickerCache();
-    // 06/10/2026 — la clé de SECOURS (jusqu'à 6 h) n'est jamais servie comme cours actuel : on passe à la cascade
+    const { record: cached, isStale, fetchedAt: tickerAt, provider } = await readTickerCache();
+    // 06/10/2026 — un relevé de plus de 12 min n'est jamais servi comme cours actuel : on passe à la cascade
     // en direct. Le relevé en direct garde l'heure du cron (et non « maintenant »).
     const entry = isStale ? undefined : cached[coingeckoId];
-    if (entry && entry.price > 0) {
-      // 06/10/2026 — le cache ticker vient de CoinGecko /coins/markets (cron) : prix attribué à « coingecko ».
-      // Les champs d'ensemble suivent la table de priorités (CMC d'abord s'il est actif, sinon ces valeurs).
+    if (entry && !entry.unlinked && entry.price > 0) {
+      // 08/10/2026 (lot Z2) — source réelle du relevé du robot R1 : CoinMarketCap (top 100, tous les champs dans le même
+      // appel), ou CoinGecko quand CMC a échoué. Les champs manquants suivent la table de priorités.
+      const liveSource: SourceName = provider === "coinmarketcap" ? "coinmarketcap" : "coingecko";
       const { fields, sources } = await resolveMarketFields(
         { coingeckoId, symbol: entry.symbol, name: entry.name },
-        { source: "coingecko", priceUsd: entry.price, data: { change24h: entry.change24h, marketCap: entry.marketCap, volume24h: 0 } },
+        {
+          source: liveSource,
+          priceUsd: entry.price,
+          data: {
+            change24h: entry.change24h,
+            marketCap: entry.marketCap,
+            volume24h: entry.volume24h ?? 0,
+            change1h: entry.change1h ?? null,
+            change7d: entry.change7d ?? null,
+            circulatingSupply: entry.circulatingSupply ?? null,
+            rank: entry.rank ?? null,
+          },
+        },
         _marketFieldDeps(coingeckoId),
-      ).catch(() => ({ fields: null, sources: { price: "coingecko" as SourceName } }));
+      ).catch(() => ({ fields: null, sources: { price: liveSource } }));
       return {
         id: coingeckoId,
         symbol: entry.symbol,
@@ -564,10 +507,11 @@ async function _getPriceSnapshotInner(coingeckoId: string): Promise<PriceSnapsho
         priceUsd: entry.price,
         change24h: fields?.change24h ?? entry.change24h,
         change7d: fields?.change7d ?? null,
-        volume24h: fields?.volume24h ?? 0, // KV ticker n'a pas le volume24h
+        volume24h: fields?.volume24h ?? entry.volume24h ?? 0,
         marketCap: fields?.marketCap ?? entry.marketCap,
         sparkline7d: [],
-        source: "static", // marqué static car cache KV (pas live exchange)
+        // 08/10/2026 (lot Z2) : source réelle du relevé (avant : « static », qui faisait citer « dernier relevé enregistré »)
+        source: liveSource,
         fetchedAt: tickerAt ?? new Date().toISOString(),
         change1h: fields?.change1h ?? null,
         ...(fields?.rank ? { marketCapRank: fields.rank } : {}),
@@ -641,7 +585,8 @@ async function _getPriceSnapshotInner(coingeckoId: string): Promise<PriceSnapsho
       marketCap: fields.marketCap ?? 0,
       sparkline7d: sparkline,
       source,
-      fetchedAt,
+      // Reprise Z2 : le fournisseur coinmarketcap LIT le relevé de R1 (≤ 12 min) : son heure, pas celle du rendu.
+      fetchedAt: typeof data.meta?.releveLe === "string" ? data.meta.releveLe : fetchedAt,
       change1h: fields.change1h,
       ...(fields.rank ? { marketCapRank: fields.rank } : {}),
       circulatingSupply: fields.circulatingSupply,
@@ -651,9 +596,11 @@ async function _getPriceSnapshotInner(coingeckoId: string): Promise<PriceSnapsho
   // Cascade exhausted (coingeckoId pas dans STATIC_FALLBACK ni couvert
   // par aucune source live). On essaie le KV snapshot (auto-update via
   // cron) avant de retourner un snapshot degrade priceUsd=0.
+  // Reprise Z2 : fetchedAt = heure du relevé de R1 (jusqu'à 24 h), jamais l'heure du rendu ; source « static » =
+  // relevé non à jour (attribution « dernier relevé enregistré », lib/data-sources/attribution.ts).
   const kvSnapshot = await _readKvSnapshot();
-  const kvEntry = kvSnapshot?.[coingeckoId];
-  if (kvEntry) {
+  const kvEntry = kvSnapshot?.snapshot[coingeckoId];
+  if (kvSnapshot && kvEntry) {
     return {
       id: coingeckoId,
       symbol: dataMeta.symbol,
@@ -665,7 +612,8 @@ async function _getPriceSnapshotInner(coingeckoId: string): Promise<PriceSnapsho
       marketCap: kvEntry.marketCap,
       sparkline7d: [],
       source: "static",
-      fetchedAt,
+      fetchedAt: kvSnapshot.updatedAt,
+      sources: { price: "static" },
     };
   }
 
@@ -709,37 +657,43 @@ export const getPriceSnapshot = unstable_cache(
  * de market cap (ne connait pas le supply). CoinCap est la bonne source.
  */
 async function _getTopMarket(limit: number): Promise<TopMarketCoin[]> {
-  // 06/10/2026 — ordre de DATA_PRIORITIES.topMarket : CoinMarketCap (classement de 200, UNE seule URL, 2 crédits
-  // par 15 min) puis CoinGecko /coins/markets (inchangé). Avant, la source ET son secours étaient CoinGecko.
+  // Ordre de DATA_PRIORITIES.topMarket : relevé CoinMarketCap du robot R1 (KV, top 100 ; une demande de 200 reçoit
+  // les 100 du relevé) puis CoinGecko /coins/markets.
   const fetchedAt = new Date().toISOString();
   const minRows = Math.min(limit, 10);
   const resolved = await resolveWithRelay<TopMarketCoin[]>(
     "topMarket",
     {
-      coinmarketcap: cmcEnabled()
-        ? async () => {
+      // 08/10/2026 (lot Z2) : relevé CoinMarketCap du robot R1 LU dans le KV (top 100), aucun appel CMC ici.
+      coinmarketcap: async () => {
+            const t = await readTickerCache();
+            // Reprise Z2 : relevé À JOUR seulement (≤ 12 min). Un relevé « stale » (jusqu'à 6 h) passait pour un succès,
+            // bloquait le relais CoinGecko et servait des cours figés horodatés « maintenant » par le suivi de portefeuille.
+            if (t.provider !== "coinmarketcap" || t.source !== "live") return null;
             // Lignes SANS id du site écartées : cette liste alimente des ids (autocomplétion, liste blanche du
-            // portefeuille, cron des prix statiques) ; un slug CMC n'en est jamais un.
-            const rows = cmcRowsWithSiteIds(await cmcListingsTop())
-              .filter((r): r is typeof r & { siteId: string } => r.siteId !== null)
+            // portefeuille) ; un id « cmc-<n> » n'en est jamais un.
+            const rows = Object.values(t.record)
+              .filter((e) => !e.unlinked && e.price > 0)
+              .sort((a, b) => (a.rank ?? Infinity) - (b.rank ?? Infinity))
               .slice(0, limit);
             if (rows.length === 0) return null;
+            const at = t.fetchedAt ?? fetchedAt;
             return rows.map((r) => ({
-              id: r.siteId,
+              id: r.id,
               symbol: r.symbol,
               name: r.name,
-              priceUsd: r.priceUsd,
+              priceUsd: r.price,
               change24h: r.change24h ?? 0,
-              change7d: r.change7d,
+              change7d: r.change7d ?? null,
               volume24h: r.volume24h ?? 0,
               marketCap: r.marketCap ?? 0,
               sparkline7d: [],
               source: "coinmarketcap" as const,
-              fetchedAt,
+              fetchedAt: at,
               marketCapRank: r.rank ?? 0,
               image: "", // même règle que ci-dessous : CryptoLogo fait la recherche locale (lib/crypto-logos.ts)
-              change1h: r.change1h,
-              circulatingSupply: r.circulatingSupply,
+              change1h: r.change1h ?? null,
+              circulatingSupply: r.circulatingSupply ?? null,
               sources: {
                 price: "coinmarketcap",
                 change1h: "coinmarketcap",
@@ -751,8 +705,7 @@ async function _getTopMarket(limit: number): Promise<TopMarketCoin[]> {
                 volume24h: "coinmarketcap",
               },
             }));
-          }
-        : undefined,
+      },
       coingecko: async () => {
         const rows = await _getTopMarketFromCoingecko(limit, fetchedAt);
         if (rows.length === 0) throw new Error("liste vide ou refusée");
@@ -807,8 +760,7 @@ async function _getTopMarketFromCoingecko(limit: number, fetchedAt: string): Pro
   }
   // AUDIT 2026-10-03 — plus de « fallback ultime » sur la table figée de mai :
   // liste vide. Les appelants gèrent déjà ce cas (lib/coingecko.ts passe à la
-  // source suivante, le cron update-static-prices refuse d'écrire < 10 lignes,
-  // ce qui évitait de surcroît de recopier des prix de mai dans le KV).
+  // source suivante ; le robot R1 n'écrit le KV qu'avec au moins 50 lignes).
   return [];
 }
 

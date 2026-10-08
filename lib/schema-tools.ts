@@ -273,7 +273,7 @@ export const EMBEDDABLE_TOOLS: Array<{
     name: "Convertisseur crypto temps réel",
     shortName: "Convertisseur",
     description:
-      "15 cryptos vers EUR/USD avec taux CoinGecko rafraîchis toutes les minutes.",
+      "15 cryptos vers EUR/USD au taux du marché.",
     height: 480,
     emoji: "💱",
   },

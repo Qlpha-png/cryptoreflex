@@ -254,9 +254,9 @@ export default function RessourcesLibresPage() {
           <div className="mt-8 grid md:grid-cols-3 gap-5">
             <DatasetCard
               icon={<Database className="h-6 w-6" />}
-              title="Top cryptos (live CoinGecko)"
+              title="Top cryptos (cours du marché)"
               count="Top 100 cryptos"
-              description="Capitalisation, volume 24 h, variation 7 j et 30 j — données rafraîchies via l'API CoinGecko publique."
+              description="Capitalisation, volume 24 h, variation 7 j et 30 j, mises à jour automatiquement."
               href="/cryptos"
               format="HTML / JSON-LD"
             />

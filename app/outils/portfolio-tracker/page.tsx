@@ -41,7 +41,7 @@ const PortfolioTrackerClient = dynamic(
 const PAGE_TITLE =
   "Portfolio Tracker crypto gratuit — suivi multi-coins en EUR";
 const PAGE_DESCRIPTION =
-  "Suivez la valeur de votre portefeuille crypto en temps réel : ajoutez vos positions, prix EUR live CoinGecko, variation 24 h, export CSV. 100 % gratuit, 100 % local (vos données restent sur votre navigateur).";
+  "Suivez la valeur de votre portefeuille crypto : ajoutez vos positions, prix en euros, variation 24 h, export CSV. 100 % gratuit, 100 % local (vos données restent sur votre navigateur).";
 const PAGE_PATH = "/outils/portfolio-tracker";
 const PAGE_URL = `${BRAND.url}${PAGE_PATH}`;
 
@@ -76,8 +76,8 @@ export default function PortfolioTrackerPage() {
       name: "Portfolio Tracker crypto Cryptoreflex",
       description: PAGE_DESCRIPTION,
       featureList: [
-        "Ajout illimité de cryptos (top 100 CoinGecko)",
-        "Prix EUR live actualisés toutes les 60 secondes",
+        "Ajout illimité de cryptos (top 100 par capitalisation)",
+        "Prix en euros rechargés toutes les 60 secondes",
         "Variation 24 h pondérée du portefeuille",
         "Export CSV des positions",
         "Stockage 100 % local (localStorage)",
@@ -111,9 +111,9 @@ export default function PortfolioTrackerPage() {
               <span className="gradient-text">Portfolio Tracker</span> crypto
             </h1>
             <p className="mt-4 text-lg text-muted leading-relaxed">
-              Suivez en temps réel la valeur de votre portefeuille crypto en
-              euros. Ajoutez vos positions manuellement, prix CoinGecko
-              actualisés toutes les 60 secondes, variation 24 h et export
+              Suivez la valeur de votre portefeuille crypto en euros.
+              Ajoutez vos positions manuellement : prix rechargés toutes les
+              60 secondes, variation 24 h et export
               CSV. Sans wallet connect, sans inscription, sans tracking.
             </p>
           </div>
@@ -178,7 +178,8 @@ export default function PortfolioTrackerPage() {
           <p className="mt-12 text-xs text-muted leading-relaxed">
             <strong className="text-fg">Avertissement :</strong> ce portfolio
             tracker est purement pédagogique. Les valeurs affichées dépendent
-            de l'API publique CoinGecko (prix EUR, latence ~60 s) et ne
+            des cours du marché (prix en euros, décalage possible de
+            plusieurs minutes) et ne
             constituent pas une comptabilité officielle. Cet outil ne
             sécurise pas vos cryptos — pour cela, utilisez un hardware
             wallet (Ledger, Trezor) et un wallet non-custodial. Cet outil

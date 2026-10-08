@@ -1,21 +1,33 @@
 /**
- * lib/kv-ticker.ts — bandeau de prix (06/10/2026, quota Upstash épuisé) : lectures en cache 300 s / 3 600 s avec
- * étiquette, clé stale écrite une fois par heure, disjoncteur. fetch simulé.
+ * lib/kv-ticker.ts — bandeau de prix : lectures en cache 300 s / 3 600 s avec étiquette, disjoncteur ; 08/10/2026 (lot Z2) :
+ * écriture en UNE commande MSET (bandeau + instantané de secours + global), fraîcheur jugée sur l'heure du relevé
+ * (MSET n'a pas d'expiration). fetch simulé.
  */
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
+  KV_MARCHE_GLOBAL_KEY,
+  KV_MARCHE_SNAPSHOT_KEY,
   KV_TICKER_LIVE_KEY,
   KV_TICKER_STALE_KEY,
   KV_TICKER_TAG,
+  buildMarcheMset,
+  classifyTickerAge,
+  readMarcheGlobal,
+  readMarcheSnapshot,
   readTickerCache,
-  shouldWriteStaleTicker,
-  writeTickerCacheBoth,
+  shouldRefreshGlobal,
+  writeMarcheMset,
+  type MarcheGlobal,
+  type TickerCachePayload,
 } from "@/lib/kv-ticker";
 import { resetKvGuardsForTests, tripKvCircuit } from "@/lib/kv";
 
 const entry = { id: "bitcoin", symbol: "BTC", name: "Bitcoin", image: "", price: 1, change24h: 0, marketCap: 1 };
+const NOW = Date.parse("2026-10-08T12:00:00Z");
+const iso = (minAgo: number) => new Date(NOW - minAgo * 60_000).toISOString();
 let store: Map<string, string>;
 let f: ReturnType<typeof vi.fn>;
+let posts: unknown[][];
 
 beforeEach(() => {
   vi.stubEnv("KV_REST_API_URL", "https://kv.test");
@@ -23,12 +35,15 @@ beforeEach(() => {
   vi.stubEnv("VERCEL_ENV", "production");
   resetKvGuardsForTests();
   store = new Map();
+  posts = [];
   f = vi.fn(async (url: string, init: RequestInit = {}) => {
-    const path = new URL(url).pathname.split("/").map(decodeURIComponent);
     if (init.method === "POST") {
-      store.set(path[2], String(init.body));
+      const body = JSON.parse(String(init.body)) as string[];
+      posts.push(body);
+      if (body[0] === "MSET") for (let i = 1; i < body.length; i += 2) store.set(body[i], body[i + 1]);
       return new Response(JSON.stringify({ result: "OK" }));
     }
+    const path = new URL(url).pathname.split("/").map(decodeURIComponent);
     return new Response(JSON.stringify({ result: store.get(path[2]) ?? null }));
   });
   vi.stubGlobal("fetch", f);
@@ -41,19 +56,30 @@ afterEach(() => {
 });
 
 describe("lecture", () => {
-  it("clé live présente : 1 lecture, en cache 300 s avec l'étiquette du bandeau", async () => {
-    store.set(KV_TICKER_LIVE_KEY, JSON.stringify({ prices: { bitcoin: entry }, fetchedAt: "2026-10-06T12:00:00Z" }));
-    const r = await readTickerCache();
-    expect(r.source).toBe("live");
+  it("relevé de 5 min : live, 1 lecture en cache 300 s avec l'étiquette du bandeau, source réelle lue", async () => {
+    store.set(KV_TICKER_LIVE_KEY, JSON.stringify({ prices: { bitcoin: entry }, fetchedAt: iso(5), source: "coinmarketcap" }));
+    const r = await readTickerCache(NOW);
+    expect(r).toMatchObject({ source: "live", isStale: false, provider: "coinmarketcap" });
     expect(f).toHaveBeenCalledTimes(1);
     expect((f.mock.calls[0][1] as { next?: unknown }).next).toEqual({ revalidate: 300, tags: [KV_TICKER_TAG] });
   });
 
-  it("clé live expirée : 2 lectures (stale en cache 3 600 s)", async () => {
-    store.set(KV_TICKER_STALE_KEY, JSON.stringify({ prices: { bitcoin: entry }, fetchedAt: "2026-10-06T11:00:00Z" }));
-    const r = await readTickerCache();
-    expect(r.source).toBe("stale");
-    expect(r.isStale).toBe(true);
+  it("relevé de 2 h dans la clé live (MSET sans expiration) : stale, sans seconde lecture", async () => {
+    store.set(KV_TICKER_LIVE_KEY, JSON.stringify({ prices: { bitcoin: entry }, fetchedAt: iso(120), source: "coinmarketcap" }));
+    const r = await readTickerCache(NOW);
+    expect(r).toMatchObject({ source: "stale", isStale: true });
+    expect(f).toHaveBeenCalledTimes(1);
+  });
+
+  it("relevé de plus de 6 h : jamais servi (source « none »)", async () => {
+    store.set(KV_TICKER_LIVE_KEY, JSON.stringify({ prices: { bitcoin: entry }, fetchedAt: iso(7 * 60) }));
+    expect((await readTickerCache(NOW)).source).toBe("none");
+  });
+
+  it("clé live absente : l'ancienne clé stale (avant Z2) est encore lue, en cache 3 600 s ; ancien relevé = CoinGecko", async () => {
+    store.set(KV_TICKER_STALE_KEY, JSON.stringify({ prices: { bitcoin: entry }, fetchedAt: iso(60) }));
+    const r = await readTickerCache(NOW);
+    expect(r).toMatchObject({ source: "stale", isStale: true, provider: "coingecko" });
     expect(f).toHaveBeenCalledTimes(2);
     expect((f.mock.calls[1][1] as { next?: unknown }).next).toEqual({ revalidate: 3600, tags: [KV_TICKER_TAG] });
   });
@@ -64,34 +90,75 @@ describe("lecture", () => {
     expect((await readTickerCache()).source).toBe("none");
     expect(f).not.toHaveBeenCalled();
   });
+
+  it("classifyTickerAge : 12 min live, 6 h stale, au-delà rien ; heure illisible = rien", () => {
+    expect(classifyTickerAge(iso(12), NOW)).toBe("live");
+    expect(classifyTickerAge(iso(13), NOW)).toBe("stale");
+    expect(classifyTickerAge(iso(360), NOW)).toBe("stale");
+    expect(classifyTickerAge(iso(361), NOW)).toBe("none");
+    expect(classifyTickerAge("pas une date", NOW)).toBe("none");
+  });
+
+  it("instantané ≤ 24 h et global ≤ 3 h, sinon null", async () => {
+    store.set(KV_MARCHE_SNAPSHOT_KEY, JSON.stringify({ snapshot: { bitcoin: { priceUsd: 1, change24h: 0, marketCap: 1, volume24h: 0 } }, updatedAt: iso(23 * 60), sourceCount: 1 }));
+    store.set(KV_MARCHE_GLOBAL_KEY, JSON.stringify({ totalMarketCapUsd: 3e12, btcDominance: 58, asOf: iso(170) }));
+    expect(await readMarcheSnapshot(NOW)).not.toBeNull();
+    expect(await readMarcheGlobal(NOW)).not.toBeNull();
+    expect(await readMarcheSnapshot(NOW + 2 * 3_600_000)).toBeNull();
+    expect(await readMarcheGlobal(NOW + 20 * 60_000)).toBeNull();
+  });
 });
 
-describe("écriture (cron toutes les 10 min)", () => {
-  it("clé stale écrite une fois par heure seulement", () => {
-    expect(shouldWriteStaleTicker(new Date("2026-10-06T12:00:00Z"))).toBe(true);
-    expect(shouldWriteStaleTicker(new Date("2026-10-06T12:09:59Z"))).toBe(true);
-    expect(shouldWriteStaleTicker(new Date("2026-10-06T12:10:00Z"))).toBe(false);
-    expect(shouldWriteStaleTicker(new Date("2026-10-06T12:50:00Z"))).toBe(false);
+describe("écriture (robot R1 toutes les 10 min) : UNE commande MSET", () => {
+  const payload: TickerCachePayload = {
+    prices: { bitcoin: { ...entry, volume24h: 5 }, "cmc-999": { ...entry, id: "cmc-999", unlinked: true } },
+    fetchedAt: iso(0),
+    source: "coinmarketcap",
+    fx: { eurPerUsd: 0.86, date: "2026-10-08", source: "bce" },
+  };
+  const global: MarcheGlobal = {
+    totalMarketCapUsd: 3e12,
+    totalVolume24hUsd: 1e11,
+    btcDominance: 58.1,
+    ethDominance: 12.2,
+    marketCapChange24h: 1.5,
+    activeCryptos: 9000,
+    asOf: iso(0),
+    source: "coinmarketcap",
+  };
+
+  it("bandeau + instantané de secours (même relevé, lignes avec fiche seulement) ; global seulement s'il est relevé", () => {
+    const sans = buildMarcheMset(payload, null);
+    expect(sans[0]).toBe("MSET");
+    expect(sans.filter((_, i) => i % 2 === 1)).toEqual([KV_TICKER_LIVE_KEY, KV_MARCHE_SNAPSHOT_KEY]);
+    const snap = JSON.parse(sans[4]);
+    expect(Object.keys(snap.snapshot)).toEqual(["bitcoin"]);
+    expect(snap).toMatchObject({ updatedAt: payload.fetchedAt, source: "coinmarketcap", sourceCount: 1 });
+    const avec = buildMarcheMset(payload, global);
+    expect(avec.filter((_, i) => i % 2 === 1)).toEqual([KV_TICKER_LIVE_KEY, KV_MARCHE_SNAPSHOT_KEY, KV_MARCHE_GLOBAL_KEY]);
   });
 
-  it("à :00 → 2 écritures ; à :20 → 1 écriture (live), succès sans alerte « partielle »", async () => {
-    const a = await writeTickerCacheBoth({ bitcoin: entry }, { now: new Date("2026-10-06T12:00:30Z") });
-    expect(f).toHaveBeenCalledTimes(2);
-    expect(a).toMatchObject({ ok: true, live: true, stale: true, staleSkipped: false });
-    const b = await writeTickerCacheBoth({ bitcoin: entry }, { now: new Date("2026-10-06T12:20:30Z") });
-    expect(f).toHaveBeenCalledTimes(3);
-    expect(b).toMatchObject({ ok: true, live: true, stale: false, staleSkipped: true });
-    expect([...store.keys()].sort()).toEqual([KV_TICKER_LIVE_KEY, KV_TICKER_STALE_KEY].sort());
+  it("un passage = exactement 1 requête KV (MSET), jamais de SET séparé", async () => {
+    const w = await writeMarcheMset(payload, global);
+    expect(w).toEqual({ ok: true, keys: 3 });
+    expect(f).toHaveBeenCalledTimes(1);
+    expect(posts).toHaveLength(1);
+    expect(posts[0][0]).toBe("MSET");
+    expect((await readTickerCache(NOW)).provider).toBe("coinmarketcap");
   });
 
-  it("?stale=1 (lancement manuel) force la clé stale", async () => {
-    await writeTickerCacheBoth({ bitcoin: entry }, { now: new Date("2026-10-06T12:20:30Z"), forceStale: true });
-    expect(f).toHaveBeenCalledTimes(2);
+  it("global relevé au premier passage de chaque heure seulement (24 crédits par jour)", () => {
+    expect(shouldRefreshGlobal(new Date("2026-10-08T12:00:00Z"))).toBe(true);
+    expect(shouldRefreshGlobal(new Date("2026-10-08T12:09:59Z"))).toBe(true);
+    expect(shouldRefreshGlobal(new Date("2026-10-08T12:10:00Z"))).toBe(false);
+    let n = 0;
+    for (let i = 0; i < 144; i++) if (shouldRefreshGlobal(new Date(NOW + i * 600_000))) n++;
+    expect(n).toBe(24);
   });
 
-  it("24 h de cron (144 passages) : 144 + 24 = 168 écritures au lieu de 288 (et 576 avec le doublon GitHub)", async () => {
-    const start = Date.parse("2026-10-06T00:00:30Z");
-    for (let i = 0; i < 144; i++) await writeTickerCacheBoth({ bitcoin: entry }, { now: new Date(start + i * 600_000) });
-    expect(f).toHaveBeenCalledTimes(168);
+  it("KV absent : aucune requête, échec signalé", async () => {
+    vi.stubEnv("KV_REST_API_URL", "");
+    expect((await writeMarcheMset(payload, null)).ok).toBe(false);
+    expect(f).not.toHaveBeenCalled();
   });
 });

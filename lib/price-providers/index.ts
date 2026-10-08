@@ -18,8 +18,6 @@
 
 import { binanceProvider } from "./binance";
 import { krakenProvider } from "./kraken";
-import { coinbaseProvider } from "./coinbase";
-import { kucoinProvider } from "./kucoin";
 import { dexscreenerProvider } from "./dexscreener";
 import { cryptocompareProvider } from "./cryptocompare";
 import { coingeckoProvider } from "./coingecko";
@@ -45,11 +43,11 @@ export { STATIC_FALLBACK } from "./static";
  * historique pour la lisibilite humaine.
  */
 export const PROVIDERS: readonly PriceProvider[] = [
-  binanceProvider,    // 10 — top market, sparkline 7d natif
+  // 08/10/2026 (lot Z2) : relevé CoinMarketCap du robot R1 lu dans le KV (aucun appel CMC depuis une page), en tête.
+  coinmarketcapProvider,
+  binanceProvider,    // 10 — top market, sparkline 7d natif (gardé : décision de Kev du 08/10/2026)
   krakenProvider,     // 20 — 93/100 fiable EU
-  coinbaseProvider,   // 30 — 79/100 fiable US/UE
-  kucoinProvider,     // 40 — exotiques asiatiques
-  coinmarketcapProvider, // 06/10/2026 — CMC Basic gratuit, inactif sans CMC_API_KEY
+  // Coinbase (conditions : « personal or research purposes ») et KuCoin : retirés des cours affichés le 08/10/2026.
   dexscreenerProvider,// 50 — 500K+ tokens onchain (anti-fake + skip set)
   cryptocompareProvider, // 60 — fallback, mcap natif
   coingeckoProvider,  // 70 — fallback authoritative ids canoniques

@@ -5,6 +5,8 @@ import { useEffect, useMemo, useState } from "react";
 import { TrendingUp, TrendingDown, Calendar, Coins, Loader2 } from "lucide-react";
 import type { HistoricalPoint } from "@/lib/historical-prices";
 import { fmtFr } from "@/lib/format-fr";
+import { sourceInfo } from "@/lib/data-sources/attribution";
+import type { SourceName } from "@/lib/data-sources/priorities";
 
 /* -------------------------------------------------------------------------- */
 /*  Types & constantes                                                        */
@@ -54,6 +56,8 @@ function DcaSimulator() {
   // FIX P0 audit-fonctionnel-live-final #2 : on garde aussi le flag clamped
   // de l'API pour disclaimer si CoinGecko a renvoyé moins que demandé.
   const [clamped, setClamped] = useState(false);
+  // 08/10/2026 (lot Z2) : source réelle de la série (renvoyée par /api/historical), jamais un nom écrit en dur
+  const [seriesSource, setSeriesSource] = useState<SourceName | null>(null);
 
   // Charge l'historique 5 ans (couvre toutes les durées max).
   useEffect(() => {
@@ -65,10 +69,11 @@ function DcaSimulator() {
         if (!r.ok) throw new Error("Données indisponibles");
         return r.json();
       })
-      .then((data: { points: HistoricalPoint[]; clamped?: boolean }) => {
+      .then((data: { points: HistoricalPoint[]; clamped?: boolean; source?: SourceName | null }) => {
         if (!cancelled) {
           setHistory(data.points);
           setClamped(Boolean(data.clamped));
+          setSeriesSource(data.source ?? null);
         }
       })
       .catch((e) => {
@@ -185,7 +190,8 @@ function DcaSimulator() {
         <div>
           <h2 className="font-bold text-xl text-fg-max">Simulateur DCA</h2>
           <p className="text-sm text-muted">
-            Backtest réel sur les prix CoinGecko des 5 dernières années
+            Backtest réel sur les prix des 5 dernières années
+            {sourceInfo(seriesSource) ? ` (données : ${sourceInfo(seriesSource)!.label})` : ""}
           </p>
         </div>
       </div>
@@ -250,7 +256,7 @@ function DcaSimulator() {
                     disabled={disabled}
                     title={
                       disabled
-                        ? "Données limitées à 1 an (CoinGecko free tier)"
+                        ? "Historique disponible trop court pour cette durée"
                         : undefined
                     }
                     className={`rounded-lg border px-3 py-2 text-sm font-semibold transition-colors min-h-[44px] focus:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
@@ -278,9 +284,8 @@ function DcaSimulator() {
               <strong className="text-amber-100">Données limitées</strong> à
               {" "}
               {availableMonths} mois (~{Math.floor(availableMonths / 12)} an
-              {availableMonths >= 24 ? "s" : ""}). CoinGecko free tier ne
-              fournit pas l'historique complet — les options plus longues sont
-              désactivées.
+              {availableMonths >= 24 ? "s" : ""}). L&apos;historique complet n&apos;est
+              pas disponible — les options plus longues sont désactivées.
             </div>
           )}
 

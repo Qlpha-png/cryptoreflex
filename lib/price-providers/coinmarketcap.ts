@@ -1,36 +1,39 @@
 /**
- * lib/price-providers/coinmarketcap.ts — Fournisseur CoinMarketCap Basic (06/10/2026).
+ * lib/price-providers/coinmarketcap.ts — cours CoinMarketCap LUS dans le KV (08/10/2026, lot Z2).
  *
- * Relais du prix en direct juste après les places de marché (table lib/data-sources/priorities.ts) et première
- * source des fiches longue traîne. Inactif sans CMC_API_KEY (canHandle = false → aucun appel, aucun journal).
- * Ne répond que pour les fiches de data/cmc-id-map.json (jamais de recherche par symbole).
+ * Aucune requête vers CoinMarketCap ici : le robot R1 (app/api/cron/refresh-ticker-prices) relève le top 100 toutes
+ * les 10 min et l'écrit dans le KV ; ce fournisseur ne fait que le lire. Il ne répond que pour une fiche du relevé, et
+ * seulement si le relevé vient vraiment de CoinMarketCap et a 12 min au plus (sinon la cascade passe à Binance).
  */
 
-import { cmcEnabled, cmcQuoteForSite, getCmcEntry } from "@/lib/coinmarketcap";
+import { getCmcEntry } from "@/lib/coinmarketcap";
+import { readTickerCache } from "@/lib/kv-ticker";
 import type { CryptoMeta, PriceProvider, ProviderPriceData } from "./types";
 
 export const coinmarketcapProvider: PriceProvider = {
   name: "coinmarketcap",
-  priority: 45,
+  priority: 5,
 
+  /** Fiche de la table data/cmc-id-map.json seulement (lecture d'un fichier, jamais d'appel réseau ni par symbole). */
   canHandle(meta: CryptoMeta): boolean {
-    return cmcEnabled() && getCmcEntry(meta.coingeckoId) !== null;
+    return getCmcEntry(meta.coingeckoId) !== null;
   },
 
   async fetch(meta: CryptoMeta): Promise<ProviderPriceData | null> {
-    // Les erreurs HTTP remontent (SourceError) : le disjoncteur les compte, la cascade passe au relais.
-    const q = await cmcQuoteForSite(meta.coingeckoId);
-    if (!q) return null;
+    const t = await readTickerCache();
+    if (t.source !== "live" || t.provider !== "coinmarketcap") return null;
+    const e = t.record[meta.coingeckoId];
+    if (!e || e.unlinked || !(e.price > 0)) return null;
     return {
-      priceUsd: q.priceUsd,
-      change24h: q.change24h ?? 0,
-      volume24h: q.volume24h ?? 0,
-      marketCap: q.marketCap ?? undefined,
-      change1h: q.change1h,
-      change7d: q.change7d,
-      circulatingSupply: q.circulatingSupply,
-      rank: q.rank,
-      meta: { cmcId: q.cmcId, lastUpdated: q.lastUpdated },
+      priceUsd: e.price,
+      change24h: e.change24h,
+      volume24h: e.volume24h ?? 0,
+      marketCap: e.marketCap > 0 ? e.marketCap : undefined,
+      change1h: e.change1h ?? null,
+      change7d: e.change7d ?? null,
+      circulatingSupply: e.circulatingSupply ?? null,
+      rank: e.rank ?? null,
+      meta: { releveLe: t.fetchedAt },
     };
   },
 };

@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 
   title: { absolute: "Convertisseur crypto temps réel — Cryptoreflex (embed)" },
   description:
-    "Convertisseur BTC, ETH, SOL en EUR/USD avec taux CoinGecko temps réel — version embeddable.",
+    "Convertisseur BTC, ETH, SOL en EUR/USD au taux du marché — version embeddable.",
   robots: { index: false, follow: true },
 };
 
@@ -60,7 +60,7 @@ export default function EmbedConvertisseurPage() {
           lineHeight: 1.4,
         }}
       >
-        15 cryptos, 2 fiats — taux CoinGecko rafraîchis toutes les minutes.
+        15 cryptos, 2 fiats — taux du marché, heure de mise à jour sous le résultat.
       </p>
 
       <Converter />

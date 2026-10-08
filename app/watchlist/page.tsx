@@ -84,8 +84,8 @@ export default function WatchlistPage() {
         <p className="mt-12 text-xs text-muted leading-relaxed border-t border-border/60 pt-6">
           La watchlist est conservée dans votre navigateur. Si vous videz le
           cache, changez de navigateur ou utilisez la navigation privée, votre
-          liste ne sera pas synchronisée. Les prix sont rafraîchis toutes les
-          deux minutes via l'API CoinGecko.
+          liste ne sera pas synchronisée. La page recharge les prix toutes les
+          deux minutes.
         </p>
       </div>
     </article>

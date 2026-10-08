@@ -92,7 +92,7 @@ export const TOOLS: Tool[] = [
   // ─── MARCHÉ ───
   {
     title: "Convertisseur crypto live",
-    desc: "Conversion temps réel BTC ↔ ETH ↔ SOL ↔ EUR/USD. 15 cryptos majeures, taux CoinGecko 60s.",
+    desc: "Conversion temps réel BTC ↔ ETH ↔ SOL ↔ EUR/USD. 15 cryptos majeures, taux du marché.",
     href: "/outils/convertisseur",
     Icon: ArrowDownUp,
     tier: "free",

@@ -102,8 +102,8 @@ export default function PortefeuillePage() {
             tenez.
           </p>
           <p>
-            Les prix sont fournis par CoinGecko (API publique), libellés en
-            euros et rafraîchis toutes les deux minutes lorsque l&apos;onglet
+            Les prix sont ceux du marché, libellés en euros et rechargés
+            toutes les deux minutes lorsque l&apos;onglet
             est actif. Les valeurs affichées sont indicatives — le prix
             d&apos;exécution réel sur votre exchange peut varier (spread, frais).
             Ce tracker n&apos;exécute aucune transaction.

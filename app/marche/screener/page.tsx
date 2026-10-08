@@ -11,6 +11,7 @@ import CryptoScreener from "@/components/CryptoScreener";
 import EmptyState from "@/components/ui/EmptyState";
 import { fitDescription } from "@/lib/seo-text";
 import Breadcrumbs from "@/components/Breadcrumbs";
+import DataSourceLine from "@/components/DataSourceLine";
 
 /**
  * /marche/screener — screener top 100 (DA Obsidian sprint 2b).
@@ -28,7 +29,7 @@ const PAGE_PATH = "/marche/screener";
 const PAGE_URL = `${BRAND.url}${PAGE_PATH}`;
 const TITLE = "Screener crypto — top 100 triable en direct";
 const DESCRIPTION =
-  "Screener du top 100 crypto par capitalisation : prix, variations 24h/7j, market cap, volume et sparkline 7 jours. Tri par colonne, recherche instantanée. Données CoinMarketCap et CoinGecko.";
+  "Screener du top 100 crypto par capitalisation : prix, variations 24h/7j, market cap, volume et sparkline 7 jours. Tri par colonne, recherche instantanée.";
 
 export const metadata: Metadata = {
   title: TITLE,
@@ -109,8 +110,9 @@ export default async function ScreenerPage() {
           )}
         </div>
 
-        <p className="mt-6 text-xs text-muted">
-          Données CoinMarketCap, avec CoinGecko en relais. La variation 7 jours et les sparklines peuvent
+        <DataSourceLine items={coins} fields={["price"]} prefix="Cours :" releve className="mt-6 text-xs text-muted" />
+        <p className="mt-2 text-xs text-muted">
+          La variation 7 jours et les sparklines peuvent
           être momentanément indisponibles pour certains actifs.
           Aucune donnée de cette page ne constitue un conseil en
           investissement.

@@ -247,7 +247,7 @@ keywords: ["brief crypto", "actualité crypto FR", "marché crypto aujourd'hui",
 import { Callout } from "@/components/mdx/Callout";
 
 <Callout type="info" title="Café Crypto">
-  Votre récap quotidien des marchés crypto en France, généré automatiquement à partir des données CoinGecko fiables. ${trendLabel} ce matin.
+  Votre récap quotidien des marchés crypto en France, généré automatiquement à partir des cours du marché. ${trendLabel} ce matin.
 </Callout>
 
 ## 📊 Top 5 mouvements 24h

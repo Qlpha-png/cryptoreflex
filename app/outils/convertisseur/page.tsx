@@ -41,7 +41,7 @@ const FAQ_ITEMS = [
   {
     question: "D'où viennent les taux de conversion ?",
     answer:
-      "Les taux proviennent directement des places de marché (Binance, Kraken, Coinbase…), avec CoinGecko en secours. Ils sont relevés à la demande et datent au plus de quelques minutes.",
+      "Les taux viennent des cours du marché, avec une source de secours si la première ne répond pas. L'heure de leur mise à jour s'affiche sous le résultat.",
   },
   {
     question: "Puis-je convertir entre deux cryptos (cross-crypto) ?",
@@ -74,7 +74,7 @@ export default function ConvertisseurPage() {
               "15 cryptos majeures (BTC, ETH, SOL, BNB, XRP, ADA, USDT, USDC…)",
               "Conversion fiat (EUR, USD)",
               "Cross-crypto (BTC vers ETH, etc.)",
-              "Taux du marché (Binance, Kraken, Coinbase…) à jour à quelques minutes près",
+              "Taux du marché, avec l'heure de mise à jour",
               "Aucune inscription, aucune publicité",
               "Mode pleine page ou widget embeddable",
             ],
@@ -141,7 +141,7 @@ export default function ConvertisseurPage() {
             <Card
               icon={<Zap className="h-6 w-6" />}
               title="Taux en temps réel"
-              text="Taux relevé à la demande sur les places de marché (Binance, Kraken, Coinbase…), CoinGecko en secours : quelques minutes de décalage au plus."
+              text="Taux du marché, avec une source de secours ; l'heure de mise à jour s'affiche sous le résultat."
             />
             <Card
               icon={<Globe className="h-6 w-6" />}

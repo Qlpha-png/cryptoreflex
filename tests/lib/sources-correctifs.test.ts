@@ -16,16 +16,14 @@ import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import cmcMapJson from "@/data/cmc-id-map.json";
+import { activerKvTest, desactiverKvTest, kvR1Simule } from "../helpers/r1-simule";
 
 vi.mock("next/cache", () => ({
   unstable_cache: <T extends (...args: unknown[]) => unknown>(fn: T): T => fn,
   revalidateTag: vi.fn(),
 }));
-// Le cache ticker (KV) n'est jamais lu ici : l'instantané passe par la cascade simulée.
-vi.mock("@/lib/kv-ticker", async (importOriginal) => ({
-  ...(await importOriginal<typeof import("@/lib/kv-ticker")>()),
-  readTickerCache: async () => ({ record: {} }),
-}));
+// 08/10/2026 (lot Z2) : le cache ticker (KV) est celui du robot R1 simulé (tests/helpers/r1-simule.ts) : les réponses
+// CMC du test deviennent le relevé écrit par R1 ; sans réponse CMC, aucun relevé et l'instantané passe par la cascade.
 
 const ROOT = path.resolve(__dirname, "../..");
 const read = (p: string) => fs.readFileSync(path.join(ROOT, p), "utf8");
@@ -39,6 +37,9 @@ function mockFetch(handler: (url: string) => Response | Promise<Response>) {
   urls = [];
   globalThis.fetch = vi.fn(async (input: string | URL | Request) => {
     const u = String(input);
+    // 08/10/2026 (lot Z2) : lecture du KV écrit par le robot R1 (simulé à partir des réponses CMC du test), non comptée
+    const kv = await kvR1Simule(u, handler);
+    if (kv) return kv;
     urls.push(u);
     return handler(u);
   }) as unknown as typeof fetch;
@@ -86,12 +87,14 @@ const listing = (data: unknown[]) => json({ status: { error_code: 0 }, data });
 const realFetch = globalThis.fetch;
 beforeEach(() => {
   vi.resetModules();
+  activerKvTest();
   delete process.env.CMC_API_KEY;
   delete process.env.NEXT_PHASE;
   vi.spyOn(console, "warn").mockImplementation(() => undefined);
 });
 afterEach(() => {
   globalThis.fetch = realFetch;
+  desactiverKvTest();
   delete process.env.CMC_API_KEY;
   delete process.env.NEXT_PHASE;
   vi.restoreAllMocks();

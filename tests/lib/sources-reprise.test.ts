@@ -16,6 +16,7 @@ import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import cmcMapJson from "@/data/cmc-id-map.json";
+import { activerKvTest, desactiverKvTest, kvR1Simule } from "../helpers/r1-simule";
 
 vi.mock("next/cache", () => ({
   unstable_cache: <T extends (...args: unknown[]) => unknown>(fn: T): T => fn,
@@ -24,10 +25,14 @@ vi.mock("next/cache", () => ({
 const tk = vi.hoisted(() => ({
   value: { record: {} as Record<string, unknown>, source: "none", isStale: false, fetchedAt: null as string | null },
 }));
-vi.mock("@/lib/kv-ticker", async (importOriginal) => ({
-  ...(await importOriginal<typeof import("@/lib/kv-ticker")>()),
-  readTickerCache: async () => tk.value,
-}));
+// 08/10/2026 (lot Z2) : sans relevé imposé par le test, la lecture passe par le KV simulé du robot R1.
+vi.mock("@/lib/kv-ticker", async (importOriginal) => {
+  const orig = await importOriginal<typeof import("@/lib/kv-ticker")>();
+  return {
+    ...orig,
+    readTickerCache: async (now?: number) => (tk.value.source === "none" ? orig.readTickerCache(now) : tk.value),
+  };
+});
 
 const ROOT = path.resolve(__dirname, "../..");
 const read = (p: string) => fs.readFileSync(path.join(ROOT, p), "utf8");
@@ -44,6 +49,9 @@ function mockFetch(handler: (url: string) => Response | Promise<Response>) {
     const u = String(input);
     // lecture gratuite du compteur de la clé (garde-fou du mois) : ni comptée, ni passée au simulateur
     if (u.includes("/v1/key/info")) return new Response("{}", { status: 404 });
+    // 08/10/2026 (lot Z2) : lecture du KV écrit par le robot R1 (simulé à partir des réponses CMC du test), non comptée
+    const kv = await kvR1Simule(u, handler);
+    if (kv) return kv;
     urls.push(u);
     return handler(u);
   }) as unknown as typeof fetch;
@@ -92,6 +100,8 @@ const listing = (data: unknown[], credits?: number) =>
 async function stubExchanges(prices: Record<string, number> = {}) {
   const { PROVIDERS } = await import("@/lib/price-providers");
   for (const p of PROVIDERS) {
+    // lot Z2 : « coinmarketcap » n'est pas une place de marché (il lit le relevé du robot R1) : laissé tel quel
+    if (p.name === "coinmarketcap") continue;
     vi.spyOn(p, "canHandle").mockReturnValue(true);
     vi.spyOn(p, "fetch").mockImplementation(async (meta: { coingeckoId: string }) =>
       p.name === "binance" ? { priceUsd: prices[meta.coingeckoId] ?? 10, change24h: 1, volume24h: 5 } : null,
@@ -102,6 +112,7 @@ async function stubExchanges(prices: Record<string, number> = {}) {
 const realFetch = globalThis.fetch;
 beforeEach(() => {
   vi.resetModules();
+  activerKvTest();
   delete process.env.CMC_API_KEY;
   delete process.env.NEXT_PHASE;
   tk.value = { record: {}, source: "none", isStale: false, fetchedAt: null };
@@ -109,13 +120,14 @@ beforeEach(() => {
 });
 afterEach(() => {
   globalThis.fetch = realFetch;
+  desactiverKvTest();
   delete process.env.CMC_API_KEY;
   delete process.env.NEXT_PHASE;
   vi.restoreAllMocks();
 });
 
 describe("quota CMC borné même dans unstable_cache (appels réseau comptés)", () => {
-  it("instantanés recalculés en boucle (12 fiches × 5 tours, en parallèle) : 1 seul appel au classement par 30 min", async () => {
+  it("instantanés recalculés en boucle (12 fiches × 5 tours, en parallèle) : relevé R1 lu dans le KV, 0 appel CMC", async () => {
     process.env.CMC_API_KEY = KEY;
     mockFetch((u) => (u.includes("/listings/latest") ? listing(cmcMapped()) : json({}, 404)));
     // Prix des places de marché = prix CMC (sinon le garde-fou « écart > 25 % » écarterait CMC, à raison).
@@ -126,13 +138,8 @@ describe("quota CMC borné même dans unstable_cache (appels réseau comptés)",
       const snaps = await Promise.all(ids.map((id) => getPriceSnapshot(id)));
       expect(snaps.every((s) => s.sources?.marketCap === "coinmarketcap")).toBe(true);
     }
-    expect(count("/listings/latest")).toBe(1);
-    expect(count("/quotes/latest")).toBe(0);
-    // Après la période (30 min) : un nouvel appel, un seul.
-    const t = Date.now() + 1_801_000;
-    vi.spyOn(Date, "now").mockReturnValue(t);
-    await Promise.all(ids.map((id) => getPriceSnapshot(id)));
-    expect(count("/listings/latest")).toBe(2);
+    // lot Z2 : les pages ne consomment plus aucun crédit (lib/coinmarketcap.ts réservé aux robots)
+    expect(count("coinmarketcap.com")).toBe(0);
   });
 
   it("100 cotations simultanées : 1 seul appel réseau (promesse partagée)", async () => {

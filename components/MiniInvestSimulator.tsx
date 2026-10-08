@@ -11,6 +11,8 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { fmtFr } from "@/lib/format-fr";
+import { sourceInfo } from "@/lib/data-sources/attribution";
+import type { SourceName } from "@/lib/data-sources/priorities";
 
 /**
  * MiniInvestSimulator — micro-calculateur "Si j'avais investi X€" (P1-10).
@@ -70,6 +72,8 @@ function MiniInvestSimulator() {
   const [error, setError] = useState<string | null>(null);
   // FIX P0 audit-fonctionnel-live-final #2 : flag clamped renvoyé par l'API.
   const [clamped, setClamped] = useState(false);
+  // 08/10/2026 (lot Z2) : source réelle de la série (renvoyée par /api/historical)
+  const [seriesSource, setSeriesSource] = useState<SourceName | null>(null);
 
   const fetchKey = `${coinId}-${days}`;
   const lastFetchRef = useRef<string | null>(null);
@@ -91,9 +95,11 @@ function MiniInvestSimulator() {
           const data = (await r.json()) as {
             points: HistoricalPoint[];
             clamped?: boolean;
+            source?: SourceName | null;
           };
           setPoints(Array.isArray(data.points) ? data.points : []);
           setClamped(Boolean(data.clamped));
+          setSeriesSource(data.source ?? null);
         })
         .catch(() => {
           setError("Données indisponibles pour le moment.");
@@ -141,7 +147,8 @@ function MiniInvestSimulator() {
             Et si vous aviez investi… ?
           </h3>
           <p className="text-xs text-muted">
-            Estimation rapide single-shot sur historique CoinGecko.
+            Estimation rapide sur l&apos;historique des prix
+            {sourceInfo(seriesSource) ? ` (données : ${sourceInfo(seriesSource)!.label})` : ""}.
           </p>
         </div>
       </div>
@@ -257,8 +264,8 @@ function MiniInvestSimulator() {
                 a tronqué le dataset (free tier limite >365j). */}
             {clamped && (
               <p className="mt-2 text-xs text-primary-soft/90">
-                Données limitées par CoinGecko free tier — résultat indicatif
-                sur la période disponible.
+                Historique disponible plus court que la période demandée — résultat
+                indicatif sur la période disponible.
               </p>
             )}
           </>

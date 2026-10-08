@@ -816,8 +816,10 @@ async function _fetchConversionRate(
     const getPriceSnapshot = async (id: string) => {
       const sym = Object.keys(COIN_IDS).find((s) => COIN_IDS[s] === id) ?? id;
       const r = await fetchPriceCascade({ coingeckoId: id, symbol: applySymbolOverride(id, sym.toUpperCase()), name: COIN_NAMES[sym] ?? id });
-      // relevé EN DIRECT de la cascade : l'heure de la réponse est l'heure du relevé
-      return { priceUsd: r?.data.priceUsd ?? 0, source: r?.source ?? "static", fetchedAt: new Date().toISOString() };
+      // relevé EN DIRECT de la cascade : l'heure de la réponse est l'heure du relevé ; reprise Z2 : le fournisseur
+      // coinmarketcap lit le relevé de R1 (≤ 12 min), on garde alors SON heure (meta.releveLe), jamais « maintenant ».
+      const releveLe = r?.data.meta?.releveLe;
+      return { priceUsd: r?.data.priceUsd ?? 0, source: r?.source ?? "static", fetchedAt: typeof releveLe === "string" ? releveLe : new Date().toISOString() };
     };
 
     // Crypto → Fiat

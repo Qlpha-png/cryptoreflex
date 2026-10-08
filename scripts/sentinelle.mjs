@@ -298,13 +298,13 @@ async function checkOrchestrator() {
   }
   /* 08/10/2026 (lot fraîcheur A) : instantané de secours des prix, rappels de série, série d'e-mails fiscalité —
      trace « dernier passage + résultat » (lib/cron-trace.ts), seuils de scripts/lib/sentinelle-robots.mjs (3 h, 30 h, 30 h). */
-  for (const [key, label, maxH] of TRACES_CRON) {
+  for (const [key, label, maxH, sourceAttendue] of TRACES_CRON) {
     try {
       const r = await fetch(`${kvUrl}/get/${encodeURIComponent(key)}`, { headers: { Authorization: `Bearer ${kvToken}` }, signal: AbortSignal.timeout(10_000) });
       const j = await r.json();
       if (j.error || !r.ok) { warn("robots", `${label} : trace illisible (HTTP ${r.status})`); continue; }
       const t = typeof j.result === "string" ? JSON.parse(j.result) : j.result;
-      const v = jugerTrace(t, label, maxH, Date.now());
+      const v = jugerTrace(t, label, maxH, Date.now(), sourceAttendue);
       (v.level === "fail" ? fail : v.level === "warn" ? warn : ok)("robots", v.msg);
     } catch (e) {
       warn("robots", `${label} : trace illisible (${e.message})`);

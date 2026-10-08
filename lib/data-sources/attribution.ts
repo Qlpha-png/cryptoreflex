@@ -75,6 +75,34 @@ export function fieldSourcesLabel(items: readonly WithSources[], field: string):
     .join(", ");
 }
 
+/**
+ * 08/10/2026 (lot Z2) — heure d'un relevé pour « Cours : CoinMarketCap, relevé à HH:MM » : « 21:40 » le jour même
+ * (heure de Paris), sinon « le 6 octobre à 21:40 ». "" si l'heure est illisible.
+ */
+export function formatReleve(iso: string, now: number = Date.now()): string {
+  const d = new Date(iso);
+  if (!Number.isFinite(d.getTime())) return "";
+  const jour = (t: Date) => t.toLocaleDateString("fr-FR", { timeZone: "Europe/Paris" });
+  const heure = d.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit", timeZone: "Europe/Paris" });
+  return jour(d) === jour(new Date(now)) ? `à ${heure}` : `le ${formatAsOf(iso)}`;
+}
+
+/**
+ * Texte « Cours : CoinMarketCap, relevé à 21:40 » à partir des lignes réellement servies (source du champ `price`, heure
+ * `asOf`). "" sans source connue : rien n'est affiché plutôt qu'un libellé deviné.
+ */
+export function coursSourceTexte(
+  items: readonly (WithSources & { asOf?: string })[],
+  now: number = Date.now(),
+  prefixe = "Cours :",
+): string {
+  const labels = sourcesUsed(items, ["price"]).map((s) => SOURCE_INFO[s]?.label ?? s);
+  if (labels.length === 0) return "";
+  const asOf = items.find((c) => typeof c.asOf === "string")?.asOf;
+  const heure = asOf ? formatReleve(asOf, now) : "";
+  return `${prefixe} ${labels.join(", ")}${heure ? `, relevé ${heure}` : ""}`;
+}
+
 /** « 6 octobre à 21:40 » (heure de Paris). */
 export function formatAsOf(iso: string): string {
   const d = new Date(iso);

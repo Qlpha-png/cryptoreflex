@@ -44,6 +44,7 @@ import {
   formatDecentralizationVerdict,
 } from "@/lib/decentralization-scores";
 import { fetchCoinDetailDaily, formatCompactNumber } from "@/lib/coingecko";
+import { coursSourceTexte } from "@/lib/data-sources/attribution";
 import { getAllCryptos, type AnyCrypto } from "@/lib/cryptos";
 import { nomsAutorisesFr } from "@/lib/plateformes-autorisees";
 import { BRAND } from "@/lib/brand";
@@ -464,7 +465,12 @@ export default async function CryptoPairPage({ params }: Props) {
             {buildIntro(a, b, commonPlatforms.length)}
           </p>
           <p className="mt-3 text-sm text-muted">
-            Tableau side-by-side · données CoinGecko + méthodologie publique Cryptoreflex
+            {/* 08/10/2026 (lot Z2) : source réellement utilisée, plus de « CoinGecko » écrit en dur */}
+            Tableau side-by-side
+            {coursSourceTexte([{ sources: detailA?.sources }, { sources: detailB?.sources }])
+              ? ` · ${coursSourceTexte([{ sources: detailA?.sources }, { sources: detailB?.sources }])}`
+              : ""}{" "}
+            · méthodologie publique Cryptoreflex
           </p>
         </header>
 

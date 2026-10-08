@@ -4,6 +4,7 @@
  */
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import cmcMapJson from "@/data/cmc-id-map.json";
+import { activerKvTest, desactiverKvTest, kvR1Simule } from "../helpers/r1-simule";
 
 vi.mock("next/cache", () => ({
   unstable_cache: <T extends (...args: unknown[]) => unknown>(fn: T): T => fn,
@@ -20,6 +21,9 @@ function mockFetch(handler: (url: string) => Response | Promise<Response>) {
   urls = [];
   globalThis.fetch = vi.fn(async (input: string | URL | Request) => {
     const u = String(input);
+    // 08/10/2026 (lot Z2) : lecture du KV écrit par le robot R1 (simulé à partir des réponses CMC du test), non comptée
+    const kv = await kvR1Simule(u, handler);
+    if (kv) return kv;
     urls.push(u);
     return handler(u);
   }) as unknown as typeof fetch;
@@ -69,22 +73,25 @@ function cgMarkets() {
 const realFetch = globalThis.fetch;
 beforeEach(async () => {
   vi.resetModules();
+  activerKvTest();
   delete process.env.CMC_API_KEY;
   vi.spyOn(console, "warn").mockImplementation(() => undefined);
 });
 afterEach(() => {
   globalThis.fetch = realFetch;
+  desactiverKvTest();
   delete process.env.CMC_API_KEY;
   vi.restoreAllMocks();
 });
 
 describe("table de priorités", () => {
-  it("cascade du prix : places de marché d'abord, CMC en 1er relais, AUCUNE source retirée", async () => {
+  it("cascade du prix (lot Z2) : relevé CMC du robot R1 d'abord, Binance gardé, Coinbase et KuCoin retirés", async () => {
     const { cascadeOrder, PROVIDERS } = await import("@/lib/price-providers");
     expect(cascadeOrder().map((p) => p.name)).toEqual([
-      "binance", "kraken", "coinbase", "kucoin", "coinmarketcap", "coingecko", "dexscreener", "cryptocompare", "static",
+      "coinmarketcap", "binance", "kraken", "coingecko", "dexscreener", "cryptocompare", "static",
     ]);
-    expect(PROVIDERS.length).toBe(9);
+    expect(PROVIDERS.length).toBe(7);
+    expect(PROVIDERS.some((p) => p.name === "coinbase" || p.name === "kucoin")).toBe(false);
   });
 
   it("données d'ensemble : CMC d'abord, CoinGecko en relais (conforme à l'étude)", async () => {
@@ -94,7 +101,7 @@ describe("table de priorités", () => {
     }
     expect(DATA_PRIORITIES.history[0]).toBe("binance-klines");
     expect(DATA_PRIORITIES.ath[0]).toBe("coingecko");
-    expect(DATA_PRIORITIES.fearGreed).toEqual(["alternative-me", "coinmarketcap"]);
+    expect(DATA_PRIORITIES.fearGreed).toEqual(["alternative-me"]);
   });
 });
 
@@ -120,7 +127,7 @@ describe("sans clé CMC", () => {
 });
 
 describe("relais", () => {
-  it("top : CMC en panne (HTTP 500) → CoinGecko prend le relais, source exacte et journal « [coingecko] relais »", async () => {
+  it("top : CMC en panne (aucun relevé du robot R1) → CoinGecko prend le relais, source exacte, aucun appel CMC", async () => {
     process.env.CMC_API_KEY = KEY;
     mockFetch((u) => (isCmc(u) ? json({}, 500) : u.includes("/coins/markets") ? json(cgMarkets()) : json({}, 404)));
     const { fetchTopMarket } = await import("@/lib/coingecko");
@@ -128,9 +135,7 @@ describe("relais", () => {
     expect(top.length).toBe(20);
     expect(top[0].id).toBe("cg-0");
     expect(top[0].sources?.marketCap).toBe("coingecko");
-    expect(urls.some(isCmc)).toBe(true);
-    const logged = (console.warn as unknown as { mock: { calls: unknown[][] } }).mock.calls.map((c) => String(c[0]));
-    expect(logged.some((l) => l.startsWith("[coingecko] relais pour top 20"))).toBe(true);
+    expect(urls.some(isCmc)).toBe(false);
   });
 
   it("top : CMC sain → CMC en premier, CoinGecko seulement en complément (courbe, ATH)", async () => {
@@ -142,6 +147,8 @@ describe("relais", () => {
     expect(top[0].id).toBe(first);
     expect(top[0].sources?.price).toBe("coinmarketcap");
     expect(top[0].priceChange1h).toBe(0.1);
+    // lot Z2 : relevé lu dans le KV du robot R1, aucun appel CoinMarketCap depuis la page
+    expect(urls.some(isCmc)).toBe(false);
   });
 
   it("champs d'ensemble : CMC en erreur 429 → CoinGecko pour la capitalisation et le volume", async () => {
@@ -186,12 +193,13 @@ describe("données aberrantes → relais", () => {
   it("stablecoin à 3,20 $ chez la 1re place de marché → la suivante prend le relais", async () => {
     const { fetchPriceCascade, PROVIDERS } = await import("@/lib/price-providers");
     const byName = Object.fromEntries(PROVIDERS.map((p) => [p.name, p]));
-    // Binance ne cote pas USDT contre lui-même (canHandle faux) : Kraken est la 1re source interrogée.
+    // Aucun relevé R1 ; Binance ne cote pas USDT contre lui-même (canHandle faux) : Kraken est la 1re place interrogée.
+    vi.spyOn(byName.coinmarketcap, "fetch").mockResolvedValue(null);
     const krakenSpy = vi.spyOn(byName.kraken, "fetch").mockResolvedValue({ priceUsd: 3.2, change24h: 0, volume24h: 1 });
-    vi.spyOn(byName.coinbase, "fetch").mockResolvedValue({ priceUsd: 1.0002, change24h: 0, volume24h: 1 });
+    vi.spyOn(byName.coingecko, "fetch").mockResolvedValue({ priceUsd: 1.0002, change24h: 0, volume24h: 1 });
     const r = await fetchPriceCascade({ coingeckoId: "tether", symbol: "USDT", name: "Tether" });
     expect(krakenSpy).toHaveBeenCalled();
-    expect(r?.source).toBe("coinbase");
+    expect(r?.source).toBe("coingecko");
     expect(r?.data.priceUsd).toBe(1.0002);
   });
 
@@ -237,7 +245,7 @@ describe("disjoncteur (mémoire du processus, aucun KV)", () => {
       isCmc(u) ? json({}, 503) : u.includes("/simple/price") ? json({ [new URL(u).searchParams.get("ids") ?? ""]: { usd: 3 } }) : json({}, 404),
     );
     const { fetchPriceCascade, PROVIDERS } = await import("@/lib/price-providers");
-    for (const p of PROVIDERS) if (["binance", "kraken", "coinbase", "kucoin"].includes(p.name)) vi.spyOn(p, "fetch").mockResolvedValue(null);
+    for (const p of PROVIDERS) if (["binance", "kraken"].includes(p.name)) vi.spyOn(p, "fetch").mockResolvedValue(null);
     const ids = Object.keys(MAP).slice(0, 4);
     for (const id of ids.slice(0, 3)) {
       expect((await fetchPriceCascade({ coingeckoId: id, symbol: MAP[id].symbol, name: id }))?.source).toBe("coingecko");
@@ -250,12 +258,17 @@ describe("disjoncteur (mémoire du processus, aucun KV)", () => {
 });
 
 describe("homonymes de symbole", () => {
-  it("le fournisseur CMC ne répond JAMAIS par symbole : fiche hors table = aucun appel", async () => {
+  it("le fournisseur CMC ne répond JAMAIS par symbole : fiche hors table = aucune lecture ; relevé lu par id", async () => {
     process.env.CMC_API_KEY = KEY;
+    mockFetch((u) => (u.includes("/listings/latest") ? json({ status: { error_code: 0 }, data: cmcListing() }) : json({}, 404)));
     const { coinmarketcapProvider } = await import("@/lib/price-providers/coinmarketcap");
     expect(coinmarketcapProvider.canHandle({ coingeckoId: "mantra", symbol: "OM", name: "MANTRA" })).toBe(false);
     expect(coinmarketcapProvider.canHandle({ coingeckoId: "faux-bitcoin", symbol: "BTC", name: "Bitcoin" })).toBe(false);
     expect(coinmarketcapProvider.canHandle({ coingeckoId: "bitcoin", symbol: "BTC", name: "Bitcoin" })).toBe(true);
+    const [site] = Object.keys(MAP);
+    const d = await coinmarketcapProvider.fetch({ coingeckoId: site, symbol: MAP[site].symbol, name: site });
+    expect(d?.priceUsd).toBe(10);
+    expect(urls.some(isCmc)).toBe(false);
   });
 });
 
@@ -296,14 +309,16 @@ describe("contrôle croisé (≤ 1/h, top 20, 1 % / 0,5 % stablecoins)", () => {
     const top = await getTopMarket(20);
     expect(top[0].source).toBe("coinmarketcap");
     await new Promise((r) => setTimeout(r, 100));
-    const exchangeCalls = urls.filter((u) => /binance\.vision|kraken\.com|coinbase\.com|kucoin\.com/.test(u)).length;
+    const exchangeCalls = urls.filter((u) => /binance\.vision|kraken\.com/.test(u)).length;
     expect(exchangeCalls).toBeGreaterThan(0);
+    // lot Z2 : Coinbase et KuCoin ne sont plus des témoins
+    expect(urls.some((u) => /coinbase\.com|kucoin\.com/.test(u))).toBe(false);
     const n = urls.length;
     await getTopMarket(20);
     await new Promise((r) => setTimeout(r, 100));
-    expect(urls.filter((u) => /binance\.vision|kraken\.com|coinbase\.com|kucoin\.com/.test(u)).length).toBe(exchangeCalls);
-    // Le classement CMC n'est PAS rappelé : mémoire de cmcGet (15 min), valable même dans unstable_cache.
-    expect(urls.filter((u) => u.includes("/listings/latest")).length).toBe(1);
+    expect(urls.filter((u) => /binance\.vision|kraken\.com/.test(u)).length).toBe(exchangeCalls);
+    // lot Z2 : le relevé vient du KV du robot R1, jamais d'appel CoinMarketCap depuis la page
+    expect(urls.filter(isCmc).length).toBe(0);
     expect(urls.length).toBe(n);
   });
 
@@ -312,7 +327,7 @@ describe("contrôle croisé (≤ 1/h, top 20, 1 % / 0,5 % stablecoins)", () => {
     const h = await import("@/lib/data-sources/health");
     const { fetchPriceCascade, PROVIDERS } = await import("@/lib/price-providers");
     const byName = Object.fromEntries(PROVIDERS.map((p) => [p.name, p]));
-    for (const n of ["binance", "kraken", "coinbase", "kucoin"]) vi.spyOn(byName[n], "fetch").mockResolvedValue(null);
+    for (const n of ["binance", "kraken"]) vi.spyOn(byName[n], "fetch").mockResolvedValue(null);
     const cmcSpy = vi.spyOn(byName.coinmarketcap, "fetch").mockResolvedValue({ priceUsd: 61_000, change24h: 0, volume24h: 0 });
     vi.spyOn(byName.coingecko, "fetch").mockResolvedValue({ priceUsd: 60_000, change24h: 0, volume24h: 0 });
     h.markSuspect("coinmarketcap", "bitcoin", "test");

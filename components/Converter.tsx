@@ -98,7 +98,7 @@ function Converter({
             {/* reprise du 08/10/2026 (juré I3) : deux devises = taux de référence journalier, pas un taux de marché */}
             {FIAT_OPTIONS.includes(from) && FIAT_OPTIONS.includes(to)
               ? "Deux devises : taux de référence journalier (BCE), daté en tête de page"
-              : "Taux du marché (Binance, Kraken, Coinbase…) — supporte cross-crypto et fiat"}
+              : "Taux du marché — supporte cross-crypto et fiat"}
           </p>
         </div>
       </div>

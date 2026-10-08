@@ -55,7 +55,7 @@ const FAQ_ITEMS = [
   {
     question: "Sur quelles données est basé ce simulateur ?",
     answer:
-      "Les prix historiques proviennent de l'API publique CoinGecko (clôtures quotidiennes en EUR), couvrant jusqu'à 5 ans glissants. Les frais de transaction sont volontairement exclus du calcul (ils représentent 0,5 à 1 % chez la plupart des plateformes). Pour un calcul plus fin, ajoutez ces frais à votre prix moyen.",
+      "Les prix historiques sont des clôtures quotidiennes en EUR, sur 5 ans glissants au plus ; la source réellement utilisée est indiquée dans le simulateur. Les frais de transaction sont volontairement exclus du calcul (ils représentent 0,5 à 1 % chez la plupart des plateformes). Pour un calcul plus fin, ajoutez ces frais à votre prix moyen.",
   },
   {
     question: "Quelle plateforme propose du DCA automatique en France ?",
@@ -85,9 +85,9 @@ export default function SimulateurDcaPage() {
             slug: "simulateur-dca",
             name: "Simulateur DCA crypto Cryptoreflex",
             description:
-              "Simulateur DCA backtest réel BTC/ETH/SOL sur 5 ans glissants — données CoinGecko, comparaison vs achat unique.",
+              "Simulateur DCA backtest réel BTC/ETH/SOL sur 5 ans glissants, comparaison vs achat unique.",
             featureList: [
-              "Backtest historique sur 1 à 5 ans (CoinGecko)",
+              "Backtest historique sur 1 à 5 ans",
               "Bitcoin, Ethereum et Solana supportés",
               "Comparaison DCA vs achat unique (lump sum)",
               "Calcul prix moyen pondéré d'acquisition",
@@ -113,7 +113,7 @@ export default function SimulateurDcaPage() {
           <div className="max-w-3xl">
             <span className="inline-flex items-center gap-2 rounded-full border border-accent-green/30 bg-accent-green/10 px-3 py-1 text-xs font-semibold text-accent-green">
               <TrendingUp className="h-3.5 w-3.5" />
-              Backtest réel — données CoinGecko
+              Backtest réel
             </span>
             <h1 className="mt-4 text-4xl sm:text-5xl font-extrabold tracking-tight text-fg-max">
               Simulateur <span className="gradient-text">DCA crypto</span>

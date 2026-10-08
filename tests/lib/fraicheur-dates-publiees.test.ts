@@ -49,8 +49,6 @@ const MAINTENANT = "(?:new Date\\(\\s*\\)|Date\\.now\\(\\))";
 /** Liste FERMÉE : fichier → raison. Toute nouvelle occurrence ailleurs fait échouer le test. */
 const EXCEPTIONS: Record<string, string> = {
   "app/api/analytics/vitals/route.ts": "p75 des mesures Web Vitals calculé à cet instant : l'heure du calcul est la date réelle de l'agrégat (KV interne, non publié)",
-  "app/api/cron/update-static-prices/route.ts": "instantané de secours écrit juste après getTopMarket : heure réelle du relevé",
-  "lib/price-source.ts": "même instantané, rafraîchi en arrière-plan juste après le relevé : heure réelle du relevé",
 };
 
 function fichiers(dir: string, out: string[] = []): string[] {
@@ -212,7 +210,7 @@ describe("/api/prices (et routes sœurs) : updatedAt = heure du relevé servi", 
   });
   it("le cache KV des cours transmet son fetchedAt (lib/coingecko.ts)", () => {
     const src = lire("lib/coingecko.ts");
-    expect(src).toMatch(/const \{ record: cached, fetchedAt: tickerAt \} = await readTickerCache\(\);/);
+    expect(src).toMatch(/const \{ record: cached, fetchedAt: tickerAt(, provider)? \} = await readTickerCache\(\);/);
     expect(src).toMatch(/\.\.\.\(tickerAt \? \{ fetchedAt: tickerAt \} : \{\}\)/);
   });
 });

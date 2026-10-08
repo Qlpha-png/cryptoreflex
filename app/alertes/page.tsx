@@ -88,7 +88,7 @@ const FAQ: { q: string; a: string }[] = [
   },
   {
     q: "Le prix utilisé est-il fiable ?",
-    a: "Source : prix du marché agrégés de plusieurs sources (Binance, Kraken, Coinbase, CoinGecko…). Délai : 15 minutes au plus entre le franchissement du seuil et l'e-mail. Suffisant pour des alertes patrimoniales, pas adapté au trading haute fréquence.",
+    a: "Source : prix du marché agrégés de plusieurs sources. Délai : 15 minutes au plus entre le franchissement du seuil et l'e-mail. Suffisant pour des alertes patrimoniales, pas adapté au trading haute fréquence.",
   },
 ];
 
@@ -272,7 +272,7 @@ export default async function AlertesPage() {
 
         {/* Mentions */}
         <p className="mt-12 text-xs text-muted leading-relaxed">
-          Données prix : prix du marché agrégés de plusieurs sources (Binance, Kraken, Coinbase, CoinGecko…), vérifiés toutes les 15 minutes.
+          Données prix : prix du marché agrégés de plusieurs sources, vérifiés toutes les 15 minutes.
           Cette page n'est pas un conseil en investissement — voir notre{" "}
           <Link href="/methodologie" className="underline hover:text-fg">méthodologie</Link>.
           Les emails sont envoyés depuis le domaine officiel <strong>{BRAND.domain}</strong>.

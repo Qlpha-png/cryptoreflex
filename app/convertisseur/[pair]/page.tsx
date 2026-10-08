@@ -104,7 +104,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       : `Convertir ${fromUp} en ${toUp} (${fromName}) en temps réel`,
     description: deuxDevises
       ? `Combien vaut 1 ${fromName} (${fromUp}) en ${toName} (${toUp}) ? Convertisseur ${fromUp}/${toUp} gratuit, au taux de référence daté (BCE).`
-      : `Combien vaut 1 ${fromName} (${fromUp}) en ${toName} (${toUp}) aujourd'hui ? Convertisseur ${fromUp}/${toUp} gratuit, au taux du marché (Binance, Kraken, Coinbase…).`,
+      : `Combien vaut 1 ${fromName} (${fromUp}) en ${toName} (${toUp}) aujourd'hui ? Convertisseur ${fromUp}/${toUp} gratuit, au taux du marché.`,
     alternates: withHreflang(url),
     openGraph: {
       title: deuxDevises ? `${fromUp} en ${toUp} — Convertisseur au taux de référence` : `${fromUp} en ${toUp} — Convertisseur temps réel`,
@@ -196,7 +196,7 @@ export default async function PairPage({ params }: PageProps) {
         : rate?.rate != null
         ? `Au dernier relevé de cette page, 1 ${fromName} (${fromUp}) valait environ ${formatRate(
             rate.rate
-          )} ${toUp} (taux du marché : Binance, Kraken, Coinbase…, CoinGecko en secours). Le convertisseur ci-dessus donne le taux du moment.`
+          )} ${toUp} (taux du marché ; heure du relevé indiquée en tête de page). Le convertisseur ci-dessus donne le taux du moment.`
         : `Le taux ${fromUp}/${toUp} est temporairement indisponible. Réessayez dans une minute.`,
     },
     {
@@ -413,8 +413,8 @@ export default async function PairPage({ params }: PageProps) {
                 <>au taux de référence daté indiqué en tête de page ({sourceTaux}) : un taux journalier, sans heure.</>
               ) : (
                 <>
-                  avec le taux de change marché. Le taux vient des places de marché (Binance, Kraken, Coinbase…), avec
-                  CoinGecko en secours ; son heure de relevé est indiquée en tête de page.
+                  avec le taux de change marché. Le taux vient des cours du marché, avec une source de secours ; son
+                  heure de relevé est indiquée en tête de page.
                 </>
               )}
             </p>

@@ -61,7 +61,8 @@ export default function EmbedSimulateurDcaPage() {
         }}
       >
         Combien aurais-tu aujourd'hui en investissant chaque mois en BTC, ETH
-        ou SOL ? Backtest réel sur les données CoinGecko.
+        ou SOL ? Backtest réel sur les prix historiques (source indiquée dans
+        le simulateur).
       </p>
 
       <DcaSimulator />

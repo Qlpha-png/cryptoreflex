@@ -26,12 +26,15 @@ export const CADENCE = [
 
 /**
  * Traces KV « dernier passage + résultat » écrites par les tâches Vercel (lib/cron-trace.ts), âge maximal en heures.
- * update-static-prices : toutes les heures (vercel.json « 0 * * * * ») → 3 h ; série d'e-mails (orchestrateur de 7 h)
+ * refresh-ticker-prices (R1, lot Z2 du 08/10/2026 : bandeau + instantané de secours + global, remplace
+ * update-static-prices) : toutes les 10 min (vercel.json « *\/10 ») → 1 h ; série d'e-mails (orchestrateur de 7 h)
  * et rappels de série (19 h) : une fois par jour → 30 h.
- * @type {Array<[string, string, number]>}
+ * 4e valeur (facultative) : source attendue. Reprise Z2 : R1 doit écrire avec CoinMarketCap ; un passage réussi grâce au
+ * relais CoinGecko est « à surveiller » (CMC en panne), et non vert.
+ * @type {Array<[string, string, number, string?]>}
  */
 export const TRACES_CRON = [
-  ["cron:update-static-prices:last", "instantané de secours des prix (update-static-prices)", 3],
+  ["cron:refresh-ticker-prices:last", "cours du marché, instantané de secours et global (refresh-ticker-prices)", 1, "coinmarketcap"],
   ["cron:streak-reminders:last", "rappels de série du jeu (streak-reminders)", 30],
   ["cron:email-series-fiscalite:last", "série d'e-mails fiscalité", 30],
 ];
@@ -40,12 +43,16 @@ export const TRACES_CRON = [
  * Verdict d'une trace : { level: "ok" | "warn" | "fail", msg }.
  * Pas encore de trace : avertissement (premier passage attendu après la mise en ligne) ; trop vieille ou en échec : défaut.
  */
-export function jugerTrace(trace, label, maxH, nowMs) {
+export function jugerTrace(trace, label, maxH, nowMs, sourceAttendue) {
   if (!trace || typeof trace !== "object" || !trace.at) return { level: "warn", msg: `${label} : pas encore de trace de passage` };
   const t = Date.parse(trace.at);
   if (!Number.isFinite(t)) return { level: "fail", msg: `${label} : trace illisible (heure « ${String(trace.at).slice(0, 40)} »)` };
   const h = (nowMs - t) / 3_600_000;
   if (h > maxH) return { level: "fail", msg: `${label} : dernier passage il y a ${Math.round(h)} h (maximum ${maxH} h)` };
   if (trace.ok !== true) return { level: "fail", msg: `${label} : dernier passage en échec il y a ${Math.round(h)} h (${String(trace.raison ?? "raison inconnue").slice(0, 120)})` };
+  if (sourceAttendue && trace.source !== sourceAttendue) {
+    const cause = trace.cmcErreur ? ` ; cause : ${String(trace.cmcErreur).slice(0, 120)}` : "";
+    return { level: "warn", msg: `${label} : passage réussi il y a ${Math.round(h)} h, mais avec ${String(trace.source ?? "une source inconnue")} au lieu de ${sourceAttendue}${cause}` };
+  }
   return { level: "ok", msg: `${label} : passage réussi il y a ${Math.round(h)} h` };
 }

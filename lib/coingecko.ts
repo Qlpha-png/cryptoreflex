@@ -60,6 +60,8 @@ export interface CoinPrice {
       marché ; CoinGecko : last_updated). Absente si inconnue. 08/10/2026 (lot fraîcheur A) : /api/prices en tire son
       `updatedAt` au lieu de l'heure de la réponse. */
   fetchedAt?: string;
+  /** 08/10/2026 (lot Z2) : source réelle du prix (« coinmarketcap » quand il vient du relevé du robot R1). */
+  source?: SourceName;
 }
 
 const COINGECKO_BASE = "https://api.coingecko.com/api/v3";
@@ -197,7 +199,7 @@ async function _fetchPrices(ids: CoinId[]): Promise<CoinPrice[]> {
   // (TTL 6 h) couvre les périodes où le live est expiré.
   try {
     const { readTickerCache } = await import("@/lib/kv-ticker");
-    const { record: cached, fetchedAt: tickerAt } = await readTickerCache();
+    const { record: cached, fetchedAt: tickerAt, provider } = await readTickerCache();
     if (Object.keys(cached).length > 0) {
       // Vérif : tous les ids demandés sont en KV (live ou stale)
       const allCached = ids.every((id) => cached[id]);
@@ -213,6 +215,7 @@ async function _fetchPrices(ids: CoinId[]): Promise<CoinPrice[]> {
             marketCap: c.marketCap,
             image: c.image,
             ...(tickerAt ? { fetchedAt: tickerAt } : {}),
+            ...(provider ? { source: provider } : {}),
           };
         });
       }
@@ -269,6 +272,7 @@ async function _fetchPrices(ids: CoinId[]): Promise<CoinPrice[]> {
         image: h?.image ?? "",
         // heure du relevé seulement pour un vrai prix (le secours « prix indisponible » porte l'heure de l'échec)
         ...(s.priceUsd > 0 && s.fetchedAt ? { fetchedAt: s.fetchedAt } : {}),
+        ...(s.priceUsd > 0 && s.sources?.price ? { source: s.sources.price } : {}),
       };
     });
   } catch {
@@ -497,20 +501,38 @@ export interface GlobalMetrics {
   activeCryptos: number;
   /** 06/10/2026 — source réelle (« coinmarketcap », « coingecko » ou « top-sum ») pour l'attribution. */
   source?: SourceName;
+  /** 08/10/2026 (lot Z2) — heure de la donnée (relevé du robot R1 pour CoinMarketCap). */
+  asOf?: string;
+}
+
+/**
+ * 08/10/2026 (lot Z2) — métriques globales écrites par le robot R1 (KV marche:global:v1, réponse « global-metrics » de
+ * CoinMarketCap, une fois par heure). AUCUN appel CoinMarketCap depuis une page : c'est la MÊME valeur (capitalisation
+ * totale, dominances) sur l'accueil, /marche et le bandeau. Absente ou de plus de 3 h → null (relais suivant).
+ */
+async function _globalFromKv(): Promise<GlobalMetrics | null> {
+  const { readMarcheGlobal } = await import("@/lib/kv-ticker");
+  const g = await readMarcheGlobal();
+  if (!g) return null;
+  return {
+    totalMarketCapUsd: g.totalMarketCapUsd,
+    totalVolume24hUsd: g.totalVolume24hUsd,
+    btcDominance: g.btcDominance,
+    ethDominance: g.ethDominance,
+    marketCapChange24h: g.marketCapChange24h,
+    activeCryptos: g.activeCryptos,
+    asOf: g.asOf,
+  };
 }
 
 async function _fetchGlobalMetrics(): Promise<GlobalMetrics | null> {
-  // 06/10/2026 — ordre de DATA_PRIORITIES.global (lib/data-sources/priorities.ts) : CoinMarketCap
-  // global-metrics (1 crédit / 30 min, vraie donnée globale) → CoinGecko /global → somme du top 200.
+  // Ordre de DATA_PRIORITIES.global : relevé CoinMarketCap du robot R1 (KV) → CoinGecko /global → somme du top 200.
   // Relais automatique + disjoncteur ; tout en panne → null comme avant.
-  const [{ resolveWithRelay }, cmc] = await Promise.all([
-    import("@/lib/data-sources/resolve"),
-    import("@/lib/coinmarketcap"),
-  ]);
+  const [{ resolveWithRelay }] = await Promise.all([import("@/lib/data-sources/resolve")]);
   const r = await resolveWithRelay<GlobalMetrics>(
     "global",
     {
-      coinmarketcap: cmc.cmcEnabled() ? () => cmc.cmcGlobalMetrics() : undefined,
+      coinmarketcap: _globalFromKv,
       coingecko: _fetchGlobalFromCoingecko,
       "top-sum": _fetchGlobalFromTopSum,
     },
@@ -586,7 +608,7 @@ const _cachedGlobalMetrics = unstable_cache(
     return g;
   },
   // v2 : la clé v1 contenait des null mis en cache pendant les builds.
-  ["coingecko-global-v2"],
+  ["coingecko-global-v3"],
   // BATCH 50 — 300s -> 1800s (30 min)
   { revalidate: 1800, tags: [CG_TAGS.global] }
 );
@@ -625,31 +647,15 @@ const FEAR_GREED_FR: Record<string, string> = {
 };
 
 /**
- * 06/10/2026 — ordre de DATA_PRIORITIES.fearGreed : alternative.me (inchangé) puis CoinMarketCap Fear & Greed
- * (inclus dans l'offre Basic, inactif sans CMC_API_KEY) en relais. `source` indique l'origine réelle.
+ * Indice peur & avidité : alternative.me seul (DATA_PRIORITIES.fearGreed). `source` indique l'origine réelle.
  */
 export async function fetchFearGreed(): Promise<FearGreedData | null> {
-  const [{ resolveWithRelay }, cmc] = await Promise.all([
-    import("@/lib/data-sources/resolve"),
-    import("@/lib/coinmarketcap"),
-  ]);
+  // 08/10/2026 (lot Z2) : plus de relais CoinMarketCap depuis une page (lib/coinmarketcap.ts réservé aux robots).
+  const { resolveWithRelay } = await import("@/lib/data-sources/resolve");
   const r = await resolveWithRelay<FearGreedData>(
     "fearGreed",
     {
       "alternative-me": _fetchFearGreedAlternative,
-      coinmarketcap: cmc.cmcEnabled()
-        ? async () => {
-            const d = await cmc.cmcFearGreed();
-            if (!d) return null;
-            const key = Object.keys(FEAR_GREED_FR).find((k) => k.toLowerCase() === d.classification.toLowerCase());
-            return {
-              value: d.value,
-              classification: key ? FEAR_GREED_FR[key] : d.classification,
-              timestamp: new Date(d.timestamp).toISOString(),
-              deltaVsYesterday: null,
-            };
-          }
-        : undefined,
     },
     {
       label: "peur & avidité",
@@ -726,7 +732,51 @@ export interface MarketCoin {
  * Tuiles : une ligne sans capitalisation (> 0) est écartée (jamais de tuile à 0) ; un logo vide est complété par le
  * logo local de l'id (lib/crypto-logos.ts), jamais par symbole (homonymes).
  */
-async function _fetchTopMarket(limit: number): Promise<MarketCoin[]> {
+/**
+ * 08/10/2026 (lot Z2) — top N lu dans le relevé du robot R1 (KV, CoinMarketCap top 100). AUCUN appel CoinMarketCap
+ * depuis une page. Relevé absent, venu de CoinGecko (CMC en panne) ou de plus de 3 h → null (relais suivant).
+ * `asOf` = heure du relevé, gardée par _cachedFetchTopMarket (et non l'heure du rendu).
+ */
+async function _topFromKv(limit: number, unlinkedPrefix: string): Promise<{ rows: MarketCoin[]; asOf: string } | null> {
+  const { readTickerCache } = await import("@/lib/kv-ticker");
+  const t = await readTickerCache();
+  if (t.source === "none" || t.provider !== "coinmarketcap" || !t.fetchedAt) return null;
+  if (!(Date.now() - Date.parse(t.fetchedAt) < TOP_MARKET_STALE_AFTER_MS)) return null;
+  const rows = Object.values(t.record)
+    .filter((e) => e.price > 0)
+    .sort((a, b) => (a.rank ?? Infinity) - (b.rank ?? Infinity))
+    .slice(0, limit);
+  if (rows.length === 0) return null;
+  return { asOf: t.fetchedAt, rows: rows.map((q) => ({
+    id: q.unlinked && !q.id.startsWith(unlinkedPrefix) ? `${unlinkedPrefix}${q.id}` : q.id,
+    symbol: q.symbol,
+    name: q.name,
+    image: q.image ?? "",
+    currentPrice: q.price,
+    marketCap: q.marketCap ?? 0,
+    marketCapRank: q.rank ?? 0,
+    totalVolume: q.volume24h ?? 0,
+    priceChange1h: q.change1h ?? null,
+    priceChange24h: q.change24h ?? 0,
+    priceChange7d: q.change7d ?? null,
+    sparkline7d: [],
+    circulatingSupply: q.circulatingSupply ?? 0,
+    ath: 0,
+    sources: {
+      price: "coinmarketcap",
+      change1h: "coinmarketcap",
+      change24h: "coinmarketcap",
+      change7d: "coinmarketcap",
+      marketCap: "coinmarketcap",
+      rank: "coinmarketcap",
+      circulatingSupply: "coinmarketcap",
+      volume24h: "coinmarketcap",
+    },
+  })) };
+}
+
+/** Top N + heure du relevé quand il vient du KV de R1 (null sinon : l'heure de la réponse est retenue). */
+async function _fetchTopMarket(limit: number): Promise<{ coins: MarketCoin[]; asOf: string | null }> {
   const [{ resolveWithRelay }, { checkList }, health, cmc] = await Promise.all([
     import("@/lib/data-sources/resolve"),
     import("@/lib/data-sources/sanity"),
@@ -736,41 +786,15 @@ async function _fetchTopMarket(limit: number): Promise<MarketCoin[]> {
   const minRows = Math.min(limit, 10);
   const toCheck = (list: MarketCoin[]) =>
     list.map((c) => ({ priceUsd: c.currentPrice, marketCap: c.marketCap, change24h: c.priceChange24h, symbol: c.symbol }));
+  let kvAsOf: string | null = null;
   const r = await resolveWithRelay<MarketCoin[]>(
     "topMarket",
     {
-      coinmarketcap: cmc.cmcEnabled()
-        ? async () => {
-            const rows = cmc.cmcRowsWithSiteIds(await cmc.cmcListingsTop()).slice(0, limit);
-            if (rows.length === 0) return null;
-            return rows.map((q) => ({
-              id: q.siteId ?? `${cmc.CMC_UNLINKED_PREFIX}${q.cmcId}`,
-              symbol: q.symbol,
-              name: q.name,
-              image: "",
-              currentPrice: q.priceUsd,
-              marketCap: q.marketCap ?? 0,
-              marketCapRank: q.rank ?? 0,
-              totalVolume: q.volume24h ?? 0,
-              priceChange1h: q.change1h,
-              priceChange24h: q.change24h ?? 0,
-              priceChange7d: q.change7d,
-              sparkline7d: [],
-              circulatingSupply: q.circulatingSupply ?? 0,
-              ath: 0,
-              sources: {
-                price: "coinmarketcap",
-                change1h: "coinmarketcap",
-                change24h: "coinmarketcap",
-                change7d: "coinmarketcap",
-                marketCap: "coinmarketcap",
-                rank: "coinmarketcap",
-                circulatingSupply: "coinmarketcap",
-                volume24h: "coinmarketcap",
-              },
-            }));
-          }
-        : undefined,
+      coinmarketcap: async () => {
+        const kv = await _topFromKv(limit, cmc.CMC_UNLINKED_PREFIX);
+        kvAsOf = kv?.asOf ?? null;
+        return kv?.rows ?? null;
+      },
       coingecko: () => _fetchTopMarketCoingecko(limit),
       aggregator: () => _fetchTopMarketAggregator(limit),
     },
@@ -780,10 +804,10 @@ async function _fetchTopMarket(limit: number): Promise<MarketCoin[]> {
       channels: { coingecko: health.CHANNELS.coingeckoKey },
     },
   );
-  if (!r) return [];
+  if (!r) return { coins: [], asOf: null };
   let rows = r.value.filter((c) => c.currentPrice > 0);
   if (r.source === "coinmarketcap") rows = await _complementCmcRows(rows, limit, cmc.CMC_UNLINKED_PREFIX);
-  return _finishTopRows(rows);
+  return { coins: await _finishTopRows(rows), asOf: r.source === "coinmarketcap" ? kvAsOf : null };
 }
 
 /** Clé de rapprochement STRICTE nom + symbole (casse ignorée, rien d'autre). */
@@ -993,14 +1017,15 @@ export interface TopMarketEntry {
  */
 const _cachedFetchTopMarket = unstable_cache(
   async (limit = 20): Promise<TopMarketEntry> => {
-    const coins = await _fetchTopMarket(limit);
+    const { coins, asOf } = await _fetchTopMarket(limit);
     if (coins.length === 0) throw new Error(`top ${limit} : aucune source disponible`);
-    return { coins, fetchedAt: new Date().toISOString() };
+    // 08/10/2026 (lot Z2) : heure du relevé du robot R1 quand le top vient du KV, sinon heure de la réponse.
+    return { coins, fetchedAt: asOf ?? new Date().toISOString() };
   },
-  // v3 : nouvelle forme { coins, fetchedAt } (l'ancienne clé contenait un tableau nu).
-  ["top-market-v3"],
-  // BATCH 50 — 120s -> 600s ; OPTIM 2026-05-10 — 600s -> 1800s (30 min).
-  { revalidate: 1800, tags: [CG_TAGS.market] }
+  // v4 (lot Z2) : top lu dans le relevé CoinMarketCap du robot R1 (KV) au lieu d'un appel CMC.
+  ["top-market-v4"],
+  // 08/10/2026 (lot Z2) : 600 s (le KV est réécrit toutes les 10 min ; plus aucun crédit CMC consommé ici).
+  { revalidate: 600, tags: [CG_TAGS.market] }
 );
 
 /**

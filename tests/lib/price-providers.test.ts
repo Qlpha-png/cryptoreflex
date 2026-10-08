@@ -25,19 +25,11 @@ afterEach(() => {
 });
 
 describe("price-providers cascade", () => {
-  it("itere les providers dans l'ordre de la table unique (Binance prioritaire, CMC 1er relais, aucun retiré)", async () => {
-    // 06/10/2026 — l'ordre vient de DATA_PRIORITIES.price (lib/data-sources/priorities.ts).
+  it("itere les providers dans l'ordre de la table unique (lot Z2 : relevé CMC en tête, Binance gardé, Coinbase et KuCoin retirés)", async () => {
+    // l'ordre vient de DATA_PRIORITIES.price (lib/data-sources/priorities.ts).
     const mod = await import("@/lib/price-providers");
     const sorted = mod.cascadeOrder();
-    expect(sorted[0].name).toBe("binance");
-    expect(sorted[1].name).toBe("kraken");
-    expect(sorted[2].name).toBe("coinbase");
-    expect(sorted[3].name).toBe("kucoin");
-    expect(sorted[4].name).toBe("coinmarketcap");
-    expect(sorted[5].name).toBe("coingecko");
-    expect(sorted[6].name).toBe("dexscreener");
-    expect(sorted[7].name).toBe("cryptocompare");
-    expect(sorted[sorted.length - 1].name).toBe("static");
+    expect(sorted.map((p) => p.name)).toEqual(["coinmarketcap", "binance", "kraken", "coingecko", "dexscreener", "cryptocompare", "static"]);
   });
 
   it("estimateMarketCap derive du STATIC_FALLBACK supply", async () => {

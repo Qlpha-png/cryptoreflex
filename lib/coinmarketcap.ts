@@ -14,6 +14,11 @@
  * instance calculé par cmcMaxMonthlyCredits() (testé : ≤ 70 % des 15 000 crédits).
  * Quota lu sur coinmarketcap.com/api/pricing le 06/10/2026 : 15 000 crédits/mois, 1 crédit par 100 points de
  * données, 50 requêtes/min, usage commercial autorisé.
+ *
+ * 08/10/2026 (lot Z2) — RÉSERVÉ AUX ROBOTS. Aucune page n'appelle plus CoinMarketCap : le robot R1
+ * (app/api/cron/refresh-ticker-prices, toutes les 10 min) écrit le top 100 et les métriques globales dans le KV, et les
+ * pages lisent ce KV (lib/kv-ticker.ts). Test : tests/lib/marche-z2.test.ts (« aucun appel CMC depuis une page »).
+ * L'offre Basic n'accepte qu'UNE devise par appel : tout est demandé en USD, l'euro vient du taux de lib/fx.ts.
  */
 
 import cmcMapJson from "@/data/cmc-id-map.json";
@@ -22,17 +27,22 @@ import { SourceError } from "@/lib/data-sources/resolve";
 const CMC_BASE = "https://pro-api.coinmarketcap.com";
 
 export const CMC_TIMEOUT_MS = 5_000;
-export const CMC_LISTING_LIMIT = 200;
+/** 08/10/2026 (lot Z2) : top 100 (1 crédit par appel) au lieu de 200 (2 crédits). */
+export const CMC_LISTING_LIMIT = 100;
 export const CMC_QUOTES_CHUNK = 100;
 export const CMC_FREE_MONTHLY_CREDITS = 15_000;
-/** Périodes de revalidation (secondes) : fixent le plafond de crédits. */
-// Rythme ralenti le 06/10/2026 (demande de Kev : « la limite ne doit pas être atteinte avant le 1er novembre ») :
-// ≈ 170 crédits/jour par instance au lieu de 332 (classement 96, global 24, lots 42, peur & avidité 8).
+/**
+ * Mémoire de chaque URL (secondes), robots seulement depuis le lot Z2 :
+ *  - classement : R1 passe toutes les 10 min ; 300 s absorbent un second lancement rapproché (orchestrateur de 07:00) ;
+ *  - global : R1 ne le demande qu'une fois par heure (premier passage de l'heure) ; 3 000 s < 1 h ;
+ *  - lots de 100 fiches : réservés au robot des fiches (lot Z3) ;
+ *  - peur & avidité : plus appelé (aucune page ne relaie vers CMC depuis le lot Z2).
+ */
 export const CMC_REVALIDATE = {
-  listings: 1_800, // top 200 toutes les 30 min
-  global: 3_600, // métriques globales toutes les heures
-  quotes: 14_400, // lots de 100 fiches toutes les 4 h
-  fearGreed: 10_800, // relais peur & avidité toutes les 3 h au plus
+  listings: 300,
+  global: 3_000,
+  quotes: 14_400,
+  fearGreed: 10_800,
 } as const;
 
 /**
@@ -117,6 +127,8 @@ export interface CmcQuote {
   totalSupply: number | null;
   maxSupply: number | null;
   lastUpdated: string | null;
+  /** Part de la capitalisation totale (en %), champ market_cap_dominance de CMC ; null s'il est absent. */
+  dominance: number | null;
 }
 
 const num = (v: unknown): number | null => (typeof v === "number" && Number.isFinite(v) ? v : null);
@@ -161,6 +173,7 @@ export function normalizeCmcCoin(raw: unknown): CmcQuote | null {
     totalSupply: pos(r.total_supply),
     maxSupply: pos(r.max_supply),
     lastUpdated: typeof q.last_updated === "string" ? q.last_updated : typeof r.last_updated === "string" ? r.last_updated : null,
+    dominance: pos(q.market_cap_dominance),
   };
 }
 
@@ -625,6 +638,8 @@ export interface CmcGlobal {
   ethDominance: number;
   marketCapChange24h: number;
   activeCryptos: number;
+  /** last_updated de la réponse (ISO), null s'il est absent. */
+  lastUpdated: string | null;
 }
 
 export async function cmcGlobalMetrics(): Promise<CmcGlobal | null> {
@@ -641,6 +656,7 @@ export async function cmcGlobalMetrics(): Promise<CmcGlobal | null> {
     ethDominance: num(d.eth_dominance) ?? 0,
     marketCapChange24h: num(q.total_market_cap_yesterday_percentage_change) ?? 0,
     activeCryptos: num(d.active_cryptocurrencies) ?? 0,
+    lastUpdated: typeof q.last_updated === "string" ? q.last_updated : typeof d.last_updated === "string" ? d.last_updated : null,
   };
 }
 
@@ -658,21 +674,42 @@ export async function cmcFearGreed(): Promise<{ value: number; classification: s
 /* -------------------------------------------------------------------------- */
 
 /**
- * Plafond MAXIMAL de crédits par mois (30 jours) et PAR INSTANCE : chaque URL est rappelée au plus une fois par
- * revalidation (mémoire de cmcGet, valable même dans unstable_cache) et l'instance s'arrête à dailyCredits / 24 h.
- * Plusieurs instances actives en même temps multiplient ce plafond : à mesurer (journal « [coinmarketcap] … sur 24 h »).
- * Coût : 1 crédit par 100 points renvoyés (classement de 200 = 2 crédits), 1 par lot de 100, 1 par appel global.
+ * PLAN DE CRÉDITS DES ROBOTS (08/10/2026, lot Z2). Depuis Z2, seuls des robots appellent CMC : la consommation est un
+ * calendrier fixe, plus une somme de caches de pages. Règle de facturation (documentation CMC, relue le 08/10/2026,
+ * architecture § 5) : 1 crédit par 100 éléments renvoyés, Basic = 1 devise par appel (USD seul).
+ *  - R1 classement top 100 : 1 crédit, toutes les 10 min (vercel.json « *\/10 ») = 144/jour ;
+ *  - R1 relancé par l'orchestrateur de 07:00 : au plus 1 crédit/jour (souvent 0 : mémoire de 300 s) ;
+ *  - R1 métriques globales : 1 crédit, au premier passage de chaque heure = 24/jour ;
+ *  - R2 fiches (lot Z3, prévu) : 7 lots de 100 × 3 passages = 21/jour ;
+ *  - table de correspondance (prévue, mensuelle) : ≈ 3 crédits/mois, compté 1/jour par prudence.
+ * Plafond retenu par l'architecture : ~250 crédits/jour (15 000/mois ÷ 30 = 500 ; marge pour le plafond quotidien non
+ * publié de Basic). Le garde-fou /v1/key/info (mode économe à 80 % de l'allocation du jour) reste en place.
+ */
+export const CMC_ROBOT_PLAN = [
+  { id: "r1-classement", libelle: "R1 classement top 100 (USD)", creditsParAppel: Math.ceil(CMC_LISTING_LIMIT / 100), appelsParJour: 144 },
+  { id: "r1-orchestrateur", libelle: "R1 relancé par l'orchestrateur de 07:00", creditsParAppel: 1, appelsParJour: 1 },
+  { id: "r1-global", libelle: "R1 métriques globales (1 fois par heure)", creditsParAppel: 1, appelsParJour: 24 },
+  { id: "r2-fiches", libelle: "R2 fiches, 7 lots de 100 × 3 passages (lot Z3)", creditsParAppel: CMC_CHUNKS.length, appelsParJour: 3 },
+  { id: "correspondance", libelle: "table de correspondance (mensuelle, comptée 1/jour)", creditsParAppel: 1, appelsParJour: 1 },
+] as const;
+export const CMC_PLAFOND_ROBOTS_JOUR = 250;
+
+/** Crédits par jour du plan des robots (somme exacte du calendrier ci-dessus). */
+export function cmcCreditsParJour(): { total: number; detail: Record<string, number> } {
+  const detail: Record<string, number> = {};
+  for (const l of CMC_ROBOT_PLAN) detail[l.id] = l.creditsParAppel * l.appelsParJour;
+  return { total: Object.values(detail).reduce((a, b) => a + b, 0), detail };
+}
+
+/**
+ * Plafond de crédits par mois (30 jours) : plan des robots × 30, borné par le plafond d'instance de cmcGet.
+ * `share` = part des 15 000 crédits gratuits.
  */
 export function cmcMaxMonthlyCredits(): { total: number; share: number; detail: Record<string, number> } {
-  const perMonth = (revalidate: number) => Math.ceil((30 * 86_400) / revalidate);
-  const detail = {
-    listings: Math.ceil(CMC_LISTING_LIMIT / 100) * perMonth(CMC_REVALIDATE.listings),
-    global: 1 * perMonth(CMC_REVALIDATE.global),
-    quotes: CMC_CHUNKS.length * perMonth(CMC_REVALIDATE.quotes),
-    fearGreed: 1 * perMonth(CMC_REVALIDATE.fearGreed),
-  };
-  // Plafond PAR INSTANCE : le plus petit du rythme naturel des URL et du budget journalier de l'instance (cmcGet).
-  const natural = Object.values(detail).reduce((a, b) => a + b, 0);
+  const jour = cmcCreditsParJour();
+  const detail: Record<string, number> = {};
+  for (const [k, v] of Object.entries(jour.detail)) detail[k] = v * 30;
+  const natural = jour.total * 30;
   const total = Math.min(natural, CMC_INSTANCE_LIMITS.dailyCredits * 30);
   return { total, share: total / CMC_FREE_MONTHLY_CREDITS, detail: { ...detail, natural, instanceCap: CMC_INSTANCE_LIMITS.dailyCredits * 30 } };
 }

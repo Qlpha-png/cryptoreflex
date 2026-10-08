@@ -1,166 +1,59 @@
 /**
- * GET /api/cron/refresh-ticker-prices
+ * GET /api/cron/refresh-ticker-prices — robot R1 (Vercel Cron toutes les 10 min, vercel.json).
  *
- * Pré-charge en KV les prix live pour le ticker home (top 6) + autocomplete
- * (top 50). Évite que /api/prices appelle la cascade live à chaque hit user.
+ * 08/10/2026 (lot Z2) : écrivain unique du marché (lib/marche-robot.ts). CoinMarketCap top 100 en USD, CoinGecko
+ * seulement si CoinMarketCap échoue ; euro au taux de lib/fx.ts ; métriques globales une fois par heure ; bandeau +
+ * instantané de secours + global en UNE commande MSET ; trace « dernier passage + résultat » (cron:refresh-ticker-prices:last).
+ * Remplace aussi l'ancien cron horaire update-static-prices (doublon D9, supprimé).
  *
- * Pourquoi :
- *   Le ticker home poll /api/prices?ids=bitcoin,ethereum,... toutes les 30s
- *   côté browser. Cache 60s seulement → cache miss déclenche cascade live
- *   (Binance + CryptoCompare batch + CG fallback). Sur ~100 visiteurs
- *   simultanés, on génère beaucoup de hits API même avec cache.
- *
- *   Solution : cron toutes les 5 min stocke les prix top 6 + top 50 en KV.
- *   /api/prices lit KV en priorité → 0 cascade live tant que KV chaud.
- *
- * Schedule : toutes les 5 min via GH Actions cron OU daily-orchestrator.
- *
- * Coût API : 1 fetch CG /coins/markets pour top 50 (1 call) toutes les
- * 5 min = 288 fetches/jour CG (vs Binance 1200/min limit, OK).
- *
- * Réponse : { ok, fetched, stored, durationMs }
+ * Paramètre : ?global=1 force le relevé des métriques globales (lancement manuel).
+ * Réponse : { ok, source, count, global, durationMs } (jamais de secret).
  */
 
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { revalidateTag } from "next/cache";
 import * as Sentry from "@sentry/nextjs";
 
 import { verifyBearer } from "@/lib/auth";
-import {
-  KV_TICKER_LIVE_TTL_SECONDS,
-  KV_TICKER_STALE_TTL_SECONDS,
-  KV_TICKER_TAG,
-  type TickerEntry,
-  writeTickerCacheBoth,
-} from "@/lib/kv-ticker";
+import { CRON_TRACE_KEYS, writeCronTrace } from "@/lib/cron-trace";
+import { KV_TICKER_TAG } from "@/lib/kv-ticker";
+import { releverMarche } from "@/lib/marche-robot";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 export const maxDuration = 30;
 
-// FIX 2026-05-14 (Phase 2) — Pattern live + stale via lib/kv-ticker.
-// Audit `gh run list` confirme que GH Actions cron `*/10 * * * *` ne tourne
-// PAS toutes les 10 min : gaps observés 65-246 min entre runs réelles.
-// Avec une seule clé TTL court (12 min), KV vide >90 % du temps.
-// Solution : écrire 2 clés simultanément (live TTL 12 min + stale TTL 6 h).
-// Les readers tentent live → stale → cascade. UX garanti même cron skipped.
-
-const COINGECKO_BASE = "https://api.coingecko.com/api/v3";
-
-interface CGRow {
-  id: string;
-  symbol: string;
-  name: string;
-  image: string;
-  current_price: number;
-  market_cap: number;
-  price_change_percentage_24h: number;
-}
-
-export async function GET(req: NextRequest): Promise<NextResponse> {
+export async function GET(req: Request): Promise<NextResponse> {
   const startedAt = Date.now();
-  const secret = process.env.CRON_SECRET;
-
-  if (!verifyBearer(req, secret)) {
+  if (!verifyBearer(req, process.env.CRON_SECRET)) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  Sentry.addBreadcrumb({
-    category: "cron",
-    message: "refresh-ticker-prices started",
-    level: "info",
+  const r = await releverMarche({ forceGlobal: new URL(req.url).searchParams.get("global") === "1" });
+  await writeCronTrace(CRON_TRACE_KEYS.refreshTickerPrices, {
+    ok: r.ok,
+    ...(r.raison ? { raison: r.raison } : {}),
+    source: r.source ?? "aucune",
+    count: r.count,
+    global: r.global,
+    // Reprise Z2 : raison courte de l'échec CoinMarketCap (relais CoinGecko ou échec total), lue par la sentinelle.
+    // Messages de lib/coinmarketcap.ts seulement (« HTTP 429 », « délai dépassé »…) : jamais la clé.
+    ...(r.cmcErreur ? { cmcErreur: r.cmcErreur.slice(0, 120) } : {}),
   });
 
-  // Top 50 par mcap : couvre ticker home (top 6) + autocomplete + portfolio.
-  const url = `${COINGECKO_BASE}/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=50&page=1&sparkline=false&price_change_percentage=24h`;
-
-  let json: CGRow[] = [];
-  try {
-    const res = await fetch(url, {
-      cache: "no-store",
-      signal: AbortSignal.timeout(15000),
-    });
-    if (!res.ok) {
-      Sentry.captureMessage(`refresh-ticker-prices CG ${res.status}`, "warning");
-      return NextResponse.json(
-        { ok: false, error: `CG ${res.status}`, durationMs: Date.now() - startedAt },
-        { status: 502 },
-      );
-    }
-    json = (await res.json()) as CGRow[];
-  } catch (err) {
-    Sentry.captureException(err);
-    return NextResponse.json(
-      { ok: false, error: err instanceof Error ? err.message : "unknown", durationMs: Date.now() - startedAt },
-      { status: 502 },
-    );
-  }
-
-  // Build Record<id, TickerEntry> for KV.
-  const record: Record<string, TickerEntry> = {};
-  for (const c of json) {
-    if (!c?.id) continue;
-    record[c.id] = {
-      id: c.id,
-      symbol: c.symbol.toUpperCase(),
-      name: c.name,
-      image: c.image,
-      price: c.current_price ?? 0,
-      change24h: c.price_change_percentage_24h ?? 0,
-      marketCap: c.market_cap ?? 0,
-    };
-  }
-
-  const fetched = Object.keys(record).length;
-  if (fetched === 0) {
-    return NextResponse.json(
-      { ok: false, error: "CG returned empty", durationMs: Date.now() - startedAt },
-      { status: 502 },
-    );
-  }
-
-  // Écrit live (TTL 12 min) + stale (TTL 6 h) en parallèle. Si l'une échoue
-  // mais l'autre passe, le fallback partiel reste fonctionnel.
-  // 06/10/2026 : la clé stale n'est écrite qu'une fois par heure (?stale=1 la force) ; les lectures sont en cache
-  // 300 s / 3 600 s, invalidées ici après écriture pour garder la fraîcheur du cron.
-  const writeResult = await writeTickerCacheBoth(record, {
-    forceStale: req.nextUrl.searchParams.get("stale") === "1",
-  });
-  if (writeResult.live || writeResult.stale) {
+  if (r.ok) {
     try {
       revalidateTag(KV_TICKER_TAG);
     } catch {
       /* hors contexte Next (tests) */
     }
-  }
-  if (!writeResult.live && !writeResult.stale) {
-    Sentry.captureMessage("refresh-ticker-prices KV write failed (both keys)", "error");
-    return NextResponse.json(
-      {
-        ok: false,
-        fetched,
-        stored: 0,
-        error: "KV set failed for both live and stale keys",
-        durationMs: Date.now() - startedAt,
-      },
-      { status: 500 },
-    );
-  }
-  if (!writeResult.live || (!writeResult.stale && !writeResult.staleSkipped)) {
-    Sentry.captureMessage(
-      `refresh-ticker-prices partial KV write: live=${writeResult.live} stale=${writeResult.stale}`,
-      "warning",
-    );
+    if (r.source !== "coinmarketcap") Sentry.captureMessage(`refresh-ticker-prices : relais CoinGecko (${r.cmcErreur ?? "CMC indisponible"})`, "warning");
+  } else {
+    Sentry.captureMessage(`refresh-ticker-prices en échec : ${r.raison ?? "inconnu"}`, "error");
   }
 
-  const durationMs = Date.now() - startedAt;
-  return NextResponse.json({
-    ok: true,
-    fetched,
-    storedLive: writeResult.live ? fetched : 0,
-    storedStale: writeResult.stale ? fetched : 0,
-    durationMs,
-    liveTtlSeconds: KV_TICKER_LIVE_TTL_SECONDS,
-    staleTtlSeconds: KV_TICKER_STALE_TTL_SECONDS,
-  });
+  return NextResponse.json(
+    { ok: r.ok, source: r.source, count: r.count, global: r.global, ...(r.raison ? { error: r.raison } : {}), durationMs: Date.now() - startedAt },
+    { status: r.ok ? 200 : 502 },
+  );
 }

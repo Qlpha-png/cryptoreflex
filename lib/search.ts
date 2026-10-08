@@ -176,7 +176,7 @@ const TOOLS: Array<{
     id: "convertisseur",
     title: "Convertisseur crypto",
     url: "/outils/convertisseur",
-    snippet: "Conversion temps réel BTC ↔ ETH ↔ EUR/USD avec prix CoinGecko.",
+    snippet: "Conversion BTC ↔ ETH ↔ EUR/USD au taux du marché.",
     keywords: ["convert", "convertir", "btc", "eth", "eur", "usd", "prix", "taux"],
   },
   {

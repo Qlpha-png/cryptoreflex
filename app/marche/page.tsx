@@ -27,6 +27,8 @@ import GainerLoserList from "@/components/GainerLoserList";
 import { fitDescription } from "@/lib/seo-text";
 import { fmtFr } from "@/lib/format-fr";
 import Breadcrumbs from "@/components/Breadcrumbs";
+import DataSourceLine from "@/components/DataSourceLine";
+import { formatReleve, sourceInfo } from "@/lib/data-sources/attribution";
 
 /**
  * /marche — DASHBOARD marché (DA Obsidian sprint 2, 2026-06-11).
@@ -50,7 +52,7 @@ const PAGE_PATH = "/marche";
 const PAGE_URL = `${BRAND.url}${PAGE_PATH}`;
 const TITLE = "Marché crypto en direct : heatmap, sentiment";
 const DESCRIPTION =
-  "Tableau de bord du marché crypto temps réel : heatmap top 60, indice Fear & Greed, plus gros gagnants/perdants 24h, market cap globale et dominance BTC. Données CoinMarketCap et CoinGecko, indice alternative.me.";
+  "Tableau de bord du marché crypto temps réel : heatmap top 60, indice Fear & Greed, plus gros gagnants/perdants 24h, market cap globale et dominance BTC. Indice Fear & Greed : alternative.me.";
 
 export const metadata: Metadata = {
   title: TITLE,
@@ -199,6 +201,14 @@ async function MarcheDashboardPage() {
               />
             </dl>
           )}
+          {/* 08/10/2026 (lot Z2) : source réelle et heure des chiffres globaux (même valeur sur tout le site) */}
+          {globalMetrics?.source && sourceInfo(globalMetrics.source) && (
+            <p className="mt-2 text-xs text-muted">
+              Capitalisation, volume et dominance : {sourceInfo(globalMetrics.source)!.label}
+              {globalMetrics.asOf && formatReleve(globalMetrics.asOf) ? `, relevé ${formatReleve(globalMetrics.asOf)}` : ""}
+            </p>
+          )}
+          <DataSourceLine items={all} fields={["price"]} prefix="Cours :" releve className="mt-1 text-xs text-muted" />
 
           {/* ── Heatmap inline top 60 ── */}
           <div className="mt-10">

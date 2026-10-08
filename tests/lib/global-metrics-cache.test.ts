@@ -5,6 +5,7 @@
  * ne l'est pas, et la valeur gardée est resservie.
  */
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { activerKvTest, desactiverKvTest, kvR1Simule } from "../helpers/r1-simule";
 
 const store = vi.hoisted(() => new Map<string, unknown>());
 vi.mock("next/cache", () => ({
@@ -27,6 +28,9 @@ function mockFetch(handler: (url: string) => Response) {
   urls = [];
   globalThis.fetch = vi.fn(async (input: string | URL | Request) => {
     const u = String(input);
+    // lot Z2 : les pages lisent le global écrit par le robot R1 (simulé à partir de la réponse CMC du test), non compté
+    const kv = await kvR1Simule(u, handler);
+    if (kv) return kv;
     urls.push(u);
     return handler(u);
   }) as unknown as typeof fetch;
@@ -46,11 +50,13 @@ const realFetch = globalThis.fetch;
 beforeEach(() => {
   vi.resetModules();
   store.clear();
+  activerKvTest();
   process.env.CMC_API_KEY = "cle-factice-de-test";
   vi.spyOn(console, "warn").mockImplementation(() => undefined);
 });
 afterEach(() => {
   globalThis.fetch = realFetch;
+  desactiverKvTest();
   delete process.env.CMC_API_KEY;
   delete process.env.NEXT_PHASE;
   vi.restoreAllMocks();
@@ -72,6 +78,8 @@ describe("métriques globales : l'échec du build n'est pas gardé", () => {
     expect(g?.source).toBe("coinmarketcap");
     expect(g?.totalMarketCapUsd).toBe(3.9e12);
     expect(g?.btcDominance).toBe(57.2);
+    expect(g?.asOf).toEqual(expect.any(String));
+    expect(urls.some((u) => u.includes("coinmarketcap.com"))).toBe(false);
   });
 
   it("relevé réussi puis toutes les sources en panne → le relevé réussi reste servi", async () => {

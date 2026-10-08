@@ -70,12 +70,11 @@ function CryptoStats({
           </div>
           <div className="flex-1">
             <h3 className="text-sm font-bold text-fg">
-              Données en temps réel temporairement indisponibles
+              Données de marché temporairement indisponibles
             </h3>
             <p className="mt-1 text-xs text-fg/75 leading-relaxed">
-              L&apos;API CoinGecko est en cours de mise à jour ou a atteint sa limite
-              gratuite. Les statistiques (capitalisation, volume, supply, ATH/ATL)
-              reviennent automatiquement dans quelques minutes — rafraîchis la page.
+              Les statistiques (capitalisation, volume, offre, ATH/ATL) reviennent
+              automatiquement au prochain relevé : rafraîchissez la page dans quelques minutes.
             </p>
           </div>
         </div>

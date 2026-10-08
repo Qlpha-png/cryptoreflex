@@ -4,6 +4,7 @@ import dynamic from "next/dynamic";
 import { fetchTopMarket } from "@/lib/coingecko";
 import { getCryptoSlugs } from "@/lib/cryptos";
 import { BRAND } from "@/lib/brand";
+import { coursSourceTexte } from "@/lib/data-sources/attribution";
 
 /**
  * /embed/heatmap — version IFRAME de la heatmap crypto live (top 20).
@@ -116,7 +117,7 @@ export default async function EmbedHeatmapPage() {
           flexWrap: "wrap",
         }}
       >
-        <span>Données : CoinMarketCap, CoinGecko, Binance</span>
+        <span>{coursSourceTexte(all)}</span>
         <a
           href={`${BRAND.url}/marche/heatmap?utm_source=embed&utm_medium=iframe&utm_campaign=heatmap`}
           target="_top"
