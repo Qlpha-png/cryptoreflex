@@ -20,6 +20,7 @@ import {
 import { BRAND } from "@/lib/brand";
 import WaltioFranchise from "@/components/fiscal-tools/WaltioFranchise";
 import { withHreflang } from "@/lib/seo-alternates";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 export const metadata: Metadata = {
   // FIX 2026-05-09 : retiré "Cryptoreflex" pour éviter doublon template.
@@ -69,6 +70,7 @@ export default function PartnersPage() {
         />
 
         <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 text-center">
+          <Breadcrumbs chemin="/partenaires" className="mb-6" />
           <span className="ds-eyebrow text-primary-soft inline-flex items-center gap-1.5">
             <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
             NOTRE SÉLECTION

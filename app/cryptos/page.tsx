@@ -4,6 +4,7 @@ import { getAllCryptosBrowsable } from "@/lib/cryptos-extended";
 import CryptosBrowser from "@/components/cryptos/CryptosBrowser";
 import AcademyCrossLink from "@/components/AcademyCrossLink";
 import { fitTitle } from "@/lib/seo-text";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 /**
  * Index /cryptos — Server Component.
@@ -68,13 +69,6 @@ export default async function CryptosIndexPage() {
           name: c.name,
         })),
       },
-      {
-        "@type": "BreadcrumbList",
-        itemListElement: [
-          { "@type": "ListItem", position: 1, name: "Accueil", item: `${SITE}/` },
-          { "@type": "ListItem", position: 2, name: "Cryptos", item: `${SITE}/cryptos` },
-        ],
-      },
     ],
   });
 
@@ -101,13 +95,7 @@ export default async function CryptosIndexPage() {
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Breadcrumb */}
-        <nav aria-label="Fil d'Ariane" className="text-xs text-muted">
-          <Link href="/" className="hover:text-fg">
-            Accueil
-          </Link>
-          <span className="mx-2">/</span>
-          <span className="text-fg/80">Cryptos</span>
-        </nav>
+        <Breadcrumbs chemin="/cryptos" />
 
         {/* Header */}
         <header className="mt-6 max-w-3xl">

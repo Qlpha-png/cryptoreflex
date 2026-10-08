@@ -23,6 +23,7 @@ import { BRAND } from "@/lib/brand";
 import RelatedPagesNav from "@/components/RelatedPagesNav";
 import NextStepsGuide from "@/components/NextStepsGuide";
 import { withHreflang } from "@/lib/seo-alternates";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 // FIX BUILD 2026-05-06 — Top 50 termes les plus consultés au build,
 // les 200+ autres en ISR on-demand. Avant : 252 pages SSG forcées.
@@ -93,59 +94,17 @@ export default function GlossaryTermPage({ params }: PageProps) {
 
   const definedTermSchema = buildDefinedTermSchema(term, BRAND.url);
 
-  const breadcrumbSchema = {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    itemListElement: [
-      { "@type": "ListItem", position: 1, name: "Accueil", item: BRAND.url },
-      {
-        "@type": "ListItem",
-        position: 2,
-        name: "Glossaire",
-        item: `${BRAND.url}/glossaire`,
-      },
-      {
-        "@type": "ListItem",
-        position: 3,
-        name: term.term,
-        item: `${BRAND.url}/glossaire/${term.id}`,
-      },
-    ],
-  };
-
   return (
     <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(definedTermSchema) }}
       />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
-      />
 
       <article className="py-12 sm:py-16">
         <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
           {/* Breadcrumb */}
-          <nav aria-label="Fil d'Ariane" className="text-sm text-muted">
-            <ol className="flex flex-wrap items-center gap-1.5">
-              <li>
-                <Link href="/" className="hover:text-fg-max">
-                  Accueil
-                </Link>
-              </li>
-              <li aria-hidden="true">/</li>
-              <li>
-                <Link href="/glossaire" className="hover:text-fg-max">
-                  Glossaire
-                </Link>
-              </li>
-              <li aria-hidden="true">/</li>
-              <li className="text-fg-max" aria-current="page">
-                {term.term}
-              </li>
-            </ol>
-          </nav>
+          <Breadcrumbs chemin={`/glossaire/${term.id}`} label={term.term} />
 
           {/* Retour */}
           <Link

@@ -10,14 +10,12 @@ import {
   Wand2,
 } from "lucide-react";
 import StructuredData from "@/components/StructuredData";
-import {
-  breadcrumbSchema,
-  faqSchema,
-} from "@/lib/schema";
+import { faqSchema } from "@/lib/schema";
 import { BRAND } from "@/lib/brand";
 import RelatedPagesNav from "@/components/RelatedPagesNav";
 import { withHreflang } from "@/lib/seo-alternates";
 import { fitDescription, fitTitle } from "@/lib/seo-text";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 const PAGE_PATH = "/outils/whitepaper-tldr";
 const PAGE_URL = `${BRAND.url}${PAGE_PATH}`;
@@ -88,11 +86,6 @@ const FAQ_ITEMS = [
 
 export default function WhitepaperTldrPage() {
   // Schemas SEO
-  const breadcrumb = breadcrumbSchema([
-    { name: "Accueil", url: "/" },
-    { name: "Outils", url: "/outils" },
-    { name: "Whitepaper TL;DR", url: PAGE_PATH },
-  ]);
 
   const faq = faqSchema(FAQ_ITEMS);
 
@@ -129,10 +122,10 @@ export default function WhitepaperTldrPage() {
 
   return (
     <>
-      <StructuredData data={[breadcrumb, faq, webApp]} id="wp-tldr-jsonld" />
 
       <section className="py-16 sm:py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <Breadcrumbs chemin="/outils/whitepaper-tldr" className="mb-6" />
           {/* ----------------------------------------------------------- */}
           {/* Hero                                                         */}
           {/* ----------------------------------------------------------- */}

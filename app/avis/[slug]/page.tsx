@@ -49,22 +49,17 @@ import { BRAND } from "@/lib/brand";
 import MobileStickyCTA from "@/components/MobileStickyCTA";
 import AffiliateLink from "@/components/AffiliateLink";
 import { getAffiliationKind, isPaidLink } from "@/lib/partnerships";
-import {
-  breadcrumbSchema,
-  faqSchema,
-  graphSchema,
-  platformReviewSchema,
-  // FIX SEO 2026-05-02 #9 — schéma SoftwareApplication en complément du
+import { faqSchema, graphSchema, platformReviewSchema, // FIX SEO 2026-05-02 #9 — schéma SoftwareApplication en complément du
   // Product (un exchange = service multi-types : produit ET app financière).
   // Permet de surfacer le rich result "App" Google.
-  platformSoftwareApplicationSchema,
-} from "@/lib/schema";
+  platformSoftwareApplicationSchema } from "@/lib/schema";
 import MiCAComplianceBadge from "@/components/MiCAComplianceBadge";
 import RelatedPagesNav from "@/components/RelatedPagesNav";
 import NextStepsGuide from "@/components/NextStepsGuide";
 import PlatformLogo from "@/components/PlatformLogo";
 import { withHreflang } from "@/lib/seo-alternates";
 import { fmtDateFr, fmtFr, fmtNb } from "@/lib/format-fr";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 // FIX SEO 2026-06-11 — pattern blog/[slug] : SSG pur + dynamicParams=false.
 // Slug inconnu = vrai HTTP 404 (avant : soft-404 en 200, vérifié live).
@@ -363,11 +358,6 @@ function ReviewPage({ params }: Props) {
     // permet rich result "App" Google (icone + categorie FinanceApplication).
     platformSoftwareApplicationSchema(p),
     faqSchema(faq.map((item) => ({ question: item.q, answer: item.a }))),
-    breadcrumbSchema([
-      { name: "Accueil", url: "/" },
-      { name: "Avis plateformes", url: "/#plateformes" },
-      { name: p.name, url: `/avis/${p.id}` },
-    ]),
   ]);
 
   const available = isAvailableFr(p);
@@ -410,17 +400,7 @@ function ReviewPage({ params }: Props) {
 
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
         {/* Breadcrumb */}
-        <nav aria-label="Fil d'Ariane" className="text-xs text-muted">
-          <Link href="/" className="hover:text-fg-max">
-            Accueil
-          </Link>
-          <span className="mx-2">/</span>
-          <Link href="/#plateformes" className="hover:text-fg-max">
-            Avis plateformes
-          </Link>
-          <span className="mx-2">/</span>
-          <span className="text-fg-max/80">{p.name}</span>
-        </nav>
+        <Breadcrumbs chemin={`/avis/${p.id}`} label={`Avis ${p.name}`} />
 
         {/* Bandeau plateforme fermée au marché FR (ex : Gemini) */}
         {!available && (

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight, TrendingUp, Calendar } from "lucide-react";
 import { BRAND, STATS } from "@/lib/brand";
-import { breadcrumbSchema, graphSchema } from "@/lib/schema";
+import { graphSchema } from "@/lib/schema";
 import StructuredData from "@/components/StructuredData";
 import { withHreflang } from "@/lib/seo-alternates";
 import {
@@ -11,6 +11,7 @@ import {
   getHistHubCryptos,
   getHistYearsFor,
 } from "@/lib/historique-prix";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 /**
  * /historique-prix — HUB INDEX (BATCH 44b — création post-audit maillage SEO).
@@ -62,16 +63,13 @@ export const revalidate = 86400;
 
 export default function HistoriquePrixHub() {
   const schema = graphSchema([
-    breadcrumbSchema([
-      { name: "Accueil", url: "/" },
-      { name: "Historique prix crypto", url: "/historique-prix" },
-    ]),
   ]);
 
   return (
     <article className="py-12 sm:py-16">
       <StructuredData id="historique-prix-hub" data={schema} />
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <Breadcrumbs chemin="/historique-prix" className="mb-8" />
         {/* Hero */}
         <header className="text-center mb-12">
           <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/5 px-3 py-1 text-xs font-mono font-bold text-primary uppercase tracking-wider mb-4">

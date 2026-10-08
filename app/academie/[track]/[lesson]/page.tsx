@@ -31,9 +31,10 @@ import RelatedEntities from "@/components/RelatedEntities";
 import { BRAND } from "@/lib/brand";
 import { getArticleBySlug } from "@/lib/mdx";
 import { TRACKS, getTrack, getLesson, getNeighbors } from "@/lib/academy-tracks";
-import { breadcrumbSchema } from "@/lib/schema";
+
 import { withHreflang } from "@/lib/seo-alternates";
 import { fitDescription, fitTitle } from "@/lib/seo-text";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 interface Props {
   params: { track: string; lesson: string };
@@ -119,44 +120,13 @@ export default async function LessonPage({ params }: Props) {
     },
   };
 
-  const breadcrumbs = breadcrumbSchema([
-    { name: "Accueil", url: "/" },
-    { name: "Académie", url: "/academie" },
-    { name: track.title, url: `/academie/${track.id}` },
-    {
-      name: `Leçon ${lesson.order} — ${lesson.title}`,
-      url: `/academie/${track.id}/${lesson.articleSlug}`,
-    },
-  ]);
-
   return (
     <div className="py-8 sm:py-12">
-      <StructuredData
-        data={[schema, breadcrumbs]}
-        id={`lesson-${lesson.articleSlug}`}
-      />
 
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         {/* Breadcrumb + retour */}
         <div className="flex items-center justify-between gap-3 text-xs text-muted">
-          <nav aria-label="Fil d'Ariane">
-            <Link href="/" className="hover:text-fg">
-              Accueil
-            </Link>
-            <span className="mx-2">/</span>
-            <Link href="/academie" className="hover:text-fg">
-              Académie
-            </Link>
-            <span className="mx-2">/</span>
-            <Link
-              href={`/academie/${track.id}`}
-              className="hover:text-fg"
-            >
-              {track.title}
-            </Link>
-            <span className="mx-2">/</span>
-            <span className="text-fg/80">Leçon {lesson.order}</span>
-          </nav>
+          <Breadcrumbs chemin={`/academie/${track.id}/${lesson.articleSlug}`} label={lesson.title} parent={{ href: `/academie/${track.id}`, label: track.title }} />
           <Link
             href={`/academie/${track.id}`}
             className="inline-flex items-center gap-1 hover:text-fg"

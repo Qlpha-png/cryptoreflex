@@ -16,6 +16,7 @@ import { getQuizForTrack } from "@/lib/academy-quizzes";
 import TrackQuiz from "@/components/academy/TrackQuiz";
 import { withHreflang } from "@/lib/seo-alternates";
 import { fitTitle } from "@/lib/seo-text";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 interface Props {
   params: { track: string };
@@ -68,24 +69,7 @@ export default function QuizPage({ params }: Props) {
     <div className="py-10 sm:py-14">
       <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
         {/* Breadcrumb */}
-        <nav className="text-xs text-muted" aria-label="Fil d'Ariane">
-          <Link href="/" className="hover:text-fg">
-            Accueil
-          </Link>
-          <span className="mx-2">/</span>
-          <Link href="/academie" className="hover:text-fg">
-            Académie
-          </Link>
-          <span className="mx-2">/</span>
-          <Link
-            href={`/academie/${track.id}`}
-            className="hover:text-fg"
-          >
-            {track.title}
-          </Link>
-          <span className="mx-2">/</span>
-          <span className="text-fg/80">Quiz final</span>
-        </nav>
+        <Breadcrumbs chemin={`/academie/${track.id}/quiz`} label="Quiz final" parent={{ href: `/academie/${track.id}`, label: track.title }} />
 
         {/* Header */}
         <header className="mt-5 mb-8">

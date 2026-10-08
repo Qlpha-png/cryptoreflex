@@ -21,14 +21,11 @@ import { BRAND } from "@/lib/brand";
 import { withHreflang } from "@/lib/seo-alternates";
 import StructuredData from "@/components/StructuredData";
 import PlatformName from "@/components/comparison/PlatformName";
-import {
-  breadcrumbSchema,
-  faqSchema,
-  graphSchema,
-} from "@/lib/schema";
+import { faqSchema, graphSchema } from "@/lib/schema";
 import { fitTitle } from "@/lib/seo-text";
 import { fmtDateFr } from "@/lib/format-fr";
 import ComparateurNotice from "@/components/ComparateurNotice";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 /**
  * /comparatif/frais — Frais RÉELS des plateformes crypto FR.
@@ -193,11 +190,6 @@ function ComparatifFraisPage() {
   const cheapTradeFee = (amount * cheapestTrade.spotTaker) / 100;
 
   const schemas = graphSchema([
-    breadcrumbSchema([
-      { name: "Accueil", url: "/" },
-      { name: "Comparatif", url: "/comparatif" },
-      { name: "Frais", url: PAGE_PATH },
-    ]),
     faqSchema([
       {
         question: "Quelle est la plateforme crypto la moins chère en 2026 ?",
@@ -231,13 +223,7 @@ function ComparatifFraisPage() {
 
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         {/* Breadcrumb */}
-        <nav aria-label="Fil d'Ariane" className="text-xs text-muted">
-          <Link href="/" className="hover:text-fg">Accueil</Link>
-          <span className="mx-2">/</span>
-          <Link href="/comparatif" className="hover:text-fg">Comparatif</Link>
-          <span className="mx-2">/</span>
-          <span className="text-fg/80">Frais</span>
-        </nav>
+        <Breadcrumbs chemin="/comparatif/frais" />
 
         {/* Header */}
         <header className="mt-6 max-w-3xl">

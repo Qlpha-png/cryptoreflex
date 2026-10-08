@@ -22,15 +22,11 @@ import {
   getAllFiscalTools,
   getRecommendedFiscalTool,
 } from "@/lib/fiscal-tools";
-import {
-  breadcrumbSchema,
-  faqSchema,
-  graphSchema,
-  type JsonLd,
-} from "@/lib/schema";
+import { faqSchema, graphSchema, type JsonLd } from "@/lib/schema";
 import { BRAND } from "@/lib/brand";
 import { withHreflang } from "@/lib/seo-alternates";
 import { fitTitle } from "@/lib/seo-text";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 /* -------------------------------------------------------------------------- */
 /*  ISR — revalidation 1x / jour (les tarifs des outils bougent rarement)     */
@@ -191,14 +187,6 @@ export default function DeclarationFiscaleCryptoPage() {
         data={graphSchema([
           productWaltioSchema,
           itemListSchema,
-          breadcrumbSchema([
-            { name: "Accueil", url: "/" },
-            { name: "Outils", url: "/outils" },
-            {
-              name: "Déclaration fiscale crypto",
-              url: PAGE_PATH,
-            },
-          ]),
           faqSchema(FAQ_ITEMS),
         ])}
       />
@@ -206,6 +194,7 @@ export default function DeclarationFiscaleCryptoPage() {
       {/* ============================ Hero ============================ */}
       <section className="relative py-16 sm:py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <Breadcrumbs chemin="/outils/declaration-fiscale-crypto" className="mb-6" />
           <div className="max-w-3xl">
             <span className="inline-flex items-center gap-2 rounded-full border border-success/40 bg-success/10 px-3 py-1 text-xs font-semibold text-success">
               <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />

@@ -14,17 +14,12 @@ import {
 } from "lucide-react";
 import { BRAND } from "@/lib/brand";
 import StructuredData from "@/components/StructuredData";
-import {
-  articleSchema,
-  breadcrumbSchema,
-  faqSchema,
-  graphSchema,
-  type JsonLd,
-} from "@/lib/schema";
+import { articleSchema, faqSchema, graphSchema, type JsonLd } from "@/lib/schema";
 import NewsletterInline from "@/components/NewsletterInline";
 import PackCTABlock from "@/components/fiscalite/PackCTABlock";
 import { withHreflang } from "@/lib/seo-alternates";
 import { fitDescription, fitTitle } from "@/lib/seo-text";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 /**
  * /etudes/fiscalite-crypto-france-2026-guide-cerfa
@@ -179,15 +174,6 @@ const SOURCES = [
 
 const baseUrl = BRAND.url;
 
-const breadcrumb = breadcrumbSchema([
-  { name: "Accueil", url: baseUrl + "/" },
-  { name: "Études", url: baseUrl + "/etudes" },
-  {
-    name: "Fiscalité crypto France 2026",
-    url: baseUrl + "/etudes/fiscalite-crypto-france-2026-guide-cerfa",
-  },
-]);
-
 const article = articleSchema({
   slug: "etudes/fiscalite-crypto-france-2026-guide-cerfa",
   title: TITLE,
@@ -231,7 +217,7 @@ const researchProject = {
   ],
 };
 
-const jsonLd: JsonLd = graphSchema([breadcrumb, article, faq, researchProject]);
+const jsonLd: JsonLd = graphSchema([article, faq, researchProject]);
 
 export default function FiscaliteCryptoStudyPage() {
   return (
@@ -241,17 +227,7 @@ export default function FiscaliteCryptoStudyPage() {
       {/* Hero */}
       <section className="border-b border-fg-max/5 bg-gradient-to-b from-success/5 to-transparent">
         <div className="mx-auto max-w-4xl px-4 py-12 sm:px-6 lg:px-8">
-          <nav className="mb-6 text-sm text-muted" aria-label="Fil d'Ariane">
-            <Link href="/" className="hover:text-info">
-              Accueil
-            </Link>
-            <span className="mx-2 text-fg-4">/</span>
-            <Link href="/etudes" className="hover:text-info">
-              Études
-            </Link>
-            <span className="mx-2 text-fg-4">/</span>
-            <span className="text-fg-2">Fiscalité crypto FR 2026</span>
-          </nav>
+          <Breadcrumbs chemin="/etudes/fiscalite-crypto-france-2026-guide-cerfa" className="mb-6" />
 
           <div className="inline-flex items-center gap-2 rounded-full border border-success/30 bg-success/10 px-3 py-1 text-xs font-medium text-success">
             <Calculator className="h-3.5 w-3.5" />

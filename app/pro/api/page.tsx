@@ -12,6 +12,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { BRAND } from "@/lib/brand";
 import { Check, Code2, ArrowRight } from "lucide-react";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 export const metadata: Metadata = {
   title: "API personnelle",
@@ -31,6 +32,7 @@ const FEATURES = [
 export default function ProApiPage() {
   return (
     <div className="container max-w-4xl mx-auto px-4 py-12 sm:py-16">
+      <Breadcrumbs chemin="/pro/api" className="mb-6" />
       <header className="text-center mb-12">
         <div className="inline-flex items-center gap-2 rounded-full border border-border bg-primary/5 px-3 py-1 text-xs font-medium text-primary mb-4">
           <Code2 className="size-3.5" />

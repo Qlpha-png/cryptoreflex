@@ -11,11 +11,11 @@ import { resolveCoingeckoId } from "@/lib/crypto-aliases";
 import { linkableCryptoPath } from "@/lib/crypto-links";
 import { corrigerAccentsProfond } from "@/lib/fr-accents";
 import StructuredData from "@/components/StructuredData";
+import Breadcrumbs from "@/components/Breadcrumbs";
 import AmfDisclaimer from "@/components/AmfDisclaimer";
 import ReflexCardPromo from "@/components/crypto-detail/ReflexCardPromo";
 import {
   articleSchema,
-  breadcrumbSchema,
   cryptoFinancialProductSchema,
   graphSchema,
 } from "@/lib/schema";
@@ -118,27 +118,12 @@ function LLMFicheViewBase({ fiche, knownIds }: { fiche: CryptoFicheRow; knownIds
       yearCreated,
       sameAs: externalSameAs,
     }),
-    breadcrumbSchema([
-      { name: "Accueil", url: BRAND.url },
-      { name: "Cryptos", url: `${BRAND.url}/cryptos` },
-      { name: fiche.name, url: pageUrl },
-    ]),
   ]);
 
   return (
     <article className="container mx-auto max-w-4xl px-4 py-8">
       {/* Breadcrumb */}
-      <nav aria-label="Fil d'Ariane" className="mb-6 text-sm text-muted-foreground">
-        <Link href="/" className="hover:underline">
-          Accueil
-        </Link>
-        {" › "}
-        <Link href="/cryptos" className="hover:underline">
-          Cryptos
-        </Link>
-        {" › "}
-        <span>{fiche.name}</span>
-      </nav>
+      <Breadcrumbs chemin={`/cryptos/${fiche.coingecko_id}`} label={fiche.name} className="mb-6" />
 
       {/* Hero */}
       <header className="mb-8">

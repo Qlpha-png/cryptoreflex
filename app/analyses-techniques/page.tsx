@@ -6,6 +6,7 @@ import { BRAND } from "@/lib/brand";
 import StructuredData from "@/components/StructuredData";
 import AnalysesIndexClient from "@/components/ta/AnalysesIndexClient";
 import { withHreflang } from "@/lib/seo-alternates";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 /**
  * /analyses-techniques — index des analyses TA quotidiennes BTC/ETH/SOL/XRP/ADA.
@@ -68,6 +69,7 @@ export default async function AnalysesTechniquesPage() {
 
       <section className="py-16 sm:py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <Breadcrumbs chemin="/analyses-techniques" className="mb-6" />
           {/* Header */}
           <div className="max-w-3xl">
             <span className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-semibold text-primary-glow">

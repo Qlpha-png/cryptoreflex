@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { BRAND } from "@/lib/brand";
 import { withHreflang } from "@/lib/seo-alternates";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 /**
  * /cgu — Conditions Générales d'Utilisation du SITE Cryptoreflex.
@@ -25,6 +26,7 @@ export const metadata: Metadata = {
 export default function CguPage() {
   return (
     <article className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-16 prose prose-invert">
+      <Breadcrumbs chemin="/cgu" className="not-prose mb-6" />
       <h1 className="text-4xl font-extrabold tracking-tight text-fg">
         Conditions Générales d&apos;Utilisation
       </h1>

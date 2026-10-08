@@ -14,18 +14,13 @@ import {
 } from "lucide-react";
 import { BRAND } from "@/lib/brand";
 import StructuredData from "@/components/StructuredData";
-import {
-  articleSchema,
-  breadcrumbSchema,
-  faqSchema,
-  graphSchema,
-  type JsonLd,
-} from "@/lib/schema";
+import { articleSchema, faqSchema, graphSchema, type JsonLd } from "@/lib/schema";
 import NewsletterInline from "@/components/NewsletterInline";
 import { withHreflang } from "@/lib/seo-alternates";
 import { getExchangePlatforms, isAvailableFr } from "@/lib/platforms";
 import { getAllMicaPlatforms } from "@/lib/mica";
 import { fitDescription, fitTitle } from "@/lib/seo-text";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 /**
  * /etudes/mica-juillet-2026-etat-des-lieux — état des lieux des plateformes crypto en France
@@ -134,12 +129,6 @@ const SOURCES = [
 
 const baseUrl = BRAND.url;
 
-const breadcrumb = breadcrumbSchema([
-  { name: "Accueil", url: baseUrl + "/" },
-  { name: "Études", url: baseUrl + "/etudes" },
-  { name: "MiCA juillet 2026", url: baseUrl + "/etudes/mica-juillet-2026-etat-des-lieux" },
-]);
-
 const article = articleSchema({
   slug: "etudes/mica-juillet-2026-etat-des-lieux",
   title: TITLE,
@@ -154,7 +143,7 @@ const article = articleSchema({
 
 const faq = faqSchema(FAQ.map((f) => ({ question: f.q, answer: f.a })));
 
-const jsonLd: JsonLd = graphSchema([breadcrumb, article, faq]);
+const jsonLd: JsonLd = graphSchema([article, faq]);
 
 export default function MicaStudyPage() {
   return (
@@ -164,17 +153,7 @@ export default function MicaStudyPage() {
       {/* Hero */}
       <section className="border-b border-fg-max/5 bg-gradient-to-b from-warning/5 to-transparent">
         <div className="mx-auto max-w-4xl px-4 py-12 sm:px-6 lg:px-8">
-          <nav className="mb-6 text-sm text-muted" aria-label="Fil d'Ariane">
-            <Link href="/" className="hover:text-info">
-              Accueil
-            </Link>
-            <span className="mx-2 text-fg-4">/</span>
-            <Link href="/etudes" className="hover:text-info">
-              Études
-            </Link>
-            <span className="mx-2 text-fg-4">/</span>
-            <span className="text-fg-2">MiCA juillet 2026</span>
-          </nav>
+          <Breadcrumbs chemin="/etudes/mica-juillet-2026-etat-des-lieux" className="mb-6" />
 
           <div className="inline-flex items-center gap-2 rounded-full border border-warning/30 bg-warning/10 px-3 py-1 text-xs font-medium text-primary-soft">
             <BookOpen className="h-3.5 w-3.5" />

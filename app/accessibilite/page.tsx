@@ -3,6 +3,7 @@ import Link from "next/link";
 import { BRAND } from "@/lib/brand";
 import { withHreflang } from "@/lib/seo-alternates";
 import { DELAI_REPONSE } from "@/lib/engagements";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 /**
  * /accessibilite — Déclaration d'accessibilité (RGAA 4.1 + EAA 2025).
@@ -31,6 +32,7 @@ export const metadata: Metadata = {
 export default function AccessibilitePage() {
   return (
     <article className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-16 prose prose-invert">
+      <Breadcrumbs chemin="/accessibilite" className="not-prose mb-6" />
       <h1 className="text-4xl font-extrabold tracking-tight text-fg">
         Déclaration d&apos;accessibilité
       </h1>

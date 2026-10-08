@@ -54,14 +54,10 @@ import AmfDisclaimer from "@/components/AmfDisclaimer";
 // l'orphelinat (audit a confirmé 0 maillage interne avant ce commit).
 import RelatedPagesNav from "@/components/RelatedPagesNav";
 import NextStepsGuide from "@/components/NextStepsGuide";
-import {
-  breadcrumbSchema,
-  faqSchema,
-  graphSchema,
-  howToSchema,
-} from "@/lib/schema";
+import { faqSchema, graphSchema, howToSchema } from "@/lib/schema";
 import { withHreflang } from "@/lib/seo-alternates";
 import { fmtFr } from "@/lib/format-fr";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 // 2026-06-13 — HARD 404 sur params invalides (fix soft-404 SEO). La page
 // est 100 % SYNCHRONE (aucun fetch réseau au build : tout vient de la data
@@ -237,17 +233,6 @@ export default function AcheterPaysPage({ params }: Props) {
       estimatedCost: { currency: country.currency, value: 50 },
       steps: steps.map((s) => ({ name: s.name, text: s.text })),
     }),
-    breadcrumbSchema([
-      { name: "Accueil", url: "/" },
-      // FIX 2026-06-13 — le crumb pointait /cryptos mais s'appelait "Acheter"
-      // (libellé ≠ destination, et le hub /acheter — vrai parent — était absent).
-      { name: "Acheter une crypto", url: "/acheter" },
-      { name: c.name, url: `/cryptos/${c.id}` },
-      {
-        name: `${country.name}`,
-        url: `/acheter/${c.id}/${country.code}`,
-      },
-    ]),
     faqSchema(faq.map((f) => ({ question: f.q, answer: f.ans }))),
   ]);
 
@@ -259,21 +244,7 @@ export default function AcheterPaysPage({ params }: Props) {
       />
 
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-        <nav aria-label="Fil d'Ariane" className="text-xs text-muted">
-          <Link href="/" className="hover:text-fg">
-            Accueil
-          </Link>
-          <span className="mx-2">/</span>
-          <Link href="/acheter" className="hover:text-fg">
-            Acheter une crypto
-          </Link>
-          <span className="mx-2">/</span>
-          <Link href={`/cryptos/${c.id}`} className="hover:text-fg">
-            {c.name}
-          </Link>
-          <span className="mx-2">/</span>
-          <span className="text-fg/80">{country.name}</span>
-        </nav>
+        <Breadcrumbs chemin={`/acheter/${c.id}/${country.code}`} label={`Acheter ${c.name} ${country.inName}`} />
 
         <header className="mt-6">
           <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-fg">

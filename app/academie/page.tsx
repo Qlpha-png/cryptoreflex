@@ -30,9 +30,10 @@ import AcademyResumeBanner from "@/components/academy/AcademyResumeBanner";
 import AcademyLevelGuide from "@/components/academy/AcademyLevelGuide";
 import StructuredData from "@/components/StructuredData";
 import FAQ from "@/components/mdx/FAQ";
-import { breadcrumbSchema } from "@/lib/schema";
+
 import { withHreflang } from "@/lib/seo-alternates";
 import { fitDescription } from "@/lib/seo-text";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 export const revalidate = 86400; // 1 jour — contenu très stable
 
@@ -122,24 +123,12 @@ function AcademiePage() {
     })),
   };
 
-  const breadcrumbs = breadcrumbSchema([
-    { name: "Accueil", url: "/" },
-    { name: "Académie", url: "/academie" },
-  ]);
-
   return (
     <div className="py-12 sm:py-16">
-      <StructuredData data={[courseSchema, breadcrumbs]} id="academie-course" />
 
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         {/* Breadcrumb */}
-        <nav className="text-xs text-muted" aria-label="Fil d'Ariane">
-          <Link href="/" className="hover:text-fg">
-            Accueil
-          </Link>
-          <span className="mx-2">/</span>
-          <span className="text-fg/80">Académie</span>
-        </nav>
+        <Breadcrumbs chemin="/academie" />
 
         {/* Hero */}
         <header className="mt-6 mb-14 max-w-3xl">

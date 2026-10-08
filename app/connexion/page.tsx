@@ -8,6 +8,7 @@ import LoginForm from "@/components/auth/LoginForm";
 // connexion était un cul-de-sac total. Avec NextStepsGuide context homepage
 // on propose 3 destinations à explorer si le user n'a pas encore de compte.
 import NextStepsGuide from "@/components/NextStepsGuide";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 export const metadata: Metadata = {
   title: "Connexion",
@@ -38,6 +39,7 @@ export default function ConnexionPage({ searchParams }: SearchParams) {
   return (
     <section className="min-h-[80vh] flex flex-col justify-center py-16">
       <div className="mx-auto max-w-md px-4 sm:px-6 w-full">
+        <Breadcrumbs chemin="/connexion" className="mb-6" />
         <div className="text-center mb-8">
           <span className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/15 text-primary border border-primary/30 mb-4">
             <Mail className="h-6 w-6" aria-hidden="true" />

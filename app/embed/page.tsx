@@ -10,9 +10,10 @@ import {
   Copy,
 } from "lucide-react";
 import StructuredData from "@/components/StructuredData";
-import { breadcrumbSchema, faqSchema, graphSchema, type JsonLd } from "@/lib/schema";
+import { faqSchema, graphSchema, type JsonLd } from "@/lib/schema";
 import { BRAND } from "@/lib/brand";
 import { fitDescription } from "@/lib/seo-text";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 /**
  * /embed — page de docs du widget JS Cryptoreflex.
@@ -82,11 +83,6 @@ const FAQ = [
 
 const baseUrl = BRAND.url;
 
-const breadcrumb = breadcrumbSchema([
-  { name: "Accueil", url: baseUrl + "/" },
-  { name: "Widgets embed", url: baseUrl + "/embed" },
-]);
-
 const faq = faqSchema(FAQ.map((f) => ({ question: f.question, answer: f.answer })));
 
 const softwareApplication = {
@@ -106,7 +102,7 @@ const softwareApplication = {
   license: "https://creativecommons.org/licenses/by/4.0/",
 };
 
-const jsonLd: JsonLd = graphSchema([breadcrumb, faq, softwareApplication]);
+const jsonLd: JsonLd = graphSchema([faq, softwareApplication]);
 
 const SCRIPT_TAG = `<script async src="${baseUrl}/embed/v1.js"></script>`;
 
@@ -159,13 +155,7 @@ export default function EmbedPage() {
       {/* Hero */}
       <section className="border-b border-fg-max/5 bg-gradient-to-b from-info/5 to-transparent">
         <div className="mx-auto max-w-5xl px-4 py-16 sm:px-6 lg:px-8">
-          <nav className="mb-6 text-sm text-muted" aria-label="Fil d'Ariane">
-            <Link href="/" className="hover:text-info">
-              Accueil
-            </Link>
-            <span className="mx-2 text-fg-4">/</span>
-            <span className="text-fg-2">Widgets embed</span>
-          </nav>
+          <Breadcrumbs chemin="/embed" className="mb-6" />
 
           <div className="inline-flex items-center gap-2 rounded-full border border-info/20 bg-info/10 px-3 py-1 text-xs font-medium text-info">
             <Sparkles className="h-3.5 w-3.5" />

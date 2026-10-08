@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { BRAND } from "@/lib/brand";
 import { pageUpdatedFr } from "@/lib/engagements";
 import { DELAI_REPONSE } from "@/lib/engagements";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 export const metadata: Metadata = {
   title: "Mentions légales",
@@ -15,6 +16,7 @@ export const metadata: Metadata = {
 export default function MentionsLegalesPage() {
   return (
     <article className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-16 prose prose-invert">
+      <Breadcrumbs chemin="/mentions-legales" className="not-prose mb-6" />
       <h1 className="text-4xl font-extrabold tracking-tight text-fg">Mentions légales</h1>
       {/* 06/10/2026 : « 25 avril 2026 » était faux (contenu modifié depuis, dernière fois le 06/10/2026). */}
       <p className="text-sm text-muted">Dernière mise à jour : {pageUpdatedFr("/mentions-legales")}</p>

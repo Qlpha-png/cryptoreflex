@@ -5,14 +5,11 @@ import { Calculator, ArrowRight } from "lucide-react";
 import { BRAND } from "@/lib/brand";
 import { withHreflang } from "@/lib/seo-alternates";
 import StructuredData from "@/components/StructuredData";
-import {
-  breadcrumbSchema,
-  faqSchema,
-  graphSchema,
-} from "@/lib/schema";
+import { faqSchema, graphSchema } from "@/lib/schema";
 import AmfDisclaimer from "@/components/AmfDisclaimer";
 import ProfitLossCalculator from "@/components/outils/ProfitLossCalculator";
 import { fitDescription, fitTitle } from "@/lib/seo-text";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 /**
  * /outils/profit-loss-calculator — BLOC 4 (2026-05-04).
@@ -69,11 +66,6 @@ export const metadata: Metadata = {
 
 export default function ProfitLossCalculatorPage() {
   const schemas = graphSchema([
-    breadcrumbSchema([
-      { name: "Accueil", url: "/" },
-      { name: "Outils", url: "/outils" },
-      { name: "Calculateur profit/perte", url: PAGE_PATH },
-    ]),
     faqSchema([
       {
         question: "Comment calcule-t-on le profit d'une crypto ?",
@@ -109,13 +101,7 @@ export default function ProfitLossCalculatorPage() {
 
       <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
         {/* Breadcrumb */}
-        <nav aria-label="Fil d'Ariane" className="text-xs text-muted">
-          <Link href="/" className="hover:text-fg">Accueil</Link>
-          <span className="mx-2">/</span>
-          <Link href="/outils" className="hover:text-fg">Outils</Link>
-          <span className="mx-2">/</span>
-          <span className="text-fg/80">Profit / perte</span>
-        </nav>
+        <Breadcrumbs chemin="/outils/profit-loss-calculator" />
 
         {/* Header */}
         <header className="mt-6 max-w-3xl">

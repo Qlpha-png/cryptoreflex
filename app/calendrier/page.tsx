@@ -33,17 +33,14 @@ import {
   fetchEvents,
   getUpcoming,
 } from "@/lib/events-fetcher";
-import {
-  breadcrumbSchema,
-  graphSchema,
-  type JsonLd,
-} from "@/lib/schema";
+import { graphSchema, type JsonLd } from "@/lib/schema";
 import StructuredData from "@/components/StructuredData";
 import CalendarPageClient from "@/components/calendar/CalendarPageClient";
 import NextStepsGuide from "@/components/NextStepsGuide";
 import type { CryptoEvent } from "@/lib/events-types";
 import { withHreflang } from "@/lib/seo-alternates";
 import { fitDescription, fitTitle } from "@/lib/seo-text";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 // QUOTA VERCEL 2026-06-11 — revalidate allongé (ISR writes 409K/200K Hobby) :
 // le HTML seed peut dater, les données fraîches arrivent côté client.
@@ -115,12 +112,8 @@ export default async function CalendarPage() {
   const availableCryptos = extractUniqueCryptos(events);
 
   // JSON-LD agrégé
-  const breadcrumb = breadcrumbSchema([
-    { name: "Accueil", url: "/" },
-    { name: "Calendrier crypto", url: PAGE_PATH },
-  ]);
   const itemList = upcomingItemListSchema(upcomingTop10);
-  const ldGraph = graphSchema([breadcrumb, itemList]);
+  const ldGraph = graphSchema([itemList]);
 
   return (
     <>
@@ -129,6 +122,7 @@ export default async function CalendarPage() {
       {/* Hero */}
       <section className="border-b border-border bg-gradient-to-b from-surface/40 to-background">
         <div className="mx-auto max-w-6xl px-4 py-12 md:py-16">
+          <Breadcrumbs chemin="/calendrier" className="mb-6" />
           <div className="flex flex-col items-start gap-4">
             <span className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1 text-caption font-semibold uppercase tracking-wide text-primary-glow ring-1 ring-primary/30">
               <CalendarDays className="h-3.5 w-3.5" aria-hidden="true" />

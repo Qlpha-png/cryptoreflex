@@ -16,14 +16,11 @@ import { getAllPlatforms, isAvailableFr, type Platform } from "@/lib/platforms";
 import { getPublishableReviewSlugs } from "@/lib/programmatic";
 import { BRAND } from "@/lib/brand";
 import StructuredData from "@/components/StructuredData";
-import {
-  breadcrumbSchema,
-  graphSchema,
-  type JsonLd,
-} from "@/lib/schema";
+import { graphSchema, type JsonLd } from "@/lib/schema";
 import { withHreflang } from "@/lib/seo-alternates";
 import { fitDescription, fitTitle } from "@/lib/seo-text";
 import { fmtFr } from "@/lib/format-fr";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 /**
  * /avis — Hub des avis plateformes (P0-5 audit-back-live-final).
@@ -140,12 +137,7 @@ function AvisHubPage() {
     },
   };
 
-  const breadcrumbs = breadcrumbSchema([
-    { name: "Accueil", url: "/" },
-    { name: "Avis plateformes", url: PAGE_PATH },
-  ]);
-
-  const schema = graphSchema([itemListSchema, breadcrumbs]);
+  const schema = graphSchema([itemListSchema]);
 
   return (
     <>
@@ -154,13 +146,7 @@ function AvisHubPage() {
       <section className="py-12 sm:py-16">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           {/* Breadcrumb visuel */}
-          <nav aria-label="Fil d'Ariane" className="text-xs text-muted">
-            <Link href="/" className="hover:text-fg">
-              Accueil
-            </Link>
-            <span className="mx-2">/</span>
-            <span className="text-fg/80">Avis plateformes</span>
-          </nav>
+          <Breadcrumbs chemin="/avis" />
 
           {/* Header */}
           <header className="mt-6 max-w-3xl">

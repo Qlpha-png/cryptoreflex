@@ -2,8 +2,7 @@ import Link from "next/link";
 import { ArrowRight, ExternalLink, Sparkles } from "lucide-react";
 
 import { BRAND } from "@/lib/brand";
-import StructuredData from "@/components/StructuredData";
-import { breadcrumbSchema, graphSchema } from "@/lib/schema";
+import Breadcrumbs from "@/components/Breadcrumbs";
 import { PlayLink } from "@/components/reflex-cards/InviteLanding";
 import { PIPS, RC, RNAME } from "@/lib/reflex-cards/render";
 import { CAT_LABEL, sousFr, universById, universCards, universDesc, universStats, type UCard } from "@/lib/reflex-cards/univers";
@@ -31,7 +30,6 @@ export default function UniversCarte({ c, chance }: { c: UCard; chance: number }
   const total = universStats()[c.cat].total;
   const linked = d?.l ? universById(d.l) : undefined;
   const near = universCards().filter((x) => x.cat === c.cat && Math.abs(x.rank - c.rank) <= 4 && x.id !== c.id).sort((a, b) => a.rank - b.rank).slice(0, 8);
-  const schema = graphSchema([breadcrumbSchema([{ name: "Accueil", url: "/" }, { name: "Reflex Cards", url: "/cartes" }, { name: c.nom, url: `/cartes/${c.id}` }])]);
   const facts: [string, React.ReactNode][] = [
     ["Rareté", <span key="r" style={{ color: colTxt }}>{RNAME[c.r]} {PIPS[c.r]}</span>],
     ["Catégorie (chapitre)", label],
@@ -42,16 +40,9 @@ export default function UniversCarte({ c, chance }: { c: UCard; chance: number }
   ];
   return (
     <>
-      <StructuredData data={schema} id={`carte-${c.id}`} />
       <section className="py-10 sm:py-14">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-          <nav aria-label="Fil d'Ariane" className="text-xs text-muted">
-            <Link href="/" className="hover:text-fg">Accueil</Link>
-            <span className="mx-2">/</span>
-            <Link href="/cartes" className="hover:text-fg">Reflex Cards</Link>
-            <span className="mx-2">/</span>
-            <span className="text-fg/80">{c.nom}</span>
-          </nav>
+          <Breadcrumbs chemin={`/cartes/${c.id}`} label={c.nom} />
           <div className="mt-6 grid items-start gap-8 md:grid-cols-[288px,1fr] md:gap-12">
             <div className="mx-auto md:mx-0 md:sticky md:top-24">
               <div className="relative flex h-[404px] w-[288px] flex-col items-center justify-center overflow-hidden rounded-2xl border bg-surface p-6 text-center" style={{ borderColor: `${col}66`, boxShadow: `0 0 0 1px ${col}33, 0 20px 60px -30px ${col}` }}>

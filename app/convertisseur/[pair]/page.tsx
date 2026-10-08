@@ -28,7 +28,7 @@ import StructuredData from "@/components/StructuredData";
 // de l'orphelinat (aucun maillage interne avant ce commit).
 import RelatedPagesNav from "@/components/RelatedPagesNav";
 import NextStepsGuide from "@/components/NextStepsGuide";
-import { breadcrumbSchema, faqSchema, graphSchema } from "@/lib/schema";
+import { faqSchema, graphSchema } from "@/lib/schema";
 import {
   TOP_PAIRS,
   COIN_NAMES,
@@ -41,6 +41,7 @@ import { conversionGrid, formatConverted, formatAmount, ratioSeries, rateStats, 
 import { getAllCryptos } from "@/lib/cryptos";
 import { withHreflang } from "@/lib/seo-alternates";
 import { eurPerUnit, fiatPerUsd } from "@/lib/fx";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 interface PageProps {
   params: { pair: string };
@@ -211,20 +212,13 @@ export default async function PairPage({ params }: PageProps) {
     <>
       <StructuredData
         data={graphSchema([
-          breadcrumbSchema([
-            { name: "Accueil", url: "/" },
-            { name: "Convertisseur", url: "/outils/convertisseur" },
-            {
-              name: `${fromUp} en ${toUp}`,
-              url: `/convertisseur/${from}-${to}`,
-            },
-          ]),
           faqSchema(faqItems),
         ])}
       />
 
       <section className="py-16 sm:py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <Breadcrumbs chemin={`/convertisseur/${params.pair}`} label={`Convertir ${fromUp} en ${toUp}`} className="mb-6" />
           <div className="max-w-3xl">
             <p className="text-sm text-muted">
               <Link href="/outils/convertisseur" className="hover:text-primary-soft">

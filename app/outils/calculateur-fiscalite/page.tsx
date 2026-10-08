@@ -36,12 +36,7 @@ import StickyWaltioCta from "@/components/fiscal-tools/StickyWaltioCta";
 import WaltioPromoBanner from "@/components/fiscal-tools/WaltioPromoBanner";
 import PackCTABlock from "@/components/fiscalite/PackCTABlock";
 import FiscalCornerstoneCard from "@/components/fiscalite/FiscalCornerstoneCard";
-import {
-  breadcrumbSchema,
-  faqSchema,
-  graphSchema,
-  type JsonLd,
-} from "@/lib/schema";
+import { faqSchema, graphSchema, type JsonLd } from "@/lib/schema";
 import { generateWebApplicationSchema } from "@/lib/schema-tools";
 import { BRAND } from "@/lib/brand";
 import { getAllFiscalTools } from "@/lib/fiscal-tools";
@@ -50,6 +45,7 @@ import {
   getRelatedFiscaliteArticles,
 } from "@/lib/seo-fiscalite-helpers";
 import { withHreflang } from "@/lib/seo-alternates";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 /* -------------------------------------------------------------------------- */
 /*  SEO meta — H1 et meta alignées sur la cible "calculateur fiscalité crypto */
@@ -306,29 +302,8 @@ function CalculateurFiscalitePage() {
       {/* ============================ Hero ============================ */}
       <section className="relative py-16 sm:py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          {/* Breadcrumb visuel — le BreadcrumbList JSON-LD est dans fiscaliteNodes */}
-          <nav
-            aria-label="Fil d'Ariane"
-            className="mb-6 text-xs text-fg-4"
-          >
-            <ol className="flex items-center gap-2">
-              <li>
-                <Link href="/" className="hover:text-primary-soft">
-                  Accueil
-                </Link>
-              </li>
-              <li aria-hidden="true">/</li>
-              <li>
-                <Link href="/outils" className="hover:text-primary-soft">
-                  Outils
-                </Link>
-              </li>
-              <li aria-hidden="true">/</li>
-              <li className="text-fg-max/80" aria-current="page">
-                Calculateur fiscalité crypto
-              </li>
-            </ol>
-          </nav>
+          {/* Fil d'Ariane visible + son BreadcrumbList (components/Breadcrumbs.tsx) */}
+          <Breadcrumbs chemin="/outils/calculateur-fiscalite" className="mb-6" />
 
           <div className="max-w-3xl">
             <div className="flex flex-wrap items-center gap-2">

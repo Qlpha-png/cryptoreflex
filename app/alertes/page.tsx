@@ -22,17 +22,14 @@ import {
 
 import { BRAND, STATS, fmtCount } from "@/lib/brand";
 import { getAllCryptosUnified } from "@/lib/cryptos-extended";
-import {
-  breadcrumbSchema,
-  faqSchema,
-  graphSchema,
-} from "@/lib/schema";
+import { faqSchema, graphSchema } from "@/lib/schema";
 import StructuredData from "@/components/StructuredData";
 import AlertsManager, {
   type AlertCryptoOption,
 } from "@/components/AlertsManager";
 import { withHreflang } from "@/lib/seo-alternates";
 import { fitDescription, fitTitle } from "@/lib/seo-text";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 const PAGE_URL = `${BRAND.url}/alertes`;
 
@@ -129,11 +126,6 @@ export default async function AlertesPage() {
       datePublished: "2026-04-25",
       dateModified: "2026-10-01", // dernière modification réelle (git), pas la date du jour (audit 03/10/2026)
     },
-    breadcrumbSchema([
-      { name: "Accueil", url: "/" },
-      { name: "Outils", url: "/outils" },
-      { name: "Alertes prix", url: "/alertes" },
-    ]),
     faqSchema(FAQ.map((f) => ({ question: f.q, answer: f.a }))),
   ]);
 
@@ -143,13 +135,7 @@ export default async function AlertesPage() {
 
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
         {/* Breadcrumb */}
-        <nav className="text-xs text-muted" aria-label="Fil d'Ariane">
-          <Link href="/" className="hover:text-fg">Accueil</Link>
-          <span className="mx-2">/</span>
-          <Link href="/outils" className="hover:text-fg">Outils</Link>
-          <span className="mx-2">/</span>
-          <span className="text-fg/80">Alertes prix</span>
-        </nav>
+        <Breadcrumbs chemin="/alertes" />
 
         {/* HERO */}
         <header className="mt-6">

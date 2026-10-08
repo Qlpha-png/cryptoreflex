@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Breadcrumbs from "@/components/Breadcrumbs";
 import { ArrowRight, Crown, Gift, Landmark, Scale, ShieldCheck, Smartphone, Sparkles, UserPlus } from "lucide-react";
 
 import CardVisual from "@/components/reflex-cards/CardVisual";
@@ -77,11 +78,7 @@ export default function UniversHub({ accounts }: { accounts: boolean }) {
       {/* Héros */}
       <section className="py-10 sm:py-14">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-          <nav aria-label="Fil d'Ariane" className="text-xs text-muted">
-            <Link href="/" className="hover:text-fg">Accueil</Link>
-            <span className="mx-2">/</span>
-            <span className="text-fg/80">Reflex Cards</span>
-          </nav>
+          <Breadcrumbs chemin="/cartes" />
           <div className="mt-6 grid items-center gap-10 lg:grid-cols-[1fr,auto]">
             <div className="max-w-xl">
               <span className="inline-flex items-center gap-2 rounded-full border border-primary-glow/40 bg-primary-glow/10 px-3 py-1 text-xs font-semibold text-primary-soft">

@@ -28,19 +28,14 @@ import { getAllPlatforms, isAvailableFr } from "@/lib/platforms";
 import { BRAND } from "@/lib/brand";
 import { withHreflang } from "@/lib/seo-alternates";
 import { stripBrandSuffix } from "@/lib/seo-title";
-import {
-  articleSchema,
-  breadcrumbSchema,
-  graphSchema,
-  organizationSchema,
-  generateSpeakableSchema,
-} from "@/lib/schema";
+import { articleSchema, graphSchema, organizationSchema, generateSpeakableSchema } from "@/lib/schema";
 import {
   authorPersonSchema,
   getAuthorByIdOrDefault,
   articleAuthorId,
 } from "@/lib/authors";
 import { fitDescription, fitTitle } from "@/lib/seo-text";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 interface Props {
   params: { slug: string };
@@ -270,11 +265,6 @@ async function BlogArticlePage({ params }: Props) {
     organizationSchema(),
     authorPersonSchema(author),
     articleJsonLd,
-    breadcrumbSchema([
-      { name: "Accueil", url: "/" },
-      { name: "Blog", url: "/blog" },
-      { name: article.title, url: `/blog/${article.slug}` },
-    ]),
   ]);
 
   // Split MDX pour insérer la NewsletterInline ~60% (P1-9).
@@ -324,6 +314,7 @@ async function BlogArticlePage({ params }: Props) {
               container, le scroll horizontal local des tables se réactive. */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 lg:gap-12 min-w-0">
             <div className="lg:col-span-2 max-w-3xl mx-auto lg:mx-0 min-w-0 w-full">
+              <Breadcrumbs chemin={`/blog/${article.slug}`} label={article.title} className="mb-6" />
               {/* Retour */}
               <Link
                 href="/blog"
@@ -394,6 +385,17 @@ async function BlogArticlePage({ params }: Props) {
               <div className="mt-8">
                 <AmfDisclaimer variant="educatif" compact />
               </div>
+
+              {/* Maillage fiscal (reprise B3a) : chaque article de fiscalité mène au hub des outils pour déclarer */}
+              {article.category?.trim().toLowerCase() === "fiscalité" && (
+                <p className="mt-6 rounded-xl border border-border bg-surface p-4 text-sm text-fg-2">
+                  <strong className="text-fg">Passer à la déclaration : </strong>
+                  <Link href="/impots" className="font-semibold text-fg underline decoration-link-line underline-offset-4 hover:decoration-fg">
+                    les outils gratuits pour calculer, remplir le Cerfa 2086 et le 3916-bis
+                  </Link>
+                  , étape par étape.
+                </p>
+              )}
 
               {/* Maillage académie : cet article est une leçon d'un parcours */}
               {academyTrack && (

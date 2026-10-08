@@ -11,15 +11,11 @@ import {
 } from "lucide-react";
 import Radar3916Bis from "@/components/Radar3916Bis";
 import StructuredData from "@/components/StructuredData";
-import {
-  faqSchema,
-  howToSchema,
-  breadcrumbSchema,
-  graphSchema,
-} from "@/lib/schema";
+import { faqSchema, howToSchema, graphSchema } from "@/lib/schema";
 import { BRAND } from "@/lib/brand";
 import { withHreflang } from "@/lib/seo-alternates";
 import { fitDescription, fitTitle } from "@/lib/seo-text";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 export const metadata: Metadata = {
   title: fitTitle("Radar 3916-bis — détectez vos amendes crypto en 2 min (gratuit)"),
@@ -138,11 +134,6 @@ export default function RadarPage() {
       steps: HOW_TO_STEPS,
     }),
     faqSchema(FAQS.map((f) => ({ question: f.q, answer: f.a }))),
-    breadcrumbSchema([
-      { name: "Accueil", url: "/" },
-      { name: "Outils", url: "/outils" },
-      { name: "Radar 3916-bis", url: "/outils/radar-3916-bis" },
-    ]),
   ]);
 
   return (
@@ -158,6 +149,7 @@ export default function RadarPage() {
         <div className="absolute -top-40 -right-40 w-[300px] h-[300px] sm:w-[500px] sm:h-[500px] bg-warning/15 rounded-full blur-3xl pointer-events-none hidden sm:block" />
 
         <div className="relative mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-16 sm:py-20 lg:py-24">
+          <Breadcrumbs chemin="/outils/radar-3916-bis" className="mb-6" />
           <div className="flex flex-col items-center text-center">
             <span className="ds-eyebrow inline-flex items-center gap-1.5 text-warning">
               <ShieldCheck className="h-3.5 w-3.5" aria-hidden="true" />

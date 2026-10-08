@@ -1,266 +1,169 @@
-import { avecTypo, avecTypoSync } from "@/components/ui/Typo";
+import { avecTypoSync } from "@/components/ui/Typo";
 import Link from "next/link";
-import { Mail, ShieldCheck, Lock, ArrowRight, Sparkles } from "lucide-react";
+import { ChevronDown, Heart } from "lucide-react";
 import { BRAND } from "@/lib/brand";
 import Logo from "./Logo";
 import { isReflexCardsEnabled } from "@/lib/reflex-cards/flag";
-import { FOOTER_KEY_LINKS, FOOTER_LEGAL, visibleSections } from "@/lib/nav";
+import { FOOTER_LEGAL } from "@/lib/nav";
+import { BANDE_CONFIANCE, PIED_COLONNES } from "@/lib/nav-data";
+import { GLOSSARY_TERMS, groupByLetter } from "@/lib/glossary";
+import { RISK } from "@/lib/risk-text";
 
 /**
- * Footer — pied de page Cryptoreflex (CRITIQUE SEO sitelinks Google + UX engagement final).
+ * Footer — le pied de page EST le plan du site (lot B3a, 08/10/2026 ; architecture finale § 7).
  *
- * Audit Block 10 RE-AUDIT 26/04/2026 (1 agent PRO consolidé) :
- *
- * VAGUE 1 — SEO Restructuration silos (P0 sitelinks Google)
- *  - Avant : silo "Navigation" hypertrophié (13 liens fourre-tout) = PageRank dilué
- *  - Après : 3 silos cohérents "Découvrir" (money pages) / "Apprendre" / "Outils & espace"
- *  - Anchor texts keyword-rich (au lieu de "Accueil"/"Blog" génériques)
- *  - Ordre : Brand+CTA / Découvrir (silo $) / Apprendre / Outils / Légal
- *
- * VAGUE 2 — Trust E-E-A-T (Agent SEO P1)
- *  - Trust badges cluster : MiCA-aligned + RGPD + SSL (signal YMYL fintech)
- *  - Mention éditoriale visible (E-E-A-T post-HCU)
- *  - Newsletter CTA inline col 1 (signal engagement)
- *
- * VAGUE 3 — A11y EAA
- *  - Suppression role="contentinfo" redondant (footer top-level a déjà ce rôle)
- *  - text-muted -> text-fg/80 (contraste AA garanti sur surface opaque)
- *  - Uniformiser aria-labelledby partout (vs aria-label inconsistant)
- *  - Liste contact aria-labelledby au lieu de aria-label
- *
- * VAGUE 4 — Visual + Dynamism
- *  - Gradient separator gold (au lieu de border-t plat)
- *  - Hover footer-link : translate-x-0.5 + chevron qui apparaît (microinteraction)
- *  - Glow radial subtle brand top-left
- *  - Bg surface opaque (au lieu de surface/40 contraste invérifiable)
- *
- * VAGUE 5 — Code quality
- *  - CURRENT_YEAR module-scope (au lieu de new Date().getFullYear() au render)
- *  - NAV_GROUPS array typed (au lieu de JSX brut non itérable)
- *  - <FooterLink> sub-component (au lieu de FOOTER_LINK string concat 23×)
+ *  - Colonnes par rubrique, lues dans lib/nav-data.ts (PIED_COLONNES) : chaque page publique une fois, sans plafond
+ *    (fin de MAX_LINKS) ; /impact, /partenaires, /quiz/crypto, /outils/yield-stablecoins et /pro/api en sont exclus.
+ *  - Rendu serveur, liens <a href> : tout le plan est dans le HTML de chaque page.
+ *  - Téléphone : chaque colonne est un accordéon <details>/<summary> (natif, clavier et lecteur d'écran). Le HTML
+ *    sort OUVERT (sans JavaScript, tout reste lisible) ; le petit script en fin de pied les replie sous 768 px avant
+ *    le premier affichage, et les garde ouverts sur ordinateur.
+ *  - Ligne A–Z vers /glossaire#a…#z (seulement les lettres qui ont des mots) ; ligne légale (dont la rubrique
+ *    D111-7 et le plan du site) ; bande de confiance ; ♥ Soutenir (NEXT_PUBLIC_SUPPORT_URL est défini en
+ *    production, la page /soutenir porte le bouton de contribution) ; « Newsletter » sans rythme promis.
+ *  - Avertissement : RISK.long (lib/risk-text.ts), le même texte que les bandeaux AmfDisclaimer.
+ *  - Pas de choix Apparence clair/sombre ici (lot B11).
  */
 
-const FOOTER_LINK_CLASS =
-  "group/flink inline-flex items-center gap-1.5 hover:text-fg hover:translate-x-0.5 transition-all duration-150 rounded " +
-  "focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background";
-
 const CURRENT_YEAR = new Date().getFullYear();
+const CARTES_ON = isReflexCardsEnabled();
+const COLONNES = PIED_COLONNES.filter((c) => CARTES_ON || c.id !== "cartes");
 
-interface FooterLinkProps {
-  href: string;
-  children: React.ReactNode;
-  /** Si true, active le chevron qui apparaît au hover (signal action). */
-  showChevron?: boolean;
-}
+const LETTRES_PRESENTES = new Set(Object.keys(groupByLetter(GLOSSARY_TERMS)));
+const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
 
-function FooterLinkBase({ href, children, showChevron = true }: FooterLinkProps) {
+/** Replie les colonnes sur téléphone avant l'affichage ; les rouvre sur ordinateur (où le summary est masqué). */
+const SCRIPT_ACCORDEONS = `(function(){var m=window.matchMedia("(max-width: 767px)");var d=document.querySelectorAll("[data-pied-col]");function a(){for(var i=0;i<d.length;i++){d[i].open=!m.matches}}a();if(m.addEventListener)m.addEventListener("change",a)})();`;
+
+/* Styles portés par les conteneurs (variantes arbitraires) : un lien du pied ne répète aucune classe, le HTML reste léger. */
+const COLS =
+  "columns-1 gap-x-8 sm:columns-2 md:columns-3 lg:columns-4 xl:columns-5 " +
+  "[&_a]:block [&_a]:py-2.5 md:[&_a]:py-1.5 [&_a]:leading-snug [&_a]:text-fg-2 [&_a]:underline [&_a]:decoration-transparent [&_a]:underline-offset-4 " +
+  "hover:[&_a]:text-fg hover:[&_a]:decoration-link-line focus-visible:[&_a]:outline-none focus-visible:[&_a]:ring-2 focus-visible:[&_a]:ring-primary [&_a]:rounded-sm";
+
+const LIGNE =
+  "flex flex-wrap gap-x-4 gap-y-1 [&_a]:inline-flex [&_a]:min-h-[32px] [&_a]:items-center [&_a]:text-fg-2 [&_a]:underline [&_a]:decoration-transparent [&_a]:underline-offset-4 " +
+  "hover:[&_a]:text-fg hover:[&_a]:decoration-link-line focus-visible:[&_a]:outline-none focus-visible:[&_a]:ring-2 focus-visible:[&_a]:ring-primary [&_a]:rounded-sm";
+
+/* Bande de confiance : liens soulignés en permanence (maquette gelée), sinon on les lit comme un slogan. */
+const BANDE =
+  "flex flex-wrap gap-x-4 gap-y-1 [&_a]:inline-flex [&_a]:min-h-[32px] [&_a]:items-center [&_a]:text-fg-2 [&_a]:underline [&_a]:decoration-link-line [&_a]:underline-offset-4 " +
+  "hover:[&_a]:text-fg hover:[&_a]:decoration-fg focus-visible:[&_a]:outline-none focus-visible:[&_a]:ring-2 focus-visible:[&_a]:ring-primary [&_a]:rounded-sm";
+
+function Footer() {
   return (
-    <Link href={href} className={FOOTER_LINK_CLASS}>
-      <span>{children}</span>
-      {showChevron && (
-        <ArrowRight
-          className="h-3 w-3 opacity-0 -translate-x-1 group-hover/flink:opacity-100 group-hover/flink:translate-x-0 transition-all"
-          aria-hidden="true"
-        />
-      )}
-    </Link>
-  );
-}
-
-/* MENU À SOURCE UNIQUE (05/10/2026, Kev : « tout bien rangé ») : les rubriques viennent de lib/nav.ts, comme la
-   barre du haut, le menu complet et la barre du bas. Sur téléphone, seul le titre de chaque rubrique s'affiche (lien
-   vers sa page d'entrée) : le pied de page reste court ; les listes complètes restent dans le HTML. */
-/** Rubriques du pied de page (sans « Mon espace ») ; 6 liens au plus, le reste via « Tout voir ». */
-const GROUPS = visibleSections(isReflexCardsEnabled()).filter((g) => g.id !== "espace");
-const MAX_LINKS = 6;
-
-async function Footer() {
-  return (
-    <footer
-      // Audit A11y : retire role="contentinfo" redondant (<footer> top-level l'a déjà implicite).
-      aria-label="Pied de page Cryptoreflex"
-      className="relative mt-12 bg-surface border-t border-border/60 overflow-hidden"
-    >
-      {/* Glow radial subtle brand top-left (Audit Visual) */}
-      <div
-        aria-hidden="true"
-        className="absolute top-0 left-0 w-96 h-96 bg-[radial-gradient(ellipse_at_top_left,rgba(245,165,36,0.08),transparent_60%)] pointer-events-none"
-      />
-
-      {/* Gradient separator gold (au lieu de border-t plat) */}
-      <div
-        aria-hidden="true"
-        className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent"
-      />
-
-      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
-        {/* Trust badges cluster (Audit Visual + SEO E-E-A-T) */}
-        <div className="hidden md:flex flex-wrap items-center gap-2 mb-8">
-          {/* FIX LEGAL 2026-05-02 #16 — "MiCA-aligned" pouvait laisser
-              entendre un agrément (pratique commerciale trompeuse L.121-2
-              conso). Reformulé en "MiCA · info publique" qui décrit
-              factuellement notre rôle d'éditeur (pas régulé directement,
-              mais traite de la régulation MiCA). */}
-          <span className="inline-flex items-center gap-1 rounded-full border border-success-border bg-success-soft px-2 py-0.5 text-xs font-mono font-bold text-success uppercase tracking-wider">
-            <ShieldCheck className="h-2.5 w-2.5" strokeWidth={2.5} aria-hidden="true" focusable="false" />
-            MiCA · info publique
-          </span>
-          <span className="inline-flex items-center gap-1 rounded-full border border-accent-cyan/30 bg-accent-cyan/5 px-2 py-0.5 text-xs font-mono font-bold text-ice-fg uppercase tracking-wider">
-            <Sparkles className="h-2.5 w-2.5" strokeWidth={2.5} aria-hidden="true" focusable="false" />
-            Méthodologie publique
-          </span>
-        </div>
-
-        {/* Grid principale : 12 cols pour fluidité (au lieu de 5 grossier) */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8">
-          {/* Col Brand (lg:col-span-3) */}
-          <div className="lg:col-span-3">
-            <Logo variant="full" height={30} className="mb-3" asLink={false} title="Cryptoreflex" />
-            <p className="text-sm text-fg/80 max-w-md">
-              Votre guide pour naviguer dans l&apos;univers crypto. Comparatifs de plateformes,
-              guides pour débutants et outils gratuits — sans jargon.
-            </p>
-
-            {/* Contact (uniformisé aria-labelledby) — H3 (audit a11y :
-                Footer ne doit pas concurrencer la hiérarchie H2 du contenu). */}
-            <h3 id="footer-contact-heading" className="sr-only">
-              Contact Cryptoreflex
-            </h3>
-            <ul
-              aria-labelledby="footer-contact-heading"
-              className="flex items-center gap-3 mt-4 list-none p-0"
-            >
-              <li>
-                <a
-                  href={`mailto:${BRAND.email}`}
-                  aria-label={`Contacter ${BRAND.name} par e-mail`}
-                  // Audit Mobile : tap target 44px (au lieu de 32px)
-                  className={`inline-flex items-center justify-center min-h-[44px] min-w-[44px] rounded-lg border border-border hover:border-primary/60 transition-colors ${FOOTER_LINK_CLASS}`}
-                >
-                  <Mail className="h-4 w-4" strokeWidth={1.75} aria-hidden="true" focusable="false" />
-                </a>
-              </li>
-            </ul>
-
-            {/* Mention éditoriale E-E-A-T — fix audit 30/04/2026 :
-                avant "Cryptoreflex Editorial" (entité fictive) + contraste 11px/55%
-                inférieur à 4.5:1 = WCAG AA fail. Maintenant : nom réel du
-                directeur de publication + opacité 70% pour contraste AA strict. */}
-            <p className="mt-5 text-xs text-fg/70 leading-relaxed max-w-md">
-              Édité depuis la France par{" "}
-              <span className="text-fg/90 font-medium">Kevin Voisin</span>{" "}
-              (Entreprise Individuelle). Directeur de publication : Kevin Voisin.{" "}
-              Hébergé par Vercel (serveurs en Europe, région Paris).
+    <footer aria-label="Pied de page" className="mt-12 border-t border-border-strong bg-sunken text-sm">
+      <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 sm:py-12 lg:px-8">
+        {/* Marque, bande de confiance et soutien */}
+        <div className="flex flex-col gap-6 border-b border-border-strong pb-8 lg:flex-row lg:items-start lg:justify-between">
+          <div className="max-w-xl">
+            <Link href="/" aria-label="Cryptoreflex, accueil" className="inline-flex min-h-[44px] items-center">
+              <Logo variant="full" height={30} asLink={false} title="Cryptoreflex" />
+            </Link>
+            <p className="mt-2 text-fg-2">
+              Comparer les plateformes autorisées en France, comprendre chaque crypto, déclarer ses impôts. Des
+              outils gratuits et des sources datées.
             </p>
           </div>
-
-          {/* L'essentiel : les 4 liens les plus utiles */}
-          <nav aria-labelledby="footer-key-heading" className="lg:col-span-2">
-            <h3 id="footer-key-heading" className="font-semibold mb-3 text-fg text-sm">L&apos;essentiel</h3>
-            <ul className="space-y-2 text-sm text-fg/75">
-              {FOOTER_KEY_LINKS.map((link) => (
-                <li key={link.href}>
-                  <FooterLink href={link.href}>{link.label}</FooterLink>
-                </li>
+          <div className="flex flex-col gap-3 lg:items-end">
+            <p className={`${BANDE} items-center`} data-bande-confiance="">
+              <span className="font-semibold text-fg">{BANDE_CONFIANCE.texte}</span>
+              {BANDE_CONFIANCE.liens.map((l) => (
+                <Link key={l.href} href={l.href}>
+                  {l.label}
+                </Link>
               ))}
-            </ul>
-          </nav>
+            </p>
+            <Link
+              href="/soutenir"
+              className="inline-flex min-h-[44px] items-center gap-2 self-start rounded-lg border border-border-strong px-4 font-semibold text-fg hover:bg-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary lg:self-end"
+            >
+              <Heart className="h-4 w-4 text-[rgb(var(--c-gold))]" aria-hidden="true" fill="currentColor" />
+              Soutenir le site
+            </Link>
+          </div>
+        </div>
 
-          {/* Rubriques (source unique lib/nav.ts) : titre seul sur téléphone, 6 liens + « Tout voir » sur ordinateur */}
-          <div className="md:col-span-2 lg:col-span-7 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-6">
-            {GROUPS.map((group) => (
-              <nav key={group.id} aria-labelledby={`footer-${group.id}`}>
-                <h3 id={`footer-${group.id}`} className="font-semibold text-sm md:mb-3">
-                  <Link href={group.href} className="text-fg hover:text-link-hover">{group.title}</Link>
-                </h3>
-                <ul className="hidden md:block space-y-2 text-sm text-fg/75">
-                  {group.links.slice(0, MAX_LINKS).map((link) => (
-                    <li key={link.href}>
-                      <FooterLink href={link.href}>{link.label}</FooterLink>
+        {/* Plan du site : une colonne par rubrique, accordéons sur téléphone */}
+        <nav aria-label="Plan du site" className="mt-8">
+          <div className={COLS}>
+            {COLONNES.map((c) => (
+              <details
+                key={c.id}
+                open
+                data-pied-col={c.id}
+                className="group mb-2 break-inside-avoid border-b border-border md:mb-6 md:border-b-0"
+              >
+                {/* Téléphone : le summary est le bouton de l'accordéon. Ordinateur : il disparaît (display:none, donc
+                    ni arrêt de tabulation ni bouton « développé » pour un lecteur d'écran) et un simple titre le remplace. */}
+                <summary className="flex min-h-[44px] cursor-pointer list-none items-center justify-between gap-3 md:hidden [&::-webkit-details-marker]:hidden">
+                  <h3 className="font-semibold text-fg">{c.titre}</h3>
+                  <ChevronDown aria-hidden="true" className="h-5 w-5 shrink-0 text-muted transition-transform group-open:rotate-180" />
+                </summary>
+                <h3 className="hidden min-h-[44px] items-center border-b border-border-strong font-semibold text-fg md:flex">{c.titre}</h3>
+                <ul className="pb-3 pt-1 md:pb-0">
+                  {c.liens.map((l) => (
+                    <li key={l.href}>
+                      <Link href={l.href}>{l.label}</Link>
                     </li>
                   ))}
-                  {group.links.length > MAX_LINKS && (
-                    <li>
-                      <Link href={group.href} className="text-primary-soft hover:text-primary">Tout voir →</Link>
-                    </li>
-                  )}
                 </ul>
-              </nav>
+              </details>
             ))}
           </div>
-        </div>
-        {/* Légal et services, en une ligne */}
-        <nav aria-label="Informations légales" className="mt-10 pt-4 border-t border-border/60">
-          <ul className="flex flex-wrap gap-x-4 gap-y-2 text-xs text-fg/70">
+        </nav>
+
+        {/* Glossaire de A à Z */}
+        <nav aria-label="Glossaire de A à Z" className="mt-6 border-t border-border-strong pt-5">
+          <p className="mb-1 font-semibold text-fg">
+            <Link href="/glossaire" className="hover:underline">
+              Glossaire de A à Z
+            </Link>
+          </p>
+          <p className="flex flex-wrap gap-x-0.5 [&_a]:inline-flex [&_a]:min-h-[32px] [&_a]:min-w-[28px] [&_a]:items-center [&_a]:justify-center [&_a]:rounded-sm [&_a]:text-fg-2 hover:[&_a]:bg-surface hover:[&_a]:text-fg focus-visible:[&_a]:outline-none focus-visible:[&_a]:ring-2 focus-visible:[&_a]:ring-primary">
+            {ALPHABET.map((l) =>
+              LETTRES_PRESENTES.has(l) ? (
+                <a key={l} href={`/glossaire#${l.toLowerCase()}`} aria-label={`Mots en ${l}`}>
+                  {l}
+                </a>
+              ) : (
+                <span key={l} className="inline-flex min-h-[32px] min-w-[28px] items-center justify-center text-muted/60" aria-hidden="true">
+                  {l}
+                </span>
+              ),
+            )}
+          </p>
+        </nav>
+
+        {/* Ligne légale (dont la rubrique D111-7 et le plan du site) */}
+        <nav aria-label="Informations légales" className="mt-6 border-t border-border-strong pt-4">
+          <ul className={`${LIGNE} text-xs`}>
             {FOOTER_LEGAL.map((link) => (
               <li key={link.href}>
-                <Link href={link.href} className="hover:text-fg">{link.label}</Link>
+                <Link href={link.href}>{link.label}</Link>
               </li>
             ))}
           </ul>
         </nav>
 
-        {/* Trust ring final — fix audit 30/04/2026 :
-            SUPPRIMÉ "SEPA · CIF ORIAS partenaires vérifiés" qui sous-entendait
-            une collaboration avec des Conseillers en Investissements Financiers
-            agréés AMF — RISQUE AMF (démarchage régulé non détenu).
-            Cryptoreflex n'a aucun partenariat CIF ORIAS et n'est pas autorisé
-            à le suggérer. Contraste passé à fg/70 pour WCAG AA. */}
-        <div className="mt-4 hidden md:flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-fg/70">
-          <span className="inline-flex items-center gap-1">
-            <Lock className="h-3 w-3" strokeWidth={2} aria-hidden="true" focusable="false" />
-            Hébergé en UE
-          </span>
-          <span aria-hidden="true">·</span>
-          <span className="inline-flex items-center gap-1">
-            <ShieldCheck className="h-3 w-3" strokeWidth={2} aria-hidden="true" focusable="false" />
-            HTTPS uniquement
-          </span>
-          <span aria-hidden="true">·</span>
-          <span className="inline-flex items-center gap-1">
-            <Sparkles className="h-3 w-3" strokeWidth={2} aria-hidden="true" focusable="false" />
-            Éditeur web indépendant
-          </span>
-        </div>
-
-        {/* DÉMONÉTISATION juin 2026 : widget LiveCommunityStats retiré du footer
-            (il affichait « abonnés Soutien Pro » — il n'y a plus de tier payant). */}
-
-        <div className="mt-6 pt-4 border-t border-border/60 space-y-3 text-xs text-fg/75">
-          <div className="flex flex-col md:flex-row justify-between gap-3">
-            <p>© {CURRENT_YEAR} {BRAND.name}. Tous droits réservés.</p>
-            <p>Site indépendant non affilié à l&apos;AMF ni à un PSI.</p>
-          </div>
-          <p
-            role="note"
-            className="leading-relaxed border border-warning-border bg-warning-soft rounded-lg p-3 text-xs sm:text-xs text-fg-2"
-          >
-            <strong className="text-warning">
-              <span aria-hidden="true">⚠️ </span>Avertissement légal
-            </strong>{" "}
-            — L&apos;investissement en cryptoactifs comporte un risque élevé de perte partielle ou
-            totale du capital. Les performances passées ne préjugent pas des performances futures.
-            Les contenus de {BRAND.name} ont une vocation purement informative et pédagogique et
-            ne constituent pas un conseil en investissement au sens de l&apos;article L.321-1 du Code
-            monétaire et financier. Consultez un conseiller en investissements financiers (CIF)
-            enregistré ORIAS pour toute décision patrimoniale significative. Certains liens, marqués
-            « Publicité », sont rémunérés (affiliation ou parrainage personnel du fondateur) —{" "}
-            <Link
-              href="/transparence"
-              className="underline hover:text-fg rounded
-                         focus:outline-none focus-visible:ring-2 focus-visible:ring-primary
-                         focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-            >
-              en savoir plus
+        <div className="mt-6 space-y-3 text-xs text-fg-2">
+          <p role="note" className="max-w-4xl leading-relaxed">
+            <strong className="text-fg">Avertissement.</strong> {RISK.long} Certains liens, marqués « Publicité », sont
+            rémunérés (affiliation ou parrainage du fondateur) :{" "}
+            <Link href="/transparence" className="underline decoration-link-line underline-offset-4 hover:text-fg">
+              qui nous rémunère
             </Link>
             .
           </p>
+          <p>
+            © {CURRENT_YEAR} {BRAND.name} · Édité depuis la France par Kevin Voisin (entreprise individuelle), directeur
+            de publication · Hébergé par Vercel (région Paris) · Site indépendant, non affilié à l’AMF.
+          </p>
         </div>
       </div>
+      <script dangerouslySetInnerHTML={{ __html: SCRIPT_ACCORDEONS }} />
     </footer>
   );
 }
 
-const FooterLink = avecTypoSync(FooterLinkBase);
-
-export default avecTypo(Footer);
+export default avecTypoSync(Footer);

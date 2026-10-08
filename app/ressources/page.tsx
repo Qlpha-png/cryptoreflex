@@ -41,6 +41,7 @@ import LeadMagnetCard from "@/components/lead-magnet/LeadMagnetCard";
 import { BRAND, STATS } from "@/lib/brand";
 import { withHreflang } from "@/lib/seo-alternates";
 import { fitDescription } from "@/lib/seo-text";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 export const metadata: Metadata = {
   // FIX 2026-05-09 : retiré "Cryptoreflex" pour éviter doublon template.
@@ -224,6 +225,7 @@ export default function RessourcesPage() {
 
       <section className="py-16 sm:py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <Breadcrumbs chemin="/ressources" className="mb-6" />
           {/* Hero */}
           <div className="max-w-3xl">
             <span className="inline-flex items-center gap-2 rounded-full border border-success-fg/30 bg-success-fg/10 px-3 py-1 text-xs font-semibold text-success-fg">

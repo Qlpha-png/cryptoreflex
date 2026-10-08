@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Info, ArrowRight } from "lucide-react";
 import { BRAND } from "@/lib/brand";
 import { withHreflang } from "@/lib/seo-alternates";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 /**
  * /cgv-abonnement — CGV d'abonnement OBSOLÈTES (démonétisation juin 2026).
@@ -31,11 +32,7 @@ export default function CgvAbonnementPage() {
   return (
     <article className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-16">
       {/* Breadcrumb */}
-      <nav aria-label="Fil d'Ariane" className="text-xs text-muted">
-        <Link href="/" className="hover:text-fg">Accueil</Link>
-        <span className="mx-2">/</span>
-        <span className="text-fg/80">CGV abonnement</span>
-      </nav>
+      <Breadcrumbs chemin="/cgv-abonnement" label="Conditions de l’ancien abonnement" />
 
       <h1 className="mt-6 text-4xl font-extrabold tracking-tight text-fg">
         Conditions Générales de Vente — Abonnement

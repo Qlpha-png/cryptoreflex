@@ -2,12 +2,13 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight, Swords, Sparkles } from "lucide-react";
 import { BRAND, STATS, fmtCount } from "@/lib/brand";
-import { breadcrumbSchema, graphSchema } from "@/lib/schema";
+import { graphSchema } from "@/lib/schema";
 import StructuredData from "@/components/StructuredData";
 import { getCryptoPairs } from "@/lib/programmatic-pages";
 import { getAllCryptos } from "@/lib/cryptos";
 import { withHreflang } from "@/lib/seo-alternates";
 import { fitTitle } from "@/lib/seo-text";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 /**
  * /vs — HUB INDEX (BATCH 44b — création post-audit maillage SEO).
@@ -124,16 +125,13 @@ export default function VsHub() {
 
   const schema = graphSchema([
     featuredItemList,
-    breadcrumbSchema([
-      { name: "Accueil", url: "/" },
-      { name: "Duels crypto", url: "/vs" },
-    ]),
   ]);
 
   return (
     <article className="py-12 sm:py-16">
       <StructuredData id="vs-hub" data={schema} />
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <Breadcrumbs chemin="/vs" className="mb-8" />
         {/* Hero */}
         <header className="text-center mb-12">
           <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/5 px-3 py-1 text-xs font-mono font-bold text-primary uppercase tracking-wider mb-4">

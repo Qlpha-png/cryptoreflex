@@ -25,7 +25,7 @@ import { getAllCorrections, getCorrectionsForSlug, lastCorrectionDate, validateC
 import { PAGE_UPDATED, formatDateFr, pageUpdatedFr } from "@/lib/engagements";
 import { PARTNERSHIPS } from "@/lib/partnerships";
 import { getExchangePlatforms } from "@/lib/platforms";
-import { FOOTER_LEGAL } from "@/lib/nav";
+import { liensDuPied } from "@/lib/nav-data";
 
 const ROOT = path.resolve(__dirname, "../..");
 const read = (rel: string) => fs.readFileSync(path.join(ROOT, rel), "utf8");
@@ -215,7 +215,7 @@ describe("journal des corrections (data/corrections.json, /corrections)", () => 
 
   it("/corrections est dans le sitemap et liée depuis /charte, /methodologie, /transparence", () => {
     expect(read("app/sitemap.ts")).toMatch(/entry\("\/corrections"/);
-    expect(FOOTER_LEGAL.some((l) => l.href === "/corrections"), "lien du pied de page").toBe(true);
+    expect(liensDuPied().some((l) => l.href === "/corrections"), "lien du pied de page").toBe(true);
     for (const route of ["/charte", "/methodologie", "/transparence"] as const) {
       expect(pages[route](), route).toContain('href="/corrections"');
     }

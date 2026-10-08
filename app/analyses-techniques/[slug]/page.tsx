@@ -6,12 +6,7 @@ import { ArrowRight, Calendar, ExternalLink, ShoppingBag } from "lucide-react";
 
 import { getTAArticleBySlug, getTASlugs, getAllTASummaries } from "@/lib/ta-mdx";
 import { BRAND } from "@/lib/brand";
-import {
-  breadcrumbSchema,
-  generateSpeakableSchema,
-  organizationSchema,
-  graphSchema,
-} from "@/lib/schema";
+import { generateSpeakableSchema, organizationSchema, graphSchema } from "@/lib/schema";
 import StructuredData from "@/components/StructuredData";
 import MdxContent from "@/components/MdxContent";
 import AutoPublishedLine from "@/components/AutoPublishedLine";
@@ -23,6 +18,7 @@ import { withHreflang } from "@/lib/seo-alternates";
 import { fitTitle } from "@/lib/seo-text";
 import { getCryptoLogo, getCryptoLogoFromSymbol } from "@/lib/crypto-logos";
 import { fmtFr } from "@/lib/format-fr";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 /** Icône ronde d'une analyse : le logo de la crypto (CoinGecko), jamais l'image de partage du site (/og-default.png,
  *  affichée en vignette ronde sur 345 analyses) ni un logo local absent (/logos/cardano.svg… en 404, audit 05/10/2026). */
@@ -165,29 +161,16 @@ export default async function TAArticlePage({ params }: Props) {
     speakable: generateSpeakableSchema(),
   };
 
-  const breadcrumbs = breadcrumbSchema([
-    { name: "Accueil", url: "/" },
-    { name: "Analyses techniques", url: "/analyses-techniques" },
-    { name: `${article.symbol} — ${formatDateFr(article.date)}`, url: `/analyses-techniques/${article.slug}` },
-  ]);
-
   const changeColor =
     article.change24h > 0 ? "text-emerald-400" : article.change24h < 0 ? "text-rose-400" : "text-muted";
 
   return (
     <>
-      <StructuredData data={[articleLd, breadcrumbs]} id="ta-article" />
 
       <article className="py-12 sm:py-16">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
           {/* Breadcrumb */}
-          <nav aria-label="Fil d'Ariane" className="mb-4 text-xs text-muted">
-            <Link href="/" className="hover:text-fg">Accueil</Link>
-            <span className="mx-1">/</span>
-            <Link href="/analyses-techniques" className="hover:text-fg">Analyses techniques</Link>
-            <span className="mx-1">/</span>
-            <span className="text-fg/80">{article.symbol}</span>
-          </nav>
+          <Breadcrumbs chemin={`/analyses-techniques/${article.slug}`} label={`${article.symbol} : analyse du ${formatDateFr(article.date)}`} className="mb-4" />
 
           {/* Header */}
           <header className="mb-8">

@@ -2,10 +2,11 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight, ArrowLeftRight, Globe } from "lucide-react";
 import { BRAND, STATS } from "@/lib/brand";
-import { breadcrumbSchema, graphSchema } from "@/lib/schema";
+import { graphSchema } from "@/lib/schema";
 import StructuredData from "@/components/StructuredData";
 import { TOP_PAIRS, COIN_NAMES } from "@/lib/historical-prices";
 import { withHreflang } from "@/lib/seo-alternates";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 /**
  * /convertisseur — HUB INDEX (BATCH 44b — création post-audit maillage SEO).
@@ -55,16 +56,13 @@ export default function ConvertisseurHub() {
   const fromKeys = Object.keys(groups).sort();
 
   const schema = graphSchema([
-    breadcrumbSchema([
-      { name: "Accueil", url: "/" },
-      { name: "Convertisseur crypto", url: "/convertisseur" },
-    ]),
   ]);
 
   return (
     <article className="py-12 sm:py-16">
       <StructuredData id="convertisseur-hub" data={schema} />
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <Breadcrumbs chemin="/convertisseur" className="mb-8" />
         {/* Hero */}
         <header className="text-center mb-12">
           <span className="inline-flex items-center gap-1.5 rounded-full border border-success-border bg-success-soft px-3 py-1 text-xs font-mono font-bold text-success-fg uppercase tracking-wider mb-4">

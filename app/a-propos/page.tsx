@@ -12,11 +12,7 @@ import {
   ArrowRight,
 } from "lucide-react";
 import StructuredData from "@/components/StructuredData";
-import {
-  organizationSchema,
-  breadcrumbSchema,
-  graphSchema,
-} from "@/lib/schema";
+import { organizationSchema, graphSchema } from "@/lib/schema";
 import { authorPersonSchema, getAuthorByIdOrDefault } from "@/lib/authors";
 import { BRAND } from "@/lib/brand";
 import { withHreflang } from "@/lib/seo-alternates";
@@ -24,6 +20,7 @@ import { PARTNERSHIPS, type PartnershipKind } from "@/lib/partnerships";
 import { getPlatformById } from "@/lib/platforms";
 import { pageUpdatedFr } from "@/lib/engagements";
 import { DELAI_REPONSE } from "@/lib/engagements";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 /**
  * 06/10/2026 (audit confiance, A-C0-6) : « la plateforme nous reverse une commission » était faux. Les noms cités
@@ -71,15 +68,12 @@ export default function AProposPage() {
         data={graphSchema([
           organizationSchema(),
           authorPersonSchema(founder),
-          breadcrumbSchema([
-            { name: "Accueil", url: "/" },
-            { name: "À propos", url: "/a-propos" },
-          ]),
         ])}
       />
 
       <article className="py-16 sm:py-20">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+          <Breadcrumbs chemin="/a-propos" className="mb-8" />
           {/* Header */}
           <header className="text-center">
             <span className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-semibold text-primary-soft">

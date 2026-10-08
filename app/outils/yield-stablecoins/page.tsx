@@ -17,18 +17,14 @@ import {
 import { BRAND } from "@/lib/brand";
 import { findPaidPlatformByUrl } from "@/lib/platforms";
 import StructuredData from "@/components/StructuredData";
-import {
-  articleSchema,
-  breadcrumbSchema,
-  faqSchema,
-  graphSchema,
-} from "@/lib/schema";
+import { articleSchema, faqSchema, graphSchema } from "@/lib/schema";
 import RelatedPagesNav from "@/components/RelatedPagesNav";
 import NextStepsGuide from "@/components/NextStepsGuide";
 import Tldr from "@/components/ui/Tldr";
 import { withHreflang } from "@/lib/seo-alternates";
 import { fitTitle } from "@/lib/seo-text";
 import { fmtFr } from "@/lib/format-fr";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 /**
  * /outils/yield-stablecoins — Comparateur APY stablecoins.
@@ -102,11 +98,6 @@ export default function YieldStablecoinsPage() {
       category: "Outil",
       tags: ["stablecoin", "yield", "USDC", "USDT", "EURC", "Earn"],
     }),
-    breadcrumbSchema([
-      { name: "Accueil", url: "/" },
-      { name: "Outils", url: "/outils" },
-      { name: "Yield stablecoins", url: "/outils/yield-stablecoins" },
-    ]),
     faqSchema(faqItems.map((item) => ({ question: item.q, answer: item.a }))),
   ]);
 
@@ -116,13 +107,7 @@ export default function YieldStablecoinsPage() {
 
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
         {/* Breadcrumb */}
-        <nav aria-label="Fil d'Ariane" className="text-xs text-muted">
-          <Link href="/" className="hover:text-fg">Accueil</Link>
-          <span className="mx-2">/</span>
-          <Link href="/outils" className="hover:text-fg">Outils</Link>
-          <span className="mx-2">/</span>
-          <span className="text-fg/80">Yield stablecoins</span>
-        </nav>
+        <Breadcrumbs chemin="/outils/yield-stablecoins" />
 
         {/* H1 */}
         <header className="mt-6">

@@ -5,17 +5,14 @@ import { TrendingUp, TrendingDown, Activity, Flame, ArrowRight, Info } from "luc
 import { fetchTopMarket } from "@/lib/coingecko";
 import { getCryptoSlugs } from "@/lib/cryptos";
 import { BRAND } from "@/lib/brand";
-import {
-  breadcrumbSchema,
-  graphSchema,
-  type JsonLd,
-} from "@/lib/schema";
+import { graphSchema, type JsonLd } from "@/lib/schema";
 
 import StructuredData from "@/components/StructuredData";
 import GainerLoserList from "@/components/GainerLoserList";
 import EmptyState from "@/components/ui/EmptyState";
 import { withHreflang } from "@/lib/seo-alternates";
 import { fitTitle } from "@/lib/seo-text";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 /**
  * /marche/gainers-losers — Top gainers / losers du marché crypto sur 24h.
@@ -104,11 +101,6 @@ export default async function GainersLosersPage() {
 
   const schemas = graphSchema([
     webPageSchema,
-    breadcrumbSchema([
-      { name: "Accueil", url: "/" },
-      { name: "Marché", url: "/marche/heatmap" },
-      { name: "Gainers & Losers", url: "/marche/gainers-losers" },
-    ]),
   ]);
 
   return (
@@ -117,17 +109,7 @@ export default async function GainersLosersPage() {
 
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         {/* Breadcrumb */}
-        <nav className="text-xs text-muted" aria-label="Fil d'Ariane">
-          <Link href="/" className="hover:text-fg">
-            Accueil
-          </Link>
-          <span className="mx-2">/</span>
-          <Link href="/marche/heatmap" className="hover:text-fg">
-            Marché
-          </Link>
-          <span className="mx-2">/</span>
-          <span className="text-fg/80">Gainers &amp; Losers</span>
-        </nav>
+        <Breadcrumbs chemin="/marche/gainers-losers" />
 
         {/* Header */}
         <header className="mt-6 mb-8">

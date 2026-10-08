@@ -4,17 +4,13 @@ import { ArrowRight, AlertTriangle, Calculator, Scale } from "lucide-react";
 
 import { BRAND } from "@/lib/brand";
 import StructuredData from "@/components/StructuredData";
-import {
-  articleSchema,
-  breadcrumbSchema,
-  faqSchema,
-  graphSchema,
-} from "@/lib/schema";
+import { articleSchema, faqSchema, graphSchema } from "@/lib/schema";
 import RelatedPagesNav from "@/components/RelatedPagesNav";
 import NextStepsGuide from "@/components/NextStepsGuide";
 import Tldr from "@/components/ui/Tldr";
 import { withHreflang } from "@/lib/seo-alternates";
 import { fitDescription, fitTitle } from "@/lib/seo-text";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 /**
  * /outils/tax-loss-harvesting — « vendre à perte pour réduire son impôt » : ce qui marche vraiment en France.
@@ -91,11 +87,6 @@ export default function TaxLossHarvestingPage() {
       category: "Outil",
       tags: ["moins-value crypto", "fiscalité", "PFU", "méthode globale", "formulaire 2086"],
     }),
-    breadcrumbSchema([
-      { name: "Accueil", url: "/" },
-      { name: "Outils", url: "/outils" },
-      { name: "Vendre à perte", url: "/outils/tax-loss-harvesting" },
-    ]),
     faqSchema(faqItems.map((item) => ({ question: item.q, answer: item.a }))),
   ]);
 
@@ -104,13 +95,7 @@ export default function TaxLossHarvestingPage() {
       <StructuredData id="tax-loss-harvesting" data={schemas} />
 
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-        <nav aria-label="Fil d'Ariane" className="text-xs text-muted">
-          <Link href="/" className="hover:text-fg">Accueil</Link>
-          <span className="mx-2">/</span>
-          <Link href="/outils" className="hover:text-fg">Outils</Link>
-          <span className="mx-2">/</span>
-          <span className="text-fg/80">Vendre à perte</span>
-        </nav>
+        <Breadcrumbs chemin="/outils/tax-loss-harvesting" />
 
         <header className="mt-6 max-w-3xl">
           <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/15 border border-primary/30 px-3 py-1 text-xs font-bold uppercase tracking-wider text-primary-soft">

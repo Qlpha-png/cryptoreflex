@@ -7,7 +7,8 @@ import { PARTNERSHIPS } from "@/lib/partnerships";
 import { BRAND } from "@/lib/brand";
 import { withHreflang } from "@/lib/seo-alternates";
 import StructuredData from "@/components/StructuredData";
-import { breadcrumbSchema, graphSchema } from "@/lib/schema";
+import { graphSchema } from "@/lib/schema";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 /**
  * Rubrique « Fonctionnement du comparateur » — article D111-7 du Code de la consommation (version en vigueur depuis le
@@ -81,17 +82,12 @@ export default function FonctionnementComparateurPage() {
       description: DESCRIPTION,
       inLanguage: "fr-FR",
     },
-    breadcrumbSchema([{ name: "Accueil", url: "/" }, { name: TITLE, url: PAGE_PATH }]),
   ]);
 
   return (
     <article className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-16">
       <StructuredData data={schema} id="fonctionnement-comparateur" />
-      <nav aria-label="Fil d'Ariane" className="text-xs text-muted">
-        <Link href="/" className="hover:text-fg">Accueil</Link>
-        <span className="mx-2">/</span>
-        <span className="text-fg/80">{TITLE}</span>
-      </nav>
+      <Breadcrumbs chemin="/fonctionnement-du-comparateur" />
 
       <h1 className="mt-5 text-4xl font-extrabold tracking-tight text-fg">{TITLE}</h1>
       <p className="mt-4 text-fg/85 leading-relaxed">

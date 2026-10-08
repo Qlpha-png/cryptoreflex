@@ -13,8 +13,9 @@ import StructuredData from "@/components/StructuredData";
 import PlatformLogo from "@/components/PlatformLogo";
 import Comparateur from "@/components/comparateur/Comparateur";
 import ComparateurNotice from "@/components/ComparateurNotice";
-import { breadcrumbSchema, faqSchema, graphSchema, type JsonLd } from "@/lib/schema";
+import { faqSchema, graphSchema, type JsonLd } from "@/lib/schema";
 import { fitDescription } from "@/lib/seo-text";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 /**
  * /comparatif — refonte du 05/10/2026 (GO de Kev : « beau, fluide, simple, qu'un enfant de 8 ans puisse tout faire »).
@@ -88,7 +89,6 @@ function ComparatifPage() {
   };
   const schema = graphSchema([
     itemList,
-    breadcrumbSchema([{ name: "Accueil", url: "/" }, { name: "Comparatif", url: PAGE_PATH }]),
     faqSchema(FAQ),
   ]);
 
@@ -97,11 +97,7 @@ function ComparatifPage() {
       <StructuredData data={schema} id="comparatif-hub" />
       <section className="py-8 sm:py-12">
         <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-          <nav aria-label="Fil d'Ariane" className="text-xs text-muted">
-            <Link href="/" className="hover:text-fg">Accueil</Link>
-            <span className="mx-2">/</span>
-            <span className="text-fg/80">Comparatif</span>
-          </nav>
+          <Breadcrumbs chemin="/comparatif" />
 
           <header className="mt-5 max-w-3xl">
             <span className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">

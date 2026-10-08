@@ -11,13 +11,10 @@ import {
 
 import { BRAND, STATS } from "@/lib/brand";
 import StructuredData from "@/components/StructuredData";
-import {
-  breadcrumbSchema,
-  graphSchema,
-  type JsonLd,
-} from "@/lib/schema";
+import { graphSchema, type JsonLd } from "@/lib/schema";
 import { withHreflang } from "@/lib/seo-alternates";
 import { fitDescription } from "@/lib/seo-text";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 /**
  * /quiz — Hub Quiz (P0-5 audit-back-live-final).
@@ -128,12 +125,7 @@ export default function QuizHubPage() {
     },
   };
 
-  const breadcrumbs = breadcrumbSchema([
-    { name: "Accueil", url: "/" },
-    { name: "Questionnaires", url: PAGE_PATH },
-  ]);
-
-  const schema = graphSchema([collectionSchema, breadcrumbs]);
+  const schema = graphSchema([collectionSchema]);
 
   return (
     <>
@@ -141,13 +133,7 @@ export default function QuizHubPage() {
 
       <section className="py-12 sm:py-16">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <nav aria-label="Fil d'Ariane" className="text-xs text-muted">
-            <Link href="/" className="hover:text-fg">
-              Accueil
-            </Link>
-            <span className="mx-2">/</span>
-            <span className="text-fg/80">Questionnaires</span>
-          </nav>
+          <Breadcrumbs chemin="/quiz" />
 
           {/* Header */}
           <header className="mt-6 max-w-3xl">

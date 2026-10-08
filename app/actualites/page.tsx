@@ -16,16 +16,12 @@ import {
   type NewsCategory,
   type NewsSummary,
 } from "@/lib/news-types";
-import {
-  breadcrumbSchema,
-  graphSchema,
-  websiteSchema,
-  type JsonLd,
-} from "@/lib/schema";
+import { graphSchema, websiteSchema, type JsonLd } from "@/lib/schema";
 import StructuredData from "@/components/StructuredData";
 import NewsCard from "@/components/news/NewsCard";
 import NewsFilters from "@/components/news/NewsFilters";
 import BriefHero from "@/components/news/BriefHero";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 /**
  * /actualites — Hub d'actualités crypto FR (news Cryptoreflex réécrites).
@@ -159,21 +155,8 @@ export default async function ActualitesPage({ searchParams }: PageProps) {
   const gridItems = featured ? visible.slice(1) : visible;
 
   // 4) JSON-LD
-  const breadcrumb = breadcrumbSchema([
-    { name: "Accueil", url: "/" },
-    { name: "Actualités", url: PAGE_PATH },
-    ...(activeCategory
-      ? [
-          {
-            name: NEWS_CATEGORY_LABELS[activeCategory],
-            url: `${PAGE_PATH}?categorie=${NEWS_CATEGORY_SLUGS[activeCategory]}`,
-          },
-        ]
-      : []),
-  ]);
   const schemas = graphSchema([
     websiteSchema(),
-    breadcrumb,
     buildItemListSchema(visible),
   ]);
 
@@ -188,24 +171,7 @@ export default async function ActualitesPage({ searchParams }: PageProps) {
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Breadcrumb */}
-        <nav className="text-xs text-muted" aria-label="Fil d'Ariane">
-          <Link href="/" className="hover:text-fg">Accueil</Link>
-          <span className="mx-2" aria-hidden="true">/</span>
-          {activeCategory ? (
-            <>
-              <Link href={PAGE_PATH} className="hover:text-fg">Actualités</Link>
-              <span className="mx-2" aria-hidden="true">/</span>
-              {/* BLOCK 11 fix (Agent /actualites audit P2) : aria-current="page"
-                  sur dernier élément du fil d'Ariane → annonce explicite SR
-                  que c'est la page courante (WCAG 2.4.8 Location). */}
-              <span className="text-fg/80" aria-current="page">
-                {NEWS_CATEGORY_LABELS[activeCategory]}
-              </span>
-            </>
-          ) : (
-            <span className="text-fg/80" aria-current="page">Actualités</span>
-          )}
-        </nav>
+        <Breadcrumbs chemin="/actualites" />
 
         {/* HERO */}
         <header className="mt-6 mb-8 max-w-3xl">

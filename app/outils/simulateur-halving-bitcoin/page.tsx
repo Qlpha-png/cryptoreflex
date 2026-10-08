@@ -3,11 +3,12 @@ import dynamic from "next/dynamic";
 import Link from "next/link";
 import { Calendar, TrendingUp, BookOpen, ArrowRight } from "lucide-react";
 import StructuredData from "@/components/StructuredData";
-import { breadcrumbSchema, faqSchema, graphSchema } from "@/lib/schema";
+import { faqSchema, graphSchema } from "@/lib/schema";
 import { generateWebApplicationSchema } from "@/lib/schema-tools";
 import RelatedPagesNav from "@/components/RelatedPagesNav";
 import { withHreflang } from "@/lib/seo-alternates";
 import { fitTitle } from "@/lib/seo-text";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 const SimulateurHalvingBitcoin = dynamic(
   () => import("@/components/SimulateurHalvingBitcoin"),
@@ -90,17 +91,13 @@ export default function SimulateurHalvingBitcoinPage() {
               "cycle bitcoin 4 ans",
             ],
           }),
-          breadcrumbSchema([
-            { name: "Accueil", url: "/" },
-            { name: "Outils", url: "/outils" },
-            { name: "Simulateur halving Bitcoin", url: "/outils/simulateur-halving-bitcoin" },
-          ]),
           faqSchema(FAQ_ITEMS),
         ])}
       />
 
       <section className="py-16 sm:py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <Breadcrumbs chemin="/outils/simulateur-halving-bitcoin" className="mb-6" />
           <div className="max-w-3xl">
             <span className="inline-flex items-center gap-2 rounded-full border border-accent-green/30 bg-accent-green/10 px-3 py-1 text-xs font-semibold text-accent-green">
               <Calendar className="h-3.5 w-3.5" />

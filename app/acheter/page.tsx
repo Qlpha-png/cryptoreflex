@@ -2,13 +2,14 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight, ShieldCheck, MapPin } from "lucide-react";
 import { BRAND } from "@/lib/brand";
-import { breadcrumbSchema, graphSchema } from "@/lib/schema";
+import { graphSchema } from "@/lib/schema";
 import StructuredData from "@/components/StructuredData";
 import { withHreflang } from "@/lib/seo-alternates";
 import { getAllCryptos } from "@/lib/cryptos";
 import { COUNTRIES, COUNTRY_CODES } from "@/lib/programmatic-pages";
 import AmfDisclaimer from "@/components/AmfDisclaimer";
 import { fitDescription, fitTitle } from "@/lib/seo-text";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 /**
  * /acheter — HUB INDEX (créé 2026-06-13, audit maillage SEO).
@@ -74,16 +75,13 @@ export default function AcheterHub() {
 
   const schema = graphSchema([
     cryptoItemList,
-    breadcrumbSchema([
-      { name: "Accueil", url: "/" },
-      { name: "Acheter une crypto", url: "/acheter" },
-    ]),
   ]);
 
   return (
     <article className="py-12 sm:py-16">
       <StructuredData id="acheter-hub" data={schema} />
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <Breadcrumbs chemin="/acheter" className="mb-8" />
         {/* Hero */}
         <header className="text-center mb-12">
           <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/5 px-3 py-1 text-xs font-mono font-bold text-primary uppercase tracking-wider mb-4">

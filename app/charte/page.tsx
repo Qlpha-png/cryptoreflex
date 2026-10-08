@@ -27,17 +27,12 @@ import {
   ArrowRight,
 } from "lucide-react";
 import StructuredData from "@/components/StructuredData";
-import {
-  articleSchema,
-  breadcrumbSchema,
-  graphSchema,
-  organizationSchema,
-  type JsonLd,
-} from "@/lib/schema";
+import { articleSchema, graphSchema, organizationSchema, type JsonLd } from "@/lib/schema";
 import { BRAND } from "@/lib/brand";
 import { withHreflang } from "@/lib/seo-alternates";
 import { PAGE_PUBLISHED, PAGE_UPDATED, formatDateFr } from "@/lib/engagements";
 import { DELAI_REPONSE } from "@/lib/engagements";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 const PAGE_PATH = "/charte";
 const PAGE_URL = `${BRAND.url}${PAGE_PATH}`;
@@ -71,10 +66,6 @@ export const metadata: Metadata = {
 
 const jsonLd: JsonLd = graphSchema([
   organizationSchema(),
-  breadcrumbSchema([
-    { name: "Accueil", url: "/" },
-    { name: "Charte éthique", url: PAGE_PATH },
-  ]),
   articleSchema({
     slug: "charte",
     title: "Charte éthique éditoriale Cryptoreflex",
@@ -185,13 +176,7 @@ export default function ChartePage() {
       <article className="py-12 sm:py-16">
         <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
           {/* Breadcrumb */}
-          <nav aria-label="Fil d'Ariane" className="text-xs text-muted">
-            <Link href="/" className="hover:text-fg">
-              Accueil
-            </Link>
-            <span className="mx-2">/</span>
-            <span className="text-fg/80">Charte éthique</span>
-          </nav>
+          <Breadcrumbs chemin="/charte" />
 
           {/* Header */}
           <header className="mt-6">

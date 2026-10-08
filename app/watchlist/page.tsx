@@ -4,6 +4,7 @@ import { Briefcase, Star } from "lucide-react";
 import { BRAND } from "@/lib/brand";
 import WatchlistView from "@/components/WatchlistView";
 import { withHreflang } from "@/lib/seo-alternates";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 /**
  * /watchlist — page Client (la donnée vit en localStorage), wrappée dans
@@ -25,13 +26,7 @@ export default function WatchlistPage() {
     <article className="py-12 sm:py-16">
       <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
         {/* Breadcrumb */}
-        <nav aria-label="Fil d'Ariane" className="text-xs text-muted">
-          <Link href="/" className="hover:text-fg">
-            Accueil
-          </Link>
-          <span className="mx-2">/</span>
-          <span className="text-fg/80">Ma watchlist</span>
-        </nav>
+        <Breadcrumbs chemin="/watchlist" />
 
         {/* Header */}
         <header className="mt-6 mb-8">

@@ -36,15 +36,10 @@ import { toCryptoPageSlug } from "@/lib/crypto-page-slug";
 import { fetchCoinDetail } from "@/lib/coingecko";
 import { BRAND } from "@/lib/brand";
 import { withHreflang } from "@/lib/seo-alternates";
-import {
-  articleSchema,
-  breadcrumbSchema,
-  cryptoFinancialProductSchema,
-  faqSchema,
-  graphSchema,
-} from "@/lib/schema";
+import { articleSchema, cryptoFinancialProductSchema, faqSchema, graphSchema } from "@/lib/schema";
 
 import StructuredData from "@/components/StructuredData";
+import Breadcrumbs from "@/components/Breadcrumbs";
 import AmfDisclaimer from "@/components/AmfDisclaimer";
 import CryptoHero from "@/components/crypto-detail/CryptoHero";
 import { LLMFicheView } from "@/components/crypto-detail/LLMFicheView";
@@ -77,7 +72,6 @@ import {
   PriceChart,
   ReadingProgressBar,
   ROISimulator,
-  StickyBreadcrumb,
   TradingViewWidget,
   WhaleWatcher,
 } from "@/components/crypto-detail/FicheLazyWidgets";
@@ -505,11 +499,6 @@ async function CryptoPage({ params }: Props) {
       yearCreated: c.yearCreated,
       sameAs: externalLinks,
     }),
-    breadcrumbSchema([
-      { name: "Accueil", url: "/" },
-      { name: "Cryptos", url: "/cryptos" },
-      { name: c.name, url: `/cryptos/${c.id}` },
-    ]),
     faqSchema(faq.map((f) => ({ question: f.q, answer: f.a }))),
   ]);
 
@@ -520,19 +509,8 @@ async function CryptoPage({ params }: Props) {
       {/* Polish UX 01/05/2026 — barre de progression de lecture sticky top */}
       <ReadingProgressBar targetSelector="article" />
 
-      {/* Breadcrumb sticky : devient fixed après 200px de scroll */}
-      <StickyBreadcrumb
-        cryptoName={c.name}
-        cryptoSymbol={c.symbol}
-        logoUrl={detail?.image}
-        slug={c.id}
-      />
-
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-        {/* BUG FIX 2026-05-10 — breadcrumb fil complet RETIRÉ car déjà
-            rendu par StickyBreadcrumb au-dessus. Mon ajout wave 1 était
-            redondant et créait un doublon visuel "Accueil / Cryptos / X"
-            répété 2× sur les fiches statiques. */}
+        <Breadcrumbs chemin={`/cryptos/${c.id}`} label={c.name} />
 
         {/* QUICK SWITCHER (audit user 2026-05-02) — barre de recherche
             visible juste sous le breadcrumb, permet de naviguer vers une

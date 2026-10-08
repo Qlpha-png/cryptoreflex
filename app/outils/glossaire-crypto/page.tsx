@@ -4,11 +4,7 @@ import dynamic from "next/dynamic";
 import { BookOpen, Search, ArrowLeft, Mail } from "lucide-react";
 
 import StructuredData from "@/components/StructuredData";
-import {
-  breadcrumbSchema,
-  graphSchema,
-  type JsonLd,
-} from "@/lib/schema";
+import { graphSchema, type JsonLd } from "@/lib/schema";
 import { generateWebApplicationSchema } from "@/lib/schema-tools";
 import {
   GLOSSARY,
@@ -17,6 +13,7 @@ import {
 } from "@/lib/glossary";
 import { BRAND } from "@/lib/brand";
 import RelatedPagesNav from "@/components/RelatedPagesNav";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 /* -------------------------------------------------------------------------- */
 /*  ISR — revalidate every 24 h                                                */
@@ -92,11 +89,6 @@ export default function GlossaireCryptoPage() {
   /*  JSON-LD                                                            */
   /* ------------------------------------------------------------------ */
   const schemas: JsonLd[] = [
-    breadcrumbSchema([
-      { name: "Accueil", url: "/" },
-      { name: "Outils", url: "/outils" },
-      { name: "Glossaire crypto", url: PAGE_PATH },
-    ]),
     generateWebApplicationSchema({
       slug: "glossaire-crypto",
       name: "Glossaire crypto français Cryptoreflex",
@@ -127,15 +119,7 @@ export default function GlossaireCryptoPage() {
       <section className="py-16 sm:py-20">
         <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
           {/* Breadcrumb */}
-          <nav aria-label="Fil d'Ariane" className="mb-6">
-            <Link
-              href="/outils"
-              className="inline-flex items-center gap-1.5 text-sm text-muted hover:text-fg transition"
-            >
-              <ArrowLeft className="h-3.5 w-3.5" />
-              Retour aux outils
-            </Link>
-          </nav>
+          <Breadcrumbs chemin="/outils/glossaire-crypto" className="mb-6" />
 
           {/* Hero */}
           <div className="max-w-3xl">

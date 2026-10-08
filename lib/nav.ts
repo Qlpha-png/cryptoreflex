@@ -13,6 +13,8 @@
  *  - tests/lib/nav.test.ts : chaque lien mène à une page qui existe, chaque rubrique publique est rangée.
  */
 
+import { LIGNE_LEGALE } from "@/lib/nav-data";
+
 export interface NavLink {
   href: string;
   label: string;
@@ -189,7 +191,10 @@ export function bottomNav(cardsOn: boolean): NavLink[] {
   ];
 }
 
-/** Pied de page : les 4 liens les plus utiles + le légal. */
+/**
+ * Pied de page : depuis le lot B3a (08/10/2026), components/Footer.tsx lit lib/nav-data.ts (plan du site complet).
+ * FOOTER_KEY_LINKS reste exporté pour les consommateurs existants ; FOOTER_LEGAL est la ligne légale de nav-data.
+ */
 export const FOOTER_KEY_LINKS: NavLink[] = [
   { href: "/comparatif", label: "Comparer les plateformes" },
   { href: "/outils/calculateur-fiscalite", label: "Calculer mon impôt crypto" },
@@ -197,17 +202,6 @@ export const FOOTER_KEY_LINKS: NavLink[] = [
   { href: "/newsletter", label: "Recevoir la newsletter" },
 ];
 
-export const FOOTER_LEGAL: NavLink[] = [
-  { href: "/mentions-legales", label: "Mentions légales" },
-  { href: "/confidentialite", label: "Confidentialité" },
-  { href: "/cgu", label: "Conditions d'utilisation" },
-  { href: "/accessibilite", label: "Accessibilité" },
-  { href: "/transparence", label: "Affiliation" },
-  // Article D111-7 du Code de la consommation : rubrique accessible depuis toutes les pages (07/10/2026).
-  { href: "/fonctionnement-du-comparateur", label: "Fonctionnement du comparateur" },
-  { href: "/corrections", label: "Corrections" },
-  { href: "/sponsoring", label: "Sponsoring" },
-  { href: "/ressources-libres", label: "Données libres" },
-  { href: "/embeds", label: "Widgets" },
-  { href: "/feed.xml", label: "Flux RSS" },
-];
+// Article D111-7 du Code de la consommation : « Fonctionnement du comparateur » reste dans la ligne légale (toutes les
+// pages). Transparence, sponsoring, données libres, widgets, flux RSS et corrections sont rangés dans les colonnes du pied.
+export const FOOTER_LEGAL: NavLink[] = LIGNE_LEGALE.map(({ href, label }) => ({ href, label }));

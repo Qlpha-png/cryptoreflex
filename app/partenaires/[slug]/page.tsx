@@ -61,13 +61,14 @@ import {
   type PartnerReview,
 } from "@/data/partner-reviews";
 import { BRAND } from "@/lib/brand";
-import { breadcrumbSchema, faqSchema } from "@/lib/schema";
+import { faqSchema } from "@/lib/schema";
 import StructuredData from "@/components/StructuredData";
 import StickyPartnerCta from "./StickyPartnerCta";
 import WaltioFranchise from "@/components/fiscal-tools/WaltioFranchise";
 import { withHreflang } from "@/lib/seo-alternates";
 import { fitTitle } from "@/lib/seo-text";
 import { fmtFr, fmtNb } from "@/lib/format-fr";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 export const revalidate = 86400; // 24h
 
@@ -139,12 +140,6 @@ export default function PartnerDetailPage({ params }: Props) {
     notFound();
   }
 
-  const breadcrumbs = [
-    { name: "Accueil", url: `${BRAND.url}/` },
-    { name: "Partenaires", url: `${BRAND.url}/partenaires` },
-    { name: partner.name, url: `${BRAND.url}/partenaires/${partner.slug}` },
-  ];
-
   /* ------------------------------ JSON-LD ------------------------------ */
   // Product simple : pas de Review ni d'AggregateRating. La note affichée est
   // celle de Trustpilot : Google interdit de baliser des avis agrégés depuis un
@@ -176,7 +171,6 @@ export default function PartnerDetailPage({ params }: Props) {
       <StructuredData
         id="partner-detail"
         data={[
-          breadcrumbSchema(breadcrumbs),
           faqSchema(
             review.faq.map((q) => ({ question: q.question, answer: q.answer }))
           ),
@@ -295,6 +289,7 @@ function PartnerHero({
       />
 
       <div className="relative mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+        <Breadcrumbs chemin={`/partenaires/${partner.slug}`} label={partner.name} className="mb-6" />
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
           {/* COLONNE GAUCHE : H1 + lead + CTA */}
           <div className="lg:col-span-7 animate-hero-fade-up">

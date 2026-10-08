@@ -6,6 +6,7 @@ import { Search } from "lucide-react";
 import { BRAND } from "@/lib/brand";
 import SearchClient from "@/components/SearchClient";
 import { withHreflang } from "@/lib/seo-alternates";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 /**
  * FIX 2026-05-09 — Title dynamique injectant la query de recherche.
@@ -49,11 +50,7 @@ export default function RechercheePage() {
     <section className="py-12 sm:py-16">
       <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
         {/* Breadcrumb */}
-        <nav aria-label="Fil d'Ariane" className="text-xs text-muted mb-6">
-          <Link href="/" className="hover:text-fg">Accueil</Link>
-          <span className="mx-1.5">/</span>
-          <span className="text-fg">Recherche</span>
-        </nav>
+        <Breadcrumbs chemin="/recherche" label="Recherche" className="mb-6" />
 
         {/* Hero */}
         <header className="mb-10">

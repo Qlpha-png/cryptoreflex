@@ -3,17 +3,13 @@ import Link from "next/link";
 import { BRAND } from "@/lib/brand";
 import { ListChecks, Scale, RefreshCw, Database, ArrowRight } from "lucide-react";
 import StructuredData from "@/components/StructuredData";
-import {
-  articleSchema,
-  breadcrumbSchema,
-  graphSchema,
-  type JsonLd,
-} from "@/lib/schema";
+import { articleSchema, graphSchema, type JsonLd } from "@/lib/schema";
 import { withHreflang } from "@/lib/seo-alternates";
 import { PAGE_PUBLISHED, PAGE_UPDATED, formatDateFr } from "@/lib/engagements";
 import { DELAI_REPONSE } from "@/lib/engagements";
 import { verificationWindow } from "@/components/home/HomeTrustLine";
 import { getExchangePlatforms } from "@/lib/platforms";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 // 06/10/2026 : la page affichait « Mise à jour : 6 mai 2026 » alors que son contenu avait changé depuis
 // (dernière modification réelle : 06/10/2026). Dates centralisées dans lib/engagements.ts.
@@ -39,11 +35,6 @@ const baseUrl = BRAND.url;
 const MICA_WINDOW = verificationWindow(getExchangePlatforms().map((p) => p.mica?.lastVerified));
 const FEES_WINDOW = verificationWindow(getExchangePlatforms().map((p) => p.fees.verified?.date));
 
-const breadcrumb = breadcrumbSchema([
-  { name: "Accueil", url: baseUrl + "/" },
-  { name: "Méthodologie", url: baseUrl + "/methodologie" },
-]);
-
 const article = articleSchema({
   slug: "methodologie",
   title: "Notre méthodologie publique",
@@ -64,7 +55,7 @@ const article = articleSchema({
   author: "Kevin Voisin",
 });
 
-const jsonLd: JsonLd = graphSchema([breadcrumb, article]);
+const jsonLd: JsonLd = graphSchema([article]);
 
 const CRITERIA = [
   { name: "Frais réels", weight: 20, what: "Frais maker/taker spot, achat instantané, retrait fiat SEPA, retrait crypto, spread typique. Calcul d'un coût total par transaction type pour 1000€." },
@@ -78,6 +69,7 @@ const CRITERIA = [
 export default function MethodologiePage() {
   return (
     <article className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-16 prose prose-invert">
+      <Breadcrumbs chemin="/methodologie" className="not-prose mb-6" />
       <StructuredData id="methodologie-jsonld" data={jsonLd} />
       <h1 className="text-4xl font-extrabold tracking-tight text-fg">Notre méthodologie</h1>
       <p className="text-sm text-muted">

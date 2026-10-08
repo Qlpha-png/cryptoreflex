@@ -9,14 +9,11 @@ import {
 } from "lucide-react";
 import ContactForm from "@/components/ContactForm";
 import StructuredData from "@/components/StructuredData";
-import {
-  breadcrumbSchema,
-  graphSchema,
-  type JsonLd,
-} from "@/lib/schema";
+import { graphSchema, type JsonLd } from "@/lib/schema";
 import { BRAND } from "@/lib/brand";
 import { withHreflang } from "@/lib/seo-alternates";
 import { DELAI_REPONSE } from "@/lib/engagements";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 /**
  * /contact — page contact (2 voies : général / partenariats B2B).
@@ -133,10 +130,6 @@ function buildContactSchema(): JsonLd[] {
 export default function ContactPage() {
   const schema = graphSchema([
     ...buildContactSchema(),
-    breadcrumbSchema([
-      { name: "Accueil", url: "/" },
-      { name: "Contact", url: "/contact" },
-    ]),
   ]);
 
   return (
@@ -148,6 +141,7 @@ export default function ContactPage() {
         <div className="absolute inset-0 bg-grid opacity-50 pointer-events-none" />
         <div className="absolute -top-40 -right-40 w-[500px] h-[500px] bg-primary/15 rounded-full blur-3xl" />
         <div className="relative mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-16 lg:py-20">
+          <Breadcrumbs chemin="/contact" className="mb-8" />
           <div className="flex flex-col items-center text-center">
             <span className="badge-info">
               <Mail className="h-3.5 w-3.5" aria-hidden="true" />

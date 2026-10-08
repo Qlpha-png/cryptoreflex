@@ -5,6 +5,7 @@ import { isSupabaseConfigured } from "@/lib/supabase/client";
 import { BRAND } from "@/lib/brand";
 import ResetPasswordForm from "@/components/auth/ResetPasswordForm";
 import { withHreflang } from "@/lib/seo-alternates";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 export const metadata: Metadata = {
   title: "Mot de passe oublié",
@@ -20,6 +21,7 @@ export default function MotDePasseOubliePage() {
   return (
     <section className="min-h-[80vh] flex items-center py-16">
       <div className="mx-auto max-w-md px-4 sm:px-6 w-full">
+        <Breadcrumbs chemin="/mot-de-passe-oublie" className="mb-6" />
         <Link
           href="/connexion"
           className="inline-flex items-center gap-1.5 text-sm text-fg/70 hover:text-fg mb-6"

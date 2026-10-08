@@ -22,12 +22,13 @@ import AmfDisclaimer from "@/components/AmfDisclaimer";
 import MobileStickyCTA from "@/components/MobileStickyCTA";
 import PaidLinkCaption from "@/components/PaidLinkCaption";
 import { outboundRel } from "@/lib/partnerships";
-import { breadcrumbSchema, faqSchema, graphSchema } from "@/lib/schema";
+import { faqSchema, graphSchema } from "@/lib/schema";
 import { withHreflang } from "@/lib/seo-alternates";
 import { fitDescription, fitTitle } from "@/lib/seo-text";
 import { getLinkableCryptoIds, linkableCryptoPath } from "@/lib/crypto-links";
 import { formatMicaDate, getMicaMeta } from "@/lib/mica";
 import { fmtFr, fmtNb } from "@/lib/format-fr";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 // FIX BUILD 2026-05-06 — `dynamicParams=true` + SSG limité aux 10 cryptos top.
 // Avant : 100 pages SSG forcées au build. Maintenant : 10 SSG + 90 ISR.
@@ -152,16 +153,6 @@ export default async function AcheterEnFrancePage({ params }: Props) {
   const best = platforms[0];
   const bestCardPct = best ? cardBuyPct(best) : null;
 
-  const breadcrumbs = breadcrumbSchema([
-    { name: "Accueil", url: BRAND.url },
-    { name: "Cryptos", url: `${BRAND.url}/cryptos` },
-    ...(ficheHref ? [{ name: meta.name, url: `${BRAND.url}${ficheHref}` }] : []),
-    {
-      name: `Acheter en France`,
-      url: `${BRAND.url}/cryptos/${meta.id}/acheter-en-france`,
-    },
-  ]);
-
   const faqs = [
     {
       question: `Quelles plateformes proposent l'achat de ${meta.name} en France ?`,
@@ -197,7 +188,7 @@ export default async function AcheterEnFrancePage({ params }: Props) {
     },
   ];
 
-  const schema = graphSchema([breadcrumbs, faqSchema(faqs)]);
+  const schema = graphSchema([faqSchema(faqs)]);
 
   return (
     <>
@@ -206,19 +197,7 @@ export default async function AcheterEnFrancePage({ params }: Props) {
       <article className="py-12 sm:py-16">
         <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
           {/* Breadcrumb */}
-          <nav aria-label="Fil d'Ariane" className="text-xs text-muted mb-6">
-            <Link href="/" className="hover:text-fg">Accueil</Link>
-            <span className="mx-1.5">/</span>
-            <Link href="/cryptos" className="hover:text-fg">Cryptos</Link>
-            <span className="mx-1.5">/</span>
-            {ficheHref ? (
-              <Link href={ficheHref} className="hover:text-fg">{meta.name}</Link>
-            ) : (
-              <span>{meta.name}</span>
-            )}
-            <span className="mx-1.5">/</span>
-            <span className="text-fg">Acheter en France</span>
-          </nav>
+          <Breadcrumbs chemin={`/cryptos/${meta.id}/acheter-en-france`} label={`Acheter ${meta.name} en France`} parent={ficheHref ? { href: ficheHref, label: meta.name } : undefined} className="mb-6" />
 
           {/* Hero */}
           <header className="glass rounded-3xl p-8 sm:p-10 relative overflow-hidden">

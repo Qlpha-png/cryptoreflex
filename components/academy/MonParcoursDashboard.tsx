@@ -146,20 +146,8 @@ function MonParcoursDashboard() {
     ?? null;
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6 sm:py-14 lg:px-8">
-      {/* Breadcrumb */}
-      <nav className="text-xs text-muted" aria-label="Fil d'Ariane">
-        <Link href="/" className="hover:text-fg">
-          Accueil
-        </Link>
-        <span className="mx-2">/</span>
-        <Link href="/academie" className="hover:text-fg">
-          Académie
-        </Link>
-        <span className="mx-2">/</span>
-        <span className="text-fg/80">Mon parcours</span>
-      </nav>
-
+    <div className="mx-auto max-w-6xl px-4 pb-10 sm:px-6 sm:pb-14 lg:px-8">
+      {/* Fil d'Ariane : rendu côté serveur par app/academie/mon-parcours/page.tsx (lot B3a) */}
       {/* Hero */}
       <header className="mt-6 max-w-3xl">
         <span className="badge-info">

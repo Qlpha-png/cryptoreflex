@@ -21,11 +21,8 @@ import { BRAND } from "@/lib/brand";
 import { withHreflang } from "@/lib/seo-alternates";
 import StructuredData from "@/components/StructuredData";
 import { fmtDateFr } from "@/lib/format-fr";
-import {
-  breadcrumbSchema,
-  faqSchema,
-  graphSchema,
-} from "@/lib/schema";
+import { faqSchema, graphSchema } from "@/lib/schema";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 /**
  * /comparatif/securite — Page dediee a la securite des plateformes crypto FR.
@@ -147,11 +144,6 @@ function ComparatifSecuritePage() {
   const securityVerified = rows.map((r) => r.verified).sort().at(-1);
 
   const schemas = graphSchema([
-    breadcrumbSchema([
-      { name: "Accueil", url: "/" },
-      { name: "Comparatif", url: "/comparatif" },
-      { name: "Sécurité", url: PAGE_PATH },
-    ]),
     faqSchema([
       {
         question: "Quelle est la plateforme crypto la plus sécurisée en 2026 ?",
@@ -186,13 +178,7 @@ function ComparatifSecuritePage() {
 
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         {/* Breadcrumb */}
-        <nav aria-label="Fil d'Ariane" className="text-xs text-muted">
-          <Link href="/" className="hover:text-fg">Accueil</Link>
-          <span className="mx-2">/</span>
-          <Link href="/comparatif" className="hover:text-fg">Comparatif</Link>
-          <span className="mx-2">/</span>
-          <span className="text-fg/80">Sécurité</span>
-        </nav>
+        <Breadcrumbs chemin="/comparatif/securite" />
 
         {/* Header */}
         <header className="mt-6 max-w-3xl">

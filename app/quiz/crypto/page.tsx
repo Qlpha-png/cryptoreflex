@@ -6,9 +6,10 @@ import { getAllCryptos } from "@/lib/cryptos";
 import { BRAND } from "@/lib/brand";
 import StructuredData from "@/components/StructuredData";
 import CryptoQuiz from "@/components/CryptoQuiz";
-import { breadcrumbSchema, graphSchema } from "@/lib/schema";
+import { graphSchema } from "@/lib/schema";
 import { withHreflang } from "@/lib/seo-alternates";
 import { fitTitle } from "@/lib/seo-text";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 export const revalidate = 86400;
 
@@ -49,11 +50,6 @@ export default function QuizCryptoPage() {
   // 06/10/2026 : le hero annonçait « parmi 780 fiches analysées » alors que seules ces fiches détaillées
   // sont départagées → on affiche leur nombre réel (getAllCryptosUnified n'est plus appelé ici).
 
-  const breadcrumbs = breadcrumbSchema([
-    { name: "Accueil", url: BRAND.url },
-    { name: "Questionnaire crypto", url: `${BRAND.url}${PATH}` },
-  ]);
-
   const quizSchema = {
     "@context": "https://schema.org",
     "@type": "Quiz",
@@ -74,7 +70,7 @@ export default function QuizCryptoPage() {
     },
   };
 
-  const schema = graphSchema([breadcrumbs, quizSchema]);
+  const schema = graphSchema([quizSchema]);
 
   return (
     <>
@@ -83,13 +79,7 @@ export default function QuizCryptoPage() {
       <article className="py-12 sm:py-16">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
           {/* Breadcrumb */}
-          <nav aria-label="Fil d'Ariane" className="text-xs text-muted mb-6">
-            <Link href="/" className="hover:text-fg">
-              Accueil
-            </Link>
-            <span className="mx-1.5">/</span>
-            <span className="text-fg">Questionnaire crypto</span>
-          </nav>
+          <Breadcrumbs chemin="/quiz/crypto" className="mb-6" />
 
           {/* Hero */}
           <header className="mb-10 sm:mb-12">

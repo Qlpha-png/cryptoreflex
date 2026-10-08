@@ -10,6 +10,7 @@ import SignupForm from "@/components/auth/SignupForm";
 // après ?". Avec NextStepsGuide, on propose 3 destinations contextuelles
 // (watchlist, alertes, newsletter) en attendant que le user signe.
 import NextStepsGuide from "@/components/NextStepsGuide";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 export const metadata: Metadata = {
   title: "Créer un compte",
@@ -27,6 +28,7 @@ export default function InscriptionPage({ searchParams }: { searchParams?: { nex
   return (
     <section className="min-h-[80vh] flex flex-col justify-center py-16">
       <div className="mx-auto max-w-md px-4 sm:px-6 w-full">
+        <Breadcrumbs chemin="/inscription" className="mb-6" />
         <div className="text-center mb-8">
           <span className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/15 text-primary border border-primary/30 mb-4">
             <UserPlus className="h-6 w-6" aria-hidden="true" />

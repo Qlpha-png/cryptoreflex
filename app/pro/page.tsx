@@ -11,9 +11,10 @@ import {
   Check,
 } from "lucide-react";
 import StructuredData from "@/components/StructuredData";
-import { breadcrumbSchema, graphSchema } from "@/lib/schema";
+import { graphSchema } from "@/lib/schema";
 import { BRAND } from "@/lib/brand";
 import { withHreflang } from "@/lib/seo-alternates";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 /**
  * /pro — page de TRANSITION (DÉMONÉTISATION juin 2026).
@@ -69,10 +70,6 @@ const NOW_FREE = [
 
 export default function ProPage() {
   const schema = graphSchema([
-    breadcrumbSchema([
-      { name: "Accueil", url: "/" },
-      { name: "Cryptoreflex Pro", url: "/pro" },
-    ]),
   ]);
 
   return (
@@ -87,6 +84,7 @@ export default function ProPage() {
         <div className="absolute -top-40 -right-40 w-[300px] h-[300px] sm:w-[500px] sm:h-[500px] bg-primary/15 rounded-full blur-3xl pointer-events-none hidden sm:block" />
 
         <div className="relative mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-20 sm:py-24">
+          <Breadcrumbs chemin="/pro" label="Tout est gratuit" className="mb-6" />
           <div className="flex flex-col items-center text-center">
             <span className="ds-eyebrow inline-flex items-center gap-1.5 text-primary-soft">
               <Sparkles className="h-3.5 w-3.5" strokeWidth={2} aria-hidden="true" />

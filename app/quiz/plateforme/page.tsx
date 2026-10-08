@@ -8,8 +8,9 @@ import { BRAND } from "@/lib/brand";
 import StructuredData from "@/components/StructuredData";
 import PlatformQuiz from "@/components/PlatformQuiz";
 import NextStepsGuide from "@/components/NextStepsGuide";
-import { breadcrumbSchema, graphSchema } from "@/lib/schema";
+import { graphSchema } from "@/lib/schema";
 import { withHreflang } from "@/lib/seo-alternates";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 export const revalidate = 86400;
 
@@ -47,11 +48,6 @@ export default function QuizPlateformePage() {
   const platforms = filterScope(getExchangePlatforms());
   const micaReleve = releveText(platforms.map((p) => p.mica.lastVerified));
 
-  const breadcrumbs = breadcrumbSchema([
-    { name: "Accueil", url: BRAND.url },
-    { name: "Filtre des plateformes", url: `${BRAND.url}${PATH}` },
-  ]);
-
   const pageSchema = {
     "@context": "https://schema.org",
     "@type": "WebPage",
@@ -67,7 +63,7 @@ export default function QuizPlateformePage() {
     },
   };
 
-  const schema = graphSchema([breadcrumbs, pageSchema]);
+  const schema = graphSchema([pageSchema]);
 
   return (
     <>
@@ -75,13 +71,7 @@ export default function QuizPlateformePage() {
 
       <article className="py-12 sm:py-16">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-          <nav aria-label="Fil d'Ariane" className="text-xs text-muted mb-6">
-            <Link href="/" className="hover:text-fg">
-              Accueil
-            </Link>
-            <span className="mx-1.5">/</span>
-            <span className="text-fg">Filtre des plateformes</span>
-          </nav>
+          <Breadcrumbs chemin="/quiz/plateforme" className="mb-6" />
 
           <header className="mb-10 sm:mb-12">
             <span className="badge-info">

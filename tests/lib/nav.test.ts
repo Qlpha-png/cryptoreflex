@@ -2,6 +2,8 @@ import { existsSync, readdirSync, statSync } from "node:fs";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
 import { FOOTER_KEY_LINKS, FOOTER_LEGAL, NAV_CTA, NAV_SECTIONS, bottomNav, topNav, visibleSections } from "@/lib/nav";
+// Lot B3a : le pied de page (plan du site) vient de lib/nav-data.ts ; ses liens sont testés dans nav-data.test.ts.
+import { liensDuPied } from "@/lib/nav-data";
 
 /**
  * Menu à source unique (lib/nav.ts) — Kev 04/10/2026 : « tout bien rangé, qu'un enfant de 8 ans trouve tout ».
@@ -46,7 +48,7 @@ describe("menu à source unique (lib/nav.ts)", () => {
   });
 
   it("chaque rubrique publique de premier niveau est rangée dans le menu ou le pied de page", () => {
-    const linked = new Set(ALL_LINKS.map((l) => l.href.split("/").filter(Boolean)[0]).filter(Boolean));
+    const linked = new Set([...ALL_LINKS, ...liensDuPied()].map((l) => l.href.split("/").filter(Boolean)[0]).filter(Boolean));
     const top = readdirSync(APP).filter((d) => statSync(path.join(APP, d)).isDirectory() && !d.startsWith("(") && !d.startsWith("_") && !d.startsWith("."));
     const orphans = top.filter((d) => !linked.has(d) && !NOT_IN_MENU.has(d));
     expect(orphans, `rubriques sans lien : ${orphans.join(", ")}`).toEqual([]);

@@ -117,6 +117,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // NOTE — /calendrier-crypto (legacy) supprimé du sitemap : redirige 301
     // vers /calendrier (cf. next.config.js, audit SEO 26-04 CRIT-3).
     entry("/outils", "monthly", 0.7),
+    // Lot B3a (08/10/2026) : hub « Déclarer ses cryptos » et plan du site (architecture § 10).
+    entry("/impots", "monthly", 0.85),
+    entry("/plan-du-site", "monthly", 0.4),
     // Phase 3 / Agent A4 — page hub /ressources (lead magnets PDF + outils + blog).
     entry("/ressources", "weekly", 0.7),
     entry("/outils/simulateur-dca", "monthly", 0.7),

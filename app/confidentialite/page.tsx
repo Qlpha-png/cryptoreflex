@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { BRAND } from "@/lib/brand";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 export const metadata: Metadata = {
   title: "Politique de confidentialité",
@@ -13,6 +14,7 @@ export const metadata: Metadata = {
 export default function ConfidentialitePage() {
   return (
     <article className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-16 prose prose-invert">
+      <Breadcrumbs chemin="/confidentialite" className="not-prose mb-6" />
       <h1 className="text-4xl font-extrabold tracking-tight text-fg">Politique de confidentialité</h1>
       <p className="text-sm text-muted">Dernière mise à jour : 2 octobre 2026 — Conforme RGPD (UE 2016/679)</p>
 

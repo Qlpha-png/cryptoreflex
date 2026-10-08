@@ -9,6 +9,7 @@ import type { Metadata } from "next";
 import { BRAND } from "@/lib/brand";
 import { withHreflang } from "@/lib/seo-alternates";
 import MonParcoursDashboard from "@/components/academy/MonParcoursDashboard";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 const TITLE = "Mon parcours — Académie crypto";
 const DESCRIPTION =
@@ -33,6 +34,9 @@ export const metadata: Metadata = {
 export default function MonParcoursPage() {
   return (
     <div className="py-0">
+      <div className="mx-auto max-w-6xl px-4 pt-10 sm:px-6 sm:pt-14 lg:px-8">
+        <Breadcrumbs chemin="/academie/mon-parcours" />
+      </div>
       <MonParcoursDashboard />
     </div>
   );

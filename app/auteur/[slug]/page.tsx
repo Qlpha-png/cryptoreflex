@@ -19,14 +19,11 @@ import {
   getAuthorById,
   articleAuthorId,
 } from "@/lib/authors";
-import {
-  breadcrumbSchema,
-  graphSchema,
-  organizationSchema,
-} from "@/lib/schema";
+import { graphSchema, organizationSchema } from "@/lib/schema";
 import { BRAND } from "@/lib/brand";
 import { withHreflang } from "@/lib/seo-alternates";
 import { fitTitle } from "@/lib/seo-text";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 interface Props {
   params: { slug: string };
@@ -79,16 +76,12 @@ export default async function AuthorPage({ params }: Props) {
         data={graphSchema([
           organizationSchema(),
           authorPersonSchema(author),
-          breadcrumbSchema([
-            { name: "Accueil", url: "/" },
-            { name: "Auteurs", url: "/a-propos" },
-            { name: author.name, url: `/auteur/${author.id}` },
-          ]),
         ])}
       />
 
       <article className="py-16 sm:py-20">
         <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
+          <Breadcrumbs chemin={`/auteur/${author.id}`} label={author.name} className="mb-8" />
           <Link
             href="/a-propos"
             className="inline-flex items-center gap-2 text-sm text-muted hover:text-fg"

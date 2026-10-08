@@ -2,11 +2,12 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight, Repeat, ShieldCheck } from "lucide-react";
 import { BRAND } from "@/lib/brand";
-import { breadcrumbSchema, graphSchema } from "@/lib/schema";
+import { graphSchema } from "@/lib/schema";
 import StructuredData from "@/components/StructuredData";
 import { getAllPlatforms, isAvailableFr } from "@/lib/platforms";
 import PlatformLogo from "@/components/PlatformLogo";
 import { withHreflang } from "@/lib/seo-alternates";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 /**
  * /alternative-a — HUB INDEX (BATCH 44b — création post-audit maillage SEO).
@@ -46,16 +47,13 @@ export default function AlternativeAHub() {
   const platforms = getAllPlatforms().filter((p) => p.category !== "wallet");
 
   const schema = graphSchema([
-    breadcrumbSchema([
-      { name: "Accueil", url: "/" },
-      { name: "Alternatives plateformes", url: "/alternative-a" },
-    ]),
   ]);
 
   return (
     <article className="py-12 sm:py-16">
       <StructuredData id="alternative-a-hub" data={schema} />
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <Breadcrumbs chemin="/alternative-a" className="mb-8" />
         {/* Hero */}
         <header className="text-center mb-12">
           <span className="inline-flex items-center gap-1.5 rounded-full border border-warning-border bg-warning-soft px-3 py-1 text-xs font-mono font-bold text-warning-fg uppercase tracking-wider mb-4">

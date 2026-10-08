@@ -17,13 +17,14 @@ const DcaSimulator = dynamic(() => import("@/components/DcaSimulator"), {
   ssr: false,
 });
 import StructuredData from "@/components/StructuredData";
-import { breadcrumbSchema, faqSchema, graphSchema } from "@/lib/schema";
+import { faqSchema, graphSchema } from "@/lib/schema";
 import { generateWebApplicationSchema } from "@/lib/schema-tools";
 import { getPlatformById } from "@/lib/platforms";
 import { outboundRel } from "@/lib/partnerships";
 import PaidLinkCaption from "@/components/PaidLinkCaption";
 import RelatedPagesNav from "@/components/RelatedPagesNav";
 import { withHreflang } from "@/lib/seo-alternates";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 export const metadata: Metadata = {
   // BATCH 37 — fix audit SEO P0 : title enrichi "FR 2026" + brand
@@ -101,17 +102,13 @@ export default function SimulateurDcaPage() {
               "DCA Solana",
             ],
           }),
-          breadcrumbSchema([
-            { name: "Accueil", url: "/" },
-            { name: "Outils", url: "/outils" },
-            { name: "Simulateur DCA", url: "/outils/simulateur-dca" },
-          ]),
           faqSchema(FAQ_ITEMS),
         ])}
       />
 
       <section className="py-16 sm:py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <Breadcrumbs chemin="/outils/simulateur-dca" className="mb-6" />
           {/* Hero */}
           <div className="max-w-3xl">
             <span className="inline-flex items-center gap-2 rounded-full border border-accent-green/30 bg-accent-green/10 px-3 py-1 text-xs font-semibold text-accent-green">

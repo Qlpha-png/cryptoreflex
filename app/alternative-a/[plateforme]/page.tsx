@@ -6,11 +6,7 @@ import { ArrowRight, Star, Trophy, ShieldCheck } from "lucide-react";
 import { getAllPlatforms, isAvailableFr, getPlatformById, type Platform } from "@/lib/platforms";
 import { BRAND } from "@/lib/brand";
 import StructuredData from "@/components/StructuredData";
-import {
-  articleSchema,
-  breadcrumbSchema,
-  graphSchema,
-} from "@/lib/schema";
+import { articleSchema, graphSchema } from "@/lib/schema";
 import RelatedPagesNav from "@/components/RelatedPagesNav";
 import NextStepsGuide from "@/components/NextStepsGuide";
 import Tldr from "@/components/ui/Tldr";
@@ -19,6 +15,7 @@ import { withHreflang } from "@/lib/seo-alternates";
 import { buildComparisonSlug, getPublishableComparisons } from "@/lib/programmatic";
 import { fmtFr } from "@/lib/format-fr";
 import { fitTitle } from "@/lib/seo-text";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 /** Duels publiés (/comparatif/<a>-vs-<b>) : le bouton « Comparer » n'apparaît que s'il mène à un vrai duel. */
 const PUBLISHED_DUELS = new Set(getPublishableComparisons().map((c) => c.slug));
@@ -180,11 +177,6 @@ export default function AlternativePage({ params }: Props) {
       category: "Comparatif",
       tags: [target.name, "alternative", "comparatif", "MiCA"],
     }),
-    breadcrumbSchema([
-      { name: "Accueil", url: "/" },
-      { name: "Alternatives", url: "/alternative-a" },
-      { name: target.name, url: `/alternative-a/${target.id}` },
-    ]),
   ]);
 
   return (
@@ -192,13 +184,7 @@ export default function AlternativePage({ params }: Props) {
       <StructuredData id="alternative-a" data={schemas} />
 
       <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-        <nav aria-label="Fil d'Ariane" className="text-xs text-muted">
-          <Link href="/" className="hover:text-fg">Accueil</Link>
-          <span className="mx-2">/</span>
-          <Link href="/comparatif" className="hover:text-fg">Comparatif</Link>
-          <span className="mx-2">/</span>
-          <span className="text-fg/80">Alternative à {target.name}</span>
-        </nav>
+        <Breadcrumbs chemin={`/alternative-a/${target.id}`} label={`Alternatives à ${target.name}`} />
 
         <header className="mt-6">
           <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight">

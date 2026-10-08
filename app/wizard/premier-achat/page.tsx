@@ -6,13 +6,10 @@ import { getAllPlatforms, isAvailableFr } from "@/lib/platforms";
 import { BRAND } from "@/lib/brand";
 import StructuredData from "@/components/StructuredData";
 import FirstPurchaseWizard from "@/components/FirstPurchaseWizard";
-import {
-  breadcrumbSchema,
-  graphSchema,
-  howToSchema,
-} from "@/lib/schema";
+import { graphSchema, howToSchema } from "@/lib/schema";
 import { withHreflang } from "@/lib/seo-alternates";
 import { fitDescription } from "@/lib/seo-text";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 export const revalidate = 86400;
 
@@ -41,11 +38,6 @@ export const metadata: Metadata = {
 
 export default function WizardPremierAchatPage() {
   const platforms = getAllPlatforms().filter(isAvailableFr);
-
-  const breadcrumbs = breadcrumbSchema([
-    { name: "Accueil", url: BRAND.url },
-    { name: "Mon premier achat", url: `${BRAND.url}${PATH}` },
-  ]);
 
   const howTo = howToSchema({
     name: "Faire son premier achat crypto en France en 2026",
@@ -82,7 +74,7 @@ export default function WizardPremierAchatPage() {
     ],
   });
 
-  const schema = graphSchema([breadcrumbs, howTo]);
+  const schema = graphSchema([howTo]);
 
   return (
     <>
@@ -91,13 +83,7 @@ export default function WizardPremierAchatPage() {
       <article className="py-12 sm:py-16">
         <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
           {/* Breadcrumb */}
-          <nav aria-label="Fil d'Ariane" className="text-xs text-muted mb-6">
-            <Link href="/" className="hover:text-fg">
-              Accueil
-            </Link>
-            <span className="mx-1.5">/</span>
-            <span className="text-fg">Mon premier achat</span>
-          </nav>
+          <Breadcrumbs chemin="/wizard/premier-achat" className="mb-6" />
 
           {/* Hero */}
           <header className="mb-10 sm:mb-12">

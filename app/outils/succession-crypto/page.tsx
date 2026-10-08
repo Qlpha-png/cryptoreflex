@@ -4,7 +4,7 @@ import { Heart, ShieldAlert, Scale, Users, FileText, ArrowRight } from "lucide-r
 
 import { BRAND } from "@/lib/brand";
 import StructuredData from "@/components/StructuredData";
-import { articleSchema, breadcrumbSchema, faqSchema, graphSchema } from "@/lib/schema";
+import { articleSchema, faqSchema, graphSchema } from "@/lib/schema";
 import RelatedPagesNav from "@/components/RelatedPagesNav";
 import NextStepsGuide from "@/components/NextStepsGuide";
 import Tldr from "@/components/ui/Tldr";
@@ -12,6 +12,7 @@ import AmfDisclaimer from "@/components/AmfDisclaimer";
 import SuccessionCryptoTool from "@/components/SuccessionCryptoTool";
 import { withHreflang } from "@/lib/seo-alternates";
 import { fitDescription, fitTitle } from "@/lib/seo-text";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 /**
  * /outils/succession-crypto — outil « Succession crypto » (terminé le 05/10/2026 ; page « Bientôt » auparavant).
@@ -114,11 +115,6 @@ export default function SuccessionCryptoPage() {
       category: "Outil",
       tags: ["succession", "héritage crypto", "testament", "transmission", "droits de succession"],
     }),
-    breadcrumbSchema([
-      { name: "Accueil", url: "/" },
-      { name: "Outils", url: "/outils" },
-      { name: "Succession Crypto", url: PATH },
-    ]),
     faqSchema(faqItems.map((item) => ({ question: item.q, answer: item.a }))),
   ]);
 
@@ -127,13 +123,7 @@ export default function SuccessionCryptoPage() {
       <StructuredData id="succession-crypto" data={schemas} />
 
       <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-        <nav aria-label="Fil d'Ariane" className="text-xs text-muted">
-          <Link href="/" className="hover:text-fg">Accueil</Link>
-          <span className="mx-2">/</span>
-          <Link href="/outils" className="hover:text-fg">Outils</Link>
-          <span className="mx-2">/</span>
-          <span className="text-fg/80">Succession Crypto</span>
-        </nav>
+        <Breadcrumbs chemin="/outils/succession-crypto" />
 
         <header className="mt-6">
           <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/15 border border-primary/30 px-3 py-1 text-xs font-bold uppercase tracking-wider text-primary-soft">

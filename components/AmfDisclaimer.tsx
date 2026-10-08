@@ -1,5 +1,6 @@
 import { avecTypoSync } from "@/components/ui/Typo";
 import { AlertTriangle, Info, Scale, BookOpen } from "lucide-react";
+import { RISK } from "@/lib/risk-text";
 
 /**
  * Bandeau d'avertissement sur les risques des crypto-actifs.
@@ -36,10 +37,8 @@ interface AmfDisclaimerProps {
   className?: string;
 }
 
-const BASE_DISCLAIMER =
-  "L'investissement en crypto-actifs comporte un risque élevé de perte totale en capital. " +
-  "Cryptoreflex n'est pas un conseiller en investissements financiers. " +
-  "Les performances passées ne préjugent pas des performances futures.";
+/** Phrase de base, commune au pied de page : lib/risk-text.ts (lot B3a). */
+const BASE_DISCLAIMER = RISK.short;
 
 interface VariantConfig {
   label: string;
@@ -55,11 +54,7 @@ const VARIANTS: Record<AmfVariant, VariantConfig> = {
     label: "Avertissement — risques",
     title: "Article éducatif — pas un conseil en investissement",
     Icon: BookOpen,
-    extra:
-      "Ce contenu a une vocation strictement pédagogique. Il ne constitue ni " +
-      "une recommandation personnalisée, ni une incitation à acheter ou vendre " +
-      "un crypto-actif. Pour toute décision patrimoniale, consultez un Conseiller " +
-      "en Investissements Financiers (CIF) immatriculé à l'ORIAS.",
+    extra: RISK.portee,
     tone: "info",
   },
   // 06/10/2026 : « Comparatif sponsorisé » était faux (aucun comparatif n'est vendu) et la commission était annoncée

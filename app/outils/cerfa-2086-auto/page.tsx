@@ -29,14 +29,10 @@ import {
 import StructuredData from "@/components/StructuredData";
 import RelatedPagesNav from "@/components/RelatedPagesNav";
 import FiscalCornerstoneCard from "@/components/fiscalite/FiscalCornerstoneCard";
-import {
-  breadcrumbSchema,
-  graphSchema,
-  howToSchema,
-  type JsonLd,
-} from "@/lib/schema";
+import { graphSchema, howToSchema, type JsonLd } from "@/lib/schema";
 import { BRAND } from "@/lib/brand";
 import { withHreflang } from "@/lib/seo-alternates";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 const Cerfa2086Generator = dynamic(
   () => import("@/components/cerfa/Cerfa2086Generator"),
@@ -119,11 +115,6 @@ function Cerfa2086AutoPage() {
       <StructuredData
         data={graphSchema([
           webAppSchema,
-          breadcrumbSchema([
-            { name: "Accueil", url: "/" },
-            { name: "Outils", url: "/outils" },
-            { name: "Cerfa 2086 auto", url: PAGE_PATH },
-          ]),
           // Étude #9 ETUDE-2026-05-02 : HowTo schema → snippet "Comment
           // générer son Cerfa 2086" éligible aux rich results recettes/HowTo.
           howToSchema({
@@ -162,6 +153,7 @@ function Cerfa2086AutoPage() {
         {/* ============================ Hero ============================ */}
         <section className="relative py-14 sm:py-20">
           <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+            <Breadcrumbs chemin="/outils/cerfa-2086-auto" className="mb-6" />
             <span className="inline-flex items-center gap-2 rounded-full border border-gold/40 bg-gold/10 px-3 py-1 text-xs font-bold text-gold">
               <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
               Outil avancé — 100 % gratuit

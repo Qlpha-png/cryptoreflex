@@ -12,11 +12,7 @@ import {
 
 import { BRAND } from "@/lib/brand";
 import StructuredData from "@/components/StructuredData";
-import {
-  breadcrumbSchema,
-  graphSchema,
-  type JsonLd,
-} from "@/lib/schema";
+import { graphSchema, type JsonLd } from "@/lib/schema";
 import { withHreflang } from "@/lib/seo-alternates";
 import {
   fetchTopMarket,
@@ -30,6 +26,7 @@ import FearGreedGauge from "@/components/FearGreedGauge";
 import GainerLoserList from "@/components/GainerLoserList";
 import { fitDescription } from "@/lib/seo-text";
 import { fmtFr } from "@/lib/format-fr";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 /**
  * /marche — DASHBOARD marché (DA Obsidian sprint 2, 2026-06-11).
@@ -149,12 +146,7 @@ async function MarcheDashboardPage() {
     },
   };
 
-  const breadcrumbs = breadcrumbSchema([
-    { name: "Accueil", url: "/" },
-    { name: "Marché", url: PAGE_PATH },
-  ]);
-
-  const schema = graphSchema([collectionSchema, breadcrumbs]);
+  const schema = graphSchema([collectionSchema]);
 
   return (
     <>
@@ -162,13 +154,7 @@ async function MarcheDashboardPage() {
 
       <section className="py-10 sm:py-12">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <nav aria-label="Fil d'Ariane" className="text-xs text-muted">
-            <Link href="/" className="hover:text-fg">
-              Accueil
-            </Link>
-            <span className="mx-2">/</span>
-            <span className="text-fg/80">Marché</span>
-          </nav>
+          <Breadcrumbs chemin="/marche" />
 
           {/* Header compact — le dashboard prime sur le discours */}
           <header className="mt-4 flex flex-wrap items-end justify-between gap-4">

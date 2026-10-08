@@ -11,17 +11,13 @@ import {
 } from "lucide-react";
 import { BRAND } from "@/lib/brand";
 import StructuredData from "@/components/StructuredData";
-import {
-  breadcrumbSchema,
-  graphSchema,
-  howToSchema,
-  type JsonLd,
-} from "@/lib/schema";
+import { graphSchema, howToSchema, type JsonLd } from "@/lib/schema";
 import NewsletterInline from "@/components/NewsletterInline";
 import PackCTABlock from "@/components/fiscalite/PackCTABlock";
 import FiscalCornerstoneCard from "@/components/fiscalite/FiscalCornerstoneCard";
 import { withHreflang } from "@/lib/seo-alternates";
 import { fitDescription, fitTitle } from "@/lib/seo-text";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 /**
  * /guides/declaration-crypto-2026-checklist
@@ -135,15 +131,6 @@ const STEPS: Step[] = [
 
 const baseUrl = BRAND.url;
 
-const breadcrumb = breadcrumbSchema([
-  { name: "Accueil", url: baseUrl + "/" },
-  { name: "Guides", url: baseUrl + "/guides" },
-  {
-    name: "Checklist déclaration crypto 2026",
-    url: baseUrl + "/guides/declaration-crypto-2026-checklist",
-  },
-]);
-
 const howTo = howToSchema({
   name: TITLE,
   description: DESCRIPTION,
@@ -162,7 +149,7 @@ const howTo = howToSchema({
   ],
 });
 
-const jsonLd: JsonLd = graphSchema([breadcrumb, howTo]);
+const jsonLd: JsonLd = graphSchema([howTo]);
 
 export default function ChecklistPage() {
   return (
@@ -196,17 +183,7 @@ export default function ChecklistPage() {
       {/* Hero */}
       <section className="border-b border-fg-max/5 bg-gradient-to-b from-success/5 to-transparent">
         <div className="mx-auto max-w-3xl px-4 py-12 sm:px-6 lg:px-8">
-          <nav className="mb-6 text-sm text-muted no-print" aria-label="Fil d'Ariane">
-            <Link href="/" className="hover:text-info">
-              Accueil
-            </Link>
-            <span className="mx-2 text-fg-4">/</span>
-            <Link href="/guides" className="hover:text-info">
-              Guides
-            </Link>
-            <span className="mx-2 text-fg-4">/</span>
-            <span className="text-fg-2">Checklist déclaration 2026</span>
-          </nav>
+          <Breadcrumbs chemin="/guides/declaration-crypto-2026-checklist" className="mb-6" />
 
           <div className="inline-flex items-center gap-2 rounded-full border border-success/30 bg-success/10 px-3 py-1 text-xs font-medium text-success no-print">
             <BookOpenCheck className="h-3.5 w-3.5" />

@@ -3,16 +3,12 @@ import Link from "next/link";
 import { Bitcoin, Clock, Calendar, TrendingUp, AlertTriangle } from "lucide-react";
 
 import { BRAND } from "@/lib/brand";
-import {
-  articleSchema,
-  breadcrumbSchema,
-  faqSchema,
-  graphSchema,
-} from "@/lib/schema";
+import { articleSchema, faqSchema, graphSchema } from "@/lib/schema";
 import StructuredData from "@/components/StructuredData";
 import HalvingCountdown from "@/components/HalvingCountdown";
 import { withHreflang } from "@/lib/seo-alternates";
 import { fitTitle } from "@/lib/seo-text";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 /**
  * /halving-bitcoin — Page evergreen avec compte à rebours et contenu pédagogique.
@@ -162,10 +158,6 @@ export default function HalvingPage() {
       category: "Bitcoin",
       tags: ["Bitcoin", "Halving", "BTC", "Cycle"],
     }),
-    breadcrumbSchema([
-      { name: "Accueil", url: "/" },
-      { name: "Halving Bitcoin", url: "/halving-bitcoin" },
-    ]),
     faqSchema(FAQ.map((f) => ({ question: f.q, answer: f.a }))),
   ]);
 
@@ -175,13 +167,7 @@ export default function HalvingPage() {
 
       <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
         {/* Breadcrumb */}
-        <nav className="text-xs text-muted" aria-label="Fil d'Ariane">
-          <Link href="/" className="hover:text-fg">
-            Accueil
-          </Link>
-          <span className="mx-2">/</span>
-          <span className="text-fg/80">Halving Bitcoin</span>
-        </nav>
+        <Breadcrumbs chemin="/halving-bitcoin" />
 
         {/* HEADER */}
         <header className="mt-6 mb-8">

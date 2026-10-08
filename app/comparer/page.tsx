@@ -6,6 +6,7 @@ import { BRAND } from "@/lib/brand";
 import { withHreflang } from "@/lib/seo-alternates";
 import ComparerHubClient from "@/components/ComparerHubClient";
 import { fitDescription, fitTitle } from "@/lib/seo-text";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 // BATCH 59 — extension hub /comparer pour refleter 4950 duels (vs 105 avant).
 // Chiffres calcules dynamiquement depuis getAllCryptoComparisons() pour eviter
@@ -52,13 +53,7 @@ export default function ComparerHubPage() {
   return (
     <article className="py-12 sm:py-16">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-        <nav aria-label="Fil d'Ariane" className="text-xs text-muted">
-          <Link href="/" className="hover:text-fg">
-            Accueil
-          </Link>
-          <span className="mx-2">/</span>
-          <span className="text-fg/80">Comparer</span>
-        </nav>
+        <Breadcrumbs chemin="/comparer" />
 
         <header className="mt-6 max-w-3xl">
           <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight">

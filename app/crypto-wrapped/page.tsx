@@ -13,15 +13,12 @@ import {
 
 import { BRAND } from "@/lib/brand";
 import StructuredData from "@/components/StructuredData";
-import {
-  articleSchema,
-  breadcrumbSchema,
-  graphSchema,
-} from "@/lib/schema";
+import { articleSchema, graphSchema } from "@/lib/schema";
 import RelatedPagesNav from "@/components/RelatedPagesNav";
 import NextStepsGuide from "@/components/NextStepsGuide";
 import Tldr from "@/components/ui/Tldr";
 import { withHreflang } from "@/lib/seo-alternates";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 /**
  * /crypto-wrapped — Idée WOW #1 (audit innovation expert).
@@ -128,10 +125,6 @@ export default function CryptoWrappedPage() {
       category: "Outil",
       tags: ["wrapped", "récap", "portfolio", "annuel", "viralité"],
     }),
-    breadcrumbSchema([
-      { name: "Accueil", url: "/" },
-      { name: "Crypto Wrapped", url: "/crypto-wrapped" },
-    ]),
   ]);
 
   return (
@@ -140,11 +133,7 @@ export default function CryptoWrappedPage() {
 
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
         {/* Breadcrumb */}
-        <nav aria-label="Fil d'Ariane" className="text-xs text-muted">
-          <Link href="/" className="hover:text-fg">Accueil</Link>
-          <span className="mx-2">/</span>
-          <span className="text-fg/80">Crypto Wrapped</span>
-        </nav>
+        <Breadcrumbs chemin="/crypto-wrapped" />
 
         {/* Hero */}
         <header className="mt-6 max-w-3xl">

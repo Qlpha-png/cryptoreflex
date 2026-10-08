@@ -41,11 +41,6 @@ export interface ArticleFrontmatter {
   author?: string;
 }
 
-export interface BreadcrumbItem {
-  name: string;
-  url: string;             // absolute URL preferred
-}
-
 export interface FaqItem {
   question: string;
   answer: string;          // peut contenir du HTML simple
@@ -438,60 +433,8 @@ export function cryptoFinancialProductSchema(
 }
 
 /* -------------------------------------------------------------------------- */
-/*  4. BreadcrumbList                                                         */
+/*  4. BreadcrumbList : émis UNIQUEMENT par components/Breadcrumbs.tsx (lot B3a) */
 /* -------------------------------------------------------------------------- */
-
-export function breadcrumbSchema(items: BreadcrumbItem[]): JsonLd {
-  return {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    itemListElement: items.map((item, index) => ({
-      "@type": "ListItem",
-      position: index + 1,
-      name: item.name,
-      item: abs(item.url),
-    })),
-  };
-}
-
-/**
- * Helper auto pour construire un fil d'Ariane à partir d'un chemin.
- * Exemple : autoBreadcrumb("/blog/guide-bitcoin", "Bitcoin guide")
- */
-export function autoBreadcrumb(
-  pathname: string,
-  finalName?: string
-): BreadcrumbItem[] {
-  const labelMap: Record<string, string> = {
-    blog: "Blog",
-    plateformes: "Plateformes",
-    outils: "Outils",
-    methodologie: "Méthodologie",
-    affiliations: "Affiliations",
-    partenariats: "Partenariats",
-    "mentions-legales": "Mentions légales",
-    confidentialite: "Confidentialité",
-  };
-
-  const segments = pathname.split("/").filter(Boolean);
-  const items: BreadcrumbItem[] = [{ name: "Accueil", url: "/" }];
-
-  let cumulative = "";
-  segments.forEach((seg, idx) => {
-    cumulative += `/${seg}`;
-    const isLast = idx === segments.length - 1;
-    const label =
-      isLast && finalName
-        ? finalName
-        : labelMap[seg] ??
-          seg
-            .replace(/-/g, " ")
-            .replace(/\b\w/g, (m) => m.toUpperCase());
-    items.push({ name: label, url: cumulative });
-  });
-
-  return items;
-}
 
 /* -------------------------------------------------------------------------- */
 /*  5. ItemList (Top 6 plateformes)                                           */

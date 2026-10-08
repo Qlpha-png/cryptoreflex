@@ -23,14 +23,11 @@ import {
 import { BRAND } from "@/lib/brand";
 import { withHreflang } from "@/lib/seo-alternates";
 import StructuredData from "@/components/StructuredData";
-import {
-  breadcrumbSchema,
-  faqSchema,
-  graphSchema,
-} from "@/lib/schema";
+import { faqSchema, graphSchema } from "@/lib/schema";
 import AmfDisclaimer from "@/components/AmfDisclaimer";
 import { fitDescription, fitTitle } from "@/lib/seo-text";
 import { fmtNb } from "@/lib/format-fr";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 /**
  * /airdrops — Hub editorial des airdrops crypto FR (BLOC 3, 2026-05-04).
@@ -103,10 +100,6 @@ export default function AirdropsPage() {
   );
 
   const schemas = graphSchema([
-    breadcrumbSchema([
-      { name: "Accueil", url: "/" },
-      { name: "Airdrops", url: PAGE_PATH },
-    ]),
     faqSchema([
       {
         question: "Qu'est-ce qu'un airdrop crypto ?",
@@ -147,11 +140,7 @@ export default function AirdropsPage() {
 
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         {/* Breadcrumb */}
-        <nav aria-label="Fil d'Ariane" className="text-xs text-muted">
-          <Link href="/" className="hover:text-fg">Accueil</Link>
-          <span className="mx-2">/</span>
-          <span className="text-fg/80">Airdrops</span>
-        </nav>
+        <Breadcrumbs chemin="/airdrops" />
 
         {/* Header */}
         <header className="mt-6 max-w-3xl">

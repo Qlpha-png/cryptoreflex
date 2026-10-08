@@ -6,7 +6,7 @@ import { ArrowRight, BookOpen, CalendarDays, ExternalLink, Sparkles } from "luci
 import { BRAND } from "@/lib/brand";
 import { withHreflang } from "@/lib/seo-alternates";
 import StructuredData from "@/components/StructuredData";
-import { breadcrumbSchema, graphSchema } from "@/lib/schema";
+import { graphSchema } from "@/lib/schema";
 import CardVisual from "@/components/reflex-cards/CardVisual";
 import CardTilt from "@/components/reflex-cards/CardTilt";
 import { InviteBanner, PlayLink } from "@/components/reflex-cards/InviteLanding";
@@ -36,6 +36,7 @@ import { CAT_LABEL, UNIVERS_ON, universBlurb, universById, universCards, univers
 import { universCardP } from "@/lib/reflex-cards/engine";
 import { rareCard } from "@/lib/reflex-cards/rare";
 import UniversCarte from "@/components/reflex-cards/UniversCarte";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 /**
  * /cartes/[id] — page publique d'une carte Reflex (id = identifiant CoinGecko).
@@ -136,13 +137,7 @@ function CarteAVenir({ c, name, fiche }: { c: ReflexCard; name: string; fiche: s
   return (
     <section className="py-10 sm:py-14">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-        <nav aria-label="Fil d'Ariane" className="text-xs text-muted">
-          <Link href="/" className="hover:text-fg">Accueil</Link>
-          <span className="mx-2">/</span>
-          <Link href="/cartes" className="hover:text-fg">Reflex Cards</Link>
-          <span className="mx-2">/</span>
-          <span className="text-fg/80">{name}</span>
-        </nav>
+        <Breadcrumbs chemin={`/cartes/${c.id}`} label={name} />
         <div className="mt-6 grid grid-cols-1 items-start gap-8 md:grid-cols-[288px,1fr] md:gap-12">
           {/* B1 : sous 320 px, la carte (288 px) ne tient pas dans 248 px → zoom 0,86 sur la carte seule */}
           <div className="mx-auto md:mx-0 max-[319px]:[zoom:0.86]">
@@ -210,11 +205,6 @@ export default async function CartePage({ params }: Props) {
   const near = family.slice(Math.max(0, idx - 4), idx + 5).filter((x) => x.id !== c.id).slice(0, 8);
 
   const schema = graphSchema([
-    breadcrumbSchema([
-      { name: "Accueil", url: "/" },
-      { name: "Reflex Cards", url: "/cartes" },
-      { name, url: `/cartes/${c.id}` },
-    ]),
   ]);
 
   const facts: [string, React.ReactNode][] = c.fossil
@@ -252,13 +242,7 @@ export default async function CartePage({ params }: Props) {
       <CardTilt />
       <section className="py-10 sm:py-14">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-          <nav aria-label="Fil d'Ariane" className="text-xs text-muted">
-            <Link href="/" className="hover:text-fg">Accueil</Link>
-            <span className="mx-2">/</span>
-            <Link href="/cartes" className="hover:text-fg">Reflex Cards</Link>
-            <span className="mx-2">/</span>
-            <span className="text-fg/80">{name}</span>
-          </nav>
+          <Breadcrumbs chemin={`/cartes/${c.id}`} label={name} />
           {isLaunched() && <InviteBanner name={name} />}
 
           <div className="mt-6 grid grid-cols-1 gap-8 md:grid-cols-[288px,1fr] md:gap-12 items-start">

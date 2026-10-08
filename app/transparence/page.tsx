@@ -19,11 +19,7 @@ import { getAllPlatforms, type Platform } from "@/lib/platforms";
 import { PARTNERSHIPS, type PartnershipMeta } from "@/lib/partnerships";
 import StructuredData from "@/components/StructuredData";
 import MicaCountdown from "@/components/MicaCountdown";
-import {
-  graphSchema,
-  breadcrumbSchema,
-  organizationSchema,
-} from "@/lib/schema";
+import { graphSchema, organizationSchema } from "@/lib/schema";
 import {
   NOT_PSAN_NOT_CIF_NOTICE,
   INFLUENCER_LAW_DISCLAIMER,
@@ -33,6 +29,7 @@ import { withHreflang } from "@/lib/seo-alternates";
 import { fitDescription } from "@/lib/seo-text";
 import { PAGE_UPDATED } from "@/lib/engagements";
 import { DELAI_REPONSE } from "@/lib/engagements";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 /* -------------------------------------------------------------------------- */
 /*  Metadata SEO                                                              */
@@ -187,17 +184,14 @@ export default function TransparencePage() {
   const affiliateNames = listFr(affiliatePartnerships.map((r) => r.name));
   const referralNames = listFr(referralPartnerships.map((r) => r.name));
 
-  const breadcrumbs = breadcrumbSchema([
-    { name: "Accueil", url: "/" },
-    { name: "Transparence et partenariats", url: PAGE_PATH },
-  ]);
-  const ld = graphSchema([breadcrumbs, organizationSchema()]);
+  const ld = graphSchema([organizationSchema()]);
 
   return (
     <article className="py-16 sm:py-20">
       <StructuredData data={ld} id="transparence-jsonld" />
 
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+        <Breadcrumbs chemin="/transparence" className="mb-6" />
         {/* HERO ------------------------------------------------------------- */}
         <header className="max-w-3xl">
           <span className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-semibold text-primary-glow">

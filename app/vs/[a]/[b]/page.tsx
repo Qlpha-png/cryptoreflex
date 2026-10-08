@@ -52,17 +52,13 @@ import { fetchCoinDetailDaily, formatCompactNumber } from "@/lib/coingecko";
 import { getAllCryptos, listedVenues, type AnyCrypto } from "@/lib/cryptos";
 import { BRAND } from "@/lib/brand";
 import { withHreflang } from "@/lib/seo-alternates";
-import {
-  breadcrumbSchema,
-  cryptoFinancialProductSchema,
-  faqSchema,
-  graphSchema,
-} from "@/lib/schema";
+import { cryptoFinancialProductSchema, faqSchema, graphSchema } from "@/lib/schema";
 import StructuredData from "@/components/StructuredData";
 import AmfDisclaimer from "@/components/AmfDisclaimer";
 import RelatedPagesNav from "@/components/RelatedPagesNav";
 import NextStepsGuide from "@/components/NextStepsGuide";
 import { fmtFr } from "@/lib/format-fr";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 // BATCH 58 (2026-05-03) — Extension TOP 30 -> TOP 100 (4950 paires).
 // Strategy : pre-build top 15 cryptos = 105 paires (les plus search FR), les
@@ -538,14 +534,6 @@ export default async function CryptoPairPage({ params }: Props) {
       yearCreated: b.yearCreated,
       sameAs: [`https://www.coingecko.com/en/coins/${b.coingeckoId}`],
     }),
-    breadcrumbSchema([
-      { name: "Accueil", url: "/" },
-      // FIX 2026-06-13 — Le parent canonique des pages /vs/[a]/[b] est le hub
-      // /vs (et non /comparer, hub frère). Pointer le fil d'Ariane vers /vs
-      // consolide le PageRank interne ascendant du cluster vers son vrai hub.
-      { name: "Duels crypto", url: "/vs" },
-      { name: `${a.symbol} vs ${b.symbol}`, url: `/vs/${a.id}/${b.id}` },
-    ]),
     faqSchema(faq.map((f) => ({ question: f.q, answer: f.ans }))),
   ]);
 
@@ -554,19 +542,7 @@ export default async function CryptoPairPage({ params }: Props) {
       <StructuredData data={schemas} id={`comparer-pair-${slug.replace("/", "-")}`} />
 
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-        <nav aria-label="Fil d'Ariane" className="text-xs text-muted">
-          <Link href="/" className="hover:text-fg">
-            Accueil
-          </Link>
-          <span className="mx-2">/</span>
-          <Link href="/vs" className="hover:text-fg">
-            Duels crypto
-          </Link>
-          <span className="mx-2">/</span>
-          <span className="text-fg/80">
-            {a.symbol} vs {b.symbol}
-          </span>
-        </nav>
+        <Breadcrumbs chemin={`/vs/${a.id}/${b.id}`} label={`${a.name} ou ${b.name}`} />
 
         <header className="mt-6">
           <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-fg">

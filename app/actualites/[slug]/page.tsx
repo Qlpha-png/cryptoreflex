@@ -16,13 +16,7 @@ import {
   NEWS_CATEGORY_LABELS,
   NEWS_CATEGORY_SLUGS,
 } from "@/lib/news-types";
-import {
-  breadcrumbSchema,
-  graphSchema,
-  organizationSchema,
-  generateSpeakableSchema,
-  type JsonLd,
-} from "@/lib/schema";
+import { graphSchema, organizationSchema, generateSpeakableSchema, type JsonLd } from "@/lib/schema";
 import { formatRelativeFr } from "@/lib/news-aggregator";
 import StructuredData from "@/components/StructuredData";
 import MdxContent from "@/components/MdxContent";
@@ -33,6 +27,7 @@ import NewsletterInline from "@/components/NewsletterInline";
 import RelatedPagesNav from "@/components/RelatedPagesNav";
 import NextStepsGuide from "@/components/NextStepsGuide";
 import { fitDescription, fitTitle } from "@/lib/seo-text";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 /**
  * /actualites/[slug] — Page détail d'une analyse Cryptoreflex.
@@ -135,13 +130,6 @@ async function NewsDetailPage({ params }: PageProps) {
   const canonicalUrl = `${BRAND.url}/actualites/${news.slug}`;
   const ogImage = news.image ?? `${BRAND.url}/actualites/${news.slug}/opengraph-image`;
 
-  const breadcrumb = breadcrumbSchema([
-    { name: "Accueil", url: "/" },
-    { name: "Actualités", url: "/actualites" },
-    { name: catLabel, url: `/actualites?categorie=${catSlug}` },
-    { name: news.title, url: `/actualites/${news.slug}` },
-  ]);
-
   // NewsArticle local — on n'utilise pas `articleSchema()` de lib/schema.ts
   // parce qu'il hardcode `/blog/<slug>`. Pour les news, l'URL canonique est
   // `/actualites/<slug>`. On garde la même structure (mainEntityOfPage,
@@ -180,7 +168,6 @@ async function NewsDetailPage({ params }: PageProps) {
 
   const schemas = graphSchema([
     organizationSchema(),
-    breadcrumb,
     newsArticleJsonLd,
   ]);
 
@@ -190,20 +177,7 @@ async function NewsDetailPage({ params }: PageProps) {
 
       <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
         {/* Breadcrumb */}
-        <nav className="text-xs text-muted" aria-label="Fil d'Ariane">
-          <Link href="/" className="hover:text-fg">Accueil</Link>
-          <span className="mx-2" aria-hidden="true">/</span>
-          <Link href="/actualites" className="hover:text-fg">Actualités</Link>
-          <span className="mx-2" aria-hidden="true">/</span>
-          <Link
-            href={`/actualites?categorie=${catSlug}`}
-            className="hover:text-fg"
-          >
-            {catLabel}
-          </Link>
-          <span className="mx-2" aria-hidden="true">/</span>
-          <span className="text-fg/80 line-clamp-1">{news.title}</span>
-        </nav>
+        <Breadcrumbs chemin={`/actualites/${news.slug}`} label={news.title} />
 
         {/* Back link mobile-friendly */}
         <Link

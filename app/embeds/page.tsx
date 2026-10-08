@@ -13,18 +13,14 @@ import {
 
 import StructuredData from "@/components/StructuredData";
 import EmbedSnippet from "@/components/embeds/EmbedSnippet";
-import {
-  breadcrumbSchema,
-  faqSchema,
-  graphSchema,
-  type JsonLd,
-} from "@/lib/schema";
+import { faqSchema, graphSchema, type JsonLd } from "@/lib/schema";
 import {
   EMBEDDABLE_TOOLS,
   generateCollectionPageSchema,
 } from "@/lib/schema-tools";
 import { BRAND } from "@/lib/brand";
 import { withHreflang } from "@/lib/seo-alternates";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 /**
  * /embeds — landing page qui présente les widgets embeddables (EMBEDDABLE_TOOLS) aux autres
@@ -119,10 +115,6 @@ const collectionSchema = generateCollectionPageSchema({
 export default function EmbedsLandingPage() {
   const schemas: JsonLd[] = [
     collectionSchema,
-    breadcrumbSchema([
-      { name: "Accueil", url: "/" },
-      { name: "Widgets embeddables", url: PAGE_PATH },
-    ]),
     faqSchema(FAQ_ITEMS),
   ];
 
@@ -133,6 +125,7 @@ export default function EmbedsLandingPage() {
       {/* ============================ Hero ============================ */}
       <section className="relative py-16 sm:py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <Breadcrumbs chemin="/embeds" className="mb-6" />
           <div className="max-w-3xl">
             <span className="inline-flex items-center gap-2 rounded-full border border-success/40 bg-success/10 px-3 py-1 text-xs font-semibold text-success">
               <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />

@@ -42,7 +42,7 @@ import MobileStickyCTA from "@/components/MobileStickyCTA";
 import PaidLinkCaption from "@/components/PaidLinkCaption";
 import { isPaidLink, outboundRel } from "@/lib/partnerships";
 import MiCAComplianceBadge from "@/components/MiCAComplianceBadge";
-import { breadcrumbSchema } from "@/lib/schema";
+
 import RelatedPagesNav from "@/components/RelatedPagesNav";
 import NextStepsGuide from "@/components/NextStepsGuide";
 import { withHreflang } from "@/lib/seo-alternates";
@@ -50,6 +50,7 @@ import { fitTitle } from "@/lib/seo-text";
 import { fmtDateFr, fmtFr, fmtNb } from "@/lib/format-fr";
 import { buildDuelVerdict } from "@/lib/comparison-verdict";
 import ComparateurNotice from "@/components/ComparateurNotice";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 // FIX SEO 2026-06-11 — pattern blog/[slug] : SSG pur + dynamicParams=false.
 // Slug inconnu = vrai HTTP 404 (avant : soft-404 en 200, vérifié live).
@@ -321,31 +322,15 @@ function ComparisonPage({ params }: Props) {
     ],
   };
 
-  const breadcrumbs = breadcrumbSchema([
-    { name: "Accueil", url: "/" },
-    { name: "Comparatif", url: "/comparatif" },
-    { name: `${a.name} vs ${b.name}`, url: `/comparatif/${spec.slug}` },
-  ]);
-
   return (
     <article className="py-12 sm:py-16">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbs) }}
-      />
 
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-        <nav aria-label="Fil d'Ariane" className="text-xs text-muted">
-          <Link href="/" className="hover:text-fg-max">Accueil</Link>
-          <span className="mx-2">/</span>
-          <span className="text-fg-max/80">Comparatif</span>
-          <span className="mx-2">/</span>
-          <span className="text-fg-max/80">{a.name} vs {b.name}</span>
-        </nav>
+        <Breadcrumbs chemin={`/comparatif/${spec.slug}`} label={`${a.name} ou ${b.name}`} />
 
         {/* HEADER VERSUS */}
         <header className="mt-6">

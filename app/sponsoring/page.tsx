@@ -14,17 +14,13 @@ import {
 import SponsoringForm from "@/components/SponsoringForm";
 import StructuredData from "@/components/StructuredData";
 import TieredPricing, { type PricingTier } from "@/components/TieredPricing";
-import {
-  faqSchema,
-  breadcrumbSchema,
-  graphSchema,
-  type JsonLd,
-} from "@/lib/schema";
+import { faqSchema, graphSchema, type JsonLd } from "@/lib/schema";
 import { BRAND } from "@/lib/brand";
 import { withHreflang } from "@/lib/seo-alternates";
 import { fitDescription, fitTitle } from "@/lib/seo-text";
 import { getSponsoringOffer } from "@/lib/sponsoring-offers";
 import { DELAI_REPONSE } from "@/lib/engagements";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 /**
  * /sponsoring — page commerciale B2B Cryptoreflex.
@@ -263,10 +259,6 @@ export default function SponsoringPage() {
   const schema = graphSchema([
     buildServiceSchema(),
     faqSchema(FAQS.map((f) => ({ question: f.q, answer: f.a }))),
-    breadcrumbSchema([
-      { name: "Accueil", url: "/" },
-      { name: "Sponsoring", url: "/sponsoring" },
-    ]),
   ]);
 
   return (
@@ -278,6 +270,7 @@ export default function SponsoringPage() {
         <div className="absolute inset-0 bg-grid opacity-50 pointer-events-none" />
         <div className="absolute -top-40 -right-40 w-[500px] h-[500px] bg-primary/15 rounded-full blur-3xl" />
         <div className="relative mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-16 lg:py-24">
+          <Breadcrumbs chemin="/sponsoring" className="mb-8" />
           <div className="flex flex-col items-center text-center">
             <span className="badge-info">
               <FileText className="h-3.5 w-3.5" aria-hidden="true" />

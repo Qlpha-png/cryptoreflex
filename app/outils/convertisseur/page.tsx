@@ -3,11 +3,12 @@ import Link from "next/link";
 import dynamic from "next/dynamic";
 import { ArrowDownUp, Globe, Zap, ArrowRight } from "lucide-react";
 import StructuredData from "@/components/StructuredData";
-import { breadcrumbSchema, faqSchema, graphSchema } from "@/lib/schema";
+import { faqSchema, graphSchema } from "@/lib/schema";
 import { generateWebApplicationSchema } from "@/lib/schema-tools";
 import { TOP_PAIRS, COIN_NAMES } from "@/lib/historical-prices";
 import RelatedPagesNav from "@/components/RelatedPagesNav";
 import { withHreflang } from "@/lib/seo-alternates";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 // BATCH 37 — fix audit Perf P0 : Converter lazy-loadé (cohérence avec les
 // 3 autres calc fiscalité/DCA/Portfolio). Bundle initial allégé ~80 KB.
@@ -85,17 +86,13 @@ export default function ConvertisseurPage() {
               "taux crypto",
             ],
           }),
-          breadcrumbSchema([
-            { name: "Accueil", url: "/" },
-            { name: "Outils", url: "/outils" },
-            { name: "Convertisseur", url: "/outils/convertisseur" },
-          ]),
           faqSchema(FAQ_ITEMS),
         ])}
       />
 
       <section className="py-16 sm:py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <Breadcrumbs chemin="/outils/convertisseur" className="mb-6" />
           <div className="max-w-3xl">
             <span className="inline-flex items-center gap-2 rounded-full border border-accent-green/30 bg-accent-green/10 px-3 py-1 text-xs font-semibold text-accent-green">
               <Zap className="h-3.5 w-3.5" />

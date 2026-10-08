@@ -10,7 +10,6 @@
  * topical authority).
  */
 import {
-  breadcrumbSchema,
   faqSchema,
   howToSchema,
   type FaqItem,
@@ -205,7 +204,7 @@ function calculatorSoftwareSchema(description: string): JsonLd {
 
 /**
  * Génère le bloc complet @graph JSON-LD pour la page calculateur :
- * SoftwareApplication + HowTo + FAQPage + BreadcrumbList.
+ * SoftwareApplication + HowTo + FAQPage (le fil d'Ariane et son BreadcrumbList viennent de <Breadcrumbs>).
  *
  * @param faqItems — liste des questions/réponses à inclure dans le FAQPage.
  * @param description — description meta utilisée par SoftwareApplication.
@@ -262,15 +261,9 @@ export function generateFiscaliteSchema(
 
   const faq = faqSchema(faqItems);
 
-  const breadcrumb = breadcrumbSchema([
-    { name: "Accueil", url: "/" },
-    { name: "Outils", url: "/outils" },
-    { name: "Calculateur fiscalité crypto", url: PAGE_PATH },
-  ]);
-
   return {
     "@context": "https://schema.org",
-    "@graph": [calculator, howTo, faq, breadcrumb].map((s) => {
+    "@graph": [calculator, howTo, faq].map((s) => {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { "@context": _ctx, ...rest } = s;
       return rest;

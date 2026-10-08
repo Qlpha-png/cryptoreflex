@@ -11,12 +11,7 @@ import {
 } from "lucide-react";
 
 import StructuredData from "@/components/StructuredData";
-import {
-  breadcrumbSchema,
-  faqSchema,
-  graphSchema,
-  type JsonLd,
-} from "@/lib/schema";
+import { faqSchema, graphSchema, type JsonLd } from "@/lib/schema";
 import { generateWebApplicationSchema } from "@/lib/schema-tools";
 import { BRAND } from "@/lib/brand";
 import RelatedPagesNav from "@/components/RelatedPagesNav";
@@ -24,6 +19,7 @@ import RelatedPagesNav from "@/components/RelatedPagesNav";
 // obligatoire sur les outils ROI : frontière conseil personnalisé sinon floue.
 import AmfDisclaimer from "@/components/AmfDisclaimer";
 import { fitTitle } from "@/lib/seo-text";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 /* ISR : recalcul tous les 24 h (la page est essentiellement statique). */
 export const revalidate = 86400;
@@ -109,11 +105,6 @@ const FAQ_ITEMS = [
 /* -------------------------------------------------------------------------- */
 export default function CalculateurROIPage() {
   const schemas: JsonLd[] = [
-    breadcrumbSchema([
-      { name: "Accueil", url: "/" },
-      { name: "Outils", url: "/outils" },
-      { name: "Calculateur ROI crypto", url: PAGE_PATH },
-    ]),
     generateWebApplicationSchema({
       slug: "calculateur-roi-crypto",
       name: "Calculateur ROI crypto Cryptoreflex",
@@ -143,15 +134,7 @@ export default function CalculateurROIPage() {
       <section className="py-16 sm:py-20">
         <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
           {/* Breadcrumb */}
-          <nav aria-label="Fil d'Ariane" className="mb-6">
-            <Link
-              href="/outils"
-              className="inline-flex items-center gap-1.5 text-sm text-muted hover:text-fg transition"
-            >
-              <ArrowLeft className="h-3.5 w-3.5" />
-              Retour aux outils
-            </Link>
-          </nav>
+          <Breadcrumbs chemin="/outils/calculateur-roi-crypto" className="mb-6" />
 
           {/* Hero */}
           <div className="max-w-3xl">

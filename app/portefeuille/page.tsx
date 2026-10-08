@@ -5,6 +5,7 @@ import { BRAND } from "@/lib/brand";
 import PortfolioView from "@/components/PortfolioView";
 import StructuredData from "@/components/StructuredData";
 import ExchangeConnect from "@/components/ExchangeConnect";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 /**
  * /portefeuille — page Client (les positions vivent en localStorage), wrappée
@@ -47,13 +48,7 @@ export default function PortefeuillePage() {
 
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
         {/* Breadcrumb */}
-        <nav aria-label="Fil d'Ariane" className="text-xs text-muted">
-          <Link href="/" className="hover:text-fg">
-            Accueil
-          </Link>
-          <span className="mx-2">/</span>
-          <span className="text-fg/80">Mon portefeuille</span>
-        </nav>
+        <Breadcrumbs chemin="/portefeuille" />
 
         {/* Header rassurant — fait passer le message localStorage AVANT la
             saisie de données financières (RGPD + confiance). */}

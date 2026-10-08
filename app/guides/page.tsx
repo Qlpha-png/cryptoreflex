@@ -3,8 +3,9 @@ import Link from "next/link";
 import { ArrowRight, BookOpenCheck, Calendar, Clock } from "lucide-react";
 import { BRAND } from "@/lib/brand";
 import StructuredData from "@/components/StructuredData";
-import { breadcrumbSchema, graphSchema, type JsonLd } from "@/lib/schema";
+import { graphSchema, type JsonLd } from "@/lib/schema";
 import { withHreflang } from "@/lib/seo-alternates";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 /**
  * /guides — hub des guides pratiques actionnables.
@@ -66,11 +67,6 @@ const TOPIC_LABELS: Record<GuideCard["topic"], { label: string; color: string }>
 
 const baseUrl = BRAND.url;
 
-const breadcrumb = breadcrumbSchema([
-  { name: "Accueil", url: baseUrl + "/" },
-  { name: "Guides", url: baseUrl + "/guides" },
-]);
-
 const collection = {
   "@context": "https://schema.org",
   "@type": "CollectionPage",
@@ -90,7 +86,7 @@ const collection = {
   })),
 };
 
-const jsonLd: JsonLd = graphSchema([breadcrumb, collection]);
+const jsonLd: JsonLd = graphSchema([collection]);
 
 export default function GuidesHubPage() {
   return (
@@ -100,13 +96,7 @@ export default function GuidesHubPage() {
       {/* Hero */}
       <section className="border-b border-fg-max/5 bg-gradient-to-b from-success/5 to-transparent">
         <div className="mx-auto max-w-5xl px-4 py-16 sm:px-6 lg:px-8">
-          <nav className="mb-6 text-sm text-muted" aria-label="Fil d'Ariane">
-            <Link href="/" className="hover:text-info">
-              Accueil
-            </Link>
-            <span className="mx-2 text-fg-4">/</span>
-            <span className="text-fg-2">Guides</span>
-          </nav>
+          <Breadcrumbs chemin="/guides" className="mb-6" />
 
           <div className="inline-flex items-center gap-2 rounded-full border border-success/30 bg-success/10 px-3 py-1 text-xs font-medium text-success">
             <BookOpenCheck className="h-3.5 w-3.5" />

@@ -2,10 +2,11 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Database, Code2, Globe2, Sparkles, ShieldCheck, Mail } from "lucide-react";
 import StructuredData from "@/components/StructuredData";
-import { faqSchema, breadcrumbSchema, graphSchema, type JsonLd } from "@/lib/schema";
+import { faqSchema, graphSchema, type JsonLd } from "@/lib/schema";
 import { BRAND, STATS } from "@/lib/brand";
 import { withHreflang } from "@/lib/seo-alternates";
 import { fitTitle } from "@/lib/seo-text";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 /**
  * /api-publique — page de documentation des endpoints publics CC-BY 4.0.
@@ -146,11 +147,6 @@ const FAQ = [
 
 const baseUrl = BRAND.url;
 
-const breadcrumb = breadcrumbSchema([
-  { name: "Accueil", url: baseUrl + "/" },
-  { name: "API publique", url: baseUrl + "/api-publique" },
-]);
-
 const faq = faqSchema(FAQ.map((f) => ({ question: f.question, answer: f.answer })));
 
 /**
@@ -255,7 +251,7 @@ const datasetSchema = {
   citation: `Cryptoreflex (2026). Open Data Crypto FR. ${baseUrl}/api-publique. Licence CC-BY 4.0.`,
 };
 
-const jsonLd: JsonLd = graphSchema([breadcrumb, faq, datasetSchema]);
+const jsonLd: JsonLd = graphSchema([faq, datasetSchema]);
 
 export default function ApiPubliquePage() {
   return (
@@ -265,13 +261,7 @@ export default function ApiPubliquePage() {
       {/* Hero */}
       <section className="border-b border-fg-max/5 bg-gradient-to-b from-info/5 to-transparent">
         <div className="mx-auto max-w-5xl px-4 py-16 sm:px-6 lg:px-8">
-          <nav className="mb-6 text-sm text-muted" aria-label="Fil d'Ariane">
-            <Link href="/" className="hover:text-info">
-              Accueil
-            </Link>
-            <span className="mx-2 text-fg-4">/</span>
-            <span className="text-fg-2">API publique</span>
-          </nav>
+          <Breadcrumbs chemin="/api-publique" className="mb-6" />
 
           <div className="inline-flex items-center gap-2 rounded-full border border-info/20 bg-info/10 px-3 py-1 text-xs font-medium text-info">
             <Sparkles className="h-3.5 w-3.5" />

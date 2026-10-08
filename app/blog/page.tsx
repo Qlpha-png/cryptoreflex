@@ -5,9 +5,10 @@ import { BookOpen } from "lucide-react";
 import { getAllArticleSummaries, getAllCategories } from "@/lib/mdx";
 import BlogIndexClient from "@/components/blog/BlogIndexClient";
 import StructuredData from "@/components/StructuredData";
-import { breadcrumbSchema } from "@/lib/schema";
+
 import { BRAND } from "@/lib/brand";
 import { withHreflang } from "@/lib/seo-alternates";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 export const metadata: Metadata = {
   title: "Blog & guides crypto",
@@ -31,11 +32,6 @@ export const metadata: Metadata = {
 export default async function BlogIndexPage() {
   const articles = await getAllArticleSummaries();
   const categories = await getAllCategories();
-
-  const breadcrumbs = breadcrumbSchema([
-    { name: "Accueil", url: "/" },
-    { name: "Blog", url: "/blog" },
-  ]);
 
   // AUDIT 2026-05-03 — JSON-LD ItemList + Blog schema (rich snippets Google).
   // Avant : seul BreadcrumbList present -> hub /blog sous-exploite SEO.
@@ -81,10 +77,10 @@ export default async function BlogIndexPage() {
 
   return (
     <section className="py-16 sm:py-20">
-      <StructuredData data={breadcrumbs} id="blog-index-breadcrumb" />
       <StructuredData data={blogSchema} id="blog-index-blog-schema" />
       <StructuredData data={itemListSchema} id="blog-index-itemlist" />
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <Breadcrumbs chemin="/blog" className="mb-6" />
         {/* Header */}
         <div className="max-w-2xl">
           <span className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-semibold text-primary-glow">

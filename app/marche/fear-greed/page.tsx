@@ -4,12 +4,7 @@ import { Activity, Flame, Info, ArrowRight } from "lucide-react";
 
 import { fetchFearGreed } from "@/lib/coingecko";
 import { BRAND } from "@/lib/brand";
-import {
-  breadcrumbSchema,
-  faqSchema,
-  graphSchema,
-  type JsonLd,
-} from "@/lib/schema";
+import { faqSchema, graphSchema, type JsonLd } from "@/lib/schema";
 
 import StructuredData from "@/components/StructuredData";
 import FearGreedGauge from "@/components/FearGreedGauge";
@@ -17,6 +12,7 @@ import EmptyState from "@/components/ui/EmptyState";
 import { withHreflang } from "@/lib/seo-alternates";
 import { fitDescription, fitTitle } from "@/lib/seo-text";
 import FearGreedSource from "@/components/FearGreedSource";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 /**
  * /marche/fear-greed — Page dédiée à l'index Fear & Greed Bitcoin.
@@ -108,11 +104,6 @@ export default async function FearGreedPage() {
 
   const schemas = graphSchema([
     webPageSchema,
-    breadcrumbSchema([
-      { name: "Accueil", url: "/" },
-      { name: "Marché", url: "/marche/heatmap" },
-      { name: "Fear & Greed", url: "/marche/fear-greed" },
-    ]),
     faqSchema(FAQ_ITEMS.map((f) => ({ question: f.q, answer: f.a }))),
   ]);
 
@@ -122,17 +113,7 @@ export default async function FearGreedPage() {
 
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
         {/* Breadcrumb */}
-        <nav className="text-xs text-muted" aria-label="Fil d'Ariane">
-          <Link href="/" className="hover:text-fg">
-            Accueil
-          </Link>
-          <span className="mx-2">/</span>
-          <Link href="/marche/heatmap" className="hover:text-fg">
-            Marché
-          </Link>
-          <span className="mx-2">/</span>
-          <span className="text-fg/80">Fear &amp; Greed</span>
-        </nav>
+        <Breadcrumbs chemin="/marche/fear-greed" />
 
         {/* Header */}
         <header className="mt-6 mb-10">

@@ -66,7 +66,7 @@ import {
   decentralizationColor,
 } from "@/lib/decentralization-scores";
 import { BRAND, STATS } from "@/lib/brand";
-import { breadcrumbSchema, graphSchema } from "@/lib/schema";
+import { graphSchema } from "@/lib/schema";
 import StructuredData from "@/components/StructuredData";
 import AmfDisclaimer from "@/components/AmfDisclaimer";
 import CopyCompareLink from "@/components/cryptos/CopyCompareLink";
@@ -78,6 +78,7 @@ import CompareVerdict from "@/components/cryptos/CompareVerdict";
 import CompareSparkline from "@/components/cryptos/CompareSparkline";
 import { withHreflang } from "@/lib/seo-alternates";
 import { fmtFr } from "@/lib/format-fr";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 /* -------------------------------------------------------------------------- */
 /*  Constantes                                                                */
@@ -209,17 +210,7 @@ export default async function CryptoComparePage({ searchParams }: Props) {
       <article className="py-10 sm:py-14">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           {/* Breadcrumb */}
-          <nav aria-label="Fil d'Ariane" className="text-xs text-muted">
-            <Link href="/" className="hover:text-fg">
-              Accueil
-            </Link>
-            <span className="mx-2">/</span>
-            <Link href="/cryptos" className="hover:text-fg">
-              Cryptos
-            </Link>
-            <span className="mx-2">/</span>
-            <span className="text-fg/80">Comparer</span>
-          </nav>
+          <Breadcrumbs chemin="/cryptos/comparer" />
 
           {/* Header */}
           <header className="mt-6 max-w-3xl">
@@ -290,11 +281,6 @@ export default async function CryptoComparePage({ searchParams }: Props) {
   const bestIdx = computeBestIndex(cryptos, details);
 
   const schemas = graphSchema([
-    breadcrumbSchema([
-      { name: "Accueil", url: "/" },
-      { name: "Cryptos", url: "/cryptos" },
-      { name: "Comparer", url: `/cryptos/comparer?ids=${ids}` },
-    ]),
   ]);
 
   return (
@@ -303,17 +289,7 @@ export default async function CryptoComparePage({ searchParams }: Props) {
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Breadcrumb */}
-        <nav aria-label="Fil d'Ariane" className="text-xs text-muted">
-          <Link href="/" className="hover:text-fg">
-            Accueil
-          </Link>
-          <span className="mx-2">/</span>
-          <Link href="/cryptos" className="hover:text-fg">
-            Cryptos
-          </Link>
-          <span className="mx-2">/</span>
-          <span className="text-fg/80">Comparer</span>
-        </nav>
+        <Breadcrumbs chemin="/cryptos/comparer" />
 
         {/* Header */}
         <header className="mt-6 max-w-3xl">

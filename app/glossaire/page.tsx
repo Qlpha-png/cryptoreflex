@@ -10,6 +10,7 @@ import {
 import { BRAND } from "@/lib/brand";
 import { withHreflang } from "@/lib/seo-alternates";
 import { fitDescription } from "@/lib/seo-text";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 const PAGE_DESCRIPTION =
   "Plus de 250 termes crypto expliqués simplement, sans jargon : blockchain, DeFi, wallets, fiscalité française, NFT, Layer 2 et plus. Référence pour comprendre la crypto en français.";
@@ -55,33 +56,16 @@ function GlossaryIndexPage() {
     })),
   };
 
-  const breadcrumbSchema = {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    itemListElement: [
-      { "@type": "ListItem", position: 1, name: "Accueil", item: BRAND.url },
-      {
-        "@type": "ListItem",
-        position: 2,
-        name: "Glossaire crypto",
-        item: `${BRAND.url}/glossaire`,
-      },
-    ],
-  };
-
   return (
     <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(termSetSchema) }}
       />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
-      />
 
       <section className="py-16 sm:py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <Breadcrumbs chemin="/glossaire" className="mb-6" />
           {/* Header */}
           <div className="max-w-3xl">
             <span className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-semibold text-primary-soft">
@@ -152,7 +136,7 @@ function GlossaryIndexPage() {
                   <li key={letter}>
                     {has ? (
                       <a
-                        href={`#letter-${letter}`}
+                        href={`#${letter.toLowerCase()}`}
                         className="inline-flex h-8 w-8 items-center justify-center rounded-md border border-border bg-elevated text-sm font-semibold text-fg-max hover:border-primary hover:text-primary-soft transition-colors"
                       >
                         {letter}
@@ -190,7 +174,7 @@ function GlossaryIndexPage() {
               <LetterSection
                 key={letter}
                 letter={letter}
-                anchorId={`letter-${letter}`}
+                anchorId={letter.toLowerCase()}
                 terms={grouped[letter]!}
               />
             ))}

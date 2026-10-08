@@ -3,8 +3,9 @@ import Link from "next/link";
 import { ArrowRight, FileText, Calendar, BookOpen } from "lucide-react";
 import { BRAND } from "@/lib/brand";
 import StructuredData from "@/components/StructuredData";
-import { breadcrumbSchema, graphSchema, type JsonLd } from "@/lib/schema";
+import { graphSchema, type JsonLd } from "@/lib/schema";
 import { withHreflang } from "@/lib/seo-alternates";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 /**
  * /etudes — hub des etudes cornerstone Cryptoreflex.
@@ -82,11 +83,6 @@ const TOPIC_LABELS: Record<StudyCard["topic"], { label: string; color: string }>
 
 const baseUrl = BRAND.url;
 
-const breadcrumb = breadcrumbSchema([
-  { name: "Accueil", url: baseUrl + "/" },
-  { name: "Études", url: baseUrl + "/etudes" },
-]);
-
 const collection = {
   "@context": "https://schema.org",
   "@type": "CollectionPage",
@@ -106,7 +102,7 @@ const collection = {
   })),
 };
 
-const jsonLd: JsonLd = graphSchema([breadcrumb, collection]);
+const jsonLd: JsonLd = graphSchema([collection]);
 
 export default function EtudesHubPage() {
   return (
@@ -116,13 +112,7 @@ export default function EtudesHubPage() {
       {/* Hero */}
       <section className="border-b border-fg-max/5 bg-gradient-to-b from-primary/5 to-transparent">
         <div className="mx-auto max-w-5xl px-4 py-16 sm:px-6 lg:px-8">
-          <nav className="mb-6 text-sm text-muted" aria-label="Fil d'Ariane">
-            <Link href="/" className="hover:text-info">
-              Accueil
-            </Link>
-            <span className="mx-2 text-fg-4">/</span>
-            <span className="text-fg-2">Études</span>
-          </nav>
+          <Breadcrumbs chemin="/etudes" className="mb-6" />
 
           <div className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
             <BookOpen className="h-3.5 w-3.5" />

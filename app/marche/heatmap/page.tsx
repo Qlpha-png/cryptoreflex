@@ -6,16 +6,13 @@ import { Flame, Info } from "lucide-react";
 import { fetchTopMarket } from "@/lib/coingecko";
 import { getCryptoSlugs } from "@/lib/cryptos";
 import { BRAND } from "@/lib/brand";
-import {
-  breadcrumbSchema,
-  graphSchema,
-  type JsonLd,
-} from "@/lib/schema";
+import { graphSchema, type JsonLd } from "@/lib/schema";
 
 import dynamic from "next/dynamic";
 import StructuredData from "@/components/StructuredData";
 import HeatmapEmpty from "./HeatmapEmpty";
 import { withHreflang } from "@/lib/seo-alternates";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 // Lazy-load Heatmap : Client lourd (~15 KB, grille 100 coins + retry logic).
 // Below-the-fold sous breadcrumb + header. HeatmapEmpty fallback couvre le
@@ -106,11 +103,6 @@ async function HeatmapPage() {
 
   const schemas = graphSchema([
     webPageSchema,
-    breadcrumbSchema([
-      { name: "Accueil", url: "/" },
-      { name: "Marché", url: "/marche/heatmap" },
-      { name: "Heatmap", url: "/marche/heatmap" },
-    ]),
   ]);
 
   return (
@@ -119,13 +111,7 @@ async function HeatmapPage() {
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Breadcrumb */}
-        <nav className="text-xs text-muted" aria-label="Fil d'Ariane">
-          <Link href="/" className="hover:text-fg">
-            Accueil
-          </Link>
-          <span className="mx-2">/</span>
-          <span className="text-fg/80">Heatmap marché</span>
-        </nav>
+        <Breadcrumbs chemin="/marche/heatmap" />
 
         {/* Header */}
         <header className="mt-6 mb-8">

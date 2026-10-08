@@ -12,18 +12,14 @@ import {
 
 import { BRAND } from "@/lib/brand";
 import StructuredData from "@/components/StructuredData";
-import {
-  articleSchema,
-  breadcrumbSchema,
-  faqSchema,
-  graphSchema,
-} from "@/lib/schema";
+import { articleSchema, faqSchema, graphSchema } from "@/lib/schema";
 import RelatedPagesNav from "@/components/RelatedPagesNav";
 import NextStepsGuide from "@/components/NextStepsGuide";
 import Tldr from "@/components/ui/Tldr";
 import AmfDisclaimer from "@/components/AmfDisclaimer";
 import { withHreflang } from "@/lib/seo-alternates";
 import { fitTitle } from "@/lib/seo-text";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 /**
  * /pack-declaration-crypto-2026 — Ressource GRATUITE pour la déclaration
@@ -129,10 +125,6 @@ export default function PackDeclarationPage() {
       category: "Service fiscal",
       tags: ["Cerfa 2086", "déclaration crypto", "fiscalité", "PFU 31,4%", "150 VH bis"],
     }),
-    breadcrumbSchema([
-      { name: "Accueil", url: "/" },
-      { name: "Pack Déclaration", url: "/pack-declaration-crypto-2026" },
-    ]),
     faqSchema(faqItems.map((item) => ({ question: item.q, answer: item.a }))),
   ]);
 
@@ -141,11 +133,7 @@ export default function PackDeclarationPage() {
       <StructuredData id="pack-declaration" data={schemas} />
 
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-        <nav aria-label="Fil d'Ariane" className="text-xs text-muted">
-          <Link href="/" className="hover:text-fg">Accueil</Link>
-          <span className="mx-2">/</span>
-          <span className="text-fg/80">Pack Déclaration Crypto 2026</span>
-        </nav>
+        <Breadcrumbs chemin="/pack-declaration-crypto-2026" />
 
         <header className="mt-6 max-w-3xl">
           <span className="inline-flex items-center gap-1.5 rounded-full bg-warning/15 border border-warning/30 px-3 py-1 text-xs font-bold uppercase tracking-wider text-warning-fg">

@@ -11,9 +11,10 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight, Info, ShieldCheck } from "lucide-react";
 import StructuredData from "@/components/StructuredData";
-import { organizationSchema, breadcrumbSchema, graphSchema } from "@/lib/schema";
+import { organizationSchema, graphSchema } from "@/lib/schema";
 import { BRAND } from "@/lib/brand";
 import { withHreflang } from "@/lib/seo-alternates";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 export const metadata: Metadata = {
   // Marque dans le titre lui-même → `absolute` (sinon « … | Cryptoreflex » en double).
@@ -40,16 +41,13 @@ export default function ImpactPage() {
       <StructuredData
         id="impact-graph"
         data={graphSchema([
-          breadcrumbSchema([
-            { name: "Accueil", url: "/" },
-            { name: "Impact", url: "/impact" },
-          ]),
           organizationSchema(),
         ])}
       />
 
       <article className="py-16 sm:py-20">
         <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
+          <Breadcrumbs chemin="/impact" className="mb-8" />
           <header className="text-center">
             <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight">
               L&apos;impact {BRAND.name}{" "}

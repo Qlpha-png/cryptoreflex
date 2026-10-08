@@ -7,7 +7,7 @@ import { ArrowRight, CalendarDays, Gift, Landmark, Scale, ShieldCheck, Smartphon
 import { BRAND } from "@/lib/brand";
 import { withHreflang } from "@/lib/seo-alternates";
 import StructuredData from "@/components/StructuredData";
-import { breadcrumbSchema, graphSchema, type JsonLd } from "@/lib/schema";
+import { graphSchema, type JsonLd } from "@/lib/schema";
 import CardVisual from "@/components/reflex-cards/CardVisual";
 import CardTilt from "@/components/reflex-cards/CardTilt";
 import {
@@ -33,6 +33,7 @@ import { applyReleases, FUTURE_LABEL } from "@/lib/reflex-cards/releases";
 import type { ReflexCard } from "@/lib/reflex-cards/types";
 import UniversHub from "@/components/reflex-cards/UniversHub";
 import { UNIVERS_ON, universCards } from "@/lib/reflex-cards/univers";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 /**
  * /cartes — présentation de Reflex Cards (jeu de cartes crypto gratuit).
@@ -69,7 +70,6 @@ async function CartesPage() {
   if (UNIVERS_ON()) {
     const schemaU = graphSchema([
       { "@context": "https://schema.org", "@type": "CollectionPage", "@id": `${PAGE_URL}#collection`, url: PAGE_URL, name: TITLE, description: descUnivers(), inLanguage: "fr-FR", isPartOf: { "@id": `${BRAND.url}/#website` } } as JsonLd,
-      breadcrumbSchema([{ name: "Accueil", url: "/" }, { name: "Reflex Cards", url: "/cartes" }]),
     ]);
     return (
       <>
@@ -106,10 +106,6 @@ async function CartesPage() {
       inLanguage: "fr-FR",
       isPartOf: { "@id": `${BRAND.url}/#website` },
     } as JsonLd,
-    breadcrumbSchema([
-      { name: "Accueil", url: "/" },
-      { name: "Reflex Cards", url: "/cartes" },
-    ]),
   ]);
 
   return (
@@ -120,11 +116,7 @@ async function CartesPage() {
       {/* Héros */}
       <section className="py-10 sm:py-14">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-          <nav aria-label="Fil d'Ariane" className="text-xs text-muted">
-            <Link href="/" className="hover:text-fg">Accueil</Link>
-            <span className="mx-2">/</span>
-            <span className="text-fg/80">Reflex Cards</span>
-          </nav>
+          <Breadcrumbs chemin="/cartes" />
           <div className="mt-6 grid grid-cols-1 items-center gap-10 lg:grid-cols-[1fr,auto]">
             <div className="max-w-xl">
               <span className="inline-flex items-center gap-2 rounded-full border border-primary-glow/40 bg-primary-glow/10 px-3 py-1 text-xs font-semibold text-primary-soft">

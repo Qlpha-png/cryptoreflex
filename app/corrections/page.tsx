@@ -9,11 +9,12 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { History, Mail } from "lucide-react";
 import StructuredData from "@/components/StructuredData";
-import { breadcrumbSchema, graphSchema } from "@/lib/schema";
+import { graphSchema } from "@/lib/schema";
 import { BRAND } from "@/lib/brand";
 import { getAllCorrections, type Correction } from "@/lib/corrections";
 import { formatDateFr } from "@/lib/engagements";
 import { withHreflang } from "@/lib/seo-alternates";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 const PAGE_PATH = "/corrections";
 const REPO_URL = "https://github.com/Qlpha-png/cryptoreflex";
@@ -48,23 +49,13 @@ export default function CorrectionsPage() {
   const latest = corrections[0]?.date ?? null;
 
   const ld = graphSchema([
-    breadcrumbSchema([
-      { name: "Accueil", url: "/" },
-      { name: "Journal des corrections", url: PAGE_PATH },
-    ]),
   ]);
 
   return (
     <article className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-16">
       <StructuredData id="corrections-jsonld" data={ld} />
 
-      <nav aria-label="Fil d'Ariane" className="text-xs text-muted">
-        <Link href="/" className="hover:text-fg">
-          Accueil
-        </Link>
-        <span className="mx-2">/</span>
-        <span className="text-fg/80">Journal des corrections</span>
-      </nav>
+      <Breadcrumbs chemin="/corrections" />
 
       <header className="mt-6">
         <h1 className="flex items-center gap-3 text-3xl sm:text-4xl font-extrabold tracking-tight text-fg">

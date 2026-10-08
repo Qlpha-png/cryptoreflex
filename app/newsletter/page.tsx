@@ -14,6 +14,7 @@ import {
 import NewsletterInline from "@/components/NewsletterInline";
 import { BRAND } from "@/lib/brand";
 import { withHreflang } from "@/lib/seo-alternates";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 /**
  * /newsletter — landing page dédiée d'inscription.
@@ -122,6 +123,7 @@ export default function NewsletterPage() {
       <section className="relative overflow-hidden border-b border-border">
         <div className="absolute inset-0 bg-grid opacity-50 pointer-events-none" />
         <div className="relative mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-16 lg:py-24">
+          <Breadcrumbs chemin="/newsletter" className="mb-6" />
           <div className="flex flex-col items-center text-center">
             <span className="badge-info">
               <Mail className="h-3.5 w-3.5" />

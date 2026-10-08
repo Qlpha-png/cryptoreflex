@@ -6,11 +6,7 @@ import { ArrowRight, TrendingUp, Calendar, Info } from "lucide-react";
 import { getAllCryptos, getCryptoBySlug, type AnyCrypto } from "@/lib/cryptos";
 import { BRAND } from "@/lib/brand";
 import StructuredData from "@/components/StructuredData";
-import {
-  articleSchema,
-  breadcrumbSchema,
-  graphSchema,
-} from "@/lib/schema";
+import { articleSchema, graphSchema } from "@/lib/schema";
 import RelatedPagesNav from "@/components/RelatedPagesNav";
 import NextStepsGuide from "@/components/NextStepsGuide";
 import Tldr from "@/components/ui/Tldr";
@@ -19,6 +15,7 @@ import { withHreflang } from "@/lib/seo-alternates";
 import { getYearOhlc, getOhlcMeta, formatOhlcPrice, getYearMonths, yearStats, MONTHS_FR, formatSignedPct, formatCompactUsd } from "@/lib/historical-ohlc";
 import { HIST_YEARS, type HistYear } from "@/lib/historique-prix";
 import { fitTitle } from "@/lib/seo-text";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 /**
  * /historique-prix/[crypto]/[annee] — Programmatic SEO ultra-fort intent.
@@ -182,12 +179,6 @@ export default function HistoriquePrixPage({ params }: Props) {
       category: "Historique prix",
       tags: [c.name, c.symbol, "historique", annee, "prix crypto"],
     }),
-    breadcrumbSchema([
-      { name: "Accueil", url: "/" },
-      { name: "Historique prix", url: "/historique-prix" },
-      { name: c.name, url: `/cryptos/${c.id}` },
-      { name: annee, url: `/historique-prix/${c.id}/${annee}` },
-    ]),
   ]);
 
   return (
@@ -195,13 +186,7 @@ export default function HistoriquePrixPage({ params }: Props) {
       <StructuredData id="historique-prix" data={schemas} />
 
       <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-        <nav aria-label="Fil d'Ariane" className="text-xs text-muted">
-          <Link href="/" className="hover:text-fg">Accueil</Link>
-          <span className="mx-2">/</span>
-          <Link href={`/cryptos/${c.id}`} className="hover:text-fg">{c.name}</Link>
-          <span className="mx-2">/</span>
-          <span className="text-fg/80">Prix {annee}</span>
-        </nav>
+        <Breadcrumbs chemin={`/historique-prix/${c.id}/${annee}`} label={`${c.name} en ${annee}`} />
 
         <header className="mt-6">
           <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/15 border border-primary/30 px-3 py-1 text-xs font-bold uppercase tracking-wider text-primary-soft">

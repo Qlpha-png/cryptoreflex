@@ -27,12 +27,13 @@ import { outboundRel } from "@/lib/partnerships";
 // l'orphelinat (audit a confirmé 0 maillage interne avant ce commit).
 import RelatedPagesNav from "@/components/RelatedPagesNav";
 import NextStepsGuide from "@/components/NextStepsGuide";
-import { breadcrumbSchema, faqSchema, graphSchema } from "@/lib/schema";
+import { faqSchema, graphSchema } from "@/lib/schema";
 import { withHreflang } from "@/lib/seo-alternates";
 import { fitTitle } from "@/lib/seo-text";
 import { resolveCoingeckoId } from "@/lib/crypto-aliases";
 import { cryptoPagePath } from "@/lib/crypto-page-slug";
 import { fmtFr, fmtNb } from "@/lib/format-fr";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 export const revalidate = 86400;
 export const dynamicParams = false;
@@ -128,12 +129,6 @@ export default function StakingDetailPage({ params }: Props) {
   const projection1y = netYield(1000, apyAvg, 1);
   const projection5y = netYield(1000, apyAvg, 5);
 
-  const breadcrumbs = breadcrumbSchema([
-    { name: "Accueil", url: BRAND.url },
-    { name: "Staking", url: `${BRAND.url}/staking` },
-    { name: pair.name, url: `${BRAND.url}/staking/${pair.cryptoId}` },
-  ]);
-
   const faqs = [
     {
       question: `Combien rapporte le staking de ${pair.name} en 2026 ?`,
@@ -163,7 +158,7 @@ export default function StakingDetailPage({ params }: Props) {
     },
   ];
 
-  const schema = graphSchema([breadcrumbs, faqSchema(faqs)]);
+  const schema = graphSchema([faqSchema(faqs)]);
 
   return (
     <>
@@ -172,13 +167,7 @@ export default function StakingDetailPage({ params }: Props) {
       <article className="py-12 sm:py-16">
         <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
           {/* Breadcrumb */}
-          <nav aria-label="Fil d'Ariane" className="text-xs text-muted mb-6">
-            <Link href="/" className="hover:text-fg">Accueil</Link>
-            <span className="mx-1.5">/</span>
-            <Link href="/staking" className="hover:text-fg">Staking</Link>
-            <span className="mx-1.5">/</span>
-            <span className="text-fg">{pair.name}</span>
-          </nav>
+          <Breadcrumbs chemin={`/staking/${pair.cryptoId}`} label={pair.name} className="mb-6" />
 
           {/* Hero */}
           <header className="glass rounded-3xl p-8 sm:p-10 relative overflow-hidden">

@@ -24,9 +24,10 @@ import { TRACKS, getTrack, getNextTrack, findLessonBySlug } from "@/lib/academy-
 import { getQuizForTrack } from "@/lib/academy-quizzes";
 import ProgressTracker from "@/components/academy/ProgressTracker";
 import StructuredData from "@/components/StructuredData";
-import { breadcrumbSchema } from "@/lib/schema";
+
 import { withHreflang } from "@/lib/seo-alternates";
 import { fitDescription, fitTitle } from "@/lib/seo-text";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 interface Props {
   params: { track: string };
@@ -100,29 +101,12 @@ export default function TrackPage({ params }: Props) {
     })),
   };
 
-  const breadcrumbs = breadcrumbSchema([
-    { name: "Accueil", url: "/" },
-    { name: "Académie", url: "/academie" },
-    { name: track.title, url: `/academie/${track.id}` },
-  ]);
-
   return (
     <div className="py-10 sm:py-14">
-      <StructuredData data={[schema, breadcrumbs]} id={`track-${track.id}`} />
 
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         {/* Breadcrumb */}
-        <nav className="text-xs text-muted" aria-label="Fil d'Ariane">
-          <Link href="/" className="hover:text-fg">
-            Accueil
-          </Link>
-          <span className="mx-2">/</span>
-          <Link href="/academie" className="hover:text-fg">
-            Académie
-          </Link>
-          <span className="mx-2">/</span>
-          <span className="text-fg/80">{track.title}</span>
-        </nav>
+        <Breadcrumbs chemin={`/academie/${track.id}`} label={track.title} />
 
         {/* Header track */}
         <header className="mt-5 mb-10 max-w-3xl">

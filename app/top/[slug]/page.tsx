@@ -27,15 +27,12 @@ import StructuredData from "@/components/StructuredData";
 import AmfDisclaimer from "@/components/AmfDisclaimer";
 import PaidLinkCaption from "@/components/PaidLinkCaption";
 import { outboundRel } from "@/lib/partnerships";
-import {
-  breadcrumbSchema,
-  faqSchema,
-  graphSchema,
-} from "@/lib/schema";
+import { faqSchema, graphSchema } from "@/lib/schema";
 import { withHreflang } from "@/lib/seo-alternates";
 import { fitTitle } from "@/lib/seo-text";
 import { formatMicaDate, getMicaMeta } from "@/lib/mica";
 import { fmtNb } from "@/lib/format-fr";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 export const revalidate = 86400;
 export const dynamicParams = false;
@@ -76,14 +73,8 @@ export default function TopListiclePage({ params }: Props) {
   const items = listicle.select();
   if (items.length === 0) notFound();
 
-  const breadcrumbs = breadcrumbSchema([
-    { name: "Accueil", url: BRAND.url },
-    { name: "Top", url: `${BRAND.url}/top` },
-    { name: listicle.h1, url: `${BRAND.url}/top/${listicle.slug}` },
-  ]);
-
   const faqs = buildListicleFaqs(listicle, items);
-  const schema = graphSchema([breadcrumbs, faqSchema(faqs)]);
+  const schema = graphSchema([faqSchema(faqs)]);
 
   return (
     <>
@@ -92,13 +83,7 @@ export default function TopListiclePage({ params }: Props) {
       <article className="py-12 sm:py-16">
         <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
           {/* Breadcrumb */}
-          <nav aria-label="Fil d'Ariane" className="text-xs text-muted mb-6">
-            <Link href="/" className="hover:text-fg">Accueil</Link>
-            <span className="mx-1.5">/</span>
-            <Link href="/top" className="hover:text-fg">Top</Link>
-            <span className="mx-1.5">/</span>
-            <span className="text-fg">{listicle.h1}</span>
-          </nav>
+          <Breadcrumbs chemin={`/top/${listicle.slug}`} label={listicle.h1} className="mb-6" />
 
           {/* Header */}
           <header className="glass rounded-3xl p-8 sm:p-10 relative overflow-hidden">

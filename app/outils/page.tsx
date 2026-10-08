@@ -15,7 +15,7 @@ import FiscalCornerstoneCard from "@/components/fiscalite/FiscalCornerstoneCard"
 import NextStepsGuide from "@/components/NextStepsGuide";
 import AcademyCrossLink from "@/components/AcademyCrossLink";
 import StructuredData from "@/components/StructuredData";
-import { breadcrumbSchema, graphSchema } from "@/lib/schema";
+import { graphSchema } from "@/lib/schema";
 import { BRAND, STATS } from "@/lib/brand";
 import { withHreflang } from "@/lib/seo-alternates";
 // BATCH 45b — innovation tech 2026 paroxysme. Wire Reveal scroll fade-up
@@ -52,6 +52,7 @@ export const metadata: Metadata = {
   },
 };
 import { TOOLS, PUBLISHED_TOOLS, type Tool } from "@/lib/tools-catalog";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 /* -------------------------------------------------------------------------- */
 /*  Catégories pour groupement visuel                                         */
@@ -134,11 +135,7 @@ function OutilsPage() {
       description: t.desc,
     })),
   };
-  const breadcrumb = breadcrumbSchema([
-    { name: "Accueil", url: "/" },
-    { name: "Outils", url: "/outils" },
-  ]);
-  const hubGraph = graphSchema([itemListSchema, breadcrumb]);
+  const hubGraph = graphSchema([itemListSchema]);
 
   // BATCH 45b — Speculation Rules ciblees sur les 5 outils les plus
   // cliques depuis le hub. Combine avec hover prefetch global (deja
@@ -173,11 +170,7 @@ function OutilsPage() {
         }}
       />
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <nav aria-label="Fil d'Ariane" className="text-xs text-muted">
-          <Link href="/" className="hover:text-fg">Accueil</Link>
-          <span className="mx-2">/</span>
-          <span className="text-fg/80">Outils</span>
-        </nav>
+        <Breadcrumbs chemin="/outils" />
 
         <header className="mt-6 max-w-3xl">
           <p className="section-eyebrow">

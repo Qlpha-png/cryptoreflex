@@ -3,13 +3,14 @@ import Link from "next/link";
 
 import { BRAND } from "@/lib/brand";
 import StructuredData from "@/components/StructuredData";
-import { breadcrumbSchema, graphSchema, type JsonLd } from "@/lib/schema";
+import { graphSchema, type JsonLd } from "@/lib/schema";
 import { withHreflang } from "@/lib/seo-alternates";
 import { fetchTopMarket } from "@/lib/coingecko";
 import { getCryptoSlugs } from "@/lib/cryptos";
 import CryptoScreener from "@/components/CryptoScreener";
 import EmptyState from "@/components/ui/EmptyState";
 import { fitDescription } from "@/lib/seo-text";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 /**
  * /marche/screener — screener top 100 (DA Obsidian sprint 2b).
@@ -70,11 +71,6 @@ export default async function ScreenerPage() {
 
   const schema = graphSchema([
     webPage,
-    breadcrumbSchema([
-      { name: "Accueil", url: "/" },
-      { name: "Marché", url: "/marche" },
-      { name: "Screener", url: PAGE_PATH },
-    ]),
   ]);
 
   return (
@@ -82,17 +78,7 @@ export default async function ScreenerPage() {
       <StructuredData data={schema} id="screener-page" />
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <nav aria-label="Fil d'Ariane" className="text-xs text-muted">
-          <Link href="/" className="hover:text-fg">
-            Accueil
-          </Link>
-          <span className="mx-2">/</span>
-          <Link href="/marche" className="hover:text-fg">
-            Marché
-          </Link>
-          <span className="mx-2">/</span>
-          <span className="text-fg/80">Screener</span>
-        </nav>
+        <Breadcrumbs chemin="/marche/screener" />
 
         <header className="mt-4 flex flex-wrap items-end justify-between gap-4">
           <div>
