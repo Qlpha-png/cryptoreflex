@@ -84,12 +84,6 @@ function MegaOnglets() {
         <li className="cr-ti" key={o.id}>
           <a className="cr-tab" id={`mt-${o.id}`} href={o.hub} data-tab={o.id}>
             {o.label}
-            {o.id === "cartes" ? (
-              <>
-                <span className="cr-new" aria-hidden="true" />
-                <span className="cr-sr"> (nouveauté)</span>
-              </>
-            ) : null}
             <span className="cr-sr" data-cur hidden> (rubrique actuelle)</span>
             <ChevronDown className="cr-chev" aria-hidden="true" strokeWidth={1.75} />
           </a>

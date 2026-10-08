@@ -101,7 +101,9 @@ describe("en-tête B3b : rendu serveur (HTML sans JavaScript)", () => {
     expect(html).toMatch(/<a class="cr-btn" href="\/soutenir">/);
     expect(html).toMatch(/href="\/outils\/verificateur-mica"[^>]*>Vérifier une plateforme<\/a>/);
     expect(html).not.toContain("Choisir ma plateforme");
-    expect(html).toContain("(nouveauté)");
+    /* 08/10/2026 (Kev) : plus de pastille « nouveauté » à côté de Cartes */
+    expect(html).not.toContain("(nouveauté)");
+    expect(html).not.toContain("cr-new");
   });
 });
 

@@ -64,7 +64,6 @@ function tiroir(o: Onglet, courant: boolean) {
       <summary>
         <span className="cr-macc-t">
           {o.label}
-          {o.id === "cartes" ? <span className="cr-macc-new">Nouveauté</span> : null}
           {courant ? <span className="cr-macc-cur">rubrique actuelle</span> : null}
         </span>
       </summary>

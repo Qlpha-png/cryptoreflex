@@ -94,7 +94,6 @@
 .cr-tab[data-current], .cr-tab[aria-expanded="true"] { color: rgb(var(--c-fg)); }
 .cr-tab[data-current]::after, .cr-tab[aria-expanded="true"]::after { transform: scaleX(1); }
 @media (hover: hover) { .cr-tab:hover { color: rgb(var(--c-fg)); background: rgb(var(--c-fg) / .05); } }
-.cr-new { width: 7px; height: 7px; margin: -10px 0 0 -3px; border-radius: 50%; background: rgb(var(--c-gold)); flex: none; }
 .cr-r2-loupe { display: none; width: 44px; padding: 0; }
 .cr-fixe.is-stuck .cr-r2-loupe { display: inline-flex; }
 @media (prefers-reduced-motion: reduce) { .cr-chev, .cr-tab::after { transition: none; } }
