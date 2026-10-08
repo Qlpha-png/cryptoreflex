@@ -23,7 +23,8 @@ import StructuredData from "@/components/StructuredData";
 import PlatformName from "@/components/comparison/PlatformName";
 import { faqSchema, graphSchema } from "@/lib/schema";
 import { fitTitle } from "@/lib/seo-text";
-import { fmtDateFr } from "@/lib/format-fr";
+import { periodeVerification } from "@/lib/fraicheur";
+import VerifieLe from "@/components/ui/VerifieLe";
 import ComparateurNotice from "@/components/ComparateurNotice";
 import Breadcrumbs from "@/components/Breadcrumbs";
 
@@ -46,7 +47,6 @@ export const revalidate = 86400;
 
 const PAGE_PATH = "/comparatif/frais";
 const PAGE_URL = `${BRAND.url}${PAGE_PATH}`;
-const VERIFIED_AT = "13 juin 2026";
 const PLATFORM_COUNT = getAvailablePlatformCount();
 const TITLE = `Frais crypto 2026 : ${PLATFORM_COUNT} plateformes comparées (frais réels)`;
 const DESCRIPTION = `Frais réels vérifiés sur grilles officielles : maker, taker, achat carte, SEPA. ${PLATFORM_COUNT} plateformes crypto en France, sourcées et datées. Du moins cher au plus cher.`;
@@ -157,13 +157,19 @@ function VerdictBadgeBase({ verdict }: { verdict?: Verified["verdict"] }) {
     );
   return (
     <span className="inline-flex items-center gap-1 rounded-md border border-border bg-elevated/60 px-1.5 py-0.5 text-xs font-bold text-muted">
-      Non vérifiable
+      {verdict === "non-verifie" ? "Non vérifié" : "Non vérifiable"}
     </span>
   );
 }
 
 function ComparatifFraisPage() {
   const all = buildRows();
+  // Date(s) réelle(s) des relevés affichés (jamais une date écrite à la main) : « le 08/10/2026 » ou « entre le … et le … ».
+  const periode = periodeVerification(all.map((r) => r.v?.date));
+  const VERIFIED_AT = periode?.texte ?? "à une date inconnue";
+  const datesFrais = all.map((r) => r.v?.date);
+  /** Grille officielle illisible le jour du relevé : aucun taux affiché, aucun classement sur d'anciens taux de sites tiers. */
+  const nonVerifie = (r: FeesRow) => r.v?.verdict === "non-verifie";
 
   // Hors classement "achat" : plateformes fermées au marché FR (Gemini) et CFD
   // (Plus500 — on n'y achète pas de crypto réelle).
@@ -177,11 +183,11 @@ function ComparatifFraisPage() {
     (r.v?.makerTakerApplies ?? true) ? r.spotTaker : r.instantBuy;
   const active = all
     .filter((r) => r.v?.verdict !== "indisponible" && r.v?.model !== "cfd")
-    .sort((a, b) => realCost(a) - realCost(b));
+    .sort((a, b) => Number(nonVerifie(a)) - Number(nonVerifie(b)) || realCost(a) - realCost(b));
 
   const cheapestTrade = active[0];
   const dearestBuy = [...active]
-    .filter((r) => r.simpleEur != null)
+    .filter((r) => r.simpleEur != null && !nonVerifie(r))
     .sort((a, b) => (b.simpleEur as number) - (a.simpleEur as number))[0];
   const verifiedCount = all.filter((r) => r.v?.verdict === "fiable").length;
 
@@ -193,7 +199,7 @@ function ComparatifFraisPage() {
     faqSchema([
       {
         question: "Quelle est la plateforme crypto la moins chère en 2026 ?",
-        answer: `Sur les frais de trading spot, ${cheapestTrade.name} est la moins chère de notre base (${fmtPct(cheapestTrade.spotTaker)} en taker, vérifié le ${VERIFIED_AT}). Attention : un achat par carte ou via l'appli "simple" coûte beaucoup plus cher partout (spread caché, frais carte). Le frais affiché le plus bas n'est pas toujours le coût réel pour un débutant — comparez la colonne "frais réel achat".`,
+        answer: `Sur les frais de trading spot, ${cheapestTrade.name} est la moins chère de notre base (${fmtPct(cheapestTrade.spotTaker)} en taker, relevé ${VERIFIED_AT}). Attention : un achat par carte ou via l'appli "simple" coûte beaucoup plus cher partout (spread caché, frais carte). Le frais affiché le plus bas n'est pas toujours le coût réel pour un débutant — comparez la colonne "frais réel achat".`,
       },
       {
         question: "Pourquoi le frais maker/taker ne suffit pas à comparer ?",
@@ -212,7 +218,7 @@ function ComparatifFraisPage() {
       },
       {
         question: "Ces frais sont-ils à jour ?",
-        answer: `Tous les frais ont été re-vérifiés le ${VERIFIED_AT} sur les grilles officielles (ou par recoupement de 2 sources fiables de moins de 6 mois), un par un, avec la source et la date affichées sur chaque ligne. Les frais évoluent : vérifiez toujours la page tarifs officielle avant de trader.`,
+        answer: `Les frais ont été relevés ${VERIFIED_AT}, plateforme par plateforme, sur la grille ou la page de frais publiée par la plateforme elle-même, avec la source et la date affichées sur chaque ligne. Quand une grille officielle est illisible, nous écrivons "non vérifié" plutôt qu'un chiffre de site tiers. Les frais évoluent : vérifiez toujours la page tarifs officielle avant de trader.`,
       },
     ]),
   ]);
@@ -237,8 +243,8 @@ function ComparatifFraisPage() {
           </h1>
           <p className="mt-3 text-base text-muted">
             <strong className="text-fg">{all.length} plateformes</strong>, frais
-            re-vérifiés un par un sur les grilles officielles le{" "}
-            <strong className="text-fg">{VERIFIED_AT}</strong> — source et date
+            <strong className="text-fg"><VerifieLe dates={datesFrais} famille="frais" label="relevés" /></strong>{" "}
+            un par un sur les grilles officielles — source et date
             affichées sur chaque ligne. On distingue le{" "}
             <strong className="text-fg">frais réel d&apos;un achat</strong>{" "}
             (carte / appli simple) du frais maker/taker réservé aux traders.
@@ -281,7 +287,7 @@ function ComparatifFraisPage() {
           <Stat
             label="Frais vérifiés (source off.)"
             value={`${verifiedCount}/${all.length}`}
-            sub={`au ${VERIFIED_AT}`}
+            sub="source et date sur chaque ligne"
             tone="primary"
             icon={<BadgeCheck className="h-4 w-4" />}
           />
@@ -387,7 +393,9 @@ function ComparatifFraisPage() {
                       )}
                     </td>
                     <td className="px-4 py-3 text-right font-mono tabular-nums text-xs">
-                      {mt ? (
+                      {nonVerifie(r) ? (
+                        <span className="text-muted">Non vérifié</span>
+                      ) : mt ? (
                         <span>
                           {fmtPct(r.spotMaker)} / {fmtPct(r.spotTaker)}
                         </span>
@@ -396,7 +404,7 @@ function ComparatifFraisPage() {
                       )}
                     </td>
                     <td className="px-4 py-3 text-right font-mono tabular-nums text-xs">
-                      {fmtSepa(r.sepaFee)}
+                      {nonVerifie(r) ? "Non vérifié" : fmtSepa(r.sepaFee)}
                     </td>
                     <td className="px-4 py-3 text-xs">
                       {r.v?.source ? (
@@ -413,7 +421,9 @@ function ComparatifFraisPage() {
                         <span className="text-muted">—</span>
                       )}
                       {r.v?.date && (
-                        <div className="mt-0.5 text-xs text-muted">{fmtDateFr(r.v.date)}</div>
+                        <div className="mt-0.5 text-xs text-muted">
+                          <VerifieLe date={r.v.date} famille="frais" label="" age={false} />
+                        </div>
                       )}
                     </td>
                     <td className="px-4 py-3 text-right">
@@ -537,12 +547,12 @@ function ComparatifFraisPage() {
         <p className="mt-10 flex items-start gap-2 text-xs text-muted leading-relaxed">
           <Info className="mt-0.5 h-3.5 w-3.5 shrink-0" />
           <span>
-            Frais re-vérifiés le {VERIFIED_AT} sur les grilles tarifaires
-            officielles, ou par recoupement de 2 sources fiables de moins de
-            6 mois quand la page officielle était inaccessible (source + date sur
-            chaque ligne). Les frais &laquo; à vérifier &raquo; n&apos;ont pas pu
-            être confirmés sur une grille officielle — confirmez-les avant de
-            trader. Les frais évoluent ; consultez toujours la page tarifs
+            <VerifieLe dates={datesFrais} famille="frais" label="Frais relevés" age={false} /> sur
+            les grilles tarifaires officielles, ou sur la page de frais publiée par la
+            plateforme (source + date sur chaque ligne). Les frais &laquo; à vérifier &raquo;
+            n&apos;ont pas pu être confirmés sur une grille officielle ; &laquo; non vérifié &raquo;
+            veut dire que la grille officielle était illisible le jour du relevé, et aucun
+            taux n&apos;est affiché — confirmez-les avant de trader. Les frais évoluent ; consultez toujours la page tarifs
             officielle. Seuls les liens marqués « Publicité » sont rémunérés
             (parrainage personnel du fondateur chez Bitpanda et Trade Republic,
             affiliation Ledger, Trezor et Waltio) : voir notre{" "}

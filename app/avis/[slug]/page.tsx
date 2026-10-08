@@ -269,7 +269,9 @@ function buildFaq(p: Platform): { q: string; a: string }[] {
 
   faq.push({
     q: `Quels sont les frais réels sur ${p.name} ?`,
-    a: `${(p.fees.verified?.makerTakerApplies ?? true)
+    a: `${p.fees.verified?.verdict === "non-verifie"
+      ? `Les frais de ${p.name} ne sont pas affichés : ${p.fees.verified.note ?? "la grille officielle n'a pas pu être lue"} Consultez la grille officielle de la plateforme avant tout ordre.`
+      : (p.fees.verified?.makerTakerApplies ?? true)
       ? `Sur le marché spot, vous payez ${fmtNb(p.fees.spotMaker)} % en maker et ${fmtNb(p.fees.spotTaker)} % en taker. ${cardCostSentence(p)}`
       : `${p.name} est un courtier : vous payez un frais d'achat unique, sans maker ni taker. Coût réel relevé : ${p.fees.verified?.realCostPct ?? `${fmtNb(p.fees.instantBuy)} %`}.`} Le retrait SEPA est facturé ${typeof p.fees.withdrawalFiatSepa === "number" ? (p.fees.withdrawalFiatSepa === 0 ? "0 € (gratuit)" : `${fmtNb(p.fees.withdrawalFiatSepa)} €`) : p.fees.withdrawalFiatSepa}. Spread : ${p.fees.spread}.`,
   });
@@ -380,6 +382,8 @@ function ReviewPage({ params }: Props) {
   const v = p.fees.verified;
   const mt = v?.makerTakerApplies ?? true;
   const isWallet = p.category === "wallet";
+  /** Grille officielle illisible le jour du relevé : aucun taux (ancien chiffre de site tiers) n'est affiché. */
+  const feesNonVerifie = v?.verdict === "non-verifie";
   // reprise du 08/10/2026 (L6 MiCA) : date du contrôle automatique du registre ESMA si plus récente que la relecture humaine
   const micaAffiche = dateStatutMica(p.id, p.mica.lastVerified, "Statut MiCA vérifié");
   const verdictLabel =
@@ -389,6 +393,8 @@ function ReviewPage({ params }: Props) {
       ? "À vérifier"
       : v?.verdict === "indisponible"
       ? "Fermé FR"
+      : v?.verdict === "non-verifie"
+      ? "Non vérifié"
       : "Non vérifiable";
   const verdictClass =
     v?.verdict === "fiable"
@@ -706,20 +712,20 @@ function ReviewPage({ params }: Props) {
                 <div className="rounded-xl border border-border bg-elevated p-4">
                   <div className="text-xs uppercase tracking-wide text-muted">Ordre limité (taker)</div>
                   <div className="mt-1 text-2xl font-bold text-fg-max tabular-nums">
-                    {fmtFr((1000 * p.fees.spotTaker / 100), 2)} €
+                    {feesNonVerifie ? "Non vérifié" : `${fmtFr((1000 * p.fees.spotTaker / 100), 2)} €`}
                   </div>
-                  <div className="mt-1 text-xs text-fg-4">{fmtNb(p.fees.spotTaker)}% sur 1 000 €</div>
+                  <div className="mt-1 text-xs text-fg-4">{feesNonVerifie ? "grille officielle illisible" : `${fmtNb(p.fees.spotTaker)}% sur 1 000 €`}</div>
                 </div>
                 <div className="rounded-xl border border-border bg-elevated p-4">
                   <div className="text-xs uppercase tracking-wide text-muted">Ordre limité (maker)</div>
                   <div className="mt-1 text-2xl font-bold text-fg-max tabular-nums">
-                    {fmtFr((1000 * p.fees.spotMaker / 100), 2)} €
+                    {feesNonVerifie ? "Non vérifié" : `${fmtFr((1000 * p.fees.spotMaker / 100), 2)} €`}
                   </div>
-                  <div className="mt-1 text-xs text-fg-4">{fmtNb(p.fees.spotMaker)}% sur 1 000 €</div>
+                  <div className="mt-1 text-xs text-fg-4">{feesNonVerifie ? "grille officielle illisible" : `${fmtNb(p.fees.spotMaker)}% sur 1 000 €`}</div>
                 </div>
               </div>
               <p className="mt-4 text-xs text-muted leading-relaxed">
-                <strong className="text-fg/80">Lecture :</strong> {cardCostSentence(p)} Après un virement, un ordre limité maker sur le marché spot coûte <strong className="text-fg-max">{fmtFr((1000 * p.fees.spotMaker / 100), 2)} €</strong> pour 1 000 €. Spread observé en plus : {p.fees.spread}.
+                <strong className="text-fg/80">Lecture :</strong> {cardCostSentence(p)} {feesNonVerifie ? "Les frais du marché spot ne sont pas affichés : la grille officielle était illisible le jour du relevé." : <>Après un virement, un ordre limité maker sur le marché spot coûte <strong className="text-fg-max">{fmtFr((1000 * p.fees.spotMaker / 100), 2)} €</strong> pour 1 000 €. Spread observé en plus : {p.fees.spread}.</>}
               </p>
             </>
           ) : (
@@ -790,11 +796,11 @@ function ReviewPage({ params }: Props) {
                   <>
                     <tr>
                       <td className="px-4 py-3 text-muted">Spot maker</td>
-                      <td className="px-4 py-3 text-right font-mono tabular-nums">{fmtNb(p.fees.spotMaker)}%</td>
+                      <td className="px-4 py-3 text-right font-mono tabular-nums">{feesNonVerifie ? "Non vérifié" : `${fmtNb(p.fees.spotMaker)}%`}</td>
                     </tr>
                     <tr>
                       <td className="px-4 py-3 text-muted">Spot taker</td>
-                      <td className="px-4 py-3 text-right font-mono tabular-nums">{fmtNb(p.fees.spotTaker)}%</td>
+                      <td className="px-4 py-3 text-right font-mono tabular-nums">{feesNonVerifie ? "Non vérifié" : `${fmtNb(p.fees.spotTaker)}%`}</td>
                     </tr>
                   </>
                 ) : (

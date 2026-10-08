@@ -107,8 +107,9 @@ export interface Platform {
       makerTakerApplies: boolean;
       /** Frais réel pour un particulier (achat simple), libellé prêt à afficher. */
       realCostPct: string;
-      /** fiable = publiable tel quel ; douteux/non vérifiable = afficher "à vérifier" ; indisponible = retirer du marché FR. */
-      verdict: "fiable" | "douteux" | "non vérifiable" | "indisponible";
+      /** fiable = publiable tel quel ; douteux = afficher "à vérifier" ; non vérifiable = CFD, non comparable ;
+       *  non-verifie = grille officielle illisible le jour du relevé, aucun chiffre affiché ; indisponible = retirer du marché FR. */
+      verdict: "fiable" | "douteux" | "non vérifiable" | "non-verifie" | "indisponible";
       /** Pièges à signaler (spread caché, réduction token, frais fixe, CFD, inactivité…). */
       note?: string;
     };
@@ -383,8 +384,10 @@ export function getAvailablePlatformCount(): number {
 /** Même règle que feeShort, au format français (« 0,4 % ») — pour l'accueil et les listes en français. */
 export function feeShortFr(p: Platform): string {
   if (p.category === "wallet") return "spread intégré";
+  // Grille officielle illisible le jour du relevé : les anciens taux (de sites tiers) ne s'affichent plus.
+  if (p.fees.verified?.verdict === "non-verifie") return "non vérifiés";
   const mt = p.fees.verified?.makerTakerApplies ?? true;
-  const rc = Number(mt ? p.fees.spotTaker : p.fees.instantBuy);
+  const rc =Number(mt ? p.fees.spotTaker : p.fees.instantBuy);
   return Number.isFinite(rc) ? `${rc.toLocaleString("fr-FR", { maximumFractionDigits: 2 })}\u00a0%` : "voir l'avis";
 }
 
