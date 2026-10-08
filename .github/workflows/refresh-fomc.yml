@@ -1,0 +1,89 @@
+# Calendrier FOMC (Fed) — robot hebdomadaire (lot fraîcheur A, 08/10/2026, audit n° 34 : réunion du 29 avril affichée au
+# 6 mai, juillet / octobre / décembre absents, badge « automatique » sans aucun robot).
+#
+# Lit https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm (scripts/refresh-fomc.mjs), réécrit SEULEMENT le bloc
+# <fomc-auto> de lib/events-seed.ts (entrées « FOMC ») et l'extrait de référence tests/fixtures/fomc/reference.html, lance
+# les tests, puis commite « chore(events): FOMC ». Rien n'est commité si les réunions n'ont pas changé.
+# ÉCHEC (rouge) si la page est injoignable, si sa structure a changé ou si elle donne moins de 8 réunions pour l'année :
+# le calendrier du site reste alors tel quel, et la sentinelle voit l'échec (contrôle des robots + cadence de 8,5 jours).
+name: Calendrier FOMC (Fed)
+
+# Lancé par l'horloge Vercel (lib/gardien.ts, /api/cron/gardien/refresh-fomc, lundi 06 h 20 UTC) ; l'horaire ci-dessous
+# reste comme filet (doublon sans danger : commit seulement si le calendrier change, groupe de concurrence). Premier passage :
+# à la fusion (push qui modifie le robot), pour que la sentinelle ne le voie pas « jamais lancé ».
+on:
+  schedule:
+    - cron: "20 6 * * 1" # filet de l'horloge Vercel
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - scripts/refresh-fomc.mjs
+      - scripts/lib/fomc.mjs
+      - .github/workflows/refresh-fomc.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: refresh-fomc
+  cancel-in-progress: false
+
+jobs:
+  fomc:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v6
+        with:
+          ref: main
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node 20
+        uses: actions/setup-node@v6
+        with:
+          node-version: "20"
+          cache: npm
+
+      - name: Lire le calendrier de la Fed
+        id: fomc
+        run: node scripts/refresh-fomc.mjs
+
+      - name: Dépendances (tests)
+        if: steps.fomc.outputs.changed == 'true'
+        run: npm ci --no-audit --no-fund
+
+      # Bloquant avant tout commit : le seed doit être la traduction exacte de la page lue, et le projet doit compiler.
+      - name: Tests du calendrier
+        if: steps.fomc.outputs.changed == 'true'
+        run: |
+          npx vitest run tests/lib/events-fomc.test.ts
+          npx tsc --noEmit -p .
+
+      - name: Commit + push (avec reprise anti-course)
+        if: steps.fomc.outputs.changed == 'true'
+        run: |
+          git add lib/events-seed.ts tests/fixtures/fomc/reference.html
+          if git diff --staged --quiet; then
+            echo "Aucun fichier modifié." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          git config user.name "Cryptoreflex Bot"
+          git config user.email "bot@cryptoreflex.fr"
+          git commit -m "chore(events): FOMC ($(date -u +%Y-%m-%d))" \
+            -m "Calendrier officiel de la Fed relu par .github/workflows/refresh-fomc.yml" \
+            -m "" \
+            -m "Co-Authored-By: Cryptoreflex Bot <bot@cryptoreflex.fr>"
+          for i in 1 2 3; do
+            if git push origin HEAD:main; then
+              echo "Calendrier FOMC publié (commit $(git rev-parse --short HEAD))." >> "$GITHUB_STEP_SUMMARY"
+              exit 0
+            fi
+            echo "Push rejeté, rebase puis nouvel essai ($i / 3)…"
+            git fetch origin main
+            git rebase origin/main || { git rebase --abort; break; }
+            sleep 2
+          done
+          echo "## ❌ Push du calendrier FOMC impossible après 3 essais" >> "$GITHUB_STEP_SUMMARY"
+          exit 1

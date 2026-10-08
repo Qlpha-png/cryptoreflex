@@ -7,6 +7,7 @@ import AmfDisclaimer from "@/components/AmfDisclaimer";
 import { BRAND } from "@/lib/brand";
 import { withHreflang } from "@/lib/seo-alternates";
 import { ONGLETS, type NavLien } from "@/lib/nav-data";
+import VerifieLe from "@/components/ui/VerifieLe";
 
 /**
  * /impots — hub « Déclarer ses cryptos » (lot B3a, architecture § 10, maquette cplus/hubs/impots.html).
@@ -30,7 +31,8 @@ const DESCRIPTION =
 
 /** Notice officielle du formulaire 2086, relue le 3 octobre 2026 (règles 2086 vérifiées, cf. data/veille/sources.json). */
 const NOTICE_2086 = "https://www.impots.gouv.fr/formulaire/2086/declaration-des-plus-ou-moins-values-de-cessions-dactifs-numeriques";
-const NOTICE_LUE_LE = "3 octobre 2026";
+/** notice 2086 lue le 03/10/2026 (date réelle de la lecture, affichée par <VerifieLe>) */
+const NOTICE_LUE_LE = "2026-10-03";
 
 export const metadata: Metadata = {
   title: TITLE,
@@ -123,7 +125,7 @@ function ImpotsPage() {
             datées.
           </p>
           <p className="mt-3 text-sm text-fg-2">
-            Règles vérifiées le {NOTICE_LUE_LE} sur la{" "}
+            <VerifieLe date={NOTICE_LUE_LE} famille="fiscalite" label="Règles vérifiées" /> sur la{" "}
             <a href={NOTICE_2086} target="_blank" rel="noopener noreferrer" className={LNK}>
               notice officielle du formulaire 2086
               <span className="sr-only"> (site officiel, nouvel onglet)</span>

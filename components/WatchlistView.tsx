@@ -40,7 +40,8 @@ interface LivePrice {
 
 interface ApiResponse {
   prices: LivePrice[];
-  updatedAt: string;
+  /** heure réelle du plus ancien relevé servi ; null si inconnue (08/10/2026) */
+  updatedAt: string | null;
 }
 
 const REFRESH_MS = 120_000; // 2 min — aligné avec PriceTicker

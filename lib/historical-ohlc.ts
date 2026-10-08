@@ -51,6 +51,14 @@ interface CoinOhlc {
 
 const DATA = (ohlcRaw as { data: Record<string, CoinOhlc> }).data;
 
+/** Date de génération du relevé (meta._generatedAt, « AAAA-MM-JJ ») : dernier point possible de l'année en cours.
+ *  null si absente. 08/10/2026 (lot fraîcheur A) : affichée à la place de « données mises à jour mensuellement »,
+ *  promesse qu'aucun robot ne tenait (script lancé à la main). */
+export const OHLC_GENERATED_AT: string | null = (() => {
+  const v = (ohlcRaw as { meta?: { _generatedAt?: unknown } }).meta?._generatedAt;
+  return typeof v === "string" && /^\d{4}-\d{2}-\d{2}$/.test(v) ? v : null;
+})();
+
 const has = (obj: object, key: string) => Object.prototype.hasOwnProperty.call(obj, key);
 
 /** Retourne l'OHLC annuel d'une crypto (par son id) pour une année, ou null. */

@@ -56,6 +56,10 @@ export interface CoinPrice {
   /** Sparkline 7j (168 points horaires CoinGecko) — UNIQUEMENT renseigné si
       la fonction `fetchPricesWithSparkline()` est utilisée. Sinon vide. */
   sparkline7d?: number[];
+  /** Heure ISO RÉELLE du relevé de ce prix (cache KV : fetchedAt du cron ; cascade : heure de la réponse de la place de
+      marché ; CoinGecko : last_updated). Absente si inconnue. 08/10/2026 (lot fraîcheur A) : /api/prices en tire son
+      `updatedAt` au lieu de l'heure de la réponse. */
+  fetchedAt?: string;
 }
 
 const COINGECKO_BASE = "https://api.coingecko.com/api/v3";
@@ -193,7 +197,7 @@ async function _fetchPrices(ids: CoinId[]): Promise<CoinPrice[]> {
   // (TTL 6 h) couvre les périodes où le live est expiré.
   try {
     const { readTickerCache } = await import("@/lib/kv-ticker");
-    const { record: cached } = await readTickerCache();
+    const { record: cached, fetchedAt: tickerAt } = await readTickerCache();
     if (Object.keys(cached).length > 0) {
       // Vérif : tous les ids demandés sont en KV (live ou stale)
       const allCached = ids.every((id) => cached[id]);
@@ -208,6 +212,7 @@ async function _fetchPrices(ids: CoinId[]): Promise<CoinPrice[]> {
             change24h: c.change24h,
             marketCap: c.marketCap,
             image: c.image,
+            ...(tickerAt ? { fetchedAt: tickerAt } : {}),
           };
         });
       }
@@ -262,6 +267,8 @@ async function _fetchPrices(ids: CoinId[]): Promise<CoinPrice[]> {
         // les coins exotiques = broken image icon visible.
         // FIX 2026-05-10 — si on a hydraté via CG, on garde son image CDN.
         image: h?.image ?? "",
+        // heure du relevé seulement pour un vrai prix (le secours « prix indisponible » porte l'heure de l'échec)
+        ...(s.priceUsd > 0 && s.fetchedAt ? { fetchedAt: s.fetchedAt } : {}),
       };
     });
   } catch {
@@ -295,6 +302,7 @@ async function _fetchPrices(ids: CoinId[]): Promise<CoinPrice[]> {
       price_change_percentage_24h: number;
       market_cap: number;
       image: string;
+      last_updated?: string;
     }>;
 
     return json.map((c) => ({
@@ -305,6 +313,7 @@ async function _fetchPrices(ids: CoinId[]): Promise<CoinPrice[]> {
       change24h: c.price_change_percentage_24h ?? 0,
       marketCap: c.market_cap,
       image: c.image,
+      ...(c.last_updated ? { fetchedAt: c.last_updated } : {}),
     }));
   } catch {
     // Graceful fallback so the site still renders if the API is rate-limited.
@@ -393,6 +402,7 @@ async function _fetchPricesWithSparkline(
           marketCap: s.marketCap > 0 ? s.marketCap : h?.marketCap ?? 0,
           image: h?.image ?? "",
           sparkline7d: s.sparkline7d, // 168 pts via Binance klines (vide si static)
+          ...(s.fetchedAt ? { fetchedAt: s.fetchedAt } : {}), // allWithPrice : tous ont un vrai prix ici
         };
       });
     }
@@ -419,6 +429,7 @@ async function _fetchPricesWithSparkline(
       market_cap: number;
       image: string;
       sparkline_in_7d: { price: number[] };
+      last_updated?: string;
     }>;
     return json.map((c) => ({
       id: c.id as CoinId,
@@ -429,6 +440,7 @@ async function _fetchPricesWithSparkline(
       marketCap: c.market_cap,
       image: c.image,
       sparkline7d: c.sparkline_in_7d?.price ?? [],
+      ...(c.last_updated ? { fetchedAt: c.last_updated } : {}),
     }));
   } catch {
     // Graceful : retourne des entries vides plutôt que crasher

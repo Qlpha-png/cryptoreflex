@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import VerifieLe from "@/components/ui/VerifieLe";
 import { notFound, redirect } from "next/navigation";
 import Link from "next/link";
 import {
@@ -26,7 +27,7 @@ import { faqSchema, graphSchema } from "@/lib/schema";
 import { withHreflang } from "@/lib/seo-alternates";
 import { fitDescription, fitTitle } from "@/lib/seo-text";
 import { getLinkableCryptoIds, linkableCryptoPath } from "@/lib/crypto-links";
-import { formatMicaDate, getMicaMeta } from "@/lib/mica";
+import { getMicaMeta } from "@/lib/mica";
 import { fmtFr, fmtNb } from "@/lib/format-fr";
 import Breadcrumbs from "@/components/Breadcrumbs";
 
@@ -212,8 +213,8 @@ export default async function AcheterEnFrancePage({ params }: Props) {
               </h1>
               <p className="mt-3 max-w-2xl text-fg/80">
                 Comparatif 2026 des plateformes régulées MiCA pour acheter {meta.symbol},
-                avec frais réels, méthodes de paiement et fiscalité française. Statuts MiCA vérifiés le{" "}
-                {formatMicaDate(getMicaMeta().lastUpdated)}.
+                avec frais réels, méthodes de paiement et fiscalité française.{" "}
+                <VerifieLe date={getMicaMeta().lastUpdated} famille="mica" label="Statuts MiCA vérifiés" />.
               </p>
             </div>
           </header>

@@ -15,6 +15,7 @@
 
 import { NextResponse } from "next/server";
 import { BRAND, STATS } from "@/lib/brand";
+import { PUBLIC_API_CACHE_CONTROL } from "@/lib/public-data-dates";
 
 export const dynamic = "force-static";
 export const revalidate = 86_400;
@@ -25,7 +26,7 @@ const COMMON_HEADERS: Record<string, string> = {
   "Access-Control-Allow-Methods": "GET, OPTIONS",
   "Access-Control-Allow-Headers": "Content-Type",
   "Access-Control-Max-Age": "86400",
-  "Cache-Control": "public, max-age=3600, s-maxage=86400, stale-while-revalidate=86400",
+  "Cache-Control": PUBLIC_API_CACHE_CONTROL,
 };
 
 export function GET() {
@@ -134,7 +135,7 @@ export function GET() {
         get: {
           summary: "Scores de décentralisation",
           description:
-            "Score composite Cryptoreflex (Nakamoto coef + validators + geo + clients + open source) pour Bitcoin, Ethereum, Solana, etc. Mise à jour trimestrielle.",
+            "Score composite Cryptoreflex (Nakamoto coef + validators + geo + clients + open source) pour Bitcoin, Ethereum, Solana, etc. Relevé manuel, daté score par score (lastVerified) : aucune révision programmée.",
           tags: ["blockchain"],
           responses: {
             "200": {
@@ -215,7 +216,10 @@ export function GET() {
             lastUpdated: {
               type: "string",
               format: "date",
-              example: "2026-05-04",
+              nullable: true,
+              description:
+                "Date la plus récente des relevés ou vérifications des lignes publiées (null si le jeu n'en porte aucune). Jamais la date de la requête ni du déploiement.",
+              example: "2026-10-07",
             },
             contact: { type: "string", example: "partners@cryptoreflex.fr" },
           },
@@ -224,7 +228,24 @@ export function GET() {
           type: "object",
           properties: {
             _meta: { $ref: "#/components/schemas/Meta" },
-            endpoints: { type: "array", items: { type: "object" } },
+            endpoints: {
+              type: "array",
+              items: {
+                type: "object",
+                properties: {
+                  path: { type: "string" },
+                  url: { type: "string", format: "uri" },
+                  description: { type: "string" },
+                  responseShape: { type: "string" },
+                  updateFrequency: {
+                    type: "string",
+                    description:
+                      "Rythme réel de mise à jour. Aucune échéance n'est promise : les jeux sont relevés à la main, sans calendrier ; la date du relevé est dans _meta.lastUpdated.",
+                    example: "Relevé à la main, sans calendrier (date : _meta.lastUpdated)",
+                  },
+                },
+              },
+            },
             examples: { type: "object" },
           },
         },

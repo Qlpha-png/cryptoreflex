@@ -18,6 +18,7 @@ import { ArrowLeft, ArrowRight, Info, RefreshCcw, ShieldCheck } from "lucide-rea
 import type { Platform } from "@/lib/platforms";
 import { trackToolUsage } from "@/lib/analytics";
 import ComparateurNotice from "@/components/ComparateurNotice";
+import VerifieLe from "@/components/ui/VerifieLe";
 import {
   ANY_HINT,
   ANY_LABEL,
@@ -25,7 +26,6 @@ import {
   FILTER_DISCLAIMER,
   costCoverage,
   filterPlatforms,
-  releveText,
   type FilterAnswers,
   type FilterChoice,
 } from "@/lib/platform-filter";
@@ -276,10 +276,10 @@ export function FilterResult({
   const active = CRITERIA.filter((c) => answers[c.key] === "oui");
   const n = list.length;
   /* Dates des relevés affichés sur les fiches : autorisation MiCA + les trois critères. */
-  const dates = releveText([
+  const dates = [
     ...list.map((p) => p.mica.lastVerified),
     ...CRITERIA.flatMap((c) => list.flatMap((p) => c.dates(p))),
-  ]);
+  ];
 
   return (
     <div>
@@ -323,7 +323,8 @@ export function FilterResult({
                 exact > 1 ? "publient" : "publie"
               } le coût complet d'un achat de Bitcoin`}
           {" ; les autres publient un plafond, ajoutent une marge non chiffrée ou ne publient pas ce coût, et ces montants ne se comparent pas entre eux."}
-          {dates ? ` Données des fiches : ${dates}.` : ""}
+          {" "}
+          <VerifieLe dates={dates} famille="frais" label="Données des fiches relevées" age={false} />.
         </p>
       )}
 

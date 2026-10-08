@@ -13,42 +13,45 @@
  * déclaré ici comme un sitemap parmi les autres. Le robots.txt référence
  * `/sitemap-index.xml` (point d'entrée unique pour les crawlers).
  *
+ * 08/10/2026 (lot fraîcheur A, audit n° 47) : <lastmod> = date RÉELLE de l'entrée la plus récente de chaque plan enfant,
+ * omis quand elle est inconnue (avant : l'heure de génération de l'index sur les 3 premiers plans).
+ *
  * Doc : https://www.sitemaps.org/protocol.html#index
  */
 
 import { BRAND } from "@/lib/brand";
 import { dernierCalculGlobal } from "@/lib/analyses-techniques";
+import { getAllArticleSummaries } from "@/lib/mdx";
+import { getAllNewsSummaries } from "@/lib/news-mdx";
+import { lastmodOfArticlesSitemap, lastmodOfEntries, lastmodOfNewsSitemap, xmlSitemapIndex } from "@/lib/sitemap-index";
+import sitemap from "@/app/sitemap";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || BRAND.url;
 
 export const dynamic = "force-static";
-export const revalidate = 3600; // 1h — changements rares (ajout d'un nouveau type de sitemap)
+export const revalidate = 3600; // 1h — même rythme que /sitemap.xml
 
 export async function GET(): Promise<Response> {
-  const now = new Date().toISOString();
+  const [principal, articles, news] = await Promise.all([
+    // le plan principal lui-même (mêmes entrées que /sitemap.xml) ; en cas d'échec : balise omise, jamais « maintenant »
+    sitemap().then(lastmodOfEntries).catch((e: unknown) => {
+      console.warn("[sitemap-index] plan principal illisible : lastmod omis", e instanceof Error ? e.message : e);
+      return null;
+    }),
+    getAllArticleSummaries().catch(() => null),
+    getAllNewsSummaries().catch(() => null),
+  ]);
 
   // Liste exhaustive des sitemaps enfants. Pour ajouter un nouveau type
   // (ex : sitemap-videos.xml), créer la route puis l'ajouter ici.
-  const sitemaps = [
-    { loc: `${SITE_URL}/sitemap.xml`, lastmod: now },
-    { loc: `${SITE_URL}/sitemap-news.xml`, lastmod: now },
-    { loc: `${SITE_URL}/sitemap-articles.xml`, lastmod: now },
+  const xml = xmlSitemapIndex([
+    { loc: `${SITE_URL}/sitemap.xml`, lastmod: principal },
+    // filtre « 2 derniers jours » identique à /sitemap-news.xml (Date.now() sert de borne, pas de date publiée)
+    { loc: `${SITE_URL}/sitemap-news.xml`, lastmod: news ? lastmodOfNewsSitemap(news, Date.now()) : null },
+    { loc: `${SITE_URL}/sitemap-articles.xml`, lastmod: articles && news ? lastmodOfArticlesSitemap(articles, news) : null },
     // Lot L2 (08/10/2026) : hub + 5 analyses vivantes ; lastmod = vrai horodatage du dernier calcul réussi.
-    { loc: `${SITE_URL}/sitemap-analyses.xml`, lastmod: dernierCalculGlobal() ?? now },
-  ];
-
-  const xml = `<?xml version="1.0" encoding="UTF-8"?>
-<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${sitemaps
-  .map(
-    (s) => `  <sitemap>
-    <loc>${s.loc}</loc>
-    <lastmod>${s.lastmod}</lastmod>
-  </sitemap>`,
-  )
-  .join("\n")}
-</sitemapindex>
-`;
+    { loc: `${SITE_URL}/sitemap-analyses.xml`, lastmod: dernierCalculGlobal() ?? null },
+  ]);
 
   return new Response(xml, {
     headers: {

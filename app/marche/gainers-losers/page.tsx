@@ -96,7 +96,8 @@ export default async function GainersLosersPage() {
       url: `${BRAND.url}/og-image.png`,
     },
     datePublished: "2026-04-25",
-    dateModified: new Date().toISOString().slice(0, 10),
+    // 08/10/2026 (lot fraîcheur A) : heure du relevé du marché servi (asOf), jamais l'heure du rendu ; omise sans relevé
+    ...(all[0]?.asOf ? { dateModified: all[0].asOf } : {}),
   };
 
   const schemas = graphSchema([

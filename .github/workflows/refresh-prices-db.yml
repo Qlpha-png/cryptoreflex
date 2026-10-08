@@ -44,12 +44,31 @@ jobs:
             cat /tmp/body.json | head -c 500
             echo
             if [ "$HTTP" = "200" ]; then
-              echo "✅ Success"
-              exit 0
+              # 08/10/2026 (lot fraîcheur A2, audit L3 c) : un 200 ne prouve pas que les prix ont été écrits. La route
+              # répond 200 même quand des lignes échouent (« errors » dans le corps) : le robot passe alors au ROUGE,
+              # sans nouvel essai (un nouvel essai referait tout le travail et les appels CoinGecko).
+              ERRS=$(jq -r 'if (.errors|type) == "number" then .errors else "illisible" end' /tmp/body.json 2>/dev/null || echo "illisible")
+              UPD=$(jq -r '.updated // "?"' /tmp/body.json 2>/dev/null || echo "?")
+              PROC=$(jq -r '.processed // "?"' /tmp/body.json 2>/dev/null || echo "?")
+              # « 0 erreur » ET au moins une fiche écrite (0 écrite = rien de prouvé, ex. base lue vide)
+              # ET (reprise du 08/10, juré I7) au moins 95 % des fiches traitées réellement écrites : une page CoinGecko
+              # sur deux ne doit plus laisser un run vert.
+              if [ "$ERRS" = "0" ] && [ "$UPD" != "?" ] && [ "$PROC" != "?" ] && [ "$UPD" -gt 0 ] 2>/dev/null \
+                && [ $(( UPD * 100 )) -ge $(( PROC * 95 )) ] 2>/dev/null; then
+                echo "✅ Success (updated=$UPD / processed=$PROC, errors=0)"
+                exit 0
+              fi
+              echo "::error::refresh-prices : errors=$ERRS, updated=$UPD sur processed=$PROC (95 % exigés)"
+              echo "## ❌ Prix de la base : $ERRS erreur(s) d'écriture ($UPD fiche(s) mise(s) à jour)" >> "$GITHUB_STEP_SUMMARY"
+              exit 1
             fi
             if [ "$attempt" -lt 3 ]; then
               sleep $((attempt * 30))
             fi
           done
           echo "::error::refresh-prices fail after 3 retries"
-          exit 0  # Pas critique — KV ticker continue de servir prices frais
+          # 08/10/2026 (lot fraîcheur A, audit n° 4) : plus de sortie forcée en succès ici. Un vrai échec doit être ROUGE : avant, ce
+          # robot sortait toujours en vert et la sentinelle ne pouvait jamais le voir en échec (le bandeau des cours, servi
+          # par le cache KV, reste à jour, mais les prix des fiches en base, eux, ne bougent plus).
+          echo "## ❌ Prix de la base non rafraîchis (3 essais, dernier code HTTP $HTTP)" >> "$GITHUB_STEP_SUMMARY"
+          exit 1

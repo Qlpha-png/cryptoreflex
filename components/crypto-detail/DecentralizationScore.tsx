@@ -8,6 +8,7 @@ import {
   DECENTRALIZATION_LAST_UPDATED,
   DECENTRALIZATION_METHODOLOGY,
 } from "@/lib/decentralization-scores";
+import VerifieLe from "@/components/ui/VerifieLe";
 
 interface Props {
   cryptoId: string;
@@ -41,8 +42,8 @@ function DecentralizationScore({ cryptoId, cryptoName }: Props) {
             <p className="mt-1 text-xs sm:text-sm text-muted leading-relaxed">
               Pas encore couvert pour {cryptoName}. Notre score composite (Nakamoto
               coefficient + validateurs + diversité géo + diversité client + open source)
-              est calculé manuellement pour les 30 cryptos les plus liquides. Les autres
-              suivront aux prochains trimestres.{" "}
+              est calculé manuellement pour une partie des cryptos les plus liquides ; les
+              autres ne sont pas encore couvertes, sans date prévue.{" "}
               <Link
                 href="/methodologie#decentralisation"
                 className="text-primary-soft hover:text-primary underline"
@@ -190,8 +191,12 @@ function DecentralizationScore({ cryptoId, cryptoName }: Props) {
         <p className="mt-2 text-xs text-muted">
           {/* FIX B cohérence dates (2026-05-09) — uniformise sur DD/MM/YYYY
               avec .toLocaleDateString("fr-FR"). Avant : YYYY-MM-DD brut. */}
-          Vérification : {new Date(score.lastVerified).toLocaleDateString("fr-FR")} · Dernière MAJ globale :{" "}
-          {new Date(DECENTRALIZATION_LAST_UPDATED).toLocaleDateString("fr-FR")}.
+          {/* 08/10/2026 (lot fraîcheur A) : lastVerified vaut « 2026-04 » (mois seul) ; new Date().toLocaleDateString
+              affichait un jour inventé (« 01/04/2026 »). Le mois seul s'affiche désormais tel quel (« avril 2026 »). */}
+          {/* 08/10/2026 (lot fraîcheur A2) : dates via <VerifieLe> (au-delà de 120 jours : « à revérifier ») */}
+          <VerifieLe date={score.lastVerified} famille="decentralisation" label="Score vérifié" inconnue="Vérification : date inconnue" /> ·{" "}
+          <VerifieLe date={DECENTRALIZATION_LAST_UPDATED} famille="decentralisation" label="jeu de données mis à jour" inconnue="mise à jour du jeu : date inconnue" age={false} />.
+          Relevé manuel, sans révision programmée.
         </p>
       </details>
 

@@ -98,6 +98,8 @@ export interface CryptoFicheRow {
   needs_review: boolean;
   created_at: string;
   updated_at: string;
+  /** date du dernier relevé du cours, écrite seulement par refresh-prices (migration 20261008) ; absente avant la migration */
+  price_updated_at?: string | null;
 }
 
 /* -------------------------------------------------------------------------- */

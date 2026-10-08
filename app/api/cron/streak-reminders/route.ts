@@ -24,6 +24,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { verifyBearer } from "@/lib/auth";
+import { CRON_TRACE_KEYS, writeCronTrace } from "@/lib/cron-trace";
 import { createSupabaseServiceRoleClient } from "@/lib/supabase/server";
 import {
   sendPushToUser,
@@ -53,6 +54,8 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
 
   const supabase = createSupabaseServiceRoleClient();
   if (!supabase) {
+    // 08/10/2026 (lot fraîcheur A) : ce 503 passait inaperçu ; la trace le rend visible à la sentinelle (seuil 30 h)
+    await writeCronTrace(CRON_TRACE_KEYS.streakReminders, { ok: false, raison: "Supabase non configuré" });
     return NextResponse.json(
       {
         ok: false,
@@ -74,6 +77,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
 
   if (error) {
     console.error("[streak-reminders] select error:", error.message);
+    await writeCronTrace(CRON_TRACE_KEYS.streakReminders, { ok: false, raison: "lecture de la base impossible" });
     return NextResponse.json(
       { ok: false, error: error.message },
       { status: 500 },
@@ -114,11 +118,15 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       };
     });
 
+  const pushed = results.filter((r) => r.pushed).length;
+  // trace : nombres seulement (aucun identifiant d'utilisateur)
+  await writeCronTrace(CRON_TRACE_KEYS.streakReminders, { ok: true, candidates: atRisk.length, pushed, failed: settled.filter((r) => r.status === "rejected").length });
+
   return NextResponse.json({
     ok: true,
     runAt: new Date().toISOString(),
     candidates: atRisk.length,
-    pushed: results.filter((r) => r.pushed).length,
+    pushed,
     results: results.slice(0, 50), // tronqué pour ne pas blow up le payload
   });
 }

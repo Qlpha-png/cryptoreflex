@@ -31,6 +31,8 @@ import {
   listedVenues,
 } from "@/lib/cryptos";
 import { getCryptoFiche } from "@/lib/cryptos-db";
+import { retirerMontantsFiges } from "@/lib/fiche-llm-texte";
+import VerifieLe from "@/components/ui/VerifieLe";
 import { resolveSlugAlias } from "@/lib/crypto-slug-aliases";
 import { toCryptoPageSlug } from "@/lib/crypto-page-slug";
 import { fetchCoinDetail } from "@/lib/coingecko";
@@ -170,7 +172,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!c) {
     const fiche = await getCryptoFiche(canonical);
     if (fiche) {
-      const llm = corrigerAccentsProfond((fiche.llm_content ?? {}) as { tldr?: string });
+      // lot fraîcheur A2 (L3 d) : description sans les montants de marché figés du jour de la génération
+      const llm = { tldr: retirerMontantsFiges(corrigerAccentsProfond((fiche.llm_content ?? {}) as { tldr?: string }).tldr) || undefined };
       const url = `${BRAND.url}/cryptos/${canonical}`;
       return {
         title: fitTitle(`${fiche.name} (${fiche.symbol}) — fiche complète`),
@@ -270,9 +273,9 @@ function buildCryptoSources(c: AnyCrypto): Array<{
       type: "whitepaper",
       label: `Whitepaper officiel ${c.name}`,
       url: tldr.whitepaperUrl,
-      note: `Document fondateur · synthèse Cryptoreflex mise à jour ${new Date(
-        tldr.lastUpdated,
-      ).toLocaleDateString("fr-FR", { month: "short", year: "numeric" })}`,
+      // reprise du 08/10/2026 (juré I6) : plus de date en dur ici (« mise à jour avr. 2026 ») ; la date de la synthèse
+      // est affichée par <VerifieLe> dans l'encadré du livre blanc (components/crypto-detail/WhitepaperTldr.tsx)
+      note: "Document fondateur · synthèse Cryptoreflex datée dans l'encadré du livre blanc",
     });
   }
 
@@ -296,9 +299,9 @@ function buildCryptoSources(c: AnyCrypto): Array<{
     type: "methodology",
     label: "Méthodologie publique Cryptoreflex",
     url: "/methodologie",
-    note: `Score, scoring sources, vérification le ${new Date(
-      FICHE_REVIEWED_DATE,
-    ).toLocaleDateString("fr-FR")}`,
+    // 08/10/2026 (lot fraîcheur A2) : plus de date dans cette note (texte simple) ; la date de vérification est affichée
+    // par <VerifieLe> en tête et en pied de fiche.
+    note: "Score, sources du score, date de vérification en tête de fiche",
   });
 
   return sources;
@@ -1199,8 +1202,8 @@ async function CryptoPage({ params }: Props) {
             "recommandées" → "présentées" pour alignement wording compliance
             (phase 2 — pas de signal d'achat personnalisé). */}
         <p className="mt-8 text-xs text-muted leading-relaxed">
-          Données de prix : plateformes d'échange, CoinMarketCap et CoinGecko, selon disponibilité. Données éditoriales vérifiées
-          le {new Date(FICHE_REVIEWED_DATE).toLocaleDateString("fr-FR")} par le
+          Données de prix : plateformes d'échange, CoinMarketCap et CoinGecko, selon disponibilité.{" "}
+          <VerifieLe date={FICHE_REVIEWED_DATE} famille="editorial" label="Données éditoriales vérifiées" age={false} /> par le
           fondateur {BRAND.name} (Kevin Voisin).{" "}
           {anyPaidPlatform
             ? "Les liens marqués « Publicité » sont rémunérés (affiliation ou parrainage), sans surcoût pour vous et sans impact sur le classement."

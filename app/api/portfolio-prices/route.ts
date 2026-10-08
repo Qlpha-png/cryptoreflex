@@ -22,6 +22,7 @@ import { getTopMarket } from "@/lib/price-source";
 import { createRateLimiter } from "@/lib/rate-limit";
 import { getClientIp } from "@/lib/ip";
 import { fiatPerUsd } from "@/lib/fx";
+import { pricesUpdatedAt } from "@/lib/prices-updated-at";
 
 export const revalidate = 60;
 
@@ -38,6 +39,8 @@ interface PortfolioPrice {
   /** Sparkline 7j (168 points horaires CoinGecko) — UNIQUEMENT renseigné si
       le query param `?include=sparkline` est présent. */
   sparkline7d?: number[];
+  /** heure ISO réelle du relevé (cascade : heure de la réponse de la source ; CoinGecko : last_updated), absente si inconnue */
+  fetchedAt?: string;
 }
 
 interface CoinGeckoSimple {
@@ -56,6 +59,7 @@ interface CoinGeckoMarket {
   current_price: number;
   price_change_percentage_24h: number;
   sparkline_in_7d?: { price: number[] };
+  last_updated?: string;
 }
 
 /**
@@ -94,6 +98,7 @@ async function _fetchPortfolioPrices(
         name: s.name,
         image: `https://assets.coincap.io/assets/icons/${s.symbol.toLowerCase()}@2x.png`,
         ...(withSparkline ? { sparkline7d: s.sparkline7d } : {}),
+        ...(s.priceUsd > 0 && s.fetchedAt ? { fetchedAt: s.fetchedAt } : {}),
       }));
     }
   } catch {
@@ -125,6 +130,7 @@ async function _fetchPortfolioPrices(
       ...(withSparkline
         ? { sparkline7d: c.sparkline_in_7d?.price ?? [] }
         : {}),
+      ...(c.last_updated ? { fetchedAt: c.last_updated } : {}),
     }));
   } catch {
     // Graceful : le portfolio reste lisible (PRU + quantité) même sans live.
@@ -231,7 +237,7 @@ export async function GET(request: Request) {
 
   if (ids.length === 0) {
     return NextResponse.json(
-      { prices: [], updatedAt: new Date().toISOString() },
+      { prices: [], updatedAt: null },
       {
         headers: {
           "Cache-Control": "public, s-maxage=60, stale-while-revalidate=120",
@@ -242,8 +248,9 @@ export async function GET(request: Request) {
 
   const prices = await fetchPortfolioPricesCached(ids, withSparkline);
 
+  // 08/10/2026 (lot fraîcheur A) : heure RÉELLE du plus ancien relevé servi, plus l'heure de la réponse
   return NextResponse.json(
-    { prices, updatedAt: new Date().toISOString() },
+    { prices, updatedAt: pricesUpdatedAt(prices) },
     {
       headers: {
         "Cache-Control": "public, s-maxage=60, stale-while-revalidate=120",

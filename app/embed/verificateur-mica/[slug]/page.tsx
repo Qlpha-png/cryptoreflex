@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import VerifieLe from "@/components/ui/VerifieLe";
 import { notFound } from "next/navigation";
 import {
   AlertTriangle,
@@ -162,10 +163,7 @@ export default function EmbedPage({ params }: Params) {
         }}
       >
         <span>
-          Vérifié{" "}
-          <time dateTime={platform.lastVerified}>
-            {formatMicaDate(platform.lastVerified)}
-          </time>
+          <VerifieLe date={platform.lastVerified} famille="mica" label="Vérifié" inconnue="Date de vérification inconnue" />
         </span>
         <a
           href={`${BRAND.url}/outils/verificateur-mica?p=${platform.id}`}

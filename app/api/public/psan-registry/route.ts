@@ -21,6 +21,7 @@
 import { NextResponse } from "next/server";
 import psanData from "@/data/psan-registry.json";
 import { BRAND } from "@/lib/brand";
+import { PUBLIC_API_CACHE_CONTROL, psanLastUpdated } from "@/lib/public-data-dates";
 
 export const dynamic = "force-static";
 export const revalidate = 86_400;
@@ -34,8 +35,7 @@ interface PsanPayload {
     attribution: string;
     attributionHtml: string;
     canonicalUrl: string;
-    lastUpdated: string;
-    nextReviewDate?: string;
+    lastUpdated: string | null;
     contact: string;
     officialSources: Record<string, string>;
   };
@@ -46,12 +46,12 @@ function buildPayload(): PsanPayload {
   const raw = psanData as {
     _meta?: {
       lastUpdated?: string;
-      nextReviewDate?: string;
       officialSources?: Record<string, string>;
     };
     platforms?: unknown;
   };
-  const lastUpdated = raw._meta?.lastUpdated ?? new Date().toISOString().split("T")[0];
+  // 08/10/2026 : date réelle (vérification la plus récente des lignes), jamais la date du jour.
+  const lastUpdated = psanLastUpdated(raw._meta, Array.isArray(raw.platforms) ? (raw.platforms as Array<{ lastVerified?: unknown }>) : []);
 
   return {
     _meta: {
@@ -65,7 +65,6 @@ function buildPayload(): PsanPayload {
         '<a href="https://cryptoreflex.fr" rel="dofollow">Donnees Cryptoreflex</a> — CC-BY 4.0',
       canonicalUrl: BRAND.url + "/api/public/psan-registry",
       lastUpdated,
-      nextReviewDate: raw._meta?.nextReviewDate,
       contact: BRAND.partnersEmail,
       officialSources: raw._meta?.officialSources ?? {},
     },
@@ -83,7 +82,7 @@ const COMMON_HEADERS: Record<string, string> = {
   "X-Attribution":
     "Donnees Cryptoreflex (https://cryptoreflex.fr) - Reutilisation conditionnee a un lien dofollow.",
   Link: '<https://creativecommons.org/licenses/by/4.0/>; rel="license"; title="CC-BY-4.0"',
-  "Cache-Control": "public, max-age=3600, s-maxage=86400, stale-while-revalidate=86400",
+  "Cache-Control": PUBLIC_API_CACHE_CONTROL,
 };
 
 export function GET() {

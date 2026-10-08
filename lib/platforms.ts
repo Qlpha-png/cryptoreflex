@@ -540,9 +540,9 @@ export function cardCostSentence(p: Pick<Platform, "name" | "fees">): string {
   switch (c.status) {
     case "ok":
       if (!cardFeeMeasured(p)) {
-        return `Un achat de 1 000 € payé par carte coûte ${purchaseCostText(c)} de frais d'achat ; d'éventuels frais de paiement par carte ne sont pas chiffrés dans notre relevé du ${dateFr(c.date)}.`;
+        return `Un achat de 1 000 € payé par carte coûte ${purchaseCostText(c)} de frais d'achat ; d'éventuels frais de paiement par carte ne sont pas chiffrés dans notre relevé (date dans l'encadré des frais).`;
       }
-      return `Un achat de 1 000 € payé par carte coûte ${purchaseCostText(c)} (frais d'achat et frais de paiement par carte compris, relevé du ${dateFr(c.date)}).`;
+      return `Un achat de 1 000 € payé par carte coûte ${purchaseCostText(c)} (frais d'achat et frais de paiement par carte compris ; date du relevé dans l'encadré des frais).`;
     case "non-publie":
       return `${p.name} ne publie pas le coût complet d'un achat par carte.`;
     case "pas-de-carte":
@@ -567,7 +567,7 @@ export function buildPlatformSummary(p: Platform): { headline: string; facts: st
     return {
       headline,
       facts: [
-        `${p.name} ne figure pas parmi les plateformes crypto agréées MiCA avec accès à la France lors de notre vérification du ${dateFr(p.mica.lastVerified)}. Statut relevé : ${lowerFirst(p.mica.status).replace(/\.$/, "")}. Nous ne donnons donc aucun verdict d'usage : comparez plutôt les plateformes agréées MiCA avec accès à la France.`,
+        `${p.name} ne figure pas parmi les plateformes crypto agréées MiCA avec accès à la France lors de notre dernière vérification (date dans l'encadré MiCA). Statut relevé : ${lowerFirst(p.mica.status).replace(/\.$/, "")}. Nous ne donnons donc aucun verdict d'usage : comparez plutôt les plateformes agréées MiCA avec accès à la France.`,
       ],
       ideal: "Aucun profil en France dans nos données.",
       avoid: "Vous résidez en France.",
@@ -591,12 +591,12 @@ export function buildPlatformSummary(p: Platform): { headline: string; facts: st
     facts.push(`${p.name} est un portefeuille matériel : vous conservez vous-même vos clés, hors du champ de l'agrément MiCA.`);
   } else {
     facts.push(
-      `Statut réglementaire : ${lowerFirst(p.mica.status)}, vérifié le ${dateFr(p.mica.lastVerified)}${p.mica.registerSource ? ` (${p.mica.registerSource})` : ""}.`,
+      `Statut réglementaire : ${lowerFirst(p.mica.status)}${p.mica.registerSource ? ` (${p.mica.registerSource})` : ""} ; date de vérification dans l'encadré MiCA.`,
     );
     const simple = simpleCost1000(p);
     if (simple.status !== "non-releve") {
       facts.push(
-        `Achat de 1 000 € (${lowerFirst(simple.path ?? "")}) : ${lowerFirst(purchaseCostText(simple))}. Payé par carte : ${lowerFirst(purchaseCostText(cardCost1000(p)))}. Frais relevés le ${dateFr(simple.date)}.`,
+        `Achat de 1 000 € (${lowerFirst(simple.path ?? "")}) : ${lowerFirst(purchaseCostText(simple))}. Payé par carte : ${lowerFirst(purchaseCostText(cardCost1000(p)))}. Date du relevé dans l'encadré des frais.`,
       );
     } else if (p.fees.verified?.makerTakerApplies ?? true) {
       facts.push(`Frais du marché spot : ${nbFr(p.fees.spotMaker)} % en maker et ${nbFr(p.fees.spotTaker)} % en taker. Coût complet d'un achat par carte : non relevé.`);
@@ -635,6 +635,13 @@ export function trustpilotText(r: Platform["ratings"]): string | null {
 }
 
 export const platformsMeta = data._meta;
+
+/** Date du dernier calcul des scores (scripts/compute-platform-scores.mjs, lancé à la main), « AAAA-MM-JJ » ou null.
+ *  08/10/2026 (lot fraîcheur A) : affichée sur /top à la place de « mis à jour automatiquement » / « trimestriellement ». */
+export const PLATFORMS_LAST_SCORED: string | null = (() => {
+  const v = (data._meta as { lastScored?: unknown }).lastScored;
+  return typeof v === "string" && /^\d{4}-\d{2}-\d{2}$/.test(v) ? v : null;
+})();
 
 /* -------------------------------------------------------------------------- */
 /* Helpers Block 4 RE-AUDIT (Audit 26/04/2026)                                 */

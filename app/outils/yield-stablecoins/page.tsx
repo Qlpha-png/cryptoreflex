@@ -25,6 +25,7 @@ import { withHreflang } from "@/lib/seo-alternates";
 import { fitTitle } from "@/lib/seo-text";
 import { fmtFr } from "@/lib/format-fr";
 import Breadcrumbs from "@/components/Breadcrumbs";
+import VerifieLe from "@/components/ui/VerifieLe";
 
 /**
  * /outils/yield-stablecoins — Comparateur APY stablecoins.
@@ -79,7 +80,7 @@ export default function YieldStablecoinsPage() {
     },
     {
       q: "Comment vérifier que le taux affiché est encore actuel ?",
-      a: `Cette page indique sa date de dernière vérification (${STABLECOIN_YIELDS_LAST_UPDATED}). Les taux changent souvent : pour le taux du jour, allez sur la plateforme directement.`,
+      a: "Cette page indique la date de son dernier relevé, et signale elle-même un relevé de plus de 14 jours (« à revérifier »). Les taux changent souvent : pour le taux du jour, allez sur la plateforme directement.",
     },
     {
       q: "Quelle différence entre USDC et EURC ?",
@@ -267,7 +268,9 @@ export default function YieldStablecoinsPage() {
         <div className="mt-10 rounded-xl border border-border bg-elevated/40 p-4 flex items-start gap-3 text-sm text-fg/85">
           <Info className="h-4 w-4 text-primary-soft mt-0.5 shrink-0" aria-hidden />
           <p className="leading-relaxed">
-            <strong>Mises à jour : {STABLECOIN_YIELDS_LAST_UPDATED}.</strong>{" "}
+            <strong>
+              <VerifieLe date={STABLECOIN_YIELDS_LAST_UPDATED} famille="rendements" label="Taux relevés" />.
+            </strong>{" "}
             Les APY varient au jour le jour selon le taux d&apos;utilisation
             côté plateforme. Données relevées à la main à la date indiquée : vérifiez le taux du jour sur la plateforme.
             Pas un conseil en investissement (cf. AMF).{" "}

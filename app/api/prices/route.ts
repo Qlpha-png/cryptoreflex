@@ -30,6 +30,7 @@ import { getAllCryptosUnified } from "@/lib/cryptos-extended";
 import { resolveCryptoLogo } from "@/lib/crypto-logos";
 import { createRateLimiter } from "@/lib/rate-limit";
 import { getClientIp } from "@/lib/ip";
+import { pricesUpdatedAt } from "@/lib/prices-updated-at";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -155,8 +156,12 @@ export async function GET(request: Request) {
     return { ...p, image };
   });
 
+  // 08/10/2026 (lot fraîcheur A, audit n° 1) : updatedAt = heure RÉELLE du relevé servi (fetchedAt du cache KV des cours,
+  // ou de la source en direct) — le plus ANCIEN des prix servis ; null si aucun prix n'a d'heure connue. Avant : l'heure
+  // de la réponse (new Date()), qui ne prouvait rien.
+  const updatedAt = pricesUpdatedAt(prices);
   return NextResponse.json(
-    { prices, updatedAt: new Date().toISOString() },
+    { prices, updatedAt },
     {
       headers: {
         "Cache-Control": "public, s-maxage=60, stale-while-revalidate=120",

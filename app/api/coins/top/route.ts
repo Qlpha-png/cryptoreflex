@@ -19,6 +19,7 @@
 import { NextResponse } from "next/server";
 import { getTopMarket } from "@/lib/price-source";
 import { fiatPerUsd } from "@/lib/fx";
+import { pricesUpdatedAt } from "@/lib/prices-updated-at";
 
 /* rendue à chaque appel : la liste pleine est mise en cache par le CDN (s-maxage=600) et par getTopMarket ; une liste vide
    (source en panne) répond 503 sans cache, au lieu d'être servie 10 minutes à tout le monde (audit du 05/10/2026) */
@@ -48,8 +49,9 @@ export async function GET(request: Request) {
       market_cap_rank: c.marketCapRank,
       price_change_percentage_24h: c.change24h,
     }));
+    // 08/10/2026 (lot fraîcheur A) : heure RÉELLE du plus ancien relevé servi (fetchedAt), plus l'heure de la réponse
     return NextResponse.json(
-      { coins, updatedAt: new Date().toISOString() },
+      { coins, updatedAt: pricesUpdatedAt(top) },
       {
         headers: {
           "Cache-Control": "public, s-maxage=600, stale-while-revalidate=1200",
@@ -58,7 +60,7 @@ export async function GET(request: Request) {
     );
   } catch {
     return NextResponse.json(
-      { coins: [], updatedAt: new Date().toISOString(), error: "fetch failed" },
+      { coins: [], updatedAt: null, error: "fetch failed" },
       { status: 503, headers: { "Cache-Control": "no-store", "Retry-After": "30" } },
     );
   }

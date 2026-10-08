@@ -23,6 +23,7 @@ import { verificationWindow } from "@/components/home/HomeTrustLine";
 import { detectMarketSource, priceSourceLabel } from "@/components/home/market-source";
 import { getAllCorrections, getCorrectionsForSlug, lastCorrectionDate, validateCorrection } from "@/lib/corrections";
 import { PAGE_UPDATED, formatDateFr, pageUpdatedFr } from "@/lib/engagements";
+import { formatJJMMAAAA } from "@/lib/fraicheur";
 import { PARTNERSHIPS } from "@/lib/partnerships";
 import { getExchangePlatforms } from "@/lib/platforms";
 import { liensDuPied } from "@/lib/nav-data";
@@ -170,7 +171,8 @@ describe("dates « mise à jour » réelles", () => {
     expect(text(pages["/mentions-legales"]())).toContain(`Dernière mise à jour : ${pageUpdatedFr("/mentions-legales")}`);
     expect(text(pages["/mentions-legales"]())).not.toContain("25 avril 2026");
     expect(text(pages["/charte"]())).toContain(`Mise à jour : ${pageUpdatedFr("/charte")}`);
-    expect(text(pages["/methodologie"]())).toContain(`Mise à jour : ${pageUpdatedFr("/methodologie")}`);
+    // reprise du 08/10/2026 (juré I6) : la date passe par <VerifieLe> (JJ/MM/AAAA)
+    expect(text(pages["/methodologie"]())).toContain(`Mise à jour le ${formatJJMMAAAA(PAGE_UPDATED["/methodologie"])}`);
     expect(text(pages["/a-propos"]())).toContain(`Mise à jour : ${pageUpdatedFr("/a-propos")}`);
     expect(formatDateFr("2026-10-06")).toBe("6 octobre 2026");
   });

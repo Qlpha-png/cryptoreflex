@@ -2,6 +2,7 @@ import { avecTypoSync } from "@/components/ui/Typo";
 import Link from "next/link";
 import { ShieldCheck } from "lucide-react";
 import { getExchangePlatforms } from "@/lib/platforms";
+import VerifieLe from "@/components/ui/VerifieLe";
 
 /**
  * Confiance en une ligne (accueil) : dates réelles de vérification des statuts sur les registres officiels
@@ -40,15 +41,20 @@ export function verificationWindow(rawDates: Array<string | null | undefined>): 
 }
 
 function HomeTrustLine() {
-  const when = verificationWindow(getExchangePlatforms().map((p) => p.mica?.lastVerified));
+  // 08/10/2026 (lot fraîcheur A2) : la période passe par <VerifieLe> (au-delà de 14 jours : « à revérifier »).
+  const dates = getExchangePlatforms().map((p) => p.mica?.lastVerified);
   return (
     <section aria-label="Notre engagement" className="mx-auto max-w-7xl px-4 pb-12 sm:px-6 lg:px-8">
       <p className="flex flex-wrap items-center gap-x-2 gap-y-1 rounded-2xl border border-border bg-surface px-5 py-4 text-sm text-fg/80">
         <ShieldCheck className="h-4 w-4 text-success-fg" aria-hidden="true" />
         <span>
-          {when
-            ? `Statuts des plateformes vérifiés sur les registres de l'AMF et de l'ESMA ${when}.`
-            : "Statuts des plateformes vérifiés sur les registres de l'AMF et de l'ESMA."}{" "}
+          <VerifieLe
+            dates={dates}
+            famille="mica"
+            label="Statuts des plateformes vérifiés sur les registres de l'AMF et de l'ESMA"
+            inconnue="Statuts des plateformes vérifiés sur les registres de l'AMF et de l'ESMA"
+          />
+          .{" "}
           Chaque lien partenaire rémunéré est signalé.
         </span>
         <Link href="/methodologie" className="font-semibold text-primary-soft underline-offset-4 hover:underline">Notre méthode</Link>

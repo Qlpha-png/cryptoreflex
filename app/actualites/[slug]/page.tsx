@@ -17,7 +17,7 @@ import {
   NEWS_CATEGORY_SLUGS,
 } from "@/lib/news-types";
 import { graphSchema, organizationSchema, generateSpeakableSchema, type JsonLd } from "@/lib/schema";
-import { formatRelativeFr } from "@/lib/news-aggregator";
+import { formatRelativeFr, hasTimeOfDay } from "@/lib/news-aggregator";
 import StructuredData from "@/components/StructuredData";
 import MdxContent from "@/components/MdxContent";
 import AutoPublishedLine from "@/components/AutoPublishedLine";
@@ -124,7 +124,8 @@ async function NewsDetailPage({ params }: PageProps) {
   const related = await getRelatedNews(news.slug, 3);
   const catLabel = NEWS_CATEGORY_LABELS[news.category];
   const catSlug = NEWS_CATEGORY_SLUGS[news.category];
-  const relDate = formatRelativeFr(news.date);
+  // 08/10/2026 (lot fraîcheur A) : la date complète est déjà affichée ; l'âge relatif seulement si la source a une heure
+  const relDate = hasTimeOfDay(news.date) ? formatRelativeFr(news.date) : "";
 
   // JSON-LD
   const canonicalUrl = `${BRAND.url}/actualites/${news.slug}`;

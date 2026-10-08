@@ -1,5 +1,6 @@
 import { avecTypoSync } from "@/components/ui/Typo";
 import Link from "next/link";
+import VerifieLe from "@/components/ui/VerifieLe";
 import {
   AlertCircle,
   Lightbulb,
@@ -128,7 +129,8 @@ function WhitepaperTldr({ cryptoId, cryptoName }: Props) {
         </a>
         <span className="text-muted">
           {/* FIX B cohérence dates (2026-05-09) — DD/MM/YYYY au lieu de YYYY-MM-DD brut. */}
-          Synthèse pédagogique Cryptoreflex · MAJ {new Date(tldr.lastUpdated).toLocaleDateString("fr-FR")}
+          Synthèse pédagogique Cryptoreflex ·{" "}
+          <VerifieLe date={tldr.lastUpdated} famille="editorial" label="mise à jour" inconnue="date de mise à jour inconnue" />
         </span>
       </div>
     </section>

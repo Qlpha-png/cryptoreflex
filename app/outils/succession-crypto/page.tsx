@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import VerifieLe from "@/components/ui/VerifieLe";
 import { Heart, ShieldAlert, Scale, Users, FileText, ArrowRight } from "lucide-react";
 
 import { BRAND } from "@/lib/brand";
@@ -337,7 +338,7 @@ export default function SuccessionCryptoPage() {
 
         {/* Sources */}
         <section className="mt-12" aria-labelledby="sources">
-          <h2 id="sources" className="text-lg font-bold">Sources (vérifiées le 5 octobre 2026)</h2>
+          <h2 id="sources" className="text-lg font-bold">Sources (<VerifieLe date="2026-10-05" famille="fiscalite" label="vérifiées" />)</h2>
           <ul className="mt-3 space-y-1.5 text-sm">
             {SOURCES.map(([label, href]) => (
               <li key={href}>

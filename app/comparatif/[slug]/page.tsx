@@ -47,7 +47,10 @@ import RelatedPagesNav from "@/components/RelatedPagesNav";
 import NextStepsGuide from "@/components/NextStepsGuide";
 import { withHreflang } from "@/lib/seo-alternates";
 import { fitTitle } from "@/lib/seo-text";
-import { fmtDateFr, fmtFr, fmtNb } from "@/lib/format-fr";
+import { fmtFr, fmtNb } from "@/lib/format-fr";
+import type { ReactNode } from "react";
+import VerifieLe from "@/components/ui/VerifieLe";
+import { dateStatutMica } from "@/lib/mica-auto";
 import { buildDuelVerdict } from "@/lib/comparison-verdict";
 import ComparateurNotice from "@/components/ComparateurNotice";
 import Breadcrumbs from "@/components/Breadcrumbs";
@@ -94,21 +97,37 @@ export function generateMetadata({ params }: Props): Metadata {
 type WinnerHint = "a" | "b" | "tie" | "na";
 
 /** Cellule Trustpilot : note relevée (+ précision éventuelle), sinon la raison de son absence. */
-function trustpilotCell(p: Platform, withDate: boolean): string {
+function trustpilotCell(p: Platform): string {
   const t = trustpilotText(p.ratings);
   const note = p.ratings.trustpilotNote;
-  const base = t ? (note ? `${t} — ${note}` : t) : note ? note.charAt(0).toUpperCase() + note.slice(1) : "—";
-  return withDate ? `${base} · relevé le ${fmtDateFr(p.ratings.trustpilotVerified)}` : base;
+  return t ? (note ? `${t} — ${note}` : t) : note ? note.charAt(0).toUpperCase() + note.slice(1) : "—";
 }
+
+/** 08/10/2026 (lot fraîcheur A2) : dates des relevés affichées par <VerifieLe> (âge signalé au-delà du seuil). */
+const releveTrustpilot = (p: Platform): ReactNode => (
+  <>
+    {" · "}
+    <VerifieLe date={p.ratings.trustpilotVerified} famille="notes" label="relevé" inconnue="date du relevé inconnue" age={false} />
+  </>
+);
 
 function trustpilotRow(a: Platform, b: Platform): CompareRow {
   const sameDate = a.ratings.trustpilotVerified === b.ratings.trustpilotVerified;
   const ra = a.ratings.trustpilot;
   const rb = b.ratings.trustpilot;
   return {
-    label: sameDate ? `Trustpilot (relevé du ${fmtDateFr(a.ratings.trustpilotVerified)})` : "Trustpilot",
-    aDisplay: trustpilotCell(a, !sameDate),
-    bDisplay: trustpilotCell(b, !sameDate),
+    label: "Trustpilot",
+    labelSuffix: sameDate ? (
+      <>
+        {" ("}
+        <VerifieLe date={a.ratings.trustpilotVerified} famille="notes" label="relevé" inconnue="date du relevé inconnue" age={false} />
+        {")"}
+      </>
+    ) : undefined,
+    aDisplay: trustpilotCell(a),
+    bDisplay: trustpilotCell(b),
+    aSuffix: sameDate ? undefined : releveTrustpilot(a),
+    bSuffix: sameDate ? undefined : releveTrustpilot(b),
     hint: ra != null && rb != null ? winner(ra, rb) : "na",
   };
 }
@@ -120,9 +139,15 @@ function boolHint(x: boolean | null, y: boolean | null): WinnerHint {
 }
 
 /** Intitulé de la ligne, avec la date du relevé quand les deux fiches ont été relevées le même jour. */
-function supportRowLabel(label: string, a: Platform, b: Platform): string {
+function supportRowLabel(a: Platform, b: Platform): ReactNode {
   const d = a.support.verified;
-  return d && d === b.support.verified ? `${label} (relevé du ${fmtDateFr(d)})` : label;
+  return d && d === b.support.verified ? (
+    <>
+      {" ("}
+      <VerifieLe date={d} famille="support" label="relevé" age={false} />
+      {")"}
+    </>
+  ) : undefined;
 }
 
 function winner(aValue: number, bValue: number, lowerIsBetter = false): WinnerHint {
@@ -142,6 +167,10 @@ interface CompareRow {
   label: string;
   aDisplay: string;
   bDisplay: string;
+  /** date de relevé affichée après le texte (composant <VerifieLe>) */
+  labelSuffix?: ReactNode;
+  aSuffix?: ReactNode;
+  bSuffix?: ReactNode;
   hint: WinnerHint;
   /** Pour expliquer pourquoi A ou B gagne sur ce critère. */
   note?: string;
@@ -265,7 +294,7 @@ function buildRows(a: Platform, b: Platform): { fees: CompareRow[]; security: Co
   const support: CompareRow[] = [
     /* 06/10/2026 : valeurs relevées sur les pages officielles d'assistance (support.source) ; « Non vérifié » ne fait
        jamais gagner ni perdre une plateforme. */
-    { label: supportRowLabel("Chat en français", a, b), aDisplay: supportChatLabel(a.support), bDisplay: supportChatLabel(b.support), hint: boolHint(a.support.frenchChat, b.support.frenchChat) },
+    { label: "Chat en français", labelSuffix: supportRowLabel(a, b), aDisplay: supportChatLabel(a.support), bDisplay: supportChatLabel(b.support), hint: boolHint(a.support.frenchChat, b.support.frenchChat) },
     { label: "Téléphone", aDisplay: supportPhoneLabel(a.support), bDisplay: supportPhoneLabel(b.support), hint: boolHint(a.support.frenchPhone, b.support.frenchPhone) },
     { label: "Délai de réponse annoncé", aDisplay: supportDelayLabel(a.support), bDisplay: supportDelayLabel(b.support), hint: "na" },
     { label: "Score support", aDisplay: `${fmtNb(a.scoring.support)}/5`, bDisplay: `${fmtNb(b.scoring.support)}/5`, hint: winner(a.scoring.support, b.scoring.support) },
@@ -292,6 +321,9 @@ function ComparisonPage({ params }: Props) {
   const b = getPlatformById(spec.b);
   if (!a || !b) notFound();
 
+  // reprise du 08/10/2026 (L6 MiCA) : contrôle automatique du registre ESMA, s'il est plus récent que la relecture humaine
+  const micaA = dateStatutMica(a.id, a.mica.lastVerified, "");
+  const micaB = dateStatutMica(b.id, b.mica.lastVerified, "");
   const rows = buildRows(a, b);
   const verdict = buildDuelVerdict(a, b);
 
@@ -343,7 +375,18 @@ function ComparisonPage({ params }: Props) {
               ? `Acteur français face à un acteur international : on compare l'accompagnement local et la profondeur de marché.`
               : spec.bucket === "wallet-vs-wallet"
                 ? `Deux références du wallet matériel comparées sur la sécurité, l'écosystème et la facilité d'usage.`
-                : `Comparatif méthodique : frais réels, sécurité, conformité MiCA, support FR. Frais relevés le ${fmtDateFr(a.fees.verified?.date ?? "") || "—"}, statuts MiCA vérifiés le ${fmtDateFr(a.mica.lastVerified) || "—"}.`}
+                : (
+                  <>
+                    Comparatif méthodique : frais réels, sécurité, conformité MiCA, support FR.{" "}
+                    {/* 08/10/2026 (lot fraîcheur A2) : dates des DEUX plateformes (avant : celles de la première seule) */}
+                    <VerifieLe dates={[a.fees.verified?.date, b.fees.verified?.date]} famille="frais" label="Frais relevés" inconnue="Frais : date du relevé inconnue" />,{" "}
+                    {micaA.auto && micaB.auto ? (
+                      <VerifieLe dates={[micaA.date, micaB.date]} famille="mica" label="registre ESMA contrôlé automatiquement" />
+                    ) : (
+                      <VerifieLe dates={[a.mica.lastVerified, b.mica.lastVerified]} famille="mica" label="statuts MiCA vérifiés" inconnue="statuts MiCA : date inconnue" />
+                    )}.
+                  </>
+                )}
           </p>
 
           <ComparateurNotice
@@ -480,12 +523,12 @@ function ComparisonPage({ params }: Props) {
                 <tbody className="divide-y divide-border">
                   {section.rows.map((row) => (
                     <tr key={row.label}>
-                      <td className="px-4 py-3 text-muted min-w-[9rem]">{typoFr(row.label)}</td>
+                      <td className="px-4 py-3 text-muted min-w-[9rem]">{typoFr(row.label)}{row.labelSuffix}</td>
                       <td className={`px-4 py-3 text-right font-mono tabular-nums ${row.hint === "a" ? "text-fg-max font-semibold" : "text-fg-max/70"}`}>
-                        {typoFr(row.aDisplay)} <WinnerBadge hint={row.hint} side="a" />
+                        {typoFr(row.aDisplay)}{row.aSuffix} <WinnerBadge hint={row.hint} side="a" />
                       </td>
                       <td className={`px-4 py-3 text-right font-mono tabular-nums ${row.hint === "b" ? "text-fg-max font-semibold" : "text-fg-max/70"}`}>
-                        {typoFr(row.bDisplay)} <WinnerBadge hint={row.hint} side="b" />
+                        {typoFr(row.bDisplay)}{row.bSuffix} <WinnerBadge hint={row.hint} side="b" />
                       </td>
                     </tr>
                   ))}
@@ -503,7 +546,7 @@ function ComparisonPage({ params }: Props) {
                         <a href={plat.support.source} target="_blank" rel="noopener noreferrer" className="underline decoration-dotted underline-offset-2 hover:text-fg-max">
                           page d&apos;assistance officielle
                         </a>
-                        , relevée le {fmtDateFr(plat.support.verified)}).
+                        , <VerifieLe date={plat.support.verified} famille="support" label="relevée" age={false} />).
                       </>
                     ) : (
                       "canaux d'assistance non vérifiés."
@@ -665,7 +708,13 @@ function ComparisonPage({ params }: Props) {
         {/* DISCLAIMER */}
         <section className="mt-12 rounded-xl border border-border bg-surface/50 p-5">
           <p className="text-xs text-muted leading-relaxed">
-            Comparatif généré à partir de nos données ; Kevin Voisin, éditeur de {BRAND.name}, en est responsable. Statut MiCA vérifié le {new Date(a.mica.lastVerified).toLocaleDateString("fr-FR")}{a.fees.cost?.date ? `, frais relevés le ${new Date(a.fees.cost.date).toLocaleDateString("fr-FR")}` : ""}. {(okA && isPaidLink(a.id, a.affiliateUrl)) || (okB && isPaidLink(b.id, b.affiliateUrl))
+            Comparatif généré à partir de nos données ; Kevin Voisin, éditeur de {BRAND.name}, en est responsable. <VerifieLe dates={[a.mica.lastVerified, b.mica.lastVerified]} famille="mica" label="Statuts MiCA vérifiés" age={false} />
+            {a.fees.cost?.date || b.fees.cost?.date ? (
+              <>
+                , <VerifieLe dates={[a.fees.cost?.date, b.fees.cost?.date]} famille="frais" label="frais relevés" age={false} />
+              </>
+            ) : null}
+            . {(okA && isPaidLink(a.id, a.affiliateUrl)) || (okB && isPaidLink(b.id, b.affiliateUrl))
               ? "Les liens marqués « Publicité » sont rémunérés (affiliation ou parrainage), sans surcoût pour vous, ce qui n'influence pas l'attribution du verdict"
               : "Les liens vers les plateformes mènent à leur site officiel ; le verdict suit notre méthodologie"}{" "}
             — voir <Link href="/methodologie" className="underline hover:text-fg-max">/methodologie</Link> et <Link href="/transparence" className="underline hover:text-fg-max">/transparence</Link>. Investir dans les cryptoactifs présente un risque de perte en capital. Ce comparatif n'est pas un conseil en investissement.

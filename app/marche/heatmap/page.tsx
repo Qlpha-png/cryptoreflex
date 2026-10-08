@@ -71,7 +71,9 @@ export const metadata: Metadata = {
   ],
 };
 
-const webPageSchema: JsonLd = {
+/** 08/10/2026 (lot fraîcheur A) : dateModified = heure du relevé du marché servi (asOf), jamais l'heure du rendu ;
+ *  omise sans relevé. Avant : new Date() au chargement du module. */
+const webPageSchema = (asOf: string | undefined): JsonLd => ({
   "@context": "https://schema.org",
   "@type": "WebPage",
   "@id": `${PAGE_URL}#webpage`,
@@ -90,8 +92,8 @@ const webPageSchema: JsonLd = {
     url: `${BRAND.url}/og-image.png`,
   },
   datePublished: "2026-04-25",
-  dateModified: new Date().toISOString().slice(0, 10),
-};
+  ...(asOf ? { dateModified: asOf } : {}),
+});
 
 async function HeatmapPage() {
   // Fetch top 100 — fetchTopMarket renvoie au max ce que CoinGecko fournit.
@@ -102,7 +104,7 @@ async function HeatmapPage() {
   const internalSlugs = getCryptoSlugs();
 
   const schemas = graphSchema([
-    webPageSchema,
+    webPageSchema(all[0]?.asOf),
   ]);
 
   return (

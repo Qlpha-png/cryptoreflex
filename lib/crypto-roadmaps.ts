@@ -55,5 +55,6 @@ export function getCryptosWithRoadmap(): string[] {
 }
 
 /** Date de dernière mise à jour globale du dataset (depuis _meta). */
-export const ROADMAPS_LAST_UPDATED: string =
-  FILE._meta?.lastUpdated ?? "2026-05-01";
+// 08/10/2026 (lot fraîcheur A2) : plus de date de repli inventée.
+export const ROADMAPS_LAST_UPDATED: string | null =
+  FILE._meta?.lastUpdated ?? null;

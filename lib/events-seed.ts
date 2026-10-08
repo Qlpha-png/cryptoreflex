@@ -34,22 +34,223 @@ import type { CryptoEvent } from "@/lib/events-types";
  * On préfère "donnée légèrement datée mais sourcée" à "donnée fraîche scrappée".
  */
 
+/**
+ * 08/10/2026 (lot fraîcheur A2) : date de la dernière revue manuelle des événements hors FOMC (commit du 05/10/2026
+ * « statuts MiCA et calendrier à jour »). Les réunions FOMC sont relues par scripts/refresh-fomc.mjs. À changer à la
+ * main après chaque revue complète ; /calendrier signale la liste « à revérifier » au-delà de 30 jours.
+ */
+export const EVENTS_SEED_REVU_LE = "2026-10-05";
+
 export const EVENTS_SEED: CryptoEvent[] = [
   /* ========================================================================
-   * 10 ÉVÉNEMENTS À VENIR (post 2026-04-26)
+   * RÉUNIONS FOMC (Fed) — bloc AUTOMATIQUE, réécrit chaque lundi par .github/workflows/refresh-fomc.yml
+   * (scripts/refresh-fomc.mjs) depuis le calendrier officiel. Décision dans les 12 derniers mois ou à venir.
    * ======================================================================== */
+  /* <fomc-auto> Bloc écrit par scripts/refresh-fomc.mjs depuis le calendrier officiel de la Fed : ne pas modifier à la main. */
+  /* Relevé de la page de la Fed : 2026-10-08. */
   {
-    id: "fomc-2026-05",
-    title: "Décision de taux FOMC (mai 2026)",
-    date: "2026-05-06",
+    id: "fomc-2025-10",
+    title: "Décision de taux FOMC (octobre 2025)",
+    date: "2025-10-29",
     crypto: "MARCHÉ",
     category: "FOMC",
     source: "Federal Reserve",
     sourceUrl: "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm",
-    description:
-      "Réunion du Federal Open Market Committee. Communication sur les taux directeurs et le bilan de la Fed — historiquement source de volatilité sur le BTC dans les heures qui suivent.",
+    description: "Réunion du comité de politique monétaire de la Fed (FOMC) les 28 et 29 octobre 2025 ; décision sur les taux et communiqué le 29 octobre. Date tirée du calendrier officiel de la Fed.",
     importance: 3,
   },
+  {
+    id: "fomc-2025-12",
+    title: "Décision de taux FOMC (décembre 2025)",
+    date: "2025-12-10",
+    crypto: "MARCHÉ",
+    category: "FOMC",
+    source: "Federal Reserve",
+    sourceUrl: "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm",
+    description: "Réunion du comité de politique monétaire de la Fed (FOMC) les 9 et 10 décembre 2025 ; décision sur les taux et communiqué le 10 décembre. Réunion avec projections économiques (SEP). Date tirée du calendrier officiel de la Fed.",
+    importance: 3,
+  },
+  {
+    id: "fomc-2026-01",
+    title: "Décision de taux FOMC (janvier 2026)",
+    date: "2026-01-28",
+    crypto: "MARCHÉ",
+    category: "FOMC",
+    source: "Federal Reserve",
+    sourceUrl: "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm",
+    description: "Réunion du comité de politique monétaire de la Fed (FOMC) les 27 et 28 janvier 2026 ; décision sur les taux et communiqué le 28 janvier. Date tirée du calendrier officiel de la Fed.",
+    importance: 3,
+  },
+  {
+    id: "fomc-2026-03",
+    title: "Décision de taux FOMC (mars 2026)",
+    date: "2026-03-18",
+    crypto: "MARCHÉ",
+    category: "FOMC",
+    source: "Federal Reserve",
+    sourceUrl: "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm",
+    description: "Réunion du comité de politique monétaire de la Fed (FOMC) les 17 et 18 mars 2026 ; décision sur les taux et communiqué le 18 mars. Réunion avec projections économiques (SEP). Date tirée du calendrier officiel de la Fed.",
+    importance: 3,
+  },
+  {
+    id: "fomc-2026-04",
+    title: "Décision de taux FOMC (avril 2026)",
+    date: "2026-04-29",
+    crypto: "MARCHÉ",
+    category: "FOMC",
+    source: "Federal Reserve",
+    sourceUrl: "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm",
+    description: "Réunion du comité de politique monétaire de la Fed (FOMC) les 28 et 29 avril 2026 ; décision sur les taux et communiqué le 29 avril. Date tirée du calendrier officiel de la Fed.",
+    importance: 3,
+  },
+  {
+    id: "fomc-2026-06",
+    title: "Décision de taux FOMC (juin 2026)",
+    date: "2026-06-17",
+    crypto: "MARCHÉ",
+    category: "FOMC",
+    source: "Federal Reserve",
+    sourceUrl: "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm",
+    description: "Réunion du comité de politique monétaire de la Fed (FOMC) les 16 et 17 juin 2026 ; décision sur les taux et communiqué le 17 juin. Réunion avec projections économiques (SEP). Date tirée du calendrier officiel de la Fed.",
+    importance: 3,
+  },
+  {
+    id: "fomc-2026-07",
+    title: "Décision de taux FOMC (juillet 2026)",
+    date: "2026-07-29",
+    crypto: "MARCHÉ",
+    category: "FOMC",
+    source: "Federal Reserve",
+    sourceUrl: "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm",
+    description: "Réunion du comité de politique monétaire de la Fed (FOMC) les 28 et 29 juillet 2026 ; décision sur les taux et communiqué le 29 juillet. Date tirée du calendrier officiel de la Fed.",
+    importance: 3,
+  },
+  {
+    id: "fomc-2026-09",
+    title: "Décision de taux FOMC (septembre 2026)",
+    date: "2026-09-16",
+    crypto: "MARCHÉ",
+    category: "FOMC",
+    source: "Federal Reserve",
+    sourceUrl: "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm",
+    description: "Réunion du comité de politique monétaire de la Fed (FOMC) les 15 et 16 septembre 2026 ; décision sur les taux et communiqué le 16 septembre. Réunion avec projections économiques (SEP). Date tirée du calendrier officiel de la Fed.",
+    importance: 3,
+  },
+  {
+    id: "fomc-2026-10",
+    title: "Décision de taux FOMC (octobre 2026)",
+    date: "2026-10-28",
+    crypto: "MARCHÉ",
+    category: "FOMC",
+    source: "Federal Reserve",
+    sourceUrl: "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm",
+    description: "Réunion du comité de politique monétaire de la Fed (FOMC) les 27 et 28 octobre 2026 ; décision sur les taux et communiqué le 28 octobre. Date tirée du calendrier officiel de la Fed.",
+    importance: 3,
+  },
+  {
+    id: "fomc-2026-12",
+    title: "Décision de taux FOMC (décembre 2026)",
+    date: "2026-12-09",
+    crypto: "MARCHÉ",
+    category: "FOMC",
+    source: "Federal Reserve",
+    sourceUrl: "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm",
+    description: "Réunion du comité de politique monétaire de la Fed (FOMC) les 8 et 9 décembre 2026 ; décision sur les taux et communiqué le 9 décembre. Réunion avec projections économiques (SEP). Date tirée du calendrier officiel de la Fed.",
+    importance: 3,
+  },
+  {
+    id: "fomc-2027-01",
+    title: "Décision de taux FOMC (janvier 2027)",
+    date: "2027-01-27",
+    crypto: "MARCHÉ",
+    category: "FOMC",
+    source: "Federal Reserve",
+    sourceUrl: "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm",
+    description: "Réunion du comité de politique monétaire de la Fed (FOMC) les 26 et 27 janvier 2027 ; décision sur les taux et communiqué le 27 janvier. Date tirée du calendrier officiel de la Fed.",
+    importance: 3,
+  },
+  {
+    id: "fomc-2027-03",
+    title: "Décision de taux FOMC (mars 2027)",
+    date: "2027-03-17",
+    crypto: "MARCHÉ",
+    category: "FOMC",
+    source: "Federal Reserve",
+    sourceUrl: "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm",
+    description: "Réunion du comité de politique monétaire de la Fed (FOMC) les 16 et 17 mars 2027 ; décision sur les taux et communiqué le 17 mars. Réunion avec projections économiques (SEP). Date tirée du calendrier officiel de la Fed.",
+    importance: 3,
+  },
+  {
+    id: "fomc-2027-04",
+    title: "Décision de taux FOMC (avril 2027)",
+    date: "2027-04-28",
+    crypto: "MARCHÉ",
+    category: "FOMC",
+    source: "Federal Reserve",
+    sourceUrl: "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm",
+    description: "Réunion du comité de politique monétaire de la Fed (FOMC) les 27 et 28 avril 2027 ; décision sur les taux et communiqué le 28 avril. Date tirée du calendrier officiel de la Fed.",
+    importance: 3,
+  },
+  {
+    id: "fomc-2027-06",
+    title: "Décision de taux FOMC (juin 2027)",
+    date: "2027-06-09",
+    crypto: "MARCHÉ",
+    category: "FOMC",
+    source: "Federal Reserve",
+    sourceUrl: "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm",
+    description: "Réunion du comité de politique monétaire de la Fed (FOMC) les 8 et 9 juin 2027 ; décision sur les taux et communiqué le 9 juin. Réunion avec projections économiques (SEP). Date tirée du calendrier officiel de la Fed.",
+    importance: 3,
+  },
+  {
+    id: "fomc-2027-07",
+    title: "Décision de taux FOMC (juillet 2027)",
+    date: "2027-07-28",
+    crypto: "MARCHÉ",
+    category: "FOMC",
+    source: "Federal Reserve",
+    sourceUrl: "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm",
+    description: "Réunion du comité de politique monétaire de la Fed (FOMC) les 27 et 28 juillet 2027 ; décision sur les taux et communiqué le 28 juillet. Date tirée du calendrier officiel de la Fed.",
+    importance: 3,
+  },
+  {
+    id: "fomc-2027-09",
+    title: "Décision de taux FOMC (septembre 2027)",
+    date: "2027-09-15",
+    crypto: "MARCHÉ",
+    category: "FOMC",
+    source: "Federal Reserve",
+    sourceUrl: "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm",
+    description: "Réunion du comité de politique monétaire de la Fed (FOMC) les 14 et 15 septembre 2027 ; décision sur les taux et communiqué le 15 septembre. Réunion avec projections économiques (SEP). Date tirée du calendrier officiel de la Fed.",
+    importance: 3,
+  },
+  {
+    id: "fomc-2027-10",
+    title: "Décision de taux FOMC (octobre 2027)",
+    date: "2027-10-27",
+    crypto: "MARCHÉ",
+    category: "FOMC",
+    source: "Federal Reserve",
+    sourceUrl: "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm",
+    description: "Réunion du comité de politique monétaire de la Fed (FOMC) les 26 et 27 octobre 2027 ; décision sur les taux et communiqué le 27 octobre. Date tirée du calendrier officiel de la Fed.",
+    importance: 3,
+  },
+  {
+    id: "fomc-2027-12",
+    title: "Décision de taux FOMC (décembre 2027)",
+    date: "2027-12-08",
+    crypto: "MARCHÉ",
+    category: "FOMC",
+    source: "Federal Reserve",
+    sourceUrl: "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm",
+    description: "Réunion du comité de politique monétaire de la Fed (FOMC) les 7 et 8 décembre 2027 ; décision sur les taux et communiqué le 8 décembre. Réunion avec projections économiques (SEP). Date tirée du calendrier officiel de la Fed.",
+    importance: 3,
+  },
+  /* </fomc-auto> */
+
+  /* ========================================================================
+   * 10 ÉVÉNEMENTS À VENIR (post 2026-04-26)
+   * ======================================================================== */
   {
     id: "btc-prague-2026",
     title: "BTC Prague 2026",
@@ -61,18 +262,6 @@ export const EVENTS_SEED: CryptoEvent[] = [
     description:
       "Plus grande conférence Bitcoin-only d'Europe. Trois jours de talks, ateliers Lightning et stands hardware wallets au Prague Congress Centre.",
     importance: 2,
-  },
-  {
-    id: "fomc-2026-06",
-    title: "Décision de taux FOMC (juin 2026)",
-    date: "2026-06-17",
-    crypto: "MARCHÉ",
-    category: "FOMC",
-    source: "Federal Reserve",
-    sourceUrl: "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm",
-    description:
-      "Réunion FOMC avec mise à jour des projections économiques (SEP) et conférence de presse de Jerome Powell. Événement à fort impact macro.",
-    importance: 3,
   },
   {
     id: "ltc-halving-2027",
@@ -134,46 +323,10 @@ export const EVENTS_SEED: CryptoEvent[] = [
       "Déblocage mensuel d'environ 92,65 millions de tokens ARB destinés à l'équipe et aux investisseurs. Diluation supply ~2 % à surveiller pour le prix.",
     importance: 2,
   },
-  {
-    id: "fomc-2026-09",
-    title: "Décision de taux FOMC (septembre 2026)",
-    date: "2026-09-16",
-    crypto: "MARCHÉ",
-    category: "FOMC",
-    source: "Federal Reserve",
-    sourceUrl: "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm",
-    description:
-      "Réunion FOMC avec dot plot mis à jour. Considérée comme la fenêtre clé pour orienter le narratif macro de fin d'année (rallye Q4 vs. correction).",
-    importance: 3,
-  },
 
   /* ========================================================================
    * 10 ÉVÉNEMENTS RÉCENTS (passés, depuis < 12 mois)
    * ======================================================================== */
-  {
-    id: "fomc-2026-03",
-    title: "Décision de taux FOMC (mars 2026)",
-    date: "2026-03-18",
-    crypto: "MARCHÉ",
-    category: "FOMC",
-    source: "Federal Reserve",
-    sourceUrl: "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm",
-    description:
-      "Réunion FOMC du premier trimestre 2026. Powell a confirmé le maintien d'une politique restrictive en attendant des signes clairs de désinflation persistante.",
-    importance: 3,
-  },
-  {
-    id: "fomc-2026-01",
-    title: "Décision de taux FOMC (janvier 2026)",
-    date: "2026-01-28",
-    crypto: "MARCHÉ",
-    category: "FOMC",
-    source: "Federal Reserve",
-    sourceUrl: "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm",
-    description:
-      "Première réunion FOMC de l'année. Statu quo sur les taux, communication prudente sur la trajectoire des cuts attendus dans le marché.",
-    importance: 3,
-  },
   {
     id: "btc-etf-anniv-2026",
     title: "2 ans des ETF Bitcoin spot US",
@@ -232,18 +385,6 @@ export const EVENTS_SEED: CryptoEvent[] = [
     sourceUrl: "https://www.blockchain.com/explorer/blocks/btc/840000",
     description:
       "Halving au bloc 840 000 : récompense passée de 6,25 à 3,125 BTC. L'inflation annuelle Bitcoin est tombée sous celle de l'or pour la première fois.",
-    importance: 3,
-  },
-  {
-    id: "fomc-2025-12",
-    title: "Décision de taux FOMC (décembre 2025)",
-    date: "2025-12-10",
-    crypto: "MARCHÉ",
-    category: "FOMC",
-    source: "Federal Reserve",
-    sourceUrl: "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm",
-    description:
-      "Dernière réunion FOMC de 2025 — projections économiques de fin d'année et message sur la trajectoire 2026. Forte attention médiatique.",
     importance: 3,
   },
 

@@ -63,14 +63,15 @@ describe("affichage", () => {
 
   it("/avis/coinbase : note, nombre d'avis, date du relevé et lien vers la page Trustpilot", () => {
     const html = renderToStaticMarkup(AvisPage({ params: { slug: "coinbase" } }));
-    expect(text(html)).toContain("Trustpilot 4,0/5 (23 213 avis, relevé le 5 octobre 2026)");
+    // 08/10/2026 (lot fraîcheur A2) : dates via <VerifieLe> (JJ/MM/AAAA, « · à revérifier » au-delà de 30 jours)
+    expect(text(html)).toMatch(/Trustpilot 4,0\/5 \(23 213 avis, relevé le 05\/10\/2026( · à revérifier)?\s?\)/);
     expect(html).toContain('href="https://fr.trustpilot.com/review/coinbase.com"');
-    expect(text(html)).toContain("note Trustpilot relevée le 5 octobre 2026");
+    expect(text(html)).toMatch(/note Trustpilot relevée le 05\/10\/2026/);
   });
 
   it("comparatif Binance / Coinbase : la note suspendue est dite comme telle, sans badge de gagnant", () => {
     const visible = text(renderToStaticMarkup(ComparisonPage({ params: { slug: "binance-vs-coinbase" } })));
-    expect(visible).toContain("Trustpilot (relevé du 5 octobre 2026)");
+    expect(visible).toMatch(/Trustpilot \(\s?relevé le 05\/10\/2026( · à revérifier)?\s?\)/);
     expect(visible).toContain("Note suspendue par Trustpilot");
     expect(visible).toContain("4,0/5 (23 213 avis)");
   });

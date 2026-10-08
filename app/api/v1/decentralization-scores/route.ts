@@ -12,6 +12,7 @@ import { requireApiKey } from "@/lib/api-keys/auth";
 import { successResponse } from "@/lib/api-keys/response";
 import { hasScope } from "@/lib/api-keys/scopes";
 import scoresData from "@/data/decentralization-scores.json";
+import { decentralizationLastUpdated } from "@/lib/public-data-dates";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -57,7 +58,8 @@ export async function GET(req: Request): Promise<Response> {
 
   return successResponse(
     {
-      last_updated: raw.lastUpdated ?? null,
+      // 08/10/2026 : date la plus récente (fichier + vérification de chaque score), même règle que l'API publique
+      last_updated: decentralizationLastUpdated(raw.lastUpdated, raw.scores),
       methodology: raw.methodology ?? null,
       scores,
       _capabilities: {

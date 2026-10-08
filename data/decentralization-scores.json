@@ -1,6 +1,6 @@
 {
   "lastUpdated": "2026-04-26",
-  "methodology": "Score composite Cryptoreflex sur 5 critères pondérés : Nakamoto coefficient (30%), nb de validateurs/mineurs actifs (25%), diversité géographique des nodes (15%), diversité des clients logiciels (15%), et open source du protocole (15%). Sources publiques : Nakaflow, EthernNodes, Solana Beach, Mintscan, GitHub. Vérification trimestrielle.",
+  "methodology": "Score composite Cryptoreflex sur 5 critères pondérés : Nakamoto coefficient (30%), nb de validateurs/mineurs actifs (25%), diversité géographique des nodes (15%), diversité des clients logiciels (15%), et open source du protocole (15%). Sources publiques : Nakaflow, EthernNodes, Solana Beach, Mintscan, GitHub. Relevé fait à la main, daté score par score : aucune révision programmée.",
   "scores": {
     "bitcoin": {
       "score": 7.4,

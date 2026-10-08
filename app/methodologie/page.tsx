@@ -1,13 +1,14 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { BRAND } from "@/lib/brand";
+import { PUBLIC_API_CACHE_LABEL } from "@/lib/public-data-dates";
 import { ListChecks, Scale, RefreshCw, Database, ArrowRight } from "lucide-react";
 import StructuredData from "@/components/StructuredData";
 import { articleSchema, graphSchema, type JsonLd } from "@/lib/schema";
 import { withHreflang } from "@/lib/seo-alternates";
 import { PAGE_PUBLISHED, PAGE_UPDATED, formatDateFr } from "@/lib/engagements";
 import { DELAI_REPONSE } from "@/lib/engagements";
-import { verificationWindow } from "@/components/home/HomeTrustLine";
+import VerifieLe from "@/components/ui/VerifieLe";
 import { getExchangePlatforms } from "@/lib/platforms";
 import Breadcrumbs from "@/components/Breadcrumbs";
 
@@ -32,8 +33,7 @@ export const metadata: Metadata = {
 const baseUrl = BRAND.url;
 
 /** Plages réelles des relevés (plateformes d'échange) : « entre le 2 et le 5 octobre 2026 », « le 5 octobre 2026 ». */
-const MICA_WINDOW = verificationWindow(getExchangePlatforms().map((p) => p.mica?.lastVerified));
-const FEES_WINDOW = verificationWindow(getExchangePlatforms().map((p) => p.fees.verified?.date));
+// 08/10/2026 (lot fraîcheur A2) : périodes de relevé affichées par <VerifieLe> (âge signalé au-delà du seuil).
 
 const article = articleSchema({
   slug: "methodologie",
@@ -73,7 +73,7 @@ export default function MethodologiePage() {
       <StructuredData id="methodologie-jsonld" data={jsonLd} />
       <h1 className="text-4xl font-extrabold tracking-tight text-fg">Notre méthodologie</h1>
       <p className="text-sm text-muted">
-        Comment {BRAND.name} évalue les plateformes crypto. Mise à jour : {formatDateFr(LAST_UPDATED)}.
+        Comment {BRAND.name} évalue les plateformes crypto. <VerifieLe date={LAST_UPDATED} famille="editorial" label="Mise à jour" age={false} />.
       </p>
 
       {/* 06/10/2026 : « inspirée des pratiques de comparateurs indépendants type UFC-Que Choisir » retiré
@@ -159,8 +159,8 @@ export default function MethodologiePage() {
           annuelle » n'étaient pas tenus. Les dates affichées sont celles des relevés réels (champs lastVerified et
           fees.verified.date de data/platforms.json), recalculées à chaque build. */}
       <ul className="text-fg/85 leading-relaxed">
-        <li><strong>Statut MiCA</strong> : relevé {MICA_WINDOW ?? "à une date non renseignée"} sur le registre MiCA de l&apos;ESMA et les listes blanches de l&apos;AMF ; la date est affichée sur chaque fiche</li>
-        <li><strong>Frais</strong> : relevés {FEES_WINDOW ?? "à une date non renseignée"} sur la grille officielle de chaque plateforme ; la date et la source sont affichées sur chaque avis</li>
+        <li><strong>Statut MiCA</strong> : <VerifieLe dates={getExchangePlatforms().map((p) => p.mica?.lastVerified)} famille="mica" label="relevé" inconnue="relevé à une date non renseignée" /> sur le registre MiCA de l&apos;ESMA et les listes blanches de l&apos;AMF ; la date est affichée sur chaque fiche</li>
+        <li><strong>Frais</strong> : <VerifieLe dates={getExchangePlatforms().map((p) => p.fees.verified?.date)} famille="frais" label="relevés" inconnue="relevés à une date non renseignée" /> sur la grille officielle de chaque plateforme ; la date et la source sont affichées sur chaque avis</li>
         <li><strong>Notes Trustpilot</strong> : relevées à la main sur la page Trustpilot de chaque plateforme ; la <strong>date du relevé</strong> est affichée à côté de chaque note</li>
         <li><strong>Bonus de bienvenue</strong> : aucun relevé daté à ce jour</li>
       </ul>
@@ -211,7 +211,7 @@ export default function MethodologiePage() {
             API publique
           </div>
           <p className="mt-1 text-sm text-muted">
-            5 endpoints JSON sans authentification, CORS *, cache CDN 24h.
+            5 endpoints JSON sans authentification, CORS *, {PUBLIC_API_CACHE_LABEL.toLowerCase()}.
             Spec OpenAPI 3.0 importable Postman/Insomnia.
           </p>
           <div className="mt-2 inline-flex items-center gap-1 text-sm font-medium text-primary-soft">

@@ -12,6 +12,7 @@ import { requireApiKey } from "@/lib/api-keys/auth";
 import { successResponse, applicationError } from "@/lib/api-keys/response";
 import { hasScope } from "@/lib/api-keys/scopes";
 import psanData from "@/data/psan-registry.json";
+import { psanLastUpdated } from "@/lib/public-data-dates";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -80,7 +81,8 @@ export async function GET(req: Request): Promise<Response> {
 
   return successResponse(
     {
-      last_updated: raw._meta?.lastUpdated ?? null,
+      // 08/10/2026 : date la plus récente des vérifications (même règle que /api/public/psan-registry)
+      last_updated: psanLastUpdated(raw._meta, platforms as Array<{ lastVerified?: unknown }>),
       platforms: filtered,
       filter: { since: sinceRaw },
     },

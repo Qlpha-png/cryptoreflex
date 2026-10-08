@@ -20,6 +20,7 @@
 import { NextResponse } from "next/server";
 import scoresData from "@/data/decentralization-scores.json";
 import { BRAND } from "@/lib/brand";
+import { PUBLIC_API_CACHE_CONTROL, decentralizationLastUpdated } from "@/lib/public-data-dates";
 
 export const dynamic = "force-static";
 export const revalidate = 86_400;
@@ -34,7 +35,7 @@ interface ScoresPayload {
     attribution: string;
     attributionHtml: string;
     canonicalUrl: string;
-    lastUpdated: string;
+    lastUpdated: string | null;
     contact: string;
   };
   scores: unknown;
@@ -44,9 +45,10 @@ function buildPayload(): ScoresPayload {
   const raw = scoresData as {
     lastUpdated?: string;
     methodology?: string;
-    scores?: unknown;
+    scores?: Record<string, { lastVerified?: unknown }>;
   };
-  const lastUpdated = raw.lastUpdated ?? new Date().toISOString().split("T")[0];
+  // 08/10/2026 : date réelle des données (fichier + vérification de chaque score), jamais la date du jour.
+  const lastUpdated = decentralizationLastUpdated(raw.lastUpdated, raw.scores);
 
   return {
     _meta: {
@@ -79,7 +81,7 @@ const COMMON_HEADERS: Record<string, string> = {
   "X-Attribution":
     "Donnees Cryptoreflex (https://cryptoreflex.fr) - Reutilisation conditionnee a un lien dofollow.",
   Link: '<https://creativecommons.org/licenses/by/4.0/>; rel="license"; title="CC-BY-4.0"',
-  "Cache-Control": "public, max-age=3600, s-maxage=86400, stale-while-revalidate=86400",
+  "Cache-Control": PUBLIC_API_CACHE_CONTROL,
 };
 
 export function GET() {

@@ -25,6 +25,7 @@ import { NextResponse } from "next/server";
 import { getKv } from "@/lib/kv";
 import { getTopMarket, type PriceSnapshot } from "@/lib/price-source";
 import { verifyBearer } from "@/lib/auth";
+import { CRON_TRACE_KEYS, writeCronTrace } from "@/lib/cron-trace";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -59,6 +60,7 @@ export async function GET(request: Request) {
     // sparkline mais pas critique ici).
     const top = await getTopMarket(50);
     if (top.length < 10) {
+      await writeCronTrace(CRON_TRACE_KEYS.updateStaticPrices, { ok: false, raison: "trop peu de cours reçus", count: top.length });
       return NextResponse.json(
         { ok: false, error: "aggregator returned too few results", count: top.length },
         { status: 200 },
@@ -81,11 +83,14 @@ export async function GET(request: Request) {
       KV_KEY,
       JSON.stringify({
         snapshot,
+        // heure du relevé : écrite juste après getTopMarket (exception justifiée du test des dates publiées)
         updatedAt: new Date().toISOString(),
         sourceCount: top.length,
       }),
       { ex: TTL_SECONDS },
     );
+    // 08/10/2026 (lot fraîcheur A) : trace du passage pour la sentinelle (seuil 3 h)
+    await writeCronTrace(CRON_TRACE_KEYS.updateStaticPrices, { ok: true, count: Object.keys(snapshot).length, mocked: kv.mocked });
 
     return NextResponse.json({
       ok: true,
@@ -98,6 +103,7 @@ export async function GET(request: Request) {
       },
     });
   } catch (err) {
+    await writeCronTrace(CRON_TRACE_KEYS.updateStaticPrices, { ok: false, raison: err instanceof Error ? err.message : "erreur inconnue" });
     return NextResponse.json(
       { ok: false, error: err instanceof Error ? err.message : "unknown" },
       { status: 500 },

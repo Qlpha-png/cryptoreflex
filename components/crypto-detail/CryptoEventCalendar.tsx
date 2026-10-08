@@ -1,4 +1,5 @@
 import { avecTypoSync } from "@/components/ui/Typo";
+import VerifieLe from "@/components/ui/VerifieLe";
 import {
   Calendar,
   Unlock,
@@ -143,8 +144,8 @@ function CryptoEventCalendar({ cryptoId, cryptoName }: Props) {
       </ol>
 
       <p className="mt-4 text-xs text-muted leading-relaxed">
-        Données éditoriales Cryptoreflex · Dernière vérification :{" "}
-        {EVENTS_LAST_UPDATED}.
+        Données éditoriales Cryptoreflex ·{" "}
+        <VerifieLe date={EVENTS_LAST_UPDATED} famille="evenements" label="Liste vérifiée" inconnue="date de vérification inconnue" />.
       </p>
     </section>
   );

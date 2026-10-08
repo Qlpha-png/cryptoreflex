@@ -52,7 +52,6 @@ export interface PlatformMica {
 
 export interface PsanRegistryMeta {
   lastUpdated: string;
-  nextReviewDate: string;
   updateFrequency: string;
   source: string;
   officialSources: {

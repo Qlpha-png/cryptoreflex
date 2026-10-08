@@ -3,9 +3,10 @@ name: Weekly events refresh
 # Cron tous les lundis à 6h UTC (avant l'ouverture des marchés FR).
 # 07/10/2026 : lancé par l'horloge Vercel (lib/gardien.ts) ; l'horaire ci-dessous reste comme filet (doublon sans danger :
 # commit seulement si l'agenda change, groupe de concurrence). Tickets dans le dépôt PRIVÉ Qlpha-png/cryptoreflex-sentinelle.
+# 08/10/2026 (lot fraîcheur A, reprise, juré I7) : LANCEMENT MANUEL SEULEMENT. Sans clé CoinMarketCal, ce robot sort en
+# rouge chaque lundi (une issue par semaine) : un bruit qui banalise le rouge. Horaire GitHub et horloge Vercel coupés
+# jusqu'à la décision de Kev sur CoinMarketCal ; il sort aussi de la liste CADENCE de la sentinelle.
 on:
-  schedule:
-    - cron: "0 6 * * 1" # filet de l'horloge Vercel
   workflow_dispatch:
 
 permissions:
@@ -33,11 +34,20 @@ jobs:
         with:
           node-version: "20"
 
+      # 08/10/2026 (lot fraîcheur A, audit n° 34) : sans la clé (ou sans réponse de l'API), le script ÉCHOUE et le dit
+      # dans le résumé du run ; avant, il sortait en vert sans rien faire.
       - name: Refresh events seed
         run: node scripts/refresh-events.mjs
         env:
-          # API key CoinMarketCal (free tier 100 calls/jour) — facultatif.
+          # API key CoinMarketCal (free tier 100 calls/jour) — OBLIGATOIRE : absente = run rouge.
           COINMARKETCAL_API_KEY: ${{ secrets.COINMARKETCAL_API_KEY }}
+
+      # Bloquant avant tout commit : le bloc FOMC automatique doit rester intact et le projet doit compiler.
+      - name: Tests du calendrier
+        run: |
+          npm ci --no-audit --no-fund
+          npx vitest run tests/lib/events-fomc.test.ts
+          npx tsc --noEmit -p .
 
       - name: Detect + commit changes (with rebase loop anti-race)
         run: |
@@ -99,7 +109,9 @@ jobs:
                 `**Date** : ${date}`,
                 ``,
                 `### Causes possibles`,
+                `- Secret COINMARKETCAL_API_KEY absent (cas actuel : le run échoue volontairement, voir le résumé)`,
                 `- API CoinMarketCal down ou quota dépassé (free tier 100 calls/jour)`,
+                `- Tests du calendrier en échec (bloc FOMC effacé ou seed qui ne compile plus)`,
                 `- Format de réponse API modifié`,
                 `- Échec push sur main`,
                 ``,

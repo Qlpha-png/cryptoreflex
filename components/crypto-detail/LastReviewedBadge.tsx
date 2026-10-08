@@ -1,5 +1,6 @@
 import { avecTypoSync } from "@/components/ui/Typo";
 import { CalendarCheck2 } from "lucide-react";
+import VerifieLe from "@/components/ui/VerifieLe";
 
 /**
  * LastReviewedBadge — affiche la date de dernière vérification éditoriale
@@ -57,9 +58,7 @@ function LastReviewedBadge({
       >
         <CalendarCheck2 className="h-3.5 w-3.5 text-primary-soft" aria-hidden="true" />
         <span className="font-semibold text-fg">{label} :</span>
-        <time dateTime={dateIso} className="font-mono text-fg/85">
-          {formatted}
-        </time>
+        <VerifieLe date={dateIso} famille="editorial" label="" className="font-mono text-fg/85" />
       </div>
     );
   }
@@ -72,9 +71,8 @@ function LastReviewedBadge({
     >
       <CalendarCheck2 className="h-3 w-3" aria-hidden="true" />
       <span className="hidden sm:inline">Vérif. </span>
-      <time dateTime={dateIso} className="font-mono text-fg/80">
-        {formatted}
-      </time>
+      {/* 08/10/2026 (lot fraîcheur A2) : date via <VerifieLe> (au-delà de 180 jours : « à revérifier ») */}
+      <VerifieLe date={dateIso} famille="editorial" label="" className="font-mono text-fg/80" />
     </span>
   );
 }

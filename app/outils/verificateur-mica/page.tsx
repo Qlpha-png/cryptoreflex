@@ -11,10 +11,17 @@ import {
 } from "lucide-react";
 import MicaVerifier from "@/components/MicaVerifier";
 import {
+  getAllMicaPlatforms,
   getMicaMeta,
   getMostSearchedPlatforms,
-  formatMicaDate,
 } from "@/lib/mica";
+import VerifieLe from "@/components/ui/VerifieLe";
+import { getExchangePlatforms } from "@/lib/platforms";
+
+/* 08/10/2026 (lot fraîcheur A, audit n° 17) : nombres RÉELS — fiches de l'outil (data/psan-registry.json) et plateformes
+   comparées chaque nuit au registre de l'ESMA par la veille (data/platforms.json, hors portefeuilles). Avant : « 50+ ». */
+const nbOutil = getAllMicaPlatforms().length;
+const nbVeille = getExchangePlatforms().length;
 import { BRAND } from "@/lib/brand";
 import RelatedPagesNav from "@/components/RelatedPagesNav";
 import { withHreflang } from "@/lib/seo-alternates";
@@ -152,16 +159,16 @@ export default function VerificateurMicaPage({ searchParams }: PageProps) {
             <p className="mt-4 text-lg text-fg-max/75">
               Vérifiez en 3 secondes l'agrément MiCA et l'accès à la France de
               n'importe quelle plateforme crypto. Données croisées depuis les
-              registres officiels AMF et ESMA, contrôlés par une veille automatique et datés fiche par fiche.
+              registres officiels AMF et ESMA, relues à la main et datées ; le registre de l'ESMA est en plus relu chaque nuit par notre veille automatique.
             </p>
             <div className="mt-6 flex flex-wrap items-center gap-4 text-sm text-muted">
               <span className="flex items-center gap-1.5">
                 <Database className="h-4 w-4 text-primary" />
-                {meta.schemaVersion ? "50+" : "50+"} plateformes répertoriées
+                {nbOutil} plateformes répertoriées
               </span>
               <span className="flex items-center gap-1.5">
                 <CalendarCheck className="h-4 w-4 text-primary" />
-                Vérifié {formatMicaDate(meta.lastUpdated)}
+                <VerifieLe date={meta.lastUpdated} famille="mica" label="Vérifié" inconnue="Date de vérification inconnue" />
               </span>
               <span className="flex items-center gap-1.5">
                 <ShieldCheck className="h-4 w-4 text-primary" />
@@ -219,14 +226,12 @@ export default function VerificateurMicaPage({ searchParams }: PageProps) {
             <MethodCard
               icon={Database}
               title="Sources officielles uniquement"
-              text="Registre intérimaire MiCA de l'ESMA (prestataires agréés, autorité, date d'agrément, pays couverts par passeport) et liste blanche de l'AMF (numéros d'agrément des prestataires français). Dernière vérification : 2 octobre 2026."
+              text={`Registre intérimaire MiCA de l'ESMA (prestataires agréés, autorité, date d'agrément, pays couverts par passeport) et liste blanche de l'AMF (numéros d'agrément des prestataires français), relus à la main (date de la dernière relecture en haut de page).`}
             />
             <MethodCard
               icon={CheckCircle2}
               title="Veille automatique"
-              text={`Une veille automatique compare nos fiches au registre de l'ESMA (contrôle prévu chaque nuit) et nous signale tout écart ; la fiche est alors corrigée à la main et datée. Dernière mise à jour : ${formatMicaDate(
-                meta.lastUpdated
-              )}.`}
+              text={`Chaque nuit, notre veille automatique relit le registre de l'ESMA et le compare aux statuts des ${nbVeille} plateformes de nos comparatifs ; tout écart est signalé, et un statut n'est mis à jour qu'après vérification. Les ${nbOutil} fiches de cet outil sont relues à la main (date de la dernière relecture en haut de page).`}
             />
             <MethodCard
               icon={AlertTriangle}
@@ -363,11 +368,13 @@ const FAQ = [
   },
   {
     q: "À quelle fréquence cet outil est-il mis à jour ?",
-    a: "Les statuts viennent des registres officiels : la liste blanche de l'AMF et le registre des prestataires agréés de l'ESMA. Une veille automatique relit ces registres chaque nuit et signale tout changement ; la fiche est alors corrigée après vérification. La date de la dernière vérification est affichée sur chaque fiche.",
+    // 08/10/2026 (lot fraîcheur A) : la veille de nuit ne lit QUE le registre de l'ESMA (pas la liste blanche de l'AMF),
+    // et seulement pour les plateformes de nos comparatifs ; les fiches de l'outil sont relues à la main.
+    a: "Les statuts viennent des registres officiels : la liste blanche de l'AMF et le registre des prestataires agréés de l'ESMA, relus à la main ; la date de la dernière relecture est affichée sur la page. Chaque nuit, une veille automatique relit en plus le registre de l'ESMA pour les plateformes de nos comparatifs et signale tout écart ; un statut n'est mis à jour qu'après vérification.",
   },
   {
     q: "Puis-je intégrer un badge sur mon site ?",
-    a: "Oui. Sur la fiche d'une plateforme, cliquez sur 'Partager (embed iframe)' pour copier le code HTML à coller sur votre site. Le badge se met à jour automatiquement en cas de changement de statut.",
+    a: "Oui. Sur la fiche d'une plateforme, cliquez sur 'Partager (embed iframe)' pour copier le code HTML à coller sur votre site. Le badge reprend le statut publié sur Cryptoreflex ; il change dès que nous corrigeons la fiche.",
   },
   {
     q: "Cryptoreflex fait-il du conseil en investissement ?",

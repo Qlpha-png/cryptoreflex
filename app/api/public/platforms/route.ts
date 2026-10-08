@@ -28,6 +28,7 @@ import { NextResponse } from "next/server";
 import platformsData from "@/data/platforms.json";
 import { BRAND } from "@/lib/brand";
 import { withOfficialLink } from "@/lib/platforms";
+import { PUBLIC_API_CACHE_CONTROL, platformsLastUpdated } from "@/lib/public-data-dates";
 
 // Force static eval au build (data/platforms.json est versionne en repo).
 export const dynamic = "force-static";
@@ -43,7 +44,7 @@ interface PlatformsPayload {
     attribution: string;
     attributionHtml: string;
     canonicalUrl: string;
-    lastUpdated: string;
+    lastUpdated: string | null;
     contact: string;
   };
   platforms: unknown;
@@ -53,7 +54,16 @@ function buildPayload(): PlatformsPayload {
   // platforms.json contient deja un `_meta` interne ; on le wrappe avec
   // les champs de license publics (separation source vs distribution).
   const raw = platformsData as { _meta?: { lastUpdated?: string }; platforms?: unknown };
-  const lastUpdated = raw._meta?.lastUpdated ?? new Date().toISOString().split("T")[0];
+  // Exclut les plateformes fermées au marché FR (ex : Gemini) — le dataset public
+  // reflète les plateformes disponibles en France (cohérent avec le compteur 33).
+  // 06/10/2026 : affiliateUrl = site officiel pour toute plateforme sans relation rémunérée réelle
+  // (lib/partnerships.ts) — plus de faux codes de parrainage (« ?ref=cryptoreflex ») dans le jeu public.
+  const published = (
+    (raw.platforms as Array<{ id: string; websiteUrl: string; affiliateUrl: string; fees?: { verified?: { verdict?: string } } }>) ?? []
+  ).filter((p) => p?.fees?.verified?.verdict !== "indisponible");
+  // 08/10/2026 (audit de fraîcheur n° 31) : date la plus récente des vérifications des lignes publiées, et non le
+  // _meta.lastUpdated du fichier (resté au 13/06 alors que les lignes ont été revérifiées en octobre).
+  const lastUpdated = platformsLastUpdated(raw._meta, published);
 
   return {
     _meta: {
@@ -69,15 +79,7 @@ function buildPayload(): PlatformsPayload {
       lastUpdated,
       contact: BRAND.partnersEmail,
     },
-    // Exclut les plateformes fermées au marché FR (ex : Gemini) — le dataset public
-    // reflète les plateformes disponibles en France (cohérent avec le compteur 33).
-    // 06/10/2026 : affiliateUrl = site officiel pour toute plateforme sans relation rémunérée réelle
-    // (lib/partnerships.ts) — plus de faux codes de parrainage (« ?ref=cryptoreflex ») dans le jeu public.
-    platforms: (
-      (raw.platforms as Array<{ id: string; websiteUrl: string; affiliateUrl: string; fees?: { verified?: { verdict?: string } } }>) ?? []
-    )
-      .filter((p) => p?.fees?.verified?.verdict !== "indisponible")
-      .map(withOfficialLink),
+    platforms: published.map(withOfficialLink),
   };
 }
 
@@ -94,8 +96,8 @@ const COMMON_HEADERS: Record<string, string> = {
   "X-Attribution":
     "Donnees Cryptoreflex (https://cryptoreflex.fr) - Reutilisation conditionnee a un lien dofollow.",
   Link: '<https://creativecommons.org/licenses/by/4.0/>; rel="license"; title="CC-BY-4.0"',
-  // Cache CDN agressif (24h) car le dataset est statique.
-  "Cache-Control": "public, max-age=3600, s-maxage=86400, stale-while-revalidate=86400",
+  // Cache : 1 h navigateur, 24 h CDN (lib/public-data-dates.ts, même valeur que le libellé de /api-publique).
+  "Cache-Control": PUBLIC_API_CACHE_CONTROL,
 };
 
 export function GET() {

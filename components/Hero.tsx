@@ -52,7 +52,7 @@ interface HeroProps {
   prices: CoinPrice[];
   /** Sparklines 7j par coin id — bitcoin alimente la ligne de vie. */
   sparklines?: Partial<Record<string, number[]>>;
-  /** ISO du dernier refresh des données (affiché dans la caption). */
+  /** ISO du relevé des données servies (asOf) ; absent si inconnu. Non affiché à ce jour. */
   updatedAt?: string;
   /** Fear & Greed 0-100 — module la frontière or/glacier de la ligne. */
   fearGreed?: number | null;
@@ -61,14 +61,9 @@ interface HeroProps {
 // Compteurs : source unique lib/brand.ts (STATS.platforms = plateformes agréées MiCA
 // avec accès à la France ; la copie locale de ces chiffres avait divergé).
 
-function Hero({ prices, sparklines, updatedAt, fearGreed }: HeroProps) {
-  const lastUpdateDate = updatedAt ? new Date(updatedAt) : new Date();
-  const lastUpdate = lastUpdateDate.toLocaleDateString("fr-FR", {
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric",
-  });
-
+function Hero({ prices, sparklines, fearGreed }: HeroProps) {
+  /* 08/10/2026 (lot fraîcheur A) : supprimé un « lastUpdate » calculé et jamais affiché, qui retombait sur new Date()
+     sans relevé. `updatedAt` reste dans les props (heure RÉELLE du relevé, ou absente : jamais « maintenant »). */
   const btcSparkline = sparklines?.bitcoin;
   const head = pulseHeadPosition(btcSparkline);
   const polyline = pulsePolyline(btcSparkline);

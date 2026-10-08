@@ -3,7 +3,10 @@ import Link from "next/link";
 // FIX C cohérence (2026-05-09) — remplace les emojis 📊/💰/🗓️ par les icônes
 // Lucide pour aligner les fiches LLM sur le design system du reste du site
 // (les fiches statiques /cryptos/* utilisent déjà BarChart3/Coins/Calendar).
-import { ExternalLink, BarChart3, Coins, Calendar, Bot } from "lucide-react";
+import { ExternalLink, Calendar, Bot } from "lucide-react";
+import CoursFiche from "@/components/crypto-detail/CoursFiche";
+import { COURS_AGE_MAX_H, etatCours, releveDuCours } from "@/lib/cours-fiche";
+import { nettoyerContenuLlm } from "@/lib/fiche-llm-texte";
 
 import type { CryptoFicheRow } from "@/lib/cryptos-db";
 import { BRAND } from "@/lib/brand";
@@ -80,7 +83,11 @@ const SCORE_LABELS: Record<string, string> = {
 
 function LLMFicheViewBase({ fiche, knownIds }: { fiche: CryptoFicheRow; knownIds: ReadonlySet<string> }) {
   // texte généré par IA : accents manquants rétablis à l'affichage (lib/fr-accents.ts, audit du 05/10/2026)
-  const llm = corrigerAccentsProfond((fiche.llm_content || {}) as LLMContent);
+  // 08/10/2026 (lot fraîcheur A2, L3 d) : les montants de marché du jour de la génération (prix, capitalisation, rang,
+  // volume…) sont retirés du texte au rendu (lib/fiche-llm-texte.ts) ; les chiffres vivants sont dans <CoursFiche>.
+  const llm = nettoyerContenuLlm(corrigerAccentsProfond((fiche.llm_content || {}) as LLMContent) as unknown as Record<string, unknown>) as LLMContent;
+  // L3 a : cours masqué si le relevé du cours (price_updated_at, jamais updated_at seul) est trop ancien (lib/cours-fiche.ts)
+  const cours = etatCours(releveDuCours(fiche), Date.now());
   const pageUrl = `${BRAND.url}/cryptos/${fiche.coingecko_id}`;
 
   // BUG G fix (2026-05-09) — homogénéise le JSON-LD avec les fiches
@@ -130,28 +137,25 @@ function LLMFicheViewBase({ fiche, knownIds }: { fiche: CryptoFicheRow; knownIds
         <div className="flex items-baseline gap-3 flex-wrap">
           <h1 className="text-3xl sm:text-4xl font-bold">{fiche.name}</h1>
           <span className="text-xl text-muted-foreground">{fiche.symbol}</span>
-          {fiche.market_cap_rank ? (
-            <span className="rounded-full border bg-card px-2 py-0.5 text-xs">
-              Rank {fiche.market_cap_rank}
-            </span>
-          ) : null}
         </div>
         {llm.tldr ? (
           <p className="mt-4 text-lg text-muted-foreground leading-relaxed">{llm.tldr}</p>
         ) : null}
         <div className="mt-4 flex flex-wrap gap-3 text-sm">
-          {fiche.market_cap_usd ? (
-            <span className="inline-flex items-center gap-1.5">
-              <BarChart3 className="size-4" aria-hidden="true" />
-              Market cap : <strong>{formatNumber(fiche.market_cap_usd)}</strong>
-            </span>
-          ) : null}
-          {fiche.price_usd ? (
-            <span className="inline-flex items-center gap-1.5">
-              <Coins className="size-4" aria-hidden="true" />
-              Prix : <strong>{formatNumber(fiche.price_usd)}</strong>
-            </span>
-          ) : null}
+          {/* Chiffres transmis au navigateur SEULEMENT si le relevé est récent : sinon ni le HTML ni les données de la
+              page ne contiennent le prix, la capitalisation ou le rang. */}
+          <CoursFiche
+            releve={cours.releve}
+            depuis={cours.depuis}
+            ageMaxH={COURS_AGE_MAX_H}
+            {...(cours.suivi
+              ? {
+                  prix: fiche.price_usd ? formatNumber(fiche.price_usd) : null,
+                  capitalisation: fiche.market_cap_usd ? formatNumber(fiche.market_cap_usd) : null,
+                  rang: fiche.market_cap_rank ?? null,
+                }
+              : {})}
+          />
           {fiche.genesis_date ? (
             <span className="inline-flex items-center gap-1.5">
               <Calendar className="size-4" aria-hidden="true" />
@@ -203,11 +207,13 @@ function LLMFicheViewBase({ fiche, knownIds }: { fiche: CryptoFicheRow; knownIds
       ) : null}
 
       {/* Metrics */}
-      {llm.metrics?.narrative ? (
+      {llm.metrics?.narrative || (llm.metrics?.keyFigures?.length ?? 0) > 0 ? (
         <section className="mb-8">
           <h2 className="text-xl font-semibold mb-3">Métriques clés</h2>
-          <p className="leading-relaxed whitespace-pre-line mb-4">{llm.metrics.narrative}</p>
-          {llm.metrics.keyFigures && llm.metrics.keyFigures.length > 0 ? (
+          {llm.metrics?.narrative ? (
+            <p className="leading-relaxed whitespace-pre-line mb-4">{llm.metrics.narrative}</p>
+          ) : null}
+          {llm.metrics?.keyFigures && llm.metrics.keyFigures.length > 0 ? (
             <div className="grid sm:grid-cols-2 gap-3">
               {llm.metrics.keyFigures.map((kf, i) => (
                 <div key={i} className="rounded-xl border bg-card p-4">

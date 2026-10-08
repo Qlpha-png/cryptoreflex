@@ -190,7 +190,7 @@ describe("Kraken : aucun numéro publié, appel seulement depuis l'appli", () =>
     expect(t).toContain("Appel possible, sans numéro publié, langue non précisée");
     expect(t).toMatch(/considérer tout numéro trouvé en ligne à son nom comme une tentative d'hameçonnage potentielle/);
     expect(html).toContain(`href="${kraken.support.source}"`);
-    expect(t).toMatch(/relevée le \d{1,2} octobre 2026/);
+    expect(t).toMatch(/relevée le \d{2}\/10\/2026/); // <VerifieLe> (lot fraîcheur A2)
   });
 });
 

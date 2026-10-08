@@ -87,6 +87,13 @@ export const getAggregatedNews = (limit = 30) =>
 /* Helpers UI                                                                 */
 /* -------------------------------------------------------------------------- */
 
+/** La valeur porte-t-elle une heure (« 2026-10-08T06:30:00Z », date RSS complète) ? « 2026-10-08 » seul : non. */
+export function hasTimeOfDay(value: string): boolean {
+  const s = value.trim();
+  if (/^\d{4}-\d{2}-\d{2}$/.test(s)) return false;
+  return /\d{1,2}:\d{2}/.test(s);
+}
+
 /**
  * Format relatif FR ("il y a 2 h", "il y a 3 jours", "12 mars 2026").
  * Au-delà de 7 jours on bascule sur un format absolu pour rester stable
@@ -96,6 +103,11 @@ export function formatRelativeFr(iso: string, now: number = Date.now()): string 
   if (!iso) return "";
   const then = Date.parse(iso);
   if (Number.isNaN(then)) return "";
+  /* 08/10/2026 (lot fraîcheur A, audit n° 12) : une date SANS heure (« 2026-10-08 », cas de toutes les actus MDX) était
+     lue comme minuit UTC → « il y a 9 heures » inventé. Sans heure connue : la date seule, jamais un âge en heures. */
+  if (!hasTimeOfDay(iso)) {
+    return new Date(then).toLocaleDateString("fr-FR", { timeZone: "UTC", day: "numeric", month: "short", year: "numeric" });
+  }
 
   const diffSec = Math.max(1, Math.round((now - then) / 1000));
   const rtf = new Intl.RelativeTimeFormat("fr-FR", { numeric: "auto" });

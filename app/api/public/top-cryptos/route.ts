@@ -15,6 +15,8 @@
 import { NextResponse } from "next/server";
 import topCryptos from "@/data/top-cryptos.json";
 import { BRAND } from "@/lib/brand";
+import { isoOrNull } from "@/lib/data-dates";
+import { PUBLIC_API_CACHE_CONTROL } from "@/lib/public-data-dates";
 
 export const dynamic = "force-static";
 export const revalidate = 86_400;
@@ -29,7 +31,7 @@ interface TopCryptosPayload {
     attribution: string;
     attributionHtml: string;
     canonicalUrl: string;
-    lastUpdated: string;
+    lastUpdated: string | null;
     contact: string;
   };
   topCryptos: unknown;
@@ -40,7 +42,8 @@ function buildPayload(): TopCryptosPayload {
     _meta?: { lastUpdated?: string; purpose?: string };
     topCryptos?: unknown;
   };
-  const lastUpdated = raw._meta?.lastUpdated ?? new Date().toISOString().split("T")[0];
+  // 08/10/2026 : les lignes ne portent pas de date ; seule la date du fichier compte (null si absente, jamais « aujourd'hui »).
+  const lastUpdated = isoOrNull(raw._meta?.lastUpdated);
 
   return {
     _meta: {
@@ -71,7 +74,7 @@ const COMMON_HEADERS: Record<string, string> = {
   "X-Attribution":
     "Donnees Cryptoreflex (https://cryptoreflex.fr) - Reutilisation conditionnee a un lien dofollow.",
   Link: '<https://creativecommons.org/licenses/by/4.0/>; rel="license"; title="CC-BY-4.0"',
-  "Cache-Control": "public, max-age=3600, s-maxage=86400, stale-while-revalidate=86400",
+  "Cache-Control": PUBLIC_API_CACHE_CONTROL,
 };
 
 export function GET() {

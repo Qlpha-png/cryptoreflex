@@ -25,7 +25,7 @@ import {
   latestDate,
   toLastModified,
 } from "@/lib/sitemap-filters";
-import { allCards as allReflexCards, isIndexable, isReflexCardsEnabled, isVisible, seasonDay } from "@/lib/reflex-cards/data";
+import { allCards as allReflexCards, cardReleaseDate, isIndexable, isReflexCardsEnabled, isVisible, seasonDay } from "@/lib/reflex-cards/data";
 import { applyReleases } from "@/lib/reflex-cards/releases";
 import { UNIVERS_ON, universCards, universIndexable } from "@/lib/reflex-cards/univers";
 /* date de la dernière mise à jour du catalogue Univers (export du 04/10/2026) */
@@ -90,8 +90,6 @@ function platformDate(id: string): Date | undefined {
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const now = new Date();
-
   // Contenus datés (frontmatter) : servent aussi de lastmod aux hubs qui les listent.
   const articles = await getAllArticleSummaries();
   const newsSummaries = await getAllNewsSummaries();
@@ -299,13 +297,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       if (!sb) return [];
       const { data, error } = await sb
         .from("cryptos")
-        .select("coingecko_id, updated_at, market_cap_rank")
+        .select("coingecko_id, last_refreshed_at, market_cap_rank")
         .eq("source", "llm-pipeline")
         .eq("is_published", true)
         .order("market_cap_rank", { ascending: true, nullsFirst: false })
         .limit(2000);
       if (error || !data) return [];
-      return data.map((r: { coingecko_id: string; updated_at: string; market_cap_rank: number | null }) =>
+      return data.map((r: { coingecko_id: string; last_refreshed_at: string | null; market_cap_rank: number | null }) =>
         entry(
           `/cryptos/${r.coingecko_id}`,
           "weekly",
@@ -317,7 +315,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
             : r.market_cap_rank < 300 ? 0.6
             : r.market_cap_rank < 700 ? 0.5
             : 0.4,
-          toLastModified(r.updated_at),
+          // reprise du 08/10 (juré I1 + M5) : date du TEXTE (last_refreshed_at), pas updated_at (tic de prix ou needs_review)
+          toLastModified(r.last_refreshed_at),
         ),
       );
     } catch (err) {
@@ -386,20 +385,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   // Reflex Cards : hub + pages carte déjà visibles (sorties ou révélées) et indexables
   // (description + fiche à relier), seulement quand le jeu est activé (lib/reflex-cards/data.ts).
-  await applyReleases({ readOnly: true }); // sorties effectives (paliers de joueurs) : seules les cartes sorties sont indexées
+  const reflexReleases = await applyReleases({ readOnly: true }); // sorties effectives (paliers de joueurs) : seules les cartes sorties sont indexées
   const reflexDay = seasonDay();
   const legacyIds = new Set(allReflexCards().map((c) => c.id));
+  // 08/10/2026 (lot fraîcheur A, audit n° 47) : lastmod = date RÉELLE de sortie de la carte (registre des sorties), omis
+  // si inconnue ; le hub prend la sortie la plus récente. Avant : new Date() à chaque régénération.
+  const reflexListed = allReflexCards().filter((c) => isVisible(c, reflexDay) && isIndexable(c));
+  const reflexDates = new Map(reflexListed.map((c) => [c.id, cardReleaseDate(c, reflexReleases.dates)]));
+  const reflexHubDate = latestDate([...reflexDates.values()]);
   const reflexCardRoutes: MetadataRoute.Sitemap = isReflexCardsEnabled()
     ? [
-        { url: `${SITE_URL}/cartes`, lastModified: now, changeFrequency: "weekly" as const, priority: 0.8 },
-        ...allReflexCards()
-          .filter((c) => isVisible(c, reflexDay) && isIndexable(c))
-          .map((c) => ({
-            url: `${SITE_URL}/cartes/${c.id}`,
-            lastModified: now,
-            changeFrequency: "monthly" as const,
-            priority: 0.5,
-          })),
+        entry("/cartes", "weekly", 0.8, reflexHubDate),
+        ...reflexListed.map((c) => entry(`/cartes/${c.id}`, "monthly", 0.5, toLastModified(reflexDates.get(c.id)))),
         /* Univers : seules les Super rares, Ultra rares et Légendaires avec un texte (≈ 1 000 pages), hors cartes du jeu d'origine */
         ...(UNIVERS_ON()
           ? universCards()

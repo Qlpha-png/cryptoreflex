@@ -2,6 +2,7 @@ import { ImageResponse } from "next/og";
 import { loadOgFonts } from "@/lib/og-fonts";
 import { getCryptoBySlug } from "@/lib/cryptos";
 import { getCryptoFiche, getCryptoFicheBySlug } from "@/lib/cryptos-db";
+import { retirerMontantsFiges } from "@/lib/fiche-llm-texte";
 import { BRAND } from "@/lib/brand";
 
 /**
@@ -67,9 +68,10 @@ async function resolveViewModel(slug: string): Promise<OgViewModel> {
     const fiche =
       (await getCryptoFiche(slug)) ?? (await getCryptoFicheBySlug(slug));
     if (fiche) {
-      const llm = (fiche.llm_content || {}) as { tldr?: string };
-      const tagline = llm.tldr
-        ? truncate(llm.tldr, 180)
+      // lot fraîcheur A2 (L3 d) : sans les montants de marché figés du jour de la génération
+      const tldr = retirerMontantsFiges(((fiche.llm_content || {}) as { tldr?: string }).tldr);
+      const tagline = tldr
+        ? truncate(tldr, 180)
         : `${fiche.name} — fiche complète, métriques, scores et risques.`;
       return {
         name: fiche.name,

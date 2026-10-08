@@ -41,6 +41,8 @@ import type { CryptoEvent } from "@/lib/events-types";
 import { withHreflang } from "@/lib/seo-alternates";
 import { fitDescription, fitTitle } from "@/lib/seo-text";
 import Breadcrumbs from "@/components/Breadcrumbs";
+import VerifieLe from "@/components/ui/VerifieLe";
+import { EVENTS_SEED_REVU_LE } from "@/lib/events-seed";
 
 // QUOTA VERCEL 2026-06-11 — revalidate allongé (ISR writes 409K/200K Hobby) :
 // le HTML seed peut dater, les données fraîches arrivent côté client.
@@ -126,7 +128,12 @@ export default async function CalendarPage() {
           <div className="flex flex-col items-start gap-4">
             <span className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1 text-caption font-semibold uppercase tracking-wide text-primary-glow ring-1 ring-primary/30">
               <CalendarDays className="h-3.5 w-3.5" aria-hidden="true" />
-              Mis à jour automatiquement
+              {/* 08/10/2026 (lot fraîcheur A, audit n° 34) : l'ancien badge de mise à jour « automatique » était faux. Seules
+                  les réunions FOMC sont relues par un robot (scripts/refresh-fomc.mjs) ; le reste est tenu à la main. */}
+              Tenu à la main · dates FOMC de la Fed
+            </span>
+            <span className="text-xs text-muted">
+              <VerifieLe date={EVENTS_SEED_REVU_LE} famille="evenements" label="Événements hors Fed revus à la main" />
             </span>
             <h1 className="text-h1 font-extrabold tracking-tight text-fg md:text-display">
               Calendrier crypto 2026

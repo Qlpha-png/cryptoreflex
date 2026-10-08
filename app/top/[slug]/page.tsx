@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import VerifieLe from "@/components/ui/VerifieLe";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import {
@@ -14,7 +15,8 @@ import {
   getListicle,
   type Listicle,
 } from "@/lib/listicles";
-import { purchaseCostText, simpleCost1000, type Platform } from "@/lib/platforms";
+import { PLATFORMS_LAST_SCORED, purchaseCostText, simpleCost1000, type Platform } from "@/lib/platforms";
+import { formatDataDateFr } from "@/lib/data-dates";
 
 /* Passe finale (06/10/2026) : la puce affichait « Instant : {instantBuy} % » (Coinbase 3,99 %), un taux que la page
    d'aide de Coinbase relevée le 05/10/2026 ne publie pas. Elle affiche le coût relevé de l'achat simple (fees.cost). */
@@ -30,7 +32,7 @@ import { outboundRel } from "@/lib/partnerships";
 import { faqSchema, graphSchema } from "@/lib/schema";
 import { withHreflang } from "@/lib/seo-alternates";
 import { fitTitle } from "@/lib/seo-text";
-import { formatMicaDate, getMicaMeta } from "@/lib/mica";
+import { getMicaMeta } from "@/lib/mica";
 import { fmtNb } from "@/lib/format-fr";
 import Breadcrumbs from "@/components/Breadcrumbs";
 
@@ -98,7 +100,7 @@ export default function TopListiclePage({ params }: Props) {
               </h1>
               <p className="mt-3 max-w-2xl text-fg/80">{listicle.intro}</p>
               <p className="mt-4 text-xs text-muted">
-                Statuts MiCA vérifiés le {formatMicaDate(getMicaMeta().lastUpdated)} — méthode : score
+                <VerifieLe date={getMicaMeta().lastUpdated} famille="mica" label="Statuts MiCA vérifiés" /> — méthode : score
                 Cryptoreflex, frais réels et statut MiCA.
               </p>
             </div>
@@ -176,7 +178,7 @@ function buildListicleFaqs(
       },
       {
         question: `Comment ce classement est-il établi ?`,
-        answer: `Le classement repose sur la grille Cryptoreflex : score global = (sécurité × 30%) + (frais × 25%) + (UX × 20%) + (support × 15%) + (conformité MiCA × 10%). Les données sont vérifiées trimestriellement et mises à jour à chaque changement de tarification ou d'agrément AMF/MiCA.`,
+        answer: `Le classement repose sur la grille Cryptoreflex : score global = (sécurité × 30%) + (frais × 25%) + (UX × 20%) + (support × 15%) + (conformité MiCA × 10%). Chaque donnée est datée sur la fiche de la plateforme (frais, statut MiCA, sécurité) ; les scores sont recalculés à la main${PLATFORMS_LAST_SCORED ? `, dernier calcul le ${formatDataDateFr(PLATFORMS_LAST_SCORED)}` : ""}. Le statut MiCA est comparé chaque nuit au registre de l'ESMA par notre veille automatique, et corrigé après vérification.`,
       },
       {
         question: `Toutes les plateformes du classement sont-elles légales en France ?`,

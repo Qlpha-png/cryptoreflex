@@ -1,0 +1,5 @@
+{
+  "_info": "Écrit chaque nuit par scripts/veille-officielle.mjs (registre MiCA de l'ESMA, CASPS.csv). Pour chaque plateforme de data/platforms.json : date du dernier contrôle automatique SANS écart entre le registre et le statut publié. Une plateforme en écart garde sa date précédente. Ne jamais écrire à la main.",
+  "controle": null,
+  "plateformes": {}
+}

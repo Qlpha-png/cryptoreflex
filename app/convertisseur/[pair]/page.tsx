@@ -41,6 +41,7 @@ import { conversionGrid, formatConverted, formatAmount, ratioSeries, rateStats, 
 import { getAllCryptos } from "@/lib/cryptos";
 import { withHreflang } from "@/lib/seo-alternates";
 import { eurPerUnit, fiatPerUsd } from "@/lib/fx";
+import { formatJJMMAAAA } from "@/lib/fraicheur";
 import Breadcrumbs from "@/components/Breadcrumbs";
 
 interface PageProps {
@@ -93,14 +94,21 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const toUp = parsed.to.toUpperCase();
 
   const url = `https://www.cryptoreflex.fr/convertisseur/${parsed.from}-${parsed.to}`;
+  // reprise du 08/10/2026 (juré I3) : deux devises = taux de référence journalier (BCE, ou taux de secours daté),
+  // jamais « en temps réel » ni « taux du marché (Binance, Kraken, Coinbase) ».
+  const deuxDevises = isFiatSym(parsed.from) && isFiatSym(parsed.to);
 
   return {
-    title: `Convertir ${fromUp} en ${toUp} (${fromName}) en temps réel`,
-    description: `Combien vaut 1 ${fromName} (${fromUp}) en ${toName} (${toUp}) aujourd'hui ? Convertisseur ${fromUp}/${toUp} gratuit, au taux du marché (Binance, Kraken, Coinbase…).`,
+    title: deuxDevises
+      ? `Convertir ${fromUp} en ${toUp} (${fromName}) au taux de référence`
+      : `Convertir ${fromUp} en ${toUp} (${fromName}) en temps réel`,
+    description: deuxDevises
+      ? `Combien vaut 1 ${fromName} (${fromUp}) en ${toName} (${toUp}) ? Convertisseur ${fromUp}/${toUp} gratuit, au taux de référence daté (BCE).`
+      : `Combien vaut 1 ${fromName} (${fromUp}) en ${toName} (${toUp}) aujourd'hui ? Convertisseur ${fromUp}/${toUp} gratuit, au taux du marché (Binance, Kraken, Coinbase…).`,
     alternates: withHreflang(url),
     openGraph: {
-      title: `${fromUp} en ${toUp} — Convertisseur temps réel`,
-      description: `Convertir ${fromName} en ${toName} avec le taux marché actuel.`,
+      title: deuxDevises ? `${fromUp} en ${toUp} — Convertisseur au taux de référence` : `${fromUp} en ${toUp} — Convertisseur temps réel`,
+      description: deuxDevises ? `Convertir ${fromName} en ${toName} au taux de référence daté.` : `Convertir ${fromName} en ${toName} avec le taux marché actuel.`,
       url,
       type: "website",
     },
@@ -169,10 +177,23 @@ export default async function PairPage({ params }: PageProps) {
   const grid = conversionGrid(gridRate);
   const gridInverse = gridRate ? conversionGrid(1 / gridRate, [1, 10, 100, 1000]) : [];
 
+  // reprise du 08/10/2026 (juré I3) : taux daté (deux devises) = la vraie source et la vraie date, sans promesse de fréquence
+  const tauxDate = rate?.label ? formatJJMMAAAA(rate.lastUpdated) : null;
+  const sourceTaux = rate?.label
+    ? rate.label.startsWith("taux de secours")
+      ? "taux de secours, référence BCE"
+      : /Binance/.test(rate.label)
+        ? "Binance et BCE"
+        : "BCE"
+    : null;
   const faqItems = [
     {
       question: `Combien vaut 1 ${fromUp} en ${toUp} aujourd'hui ?`,
-      answer: rate?.rate != null
+      answer: rate?.rate != null && rate.label
+        ? `Au taux de référence ${tauxDate ? `du ${tauxDate} ` : ""}(${sourceTaux}), 1 ${fromName} (${fromUp}) vaut environ ${formatRate(
+            rate.rate
+          )} ${toUp}. Source exacte affichée en tête de page.`
+        : rate?.rate != null
         ? `Au dernier relevé de cette page, 1 ${fromName} (${fromUp}) valait environ ${formatRate(
             rate.rate
           )} ${toUp} (taux du marché : Binance, Kraken, Coinbase…, CoinGecko en secours). Le convertisseur ci-dessus donne le taux du moment.`
@@ -232,12 +253,20 @@ export default async function PairPage({ params }: PageProps) {
             <p className="mt-4 text-lg text-fg-max/70">
               {rate?.rate != null ? (
                 <>
-                  Au taux actuel,{" "}
+                  {rate.label?.startsWith("taux de secours") ? "Au dernier taux connu" : "Au taux actuel"},{" "}
                   <strong className="text-fg-max">
                     1 {fromName} ={" "}
                     <span className="font-mono">{formatRate(rate.rate)} {toUp}</span>
                   </strong>
-                  . Mis à jour {fmtRelative(rate.lastUpdated)}.
+                  {/* 08/10/2026 (lot fraîcheur A) : taux journalier = mention datée ; heure inconnue = rien (jamais « il y a 0 min ») */}
+                  {/* reprise du 08/10/2026 (juré I4) : heure ABSOLUE du relevé ; un « il y a » calculé au rendu reste figé jusqu'à 1 h dans le cache */}
+                  {rate.label ? <>. Source : {rate.label}.</> : rate.lastUpdated && heureReleve(rate.lastUpdated) ? (
+                    <>
+                      . <span data-cours-releve={rate.lastUpdated}>Relevé {heureReleve(rate.lastUpdated)}</span>.
+                    </>
+                  ) : (
+                    "."
+                  )}
                 </>
               ) : (
                 <>Taux {fromUp}/{toUp} en cours d'actualisation…</>
@@ -256,8 +285,13 @@ export default async function PairPage({ params }: PageProps) {
                 Combien valent vos {fromUp} en {toUp} ? Les repères
               </h2>
               <p className="mt-2 text-sm text-fg-max/70">
-                {liveRate ? "Au taux du moment" : "Au dernier cours quotidien connu"}, 1 {fromUp} = {formatConverted(grid[0].value)} {toUp}. Repères
-                arrondis, mis à jour chaque jour ; le convertisseur ci-dessus donne le montant exact à la seconde.
+                {liveRate && rate?.label
+                  ? `Au taux de référence${tauxDate ? ` du ${tauxDate}` : ""} (${sourceTaux})`
+                  : liveRate
+                    ? "Au taux relevé en tête de page"
+                    : "Au dernier cours quotidien connu"}
+                , 1 {fromUp} = {formatConverted(grid[0].value)} {toUp}. Repères arrondis ; le convertisseur ci-dessus recalcule le
+                montant avec le taux le plus récent disponible.
               </p>
               <div className="mt-4 grid gap-4 md:grid-cols-[3fr_2fr]">
                 <div className="overflow-x-auto rounded-2xl border border-border">
@@ -374,10 +408,15 @@ export default async function PairPage({ params }: PageProps) {
             <p className="text-fg-max/70">
               Cette page vous permet de convertir{" "}
               <strong className="text-fg-max">{fromName} ({fromUp})</strong> en{" "}
-              <strong className="text-fg-max">{toName} ({toUp})</strong> avec le taux
-              de change marché actuel. Le taux vient directement des places de marché
-              (Binance, Kraken, Coinbase…), avec CoinGecko en secours ; il date au plus
-              de quelques minutes.
+              <strong className="text-fg-max">{toName} ({toUp})</strong>{" "}
+              {rate?.label ? (
+                <>au taux de référence daté indiqué en tête de page ({sourceTaux}) : un taux journalier, sans heure.</>
+              ) : (
+                <>
+                  avec le taux de change marché. Le taux vient des places de marché (Binance, Kraken, Coinbase…), avec
+                  CoinGecko en secours ; son heure de relevé est indiquée en tête de page.
+                </>
+              )}
             </p>
             <p className="text-fg-max/70 mt-3">
               Pour une conversion réelle (achat / vente), passez par une plateforme
@@ -475,12 +514,12 @@ function formatRate(v: number | null | undefined): string {
   return v.toLocaleString("fr-FR", { maximumFractionDigits: 8 });
 }
 
-function fmtRelative(iso: string): string {
-  const diff = Date.now() - new Date(iso).getTime();
-  const sec = Math.round(diff / 1000);
-  if (sec < 60) return `il y a ${sec} s`;
-  const min = Math.round(sec / 60);
-  if (min < 60) return `il y a ${min} min`;
-  const h = Math.round(min / 60);
-  return `il y a ${h} h`;
+/** « le 08/10/2026 à 14:05 (heure de Paris) » : heure absolue du relevé (jamais un âge calculé au rendu). null si illisible. */
+function heureReleve(iso: string): string | null {
+  const t = Date.parse(iso);
+  if (!Number.isFinite(t) || iso.length <= 10) return null;
+  const d = new Date(t);
+  const jour = d.toLocaleDateString("fr-FR", { timeZone: "Europe/Paris", day: "2-digit", month: "2-digit", year: "numeric" });
+  const heure = d.toLocaleTimeString("fr-FR", { timeZone: "Europe/Paris", hour: "2-digit", minute: "2-digit" });
+  return `le ${jour} à ${heure} (heure de Paris)`;
 }

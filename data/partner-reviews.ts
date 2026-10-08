@@ -64,6 +64,8 @@ export interface PartnerReview {
   externalReviewCount: number;
   /** Date du relevé Trustpilot (ISO YYYY-MM-DD) */
   externalReviewDate: string;
+  /** Date du relevé de la grille tarifaire publiée par le partenaire (ISO YYYY-MM-DD), affichée par <VerifieLe> */
+  tarifsReleveLe?: string;
   /** Source publique de l'aggregateRating */
   externalReviewSource: { name: string; url: string };
   /** Date dernière mise à jour review (ISO YYYY-MM-DD) */
@@ -467,6 +469,8 @@ export const partnerReviews: PartnerReview[] = [
   /* ============================ WALTIO ============================ */
   {
     slug: "waltio",
+    // grille tarifaire relevée le 05/10/2026 (date auparavant écrite dans deux textes de la fiche)
+    tarifsReleveLe: "2026-10-05",
     // fr.trustpilot.com/review/waltio.com relu le 05/10/2026 (JSON-LD) : ratingValue 4, reviewCount 512.
     rating: 4.0,
     externalReviewCount: 512,
@@ -513,7 +517,7 @@ export const partnerReviews: PartnerReview[] = [
       },
       roi: {
         title: "Ce que ça coûte, ce que ça évite",
-        body: "Offre Starter : 99 €/an jusqu'à 1 000 transactions (grille relevée le 5 octobre 2026). L'abonnement couvre une seule année fiscale et se renouvelle automatiquement le 1er octobre. En face, un seul compte étranger oublié au 3916-bis coûte 750 € d'amende (1 500 € au-delà de 50 000 €). Vous n'avez plus à appliquer à la main la formule du 2086, cession par cession. Le temps gagné dépend de votre volume : comparez-le au prix.",
+        body: "Offre Starter : 99 €/an jusqu'à 1 000 transactions (date de la grille en tête de page). L'abonnement couvre une seule année fiscale et se renouvelle automatiquement le 1er octobre. En face, un seul compte étranger oublié au 3916-bis coûte 750 € d'amende (1 500 € au-delà de 50 000 €). Vous n'avez plus à appliquer à la main la formule du 2086, cession par cession. Le temps gagné dépend de votre volume : comparez-le au prix.",
         stat: "99 €/an",
       },
     },
@@ -551,7 +555,7 @@ export const partnerReviews: PartnerReview[] = [
       },
     ],
     specs: [
-      { label: "Offres", value: "Free (gratuit), Lite 39 €, Starter 99 €, Smart 249 €, Unlimited 999 € par an (grille relevée le 5 octobre 2026)" },
+      { label: "Offres", value: "Free (gratuit), Lite 39 €, Starter 99 €, Smart 249 €, Unlimited 999 € par an (date de la grille en tête de page)" },
       { label: "Intégrations", value: "700+ plateformes, wallets et blockchains selon Waltio (API, adresse publique ou fichier)" },
       { label: "Méthode de calcul", value: "Méthode globale (art. 150 VH bis CGI) pour la France" },
       { label: "Documents", value: "Annexe 2086, Grand Livre, Fiche de stock, informations du 3916-bis" },

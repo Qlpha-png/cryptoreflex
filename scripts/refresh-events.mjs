@@ -7,8 +7,11 @@
  *
  * Cron hebdomadaire (lundi 6h UTC via .github/workflows/weekly-events.yml).
  *
- * Si COINMARKETCAL_API_KEY absent : log warning et exit 0 (le seed existant
- * reste intact, pas de perte).
+ * Si COINMARKETCAL_API_KEY absent, ou API en erreur : le seed reste intact ET le script sort en code 1, avec la raison
+ * dans le résumé du run (08/10/2026 : avant, sortie en vert sans rien faire).
+ * ATTENTION (08/10/2026) : la réécriture ci-dessous (updateSeedFile) n'a jamais tourné ; elle exporte SEED_EVENTS au
+ * lieu de EVENTS_SEED et effacerait le bloc FOMC automatique : le workflow lance tests/lib/events-fomc.test.ts et tsc
+ * AVANT tout commit, ce qui bloquerait ce résultat. À réécrire avant d'ajouter la clé.
  *
  * Stratégie :
  *  - Garde les événements "Conference" hardcodés dans le seed actuel
@@ -54,10 +57,22 @@ function inferImportance(category) {
 /*  Fetch CoinMarketCal                                                       */
 /* -------------------------------------------------------------------------- */
 
+/** Résumé du run GitHub (« pourquoi rouge ») ; sans effet hors GitHub Actions. */
+async function resume(ligne) {
+  if (process.env.GITHUB_STEP_SUMMARY) await fs.appendFile(process.env.GITHUB_STEP_SUMMARY, ligne + "\n").catch(() => {});
+}
+
+/**
+ * 08/10/2026 (lot fraîcheur A, audit n° 34) : un passage sans clé ou sans réponse de l'API sortait EN VERT sans rien faire
+ * (« keeping existing seed ») — un robot vert qui ne prouve rien. Désormais : échec (code 1) expliqué dans le résumé.
+ */
+class EchecRobot extends Error {}
+
 async function fetchEvents() {
   if (!API_KEY) {
-    console.warn("[refresh-events] COINMARKETCAL_API_KEY absent — keeping existing seed.");
-    return null;
+    console.error("[refresh-events] COINMARKETCAL_API_KEY absent : aucun événement relu, seed inchangé.");
+    await resume("## ❌ Agenda non rafraîchi : secret COINMARKETCAL_API_KEY absent\n\nAucun événement n'a été relu ; `lib/events-seed.ts` est inchangé. Ajouter la clé CoinMarketCal dans les secrets du dépôt, ou retirer ce robot.");
+    throw new EchecRobot("COINMARKETCAL_API_KEY absent");
   }
 
   const url = `${API_URL}?max=30&page=1&dateRangeStart=${new Date().toISOString().slice(0, 10)}`;
@@ -72,15 +87,18 @@ async function fetchEvents() {
     });
     if (!res.ok) {
       console.error(`[refresh-events] API ${res.status} — keeping existing seed.`);
-      return null;
+      await resume(`## ❌ Agenda non rafraîchi : l'API CoinMarketCal répond HTTP ${res.status}\n\n\`lib/events-seed.ts\` est inchangé.`);
+      throw new EchecRobot(`API CoinMarketCal HTTP ${res.status}`);
     }
     const data = await res.json();
     const items = data.body || [];
     console.log(`[refresh-events] ${items.length} events fetched.`);
     return items;
   } catch (err) {
+    if (err instanceof EchecRobot) throw err;
     console.error(`[refresh-events-fail] ${err.message} — keeping existing seed.`);
-    return null;
+    await resume(`## ❌ Agenda non rafraîchi : API CoinMarketCal injoignable\n\n\`lib/events-seed.ts\` est inchangé.`);
+    throw new EchecRobot("API CoinMarketCal injoignable");
   }
 }
 
@@ -172,6 +190,7 @@ export const SEED_LAST_UPDATED = "${new Date().toISOString().slice(0, 10)}";
   }
   process.exit(0);
 })().catch((err) => {
+  // 08/10/2026 : un échec est ROUGE (avant : process.exit(0) même en erreur fatale)
   console.error(`[FATAL] ${err.message}`);
-  process.exit(0);
+  process.exit(1);
 });

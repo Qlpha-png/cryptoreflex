@@ -9,6 +9,8 @@ import RelatedPagesNav from "@/components/RelatedPagesNav";
 import { withHreflang } from "@/lib/seo-alternates";
 import { fitDescription, fitTitle } from "@/lib/seo-text";
 import Breadcrumbs from "@/components/Breadcrumbs";
+import VerifieLe from "@/components/ui/VerifieLe";
+import { STAKING_RATES_PERIODE } from "@/lib/staking-rates";
 
 // Lazy-load : Client lourd (compare 5+ providers, calcul on input change).
 const CalculateurApyStaking = dynamic(
@@ -105,7 +107,7 @@ export default function CalculateurApyStakingPage() {
           <div className="max-w-3xl">
             <span className="inline-flex items-center gap-2 rounded-full border border-accent-green/30 bg-accent-green/10 px-3 py-1 text-xs font-semibold text-accent-green">
               <Coins className="h-3.5 w-3.5" />
-              APY indicatifs Q1 2026
+              <VerifieLe date={STAKING_RATES_PERIODE.debut} affichage={STAKING_RATES_PERIODE.texte} famille="rendements" label="APY indicatifs relevés au" />
             </span>
             <h1 className="mt-4 text-4xl sm:text-5xl font-extrabold tracking-tight text-fg-max">
               Calculateur <span className="gradient-text">APY staking crypto</span>

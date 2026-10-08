@@ -50,7 +50,8 @@ interface RestPayload {
     price: number;
     change24h: number;
   }>;
-  updatedAt: string;
+  /** heure réelle du relevé servi ; null si inconnue (08/10/2026) */
+  updatedAt: string | null;
 }
 
 const RETRY_DELAYS_MS = [2_000, 5_000, 15_000];
@@ -162,7 +163,7 @@ export function useLivePrices(ids: string[]): UseLivePricesResult {
           const data = (await res.json()) as RestPayload;
           if (cancelledRef.current) return;
           if (Array.isArray(data.prices)) {
-            const ts = Date.parse(data.updatedAt) || Date.now();
+            const ts = (data.updatedAt ? Date.parse(data.updatedAt) : NaN) || Date.now();
             for (const p of data.prices) {
               applyUpdate({
                 id: p.id,

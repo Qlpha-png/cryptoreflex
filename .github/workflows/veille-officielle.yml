@@ -95,6 +95,31 @@ jobs:
           done
           exit 1
 
+      # 08/10/2026 (lot fraîcheur A, reprise, L6 MiCA) : chaque nuit où le registre de l'ESMA a été lu, les plateformes
+      # SANS écart reçoivent la date du jour dans data/veille/mica-auto.json ; le site affiche alors « Registre ESMA
+      # contrôlé automatiquement le JJ/MM/AAAA ». Une plateforme en écart garde sa date précédente (ticket ci-dessous).
+      - name: Publier la date du contrôle automatique du registre MiCA
+        if: ${{ !cancelled() }}
+        run: |
+          if [ -z "$(git status --porcelain -- data/veille/mica-auto.json)" ]; then
+            echo "Date du contrôle MiCA inchangée (registre illisible cette nuit, ou déjà publiée)."
+            exit 0
+          fi
+          git config user.name "Cryptoreflex Bot"
+          git config user.email "bot@cryptoreflex.fr"
+          git add data/veille/mica-auto.json
+          git commit -m "chore(veille): registre MiCA de l'ESMA contrôlé sans écart" \
+            -m "Généré par .github/workflows/veille-officielle.yml (data/veille/mica-auto.json)." \
+            -m "" \
+            -m "Co-Authored-By: Cryptoreflex Bot <bot@cryptoreflex.fr>"
+          for i in 1 2 3; do
+            if git push origin HEAD:main; then exit 0; fi
+            git fetch origin main
+            git rebase origin/main || { git rebase --abort; exit 1; }
+            sleep 2
+          done
+          exit 1
+
       - name: Tickets privés non configurés
         if: always() && env.TICKETS_PRIVES != 'true'
         run: |

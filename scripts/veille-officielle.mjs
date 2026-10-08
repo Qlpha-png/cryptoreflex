@@ -361,8 +361,25 @@ async function veilleRegistre() {
     if (ent && !lignesP.length && site) fail("registre", `${p.name} : l'entité « ${ent} » n'apparaît plus au registre MiCA de l'ESMA alors que le site la dit autorisée → vérifier (retrait ? changement de nom ?)`);
     else if (registreFR !== site) fail("registre", `${p.name} : registre ESMA = ${registreFR ? "autorisée en France" : "PAS autorisée en France"}, site = ${site ? "autorisée" : "non autorisée"} → mettre data/platforms.json à jour`);
     else if (!ent && parNom.some(autoriseFR)) fail("registre", `${p.name} : une entité à ce nom apparaît au registre MiCA avec la France (${parNom.map((r) => r.ae_lei_name).join(", ")}) → statut à revoir`);
+    else sansEcart[p.id] = AUJ; // aucun écart : date du contrôle automatique (L6), affichée sur le site
   }
   ok("registre", `registre ESMA : ${rows.length} lignes, ${n} plateformes rapprochées`);
+  ecrireMicaAuto(sansEcart);
+}
+
+/**
+ * L6 MiCA (reprise du 08/10/2026) : data/veille/mica-auto.json reçoit, CHAQUE nuit où le registre a été lu, la date du
+ * jour pour chaque plateforme sans écart. Une plateforme en écart (ou absente cette nuit) garde sa date précédente :
+ * on n'avance jamais une date sans contrôle réussi. Le workflow commite ce fichier s'il a changé.
+ */
+const MICA_AUTO_PATH = path.join(ROOT, "data/veille/mica-auto.json");
+const sansEcart = {};
+function ecrireMicaAuto(nouvelles) {
+  const avant = existsSync(MICA_AUTO_PATH) ? JSON.parse(readFileSync(MICA_AUTO_PATH, "utf8")) : {};
+  const plateformes = { ...(avant.plateformes || {}), ...nouvelles };
+  const trie = Object.fromEntries(Object.keys(plateformes).sort().map((k) => [k, plateformes[k]]));
+  writeFileSync(MICA_AUTO_PATH, JSON.stringify({ _info: avant._info, controle: AUJ, plateformes: trie }, null, 2) + "\n");
+  log(`mica-auto : ${Object.keys(nouvelles).length} plateforme(s) sans écart datée(s) du ${AUJ}`);
 }
 
 /* ------------------------------------------------------------------ grilles de frais */

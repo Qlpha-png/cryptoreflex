@@ -99,7 +99,8 @@ export default async function FearGreedPage() {
       url: `${BRAND.url}/og-image.png`,
     },
     datePublished: "2026-04-25",
-    dateModified: new Date().toISOString().slice(0, 10),
+    // 08/10/2026 (lot fraîcheur A) : date du relevé de l'indice (alternative.me), jamais l'heure du rendu ; omise sans relevé
+    ...(fg?.timestamp ? { dateModified: fg.timestamp } : {}),
   };
 
   const schemas = graphSchema([

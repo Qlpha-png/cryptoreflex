@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import VerifieLe from "@/components/ui/VerifieLe";
 
 import { getAllPlatforms, getPlatformById, isAvailableFr } from "@/lib/platforms";
 import { computeGlobalScore, SCORING_WEIGHTS } from "@/lib/scoring";
@@ -242,9 +243,10 @@ export default function FonctionnementComparateurPage() {
 
       <h2 id="mise-a-jour" className={H2}>Mise à jour des données</h2>
       <ul className={UL}>
-        {feeDates && <li>• Comparatif : coût d&apos;un achat relevé {feeDates} ; la date et la source figurent sous chaque ligne.</li>}
-        {pctDates && <li>• Page des frais : frais en pourcentage vérifiés {pctDates} ; la source et la date figurent sur chaque ligne.</li>}
-        {micaDates && <li>• Autorisations MiCA vérifiées {micaDates}.</li>}
+        {feeDates && <li>• Comparatif : coût d&apos;un achat <VerifieLe dates={ranked.map((p) => p.fees.cost?.date)} famille="frais" label="relevé" /> ; la date et la source figurent sous chaque ligne.</li>}
+        {/* 08/10/2026 (lot fraîcheur A2) : périodes via <VerifieLe> */}
+        {pctDates && <li>• Page des frais : <VerifieLe dates={ranked.map((p) => p.fees.verified?.date)} famille="frais" label="frais en pourcentage vérifiés" age={false} /> ; la source et la date figurent sur chaque ligne.</li>}
+        {micaDates && <li>• <VerifieLe dates={ranked.map((p) => p.mica.lastVerified)} famille="mica" label="Autorisations MiCA vérifiées" />.</li>}
         <li>
           • Une veille automatique compare chaque nuit le registre MiCA de l&apos;ESMA et les grilles tarifaires citées à
           leur dernier état relu. Un écart ouvre une alerte. La veille ne modifie aucune donnée : la correction est faite

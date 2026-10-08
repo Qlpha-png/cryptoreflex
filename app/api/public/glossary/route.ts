@@ -14,6 +14,7 @@
 import { NextResponse } from "next/server";
 import glossaryData from "@/data/glossary.json";
 import { BRAND } from "@/lib/brand";
+import { PUBLIC_API_CACHE_CONTROL, glossaryLastUpdated } from "@/lib/public-data-dates";
 
 export const dynamic = "force-static";
 export const revalidate = 86_400;
@@ -28,7 +29,7 @@ interface GlossaryPayload {
     attributionHtml: string;
     canonicalUrl: string;
     termCount: number;
-    lastUpdated: string;
+    lastUpdated: string | null;
     contact: string;
   };
   terms: unknown[];
@@ -37,9 +38,8 @@ interface GlossaryPayload {
 function buildPayload(): GlossaryPayload {
   const raw = glossaryData as { terms?: unknown[] };
   const terms = Array.isArray(raw.terms) ? raw.terms : [];
-  // On evite de re-iterer pour calcul lastUpdated : prendre la date de build
-  // (les changements glossary.json declenchent rebuild Vercel).
-  const lastUpdated = new Date().toISOString().split("T")[0]!;
+  // 08/10/2026 (audit de fraîcheur n° 31) : avant, date du BUILD ; désormais la mise à jour la plus récente des termes.
+  const lastUpdated = glossaryLastUpdated(terms);
 
   return {
     _meta: {
@@ -70,7 +70,7 @@ const COMMON_HEADERS: Record<string, string> = {
   "X-Attribution":
     "Glossaire Cryptoreflex (https://cryptoreflex.fr) - Reutilisation conditionnee a un lien dofollow.",
   Link: '<https://creativecommons.org/licenses/by/4.0/>; rel="license"; title="CC-BY-4.0"',
-  "Cache-Control": "public, max-age=3600, s-maxage=86400, stale-while-revalidate=86400",
+  "Cache-Control": PUBLIC_API_CACHE_CONTROL,
 };
 
 export function GET() {

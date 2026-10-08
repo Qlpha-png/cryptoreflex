@@ -30,6 +30,14 @@ export interface StakingProviderRate {
   infoUrl: string;
 }
 
+/**
+ * 08/10/2026 (lot fraîcheur A2) : périodes de relevé des taux, telles qu'écrites dans les pages (aucun jour inventé) :
+ * calculateur « APY indicatifs Q1 2026 » (début de période = janvier, on ne rajeunit jamais) ; /staking « APY estimés
+ * avril 2026 » (lib/programmatic STAKING_PAIRS). Relevés à la main, sans robot.
+ */
+export const STAKING_RATES_PERIODE = { debut: "2026-01", texte: "T1 2026" } as const;
+export const STAKING_PAIRS_RELEVE = "2026-04";
+
 export interface StakingCryptoData {
   id: "ethereum" | "solana" | "cardano" | "polkadot" | "cosmos" | "near";
   symbol: string;

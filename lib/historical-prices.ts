@@ -12,6 +12,8 @@
 import { unstable_cache } from "next/cache";
 import { cgHeaders } from "@/lib/coingecko";
 import type { SourceName } from "@/lib/data-sources/priorities";
+import { formatDataDateFr, isoOrNull, oldestIso } from "@/lib/data-dates";
+import { FX_FALLBACK } from "@/lib/fx-fallback";
 
 const COINGECKO_BASE = "https://api.coingecko.com/api/v3";
 
@@ -726,8 +728,24 @@ export async function fetchHistoricalSeries(coinId: string, days: number): Promi
 export interface SimplePrice {
   /** prix de 1 unité de `from` exprimé dans `to` */
   rate: number;
-  /** ISO timestamp dernière maj côté CoinGecko */
-  lastUpdated: string;
+  /** horodatage ISO RÉEL du relevé (source de prix), null si la source ne le donne pas — jamais « maintenant » par défaut */
+  lastUpdated: string | null;
+  /** taux sans heure (taux de change journalier, identité) : mention datée à afficher à la place d'un « il y a … »
+   *  (08/10/2026, audit de fraîcheur n° 9 : les paires fiat→fiat affichaient « il y a 0 min » sur un taux du 02/10) */
+  label?: string;
+}
+
+/** Mention datée d'un taux de change journalier (lib/fx.ts) : « taux BCE du 2 octobre 2026 », « taux de secours … ». */
+export function fxRateLabel(fx: { date: string; source: "bce" | "binance" | "secours" }, pair: { from: string; to: string }): string {
+  const jour = formatDataDateFr(fx.date) ?? "date inconnue";
+  if (fx.source === "secours") return `taux de secours (référence BCE du ${jour}), le taux du jour est indisponible`;
+  if (fx.source === "binance") {
+    const seulementEuroDollar = [pair.from, pair.to].every((c) => c === "eur" || c === "usd");
+    return seulementEuroDollar
+      ? `taux EUR/USDT de Binance du ${jour}`
+      : `taux du ${jour} (euro : Binance ; livre et franc suisse : rapport BCE du ${formatDataDateFr(FX_FALLBACK.date) ?? FX_FALLBACK.date})`;
+  }
+  return `taux de référence BCE du ${jour}`;
 }
 
 /**
@@ -747,9 +765,9 @@ async function _fetchConversionRate(
   const fromLower = from.toLowerCase();
   const toLower = to.toLowerCase();
 
-  // Identité
+  // Identité : 1 X = 1 X, sans date (aucun relevé)
   if (fromLower === toLower) {
-    return { rate: 1, lastUpdated: new Date().toISOString() };
+    return { rate: 1, lastUpdated: null, label: "même devise, taux fixe" };
   }
 
   const isFiat = (s: string) => (FIAT_CODES as readonly string[]).includes(s);
@@ -798,9 +816,9 @@ async function _fetchConversionRate(
     const getPriceSnapshot = async (id: string) => {
       const sym = Object.keys(COIN_IDS).find((s) => COIN_IDS[s] === id) ?? id;
       const r = await fetchPriceCascade({ coingeckoId: id, symbol: applySymbolOverride(id, sym.toUpperCase()), name: COIN_NAMES[sym] ?? id });
+      // relevé EN DIRECT de la cascade : l'heure de la réponse est l'heure du relevé
       return { priceUsd: r?.data.priceUsd ?? 0, source: r?.source ?? "static", fetchedAt: new Date().toISOString() };
     };
-    const now = new Date().toISOString();
 
     // Crypto → Fiat
     if (!isFiat(fromLower) && isFiat(toLower)) {
@@ -818,7 +836,8 @@ async function _fetchConversionRate(
       if (!point) return null;
       return {
         rate: point[toLower],
-        lastUpdated: new Date((point.last_updated_at ?? Date.now() / 1000) * 1000).toISOString(),
+        // heure du relevé CoinGecko ; absente : null (avant : « maintenant »)
+        lastUpdated: point.last_updated_at ? new Date(point.last_updated_at * 1000).toISOString() : null,
       };
     }
 
@@ -837,7 +856,7 @@ async function _fetchConversionRate(
       if (!point || !point[fromLower]) return null;
       return {
         rate: 1 / point[fromLower],
-        lastUpdated: new Date((point.last_updated_at ?? Date.now() / 1000) * 1000).toISOString(),
+        lastUpdated: point.last_updated_at ? new Date(point.last_updated_at * 1000).toISOString() : null,
       };
     }
 
@@ -853,7 +872,7 @@ async function _fetchConversionRate(
       if (a.priceUsd > 0 && b.priceUsd > 0 && a.source !== "static" && b.source !== "static") {
         return {
           rate: a.priceUsd / b.priceUsd,
-          lastUpdated: now,
+          lastUpdated: oldestIso([a.fetchedAt, b.fetchedAt]),
         };
       }
       // Fallback CoinGecko
@@ -861,15 +880,22 @@ async function _fetchConversionRate(
       const ax = json?.[idFrom];
       const bx = json?.[idTo];
       if (!ax || !bx || !bx.eur) return null;
-      const ts = Math.max(ax.last_updated_at ?? 0, bx.last_updated_at ?? 0) || Date.now() / 1000;
+      // le plus ANCIEN des deux relevés (on n'annonce jamais plus frais que vrai) ; inconnu : null
+      const tsA = ax.last_updated_at ? new Date(ax.last_updated_at * 1000).toISOString() : null;
+      const tsB = bx.last_updated_at ? new Date(bx.last_updated_at * 1000).toISOString() : null;
       return {
         rate: ax.eur / bx.eur,
-        lastUpdated: new Date(ts * 1000).toISOString(),
+        lastUpdated: tsA && tsB ? oldestIso([tsA, tsB]) : null,
       };
     }
 
-    // Fiat → Fiat : rapport des taux du jour (avant le 05/10/2026 : « 1 USD = 1 EUR »)
-    return { rate: FIAT_TO_USD[fromLower] / FIAT_TO_USD[toLower], lastUpdated: new Date().toISOString() };
+    // Fiat → Fiat : rapport des taux du jour (avant le 05/10/2026 : « 1 USD = 1 EUR »). 08/10/2026 : la date est celle
+    // du taux (journalier, sans heure), affichée telle quelle — plus de « il y a 0 min » sur un taux de plusieurs jours.
+    return {
+      rate: FIAT_TO_USD[fromLower] / FIAT_TO_USD[toLower],
+      lastUpdated: isoOrNull(fx.date),
+      label: fxRateLabel(fx, { from: fromLower, to: toLower }),
+    };
   } catch (err) {
     console.warn("[historical-prices] rate failed:", err);
     return null;

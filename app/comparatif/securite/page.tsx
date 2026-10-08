@@ -1,5 +1,6 @@
 import { avecTypoSync } from "@/components/ui/Typo";
 import type { Metadata } from "next";
+import VerifieLe from "@/components/ui/VerifieLe";
 import Link from "next/link";
 import Image from "next/image";
 import {
@@ -14,13 +15,12 @@ import {
 } from "lucide-react";
 
 import { coldStorageLabel, getExchangePlatforms, insuranceLabel, NO_INCIDENT_FOUND } from "@/lib/platforms";
-import { formatMicaDate, getMicaMeta } from "@/lib/mica";
+import { getMicaMeta } from "@/lib/mica";
 import { getReviewHref } from "@/lib/programmatic";
 import PlatformName from "@/components/comparison/PlatformName";
 import { BRAND } from "@/lib/brand";
 import { withHreflang } from "@/lib/seo-alternates";
 import StructuredData from "@/components/StructuredData";
-import { fmtDateFr } from "@/lib/format-fr";
 import { faqSchema, graphSchema } from "@/lib/schema";
 import Breadcrumbs from "@/components/Breadcrumbs";
 
@@ -141,7 +141,6 @@ function ComparatifSecuritePage() {
   // « Sans objet » (pas de garde : CFD, portefeuille non dépositaire, achat envoyé au client) ne décrit aucune conservation.
   const describedCold = rows.filter((r) => r.coldStoragePublished && !/^sans objet/i.test(r.coldStorage)).length;
   const figureCold = rows.filter((r) => r.coldStoragePublished && /\d\s?%/.test(r.coldStorage)).length;
-  const securityVerified = rows.map((r) => r.verified).sort().at(-1);
 
   const schemas = graphSchema([
     faqSchema([
@@ -341,7 +340,7 @@ function ComparatifSecuritePage() {
           Conservation hors ligne et assurance : telles que publiées par chaque plateforme (cliquez pour la source),
           non auditées par Cryptoreflex. Incidents : le plus récent trouvé dans un communiqué officiel ou la presse
           reconnue ; « — » signifie que nous n&apos;en avons relevé aucun, ce qui n&apos;est pas une garantie.
-          Relevé du {fmtDateFr(securityVerified)}.
+          <VerifieLe dates={rows.map((r) => r.verified)} famille="securite" label="Relevé" />.
         </p>
 
         {/* Insights */}
@@ -396,7 +395,7 @@ function ComparatifSecuritePage() {
         </section>
 
         <p className="mt-10 text-xs text-muted leading-relaxed">
-          Statuts MiCA vérifiés le {formatMicaDate(getMicaMeta().lastUpdated)} sur le registre de l&apos;ESMA et la
+          <VerifieLe date={getMicaMeta().lastUpdated} famille="mica" label="Statuts MiCA vérifiés" age={false} /> sur le registre de l&apos;ESMA et la
           liste blanche de l&apos;AMF (à recouper avant toute décision). Seuls les liens marqués
           « Publicité » sont rémunérés (affiliation ou parrainage personnel du fondateur) : voir notre{" "}
           <Link href="/transparence" className="underline hover:text-fg">page transparence</Link>.

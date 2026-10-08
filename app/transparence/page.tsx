@@ -28,6 +28,7 @@ import {
 import { withHreflang } from "@/lib/seo-alternates";
 import { fitDescription } from "@/lib/seo-text";
 import { PAGE_UPDATED } from "@/lib/engagements";
+import VerifieLe from "@/components/ui/VerifieLe";
 import { DELAI_REPONSE } from "@/lib/engagements";
 import Breadcrumbs from "@/components/Breadcrumbs";
 
@@ -216,12 +217,7 @@ export default function TransparencePage() {
             réglementaire MiCA et le type de rémunération.
           </p>
           <p className="mt-3 text-sm text-muted">
-            Dernière mise à jour :{" "}
-            {new Date(PAGE_LAST_UPDATED).toLocaleDateString("fr-FR", {
-              day: "numeric",
-              month: "long",
-              year: "numeric",
-            })}
+            <VerifieLe date={PAGE_LAST_UPDATED} famille="editorial" label="Dernière mise à jour" />
             . Les modifications sont historisées dans Git (audit trail public) et
             les corrections listées dans le{" "}
             <Link href="/corrections" className="text-primary-soft underline hover:text-primary">
@@ -566,7 +562,7 @@ export default function TransparencePage() {
                   à encadrer l'influence commerciale (« loi Influenceurs »),
                   en particulier son article 5-2 : l'intention commerciale doit
                   être indiquée par une mention claire, lisible et compréhensible
-                  (version en vigueur relue sur Légifrance le 6 octobre 2026) ;
+                  (version en vigueur <VerifieLe date="2026-10-06" famille="fiscalite" label="relue sur Légifrance" age={false} />) ;
                 </li>
                 <li>
                   de l'<strong>article 20 de la loi n°2004-575 du 21 juin 2004</strong>

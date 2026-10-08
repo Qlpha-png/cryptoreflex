@@ -2,9 +2,11 @@
 
 import { avecTypoSync } from "@/components/ui/Typo";
 import { useEffect, useMemo, useState } from "react";
+import VerifieLe from "@/components/ui/VerifieLe";
 import { Coins, ShieldAlert, Lock, Sparkles, ArrowRight, Info } from "lucide-react";
 import {
   STAKING_RATES,
+  STAKING_RATES_PERIODE,
   computeStakingReward,
   getStakingDataById,
   type StakingCryptoData,
@@ -219,7 +221,7 @@ function CalculateurApyStaking() {
               </table>
             </div>
             <p className="border-t border-border bg-elevated/40 px-4 py-2 text-xs text-fg-4">
-              APY indicatifs Q1 2026 — varient quotidiennement avec le réseau et les pools.
+              <VerifieLe date={STAKING_RATES_PERIODE.debut} affichage={STAKING_RATES_PERIODE.texte} famille="rendements" label="APY indicatifs relevés au" age={false} /> — varient quotidiennement avec le réseau et les pools.
               Récompenses nettes affichées sans réinvestissement automatique.
             </p>
           </div>

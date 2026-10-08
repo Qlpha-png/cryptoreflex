@@ -12,10 +12,10 @@ vi.mock("next/cache", () => ({
 }));
 
 const DB_ROWS = [
-  { coingecko_id: "ripple", updated_at: "2026-09-01T10:00:00Z", market_cap_rank: 4 },
-  { coingecko_id: "bitcoin", updated_at: "2026-09-01T10:00:00Z", market_cap_rank: 1 },
-  { coingecko_id: "near", updated_at: "2026-09-01T10:00:00Z", market_cap_rank: 30 },
-  { coingecko_id: "chain-2", updated_at: "2026-08-15T10:00:00Z", market_cap_rank: 400 },
+  { coingecko_id: "ripple", updated_at: "2026-09-01T10:00:00Z", last_refreshed_at: "2026-09-01T10:00:00Z", market_cap_rank: 4 },
+  { coingecko_id: "bitcoin", updated_at: "2026-09-01T10:00:00Z", last_refreshed_at: "2026-09-01T10:00:00Z", market_cap_rank: 1 },
+  { coingecko_id: "near", updated_at: "2026-09-01T10:00:00Z", last_refreshed_at: "2026-09-01T10:00:00Z", market_cap_rank: 30 },
+  { coingecko_id: "chain-2", updated_at: "2026-10-08T07:00:00Z" /* needs_review du jour : ne doit pas dater la fiche */, last_refreshed_at: "2026-08-15T10:00:00Z", market_cap_rank: 400 },
 ];
 
 vi.mock("@/lib/supabase/server", () => {

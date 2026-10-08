@@ -69,6 +69,7 @@ import { withHreflang } from "@/lib/seo-alternates";
 import { fitTitle } from "@/lib/seo-text";
 import { fmtFr, fmtNb } from "@/lib/format-fr";
 import Breadcrumbs from "@/components/Breadcrumbs";
+import VerifieLe from "@/components/ui/VerifieLe";
 
 export const revalidate = 86400; // 24h
 
@@ -211,11 +212,17 @@ export default function PartnerDetailPage({ params }: Props) {
               <span className="font-bold text-fg">Publicité.</span> Cette
               page contient des liens affiliés (loi 9 juin 2023). La note de{" "}
               {fmtNb(review.rating)}/5 est celle de Trustpilot (
-              {review.externalReviewCount.toLocaleString("fr-FR")} avis, relevée le{" "}
-              {new Date(review.externalReviewDate).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" })}),
+              {review.externalReviewCount.toLocaleString("fr-FR")} avis,{" "}
+              <VerifieLe date={review.externalReviewDate} famille="notes" label="relevée" />),
               pas la nôtre : le partenariat ne la change pas. Notre analyse repose
               sur les informations publiées par {partner.name} et sur des sources
               publiques, pas sur une utilisation personnelle du produit.
+              {review.tarifsReleveLe ? (
+                <>
+                  {" "}
+                  <VerifieLe date={review.tarifsReleveLe} famille="tarifs-partenaires" label="Tarifs relevés" /> sur le site de {partner.name}.
+                </>
+              ) : null}
             </p>
           </div>
         </aside>

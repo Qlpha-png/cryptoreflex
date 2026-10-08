@@ -47,7 +47,8 @@ const EVENTS_BY_CRYPTO: Record<string, RawCryptoEvent[]> = FILE.events ?? {};
 const GLOBAL_EVENTS: RawGlobalEvent[] = FILE.globalEvents ?? [];
 
 /** Date de dernière vérification éditoriale (affichée en footer du composant). */
-export const EVENTS_LAST_UPDATED: string = FILE._meta?.lastUpdated ?? "2026-05-01";
+// 08/10/2026 (lot fraîcheur A2) : plus de date de repli inventée ; sans date dans le fichier, « date inconnue ».
+export const EVENTS_LAST_UPDATED: string | null = FILE._meta?.lastUpdated ?? null;
 
 /** Évènement avec calcul du nombre de jours restants. */
 export interface CryptoEvent extends RawCryptoEvent {

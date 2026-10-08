@@ -19,6 +19,7 @@ import { successResponse } from "@/lib/api-keys/response";
 import { hasScope } from "@/lib/api-keys/scopes";
 import platformsData from "@/data/platforms.json";
 import { withOfficialLink } from "@/lib/platforms";
+import { platformsLastUpdated } from "@/lib/public-data-dates";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -41,16 +42,16 @@ export async function GET(req: Request): Promise<Response> {
 
   const raw = platformsData as unknown as PlatformsRaw;
 
+  // Exclut les plateformes fermées au marché FR (ex : Gemini) — cohérent avec le
+  // le statut MiCA exposé (micaCompliant) indique en plus si la plateforme peut servir la France.
+  // 06/10/2026 : affiliateUrl = site officiel sans relation rémunérée réelle (lib/partnerships.ts).
+  const published = (
+    (raw.platforms as Array<{ id: string; websiteUrl: string; affiliateUrl: string; fees?: { verified?: { verdict?: string } } }>) ?? []
+  ).filter((p) => p?.fees?.verified?.verdict !== "indisponible");
   const data = {
-    last_updated: raw._meta?.lastUpdated ?? null,
-    // Exclut les plateformes fermées au marché FR (ex : Gemini) — cohérent avec le
-    // le statut MiCA exposé (micaCompliant) indique en plus si la plateforme peut servir la France.
-    // 06/10/2026 : affiliateUrl = site officiel sans relation rémunérée réelle (lib/partnerships.ts).
-    platforms: (
-      (raw.platforms as Array<{ id: string; websiteUrl: string; affiliateUrl: string; fees?: { verified?: { verdict?: string } } }>) ?? []
-    )
-      .filter((p) => p?.fees?.verified?.verdict !== "indisponible")
-      .map(withOfficialLink),
+    // 08/10/2026 : date la plus récente des vérifications des lignes publiées (même règle que /api/public/platforms)
+    last_updated: platformsLastUpdated(raw._meta, published),
+    platforms: published.map(withOfficialLink),
     history: includeHistory ? (raw.history ?? null) : undefined,
     _capabilities: {
       include_history_available: hasScope(key.scopes, "historical:read"),

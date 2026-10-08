@@ -8,7 +8,8 @@
  *   - Diversité client       15 %
  *   - Open source            15 %
  *
- * Data statique éditoriale, update manuel trimestriel.
+ * Data statique éditoriale, relevé manuel daté score par score (aucune révision programmée ; « trimestriel »
+ * retiré le 08/10/2026 : aucun robot ni calendrier ne le tenait, la vérification BTC datait du 04/2026).
  */
 import data from "@/data/decentralization-scores.json";
 
@@ -40,8 +41,9 @@ interface ScoresFile {
 
 const FILE = data as ScoresFile;
 const SCORES = FILE.scores ?? {};
-export const DECENTRALIZATION_LAST_UPDATED: string =
-  FILE.lastUpdated ?? "2026-04-26";
+// 08/10/2026 (lot fraîcheur A2) : plus de date de repli inventée.
+export const DECENTRALIZATION_LAST_UPDATED: string | null =
+  FILE.lastUpdated ?? null;
 export const DECENTRALIZATION_METHODOLOGY: string =
   FILE.methodology ??
   "Score composite : Nakamoto coefficient (30%) + validateurs (25%) + géographie (15%) + diversité client (15%) + open source (15%).";

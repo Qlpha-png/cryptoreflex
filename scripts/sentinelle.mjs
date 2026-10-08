@@ -18,6 +18,9 @@
 import { readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { CADENCE, TRACES_CRON, jugerTrace } from "./lib/sentinelle-robots.mjs";
+import { AGE_MAX_H, FICHES_TEMOINS, choisirEchantillon, fichesDuPlan, jugerFiche } from "./lib/sentinelle-cours.mjs";
+import { inventaireDonnees, jugerPageDates, pagesDatesDuJour } from "./lib/inventaire-dates.mjs";
 
 const ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
 const FULL = process.argv.includes("--full");
@@ -216,18 +219,8 @@ async function checkRobots() {
   } catch (e) {
     warn("robots", `liste des tâches GitHub illisible : ${e.message}`);
   }
-  /* 05/10/2026 : un robot qui ne se lance plus du tout ne produit aucun échec. Âge maximal du dernier passage (heures) ;
-     GitHub retarde souvent ses tâches programmées de plusieurs heures, d'où la marge. */
-  const CADENCE = [
-    ["daily-content.yml", "actus et analyses du jour", 30],
-    ["audit-navigateur.yml", "audit navigateur de nuit", 32],
-    ["health-check.yml", "contrôle de santé", 16],
-    ["freshness-check.yml", "contrôle de fraîcheur", 40],
-    ["refresh-prices-db.yml", "prix de la base", 16],
-    ["refresh-static-details-kv.yml", "détails des fiches", 16],
-    ["weekly-blog.yml", "article de la semaine", 8 * 24 + 12],
-    ["weekly-events.yml", "agenda de la semaine", 8 * 24 + 12],
-  ];
+  /* 05/10/2026 : un robot qui ne se lance plus du tout ne produit aucun échec. Âge maximal du dernier passage (heures) :
+     liste CADENCE de scripts/lib/sentinelle-robots.mjs (08/10/2026 : + veille officielle 30 h, + robot FOMC). */
   for (const [file, label, maxH] of CADENCE) {
     try {
       const r = await fetch(`https://api.github.com/repos/${repo}/actions/workflows/${file}/runs?per_page=1`, {
@@ -299,6 +292,20 @@ async function checkOrchestrator() {
     }
   } catch (e) {
     warn("robots", `trace des alertes illisible : ${e.message}`);
+  }
+  /* 08/10/2026 (lot fraîcheur A) : instantané de secours des prix, rappels de série, série d'e-mails fiscalité —
+     trace « dernier passage + résultat » (lib/cron-trace.ts), seuils de scripts/lib/sentinelle-robots.mjs (3 h, 30 h, 30 h). */
+  for (const [key, label, maxH] of TRACES_CRON) {
+    try {
+      const r = await fetch(`${kvUrl}/get/${encodeURIComponent(key)}`, { headers: { Authorization: `Bearer ${kvToken}` }, signal: AbortSignal.timeout(10_000) });
+      const j = await r.json();
+      if (j.error || !r.ok) { warn("robots", `${label} : trace illisible (HTTP ${r.status})`); continue; }
+      const t = typeof j.result === "string" ? JSON.parse(j.result) : j.result;
+      const v = jugerTrace(t, label, maxH, Date.now());
+      (v.level === "fail" ? fail : v.level === "warn" ? warn : ok)("robots", v.msg);
+    } catch (e) {
+      warn("robots", `${label} : trace illisible (${e.message})`);
+    }
   }
 }
 
@@ -459,6 +466,82 @@ async function checkSitemaps() {
   } else ok("plans du site", `${done - blocked} adresses contrôlées : toutes en 200, indexables, canoniques`);
 }
 
+/* ------------------------------------------------------------------ cours des fiches (lot fraîcheur A2, audit L3) */
+async function checkCoursFiches() {
+  let fiches;
+  try {
+    fiches = fichesDuPlan(await (await get(SITE + "/sitemap.xml")).res.text());
+  } catch (e) {
+    warn("cours des fiches", `plan du site illisible (${e.message})`);
+    return;
+  }
+  const echantillon = choisirEchantillon(fiches, Date.now(), 30);
+  const defauts = [];
+  let controlees = 0, masquees = 0, bloquees = 0;
+  const temoinsSansRepere = [];
+  for (const id of echantillon) {
+    try {
+      let { res } = await get(`${SITE}/cryptos/${id}`);
+      let html = await res.text();
+      if (isCheckpoint(res.status, html)) { bloquees++; continue; }
+      if (res.status !== 200) { defauts.push(`/cryptos/${id} répond ${res.status}`); continue; }
+      let j = jugerFiche(html, Date.now());
+      if (j.etat === "defaut" && /relevé il y a/.test(j.detail)) {
+        // page servie depuis le cache au-delà de sa durée : la première lecture relance la génération, on relit une fois
+        await new Promise((r) => setTimeout(r, 8000));
+        ({ res } = await get(`${SITE}/cryptos/${id}`));
+        html = await res.text();
+        j = jugerFiche(html, Date.now());
+      }
+      if (j.etat === "editoriale") {
+        // les témoins sont des fiches générées : sans repère data-cours-*, le contrôle ne voit plus rien
+        if (FICHES_TEMOINS.includes(id)) temoinsSansRepere.push(id);
+        continue;
+      }
+      controlees++;
+      if (/masqué/.test(j.detail)) masquees++;
+      if (j.etat === "defaut") defauts.push(`/cryptos/${id} : ${j.detail}`);
+    } catch (e) {
+      warn("cours des fiches", `/cryptos/${id} injoignable (${e.message})`);
+    }
+  }
+  // Reprise du 08/10 (juré I7) : un contrôle qui ne voit aucune fiche générée échoue, il ne se contente pas d'avertir.
+  for (const id of temoinsSansRepere) defauts.push(`/cryptos/${id} : repère data-cours-* absent (fiche générée lue comme éditoriale : le contrôle des cours est aveugle)`);
+  if (controlees === 0 && bloquees < echantillon.length) defauts.push(`aucune fiche générée contrôlée sur ${echantillon.length} lues (repère data-cours-* disparu ?)`);
+  if (defauts.length) for (const d of defauts) fail("cours des fiches", d);
+  else if (controlees === 0) warn("cours des fiches", `les ${bloquees} lectures ont été bloquées par le pare-feu de Vercel : rien n'a pu être contrôlé`);
+  else if (controlees < 20) warn("cours des fiches", `seulement ${controlees} fiches générées contrôlées (20 attendues)`);
+  else ok("cours des fiches", `${controlees} fiches contrôlées (dont audiera, luxxcoin) : aucun cours de plus de ${AGE_MAX_H} h affiché, ${masquees} cours masqués`);
+}
+
+/* ------------------------------------------------------------------ dates « vérifié le » (lot fraîcheur A2, L1) */
+async function checkDatesVerification() {
+  // 1. pages : aucune date « vérifié / mis à jour / relevé » affichée hors du composant <VerifieLe>
+  const problemes = [];
+  let slugsAvis = [];
+  try {
+    slugsAvis = JSON.parse(readFileSync(path.join(ROOT, "data/platforms.json"), "utf8")).platforms.map((x) => x.id);
+  } catch { /* liste illisible : pages fixes seulement */ }
+  const PAGES = pagesDatesDuJour(slugsAvis, Date.now());
+  for (const p of PAGES) {
+    try {
+      const { res } = await get(SITE + p);
+      const html = await res.text();
+      if (isCheckpoint(res.status, html) || res.status !== 200) continue;
+      for (const d of jugerPageDates(html)) problemes.push(`${p} : « ${d} »`);
+    } catch (e) {
+      warn("dates vérifiées", `${p} injoignable (${e.message})`);
+    }
+  }
+  if (problemes.length) for (const pb of problemes.slice(0, 20)) fail("dates vérifiées", `date affichée hors du composant : ${pb}`);
+  else ok("dates vérifiées", `${PAGES.length} pages : toutes les dates « vérifié le » passent par le composant`);
+  // 2. données : dates au-delà du seuil de leur famille (information, la page l'affiche déjà « à revérifier »)
+  const inv = inventaireDonnees(ROOT, Date.now());
+  const vieilles = inv.filter((l) => l.aReverifier > 0);
+  if (vieilles.length) warn("dates vérifiées", `à revérifier : ${vieilles.map((l) => `${l.champ} (${l.aReverifier}/${l.total}, seuil ${l.seuil} j)`).join(" ; ")}`);
+  else ok("dates vérifiées", `${inv.length} champs de date sous leur seuil`);
+}
+
 /* ------------------------------------------------------------------ exécution + rapport */
 await checkKeyPages();
 await checkFreshness();
@@ -470,6 +553,8 @@ await checkCmcBudget();
 if (FULL) {
   await checkFiscal();
   await checkPartners();
+  await checkCoursFiches();
+  await checkDatesVerification();
   await checkSitemaps();
 }
 

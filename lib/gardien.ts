@@ -106,12 +106,16 @@ export const ROBOTS_GARDIEN: readonly RobotGardien[] = [
     horaire: "0 8 * * 6",
     description: "Article long de la semaine, le samedi.",
   },
+  // weekly-events retiré le 08/10/2026 (lot fraîcheur A, reprise I7) : lancement manuel seulement, en attendant la
+  // décision de Kev sur CoinMarketCal (sans clé, il était rouge chaque lundi).
   {
-    cle: "weekly-events",
-    workflow: "weekly-events.yml",
+    cle: "refresh-fomc",
+    workflow: "refresh-fomc.yml",
+    // 08/10/2026 (lot fraîcheur A) : calendrier officiel de la Fed → bloc FOMC de lib/events-seed.ts ; commit seulement si
+    // les réunions changent, rouge si la page change de structure.
     inputs: {},
-    horaire: "0 6 * * 1",
-    description: "Agenda des événements crypto, le lundi.",
+    horaire: "20 6 * * 1",
+    description: "Réunions FOMC relues sur le calendrier officiel de la Fed, le lundi.",
   },
 ];
 

@@ -28,6 +28,7 @@ import AmfDisclaimer from "@/components/AmfDisclaimer";
 import { fitDescription, fitTitle } from "@/lib/seo-text";
 import { fmtNb } from "@/lib/format-fr";
 import Breadcrumbs from "@/components/Breadcrumbs";
+import VerifieLe from "@/components/ui/VerifieLe";
 
 /**
  * /airdrops — Hub editorial des airdrops crypto FR (BLOC 3, 2026-05-04).
@@ -291,7 +292,7 @@ export default function AirdropsPage() {
 
         <p className="mt-6 text-xs text-muted leading-relaxed">
           {AIRDROPS_DISCLAIMER}{" "}
-          Données au {fmtDateFr(AIRDROPS_LAST_UPDATED)}. Vérifiez la fiscalité
+          <VerifieLe date={AIRDROPS_LAST_UPDATED} famille="airdrops" label="Liste vérifiée" />. Vérifiez la fiscalité
           via{" "}
           <Link
             href="/blog/fiscalite-airdrops-crypto-france-2026"

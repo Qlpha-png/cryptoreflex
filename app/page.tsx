@@ -96,7 +96,7 @@ async function HomePage() {
         priceSource={priceSource}
       />
       {/* Heure RÉELLE du relevé servi (Data Cache), pas l'heure du rendu : un dernier relevé ancien n'est pas « en direct ». */}
-      <Hero prices={prices} sparklines={heroSparklines} updatedAt={market[0]?.asOf ?? new Date().toISOString()} fearGreed={fearGreed?.value ?? null} />
+      <Hero prices={prices} sparklines={heroSparklines} updatedAt={market[0]?.asOf} fearGreed={fearGreed?.value ?? null} />
       <HomeDoors />
       <HomeMarketToday market={market} priceSource={priceSource} />
       <HomeTrustLine />

@@ -64,6 +64,15 @@ const PART_INDEX = new Map(DATA.parties.map((p, i) => [p.jour, i]));
 const effectiveDay = (jour: number): number => partDay(PART_INDEX.get(jour) ?? N_PARTS_FAR);
 const N_PARTS_FAR = 99;
 export const isReleased = (c: ReflexCard, day: number): boolean => (c.fossil ? day >= 1 : !!c.sortie && day >= 1 && effectiveDay(c.sortie.jour) <= day);
+/** date « AAAA-MM-JJ » de sortie effective d'une carte d'après le registre des sorties (Releases.dates, index = partie) ;
+ *  fossile : sortie avec la 1re partie (jour 1) ; null si pas encore sortie ou date inconnue (lastmod du plan du site,
+ *  lot fraîcheur A du 08/10/2026 : plus jamais « maintenant »). */
+export function cardReleaseDate(c: ReflexCard, dates: ReadonlyArray<string | null>): string | null {
+  if (c.fossil) return dates[0] ?? null;
+  if (!c.sortie) return null;
+  const i = PART_INDEX.get(c.sortie.jour);
+  return i === undefined ? null : dates[i] ?? null;
+}
 /** carte entière visible par tous (révélation officielle) */
 export const isRevealed = (c: ReflexCard): boolean => REVEALED.has(c.id);
 /** a une page publique : sortie, révélée, ou fossile (l'histoire du Musée est publique, la carte reste à trouver) */

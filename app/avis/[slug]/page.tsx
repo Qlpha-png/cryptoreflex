@@ -54,11 +54,13 @@ import { faqSchema, graphSchema, platformReviewSchema, // FIX SEO 2026-05-02 #9 
   // Permet de surfacer le rich result "App" Google.
   platformSoftwareApplicationSchema } from "@/lib/schema";
 import MiCAComplianceBadge from "@/components/MiCAComplianceBadge";
+import VerifieLe from "@/components/ui/VerifieLe";
+import { dateStatutMica } from "@/lib/mica-auto";
 import RelatedPagesNav from "@/components/RelatedPagesNav";
 import NextStepsGuide from "@/components/NextStepsGuide";
 import PlatformLogo from "@/components/PlatformLogo";
 import { withHreflang } from "@/lib/seo-alternates";
-import { fmtDateFr, fmtFr, fmtNb } from "@/lib/format-fr";
+import { fmtFr, fmtNb } from "@/lib/format-fr";
 import Breadcrumbs from "@/components/Breadcrumbs";
 
 // FIX SEO 2026-06-11 — pattern blog/[slug] : SSG pur + dynamicParams=false.
@@ -202,7 +204,14 @@ function CostTileBase({ label, cost, normalCase = false }: { label: string; cost
       <div className="mt-1 text-xs text-fg-4">
         sur 1 000 €
         {cost.status === "ok" && (cost.kind === "partiel" || cost.kind === "max-partiel") ? ", plus une marge non publiée" : ""}
-        {cost.status !== "non-releve" ? ` · relevé le ${fmtDateFr(cost.date)}` : ""}
+        {cost.status !== "non-releve" ? (
+          <>
+            {" · "}
+            <VerifieLe date={cost.date} famille="frais" label="relevé" age={false} />
+          </>
+        ) : (
+          ""
+        )}
       </div>
     </div>
   );
@@ -212,9 +221,6 @@ function CostTileBase({ label, cost, normalCase = false }: { label: string; cost
  * FAQ — questions générées en contexte (varient selon les data)
  * ------------------------------------------------------------------ */
 
-const frDate = (iso: string) =>
-  new Date(iso).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric", timeZone: "Europe/Paris" });
-
 /**
  * Réponse « piratage » construite UNIQUEMENT à partir des valeurs sourcées de data/ (06/10/2026). Avant : « Aucun
  * incident de sécurité majeur n'est documenté » et « 95 % des fonds clients sont en cold storage » pour des plateformes
@@ -222,10 +228,11 @@ const frDate = (iso: string) =>
  */
 function securityFaqAnswer(p: Platform): string {
   const s = p.security;
-  const when = frDate(s.verified);
+  // 08/10/2026 (lot fraîcheur A2) : plus de date dans le texte de la FAQ (texte figé, repris dans le JSON-LD) ; la date
+  // du relevé est affichée par <VerifieLe> dans la section Sécurité, qui signale elle-même quand elle est à revérifier.
   const incident = s.lastIncident
     ? `Oui. Ce que nous avons documenté, du plus récent au plus ancien : ${lcFirst(s.lastIncident).replace(/[\s.]*$/, ".")}`
-    : `Nous n'avons relevé aucun incident de sécurité documenté pour ${p.name} dans nos sources (communiqués officiels, presse reconnue) au ${when}. Ce n'est pas une garantie.`;
+    : `Nous n'avons relevé aucun incident de sécurité documenté pour ${p.name} dans nos sources (communiqués officiels, presse reconnue) à la date de notre dernier relevé, indiquée dans la section « Sécurité » de cette page. Ce n'est pas une garantie.`;
   if (p.category === "wallet") {
     return `${incident} ${p.name} fabrique des portefeuilles matériels : la société ne garde pas vos cryptos, vos clés restent sur l'appareil. Le risque principal tient à votre phrase de récupération et aux faux messages qui la réclament.`;
   }
@@ -256,8 +263,8 @@ function buildFaq(p: Platform): { q: string; a: string }[] {
       p.category === "wallet"
         ? `${p.name} est un portefeuille matériel : vous conservez vous-même vos clés, il n'a donc pas besoin d'agrément MiCA. Les achats proposés dans son application passent par des prestataires partenaires.`
         : isAvailableFr(p)
-          ? `Oui. ${p.name} figure au registre MiCA de l'ESMA : ${p.mica.status}${p.mica.amfRegistration ? ` (agrément AMF n° ${p.mica.amfRegistration})` : ""}${p.mica.legalEntity ? `, via ${p.mica.legalEntity}` : ""}. Vérification effectuée par Cryptoreflex le ${frDate(p.mica.lastVerified)}.`
-          : `Non. ${p.mica.status}. Depuis le 1er juillet 2026, fin de la période transitoire MiCA, seuls les prestataires agréés avec accès à la France peuvent y fournir des services sur crypto-actifs. Vérification effectuée par Cryptoreflex le ${frDate(p.mica.lastVerified)}.`,
+          ? `Oui. ${p.name} figure au registre MiCA de l'ESMA : ${p.mica.status}${p.mica.amfRegistration ? ` (agrément AMF n° ${p.mica.amfRegistration})` : ""}${p.mica.legalEntity ? `, via ${p.mica.legalEntity}` : ""}. La date de notre dernière vérification figure dans l'encadré « Statut MiCA » de cette page.`
+          : `Non. ${p.mica.status}. Depuis le 1er juillet 2026, fin de la période transitoire MiCA, seuls les prestataires agréés avec accès à la France peuvent y fournir des services sur crypto-actifs. La date de notre dernière vérification figure dans l'encadré « Statut MiCA » de cette page.`,
   });
 
   faq.push({
@@ -272,7 +279,7 @@ function buildFaq(p: Platform): { q: string; a: string }[] {
   faq.push({
     q: `${p.name} propose-t-elle un support en français ?`,
     a: p.support.note && p.support.verified
-      ? `${p.support.note.replace(/\.$/, "")} (page d'assistance officielle relevée le ${frDate(p.support.verified)}). N'appelez jamais un numéro trouvé ailleurs que sur le site officiel : c'est une technique d'hameçonnage courante.`
+      ? `${p.support.note.replace(/\.$/, "")} (page d'assistance officielle ; date du relevé dans la section « Support » de cette page). N'appelez jamais un numéro trouvé ailleurs que sur le site officiel : c'est une technique d'hameçonnage courante.`
       : `Nous n'avons pas encore vérifié les canaux d'assistance de ${p.name}. Consultez son centre d'aide officiel avant d'ouvrir un compte, et n'appelez jamais un numéro trouvé ailleurs que sur le site officiel.`,
   });
 
@@ -369,11 +376,12 @@ function ReviewPage({ params }: Props) {
     !available ? unavailableLabel : paidKind ? paidLabel : `Site officiel de ${p.name}`;
   // Note Trustpilot relevée à la main : toujours affichée avec sa date et un lien vers la page source.
   const tp = trustpilotText(p.ratings);
-  const tpDate = fmtDateFr(p.ratings.trustpilotVerified);
   const hasTpLine = !!p.ratings.trustpilotUrl && !!(tp || p.ratings.trustpilotNote);
   const v = p.fees.verified;
   const mt = v?.makerTakerApplies ?? true;
   const isWallet = p.category === "wallet";
+  // reprise du 08/10/2026 (L6 MiCA) : date du contrôle automatique du registre ESMA si plus récente que la relecture humaine
+  const micaAffiche = dateStatutMica(p.id, p.mica.lastVerified, "Statut MiCA vérifié");
   const verdictLabel =
     v?.verdict === "fiable"
       ? "Vérifié"
@@ -478,13 +486,26 @@ function ReviewPage({ params }: Props) {
                   >
                     Trustpilot
                   </a>
-                  {p.ratings.trustpilot != null && p.ratings.trustpilotCount != null
-                    ? ` ${fmtFr(p.ratings.trustpilot, 1)}/5 (${p.ratings.trustpilotCount.toLocaleString("fr-FR")} avis, relevé le ${tpDate})${p.ratings.trustpilotNote ? ` — ${p.ratings.trustpilotNote}` : ""}`
-                    : ` : ${p.ratings.trustpilotNote ?? "aucune note publique"}, relevé le ${tpDate}`}
+                  {p.ratings.trustpilot != null && p.ratings.trustpilotCount != null ? (
+                    <>
+                      {` ${fmtFr(p.ratings.trustpilot, 1)}/5 (${p.ratings.trustpilotCount.toLocaleString("fr-FR")} avis, `}
+                      <VerifieLe date={p.ratings.trustpilotVerified} famille="notes" label="relevé" inconnue="date du relevé inconnue" age={false} />
+                      {`)${p.ratings.trustpilotNote ? ` — ${p.ratings.trustpilotNote}` : ""}`}
+                    </>
+                  ) : (
+                    <>
+                      {` : ${p.ratings.trustpilotNote ?? "aucune note publique"}, `}
+                      <VerifieLe date={p.ratings.trustpilotVerified} famille="notes" label="relevé" inconnue="date du relevé inconnue" age={false} />
+                    </>
+                  )}
                 </span>
               )}
               <span className="text-xs text-muted">
-                Données vérifiées le {new Date(p.mica.lastVerified).toLocaleDateString("fr-FR")}
+                {isWallet ? (
+                  <VerifieLe date={p.mica.lastVerified} famille="wallets" label="Statut MiCA vérifié" age={false} />
+                ) : (
+                  <VerifieLe date={micaAffiche.date} famille="mica" label={micaAffiche.auto ? micaAffiche.label : "Statut MiCA vérifié"} />
+                )}
               </span>
             </div>
           </div>
@@ -636,7 +657,17 @@ function ReviewPage({ params }: Props) {
             Frais réels chiffrés sur {p.name} (exemple 1 000 €)
           </h2>
           <p className="mt-2 text-sm text-muted">
-            Estimation indicative{v?.date ? ` (frais relevés le ${new Date(v.date).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" })})` : ""} : vérifiez la grille tarifaire de la plateforme avant d&apos;investir.
+            Estimation indicative
+            {v?.date ? (
+              <>
+                {" ("}
+                <VerifieLe date={v.date} famille="frais" label="frais relevés" age={false} />
+                {")"}
+              </>
+            ) : (
+              ""
+            )}{" "}
+            : vérifiez la grille tarifaire de la plateforme avant d&apos;investir.
           </p>
           {v && (
             <div className="mt-4 rounded-xl border border-primary/25 bg-primary/5 p-4">
@@ -661,7 +692,7 @@ function ReviewPage({ params }: Props) {
                 >
                   Source
                 </a>{" "}
-                · vérifié le {new Date(v.date).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" })}
+                · <VerifieLe date={v.date} famille="frais" label="vérifié" age={false} />
               </div>
             </div>
           )}
@@ -840,7 +871,8 @@ function ReviewPage({ params }: Props) {
               <div className="text-xs uppercase tracking-wide text-muted">Statut MiCA</div>
               <div className="mt-1 text-sm font-semibold text-fg-max">{p.mica.status}</div>
               <p className="mt-2 text-sm text-fg-max/70">
-                Enregistré le {p.mica.registrationDate ? new Date(p.mica.registrationDate).toLocaleDateString("fr-FR") : "—"}. Vérifié par Cryptoreflex le {new Date(p.mica.lastVerified).toLocaleDateString("fr-FR")}.
+                Enregistré le {p.mica.registrationDate ? new Date(p.mica.registrationDate).toLocaleDateString("fr-FR") : "—"}.{" "}
+                <VerifieLe date={p.mica.lastVerified} famille={isWallet ? "wallets" : "mica"} label="Vérifié par Cryptoreflex" age={false} />.
               </p>
             </div>
             <div className="rounded-xl border border-border bg-surface p-4">
@@ -871,7 +903,7 @@ function ReviewPage({ params }: Props) {
             </div>
           </div>
           <p className="mt-3 text-xs text-muted">
-            Données de sécurité relevées le {frDate(p.security.verified)} sur les pages officielles {deNom(p.name)} et, pour les incidents, dans des communiqués ou la presse reconnue.
+            <VerifieLe date={p.security.verified} famille="securite" label="Données de sécurité relevées" inconnue="Données de sécurité relevées (date inconnue)" age={false} /> sur les pages officielles {deNom(p.name)} et, pour les incidents, dans des communiqués ou la presse reconnue.
           </p>
         </section>
 
@@ -882,7 +914,7 @@ function ReviewPage({ params }: Props) {
               {available ? `Ouvrir le site de ${p.name}` : "Cherchez une plateforme autorisée en France"}
             </div>
             <p className="mt-1 text-sm text-fg-max/70 max-w-xl">
-              {isWallet ? "Portefeuille matériel, hors champ MiCA" : available ? "Plateforme agréée MiCA" : "Non autorisée en France"} · vérifié le {new Date(p.mica.lastVerified).toLocaleDateString("fr-FR")}.
+              {isWallet ? "Portefeuille matériel, hors champ MiCA" : available ? "Plateforme agréée MiCA" : "Non autorisée en France"} · <VerifieLe date={p.mica.lastVerified} famille={isWallet ? "wallets" : "mica"} label="vérifié" age={false} />.
             </p>
           </div>
           <div className="shrink-0">
@@ -964,7 +996,7 @@ function ReviewPage({ params }: Props) {
               <a href={p.support.source} target="_blank" rel="noopener noreferrer" className="underline decoration-dotted underline-offset-2 hover:text-fg-max">
                 Page d&apos;assistance officielle
               </a>{" "}
-              relevée le {frDate(p.support.verified)}
+              <VerifieLe date={p.support.verified} famille="support" label="relevée" age={false} />
               {p.support.otherSources?.length ? (
                 <>
                   {" "}(autres pages officielles lues :{" "}
@@ -1191,7 +1223,14 @@ function ReviewPage({ params }: Props) {
         {/* DISCLAIMER */}
         <section className="mt-12 rounded-xl border border-border bg-surface/50 p-5">
           <p className="text-xs text-muted leading-relaxed">
-            Cette fiche est générée à partir de nos données ; Kevin Voisin, éditeur de {BRAND.name}, en est responsable. Données vérifiées le {new Date(p.mica.lastVerified).toLocaleDateString("fr-FR")} auprès des sources publiques (site officiel, registre AMF){hasTpLine ? `, note Trustpilot relevée le ${tpDate}` : ""}.{" "}
+            Cette fiche est générée à partir de nos données ; Kevin Voisin, éditeur de {BRAND.name}, en est responsable. <VerifieLe date={p.mica.lastVerified} famille={isWallet ? "wallets" : "mica"} label="Statut MiCA vérifié" age={false} /> auprès des sources publiques (site officiel, registre AMF){hasTpLine ? (
+              <>
+                , note Trustpilot <VerifieLe date={p.ratings.trustpilotVerified} famille="notes" label="relevée" inconnue="(date du relevé inconnue)" age={false} />
+              </>
+            ) : (
+              ""
+            )}
+            .{" "}
             {paidKind === "affiliate"
               ? `${BRAND.name} perçoit une commission via les liens vers ${p.name} marqués « Publicité », sans surcoût ni biais sur la note attribuée`
               : paidKind === "referral"

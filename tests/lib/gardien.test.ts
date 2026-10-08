@@ -190,7 +190,7 @@ describe("GET /api/cron/gardien/[robot]", () => {
   it("GitHub refuse : 502, message court, jeton masqué même si GitHub le recopiait", async () => {
     vi.stubEnv("GITHUB_GARDIEN_TOKEN", JETON);
     vi.stubGlobal("fetch", vi.fn(async () => new Response(JSON.stringify({ message: `Bad credentials ${JETON}` }), { status: 401 })));
-    const res = await appel("weekly-events", `Bearer ${SECRET}`);
+    const res = await appel("weekly-blog", `Bearer ${SECRET}`);
     expect(res.status).toBe(502);
     const texte = await res.text();
     expect(texte).not.toContain(JETON);

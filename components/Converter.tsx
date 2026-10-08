@@ -46,6 +46,7 @@ function Converter({
 
   const [rate, setRate] = useState<number | null>(null);
   const [lastUpdated, setLastUpdated] = useState<string | null>(null);
+  const [rateLabel, setRateLabel] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -57,9 +58,11 @@ function Converter({
         cache: "no-store",
       });
       if (!res.ok) throw new Error("rate unavailable");
-      const data = (await res.json()) as { rate: number; lastUpdated: string };
+      const data = (await res.json()) as { rate: number; lastUpdated: string | null; label?: string };
       setRate(data.rate);
       setLastUpdated(data.lastUpdated);
+      // taux journalier ou identité : mention datée (« taux BCE du … »), pas d'âge en minutes (lot fraîcheur A, 08/10/2026)
+      setRateLabel(data.label ?? null);
     } catch (err) {
       setError("Conversion temporairement indisponible. Réessayez dans 1 min.");
       setRate(null);
@@ -92,7 +95,10 @@ function Converter({
         <div>
           <h2 className="font-bold text-xl text-fg-max">Convertisseur Crypto</h2>
           <p className="text-sm text-muted">
-            Taux du marché (Binance, Kraken, Coinbase…) — supporte cross-crypto et fiat
+            {/* reprise du 08/10/2026 (juré I3) : deux devises = taux de référence journalier, pas un taux de marché */}
+            {FIAT_OPTIONS.includes(from) && FIAT_OPTIONS.includes(to)
+              ? "Deux devises : taux de référence journalier (BCE), daté en tête de page"
+              : "Taux du marché (Binance, Kraken, Coinbase…) — supporte cross-crypto et fiat"}
           </p>
         </div>
       </div>
@@ -141,11 +147,13 @@ function Converter({
               <span className="font-mono text-fg-max/80">
                 1 {from.toUpperCase()} = {formatRate(rate)} {to.toUpperCase()}
               </span>
-              {lastUpdated && (
+              {rateLabel ? (
+                <span className="ml-2 text-muted">• {rateLabel}</span>
+              ) : lastUpdated ? (
                 <span className="ml-2 text-muted">
                   • MAJ {fmtRelative(lastUpdated)}
                 </span>
-              )}
+              ) : null}
             </>
           ) : (
             <span>Chargement…</span>

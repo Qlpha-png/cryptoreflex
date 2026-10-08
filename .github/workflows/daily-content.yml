@@ -175,10 +175,49 @@ jobs:
       # épuisé = 0 news du 14/07 au 02/10/2026, run « vert »). Les analyses techniques sont déjà
       # committées à ce stade ; ce step fait échouer le run (→ issue « Notify on failure »)
       # si aucune news n'a été créée alors que des tentatives ont échoué.
-      - name: Échec si aucune news générée
-        if: steps.gen.outputs.news_created == '0' && steps.gen.outputs.news_errors != '0'
+      # 08/10/2026 (lot fraîcheur A, reprise, juré I7) : un passage sans travail ne finit plus vert. Ce job ne tourne pas
+      # quand le filet du gardien a constaté une publication déjà réussie (job « filet », deja=true) : seul cas où 0 actu
+      # est normal. Ici : 0 actu = échec (avec ou sans erreur), et moins de 5 analyses traitées (calculées + en échec)
+      # ou des compteurs absents = échec.
+      - name: Échec si le travail du jour manque (actus et analyses)
+        if: ${{ !cancelled() && steps.gen.outcome == 'success' }}
+        env:
+          NEWS_CREATED: ${{ steps.gen.outputs.news_created }}
+          NEWS_ERRORS: ${{ steps.gen.outputs.news_errors }}
+          NEWS_SKIPPED: ${{ steps.gen.outputs.news_skipped }}
+          TA_UPDATED: ${{ steps.gen.outputs.ta_updated }}
+          TA_ERRORS: ${{ steps.gen.outputs.ta_errors }}
         run: |
-          echo "::error::0 news créée, ${{ steps.gen.outputs.news_errors }} échec(s) : vérifier le secret ANTHROPIC_API_KEY (clé et crédit)."
+          fail=0
+          if [ -z "$NEWS_CREATED" ]; then
+            echo "::error::compteur news_created absent : le générateur n'a pas publié ses compteurs."
+            fail=1
+          elif [ "$NEWS_CREATED" = "0" ]; then
+            if [ "${NEWS_ERRORS:-0}" != "0" ]; then
+              echo "::error::0 news créée, $NEWS_ERRORS échec(s) : vérifier le secret ANTHROPIC_API_KEY (clé et crédit)."
+            else
+              echo "::error::0 news créée et 0 erreur (${NEWS_SKIPPED:-?} sources déjà traitées) : flux vides ou tous en doublon ?"
+            fi
+            fail=1
+          fi
+          if [ -z "$TA_UPDATED" ] || [ -z "$TA_ERRORS" ]; then
+            echo "::error::compteurs des analyses techniques absents (ta_updated='$TA_UPDATED', ta_errors='$TA_ERRORS')."
+            fail=1
+          elif [ $(( TA_UPDATED + TA_ERRORS )) -lt 5 ]; then
+            echo "::error::analyses techniques : $TA_UPDATED calculée(s) + $TA_ERRORS en échec = moins des 5 attendues."
+            fail=1
+          fi
+          exit $fail
+
+      # 08/10/2026 (lot fraîcheur A, audit n° 13) : `ta_errors` était publié par le générateur mais lu par aucun workflow :
+      # une panne de la source de prix des analyses techniques laissait un run vert et les fichiers inchangés. Étape placée
+      # APRÈS la publication : les actus du jour restent publiées, le run passe au rouge et le dit dans le résumé.
+      - name: Échec si une analyse technique n'a pas été calculée
+        if: ${{ !cancelled() && steps.gen.outputs.ta_errors != '' && steps.gen.outputs.ta_errors != '0' }}
+        run: |
+          echo "::error::${{ steps.gen.outputs.ta_errors }} analyse(s) technique(s) non calculée(s) (source de prix injoignable ?). Les actus du jour sont publiées."
+          echo "## ❌ ${{ steps.gen.outputs.ta_errors }} analyse(s) technique(s) en échec" >> "$GITHUB_STEP_SUMMARY"
+          echo "Les actus du jour sont publiées ; les analyses concernées gardent leur dernier calcul (voir le journal de l'étape « Generate daily content »)." >> "$GITHUB_STEP_SUMMARY"
           exit 1
 
       - name: Job summary

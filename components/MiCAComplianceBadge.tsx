@@ -1,5 +1,6 @@
 import { avecTypoSync } from "@/components/ui/Typo";
 import { ShieldCheck } from "lucide-react";
+import VerifieLe from "@/components/ui/VerifieLe";
 
 /**
  * MiCAComplianceBadge — badge de réassurance MiCA réutilisable.
@@ -43,14 +44,8 @@ function MiCAComplianceBadge({
   const isBanner = variant === "banner";
   const isCompact = variant === "compact";
 
-  // Format date en FR si fourni.
-  const verifiedLabel = verifiedAt
-    ? new Date(verifiedAt).toLocaleDateString("fr-FR", {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-      })
-    : null;
+  // 08/10/2026 (lot fraîcheur A2) : date affichée par <VerifieLe> (qui signale elle-même une date à revérifier).
+  const verifiedLabel = verifiedAt ? true : null;
 
   return (
     <div
@@ -64,9 +59,7 @@ function MiCAComplianceBadge({
         ${className}
       `}
       role="status"
-      aria-label={`Plateforme agréée MiCA${jurisdiction ? ` (${jurisdiction})` : ""}${
-        verifiedLabel ? `, vérifiée le ${verifiedLabel}` : ""
-      }`}
+      aria-label={`Plateforme agréée MiCA${jurisdiction ? ` (${jurisdiction})` : ""}`}
     >
       <ShieldCheck
         className={isCompact ? "h-3 w-3" : "h-4 w-4"}
@@ -79,7 +72,7 @@ function MiCAComplianceBadge({
       </span>
       {verifiedLabel && !isCompact && (
         <span className="text-xs font-normal text-accent-green/70">
-          · vérifié {verifiedLabel}
+          · <VerifieLe date={verifiedAt} famille="mica" label="vérifié" age={false} />
         </span>
       )}
     </div>

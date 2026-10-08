@@ -8,6 +8,8 @@ import StakingComparator from "@/components/StakingComparator";
 import { withHreflang } from "@/lib/seo-alternates";
 import { fitDescription, fitTitle } from "@/lib/seo-text";
 import Breadcrumbs from "@/components/Breadcrumbs";
+import VerifieLe from "@/components/ui/VerifieLe";
+import { STAKING_PAIRS_RELEVE } from "@/lib/staking-rates";
 
 export const revalidate = 86400;
 
@@ -36,7 +38,7 @@ export default function StakingIndexPage() {
           <p className="mt-3 text-fg/70">
             20 cryptos staking-éligibles. Filtre par APY, lock-up, risque ou
             plateforme MiCA pour trouver le couple rendement / sécurité qui vous
-            convient. APY estimés avril 2026, à recouper avec les UI exchange.
+            convient. <VerifieLe date={STAKING_PAIRS_RELEVE} famille="rendements" label="APY estimés" />, à recouper avec les UI exchange.
           </p>
         </div>
 

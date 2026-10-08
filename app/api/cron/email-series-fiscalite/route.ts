@@ -47,6 +47,7 @@ import { renderEmailHtml, renderEmailText } from "@/lib/email-renderer";
 import { getKv } from "@/lib/kv";
 import { verifyBearer } from "@/lib/auth";
 import { maskEmailForLog } from "@/lib/rate-limit";
+import { CRON_TRACE_KEYS, writeCronTrace } from "@/lib/cron-trace";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -182,6 +183,8 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
   } catch (err) {
     const msg = err instanceof Error ? err.message : "unknown";
     console.error("[fiscalite-cron] list subscribers failed", { msg });
+    // 08/10/2026 (lot fraîcheur A) : trace pour la sentinelle (seuil 30 h) ; raison générique, jamais le message brut
+    await writeCronTrace(CRON_TRACE_KEYS.emailSeriesFiscalite, { ok: false, raison: "liste des abonnés illisible" });
     return NextResponse.json(
       { ok: false, error: "list subscribers failed", reason: msg },
       { status: 502 },
@@ -275,6 +278,15 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
   };
 
   console.log("[fiscalite-cron-end]", report);
+  // trace : nombres seulement (aucune adresse e-mail)
+  await writeCronTrace(CRON_TRACE_KEYS.emailSeriesFiscalite, {
+    ok,
+    ...(ok ? {} : { raison: `${failed} envoi(s) en échec` }),
+    subscribers: subscribers.length,
+    candidates: decisions.length,
+    sent,
+    failed,
+  });
   return NextResponse.json(report, { status: ok ? 200 : 207 });
 }
 

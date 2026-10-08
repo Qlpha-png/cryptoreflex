@@ -167,6 +167,12 @@ async function bulkUpdatePrices(
 ): Promise<{ updated: number; errors: Array<{ stage: string; message: string }> }> {
   const errors: Array<{ stage: string; message: string }> = [];
   let updated = 0;
+  // 08/10/2026 (lot fraîcheur A, reprise I1) : date du cours, séparée de updated_at (que le déclencheur SQL remet à
+  // now() à chaque écriture, needs_review compris). Seul ce robot l'écrit. Tant que la migration
+  // supabase/migrations/20261008_cryptos_price_updated_at.sql n'est pas lancée, la colonne manque : on écrit sans
+  // elle (les prix restent à jour) et le run compte UNE erreur, pour passer au rouge et le faire savoir.
+  const releveCours = new Date().toISOString();
+  let avecDateCours = true;
 
   // FIX 2026-05-12 — `upsert` fail systématiquement avec :
   //   "null value in column slug violates not-null constraint"
@@ -189,14 +195,23 @@ async function bulkUpdatePrices(
       break;
     }
     try {
-      const { error } = await sb
+      const valeurs = {
+        price_usd: u.price_usd,
+        market_cap_usd: u.market_cap_usd,
+        market_cap_rank: u.market_cap_rank,
+      };
+      let { error } = await sb
         .from("cryptos")
-        .update({
-          price_usd: u.price_usd,
-          market_cap_usd: u.market_cap_usd,
-          market_cap_rank: u.market_cap_rank,
-        })
+        .update(avecDateCours ? { ...valeurs, price_updated_at: releveCours } : valeurs)
         .eq("coingecko_id", u.coingecko_id);
+      if (error && avecDateCours && /price_updated_at/.test(error.message ?? "")) {
+        avecDateCours = false;
+        errors.push({
+          stage: "schema",
+          message: "colonne cryptos.price_updated_at absente : lancer supabase/migrations/20261008_cryptos_price_updated_at.sql",
+        });
+        ({ error } = await sb.from("cryptos").update(valeurs).eq("coingecko_id", u.coingecko_id));
+      }
       if (error) {
         errors.push({
           stage: `update-${u.coingecko_id}`,

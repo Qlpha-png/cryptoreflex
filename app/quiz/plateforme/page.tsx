@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
+import type { ReactNode } from "react";
 import Link from "next/link";
 import { ArrowRight, ListChecks } from "lucide-react";
 
 import { getExchangePlatforms } from "@/lib/platforms";
-import { CRITERIA, FILTER_DISCLAIMER, filterScope, releveText } from "@/lib/platform-filter";
+import { CRITERIA, FILTER_DISCLAIMER, filterScope } from "@/lib/platform-filter";
+import VerifieLe from "@/components/ui/VerifieLe";
 import { BRAND } from "@/lib/brand";
 import StructuredData from "@/components/StructuredData";
 import PlatformQuiz from "@/components/PlatformQuiz";
@@ -46,7 +48,7 @@ export const metadata: Metadata = {
 export default function QuizPlateformePage() {
   /* Exchanges et courtiers autorisés en France (les portefeuilles matériels ne sont pas des plateformes d'achat). */
   const platforms = filterScope(getExchangePlatforms());
-  const micaReleve = releveText(platforms.map((p) => p.mica.lastVerified));
+  const micaDates = platforms.map((p) => p.mica.lastVerified);
 
   const pageSchema = {
     "@context": "https://schema.org",
@@ -95,9 +97,12 @@ export default function QuizPlateformePage() {
           <section className="mt-12 grid grid-cols-1 sm:grid-cols-3 gap-4">
             <Method
               title="Autorisation vérifiée"
-              description={`Seules les plateformes agréées MiCA avec accès à la France (registre de l'ESMA et liste blanche de l'AMF${
-                micaReleve ? `, ${micaReleve}` : ""
-              }).`}
+              description={
+                <>
+                  Seules les plateformes agréées MiCA avec accès à la France (registre de l&apos;ESMA et liste blanche de
+                  l&apos;AMF ; <VerifieLe dates={micaDates} famille="mica" label="statuts vérifiés" inconnue="date de vérification inconnue" />).
+                </>
+              }
             />
             <Method
               title="Critères sourcés"
@@ -130,7 +135,7 @@ export default function QuizPlateformePage() {
   );
 }
 
-function Method({ title, description }: { title: string; description: string }) {
+function Method({ title, description }: { title: string; description: ReactNode }) {
   return (
     <div className="rounded-xl border border-border bg-elevated/40 p-5">
       <h3 className="font-semibold text-fg">{title}</h3>

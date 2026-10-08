@@ -6,7 +6,8 @@
  * Calculs : lib/comparateur.ts (testés). L'état (montant, objectif) est gardé dans l'adresse pour le partage.
  */
 import { avecTypoSync } from "@/components/ui/Typo";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import VerifieLe from "@/components/ui/VerifieLe";
 import Link from "next/link";
 import { ArrowRight, Check, Coins, CreditCard, ExternalLink, Flag, Info, Phone, MessageCircle, Plus, Sprout, X } from "lucide-react";
 import PlatformLogo from "@/components/PlatformLogo";
@@ -24,8 +25,7 @@ const MAX_COMPARE = 3;
 /* les 8 premières d'abord : la liste complète tenait 12 écrans sur téléphone */
 const FIRST = 8;
 
-const fmtDate = (iso: string | null) =>
-  iso ? new Date(`${iso}T12:00:00Z`).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" }) : "—";
+// 08/10/2026 (lot fraîcheur A2) : dates des frais affichées par <VerifieLe> (âge signalé au-delà de 90 jours).
 
 function Comparateur({ rows, duelSlugs }: { rows: Row[]; duelSlugs: string[] }) {
   const [amount, setAmount] = useState<Amount>(100);
@@ -210,7 +210,7 @@ function Comparateur({ rows, duelSlugs }: { rows: Row[]; duelSlugs: string[] }) 
                 </div>
               </div>
               <p className="mt-2 text-xs text-muted">
-                Frais vérifiés le {fmtDate(r.verifiedDate)}
+                <VerifieLe date={r.verifiedDate} famille="frais" label="Frais vérifiés" inconnue="Frais : date du relevé inconnue" age={false} />
                 {r.source ? (
                   <>
                     {" "}·{" "}
@@ -312,12 +312,12 @@ function Comparateur({ rows, duelSlugs }: { rows: Row[]; duelSlugs: string[] }) 
                     ["Agrément", (r: Row) => (r.french ? "AMF (France)" : r.authority)],
                     ["Aide en français", (r: Row) => r.supportFr],
                     ["Note Cryptoreflex", (r: Row) => `${r.score.toLocaleString("fr-FR")}/5`],
-                    ["Frais vérifiés le", (r: Row) => fmtDate(r.verifiedDate)],
+                    ["Frais vérifiés le", (r: Row) => <VerifieLe date={r.verifiedDate} famille="frais" label="" inconnue="—" age={false} />],
                   ].map(([label, fn]) => (
                     <tr key={label as string}>
                       <th scope="row" className="py-2.5 pr-3 text-left text-xs font-semibold text-fg/70">{label as string}</th>
                       {chosen.map((r) => (
-                        <td key={r.id} className="py-2.5 pr-3 font-semibold tabular-nums text-fg">{(fn as (r: Row) => string)(r)}</td>
+                        <td key={r.id} className="py-2.5 pr-3 font-semibold tabular-nums text-fg">{(fn as (r: Row) => ReactNode)(r)}</td>
                       ))}
                     </tr>
                   ))}

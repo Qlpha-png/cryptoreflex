@@ -4,6 +4,8 @@ import { ArrowRight, Trophy } from "lucide-react";
 
 import { ALL_LISTICLES } from "@/lib/listicles";
 import { BRAND } from "@/lib/brand";
+import { PLATFORMS_LAST_SCORED } from "@/lib/platforms";
+import { formatDataDateFr } from "@/lib/data-dates";
 import { withHreflang } from "@/lib/seo-alternates";
 import Breadcrumbs from "@/components/Breadcrumbs";
 
@@ -33,7 +35,9 @@ export default function TopIndexPage() {
             Tous les <span className="gradient-text">classements crypto</span> 2026
           </h1>
           <p className="mt-3 text-fg/70">
-            Tops data-driven mis à jour automatiquement quand un scoring change. Pas de pseudo-classements promotionnels.
+            Classements calculés à partir des données datées de nos fiches
+            {PLATFORMS_LAST_SCORED ? ` (scores des plateformes recalculés le ${formatDataDateFr(PLATFORMS_LAST_SCORED)})` : ""}.
+            Pas de pseudo-classements promotionnels.
           </p>
         </div>
 
