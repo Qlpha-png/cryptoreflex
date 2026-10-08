@@ -70,9 +70,14 @@ for (const path of PAGES) {
       });
       const out = [];
       for (const p of pops) {
+        // 08/10/2026 : un choix à moitié caché par le défilement de la liste elle-même n'est pas « recouvert »
+        // (faux positif chaque nuit sur /outils/portfolio-tracker) : on ne teste que les choix dont le
+        // point visé est dans la partie visible de la liste.
+        const pr = p.getBoundingClientRect();
         const items = [...p.querySelectorAll('[role="option"], [role="menuitem"], a, button')].filter((it) => {
           const r = it.getBoundingClientRect();
-          return r.width > 0 && r.height > 0 && r.top >= 0 && r.bottom <= innerHeight;
+          const cy = r.top + r.height / 2;
+          return r.width > 0 && r.height > 0 && r.top >= 0 && r.bottom <= innerHeight && cy > pr.top && cy < pr.bottom;
         });
         let covered = 0;
         let by = "";

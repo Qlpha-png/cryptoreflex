@@ -839,6 +839,13 @@
       "avant": "« 100 % conforme à la fiscalité française » ; « c'est le meilleur ratio fiabilité × support × prix » ; « 220+ exchanges » ; « réponse < 24h » ; « vs 600 € et plus chez un comptable ».",
       "après": "« conçu pour la fiscalité française des particuliers » ; « c'est notre choix : rapport fiscal prêt, aide en français et une offre d'entrée à 39 €/an » ; « 700+ (selon Waltio) » ; délai de réponse et comparaison avec un comptable retirés (non sourcés).",
       "nature": "Promesses invérifiables et chiffres non sourcés sur Waltio corrigés ; fuite de données de janvier 2026 désormais signalée partout où Waltio est recommandé."
+    },
+    {
+      "date": "2026-10-08",
+      "page": "/comparatif",
+      "avant": "Young Platform : « 2,49 € par ordre jusqu'à 100 €, puis 1,89 % ».",
+      "après": "Young Platform : « 1,99 € par ordre jusqu'à 50 €, 2,49 € jusqu'à 100 €, puis 1,89 % ».",
+      "nature": "Tranche de commission sous 50 € oubliée, rétablie d'après la grille officielle (exchange.youngplatform.com/fr/fees, relue le 08/10/2026). Coûts calculés pour 100 € et 1 000 € inchangés."
     }
   ]
 }
