@@ -6,7 +6,10 @@
  * instantané de secours + global en UNE commande MSET ; trace « dernier passage + résultat » (cron:refresh-ticker-prices:last).
  * Remplace aussi l'ancien cron horaire update-static-prices (doublon D9, supprimé).
  *
- * Paramètre : ?global=1 force le relevé des métriques globales (lancement manuel).
+ * Frein du mois (lot Z2b) : projection CoinMarketCap > 90 % (ou erreur 1009 du jour) → un passage sur deux est sauté et le global
+ * ne part que toutes les 3 h ; retour à la normale sous 75 % (scripts/lib/budget-mois.mjs). Jamais de coupure.
+ *
+ * Paramètres (lancement manuel) : ?global=1 force le relevé des métriques globales ; ?force=1 ignore le saut du frein.
  * Réponse : { ok, source, count, global, durationMs } (jamais de secret).
  */
 
@@ -29,13 +32,30 @@ export async function GET(req: Request): Promise<NextResponse> {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const r = await releverMarche({ forceGlobal: new URL(req.url).searchParams.get("global") === "1" });
+  const params = new URL(req.url).searchParams;
+  const r = await releverMarche({ forceGlobal: params.get("global") === "1", force: params.get("force") === "1" });
+
+  // Frein du mois (lot Z2b) : passage sauté = relevé toutes les 20 min. Rien n'est appelé, rien n'est écrit (la trace garde
+  // l'heure du dernier VRAI relevé, que la sentinelle et le frein relisent).
+  if (r.saute) {
+    return NextResponse.json({ ok: true, saute: true, frein: "actif", raison: r.frein?.raison, durationMs: Date.now() - startedAt });
+  }
+
   await writeCronTrace(CRON_TRACE_KEYS.refreshTickerPrices, {
     ok: r.ok,
     ...(r.raison ? { raison: r.raison } : {}),
     source: r.source ?? "aucune",
     count: r.count,
     global: r.global,
+    // Lot Z2b : état du frein du mois et compteur interne des crédits du mois (lus par le bilan et la sentinelle).
+    ...(r.frein
+      ? {
+          frein: r.frein.actif ? "actif" : "normal",
+          freinRaison: r.frein.raison.slice(0, 120),
+          ...(r.frein.projectionPct !== null ? { projectionPct: Math.round(r.frein.projectionPct * 10) / 10 } : {}),
+        }
+      : {}),
+    ...(r.mois !== undefined && r.creditsMois !== undefined ? { mois: r.mois, creditsMois: r.creditsMois } : {}),
     // Reprise Z2 : raison courte de l'échec CoinMarketCap (relais CoinGecko ou échec total), lue par la sentinelle.
     // Messages de lib/coinmarketcap.ts seulement (« HTTP 429 », « délai dépassé »…) : jamais la clé.
     ...(r.cmcErreur ? { cmcErreur: r.cmcErreur.slice(0, 120) } : {}),

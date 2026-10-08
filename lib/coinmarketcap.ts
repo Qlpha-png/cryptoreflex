@@ -535,6 +535,21 @@ export async function cmcBudgetReport(now: number = Date.now()): Promise<CmcBudg
   return { ...cmcBudgetBilan(usage, now), erreur1009: await derniereErreur1009() };
 }
 
+/**
+ * Mesure du FREIN du robot des cours (lot Z2b, 08/10/2026) : crédits consommés ce mois (compteur officiel, 0 crédit, même
+ * lecture partagée que le garde-fou), limite du plan, et erreur 1009 reçue AUJOURD'HUI (jour UTC). `consomme` vaut null quand le
+ * compteur est illisible : le frein garde alors son état précédent, rien n'est supposé. null = clé absente (pas de frein utile).
+ */
+export async function cmcFreinMesure(now: number = Date.now()): Promise<{ consomme: number | null; limite: number; erreur1009Jour: boolean } | null> {
+  if (!cmcEnabled()) return null;
+  const usage = await cmcKeyUsage(now);
+  const e1009 = await derniereErreur1009();
+  const erreur1009Jour = !!e1009 && Number.isFinite(Date.parse(e1009)) && new Date(e1009).toISOString().slice(0, 10) === new Date(now).toISOString().slice(0, 10);
+  const limite = usage?.monthLimit ?? CMC_FREE_MONTHLY_CREDITS;
+  const consomme = usage ? (usage.monthUsed ?? Math.max(0, limite - usage.monthLeft)) : null;
+  return { consomme, limite, erreur1009Jour };
+}
+
 /** Tests uniquement. */
 export function __resetCmcForTests(): void {
   cmcMemo.clear();

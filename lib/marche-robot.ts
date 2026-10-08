@@ -10,16 +10,24 @@
  *     pour tout le site (accueil, /marche, bandeau) ;
  *  4. une seule commande MSET (bandeau + instantané de secours + global) puis la trace « dernier passage + résultat ».
  * Budget : 144 + 24 (+ 1 orchestrateur) crédits par jour, voir CMC_ROBOT_PLAN (lib/coinmarketcap.ts).
+ *
+ * FREIN DU MOIS (lot Z2b, 08/10/2026 ; Kev : « 0 € de dépassement, le site ne doit JAMAIS être coupé ») : si la projection de fin
+ * de mois dépasse 90 % de la limite CoinMarketCap (ou erreur 1009 reçue aujourd'hui), le robot passe à un relevé toutes les
+ * 20 min (il saute un passage sur deux) et au global toutes les 3 h ; retour à la normale sous 75 %. Jamais de coupure :
+ * l'heure du relevé écrite avec les cours (fetchedAt) reste exacte et affichée par le site. Règle : scripts/lib/budget-mois.mjs.
  */
 
 import {
+  CMC_FREE_MONTHLY_CREDITS,
   CMC_UNLINKED_PREFIX,
   cmcEnabled,
+  cmcFreinMesure,
   cmcGlobalMetrics,
   cmcListingsTop,
   cmcRowsWithSiteIds,
   type CmcTopRow,
 } from "@/lib/coinmarketcap";
+import { CRON_TRACE_KEYS } from "@/lib/cron-trace";
 import { getCryptoLogo } from "@/lib/crypto-logos";
 import { fiatPerUsd } from "@/lib/fx";
 import {
@@ -32,6 +40,8 @@ import {
   type TickerRecord,
   type TickerSourceName,
 } from "@/lib/kv-ticker";
+import { getKv } from "@/lib/kv";
+import { decisionFrein, freinAutoriseGlobal, freinSautePassage, moisCle } from "@/scripts/lib/budget-mois.mjs";
 
 export const MARCHE_TOP_N = 100;
 /** En dessous, le relevé est jugé incomplet et la source suivante est essayée. */
@@ -121,11 +131,54 @@ function globalFromCmc(g: Awaited<ReturnType<typeof cmcGlobalMetrics>>, at: Date
   };
 }
 
+/** État du frein du mois, écrit dans la trace du robot (cron:refresh-ticker-prices:last) et affiché dans le bilan. */
+export interface FreinR1 {
+  actif: boolean;
+  raison: string;
+  /** Projection de fin de mois en % de la limite CoinMarketCap, null si le compteur est illisible. */
+  projectionPct: number | null;
+}
+
+/** Ce que le robot relit de sa dernière trace : heure du dernier relevé, frein, compteur interne de crédits du mois. */
+export interface TraceR1 {
+  at?: string;
+  frein?: "actif" | "normal";
+  freinRaison?: string;
+  projectionPct?: number;
+  mois?: string;
+  creditsMois?: number;
+}
+
+/** Lit la dernière trace de R1 ; null si absente, illisible ou KV en panne (le robot ne dépend jamais d'elle pour relever). */
+export async function lireTraceR1(): Promise<TraceR1 | null> {
+  try {
+    const v = await getKv().get<unknown>(CRON_TRACE_KEYS.refreshTickerPrices);
+    if (!v || typeof v !== "object") return null;
+    const t = v as Record<string, unknown>;
+    const out: TraceR1 = {};
+    if (typeof t.at === "string") out.at = t.at;
+    if (t.frein === "actif" || t.frein === "normal") out.frein = t.frein;
+    if (typeof t.freinRaison === "string") out.freinRaison = t.freinRaison;
+    if (typeof t.projectionPct === "number" && Number.isFinite(t.projectionPct)) out.projectionPct = t.projectionPct;
+    if (typeof t.mois === "string") out.mois = t.mois;
+    if (typeof t.creditsMois === "number" && Number.isFinite(t.creditsMois) && t.creditsMois >= 0) out.creditsMois = t.creditsMois;
+    return out;
+  } catch {
+    return null;
+  }
+}
+
 export interface ReleveMarche {
   ok: boolean;
   source: TickerSourceName | null;
   count: number;
   global: boolean;
+  /** Frein actif : ce passage a été sauté (relevé toutes les 20 min), rien n'a été appelé ni écrit. */
+  saute?: boolean;
+  frein?: FreinR1;
+  /** Compteur interne des crédits CoinMarketCap dépensés par le robot ce mois-ci (« AAAA-MM »), repris dans la trace. */
+  mois?: string;
+  creditsMois?: number;
   /** Raison courte de l'échec de CoinMarketCap quand CoinGecko a pris le relais (jamais de secret). */
   cmcErreur?: string;
   raison?: string;
@@ -137,12 +190,23 @@ export interface ReleveMarche {
  * Un passage de R1. `forceGlobal` (?global=1) relève les métriques globales hors du premier passage de l'heure.
  * Ne lève jamais.
  */
-export async function releverMarche(opts: { now?: () => Date; forceGlobal?: boolean; fetchImpl?: typeof fetch } = {}): Promise<ReleveMarche> {
+export async function releverMarche(opts: { now?: () => Date; forceGlobal?: boolean; force?: boolean; fetchImpl?: typeof fetch } = {}): Promise<ReleveMarche> {
   const now = opts.now ?? (() => new Date());
   const fetchImpl = opts.fetchImpl ?? fetch;
   let record: TickerRecord = {};
   let source: TickerSourceName | null = null;
   let cmcErreur: string | undefined;
+
+  // Frein du mois : décidé avant tout appel payant, d'après le compteur officiel (0 crédit) et la dernière trace.
+  const debut = now();
+  const precedente = await lireTraceR1();
+  const frein = await decider(debut, precedente);
+  const mois = moisCle(debut.getTime());
+  const creditsAvant = precedente?.mois === mois && precedente.creditsMois !== undefined ? precedente.creditsMois : 0;
+  const suivi = (credits: number) => ({ frein, mois, creditsMois: creditsAvant + credits });
+  if (frein.actif && !opts.force && !opts.forceGlobal && freinSautePassage(true, debut.getTime(), precedente?.at)) {
+    return { ok: true, saute: true, source: null, count: 0, global: false, ...suivi(0) };
+  }
 
   if (cmcEnabled()) {
     try {
@@ -168,7 +232,7 @@ export async function releverMarche(opts: { now?: () => Date; forceGlobal?: bool
       /* rien d'autre : aucun basculement vers une source non prévue */
     }
   }
-  if (!source) return { ok: false, source: null, count: 0, global: false, cmcErreur, raison: "aucune source n'a rendu le top 100" };
+  if (!source) return { ok: false, source: null, count: 0, global: false, cmcErreur, raison: "aucune source n'a rendu le top 100", ...suivi(0) };
 
   // heure du relevé : prise juste après la réponse de la source
   const releve = now();
@@ -176,13 +240,35 @@ export async function releverMarche(opts: { now?: () => Date; forceGlobal?: bool
   const tickerFx: TickerFx = { eurPerUsd: fx.eur, date: fx.date, source: fx.source };
 
   let global: MarcheGlobal | null = null;
-  if (source === "coinmarketcap" && (opts.forceGlobal || shouldRefreshGlobal(releve))) {
+  let globalTente = false;
+  if (source === "coinmarketcap" && (opts.forceGlobal || (shouldRefreshGlobal(releve) && freinAutoriseGlobal(frein.actif, releve.getTime())))) {
+    globalTente = true;
     global = globalFromCmc(await cmcGlobalMetrics().catch(() => null), releve);
   }
+  // crédits estimés de ce passage : 1 par appel de 100 lignes (classement, global) ; aucun si CoinGecko a pris le relais
+  const credits = (source === "coinmarketcap" ? 1 : 0) + (globalTente ? 1 : 0);
 
   const payload: TickerCachePayload = { prices: record, fetchedAt: releve.toISOString(), source, fx: tickerFx };
   const w = await writeMarcheMset(payload, global);
   const count = Object.keys(record).length;
-  if (!w.ok) return { ok: false, source, count, global: false, cmcErreur, raison: "écriture KV refusée (MSET)", fetchedAt: payload.fetchedAt, fx: tickerFx };
-  return { ok: true, source, count, global: global !== null, ...(source !== "coinmarketcap" ? { cmcErreur } : {}), fetchedAt: payload.fetchedAt, fx: tickerFx };
+  if (!w.ok) return { ok: false, source, count, global: false, cmcErreur, raison: "écriture KV refusée (MSET)", fetchedAt: payload.fetchedAt, fx: tickerFx, ...suivi(credits) };
+  return { ok: true, source, count, global: global !== null, ...(source !== "coinmarketcap" ? { cmcErreur } : {}), fetchedAt: payload.fetchedAt, fx: tickerFx, ...suivi(credits) };
+}
+
+/**
+ * Décision du frein à partir du compteur officiel CoinMarketCap. Sans clé : normal. Compteur illisible : l'état de la dernière
+ * trace est gardé (rien n'est supposé). Ne lève jamais.
+ */
+async function decider(maintenant: Date, precedente: TraceR1 | null): Promise<FreinR1> {
+  const precedentActif = precedente?.frein === "actif";
+  if (!cmcEnabled()) return { actif: false, raison: "clé CoinMarketCap absente : rien à freiner", projectionPct: null };
+  const mesure = await cmcFreinMesure(maintenant.getTime()).catch(() => null);
+  const d = decisionFrein({
+    consomme: mesure?.consomme ?? null,
+    limite: mesure?.limite ?? CMC_FREE_MONTHLY_CREDITS,
+    now: maintenant.getTime(),
+    erreur1009Jour: mesure?.erreur1009Jour === true,
+    precedentActif,
+  });
+  return { actif: d.actif, raison: d.raison, projectionPct: d.projectionPct };
 }

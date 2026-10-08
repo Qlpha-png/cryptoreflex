@@ -15,6 +15,8 @@
 import { NextResponse } from "next/server";
 import { verifyBearer } from "@/lib/auth";
 import { cmcBudgetReport } from "@/lib/coinmarketcap";
+import { lireTraceR1 } from "@/lib/marche-robot";
+import { moisCle } from "@/scripts/lib/budget-mois.mjs";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -24,5 +26,13 @@ export async function GET(req: Request): Promise<NextResponse> {
     return NextResponse.json({ error: "Not found" }, { status: 404 });
   }
   const bilan = await cmcBudgetReport();
-  return NextResponse.json(bilan, { headers: { "Cache-Control": "no-store" } });
+  // Lot Z2b (08/10/2026) : état du FREIN du robot des cours et compteur interne des crédits du mois, tous deux écrits dans la
+  // trace de R1 (cron:refresh-ticker-prices:last). null = aucune trace (premier passage pas encore fait) : rien n'est supposé.
+  const trace = await lireTraceR1();
+  const frein = trace?.frein
+    ? { etat: trace.frein, raison: trace.freinRaison ?? null, projectionPct: trace.projectionPct ?? null, dernierReleve: trace.at ?? null }
+    : null;
+  const compteurRobots =
+    trace?.mois === moisCle(Date.now()) && trace.creditsMois !== undefined ? { mois: trace.mois, credits: trace.creditsMois, source: "trace du robot des cours (robots seulement)" } : null;
+  return NextResponse.json({ ...bilan, frein, compteurRobots }, { headers: { "Cache-Control": "no-store" } });
 }

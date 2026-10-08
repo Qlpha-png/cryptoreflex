@@ -24,6 +24,7 @@ import { inventaireDonnees, jugerPageDates, pagesDatesDuJour } from "./lib/inven
 import {
   chargerRegistre, compter, evaluerRegistre, jugerCmcJour, jugerExpiration, jugerTailleBase, rapportHebdo, ticketsDefauts, validerRegistre,
 } from "./lib/fraicheur-registre.mjs";
+import { bilanConsommation, compterExecutionsMois, mesureCmc, mesureGithub, mesureStock, nonMesure, sectionConsommation } from "./lib/budget-mois.mjs";
 
 const ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
 const FULL = process.argv.includes("--full");
@@ -315,12 +316,16 @@ async function checkOrchestrator() {
 /* 07/10/2026 (Kev : « contrôler la consommation de CoinMarketCap pour qu'on ait toujours les ressources pour 1 mois ») :
    compteur officiel de la clé lu par le site (/api/diag/cmc-budget, protégé par CRON_SECRET, 0 crédit). Défaut si, au
    rythme actuel, le garde-fou devrait couper CMC avant la fin du mois (ou le coupe déjà) ; à surveiller au-delà de 80 %. */
+/* Lot Z2b (08/10/2026) : la réponse du bilan est gardée pour la section « Consommation du mois » (cmcReponse), avec la raison
+   quand elle manque (cmcRaison) : jamais de chiffre supposé. */
+let cmcReponse = null;
+let cmcRaison = "bilan CoinMarketCap non lu dans ce passage";
 async function checkCmcBudget() {
   const secret = (process.env.CRON_SECRET ?? "").trim(); // espaces de bord ignorés, comme le fait fetch pour un en-tête
-  if (!secret) return warn("quota", "budget CoinMarketCap non contrôlé (CRON_SECRET absent de l'environnement)");
+  if (!secret) { cmcRaison = "CRON_SECRET absent de l'environnement"; return warn("quota", "budget CoinMarketCap non contrôlé (CRON_SECRET absent de l'environnement)"); }
   /* Tickets PUBLICS : jamais la valeur du secret, ni un message d'erreur brut qui pourrait la recopier (fetch cite
      l'en-tête refusé quand le secret contient un retour à la ligne). */
-  if (!/^[\x21-\x7e]+$/.test(secret)) return fail("quota", "budget CoinMarketCap non contrôlé : CRON_SECRET mal formé (espace, retour à la ligne ou caractère invisible)");
+  if (!/^[\x21-\x7e]+$/.test(secret)) { cmcRaison = "CRON_SECRET mal formé"; return fail("quota", "budget CoinMarketCap non contrôlé : CRON_SECRET mal formé (espace, retour à la ligne ou caractère invisible)"); }
   const lire = async () => {
     const { res } = await get(SITE + "/api/diag/cmc-budget", { headers: { authorization: `Bearer ${secret}` }, timeout: 20_000 });
     if (res.status !== 200) { await res.body?.cancel().catch(() => {}); return { http: res.status }; }
@@ -332,8 +337,11 @@ async function checkCmcBudget() {
     // incident ponctuel (compteur ou route) : une seconde lecture une minute plus tard avant de conclure
     if (r.http || !r.b?.lu) { await new Promise((fin) => setTimeout(fin, 65_000)); r = await lire(); }
   } catch (e) {
+    cmcRaison = `bilan illisible (${e?.name === "TimeoutError" ? "délai dépassé" : "erreur réseau"})`;
     return warn("quota", `budget CoinMarketCap illisible (${e?.name === "TimeoutError" ? "délai dépassé" : "erreur réseau"})`);
   }
+  if (r.http) cmcRaison = `la route du bilan répond HTTP ${r.http}`;
+  else cmcReponse = r.b ?? null;
   if (r.http) return fail("quota", `contrôle du budget CoinMarketCap impossible : la route répond HTTP ${r.http} (jeton CRON_SECRET différent entre GitHub et Vercel ?)`);
   const b = r.b;
   if (!b?.lu) {
@@ -580,6 +588,9 @@ const accesSupabase = () => {
   return url && key ? { url, key } : null;
 };
 
+/* Lot Z2b : les fichiers fraicheur-etat.json et fraicheur-hebdo.md sont écrits à la FIN du contrôle complet
+   (ecrireEtatFraicheur), une fois la consommation du mois mesurée : elle y figure (section du ticket du dimanche). */
+let etatFraicheur = null;
 async function checkRegistreFraicheur() {
   let reg;
   try {
@@ -602,9 +613,7 @@ async function checkRegistreFraicheur() {
   };
   const resultats = await evaluerRegistre(reg, ctx);
   const n = compter(resultats);
-  const etatDir = path.dirname(REPORT);
-  writeFileSync(path.join(etatDir, "fraicheur-etat.json"), JSON.stringify({ le: new Date(ctx.now).toISOString(), compte: n, resultats, tickets: ticketsDefauts(resultats) }, null, 1));
-  writeFileSync(path.join(etatDir, "fraicheur-hebdo.md"), rapportHebdo(resultats, ctx.now));
+  etatFraicheur = { now: ctx.now, resultats, compte: n };
   ok("registre de fraîcheur", `${resultats.length} familles : ${n.ok} ✅, ${n.attention} ⚠️, ${n.defaut} ❌`);
   const defauts = resultats.filter((r) => r.etat === "defaut");
   if (defauts.length) warn("registre de fraîcheur", `familles ❌ (un ticket par famille) : ${defauts.map((r) => `n° ${r.id}`).join(", ")}`);
@@ -623,11 +632,13 @@ function checkExpirations() {
 /* Taille de la base Supabase (§ 6.2 point 3) : ⚠️ à 60 %, ❌ à 80 % de 500 Mo. Lecture par la fonction SQL
    cryptoreflex_taille_base (migration 20261008_taille_base_sentinelle.sql, à lancer par Kev) avec la clé déjà présente ;
    tant qu'elle n'existe pas : « non mesurable », jamais un chiffre supposé. */
+const tailleBase = { octets: null, plafond: 524_288_000, raison: "taille non lue dans ce passage" };
 async function checkTailleBase() {
   let plafond = 524_288_000;
   try { plafond = chargerRegistre(ROOT).quotas?.supabase?.plafondOctets ?? plafond; } catch { /* plafond par défaut */ }
+  tailleBase.plafond = plafond;
   const acces = accesSupabase();
-  if (!acces) return warn("quota", jugerTailleBase(null, plafond, "accès Supabase absent de l'environnement").msg);
+  if (!acces) { tailleBase.raison = "accès Supabase absent de l'environnement"; return warn("quota", jugerTailleBase(null, plafond, "accès Supabase absent de l'environnement").msg); }
   try {
     const r = await fetch(`${acces.url.replace(/\/$/, "")}/rest/v1/rpc/cryptoreflex_taille_base`, {
       method: "POST",
@@ -638,14 +649,59 @@ async function checkTailleBase() {
     const corps = await r.json().catch(() => null);
     if (!r.ok) {
       const absente = r.status === 404 || /PGRST202|could not find the function/i.test(JSON.stringify(corps ?? ""));
+      tailleBase.raison = absente ? "fonction SQL cryptoreflex_taille_base absente" : `HTTP ${r.status}`;
       return warn("quota", jugerTailleBase(null, plafond, absente ? "fonction SQL cryptoreflex_taille_base absente (migration 20261008_taille_base_sentinelle.sql non lancée)" : `HTTP ${r.status}`).msg);
     }
     const v = jugerTailleBase(Number(corps), plafond);
+    if (typeof corps === "number" && Number.isFinite(corps) && corps >= 0) tailleBase.octets = corps;
+    else tailleBase.raison = "réponse de la fonction illisible";
     (v.level === "fail" ? fail : v.level === "warn" ? warn : ok)("quota", v.msg);
     if (v.detail) warn("quota", v.detail);
   } catch (e) {
+    tailleBase.raison = `lecture impossible (${e?.name === "TimeoutError" ? "délai dépassé" : "erreur réseau"})`;
     warn("quota", jugerTailleBase(null, plafond, `lecture impossible (${e?.name === "TimeoutError" ? "délai dépassé" : "erreur réseau"})`).msg);
   }
+}
+
+/* ------------------------------------------------------------------ consommation du mois (lot Z2b, 08/10/2026) */
+/* Kev : « à toi de faire en sorte qu'on gère la conso du mois », 0 € de dépassement, site jamais coupé. Un tableau par service :
+   consommé, limite, projection de fin de mois (consommé ÷ jours écoulés × jours du mois), état ✅ < 75 % · ⚠️ 75-90 % · ❌ > 90 %.
+   Mesuré sans nouveau secret : CoinMarketCap (compteur officiel via le bilan du site, sinon compteur interne des robots),
+   Supabase (fonction SQL de taille, seuils 60/80 %), GitHub Actions (API avec GITHUB_TOKEN). Upstash et Vercel : « non mesuré »
+   (leurs compteurs exigent un jeton de gestion que le site n'a pas ; alerte e-mail du fournisseur). Le FREIN (robot des cours)
+   est décidé par le robot lui-même ; ici on l'affiche. */
+let consommation = null;
+async function checkConsommationMois() {
+  const now = Date.now();
+  const gh = await compterExecutionsMois({ repo: process.env.GITHUB_REPOSITORY, token: process.env.GITHUB_TOKEN, now, ua: UA });
+  const services = [
+    mesureCmc(cmcReponse, now, { raison: cmcReponse?.raison ?? cmcRaison, limiteSecours: 15_000 }),
+    mesureStock({ id: "supabase", nom: "Supabase (base de données)", octets: tailleBase.octets, plafond: tailleBase.plafond, raison: tailleBase.raison, source: "fonction SQL cryptoreflex_taille_base" }),
+    mesureGithub({ ...gh, now }),
+    nonMesure("upstash", "Upstash (KV)"),
+    nonMesure("vercel", "Vercel (crédit Pro du mois)"),
+  ];
+  consommation = { bilan: bilanConsommation(services, now), markdown: sectionConsommation(services, now) };
+  const mesures = services.filter((s) => s.etat !== "non-mesure");
+  ok("consommation", `${mesures.length} service(s) mesuré(s) sur ${services.length} : ${services.map((s) => `${s.nom.split(" (")[0]} ${s.icone}`).join(", ")}`);
+  for (const s of services) {
+    if (s.etat === "attention") warn("consommation", s.msg);
+  }
+  // Un défaut qui n'a pas déjà son signal ailleurs : dépôt GitHub privé (minutes facturables). CoinMarketCap ❌ est traité par le
+  // frein du robot (affiché dans la section) ; la taille de la base a son contrôle (checkTailleBase).
+  const gith = services.find((s) => s.id === "github");
+  if (gith?.etat === "defaut") fail("quota", "dépôt GitHub privé : les minutes de GitHub Actions deviennent facturables (repasser le dépôt en public)");
+  const cmc = services.find((s) => s.id === "cmc");
+  if (cmc?.etat === "defaut") warn("consommation", cmc.msg);
+}
+
+/* Fichiers lus par l'étape « Tickets Fraîcheur » du workflow : état des familles + section « Consommation du mois ». */
+function ecrireEtatFraicheur() {
+  if (!etatFraicheur) return; // registre illisible : on n'écrit rien (sinon le workflow fermerait tous les tickets de famille)
+  const { now, resultats, compte } = etatFraicheur;
+  const dir = path.dirname(REPORT);
+  writeFileSync(path.join(dir, "fraicheur-etat.json"), JSON.stringify({ le: new Date(now).toISOString(), compte, resultats, tickets: ticketsDefauts(resultats), ...(consommation ? { consommation: consommation.bilan } : {}) }, null, 1));
+  writeFileSync(path.join(dir, "fraicheur-hebdo.md"), rapportHebdo(resultats, now) + (consommation ? "\n" + consommation.markdown : ""));
 }
 
 /* ------------------------------------------------------------------ exécution + rapport */
@@ -664,6 +720,8 @@ if (FULL) {
   await checkRegistreFraicheur();
   checkExpirations();
   await checkTailleBase();
+  await checkConsommationMois();
+  ecrireEtatFraicheur();
   await checkSitemaps();
 }
 
