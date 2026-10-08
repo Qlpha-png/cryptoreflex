@@ -161,7 +161,7 @@ export default function MethodologiePage() {
       <ul className="text-fg/85 leading-relaxed">
         <li><strong>Statut MiCA</strong> : <VerifieLe dates={getExchangePlatforms().map((p) => p.mica?.lastVerified)} famille="mica" label="relevé" inconnue="relevé à une date non renseignée" /> sur le registre MiCA de l&apos;ESMA et les listes blanches de l&apos;AMF ; la date est affichée sur chaque fiche</li>
         <li><strong>Frais</strong> : <VerifieLe dates={getExchangePlatforms().map((p) => p.fees.verified?.date)} famille="frais" label="relevés" inconnue="relevés à une date non renseignée" /> sur la grille officielle de chaque plateforme ; la date et la source sont affichées sur chaque avis</li>
-        <li><strong>Notes Trustpilot</strong> : relevées à la main sur la page Trustpilot de chaque plateforme ; la <strong>date du relevé</strong> est affichée à côté de chaque note</li>
+        <li><strong>Notes Trustpilot</strong> : relevées sur la page Trustpilot de chaque plateforme ; la <strong>date du relevé</strong> est affichée à côté de chaque note</li>
         <li><strong>Bonus de bienvenue</strong> : aucun relevé daté à ce jour</li>
       </ul>
       <p className="text-sm text-muted leading-relaxed">

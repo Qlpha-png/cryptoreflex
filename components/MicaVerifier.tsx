@@ -279,7 +279,7 @@ function MicaVerifier({ initialPlatformId }: Props) {
 
       <p className="text-xs text-muted">
         {/* 08/10/2026 (lot fraîcheur A) : plus de « mise à jour mensuelle » (aucun robot ne la tenait) */}
-        <VerifieLe date={meta.lastUpdated} famille="mica" label="Données relues à la main" inconnue="Données relues à la main (date inconnue)" age={false} /> · Registre
+        <VerifieLe date={meta.lastUpdated} famille="mica" label="Données vérifiées" inconnue="Date de vérification inconnue" age={false} /> · Registre
         de l&apos;ESMA relu chaque nuit par notre veille pour les plateformes de nos
         comparatifs, statuts mis à jour après vérification. Information à titre
         indicatif — ne constitue pas un conseil en investissement.

@@ -45,7 +45,7 @@ export interface LigneHistorique {
  * l'adresse datée du 26/04 reste en 301 vers la page vivante (règle par motif du middleware).
  */
 export const LIGNES_RETIREES: { date: string; raison: string }[] = [
-  { date: "2026-04-26", raison: "valeurs d’essai écrites à la main, qui n’étaient pas des cours de marché" },
+  { date: "2026-04-26", raison: "valeurs d’essai qui n’étaient pas des cours de marché" },
 ];
 
 export function noteRetraits(): string {

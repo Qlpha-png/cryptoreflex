@@ -122,7 +122,7 @@ const MACRO_EVENTS: Record<Annee, string[]> = {
   "2023": ["Reprise du marché après le krach de 2022", "Vague de demandes d'ETF Bitcoin spot auprès de la SEC (dont BlackRock)", "Règlement MiCA adopté par l'UE"],
   "2024": ["Approbation des ETF Bitcoin spot aux États-Unis (janvier)", "Halving Bitcoin (avril)", "Autorisation des ETF Ethereum spot aux États-Unis (mai, cotation en juillet)", "MiCA applicable aux stablecoins (30 juin) puis aux prestataires crypto (30 décembre)", "Élection de Donald Trump, candidat pro-crypto (novembre)", "BTC record historique au-delà de 108 000 $ (décembre)"],
   "2025": ["GENIUS Act : première loi américaine encadrant les stablecoins (juillet)", "BTC nouveau record historique vers 126 000 $ (octobre), porté par les flux des ETF spot", "Vague de liquidations à partir du 10 octobre : BTC repasse sous 105 000 $"],
-  "2026": ["Directive DAC8 : depuis le 1er janvier, les prestataires crypto de l'UE collectent les données de leurs clients pour les administrations fiscales", "Fin de la période transitoire MiCA en France (1er juillet) : seuls les prestataires agréés MiCA peuvent servir les résidents français", "Binance cesse ses services sur crypto-actifs en France (1er juillet)", "Cycle post-halving en cours", "Année partielle : relevé fait à la main, sans mise à jour automatique (date du dernier relevé sous le tableau)"],
+  "2026": ["Directive DAC8 : depuis le 1er janvier, les prestataires crypto de l'UE collectent les données de leurs clients pour les administrations fiscales", "Fin de la période transitoire MiCA en France (1er juillet) : seuls les prestataires agréés MiCA peuvent servir les résidents français", "Binance cesse ses services sur crypto-actifs en France (1er juillet)", "Cycle post-halving en cours", "Année partielle (date du dernier relevé sous le tableau)"],
 };
 
 // Intro data-derivée, unique par couple (crypto, année). 100 % calculée à
@@ -257,7 +257,7 @@ export default function HistoriquePrixPage({ params }: Props) {
                 <>
                   {` Année partielle (${ohlc.m} mois de cotation${ohlc.m > 1 ? "s" : ""}). `}
                   {/* 08/10/2026 (lot fraîcheur A2) : date du relevé = meta._generatedAt, âge signalé au-delà de 35 jours */}
-                  <VerifieLe date={OHLC_GENERATED_AT} famille="historique-prix" label="Données arrêtées au dernier relevé, fait à la main" inconnue="Date du dernier relevé inconnue." />
+                  <VerifieLe date={OHLC_GENERATED_AT} famille="historique-prix" label="Données arrêtées au dernier relevé," inconnue="Date du dernier relevé inconnue." />
                   .
                 </>
               ) : (

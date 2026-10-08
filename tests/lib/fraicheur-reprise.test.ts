@@ -145,7 +145,7 @@ describe("I2 — aucune promesse de fréquence sans robot", () => {
       expect(s, f).not.toMatch(/"(Mensuelle|Trimestrielle|monthly|quarterly)"/);
       expect(s, f).not.toMatch(/nextReviewDate\s*[:?]/);
     }
-    expect(JSON.parse(lire("data/psan-registry.json"))._meta.updateFrequency).toBe("Relevé à la main, sans calendrier (date : _meta.lastUpdated)");
+    expect(JSON.parse(lire("data/psan-registry.json"))._meta.updateFrequency).toBe("Date de mise à jour : _meta.lastUpdated");
   });
 });
 

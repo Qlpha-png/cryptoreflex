@@ -86,7 +86,7 @@ function CryptoEventCalendar({ cryptoId, cryptoName }: Props) {
       </h2>
       <p className="mt-2 text-sm text-muted max-w-[34em]">
         Token unlocks, upgrades mainnet, ETF deadlines, conférences — calendrier
-        court-moyen terme, vérifié manuellement par Cryptoreflex.
+        court-moyen terme, vérifié par Cryptoreflex.
       </p>
 
       <ol className="mt-6 space-y-3">

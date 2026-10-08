@@ -460,9 +460,6 @@ function ReviewPage({ params }: Props) {
             )}
             <h1 className="mt-3 text-4xl sm:text-5xl font-extrabold tracking-tight">
               {p.name} avis 2026
-              <span className="block mt-1 text-2xl sm:text-3xl text-fg/70 font-bold">
-                Analyse indépendante Cryptoreflex
-              </span>
             </h1>
             <p className="mt-3 text-lg text-fg-max/70">{p.tagline}</p>
 

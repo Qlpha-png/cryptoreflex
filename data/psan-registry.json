@@ -1,7 +1,7 @@
 {
   "_meta": {
     "lastUpdated": "2026-10-02",
-    "updateFrequency": "Relevé à la main, sans calendrier (date : _meta.lastUpdated)",
+    "updateFrequency": "Date de mise à jour : _meta.lastUpdated",
     "source": "Registre intérimaire MiCA de l'ESMA (CASPS.csv, données au 29/09/2026) et liste blanche de l'AMF, consultés le 02/10/2026. Les anciens numéros PSAN ne sont plus affichés : le régime PSAN a pris fin le 30 juin 2026.",
     "officialSources": {
       "amf": "https://www.amf-france.org/fr/espace-epargnants/proteger-son-epargne/listes-blanches-autorisations",

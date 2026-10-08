@@ -135,7 +135,7 @@ export function GET() {
         get: {
           summary: "Scores de décentralisation",
           description:
-            "Score composite Cryptoreflex (Nakamoto coef + validators + geo + clients + open source) pour Bitcoin, Ethereum, Solana, etc. Relevé manuel, daté score par score (lastVerified) : aucune révision programmée.",
+            "Score composite Cryptoreflex (Nakamoto coef + validators + geo + clients + open source) pour Bitcoin, Ethereum, Solana, etc. Daté score par score (lastVerified) : aucune révision programmée.",
           tags: ["blockchain"],
           responses: {
             "200": {
@@ -240,8 +240,8 @@ export function GET() {
                   updateFrequency: {
                     type: "string",
                     description:
-                      "Rythme réel de mise à jour. Aucune échéance n'est promise : les jeux sont relevés à la main, sans calendrier ; la date du relevé est dans _meta.lastUpdated.",
-                    example: "Relevé à la main, sans calendrier (date : _meta.lastUpdated)",
+                      "Où lire la date de mise à jour du jeu de données (_meta.lastUpdated).",
+                    example: "Date de mise à jour : _meta.lastUpdated",
                   },
                 },
               },

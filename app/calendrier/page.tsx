@@ -126,14 +126,8 @@ export default async function CalendarPage() {
         <div className="mx-auto max-w-6xl px-4 py-12 md:py-16">
           <Breadcrumbs chemin="/calendrier" className="mb-6" />
           <div className="flex flex-col items-start gap-4">
-            <span className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1 text-caption font-semibold uppercase tracking-wide text-primary-glow ring-1 ring-primary/30">
-              <CalendarDays className="h-3.5 w-3.5" aria-hidden="true" />
-              {/* 08/10/2026 (lot fraîcheur A, audit n° 34) : l'ancien badge de mise à jour « automatique » était faux. Seules
-                  les réunions FOMC sont relues par un robot (scripts/refresh-fomc.mjs) ; le reste est tenu à la main. */}
-              Tenu à la main · dates FOMC de la Fed
-            </span>
             <span className="text-xs text-muted">
-              <VerifieLe date={EVENTS_SEED_REVU_LE} famille="evenements" label="Événements hors Fed revus à la main" />
+              <VerifieLe date={EVENTS_SEED_REVU_LE} famille="evenements" label="Événements vérifiés" />
             </span>
             <h1 className="text-h1 font-extrabold tracking-tight text-fg md:text-display">
               Calendrier crypto 2026

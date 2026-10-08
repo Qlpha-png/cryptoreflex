@@ -42,7 +42,7 @@ function DecentralizationScore({ cryptoId, cryptoName }: Props) {
             <p className="mt-1 text-xs sm:text-sm text-muted leading-relaxed">
               Pas encore couvert pour {cryptoName}. Notre score composite (Nakamoto
               coefficient + validateurs + diversité géo + diversité client + open source)
-              est calculé manuellement pour une partie des cryptos les plus liquides ; les
+              est calculé pour une partie des cryptos les plus liquides ; les
               autres ne sont pas encore couvertes, sans date prévue.{" "}
               <Link
                 href="/methodologie#decentralisation"
@@ -196,7 +196,6 @@ function DecentralizationScore({ cryptoId, cryptoName }: Props) {
           {/* 08/10/2026 (lot fraîcheur A2) : dates via <VerifieLe> (au-delà de 120 jours : « à revérifier ») */}
           <VerifieLe date={score.lastVerified} famille="decentralisation" label="Score vérifié" inconnue="Vérification : date inconnue" /> ·{" "}
           <VerifieLe date={DECENTRALIZATION_LAST_UPDATED} famille="decentralisation" label="jeu de données mis à jour" inconnue="mise à jour du jeu : date inconnue" age={false} />.
-          Relevé manuel, sans révision programmée.
         </p>
       </details>
 

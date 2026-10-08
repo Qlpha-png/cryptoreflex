@@ -60,7 +60,7 @@ const ENDPOINTS: EndpointDoc[] = [
     description:
       `${STATS.platformsAudited} plateformes crypto comparées : frais maker/taker, retrait SEPA, sécurité, MiCA, support FR.`,
     responseShape: "{ _meta, platforms: [{ id, name, fees, security, micaStatus, ... }] }",
-    updateFrequency: "Relevé à la main, sans calendrier (date : _meta.lastUpdated)",
+    updateFrequency: "Date de mise à jour : _meta.lastUpdated",
   },
   {
     path: "/api/public/psan-registry",
@@ -69,7 +69,7 @@ const ENDPOINTS: EndpointDoc[] = [
       "Statut MiCA (registre de l'ESMA) et numéro d'agrément AMF des prestataires français. Le champ atRiskJuly2026 vaut true si la plateforme ne peut pas servir la France depuis le 1er juillet 2026.",
     responseShape:
       "{ _meta, platforms: [{ id, name, psanStatus, amfRegistration, micaStatus, atRiskJuly2026, ... }] }",
-    updateFrequency: "Relevé à la main, sans calendrier (date : _meta.lastUpdated)",
+    updateFrequency: "Date de mise à jour : _meta.lastUpdated",
   },
   {
     path: "/api/public/decentralization-scores",
@@ -78,7 +78,7 @@ const ENDPOINTS: EndpointDoc[] = [
       "Score composite Cryptoreflex (Nakamoto coef, validators, géo, clients, open source) pour Bitcoin, Ethereum, Solana, etc.",
     responseShape:
       "{ _meta, scores: { bitcoin: { score, breakdown, notes }, ethereum: {...}, ... } }",
-    updateFrequency: "Relevé à la main, sans calendrier (date : _meta.lastUpdated)",
+    updateFrequency: "Date de mise à jour : _meta.lastUpdated",
   },
   {
     path: "/api/public/top-cryptos",
@@ -87,7 +87,7 @@ const ENDPOINTS: EndpointDoc[] = [
       "Top 10 cryptos par capitalisation en français débutant : tagline, useCase, points forts/faibles, riskLevel.",
     responseShape:
       "{ _meta, topCryptos: [{ rank, id, name, symbol, tagline, what, useCase, ... }] }",
-    updateFrequency: "Relevé à la main, sans calendrier (date : _meta.lastUpdated)",
+    updateFrequency: "Date de mise à jour : _meta.lastUpdated",
   },
   {
     path: "/api/public/fiscal-tools",
@@ -95,7 +95,7 @@ const ENDPOINTS: EndpointDoc[] = [
     description:
       "Comparatif Waltio, Koinly, CoinTracking : tarifs, plans, support FR, MiCA, freeTrial.",
     responseShape: "{ _meta, tools: [{ id, name, country, pricingModel, plansEur, ... }] }",
-    updateFrequency: "Relevé à la main, sans calendrier (date : _meta.lastUpdated)",
+    updateFrequency: "Date de mise à jour : _meta.lastUpdated",
   },
 ];
 
@@ -128,7 +128,7 @@ const FAQ = [
   {
     question: "Quelle est la fréquence de mise à jour ?",
     answer:
-      "Chaque endpoint indique sa date de mise à jour dans _meta.lastUpdated. Plateformes et statuts MiCA : chaque nuit, notre veille automatique compare les statuts au registre de l'ESMA et signale les écarts ; un statut n'est modifié qu'après vérification. Frais datés plateforme par plateforme. Décentralisation et top cryptos : relevés à la main, sans calendrier fixe (date dans _meta.lastUpdated ; les scores de décentralisation sont aussi datés un par un). " +
+      "Chaque endpoint indique sa date de mise à jour dans _meta.lastUpdated. Plateformes et statuts MiCA : chaque nuit, notre veille automatique compare les statuts au registre de l'ESMA et signale les écarts ; un statut n'est modifié qu'après vérification. Frais datés plateforme par plateforme. Décentralisation et top cryptos : date dans _meta.lastUpdated (les scores de décentralisation sont aussi datés un par un). " +
       `Cache : en-tête Cache-Control max-age=${PUBLIC_API_MAX_AGE_S} (1 h dans le navigateur) et s-maxage=${PUBLIC_API_S_MAXAGE_S} (jusqu'à 24 h sur le CDN ; chaque mise en ligne du site régénère les réponses).`,
   },
   {

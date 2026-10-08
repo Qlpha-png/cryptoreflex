@@ -52,7 +52,7 @@ function WhitepaperTldr({ cryptoId, cryptoName }: Props) {
             </h2>
             <p className="mt-1 text-xs sm:text-sm text-muted leading-relaxed">
               Notre synthèse en 5 points (problème, solution, innovation, limites, impact)
-              est rédigée manuellement pour les 30 cryptos les plus capitalisées. Les autres
+              est rédigée pour les 30 cryptos les plus capitalisées. Les autres
               suivront aux prochains trimestres.{" "}
               <Link
                 href="/methodologie#whitepaper-tldr"

@@ -54,7 +54,7 @@ export function GET() {
         description:
           `Catalogue des ${STATS.platformsAudited} plateformes crypto comparées (frais, sécurité, MiCA, support FR). Date de vérification sur chaque fiche.`,
         responseShape: "{ _meta, platforms: [{ id, name, fees, security, micaStatus, ... }] }",
-        updateFrequency: "Relevé à la main, sans calendrier (date : _meta.lastUpdated)",
+        updateFrequency: "Date de mise à jour : _meta.lastUpdated",
       },
       {
         path: "/api/public/psan-registry",
@@ -63,7 +63,7 @@ export function GET() {
           "Registre PSAN (FR) + statut MiCA (UE) consolidé : agrément AMF, autorisation CASP, passeport UE, accès au marché français depuis le 1er juillet 2026.",
         responseShape:
           "{ _meta, platforms: [{ id, name, psanStatus, amfRegistration, micaStatus, atRiskJuly2026, ... }] }",
-        updateFrequency: "Relevé à la main, sans calendrier (date : _meta.lastUpdated)",
+        updateFrequency: "Date de mise à jour : _meta.lastUpdated",
       },
       {
         path: "/api/public/decentralization-scores",
@@ -71,7 +71,7 @@ export function GET() {
         description:
           "Score composite Cryptoreflex de décentralisation pour Bitcoin, Ethereum, Solana, etc. (Nakamoto coefficient, validators, geo, clients, open source).",
         responseShape: "{ _meta, scores: { bitcoin: { score, breakdown, notes }, ... } }",
-        updateFrequency: "Relevé à la main, sans calendrier (date : _meta.lastUpdated)",
+        updateFrequency: "Date de mise à jour : _meta.lastUpdated",
       },
       {
         path: "/api/public/top-cryptos",
@@ -80,7 +80,7 @@ export function GET() {
           "Top 10 cryptos par capitalisation, vulgarisées en français pour débutants : tagline, useCase, points forts/faibles, beginnerFriendly score, riskLevel.",
         responseShape:
           "{ _meta, topCryptos: [{ rank, id, name, symbol, tagline, what, useCase, strengths, weaknesses, ... }] }",
-        updateFrequency: "Relevé à la main, sans calendrier (date : _meta.lastUpdated)",
+        updateFrequency: "Date de mise à jour : _meta.lastUpdated",
       },
       {
         path: "/api/public/fiscal-tools",
@@ -88,7 +88,7 @@ export function GET() {
         description:
           "Comparatif des outils de fiscalité crypto FR (Waltio, Koinly, CoinTracking) : tarifs, plans, support FR, MiCA, freeTrial.",
         responseShape: "{ _meta, tools: [{ id, name, country, pricingModel, plansEur, ... }] }",
-        updateFrequency: "Relevé à la main, sans calendrier (date : _meta.lastUpdated)",
+        updateFrequency: "Date de mise à jour : _meta.lastUpdated",
       },
     ],
     examples: {

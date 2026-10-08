@@ -148,10 +148,6 @@ export default function VerificateurMicaPage({ searchParams }: PageProps) {
         <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-16 sm:py-20">
           <Breadcrumbs chemin="/outils/verificateur-mica" className="mb-6" />
           <div className="max-w-3xl">
-            <span className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-semibold text-primary-soft">
-              <Sparkles className="h-3.5 w-3.5" />
-              Outil exclusif Cryptoreflex
-            </span>
             <h1 className="mt-4 text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-fg-max">
               Cet exchange est-il vraiment{" "}
               <span className="gradient-text">régulé en France</span> ?
@@ -159,7 +155,7 @@ export default function VerificateurMicaPage({ searchParams }: PageProps) {
             <p className="mt-4 text-lg text-fg-max/75">
               Vérifiez en 3 secondes l'agrément MiCA et l'accès à la France de
               n'importe quelle plateforme crypto. Données croisées depuis les
-              registres officiels AMF et ESMA, relues à la main et datées ; le registre de l'ESMA est en plus relu chaque nuit par notre veille automatique.
+              registres officiels AMF et ESMA, datées ; le registre de l'ESMA est en plus relu chaque nuit par notre veille automatique.
             </p>
             <div className="mt-6 flex flex-wrap items-center gap-4 text-sm text-muted">
               <span className="flex items-center gap-1.5">
@@ -226,12 +222,12 @@ export default function VerificateurMicaPage({ searchParams }: PageProps) {
             <MethodCard
               icon={Database}
               title="Sources officielles uniquement"
-              text={`Registre intérimaire MiCA de l'ESMA (prestataires agréés, autorité, date d'agrément, pays couverts par passeport) et liste blanche de l'AMF (numéros d'agrément des prestataires français), relus à la main (date de la dernière relecture en haut de page).`}
+              text={`Registre intérimaire MiCA de l'ESMA (prestataires agréés, autorité, date d'agrément, pays couverts par passeport) et liste blanche de l'AMF (numéros d'agrément des prestataires français) ; date de la dernière vérification en haut de page.`}
             />
             <MethodCard
               icon={CheckCircle2}
               title="Veille automatique"
-              text={`Chaque nuit, notre veille automatique relit le registre de l'ESMA et le compare aux statuts des ${nbVeille} plateformes de nos comparatifs ; tout écart est signalé, et un statut n'est mis à jour qu'après vérification. Les ${nbOutil} fiches de cet outil sont relues à la main (date de la dernière relecture en haut de page).`}
+              text={`Chaque nuit, notre veille automatique relit le registre de l'ESMA et le compare aux statuts des ${nbVeille} plateformes de nos comparatifs ; tout écart est signalé, et un statut n'est mis à jour qu'après vérification.`}
             />
             <MethodCard
               icon={AlertTriangle}
@@ -370,7 +366,7 @@ const FAQ = [
     q: "À quelle fréquence cet outil est-il mis à jour ?",
     // 08/10/2026 (lot fraîcheur A) : la veille de nuit ne lit QUE le registre de l'ESMA (pas la liste blanche de l'AMF),
     // et seulement pour les plateformes de nos comparatifs ; les fiches de l'outil sont relues à la main.
-    a: "Les statuts viennent des registres officiels : la liste blanche de l'AMF et le registre des prestataires agréés de l'ESMA, relus à la main ; la date de la dernière relecture est affichée sur la page. Chaque nuit, une veille automatique relit en plus le registre de l'ESMA pour les plateformes de nos comparatifs et signale tout écart ; un statut n'est mis à jour qu'après vérification.",
+    a: "Les statuts viennent des registres officiels : la liste blanche de l'AMF et le registre des prestataires agréés de l'ESMA ; la date de la dernière vérification est affichée sur la page. Chaque nuit, une veille automatique relit en plus le registre de l'ESMA pour les plateformes de nos comparatifs et signale tout écart ; un statut n'est mis à jour qu'après vérification.",
   },
   {
     q: "Puis-je intégrer un badge sur mon site ?",

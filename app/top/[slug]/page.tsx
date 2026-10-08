@@ -178,7 +178,7 @@ function buildListicleFaqs(
       },
       {
         question: `Comment ce classement est-il établi ?`,
-        answer: `Le classement repose sur la grille Cryptoreflex : score global = (sécurité × 30%) + (frais × 25%) + (UX × 20%) + (support × 15%) + (conformité MiCA × 10%). Chaque donnée est datée sur la fiche de la plateforme (frais, statut MiCA, sécurité) ; les scores sont recalculés à la main${PLATFORMS_LAST_SCORED ? `, dernier calcul le ${formatDataDateFr(PLATFORMS_LAST_SCORED)}` : ""}. Le statut MiCA est comparé chaque nuit au registre de l'ESMA par notre veille automatique, et corrigé après vérification.`,
+        answer: `Le classement repose sur la grille Cryptoreflex : score global = (sécurité × 30%) + (frais × 25%) + (UX × 20%) + (support × 15%) + (conformité MiCA × 10%). Chaque donnée est datée sur la fiche de la plateforme (frais, statut MiCA, sécurité) ; les scores sont recalculés${PLATFORMS_LAST_SCORED ? `, dernier calcul le ${formatDataDateFr(PLATFORMS_LAST_SCORED)}` : ""}. Le statut MiCA est comparé chaque nuit au registre de l'ESMA par notre veille automatique, et corrigé après vérification.`,
       },
       {
         question: `Toutes les plateformes du classement sont-elles légales en France ?`,

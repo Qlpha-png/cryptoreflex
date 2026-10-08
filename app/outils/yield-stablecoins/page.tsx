@@ -52,7 +52,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Comparateur yield stablecoins — Cryptoreflex",
     description:
-      "Combien rapporte votre USDC, USDT ou EURC sur Bitpanda, Coinbase, Kraken, SwissBorg ? Comparatif d'APY relevés à la main, avec leur date : vérifiez toujours le taux du jour sur la plateforme.",
+      "Combien rapporte votre USDC, USDT ou EURC sur Bitpanda, Coinbase, Kraken, SwissBorg ? Comparatif d'APY datés : vérifiez toujours le taux du jour sur la plateforme.",
     url: `${BRAND.url}/outils/yield-stablecoins`,
     type: "website",
   },
@@ -272,7 +272,7 @@ export default function YieldStablecoinsPage() {
               <VerifieLe date={STABLECOIN_YIELDS_LAST_UPDATED} famille="rendements" label="Taux relevés" />.
             </strong>{" "}
             Les APY varient au jour le jour selon le taux d&apos;utilisation
-            côté plateforme. Données relevées à la main à la date indiquée : vérifiez le taux du jour sur la plateforme.
+            côté plateforme. Données relevées à la date indiquée : vérifiez le taux du jour sur la plateforme.
             Pas un conseil en investissement (cf. AMF).{" "}
             {anyPaidYield
               ? "Les liens marqués « Publicité » sont rémunérés (affiliation ou parrainage) : voir la page transparence."

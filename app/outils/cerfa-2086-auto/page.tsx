@@ -154,10 +154,6 @@ function Cerfa2086AutoPage() {
         <section className="relative py-14 sm:py-20">
           <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
             <Breadcrumbs chemin="/outils/cerfa-2086-auto" className="mb-6" />
-            <span className="inline-flex items-center gap-2 rounded-full border border-gold/40 bg-gold/10 px-3 py-1 text-xs font-bold text-gold">
-              <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
-              Outil avancé — 100 % gratuit
-            </span>
 
             <h1 className="mt-4 font-display text-4xl sm:text-5xl font-extrabold tracking-tight text-fg">
               Préparez votre{" "}
