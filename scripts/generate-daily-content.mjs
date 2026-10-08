@@ -457,10 +457,10 @@ ${linksMd}
 
 ---
 
-> **Source originale** : [${raw.source}](${raw.sourceUrl}) — lien direct vers l'article publié par la source. La traduction et l'analyse française détaillée seront ajoutées prochainement (rewriter LLM en cours d'optimisation).
+> **Source originale** : [${raw.source}](${raw.sourceUrl}) — lien direct vers l'article publié par la source, à lire pour le détail. Cette page n'en donne qu'un résumé automatique.
 
 <Callout type="warning" title="Avertissement">
-Cet article est une synthèse automatique à but informatif. Il ne constitue **pas un conseil en investissement**. Les cryptoactifs sont des actifs volatils : tu peux perdre tout ou partie de ton capital. Vérifie toujours les informations à la source avant toute décision.
+Cet article est une synthèse automatique à but informatif. Il ne constitue **pas un conseil en investissement**. Les crypto-actifs sont volatils : vous pouvez perdre tout ou partie de votre capital. Vérifiez toujours les informations à la source.
 </Callout>
 `;
 

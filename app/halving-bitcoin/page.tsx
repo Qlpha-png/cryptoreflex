@@ -131,7 +131,7 @@ const FAQ = [
   },
   {
     q: "Le halving fait-il monter le prix du Bitcoin ?",
-    a: "Historiquement, les trois halvings de 2012, 2016 et 2020 ont été suivis d'un cycle haussier majeur dans les 12 à 18 mois qui ont suivi. Cela dit, corrélation n'est pas causalité : d'autres facteurs (politique monétaire, adoption institutionnelle, ETF) pèsent au moins autant. Aucun investisseur sérieux ne devrait considérer un nouveau cycle haussier comme garanti.",
+    a: "Historiquement, les halvings de 2012, 2016 et 2020 ont été suivis d'un cycle haussier majeur dans les 12 à 18 mois qui ont suivi, et celui de 2024 d'une hausse plus modérée. Cela dit, corrélation n'est pas causalité : d'autres facteurs (politique monétaire, adoption institutionnelle, ETF) pèsent au moins autant. Aucun investisseur sérieux ne devrait considérer un nouveau cycle haussier comme garanti.",
   },
   {
     q: "Combien restera-t-il de bitcoins à miner après le halving 2028 ?",

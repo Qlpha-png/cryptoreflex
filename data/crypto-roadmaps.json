@@ -40,7 +40,7 @@
         "date": "2028-04",
         "status": "planned",
         "title": "Halving #5",
-        "description": "Récompense passera de 3,125 à 1,5625 BTC. Historiquement, le halving précède un cycle haussier d'environ 12-18 mois.",
+        "description": "Récompense passera de 3,125 à 1,5625 BTC. Les halvings précédents (2012, 2016, 2020, 2024) ont été suivis de fortes hausses, mais rien ne garantit que cela se reproduise.",
         "sourceUrl": "https://github.com/bitcoin/bitcoin/blob/master/src/validation.cpp",
         "sourceVerifiedAt": "2026-05"
       }

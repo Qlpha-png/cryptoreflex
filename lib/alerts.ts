@@ -628,7 +628,7 @@ export async function evaluateAndFire(
             const userId = await lookupUserIdByEmail(alert.email);
             if (!userId) return;
             await sendPushToUser(userId, {
-              title: `🚨 Alerte prix ${alert.symbol}`,
+              title: `Alerte de prix ${alert.symbol}`, // lot légal 2 (08/10/2026) : pas d'émoji d'alarme (fausse urgence)
               body: `${cryptoName} ${pushDirection} ${formattedThreshold}`,
               url: `/cryptos/${detailSlug}`,
               tag: `alert-${alert.id}`,

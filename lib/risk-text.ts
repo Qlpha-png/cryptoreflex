@@ -12,7 +12,8 @@
 
 const SHORT =
   "L’investissement en crypto-actifs comporte un risque élevé de perte totale en capital. " +
-  "Cryptoreflex n’est pas un conseiller en investissements financiers. " +
+  /* lot légal 2 (08/10/2026, juré juridique) : le site n'est pas non plus prestataire de services sur crypto-actifs */
+  "Cryptoreflex n’est ni conseiller en investissements financiers, ni prestataire de services sur crypto-actifs (PSCA). " +
   "Les performances passées ne préjugent pas des performances futures.";
 
 const PORTEE =

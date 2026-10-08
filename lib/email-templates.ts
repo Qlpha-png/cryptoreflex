@@ -178,7 +178,7 @@ export function priceAlertHtml(ctx: PriceAlertEmailContext): string {
           <tr>
             <td style="padding:28px 28px 0 28px;">
               <div style="border:1px solid rgba(245,158,11,0.25);background:rgba(245,158,11,0.05);border-radius:10px;padding:14px 16px;font-size:12px;line-height:1.5;color:#FCD34D;">
-                <strong style="color:#FDE68A;">Information non sollicitée — pas un conseil en investissement.</strong>
+                <strong style="color:#FDE68A;">Alerte que vous avez demandée — pas un conseil en investissement.</strong>
                 Les variations de prix crypto sont structurellement volatiles. Cette alerte est purement informative ;
                 ${esc(BRAND.name)} ne recommande aucune action d'achat ou de vente.
                 Voir notre <a href="${BRAND.url}/methodologie" style="color:#FDE68A;">méthodologie</a>.
