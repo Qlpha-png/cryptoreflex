@@ -56,18 +56,12 @@ export interface PartnerReview {
   /** Slug partenaire (lien avec data/partners.ts) */
   slug: string;
   /**
-   * Note Trustpilot (TrustScore /5) relevée à la date externalReviewDate. Ce n'est PAS une note Cryptoreflex : aucune grille
-   * maison n'est documentée (05/10/2026 : les anciennes notes 4,2 / 4,4 / 4,0 reprenaient des relevés Trustpilot faux).
+   * Page Trustpilot officielle du partenaire. 08/10/2026 (décision de Kev) : les conditions de Trustpilot interdisent
+   * de reprendre ses notes ; aucune note, aucun nombre d'avis ni aucune date de relevé n'est gardé ni affiché.
    */
-  rating: number;
-  /** Nombre d'avis Trustpilot à la même date */
-  externalReviewCount: number;
-  /** Date du relevé Trustpilot (ISO YYYY-MM-DD) */
-  externalReviewDate: string;
+  trustpilotUrl: string;
   /** Date du relevé de la grille tarifaire publiée par le partenaire (ISO YYYY-MM-DD), affichée par <VerifieLe> */
   tarifsReleveLe?: string;
-  /** Source publique de l'aggregateRating */
-  externalReviewSource: { name: string; url: string };
   /** Date dernière mise à jour review (ISO YYYY-MM-DD) */
   lastUpdated: string;
   /** Synthèse en 30 secondes (verdict bref) */
@@ -102,14 +96,7 @@ export const partnerReviews: PartnerReview[] = [
   /* ============================ LEDGER ============================ */
   {
     slug: "ledger",
-    // fr.trustpilot.com/review/www.ledger.com relu le 05/10/2026 (JSON-LD) : ratingValue 3.3, reviewCount 2737.
-    rating: 3.3,
-    externalReviewCount: 2737,
-    externalReviewDate: "2026-10-05",
-    externalReviewSource: {
-      name: "Trustpilot",
-      url: "https://fr.trustpilot.com/review/www.ledger.com",
-    },
+    trustpilotUrl: "https://fr.trustpilot.com/review/www.ledger.com",
     lastUpdated: "2026-10-05",
     verdict: {
       summary:
@@ -272,7 +259,6 @@ export const partnerReviews: PartnerReview[] = [
     ],
     socialProof: [
       { stat: "8 millions+", source: "Appareils Ledger vendus (chiffre annoncé par Ledger sur ledger.com, octobre 2026)" },
-      { stat: "3,3/5", source: "TrustScore Trustpilot de www.ledger.com (2 737 avis, relevé le 5 octobre 2026)" },
       { stat: "EAL6+", source: "Certification Common Criteria de la puce ST33K1M5 (Nano S Plus, Nano Gen5, Flex, Stax ; EAL5+ sur le Nano X)" },
     ],
     risksAvoided: [
@@ -286,14 +272,7 @@ export const partnerReviews: PartnerReview[] = [
   /* ============================ TREZOR ============================ */
   {
     slug: "trezor",
-    // fr.trustpilot.com/review/trezor.io relu le 05/10/2026 (JSON-LD) : ratingValue 4.6, reviewCount 2020.
-    rating: 4.6,
-    externalReviewCount: 2020,
-    externalReviewDate: "2026-10-05",
-    externalReviewSource: {
-      name: "Trustpilot",
-      url: "https://fr.trustpilot.com/review/trezor.io",
-    },
+    trustpilotUrl: "https://fr.trustpilot.com/review/trezor.io",
     lastUpdated: "2026-10-05",
     verdict: {
       summary:
@@ -455,7 +434,6 @@ export const partnerReviews: PartnerReview[] = [
     ],
     socialProof: [
       { stat: "2013", source: "Création de Trezor ; son Model One, sorti en 2014, est présenté par Trezor comme le premier portefeuille matériel" },
-      { stat: "4,6/5", source: "TrustScore Trustpilot de trezor.io, sur 2 020 avis (5 octobre 2026)" },
       { stat: "EAL6+", source: "Certification Common Criteria de la puce OPTIGA Trust M (Safe 3, 5 et 7)" },
     ],
     risksAvoided: [
@@ -471,14 +449,7 @@ export const partnerReviews: PartnerReview[] = [
     slug: "waltio",
     // grille tarifaire relevée le 05/10/2026 (date auparavant écrite dans deux textes de la fiche)
     tarifsReleveLe: "2026-10-05",
-    // fr.trustpilot.com/review/waltio.com relu le 05/10/2026 (JSON-LD) : ratingValue 4, reviewCount 512.
-    rating: 4.0,
-    externalReviewCount: 512,
-    externalReviewDate: "2026-10-05",
-    externalReviewSource: {
-      name: "Trustpilot",
-      url: "https://fr.trustpilot.com/review/waltio.com",
-    },
+    trustpilotUrl: "https://fr.trustpilot.com/review/waltio.com",
     lastUpdated: "2026-10-05",
     verdict: {
       summary:
@@ -642,7 +613,6 @@ export const partnerReviews: PartnerReview[] = [
     ],
     socialProof: [
       { stat: "700+", source: "Intégrations (plateformes, wallets, blockchains) annoncées par Waltio" },
-      { stat: "4,0/5", source: "TrustScore Trustpilot de waltio.com, sur 512 avis (5 octobre 2026)" },
       { stat: "2018", source: "Création de la SAS Waltio à Clermont-Ferrand (registre officiel des entreprises)" },
     ],
     risksAvoided: [

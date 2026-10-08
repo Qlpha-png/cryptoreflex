@@ -50,7 +50,6 @@ export const CHAMPS = [
   ["data/platforms.json", "platforms[].fees.cost.date", "frais"],
   ["data/platforms.json", "platforms[].support.verified", "support"],
   ["data/platforms.json", "platforms[].security.verified", "securite"],
-  ["data/platforms.json", "platforms[].ratings.trustpilotVerified", "notes"],
   ["data/wallets.json", "platforms[].mica.lastVerified", "wallets"],
   ["data/psan-registry.json", "_meta.lastUpdated", "mica"],
   ["data/psan-registry.json", "platforms[].lastVerified", "mica"],

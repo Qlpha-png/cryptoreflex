@@ -28,7 +28,6 @@ import {
   type Platform,
   supportChatLabel,
   supportPhoneLabel,
-  trustpilotText,
 } from "@/lib/platforms";
 
 const lowerFirst = (s: string) => s.charAt(0).toLowerCase() + s.slice(1);
@@ -489,7 +488,7 @@ export function buildComparisonCopy(
 
   const supportAnalysis = [
     `Le support client en français est un critère sous-estimé jusqu'au premier problème (KYC bloqué, retrait en attente, oubli 2FA). ${a.name} : chat en français ${supportChatLabel(a.support).toLowerCase()}, téléphone ${supportPhoneLabel(a.support).toLowerCase()}${a.support.responseTime ? `, délai annoncé ${a.support.responseTime}` : ""}. ${b.name} : chat en français ${supportChatLabel(b.support).toLowerCase()}, téléphone ${supportPhoneLabel(b.support).toLowerCase()}${b.support.responseTime ? `, délai annoncé ${b.support.responseTime}` : ""}. Valeurs relevées sur les pages officielles d'assistance.`,
-    `Sur notre note support pondérée, ${sup.winner.name} prend l'avantage avec ${fmtScore(sup.winner.scoring.support)} (vs ${fmtScore(sup.loser.scoring.support)}). Trustpilot : ${a.name} ${trustpilotText(a.ratings) ?? "sans note publique"} (relevé le ${fmtDateFr(a.ratings.trustpilotVerified)}), ${b.name} ${trustpilotText(b.ratings) ?? "sans note publique"} (relevé le ${fmtDateFr(b.ratings.trustpilotVerified)}). Attention : une note Trustpilot reflète surtout les clients qui prennent la peine d'écrire, souvent après un incident ou sur invitation de la plateforme ; elle ne mesure pas à elle seule la qualité du support.`,
+    `Sur notre note support pondérée, ${sup.winner.name} prend l'avantage avec ${fmtScore(sup.winner.scoring.support)} (vs ${fmtScore(sup.loser.scoring.support)}). Les avis des utilisateurs se lisent sur la page Trustpilot officielle de chaque plateforme (un lien figure sur chaque avis). Attention : ces avis reflètent surtout les clients qui prennent la peine d'écrire, souvent après un incident ou sur invitation de la plateforme ; ils ne mesurent pas à eux seuls la qualité du support.`,
   ];
 
   const catalogAnalysis = [

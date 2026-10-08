@@ -1,7 +1,6 @@
 import { ImageResponse } from "next/og";
 import { loadOgFonts } from "@/lib/og-fonts";
 import { getPartner } from "@/data/partners";
-import { getPartnerReview } from "@/data/partner-reviews";
 import { BRAND } from "@/lib/brand";
 
 /**
@@ -22,12 +21,11 @@ interface Props {
 
 export default async function OgImage({ params }: Props) {
   const partner = getPartner(params.slug);
-  const review = getPartnerReview(params.slug);
 
   const name = partner?.name ?? "Partenaire";
   const tagline =
     partner?.tagline ?? "Notre analyse détaillée.";
-  const rating = review?.rating ?? null;
+  // 08/10/2026 : plus de note Trustpilot sur l'image (conditions de Trustpilot).
   const priceFrom = partner?.priceFrom ?? "";
   const brandColor = partner?.brandColor ?? "#F59E0B";
   const since = partner?.since ?? "";
@@ -168,7 +166,7 @@ export default async function OgImage({ params }: Props) {
           </div>
         </div>
 
-        {/* Footer — rating + prix + URL */}
+        {/* Footer — prix + URL */}
         <div
           style={{
             display: "flex",
@@ -179,50 +177,6 @@ export default async function OgImage({ params }: Props) {
           }}
         >
           <div style={{ display: "flex", alignItems: "center", gap: 32 }}>
-            {rating !== null && (
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: 4,
-                }}
-              >
-                <span
-                  style={{
-                    fontSize: 14,
-                    color: "rgba(255,255,255,0.5)",
-                    textTransform: "uppercase",
-                    letterSpacing: "0.1em",
-                    display: "flex",
-                  }}
-                >
-                  Note Trustpilot
-                </span>
-                <span
-                  style={{
-                    fontSize: 64,
-                    fontWeight: 800,
-                    color: "#F59E0B",
-                    display: "flex",
-                    fontVariantNumeric: "tabular-nums",
-                  }}
-                >
-                  {rating.toFixed(1).replace(".", ",")}
-                  <span
-                    style={{
-                      fontSize: 30,
-                      color: "rgba(255,255,255,0.5)",
-                      marginLeft: 4,
-                      alignSelf: "flex-end",
-                      paddingBottom: 12,
-                      display: "flex",
-                    }}
-                  >
-                    /5
-                  </span>
-                </span>
-              </div>
-            )}
             {priceFrom && (
               <div
                 style={{

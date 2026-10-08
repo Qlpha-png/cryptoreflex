@@ -7,7 +7,6 @@ import {
   ArrowRight,
   CheckCircle2,
   AlertCircle,
-  Download,
   X,
 } from "lucide-react";
 import { track } from "@/lib/analytics";
@@ -25,10 +24,10 @@ import { track } from "@/lib/analytics";
  *  - source : tracking analytics (vers Beehiiv UTM campaign)
  *  - variant : "default" (carte glass) | "minimal" (juste le form)
  *  - title / subtitle : override du copy par défaut
- *  - leadMagnet : si true, mentionne le PDF en bonus
+ *  - leadMagnet : sans effet depuis le 08/10/2026 (guide PDF des plateformes retiré)
  *
  * États : idle -> loading -> (success | error)
- * Le "success" affiche une pop-in (overlay) avec lien direct vers le PDF.
+ * Le "success" affiche une pop-in (overlay) de confirmation.
  */
 
 type Variant = "default" | "minimal";
@@ -51,8 +50,6 @@ interface NewsletterInlineProps {
    */
   context?: "fiscalite" | "securite" | "trading" | "debutant" | "actualites" | "defi" | "regulation";
 }
-
-const LEAD_MAGNET_URL = "/lead-magnets/guide-plateformes-crypto-2026.pdf";
 
 /**
  * Defaults de copy par contexte (source). Ne sont appliques que si le caller
@@ -81,12 +78,12 @@ const COPY_DEFAULTS: Record<
   },
   hero: {
     title: "Recevoir la newsletter",
-    subtitle: "Gratuit. Désinscription en 1 clic. Guide PDF offert.",
+    subtitle: "Gratuit. Désinscription en 1 clic.",
     ctaLabel: "Recevoir la newsletter",
   },
   "newsletter-page": {
     title: "Inscription à la newsletter",
-    subtitle: "Gratuit. Désinscription en 1 clic. Guide PDF offert.",
+    subtitle: "Gratuit. Désinscription en 1 clic.",
     ctaLabel: "Recevoir la newsletter",
   },
 };
@@ -149,7 +146,6 @@ function NewsletterInline({
   variant = "default",
   title,
   subtitle,
-  leadMagnet = true,
   ctaLabel,
   showPreview = false,
   context,
@@ -312,13 +308,6 @@ function NewsletterInline({
           </button>
         </form>
 
-        {leadMagnet && variant === "default" && status === "idle" && (
-          <p className="mt-3 text-xs text-muted">
-            <span className="text-primary-soft font-medium">Bonus :</span> guide PDF
-            "Les plateformes crypto régulées MiCA à utiliser en France 2026" à l'inscription.
-          </p>
-        )}
-
         {showPreview && variant === "default" && status === "idle" && (
           <details className="mt-3 group">
             <summary className="cursor-pointer text-xs text-primary-soft hover:text-primary inline-flex items-center gap-1 list-none">
@@ -408,29 +397,22 @@ function NewsletterInline({
                 <>
                   Newsletter en cours de configuration — votre email{" "}
                   <strong>{email}</strong> a été noté côté Cryptoreflex, on vous
-                  recontactera dès que c&apos;est prêt. En attendant, téléchargez
-                  votre guide :
+                  recontactera dès que c&apos;est prêt.
                 </>
               ) : (
                 <>
                   Un email de confirmation est en route vers <strong>{email}</strong>.
-                  Pendant ce temps, téléchargez votre guide PDF :
                 </>
               )}
             </p>
 
-            <a
-              href={LEAD_MAGNET_URL}
-              download
+            <button
+              type="button"
               className="btn-primary w-full mt-5 justify-center"
-              onClick={() => {
-                // Petit délai puis ferme la pop-in pour ne pas bloquer la nav
-                setTimeout(() => setShowPopin(false), 300);
-              }}
+              onClick={() => setShowPopin(false)}
             >
-              <Download className="h-4 w-4" />
-              Télécharger le guide (PDF, 57 pages)
-            </a>
+              Continuer la lecture
+            </button>
 
             <p className="mt-3 text-xs text-muted text-center">
               Pas reçu l'email après 5 min ? Vérifiez vos spams.

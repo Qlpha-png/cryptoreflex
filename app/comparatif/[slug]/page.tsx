@@ -28,9 +28,10 @@ import {
   supportChatLabel,
   supportDelayLabel,
   supportPhoneLabel,
-  trustpilotText,
+  trustpilotLink,
   verifiedBonus,
 } from "@/lib/platforms";
+import TrustpilotLink from "@/components/TrustpilotLink";
 import {
   getComparison,
   getPublishableComparisons,
@@ -93,42 +94,18 @@ export function generateMetadata({ params }: Props): Metadata {
  * Helpers de comparaison
  * ------------------------------------------------------------------ */
 
-/** "na" = valeurs non comparables (ex. une note Trustpilot absente) : aucun badge. */
+/** "na" = valeurs non comparables (ex. une valeur non vérifiée) : aucun badge. */
 type WinnerHint = "a" | "b" | "tie" | "na";
 
-/** Cellule Trustpilot : note relevée (+ précision éventuelle), sinon la raison de son absence. */
-function trustpilotCell(p: Platform): string {
-  const t = trustpilotText(p.ratings);
-  const note = p.ratings.trustpilotNote;
-  return t ? (note ? `${t} — ${note}` : t) : note ? note.charAt(0).toUpperCase() + note.slice(1) : "—";
-}
-
-/** 08/10/2026 (lot fraîcheur A2) : dates des relevés affichées par <VerifieLe> (âge signalé au-delà du seuil). */
-const releveTrustpilot = (p: Platform): ReactNode => (
-  <>
-    {" · "}
-    <VerifieLe date={p.ratings.trustpilotVerified} famille="notes" label="relevé" inconnue="date du relevé inconnue" age={false} />
-  </>
-);
-
-function trustpilotRow(a: Platform, b: Platform): CompareRow {
-  const sameDate = a.ratings.trustpilotVerified === b.ratings.trustpilotVerified;
-  const ra = a.ratings.trustpilot;
-  const rb = b.ratings.trustpilot;
+/** 08/10/2026 (décision de Kev) : aucune note Trustpilot reprise, seulement le lien vers la page officielle. */
+function avisUtilisateursRow(a: Platform, b: Platform): CompareRow {
   return {
-    label: "Trustpilot",
-    labelSuffix: sameDate ? (
-      <>
-        {" ("}
-        <VerifieLe date={a.ratings.trustpilotVerified} famille="notes" label="relevé" inconnue="date du relevé inconnue" age={false} />
-        {")"}
-      </>
-    ) : undefined,
-    aDisplay: trustpilotCell(a),
-    bDisplay: trustpilotCell(b),
-    aSuffix: sameDate ? undefined : releveTrustpilot(a),
-    bSuffix: sameDate ? undefined : releveTrustpilot(b),
-    hint: ra != null && rb != null ? winner(ra, rb) : "na",
+    label: "Avis des utilisateurs",
+    aDisplay: trustpilotLink(a) ? "" : "—",
+    bDisplay: trustpilotLink(b) ? "" : "—",
+    aSuffix: <TrustpilotLink url={trustpilotLink(a)} label="Voir sur Trustpilot" />,
+    bSuffix: <TrustpilotLink url={trustpilotLink(b)} label="Voir sur Trustpilot" />,
+    hint: "na",
   };
 }
 
@@ -287,7 +264,7 @@ function buildRows(a: Platform, b: Platform): { fees: CompareRow[]; security: Co
   const ux: CompareRow[] = [
     { label: "Score UX", aDisplay: `${fmtNb(a.scoring.ux)}/5`, bDisplay: `${fmtNb(b.scoring.ux)}/5`, hint: winner(a.scoring.ux, b.scoring.ux) },
     // Notes App Store / Play Store retirées le 06/10/2026 : aucune source ni date, valeurs fausses (cf. storeRating).
-    trustpilotRow(a, b),
+    avisUtilisateursRow(a, b),
     { label: "Cryptos listées", aDisplay: `${a.cryptos.totalCount}`, bDisplay: `${b.cryptos.totalCount}`, hint: winner(a.cryptos.totalCount, b.cryptos.totalCount) },
   ];
 
@@ -495,7 +472,7 @@ function ComparisonPage({ params }: Props) {
           [
             { title: "Frais", icon: Wallet, rows: rows.fees, intro: `Sur les frais, ${a.name} affiche ${fmtNb(a.fees.spotMaker)}% en maker contre ${fmtNb(b.fees.spotMaker)}% pour ${b.name}. La différence paraît mineure jusqu'à ce qu'on la projette sur 10 000€ de volume mensuel — auquel cas elle devient le critère dominant pour un trader actif.` },
             { title: "Sécurité & MiCA", icon: ShieldCheck, rows: rows.security, intro: `${a.category !== "wallet" && b.category !== "wallet" && isAvailableFr(a) && isAvailableFr(b) ? "Les deux plateformes sont agréées MiCA avec accès à la France. " : ""}Conservation hors ligne et assurance sont présentées telles que les plateformes les publient, sans audit de notre part ; les incidents, tels que documentés par un communiqué officiel ou la presse reconnue. « Aucun relevé » ne veut pas dire « aucun incident ».` },
-            { title: "Expérience utilisateur", icon: Coins, rows: rows.ux, intro: `Sous-note UX de notre méthodologie, note Trustpilot (datée) et taille du catalogue. Ces métriques ne pèsent pas pareil selon votre profil : un investisseur passif regardera surtout la simplicité, un trader actif le catalogue.` },
+            { title: "Expérience utilisateur", icon: Coins, rows: rows.ux, intro: `Sous-note UX de notre méthodologie, lien vers les avis des utilisateurs et taille du catalogue. Ces métriques ne pèsent pas pareil selon votre profil : un investisseur passif regardera surtout la simplicité, un trader actif le catalogue.` },
             { title: "Support client", icon: HeadphonesIcon, rows: rows.support, intro: `En cas de problème (vérification d'identité bloquée, retrait en attente, suspicion de fraude), savoir comment joindre la plateforme compte. Canaux relevés sur les pages officielles d'assistance ; un délai n'est indiqué que si la plateforme l'annonce elle-même.` },
           ] as const
         ).map((section) => (

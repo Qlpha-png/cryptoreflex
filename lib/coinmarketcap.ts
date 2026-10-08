@@ -254,7 +254,12 @@ async function cmcNetwork(path: string, revalidate: number, estimatedCredits: nu
   } catch (err) {
     throw new SourceError(err instanceof Error && err.name === "TimeoutError" ? "délai dépassé" : "erreur réseau");
   }
-  if (!res.ok) throw new SourceError(`HTTP ${res.status}`, { status: res.status });
+  if (!res.ok) {
+    // 08/10/2026 (lot Z1) : erreur 1009 = plafond QUOTIDIEN atteint (HTTP 429) ; notée pour la sentinelle
+    const corps = (await res.json().catch(() => null)) as { status?: { error_code?: unknown } } | null;
+    if (corps?.status?.error_code === CMC_ERREUR_PLAFOND_JOUR) noterErreur1009();
+    throw new SourceError(`HTTP ${res.status}`, { status: res.status });
+  }
   let json: { status?: { error_code?: unknown; credit_count?: unknown }; data?: unknown };
   try {
     json = (await res.json()) as typeof json;
@@ -267,8 +272,41 @@ async function cmcNetwork(path: string, revalidate: number, estimatedCredits: nu
   // eslint-disable-next-line no-console
   console.warn(`[coinmarketcap] ${path.split("?")[0]} : ${credits} crédit(s), ${cmcInstanceCredits24h()} sur 24 h (cette instance)`);
   const code = json?.status?.error_code;
+  if (code === CMC_ERREUR_PLAFOND_JOUR) noterErreur1009();
   if (typeof code === "number" && code !== 0) throw new SourceError(`erreur CMC ${code}`);
   return json?.data ?? null;
+}
+
+/**
+ * Erreur 1009 de CoinMarketCap (« daily rate limit », documentation de l'API) : 08/10/2026, lot Z1. La dernière occurrence
+ * est gardée en mémoire et écrite dans le KV (au plus une écriture par heure et par instance, un KV en panne ne bloque
+ * rien) ; le bilan de /api/diag/cmc-budget la renvoie et la sentinelle la signale.
+ */
+export const CMC_ERREUR_PLAFOND_JOUR = 1009;
+export const CMC_ERREUR_1009_KV = "cmc:erreur-1009:last";
+const cmcErreur1009: { at: number; ecritKv: number } = { at: 0, ecritKv: 0 };
+function noterErreur1009(now: number = Date.now()): void {
+  cmcErreur1009.at = now;
+  if (now - cmcErreur1009.ecritKv < 3_600_000) return;
+  cmcErreur1009.ecritKv = now;
+  void import("@/lib/kv")
+    .then(({ getKv }) => getKv().set(CMC_ERREUR_1009_KV, { at: new Date(now).toISOString() }, { ex: 3 * 86_400 }))
+    .catch(() => {});
+}
+
+/** Dernière erreur 1009 connue (KV, sinon mémoire de l'instance), ISO ou null. */
+async function derniereErreur1009(): Promise<string | null> {
+  let kv: string | null = null;
+  try {
+    const { getKv } = await import("@/lib/kv");
+    const v = await getKv().get<{ at?: unknown }>(CMC_ERREUR_1009_KV);
+    kv = typeof v?.at === "string" && Number.isFinite(Date.parse(v.at)) ? v.at : null;
+  } catch {
+    kv = null;
+  }
+  const memo = cmcErreur1009.at ? new Date(cmcErreur1009.at).toISOString() : null;
+  if (kv && memo) return kv > memo ? kv : memo;
+  return kv ?? memo;
 }
 
 /**
@@ -285,8 +323,13 @@ async function cmcNetwork(path: string, revalidate: number, estimatedCredits: nu
 export const CMC_MONTH_RESERVE = 300;
 export const CMC_KEY_INFO_TTL_MS = 10 * 60_000;
 const DAY_MS = 86_400_000;
-/** monthUsed / monthLimit : facultatifs (lus pour le bilan de la sentinelle, pas nécessaires au garde-fou). */
-type KeyUsage = { dayUsed: number; monthLeft: number; monthUsed?: number; monthLimit?: number } | null;
+/**
+ * monthUsed / monthLimit : facultatifs (lus pour le bilan de la sentinelle, pas nécessaires au garde-fou).
+ * dayLimit / dayLeft (08/10/2026, lot Z1) : plafond QUOTIDIEN de l'offre Basic. Son existence est documentée (erreur 1009),
+ * sa valeur n'est pas publiée : on ne la lit que si /v1/key/info la renvoie (plan.credit_limit_daily,
+ * usage.current_day.credits_left), jamais une valeur supposée.
+ */
+type KeyUsage = { dayUsed: number; monthLeft: number; monthUsed?: number; monthLimit?: number; dayLimit?: number; dayLeft?: number } | null;
 let cmcKeyUsageMemo: { at: number; ttl: number; usage: Promise<KeyUsage> } | null = null;
 
 /**
@@ -317,8 +360,8 @@ async function cmcKeyUsageFetch(): Promise<KeyUsage> {
     if (res.ok) {
       const j = (await res.json()) as {
         data?: {
-          plan?: { credit_limit_monthly?: unknown };
-          usage?: { current_day?: { credits_used?: unknown }; current_month?: { credits_used?: unknown; credits_left?: unknown } };
+          plan?: { credit_limit_monthly?: unknown; credit_limit_daily?: unknown };
+          usage?: { current_day?: { credits_used?: unknown; credits_left?: unknown }; current_month?: { credits_used?: unknown; credits_left?: unknown } };
         };
       };
       const dayUsed = j?.data?.usage?.current_day?.credits_used;
@@ -329,6 +372,10 @@ async function cmcKeyUsageFetch(): Promise<KeyUsage> {
         const monthLimit = pos(j?.data?.plan?.credit_limit_monthly);
         if (monthUsed !== null) usage.monthUsed = monthUsed;
         if (monthLimit !== null) usage.monthLimit = monthLimit;
+        const dayLimit = pos(j?.data?.plan?.credit_limit_daily);
+        const dayLeft = num(j?.data?.usage?.current_day?.credits_left);
+        if (dayLimit !== null) usage.dayLimit = dayLimit;
+        if (dayLeft !== null) usage.dayLeft = dayLeft;
       }
     }
   } catch {
@@ -386,6 +433,12 @@ export interface CmcBudgetBilan {
   /** AAAA-MM-JJ (UTC) si, à ce rythme, les crédits disponibles s'épuisent avant la fin du mois ; sinon null. */
   epuisementPrevu: string | null;
   raison: string;
+  /** Plafond QUOTIDIEN renvoyé par /v1/key/info (plan.credit_limit_daily), null s'il n'est pas renvoyé (valeur non publiée). */
+  plafondJour: number | null;
+  /** Crédits restants du jour renvoyés par /v1/key/info (usage.current_day.credits_left), null s'ils ne sont pas renvoyés. */
+  restantJour: number | null;
+  /** Dernière erreur 1009 (« daily rate limit ») vue par le site, ISO, ou null. */
+  erreur1009: string | null;
 }
 
 const CMC_PATH_LOT = "/v2/cryptocurrency/quotes/latest";
@@ -455,6 +508,9 @@ export function cmcBudgetBilan(usage: NonNullable<KeyUsage>, now: number): CmcBu
     disponible,
     epuisementPrevu,
     raison,
+    plafondJour: usage.dayLimit ?? null,
+    restantJour: usage.dayLeft ?? null,
+    erreur1009: null,
   };
 }
 
@@ -463,7 +519,7 @@ export async function cmcBudgetReport(now: number = Date.now()): Promise<CmcBudg
   if (!cmcEnabled()) return { lu: false, raison: "clé CoinMarketCap absente de l'environnement" };
   const usage = await cmcKeyUsage(now);
   if (!usage) return { lu: false, raison: "compteur officiel (/v1/key/info) illisible" };
-  return cmcBudgetBilan(usage, now);
+  return { ...cmcBudgetBilan(usage, now), erreur1009: await derniereErreur1009() };
 }
 
 /** Tests uniquement. */
@@ -472,6 +528,8 @@ export function __resetCmcForTests(): void {
   cmcCreditLog = [];
   cmcBudgetLoggedAt = 0;
   cmcKeyUsageMemo = null;
+  cmcErreur1009.at = 0;
+  cmcErreur1009.ecritKv = 0;
 }
 
 /** Top 200 par capitalisation (UNE seule URL, quel que soit le nombre de lignes affichées). */

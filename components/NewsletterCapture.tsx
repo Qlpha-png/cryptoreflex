@@ -9,7 +9,6 @@ import {
   CheckCircle2,
   Clock,
   AlertCircle,
-  Download,
   Lock,
   Users,
 } from "lucide-react";
@@ -353,26 +352,18 @@ function NewsletterCapture() {
                     Newsletter en cours de configuration — votre email{" "}
                     <strong className="text-fg">{email}</strong> a été noté côté
                     Cryptoreflex, on vous recontactera dès que c&apos;est prêt. En
-                    attendant, téléchargez votre guide&nbsp;:
+                    attendant, continuez votre lecture&nbsp;:
                   </>
                 ) : (
                   <>
                     Un e-mail de bienvenue vient de vous être envoyé à{" "}
-                    <strong className="text-fg">{email}</strong>. Votre guide PDF
-                    est aussi disponible tout de suite&nbsp;:
+                    <strong className="text-fg">{email}</strong>.
                   </>
                 )}
               </p>
 
+              {/* Lien « Télécharger le guide PDF » retiré le 08/10/2026 : le guide des plateformes reprenait des notes Trustpilot. */}
               <div className="mt-6 flex flex-col sm:flex-row gap-3">
-                <a
-                  href="/lead-magnets/guide-plateformes-crypto-2026.pdf"
-                  download
-                  className="btn-primary btn-primary-shine"
-                >
-                  <Download className="h-4 w-4" aria-hidden="true" focusable="false" />
-                  Télécharger le guide PDF
-                </a>
                 <Link href="/blog" className="btn-ghost">
                   Lire les analyses récentes
                   <ArrowRight className="h-4 w-4 arrow-spring" aria-hidden="true" focusable="false" />

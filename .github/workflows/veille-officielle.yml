@@ -98,18 +98,21 @@ jobs:
       # 08/10/2026 (lot fraîcheur A, reprise, L6 MiCA) : chaque nuit où le registre de l'ESMA a été lu, les plateformes
       # SANS écart reçoivent la date du jour dans data/veille/mica-auto.json ; le site affiche alors « Registre ESMA
       # contrôlé automatiquement le JJ/MM/AAAA ». Une plateforme en écart garde sa date précédente (ticket ci-dessous).
+      # Reprise Z1 : même étape pour data/veille/licences-ref.json (première référence d'une page de licence, écrite
+      # automatiquement ; sans elle aucun ticket « relire la licence » ne peut s'ouvrir).
       - name: Publier la date du contrôle automatique du registre MiCA
         if: ${{ !cancelled() }}
         run: |
-          if [ -z "$(git status --porcelain -- data/veille/mica-auto.json)" ]; then
-            echo "Date du contrôle MiCA inchangée (registre illisible cette nuit, ou déjà publiée)."
+          if [ -z "$(git status --porcelain -- data/veille/mica-auto.json data/veille/licences-ref.json)" ]; then
+            echo "Date du contrôle MiCA et références de licence inchangées (registre illisible cette nuit, ou déjà publiées)."
             exit 0
           fi
           git config user.name "Cryptoreflex Bot"
           git config user.email "bot@cryptoreflex.fr"
           git add data/veille/mica-auto.json
-          git commit -m "chore(veille): registre MiCA de l'ESMA contrôlé sans écart" \
-            -m "Généré par .github/workflows/veille-officielle.yml (data/veille/mica-auto.json)." \
+          if [ -f data/veille/licences-ref.json ]; then git add data/veille/licences-ref.json; fi
+          git commit -m "chore(veille): registre MiCA de l'ESMA contrôlé sans écart, références de licence" \
+            -m "Généré par .github/workflows/veille-officielle.yml (data/veille/mica-auto.json, data/veille/licences-ref.json)." \
             -m "" \
             -m "Co-Authored-By: Cryptoreflex Bot <bot@cryptoreflex.fr>"
           for i in 1 2 3; do
@@ -155,6 +158,36 @@ jobs:
             } else if (issue) {
               await github.rest.issues.createComment({ ...depot, issue_number: issue.number, body: `✅ Plus aucun écart avec les sources officielles.\n\n${report}\n\n[Voir l'exécution](${runUrl})` });
               await github.rest.issues.update({ ...depot, issue_number: issue.number, state: "closed" });
+            }
+
+      # 08/10/2026 (lot Z1, architecture 0 € § 6.2 point 5) : empreinte mensuelle des pages de licence (S1 CoinMarketCap,
+      # S2 DexScreener, S4 ESMA, S5 Licence ouverte, S7 alternative.me, S8 Fed). Une page dont les phrases de conditions
+      # changent → un ticket « relire la licence » (titre stable : jamais deux tickets ouverts pour la même page). Fermé à
+      # la main après relecture ; la référence avance avec « enregistrer ».
+      - name: Tickets « relire la licence » (dépôt privé)
+        if: always() && env.TICKETS_PRIVES == 'true' && hashFiles('veille-licences.json') != ''
+        continue-on-error: true
+        uses: actions/github-script@v9
+        with:
+          github-token: ${{ secrets.SENTINELLE_TOKEN }}
+          script: |
+            const fs = require("fs");
+            const depot = { owner: "Qlpha-png", repo: "cryptoreflex-sentinelle" };
+            const changees = JSON.parse(fs.readFileSync("veille-licences.json", "utf8"));
+            const runUrl = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
+            const ouverts = await github.paginate(github.rest.issues.listForRepo, { ...depot, state: "open", labels: "licence", per_page: 100 });
+            for (const c of changees) {
+              const titre = `[Licence] relire la licence : ${c.cle} ${c.nom}`;
+              if (ouverts.some((i) => i.title === titre)) continue;
+              const liste = (xs) => (xs.length ? xs.map((x) => `- ${x}`).join("\n") : "- (aucune)");
+              const corps = [
+                `Les phrases de conditions de ${c.url} ont changé depuis le ${c.depuis ?? "dernier relevé"}.`,
+                "",
+                "Relire la page, vérifier que l'usage du site reste permis (usage commercial, attribution, redistribution), corriger si besoin, puis relancer la veille avec « enregistrer ».",
+                "",
+                "Phrases apparues :", liste(c.apparues), "", "Phrases disparues :", liste(c.disparues), "", `[Voir l'exécution](${runUrl})`,
+              ].join("\n");
+              await github.rest.issues.create({ ...depot, title: titre, body: corps, labels: ["licence"] });
             }
 
       - name: Échec si changement (e-mail GitHub)

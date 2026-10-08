@@ -37,7 +37,7 @@ import {
   supportChatLabel,
   supportDelayLabel,
   supportPhoneLabel,
-  trustpilotText,
+  trustpilotLink,
   verifiedBonus,
 } from "@/lib/platforms";
 import {
@@ -55,6 +55,7 @@ import { faqSchema, graphSchema, platformReviewSchema, // FIX SEO 2026-05-02 #9 
   platformSoftwareApplicationSchema } from "@/lib/schema";
 import MiCAComplianceBadge from "@/components/MiCAComplianceBadge";
 import VerifieLe from "@/components/ui/VerifieLe";
+import TrustpilotLink from "@/components/TrustpilotLink";
 import { dateStatutMica } from "@/lib/mica-auto";
 import RelatedPagesNav from "@/components/RelatedPagesNav";
 import NextStepsGuide from "@/components/NextStepsGuide";
@@ -359,7 +360,7 @@ function ReviewPage({ params }: Props) {
    *
    * AVANT (bug SEO) : on injectait un simple `Review` avec `Rating` (sans
    * aggregate) → Google ignorait les étoiles. Maintenant : Product+AggregateRating
-   * (via reviewCount=trustpilotCount) = étoiles éligibles dans les résultats.
+   * (historique : retiré le 03/10/2026, aucune note agrégée n'est publiée ; aucune note Trustpilot depuis le 08/10/2026).
    */
   const jsonLd = graphSchema([
     platformReviewSchema(p),
@@ -376,9 +377,7 @@ function ReviewPage({ params }: Props) {
   const paidKind = available && isPaidLink(p.id, p.affiliateUrl) ? getAffiliationKind(p.id) : null;
   const ctaLabel = (paidLabel: string, unavailableLabel: string) =>
     !available ? unavailableLabel : paidKind ? paidLabel : `Site officiel de ${p.name}`;
-  // Note Trustpilot relevée à la main : toujours affichée avec sa date et un lien vers la page source.
-  const tp = trustpilotText(p.ratings);
-  const hasTpLine = !!p.ratings.trustpilotUrl && !!(tp || p.ratings.trustpilotNote);
+  // 08/10/2026 (décision de Kev) : aucune note Trustpilot reprise, seulement un lien vers la page officielle.
   const v = p.fees.verified;
   const mt = v?.makerTakerApplies ?? true;
   const isWallet = p.category === "wallet";
@@ -469,8 +468,8 @@ function ReviewPage({ params }: Props) {
             </h1>
             <p className="mt-3 text-lg text-fg-max/70">{p.tagline}</p>
 
-            {/* Pas de séparateur « · » entre les éléments : la ligne Trustpilot est longue et passe
-                à la ligne, ce qui laissait des points orphelins. L'espacement suffit. */}
+            {/* Pas de séparateur « · » entre les éléments : une ligne qui passe à la ligne laissait
+                des points orphelins. L'espacement suffit. */}
             <div className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-1.5">
               <div className="flex items-center gap-2">
                 <Stars n={p.scoring.global} />
@@ -479,30 +478,6 @@ function ReviewPage({ params }: Props) {
                   <span className="text-muted">/5</span>
                 </span>
               </div>
-              {hasTpLine && p.ratings.trustpilotUrl && (
-                <span className="text-xs text-muted">
-                  <a
-                    href={p.ratings.trustpilotUrl}
-                    target="_blank"
-                    rel="nofollow noopener noreferrer"
-                    className="underline decoration-dotted underline-offset-2 hover:text-fg-max"
-                  >
-                    Trustpilot
-                  </a>
-                  {p.ratings.trustpilot != null && p.ratings.trustpilotCount != null ? (
-                    <>
-                      {` ${fmtFr(p.ratings.trustpilot, 1)}/5 (${p.ratings.trustpilotCount.toLocaleString("fr-FR")} avis, `}
-                      <VerifieLe date={p.ratings.trustpilotVerified} famille="notes" label="relevé" inconnue="date du relevé inconnue" age={false} />
-                      {`)${p.ratings.trustpilotNote ? ` — ${p.ratings.trustpilotNote}` : ""}`}
-                    </>
-                  ) : (
-                    <>
-                      {` : ${p.ratings.trustpilotNote ?? "aucune note publique"}, `}
-                      <VerifieLe date={p.ratings.trustpilotVerified} famille="notes" label="relevé" inconnue="date du relevé inconnue" age={false} />
-                    </>
-                  )}
-                </span>
-              )}
               <span className="text-xs text-muted">
                 {isWallet ? (
                   <VerifieLe date={p.mica.lastVerified} famille="wallets" label="Statut MiCA vérifié" age={false} />
@@ -510,6 +485,13 @@ function ReviewPage({ params }: Props) {
                   <VerifieLe date={micaAffiche.date} famille="mica" label={micaAffiche.auto ? micaAffiche.label : "Statut MiCA vérifié"} />
                 )}
               </span>
+              {/* Lien placé après la date MiCA, jamais accolé à notre note : « 4,6/5 Avis des utilisateurs
+                  sur Trustpilot » laisserait croire que la note vient de Trustpilot. */}
+              {trustpilotLink(p) && (
+                <span className="text-xs text-muted">
+                  <TrustpilotLink url={trustpilotLink(p)} />
+                </span>
+              )}
             </div>
           </div>
 
@@ -766,7 +748,7 @@ function ReviewPage({ params }: Props) {
         <section className="mt-12">
           <h2 className="text-2xl font-bold tracking-tight">Notre scoring détaillé</h2>
           <p className="mt-2 text-sm text-muted max-w-2xl">
-            Six critères pondérés, chacun mesuré sur des données vérifiables (frais affichés par la plateforme, registres de l&apos;AMF et de l&apos;ESMA, avis Trustpilot). Détails dans la <Link href="/methodologie" className="underline hover:text-fg-max">méthodologie publique</Link>.
+            Six critères pondérés, chacun mesuré sur des données vérifiables (frais affichés par la plateforme, registres de l&apos;AMF et de l&apos;ESMA). Détails dans la <Link href="/methodologie" className="underline hover:text-fg-max">méthodologie publique</Link>.
           </p>
           <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             <Score value={p.scoring.fees} label="Frais" />
@@ -1226,14 +1208,7 @@ function ReviewPage({ params }: Props) {
         {/* DISCLAIMER */}
         <section className="mt-12 rounded-xl border border-border bg-surface/50 p-5">
           <p className="text-xs text-muted leading-relaxed">
-            Cette fiche est générée à partir de nos données ; Kevin Voisin, éditeur de {BRAND.name}, en est responsable. <VerifieLe date={p.mica.lastVerified} famille={isWallet ? "wallets" : "mica"} label="Statut MiCA vérifié" age={false} /> auprès des sources publiques (site officiel, registre AMF){hasTpLine ? (
-              <>
-                , note Trustpilot <VerifieLe date={p.ratings.trustpilotVerified} famille="notes" label="relevée" inconnue="(date du relevé inconnue)" age={false} />
-              </>
-            ) : (
-              ""
-            )}
-            .{" "}
+            Cette fiche est générée à partir de nos données ; Kevin Voisin, éditeur de {BRAND.name}, en est responsable. <VerifieLe date={p.mica.lastVerified} famille={isWallet ? "wallets" : "mica"} label="Statut MiCA vérifié" age={false} /> auprès des sources publiques (site officiel, registre AMF).{" "}
             {paidKind === "affiliate"
               ? `${BRAND.name} perçoit une commission via les liens vers ${p.name} marqués « Publicité », sans surcoût ni biais sur la note attribuée`
               : paidKind === "referral"

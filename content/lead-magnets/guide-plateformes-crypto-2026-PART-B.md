@@ -52,13 +52,6 @@ Coinhouse est agréée MiCA par l'AMF (n° A2026-013). Historiquement, elle a é
 - Téléphone FR : oui — disponible en semaine avec un temps de réponse annoncé inférieur à 4 heures. C'est le meilleur support téléphonique du panel, partagé avec Kraken et Coinbase mais avec une réactivité supérieure sur les heures ouvrées françaises
 - Temps de réponse moyen : inférieur à 4 h en semaine
 
-**Notes externes :**
-- Trustpilot : 4,4 / 5 (4 800 avis)
-- App Store : 4,5 / 5
-- Play Store : 4,3 / 5
-
-Un Trustpilot de 4,4/5 est solide, mais repose sur un volume d'avis modeste (4 800). Cela signifie que la note est moins statistiquement robuste, mais aussi que la base d'utilisateurs est plus homogène et tend à avoir des profils qui ont choisi consciemment Coinhouse pour son accompagnement. Les avis positifs soulignent systématiquement la qualité du support humain.
-
 **Forces :**
 - Premier PSAN enregistré par l'AMF (n° E2020-001, mars 2020), aujourd'hui agréée MiCA par l'AMF (n° A2026-013) : l'historique réglementaire le plus long de tous les opérateurs du panel
 - Support téléphonique FR inférieur à 4 h en semaine : aucun autre broker du panel n'offre cette réactivité — avantage décisif quand votre compte est bloqué
@@ -123,13 +116,6 @@ Bitstack est agréée MiCA par l'AMF (n° A2025-003). Bitstack est une société
 - Chat FR : oui
 - Téléphone FR : non
 - Temps de réponse moyen : inférieur à 24 h
-
-**Notes externes :**
-- Trustpilot : 4,6 / 5 (3 200 avis)
-- App Store : 4,7 / 5
-- Play Store : 4,5 / 5
-
-La note Trustpilot de 4,6/5 est la plus élevée du panel — mais sur le volume d'avis le plus bas (3 200). À interpréter avec précaution statistique : la base d'utilisateurs est encore limitée et homogène (profils débutants satisfaits de la simplicité). Elle signale néanmoins une satisfaction réelle sur le cas d'usage DCA/arrondi, qui est exactement ce que Bitstack a conçu.
 
 **Forces :**
 - DCA automatique natif via arrondi CB : fonctionnalité unique dans le panel — vous épargnez en Bitcoin sans y penser
@@ -196,17 +182,9 @@ SwissBorg est agréée MiCA par l'AMF, via son entité française Blocknodes SAS
 - Téléphone FR : non
 - Temps de réponse moyen : inférieur à 12 h — le meilleur temps de réponse pour un broker sans téléphone dans le panel, comparable à Kraken
 
-**Notes externes :**
-- Trustpilot : 4,5 / 5 (7 800 avis)
-- App Store : 4,7 / 5
-- Play Store : 4,6 / 5
-
-Le Trustpilot de SwissBorg (4,5/5 sur 7 800 avis) est l'un des plus solides du panel en termes de rapport volume/note. La communauté SwissBorg est particulièrement active — la plateforme a construit une base d'utilisateurs engagés, notamment francophones, autour de son token BORG et de sa gouvernance participative. Les avis soulignent la qualité de l'app mobile et la transparence sur les programmes Earn.
-
 **Forces :**
 - Smart Engine (best execution multi-exchange) : vous obtenez automatiquement le meilleur prix disponible sur les marchés connectés sans avoir à comparer manuellement — différenciateur technique unique dans le panel des brokers
 - Programmes Earn avec des APR attractifs sur des actifs variés : rendement passif dans un cadre réglementé MiCA, ce qui n'est pas un détail en 2026
-- App mobile et Trustpilot parmi les mieux notés du panel (4,5/5 TP, 4,7/5 App Store) : l'expérience quotidienne est réellement au niveau de ce que promettent les notes
 
 **Faiblesses :**
 - Token BORG requis pour accéder aux meilleures conditions de frais : c'est une couche de complexité supplémentaire et un risque de volatilité propre au token — si vous n'êtes pas prêt à gérer ça, vous payez le tarif standard
@@ -268,13 +246,6 @@ Bybit est agréée MiCA par la FMA (Finanzmarktaufsicht, Autriche), avec un pass
 - Chat FR : oui
 - Téléphone FR : non
 - Temps de réponse moyen : inférieur à 24 h
-
-**Notes externes :**
-- Trustpilot : 4,2 / 5 (18 000 avis)
-- App Store : 4,6 / 5
-- Play Store : 4,4 / 5
-
-Un Trustpilot de 4,2/5 sur 18 000 avis est correct pour un exchange de cette taille et avec le contexte du hack 2025. Les avis récents (post-hack) restent généralement positifs sur la gestion de crise — les utilisateurs ont été remboursés, ce qui a stabilisé la perception. Les avis négatifs portent principalement sur les délais KYC et quelques cas de gel de compte lors de vérifications post-hack.
 
 **Forces :**
 - Profondeur de carnet sur les perpétuels BTC/ETH parmi les meilleures du panel : si vous faites du trading actif sur des positions importantes, la liquidité de Bybit limite votre slippage
@@ -340,13 +311,6 @@ Revolut est agréée MiCA par la CySEC (Chypre), avec un passeport vers la Franc
 - Chat FR : oui
 - Téléphone FR : non
 - Temps de réponse moyen : inférieur à 24 h — mais avec un bémol : les utilisateurs rapportent des difficultés sur l'escalade (passer du bot de premier niveau à un agent humain compétent prend souvent plusieurs échanges). Le score support de 3,4/5 est le plus bas du panel pour cette raison.
-
-**Notes externes :**
-- Trustpilot : 4,2 / 5 (198 000 avis)
-- App Store : 4,7 / 5
-- Play Store : 4,5 / 5
-
-Le Trustpilot de Revolut (4,2/5 sur 198 000 avis) est le volume d'avis le plus important du panel — de très loin. Cette note reflète l'expérience globale Revolut (banque + crypto + transferts), pas uniquement le service crypto. La note App Store de 4,7/5 est partagée avec Coinbase et SwissBorg comme les meilleures du panel. La partie crypto spécifique est souvent bien notée pour la fluidité de l'achat, mais le support sur les problèmes crypto complexes (verrouillage de compte, questions fiscales) est le talon d'Achille identifié dans les avis détaillés.
 
 **Forces :**
 - Intégration néobanque sans friction : si vous utilisez déjà Revolut au quotidien, acheter du Bitcoin est littéralement aussi simple que faire un virement — zéro nouvelle application, zéro nouveau KYC
@@ -483,7 +447,7 @@ Ce chapitre vous guide selon cinq profils types. Identifiez celui qui vous resse
 
 1. **Kraken (4,5/5)** — sécurité de 4,9/5 (aucun fonds client volé par piratage depuis 2011), MiCA de 4,6/5, support FR par téléphone avec réponse en moins de 12 heures. En cas de blocage, vous pouvez appeler. L'interface Simple de Kraken est accessible, et le Proof-of-Reserves trimestriel vous donne une garantie supplémentaire que vos cryptos sont bien là.
 
-2. **Bitpanda (4,4/5)** — le score MiCA le plus élevé du panel (4,9/5), 99 % des fonds en cold storage, interface mobile exemplaire (UX 4,6/5), Trustpilot de 4,3/5 sur 47 000 avis — le signal de satisfaction client le plus robuste statistiquement dans le panel. Plans d'épargne à partir de 1 € si vous voulez automatiser ensuite.
+2. **Bitpanda (4,4/5)** — le score MiCA le plus élevé du panel (4,9/5), 99 % des fonds en cold storage, interface mobile exemplaire (UX 4,6/5). Plans d'épargne à partir de 1 € si vous voulez automatiser ensuite.
 
 3. **Coinhouse (4,0/5)** — note globale plus basse, mais le meilleur support humain du panel (téléphone inférieur à 4 heures, conseiller dédié). Si vous savez que vous aurez des questions et que vous voulez une réponse d'un être humain francophone, pas d'un chatbot, Coinhouse est le seul acteur du panel à offrir ce niveau d'accompagnement. Les frais plus élevés sont le prix de cette qualité de service.
 
@@ -501,7 +465,7 @@ Ce chapitre vous guide selon cinq profils types. Identifiez celui qui vous resse
 
 1. **Bitstack (4,1/5)** — conçu nativement pour le DCA Bitcoin. Plans d'épargne automatiques hebdomadaires ou mensuels, arrondi sur les dépenses CB, onboarding en 5 minutes. Frais à 1 % sur tout — simple, prévisible. Le catalogue de 25 cryptos ne vous gêne pas si vous visez juste BTC et ETH. Agréée MiCA par l'AMF (n° A2025-003), supervision française directe.
 
-2. **Bitpanda (4,4/5)** — Bitpanda Savings Plans permettent d'automatiser un DCA sur n'importe lequel des 480 actifs (crypto, actions, ETF, or) à partir de 1 €. Le spread de 1 à 2 % est son principal défaut sur ce cas d'usage — pour un DCA de 100 €/mois, comptez environ 1,50 à 2 € de spread supplémentaire par achat. MiCA de 4,9/5, Trustpilot de 4,3/5 — la solidité réglementaire rassure sur le long terme.
+2. **Bitpanda (4,4/5)** — Bitpanda Savings Plans permettent d'automatiser un DCA sur n'importe lequel des 480 actifs (crypto, actions, ETF, or) à partir de 1 €. Le spread de 1 à 2 % est son principal défaut sur ce cas d'usage — pour un DCA de 100 €/mois, comptez environ 1,50 à 2 € de spread supplémentaire par achat. MiCA de 4,9/5 — la solidité réglementaire rassure sur le long terme.
 
 3. **Trade Republic (4,3/5)** — plans d'épargne automatiques crypto + ETF + actions dès 1 € par semaine, frais à 1 % sur tout (lisible et prévisible), licence bancaire et agrément MiCA (BaFin). Si vous voulez construire un portefeuille diversifié crypto + ETF monde dans une seule application avec des prélèvements automatiques, Trade Republic est une option solide. Attention : pas de retrait crypto vers wallet externe — vos BTC restent en custodial.
 
@@ -733,8 +697,6 @@ Définitions concises des termes clés utilisés dans ce guide et dans l'écosys
 
 **Subsidiarisation UE** : processus par lequel une entité non-européenne crée une filiale légale dans un pays membre de l'UE pour obtenir un agrément MiCA. Bybit (Autriche), OKX (Malte) ou Crypto.com (Malte) en sont des exemples.
 
-**Trustpilot** : plateforme d'avis clients en ligne. Dans ce secteur, les notes Trustpilot souffrent d'un biais de sélection : les clients mécontents (souvent suite à un blocage KYC ou un problème de retrait) sont surreprésentés par rapport aux clients satisfaits qui n'ont pas de raison particulière de noter. À lire avec le contexte.
-
 **UTM tracking** : paramètres ajoutés aux URLs pour mesurer l'origine du trafic (ex. : `?utm_source=cryptoreflex`). Les liens affiliés Cryptoreflex utilisent ce tracking pour attribuer les commissions. Ils ne changent pas le prix ni les conditions que vous obtenez sur la plateforme.
 
 **Wallet** : portefeuille numérique qui stocke les clés cryptographiques permettant d'accéder à vos cryptos. Custodial (géré par une plateforme) ou non-custodial (géré par vous via une phrase seed de 12 à 24 mots).
@@ -775,7 +737,7 @@ Si vous pensez qu'une note est injustifiée, vous avez les outils pour le vérif
 
 **cryptoreflex.fr/comparatif** — tableau interactif filtrable des plateformes. Vous pouvez filtrer par critère (frais, sécurité, MiCA, catalogue), trier par note, et comparer deux plateformes côte à côte. Mis à jour à chaque modification des données.
 
-**cryptoreflex.fr/avis/[plateforme]** — fiches détaillées pour chacune des plateformes de ce guide, avec mises à jour mensuelles (frais, statut MiCA, notes Trustpilot). Les fiches en ligne sont plus à jour que ce PDF entre deux versions trimestrielles.
+**cryptoreflex.fr/avis/[plateforme]** — fiches détaillées pour chacune des plateformes de ce guide, avec mises à jour mensuelles (frais, statut MiCA). Les fiches en ligne sont plus à jour que ce PDF entre deux versions trimestrielles.
 
 **cryptoreflex.fr/quiz** — trouvez la plateforme adaptée à votre profil en 5 questions. En moins de 2 minutes, vous répondez à des questions sur votre profil (débutant/expérimenté), vos objectifs (DCA, trading, diversification) et votre attitude au risque. L'outil vous présente les 2 à 3 plateformes les plus adaptées, avec une justification.
 

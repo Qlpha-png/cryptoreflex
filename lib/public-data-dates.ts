@@ -23,17 +23,16 @@ interface PlatformDates {
   fees?: { verified?: { date?: unknown }; cost?: { date?: unknown } };
   support?: { verified?: unknown };
   security?: { verified?: unknown };
-  ratings?: { trustpilotVerified?: unknown };
 }
 
-/** Plateformes : vérifications MiCA, frais, coût d'achat, support, sécurité, notes, et dates d'ensemble du fichier. */
+/** Plateformes : vérifications MiCA, frais, coût d'achat, support, sécurité, et dates d'ensemble du fichier. */
 export function platformsLastUpdated(
   meta: { lastUpdated?: unknown; lastScored?: unknown; feesVerifiedAt?: unknown; micaVerifiedAt?: unknown } | undefined,
   platforms: ReadonlyArray<unknown>,
 ): string | null {
   const vals: unknown[] = [meta?.lastUpdated, meta?.lastScored, meta?.feesVerifiedAt, meta?.micaVerifiedAt];
   for (const p of platforms as ReadonlyArray<PlatformDates | null | undefined>) {
-    vals.push(p?.mica?.lastVerified, p?.fees?.verified?.date, p?.fees?.cost?.date, p?.support?.verified, p?.security?.verified, p?.ratings?.trustpilotVerified);
+    vals.push(p?.mica?.lastVerified, p?.fees?.verified?.date, p?.fees?.cost?.date, p?.support?.verified, p?.security?.verified);
   }
   return latestIso(vals);
 }

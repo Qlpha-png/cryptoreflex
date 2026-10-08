@@ -58,8 +58,6 @@ La **sécurité** va bien au-delà du "la plateforme a-t-elle déjà été hack�
 
 Les **frais réels** ne se lisent pas dans une grille tarifaire standard. Un "frais maker 0,1 %" n'a de sens que si vous comprenez ce qu'il ne comprend pas : le spread implicite sur les ordres au marché, les frais de retrait crypto variables selon le réseau, les frais de conversion fiat-crypto sur les plateformes broker. Cette étude calcule un coût total simulé sur une transaction type de 1 000 € pour chaque plateforme.
 
-Les **notes Trustpilot et App Store** méritent une lecture critique. Une note Trustpilot de 1,6/5 pour Coinbase (pourtant la plateforme la plus régulée du monde) indique davantage un biais de sélection (les clients mécontents notent, les satisfaits moins) qu'une réalité opérationnelle catastrophique. Nous vous donnons les chiffres bruts et le contexte.
-
 ### Pourquoi cette étude est différente
 
 Cryptoreflex est un site lancé en avril 2026. Nous n'avons pas dix ans d'historique d'audience ni de prix de l'industrie. Ce que nous avons, c'est une méthode construite avant le premier article : une méthodologie de scoring publique, vérifiable, et identique pour toutes les plateformes.
@@ -174,7 +172,6 @@ Les données de cette étude ont une date de péremption différente selon les c
 
 - **Statut MiCA** : vérifié sur le registre MiCA de l'ESMA et la liste blanche de l'AMF (dernière vérification : 2 octobre 2026, données ESMA au 29 septembre 2026). Depuis la fin de la période transitoire, le 1er juillet 2026, l'ancien statut PSAN ne vaut plus autorisation.
 - **Frais** : vérifiés chaque trimestre. Les grilles tarifaires changent moins souvent mais les spreads implicites et les frais de réseau varient.
-- **Notes Trustpilot, App Store, Play Store** : actualisées chaque mois.
 - **Bonus de bienvenue** : vérifiés chaque mois — mais conformément à notre politique éditoriale (et à la loi sur les influenceurs), nous n'affichons aucun montant chiffré de bonus. Le wording standard est "Bonus actuel — voir conditions sur la plateforme". Les montants et conditions variant chaque semaine, afficher "100 €" serait soit inexact soit trompeur.
 - **Refonte complète d'une fiche** : au minimum une fois par an, avec re-test pratique des parcours.
 
@@ -189,7 +186,7 @@ Le tableau ci-dessous est trié par score global décroissant. Toutes les notes 
 | Rang | Plateforme | Catégorie | Global /5 | Forces | Faiblesses | Idéal pour |
 |---:|---|---|---:|---|---|---|
 | 1 | Kraken | Exchange | 4,5 | Sécurité, support FR | UX complexe, frais instant | Expérimentés sécurité |
-| 2 | Coinbase | Exchange | 4,4 | Régulation, UX simple | Frais élevés, Trustpilot bas | Débutants prudents |
+| 2 | Coinbase | Exchange | 4,4 | Régulation, UX simple | Frais élevés | Débutants prudents |
 | 2 | Bitpanda | Broker | 4,4 | MiCA, multi-actifs | Spread élevé, pas de levier | Long terme européen |
 | 2 | SwissBorg | Broker | 4,4 | Best execution, yield | Token BORG requis, dépôt 50 € min | Yield intermédiaire |
 | 5 | Trade Republic | Broker | 4,3 | UX mobile, plans épargne | Catalogue limité, pas retrait crypto | Débutant tout-en-un |
@@ -257,13 +254,6 @@ Coinbase est agréée MiCA par la CSSF (Luxembourg), avec un passeport vers la F
 - Téléphone FR : oui
 - Temps de réponse moyen : inférieur à 24 h
 
-**Notes externes :**
-- Trustpilot : 1,6 / 5 (28 500 avis)
-- App Store : 4,7 / 5
-- Play Store : 4,6 / 5
-
-La dissonance entre le Trustpilot (1,6/5) et les stores mobiles (4,6-4,7/5) mérite une explication. Les notes Trustpilot de Coinbase sont historiquement tirées vers le bas par les plaintes relatives aux blocages de compte KYC — un phénomène structurel sur les plateformes très régulées qui appliquent des procédures anti-blanchiment strictes. Les stores mobiles reflètent l'expérience quotidienne de trading, qui est réellement fluide. Les deux lectures sont vraies en même temps.
-
 **Forces :**
 - Cotée NASDAQ (COIN) : transparence financière trimestrielle, obligations légales US + UE cumulées
 - Agrément MiCA (CSSF, Luxembourg) avec passeport vers la France
@@ -271,7 +261,6 @@ La dissonance entre le Trustpilot (1,6/5) et les stores mobiles (4,6-4,7/5) mér
 
 **Faiblesses :**
 - Frais d'achat instantané à 1,49 % : parmi les plus élevés du panel pour le mode d'achat utilisé par la grande majorité des débutants
-- Trustpilot 1,6/5 : signal à surveiller même si le contexte atténue la sévérité
 - Incident de sécurité en 2025 : pas de pertes de fonds, mais exposition de données personnelles — à connaître
 
 **Verdict Cryptoreflex :**
@@ -336,13 +325,6 @@ Bitpanda est agréée MiCA par la FMA (Autriche), avec un passeport vers la Fran
 - Téléphone FR : non
 - Temps de réponse moyen : inférieur à 24 h
 
-**Notes externes :**
-- Trustpilot : 4,3 / 5 (47 000 avis)
-- App Store : 4,7 / 5
-- Play Store : 4,5 / 5
-
-Bitpanda est l'une des rares grandes plateformes crypto à maintenir un Trustpilot au-dessus de 4/5 sur un volume significatif d'avis (47 000). C'est un signal fort de satisfaction client cohérente, pas uniquement d'une base d'avis restreinte facile à maintenir positive.
-
 **Forces :**
 - Régulation européenne complète : agrément MiCA (FMA, Autriche) + MiFID II pour les actions/ETF — double agrément unique dans le panel
 - Plans d'épargne automatiques : DCA programmable sur crypto, actions, ETF, métaux depuis 1 €
@@ -406,13 +388,6 @@ Kraken est agréée MiCA par la Banque centrale d'Irlande, avec un passeport ver
 - Chat FR : oui
 - Téléphone FR : oui — fait rare dans le panel, partagé uniquement avec Coinbase et Coinhouse
 - Temps de réponse moyen : inférieur à 12 h — le meilleur du panel parmi les exchanges
-
-**Notes externes :**
-- Trustpilot : 3,5 / 5 (9 500 avis)
-- App Store : 4,6 / 5
-- Play Store : 4,5 / 5
-
-Un Trustpilot de 3,5/5 sur un volume modéré (9 500 avis) est dans la moyenne du secteur. Les plaintes portent principalement sur l'interface Pro jugée complexe par les néo-utilisateurs et quelques cas de blocages KYC. Le support par téléphone permet généralement de résoudre ces situations plus rapidement que chez les concurrents.
 
 **Forces :**
 - Aucun hack majeur en 14 ans d'existence (depuis 2011) : le meilleur track record de sécurité du secteur
@@ -485,13 +460,6 @@ Trade Republic est agréée MiCA par la BaFin (Allemagne), avec un passeport ver
 - Chat FR : oui
 - Téléphone FR : non
 - Temps de réponse moyen : inférieur à 48 h
-
-**Notes externes :**
-- Trustpilot : 3,8 / 5 (28 000 avis)
-- App Store : 4,6 / 5
-- Play Store : 4,5 / 5
-
-Un Trustpilot de 3,8/5 sur 28 000 avis est respectable pour un broker. Les plaintes portent principalement sur des délais lors du traitement des transferts de portefeuilles (ISP) et quelques difficultés KYC à l'ouverture de compte. L'expérience quotidienne sur l'app mobile est très bien notée.
 
 **Forces :**
 - Régulé BaFin + agrément MiCA CASP + licence bancaire : triple protection réglementaire unique dans le panel

@@ -1,0 +1,557 @@
+{
+  "_lisezmoi": "Registre de fraîcheur des 51 familles de données de cryptoreflex.fr (+ 18b), lot Z1 du 08/10/2026 (architecture 0 €, § 6.2). Numéros = carte de fraîcheur du 08/10/2026. Pour chaque famille : source, robot, cadence, âge maximal (ageMaxH, au-delà ⚠️) et âge critique (critiqueH, au-delà ❌), et la façon de lire la VRAIE date (lecture). Lu chaque nuit par la sentinelle complète (scripts/sentinelle.mjs, scripts/lib/fraicheur-registre.mjs) : chaque famille reçoit ✅, ⚠️ ou ❌ ; une date illisible vaut ❌ (jamais « inconnue »). Une famille ❌ ouvre un ticket dédoublonné ; un ticket « état des 51 familles » est publié chaque dimanche. Méthodes de lecture : kv, workflow, fichier, constante, dossier, page, page-calcul, supabase, recomptage, echeance-jeu, absence, aucune.",
+  "version": 1,
+  "majLe": "2026-10-08",
+  "familles": [
+    {
+      "id": "1",
+      "famille": "Cours du bandeau, de l'accueil et du top 50",
+      "source": "CoinGecko (S3, licence à trancher) ; CoinMarketCap Basic (S1) prévu au lot Z2",
+      "robot": "Vercel Cron refresh-ticker-prices (R1)",
+      "cadence": "toutes les 10 min",
+      "ageMaxH": 0.5,
+      "critiqueH": 1.25,
+      "lecture": { "methode": "kv", "cle": "cg-ticker-prices:v1", "champ": "fetchedAt", "repliCle": "cg-ticker-prices:stale:v1", "explication": "champ fetchedAt de la clé KV cg-ticker-prices:v1 (secours : clé stale, écrite une fois par heure)" }
+    },
+    {
+      "id": "2",
+      "famille": "Instantané de secours price-source:top-snapshot",
+      "source": "même source que n° 1",
+      "robot": "Vercel Cron update-static-prices",
+      "cadence": "toutes les heures",
+      "ageMaxH": 3,
+      "critiqueH": 6,
+      "lecture": { "methode": "kv", "cle": "cron:update-static-prices:last", "champ": "at", "trace": true, "explication": "trace KV « dernier passage + résultat » (lib/cron-trace.ts) : heure et ok" }
+    },
+    {
+      "id": "3",
+      "famille": "Détails des fiches (ATH, ATL, offre, courbe 7 j)",
+      "source": "CoinGecko (S3) ; archive maison prévue (R4)",
+      "robot": "GitHub refresh-static-details-kv (R3), lancé par le Gardien",
+      "cadence": "toutes les 6 h",
+      "ageMaxH": 16,
+      "critiqueH": 32,
+      "lecture": { "methode": "workflow", "fichier": "refresh-static-details-kv.yml", "explication": "heure du dernier passage RÉUSSI du workflow (API GitHub)" }
+    },
+    {
+      "id": "4",
+      "famille": "Prix, capitalisation et rang des fiches du top 500",
+      "source": "CoinGecko (S3) ; CoinMarketCap par identifiant prévu (S1, lot Z3)",
+      "robot": "GitHub refresh-prices-db (R2), Gardien 08/14/20 h",
+      "cadence": "3 fois par jour",
+      "ageMaxH": 16,
+      "critiqueH": 48,
+      "lecture": { "methode": "supabase", "table": "cryptos", "colonne": "price_updated_at", "repliColonne": "updated_at", "filtre": "is_published=eq.true&price_usd=not.is.null&market_cap_rank=lte.500", "mode": "plusAncienne", "explication": "plus ancienne date de cours (price_updated_at, sinon updated_at tant que la migration du 08/10 n'est pas lancée) des fiches publiées de rang 1 à 500" }
+    },
+    {
+      "id": "5",
+      "famille": "Prix, capitalisation et rang des fiches hors top 500",
+      "source": "aucune aujourd'hui ; CoinMarketCap (S1) et DexScreener (S2) prévus au lot Z3",
+      "robot": "aucun (R2 étendu au lot Z3)",
+      "cadence": "1 fois par jour",
+      "ageMaxH": 24,
+      "critiqueH": 48,
+      "lecture": { "methode": "supabase", "table": "cryptos", "colonne": "price_updated_at", "repliColonne": "updated_at", "filtre": "is_published=eq.true&price_usd=not.is.null&or=(market_cap_rank.gt.500,market_cap_rank.is.null)", "mode": "plusAncienne", "explication": "plus ancienne date de cours des fiches publiées hors du top 500 (l'affichage masque déjà tout cours de plus de 48 h)" }
+    },
+    {
+      "id": "6",
+      "famille": "/marche, heatmap, gainers-losers",
+      "source": "données des n° 1 et 4",
+      "robot": "rendu ISR 900 s",
+      "cadence": "15 min",
+      "ageMaxH": 1,
+      "critiqueH": 3,
+      "lecture": { "methode": "page", "chemin": "/marche", "motif": "(?:asOf|updatedAt)\\\\?\"\\s*:\\s*\\\\?\"(\\d{4}-\\d{2}-\\d{2}T[0-9:.]+Z)", "mode": "plusRecente", "format": "iso", "explication": "horodatage asOf du relevé, lu dans la page rendue par le serveur" }
+    },
+    {
+      "id": "7",
+      "famille": "Chiffres globaux de l'accueil (capitalisation, dominance)",
+      "source": "données du n° 1 (dérivation prévue au lot Z2)",
+      "robot": "rendu ISR",
+      "cadence": "15 min",
+      "ageMaxH": 1,
+      "critiqueH": 3,
+      "lecture": { "methode": "page", "chemin": "/", "motif": "(?:asOf|updatedAt)\\\\?\"\\s*:\\s*\\\\?\"(\\d{4}-\\d{2}-\\d{2}T[0-9:.]+Z)", "mode": "plusRecente", "format": "iso", "explication": "horodatage asOf / updatedAt du relevé, lu dans la page d'accueil rendue par le serveur" }
+    },
+    {
+      "id": "8",
+      "famille": "Fear & Greed",
+      "source": "alternative.me (S7, attribution à côté du chiffre)",
+      "robot": "rendu ISR 1 h",
+      "cadence": "1 fois par jour",
+      "ageMaxH": 36,
+      "critiqueH": 72,
+      "lecture": { "methode": "page", "chemin": "/marche/fear-greed", "motif": "Dernière mise à jour[\\s\\S]{0,60}?<time [dD]ate[tT]ime=\"([^\"]+)\"", "mode": "plusRecente", "format": "auto", "explication": "attribut dateTime de « Dernière mise à jour » (horodatage de la valeur d'alternative.me)" }
+    },
+    {
+      "id": "9",
+      "famille": "Taux de change du convertisseur",
+      "source": "taux de secours écrit dans le code ; BCE (S6) prévue au lot Z4 (R6)",
+      "robot": "aucun (R6 au lot Z4)",
+      "cadence": "1 fois par jour ouvré",
+      "ageMaxH": 24,
+      "critiqueH": 96,
+      "lecture": { "methode": "constante", "fichier": "lib/fx-fallback.ts", "motif": "FX_FALLBACK\\s*=\\s*\\{[^}]*date:\\s*\"(\\d{4}-\\d{2}-\\d{2})\"", "explication": "date du taux de secours FX_FALLBACK (la BCE échoue depuis Vercel : ce secours est servi)" }
+    },
+    {
+      "id": "10",
+      "famille": "Historique de prix 2026 (/historique-prix)",
+      "source": "fichier figé (Binance Vision, S26, gardé : décision de Kev du 08/10/2026) ; archive maison prévue (R4)",
+      "robot": "aucun (scripts/generate-historical-ohlc.mjs lancé à la main)",
+      "cadence": "1 fois par mois",
+      "ageMaxH": 840,
+      "critiqueH": 1080,
+      "lecture": { "methode": "fichier", "fichier": "data/historical-ohlc.json", "chemin": "meta._generatedAt", "mode": "plusAncienne", "explication": "meta._generatedAt du fichier d'historique" }
+    },
+    {
+      "id": "11",
+      "famille": "Fourchettes de capitalisation des 90 « gems »",
+      "source": "relevé éditorial ; capitalisation de R2 prévue",
+      "robot": "aucun",
+      "cadence": "1 fois par semaine",
+      "ageMaxH": 168,
+      "critiqueH": 336,
+      "lecture": { "methode": "fichier", "fichier": "data/hidden-gems.json", "chemin": "_meta.lastUpdated", "mode": "plusAncienne", "explication": "_meta.lastUpdated de data/hidden-gems.json (aucune date par entrée)" }
+    },
+    {
+      "id": "12",
+      "famille": "Actus du jour",
+      "source": "flux RSS des médias (S20) ; rédaction par l'API Anthropic",
+      "robot": "GitHub daily-content (cron-job.org 04:30 + filet du Gardien 04:45)",
+      "cadence": "1 fois par jour",
+      "ageMaxH": 26,
+      "critiqueH": 72,
+      "lecture": { "methode": "page", "chemin": "/feed.xml", "motif": "<pubDate>([^<]+)</pubDate>", "mode": "plusRecente", "format": "rss", "explication": "date de publication la plus récente du flux RSS du site" }
+    },
+    {
+      "id": "13",
+      "famille": "Analyses techniques en euros (5 cryptos)",
+      "source": "Kraken OHLC (S25, à confirmer)",
+      "robot": "GitHub daily-content",
+      "cadence": "1 fois par jour",
+      "ageMaxH": 28,
+      "critiqueH": 60,
+      "lecture": { "methode": "page", "chemin": "/analyses-techniques", "motif": "data-calcul=\"[a-z0-9-]+\\|(\\d{4}-\\d{2}-\\d{2}T[0-9:.]+Z)\"", "mode": "plusAncienne", "format": "iso", "explication": "plus ancien horodatage data-calcul des 5 analyses du tableau du jour" }
+    },
+    {
+      "id": "14",
+      "famille": "Article long hebdomadaire",
+      "source": "rédaction par l'API Anthropic",
+      "robot": "GitHub weekly-blog (Gardien le samedi 08:00)",
+      "cadence": "1 fois par semaine",
+      "ageMaxH": 204,
+      "critiqueH": 360,
+      "lecture": { "methode": "dossier", "dossier": "content/articles", "champ": "date", "mode": "plusRecente", "explication": "date (en-tête « date: ») de l'article le plus récent de content/articles" }
+    },
+    {
+      "id": "15",
+      "famille": "Articles existants (date « mis à jour »)",
+      "source": "sources citées par chaque article",
+      "robot": "aucun (la veille couvre une partie des lois)",
+      "cadence": "à chaque loi ou chiffre cité",
+      "ageMaxH": 4320,
+      "critiqueH": 8760,
+      "lecture": { "methode": "dossier", "dossier": "content/articles", "champ": "lastUpdated", "repliChamp": "date", "mode": "plusAncienne", "explication": "plus ancienne date « lastUpdated: » (à défaut « date: ») des articles de content/articles" }
+    },
+    {
+      "id": "16",
+      "famille": "Statut MiCA des 34 plateformes",
+      "source": "ESMA CASPS.csv (S4) ; AMF (S5) prévue",
+      "robot": "veille de nuit (R5) ; correction humaine",
+      "cadence": "1 fois par semaine",
+      "ageMaxH": 336,
+      "critiqueH": 672,
+      "lecture": { "methode": "fichier", "fichier": "data/veille/mica-auto.json", "chemin": "plateformes.*", "mode": "plusAncienne", "champDetail": "controle", "exigerIds": { "fichier": "data/platforms.json", "chemin": "platforms[]", "exclureCategorie": "wallet" }, "repli": { "methode": "fichier", "fichier": "data/platforms.json", "chemin": "platforms[].mica.lastVerified", "mode": "plusAncienne" }, "explication": "plus ancienne date de contrôle sans écart au registre ESMA parmi les plateformes (data/veille/mica-auto.json, plateformes.*) ; une plateforme de data/platforms.json sans date = ❌ ; tant que le fichier est vide, plus ancienne relecture humaine mica.lastVerified" }
+    },
+    {
+      "id": "17",
+      "famille": "Vérificateur MiCA (/outils/verificateur-mica)",
+      "source": "données du n° 16",
+      "robot": "veille de nuit (R5)",
+      "cadence": "1 fois par semaine",
+      "ageMaxH": 336,
+      "critiqueH": 672,
+      "lecture": { "methode": "fichier", "fichier": "data/veille/mica-auto.json", "chemin": "plateformes.*", "mode": "plusAncienne", "champDetail": "controle", "exigerIds": { "fichier": "data/platforms.json", "chemin": "platforms[]", "exclureCategorie": "wallet" }, "repli": { "methode": "fichier", "fichier": "data/platforms.json", "chemin": "platforms[].mica.lastVerified", "mode": "plusAncienne" }, "explication": "même lecture que le n° 16 (le vérificateur lit les mêmes données)" }
+    },
+    {
+      "id": "18",
+      "famille": "Liste blanche AMF, registre PSAN",
+      "source": "AMF via data.gouv.fr (S5, prévue au lot Z4)",
+      "robot": "aucun (ajout à R5 au lot Z4)",
+      "cadence": "1 fois par semaine",
+      "ageMaxH": 168,
+      "critiqueH": 336,
+      "lecture": { "methode": "fichier", "fichier": "data/psan-registry.json", "chemin": "_meta.lastUpdated", "mode": "plusAncienne", "explication": "_meta.lastUpdated de data/psan-registry.json" }
+    },
+    {
+      "id": "18b",
+      "famille": "Liste noire AMF (alerte d'usurpation)",
+      "source": "AMF via data.gouv.fr (S5, liste noire ; e-mails jamais republiés)",
+      "robot": "aucun (ajout à R5 au lot Z4)",
+      "cadence": "1 fois par jour",
+      "ageMaxH": 24,
+      "critiqueH": 48,
+      "lecture": { "methode": "aucune", "raison": "aucun robot ne lit encore la liste noire de l'AMF (ajout prévu au lot Z4)", "explication": "aucune date à lire tant que le robot n'existe pas : la famille reste ❌" }
+    },
+    {
+      "id": "19",
+      "famille": "Frais en % des plateformes suivies par la veille",
+      "source": "pages tarifaires officielles (S22)",
+      "robot": "veille de nuit (empreintes des grilles) puis correction humaine",
+      "cadence": "1 fois par mois",
+      "ageMaxH": 2160,
+      "critiqueH": 2880,
+      "lecture": { "methode": "fichier", "fichier": "data/platforms.json", "chemin": "platforms[].fees.verified.date", "mode": "plusAncienne", "exclureIds": ["binance", "bitget", "gemini", "nexo", "wirex", "paypal-crypto", "bitfinex", "bsdex", "plus500", "anycoin-direct", "stackin"], "explication": "plus ancienne date fees.verified.date des plateformes suivies par la veille" }
+    },
+    {
+      "id": "20",
+      "famille": "Frais des 11 plateformes hors veille",
+      "source": "pages tarifaires officielles (S22), lisibles pour 3 seulement",
+      "robot": "aucun",
+      "cadence": "1 fois par mois",
+      "ageMaxH": 2160,
+      "critiqueH": 2880,
+      "lecture": { "methode": "fichier", "fichier": "data/platforms.json", "chemin": "platforms[].fees.verified.date", "mode": "plusAncienne", "ids": ["binance", "bitget", "gemini", "nexo", "wirex", "paypal-crypto", "bitfinex", "bsdex", "plus500", "anycoin-direct", "stackin"], "explication": "plus ancienne date fees.verified.date des 11 plateformes hors veille présentes dans les données" }
+    },
+    {
+      "id": "21",
+      "famille": "En-tête et pied de /comparatif/frais",
+      "source": "calculé depuis les lignes (n° 19 et 20)",
+      "robot": "calcul au rendu",
+      "cadence": "suit les lignes",
+      "ageMaxH": 2160,
+      "critiqueH": 2880,
+      "lecture": { "methode": "fichier", "fichier": "data/platforms.json", "chemin": "platforms[].fees.verified.date", "mode": "plusAncienne", "explication": "l'en-tête affiche la période des lignes : sa date réelle est la plus ancienne fees.verified.date" }
+    },
+    {
+      "id": "22",
+      "famille": "Coût d'un achat de 100 € / 1 000 €",
+      "source": "grilles officielles (S22)",
+      "robot": "veille partielle",
+      "cadence": "1 fois par mois",
+      "ageMaxH": 2160,
+      "critiqueH": 2880,
+      "lecture": { "methode": "fichier", "fichier": "data/platforms.json", "chemin": "platforms[].fees.cost.date", "mode": "plusAncienne", "exigerTous": "platforms[]", "explication": "plus ancienne date fees.cost.date ; une plateforme sans date rend la famille ❌" }
+    },
+    {
+      "id": "23",
+      "famille": "Support client",
+      "source": "pages officielles d'assistance",
+      "robot": "aucun (revue périodique R14 prévue)",
+      "cadence": "1 fois par trimestre",
+      "ageMaxH": 2160,
+      "critiqueH": 4320,
+      "lecture": { "methode": "fichier", "fichier": "data/platforms.json", "chemin": "platforms[].support.verified", "mode": "plusAncienne", "explication": "plus ancienne date support.verified" }
+    },
+    {
+      "id": "24",
+      "famille": "Sécurité, incidents, piratages",
+      "source": "pages officielles ; flux RSS (S20) pour la détection prévue (R9)",
+      "robot": "aucun (R9 prévu au lot Z6)",
+      "cadence": "1 fois par semaine",
+      "ageMaxH": 336,
+      "critiqueH": 672,
+      "lecture": { "methode": "fichier", "fichier": "data/platforms.json", "chemin": "platforms[].security.verified", "mode": "plusAncienne", "explication": "plus ancienne date security.verified" }
+    },
+    {
+      "id": "25",
+      "famille": "Notes Trustpilot",
+      "source": "Trustpilot (S31) exclue : notes retirées le 08/10/2026, seul un lien est affiché",
+      "robot": "aucun (rien à mettre à jour)",
+      "cadence": "aucune",
+      "ageMaxH": 24,
+      "critiqueH": 48,
+      "lecture": { "methode": "absence", "fichiers": ["data/platforms.json", "data/wallets.json", "data/partner-reviews.ts", "content/lead-magnets/guide-plateformes-crypto-2026.md", "content/lead-magnets/guide-plateformes-crypto-2026-PART-A.md", "content/lead-magnets/guide-plateformes-crypto-2026-PART-B.md"], "interdits": ["\"trustpilot\":", "\"trustpilotCount\":", "\"trustpilotVerified\":", "\"trustpilotNote\":"], "motifs": ["Trustpilot[^\\n]{0,40}\\d[,.]\\d\\s?/\\s?5", "Trustpilot[^\\n]{0,40}\\d[\\d  ]{2,}\\s*avis\\b", "TrustScore"], "dossiers": [{ "dossier": "content/articles", "extension": ".mdx" }], "explication": "contrôle du jour : aucun champ de note Trustpilot dans les données publiées, et aucune note Trustpilot (« Trustpilot … x,y/5 », nombre d'avis) dans les données, les sources du guide PDF et les articles (sinon ❌)" }
+    },
+    {
+      "id": "26",
+      "famille": "Scores Cryptoreflex (/top, /comparatif)",
+      "source": "calcul à partir des données",
+      "robot": "aucun (scripts/compute-platform-scores.mjs lancé à la main ; R12 prévu)",
+      "cadence": "à chaque changement de donnée",
+      "ageMaxH": 720,
+      "critiqueH": 2160,
+      "lecture": { "methode": "fichier", "fichier": "data/platforms.json", "chemin": "_meta.lastScored", "mode": "plusRecente", "pasAvant": { "fichier": "data/platforms.json", "chemin": "platforms[].fees.verified.date", "mode": "plusRecente" }, "explication": "_meta.lastScored ; ⚠️ au moins si des frais ont été relevés après le dernier calcul" }
+    },
+    {
+      "id": "27",
+      "famille": "Lois, BOFiP, barème, seuils",
+      "source": "Légifrance (S11), BOFiP (S12), impots.gouv (S13)",
+      "robot": "veille de nuit (R5) ; correction humaine, jamais de fusion automatique",
+      "cadence": "à chaque texte",
+      "ageMaxH": 720,
+      "critiqueH": 1440,
+      "lecture": { "methode": "fichier", "fichier": "data/veille/etat.json", "chemin": "_enregistre", "mode": "plusRecente", "et": [{ "methode": "workflow", "fichier": "veille-officielle.yml" }], "explication": "la plus ancienne de deux dates : _enregistre de data/veille/etat.json (dernière référence relue et acceptée) et dernier passage réussi de veille-officielle.yml (une nuit où Légifrance n'est pas lu fait échouer la veille)" }
+    },
+    {
+      "id": "28",
+      "famille": "DAC8, calendrier fiscal, échéances de déclaration",
+      "source": "impots.gouv (S13), Légifrance (S11) ; EUR-Lex (S14) non prouvé",
+      "robot": "aucun (absents de data/veille/sources.json ; ajout au lot Z6)",
+      "cadence": "à chaque texte, et chaque année",
+      "ageMaxH": 720,
+      "critiqueH": 1440,
+      "lecture": { "methode": "aucune", "raison": "DAC8 et le calendrier fiscal ne sont suivis par aucun robot (dates écrites dans des phrases)", "explication": "aucune date à lire tant que la veille ne suit pas ces sources : la famille reste ❌" }
+    },
+    {
+      "id": "29",
+      "famille": "Statut MiCA des wallets",
+      "source": "ESMA (S4) si le prestataire y figure",
+      "robot": "aucun",
+      "cadence": "1 fois par mois",
+      "ageMaxH": 2160,
+      "critiqueH": 4320,
+      "lecture": { "methode": "fichier", "fichier": "data/wallets.json", "chemin": "platforms[].mica.lastVerified", "mode": "plusAncienne", "explication": "plus ancienne date mica.lastVerified de data/wallets.json" }
+    },
+    {
+      "id": "30",
+      "famille": "Tarifs des partenaires fiscaux",
+      "source": "pages des partenaires (CGU non lues)",
+      "robot": "aucun (empreinte prévue dans R5)",
+      "cadence": "1 fois par trimestre",
+      "ageMaxH": 2160,
+      "critiqueH": 4320,
+      "lecture": { "methode": "fichier", "fichier": "data/fiscal-tools.json", "chemin": "_meta.lastUpdated", "mode": "plusAncienne", "explication": "_meta.lastUpdated de data/fiscal-tools.json (données de l'API fiscal-tools)" }
+    },
+    {
+      "id": "31",
+      "famille": "_meta.lastUpdated de l'API publique",
+      "source": "calculé depuis les données (lot A)",
+      "robot": "calcul au build",
+      "cadence": "suit les données",
+      "ageMaxH": 2160,
+      "critiqueH": 4320,
+      "lecture": { "methode": "page", "chemin": "/api/public/platforms", "motif": "\"lastUpdated\"\\s*:\\s*\"(\\d{4}-\\d{2}-\\d{2}[^\"]*)\"", "mode": "plusRecente", "format": "iso", "explication": "_meta.lastUpdated servi par /api/public/platforms" }
+    },
+    {
+      "id": "32",
+      "famille": "Rendements de stablecoins",
+      "source": "relevé éditorial ; Aave (S17), Morpho (S18) prévus (R8) ; DefiLlama : décision en attente",
+      "robot": "aucun (R8 au lot Z5)",
+      "cadence": "1 fois par semaine",
+      "ageMaxH": 336,
+      "critiqueH": 672,
+      "lecture": { "methode": "constante", "fichier": "lib/stablecoin-yields.ts", "motif": "STABLECOIN_YIELDS_LAST_UPDATED\\s*=\\s*\"([\\d-]+)\"", "explication": "constante STABLECOIN_YIELDS_LAST_UPDATED" }
+    },
+    {
+      "id": "33",
+      "famille": "Rendements de staking",
+      "source": "relevé éditorial ; Lido (S15), Rocket Pool (S16), Kraken (S19) prévus (R8)",
+      "robot": "aucun (R8 au lot Z5)",
+      "cadence": "1 semaine à 1 mois",
+      "ageMaxH": 336,
+      "critiqueH": 720,
+      "lecture": { "methode": "constante", "fichier": "lib/staking-rates.ts", "motif": "STAKING_PAIRS_RELEVE\\s*=\\s*\"([\\d-]+)\"", "explication": "constante STAKING_PAIRS_RELEVE (mois seul = 1er du mois, jamais rajeuni)" }
+    },
+    {
+      "id": "34",
+      "famille": "Calendrier /calendrier",
+      "source": "Fed (S8) pour le FOMC ; événements crypto tenus en session",
+      "robot": "GitHub refresh-fomc (R7) pour le FOMC ; weekly-events sans clé",
+      "cadence": "1 fois par semaine",
+      "ageMaxH": 720,
+      "critiqueH": 1440,
+      "lecture": { "methode": "constante", "fichier": "lib/events-seed.ts", "motif": "EVENTS_SEED_REVU_LE\\s*=\\s*\"([\\d-]+)\"", "explication": "constante EVENTS_SEED_REVU_LE (dernière revue du seed)" }
+    },
+    {
+      "id": "35",
+      "famille": "Événements par crypto",
+      "source": "aucune sous licence (CoinMarketCal, Tokenomist exclus ; DefiLlama : décision en attente)",
+      "robot": "aucun (revue périodique R14)",
+      "cadence": "1 fois par mois",
+      "ageMaxH": 720,
+      "critiqueH": 1440,
+      "lecture": { "methode": "fichier", "fichier": "data/crypto-events.json", "chemin": "_meta.lastUpdated", "mode": "plusAncienne", "explication": "_meta.lastUpdated de data/crypto-events.json" }
+    },
+    {
+      "id": "36",
+      "famille": "Événements « evergreen »",
+      "source": "aucune",
+      "robot": "aucun (revue périodique R14)",
+      "cadence": "1 fois par trimestre",
+      "ageMaxH": 2160,
+      "critiqueH": 4320,
+      "lecture": { "methode": "fichier", "fichier": "data/events.json", "chemin": "_meta.lastUpdated", "mode": "plusAncienne", "explication": "_meta.lastUpdated de data/events.json" }
+    },
+    {
+      "id": "37",
+      "famille": "Airdrops",
+      "source": "aucune source sous licence",
+      "robot": "statut calculé chaque jour ; liste tenue en session",
+      "cadence": "1 fois par semaine",
+      "ageMaxH": 336,
+      "critiqueH": 672,
+      "lecture": { "methode": "fichier", "fichier": "data/airdrops.json", "chemin": "_meta.lastUpdated", "mode": "plusAncienne", "explication": "_meta.lastUpdated de data/airdrops.json" }
+    },
+    {
+      "id": "38",
+      "famille": "Roadmaps",
+      "source": "aucune",
+      "robot": "aucun (revue périodique R14)",
+      "cadence": "1 fois par trimestre",
+      "ageMaxH": 4320,
+      "critiqueH": 8760,
+      "lecture": { "methode": "fichier", "fichier": "data/crypto-roadmaps.json", "chemin": "_meta.lastUpdated", "mode": "plusAncienne", "explication": "_meta.lastUpdated de data/crypto-roadmaps.json" }
+    },
+    {
+      "id": "39",
+      "famille": "Scores de décentralisation",
+      "source": "aucune",
+      "robot": "aucun (revue périodique R14)",
+      "cadence": "1 fois par trimestre",
+      "ageMaxH": 2880,
+      "critiqueH": 5760,
+      "lecture": { "methode": "fichier", "fichier": "data/decentralization-scores.json", "chemin": "lastUpdated", "mode": "plusAncienne", "explication": "lastUpdated de data/decentralization-scores.json" }
+    },
+    {
+      "id": "40",
+      "famille": "Résumés de whitepapers",
+      "source": "documents officiels des projets",
+      "robot": "aucun",
+      "cadence": "1 fois par an",
+      "ageMaxH": 8760,
+      "critiqueH": 17520,
+      "lecture": { "methode": "fichier", "fichier": "data/whitepaper-tldrs.json", "chemin": "_meta.lastUpdated", "mode": "plusAncienne", "explication": "_meta.lastUpdated de data/whitepaper-tldrs.json" }
+    },
+    {
+      "id": "41",
+      "famille": "Fiches éditoriales (top 10)",
+      "source": "chiffres : R2 ; texte : aucune",
+      "robot": "aucun (revue périodique R14)",
+      "cadence": "1 fois par trimestre",
+      "ageMaxH": 4320,
+      "critiqueH": 8760,
+      "lecture": { "methode": "fichier", "fichier": "data/top-cryptos.json", "chemin": "_meta.lastUpdated", "mode": "plusAncienne", "explication": "_meta.lastUpdated de data/top-cryptos.json (aucune date par fiche dans le fichier)" }
+    },
+    {
+      "id": "42",
+      "famille": "Textes des fiches LLM",
+      "source": "génération par lots (batch-fiches)",
+      "robot": "aucun (batch-fiches lancé à la main)",
+      "cadence": "1 fois par mois",
+      "ageMaxH": 720,
+      "critiqueH": 1440,
+      "lecture": { "methode": "supabase", "table": "cryptos", "colonne": "last_refreshed_at", "filtre": "is_published=eq.true", "mode": "plusAncienne", "explication": "plus ancienne date de texte (last_refreshed_at) des fiches publiées" }
+    },
+    {
+      "id": "43",
+      "famille": "Compteurs du site (data/site-counts.json)",
+      "source": "le site lui-même",
+      "robot": "sentinelle complète (scripts/update-site-counts.mjs)",
+      "cadence": "1 fois par jour",
+      "ageMaxH": 30,
+      "critiqueH": 48,
+      "lecture": { "methode": "recomptage", "explication": "recomptage réussi dans le même passage de la sentinelle complète (étape « Recompter les chiffres du site »)" }
+    },
+    {
+      "id": "44",
+      "famille": "Reflex Cards : jour de saison, sorties",
+      "source": "calcul",
+      "robot": "calcul à chaque requête",
+      "cadence": "continu",
+      "ageMaxH": 1,
+      "critiqueH": 2,
+      "lecture": { "methode": "page-calcul", "chemin": "/cartes/jouer", "motif": "GAME_DAY=(\\d+)", "jour1": "2026-10-02", "explication": "GAME_DAY de la page du jeu comparé au jour attendu (jour de Paris − 02/10/2026 + 1 ; la veille admise jusqu'à 2 h) ; écart = ❌" }
+    },
+    {
+      "id": "45",
+      "famille": "Reflex Cards : missions, Comptoir",
+      "source": "création de contenu en session",
+      "robot": "aucun (alerte de la sentinelle à J-30)",
+      "cadence": "environ 3 mois d'avance",
+      "ageMaxH": 720,
+      "critiqueH": 0,
+      "lecture": { "methode": "echeance-jeu", "fichier": "data/reflex-cards-rules.json", "chemin": "/cartes/jouer", "explication": "échéance du contenu programmé (dernier jour d'objets éphémères, dernière mission) : ✅ à plus de 30 jours, ⚠️ à 30 jours ou moins, ❌ dépassée" }
+    },
+    {
+      "id": "46",
+      "famille": "Glossaire",
+      "source": "rédaction",
+      "robot": "aucun",
+      "cadence": "1 fois par an",
+      "ageMaxH": 8760,
+      "critiqueH": 17520,
+      "lecture": { "methode": "fichier", "fichier": "data/glossary.json", "chemin": "terms[].lastUpdated", "mode": "plusAncienne", "explication": "plus ancienne date lastUpdated des termes du glossaire" }
+    },
+    {
+      "id": "47",
+      "famille": "lastmod des sitemaps",
+      "source": "calculé (lot A) depuis la date réelle des entrées",
+      "robot": "généré",
+      "cadence": "à chaque changement réel",
+      "ageMaxH": 48,
+      "critiqueH": 96,
+      "lecture": { "methode": "page", "chemin": "/sitemap-index.xml", "motif": "<lastmod>([^<]+)</lastmod>", "mode": "plusRecente", "format": "iso", "explication": "lastmod le plus récent de l'index des plans du site (le plan des actus change chaque jour)" }
+    },
+    {
+      "id": "48",
+      "famille": "dateModified JSON-LD des pages marché",
+      "source": "calculé (lot A) depuis la date de la source",
+      "robot": "généré",
+      "cadence": "suit la source",
+      "ageMaxH": 48,
+      "critiqueH": 96,
+      "lecture": { "methode": "page", "chemin": "/marche/fear-greed", "motif": "\"dateModified\"\\s*:\\s*\"([^\"]+)\"", "mode": "plusRecente", "format": "auto", "explication": "dateModified du JSON-LD de /marche/fear-greed" }
+    },
+    {
+      "id": "49",
+      "famille": "Alertes de prix (e-mails)",
+      "source": "cours des n° 1 et 4",
+      "robot": "Vercel Cron evaluate-alerts (*/15)",
+      "cadence": "15 min",
+      "ageMaxH": 1.5,
+      "critiqueH": 3,
+      "lecture": { "methode": "kv", "cle": "cron:evaluate-alerts:last", "champ": "at", "trace": true, "explication": "trace KV du dernier passage (écrite une fois par heure, et à chaque envoi ou erreur)" }
+    },
+    {
+      "id": "50",
+      "famille": "Série d'e-mails fiscalité",
+      "source": "—",
+      "robot": "orchestrateur quotidien 07:00 (trace du lot A)",
+      "cadence": "1 fois par jour",
+      "ageMaxH": 30,
+      "critiqueH": 48,
+      "lecture": { "methode": "kv", "cle": "cron:email-series-fiscalite:last", "champ": "at", "trace": true, "explication": "trace KV « dernier passage + résultat » (lib/cron-trace.ts)" }
+    },
+    {
+      "id": "51",
+      "famille": "Rappels de série du jeu (push)",
+      "source": "—",
+      "robot": "Vercel Cron streak-reminders 19:00 (trace du lot A)",
+      "cadence": "1 fois par jour",
+      "ageMaxH": 30,
+      "critiqueH": 48,
+      "lecture": { "methode": "kv", "cle": "cron:streak-reminders:last", "champ": "at", "trace": true, "explication": "trace KV « dernier passage + résultat » (lib/cron-trace.ts)" }
+    }
+  ],
+  "expirations": [
+    {
+      "id": "gardien-github",
+      "nom": "Jetons GitHub du Gardien (lancement des robots depuis Vercel)",
+      "expire": "2027-10-06",
+      "avertirJours": 30,
+      "source": "mémoire du 07/10/2026 : 2 jetons posés le 07/10/2026, expiration le 06/10/2027 (date non relue dans GitHub)"
+    },
+    {
+      "id": "cron-job-org",
+      "nom": "Jeton de cron-job.org (lancement de daily-content à 04:30)",
+      "expire": null,
+      "avertirJours": 30,
+      "source": "date d'expiration non connue : à lire une fois par Kev sur cron-job.org, puis à écrire ici"
+    }
+  ],
+  "quotas": {
+    "coinmarketcap": {
+      "lecture": "/api/diag/cmc-budget (compteur officiel /v1/key/info, 0 crédit), lu par la sentinelle à chaque passage",
+      "quotidien": "crédits du jour (usage.current_day.credits_used) ; plafond quotidien (plan.credit_limit_daily) seulement s'il est renvoyé par /v1/key/info, sa valeur n'étant pas publiée ; erreur 1009 (« daily rate limit ») notée par le site dans le KV (cmc:erreur-1009:last)",
+      "seuils": "⚠️ à 80 % du plafond quotidien s'il est connu ; ❌ si une erreur 1009 date de moins de 24 h"
+    },
+    "supabase": {
+      "plafondOctets": 524288000,
+      "plafondTexte": "500 Mo (offre Free ; plan réel du projet non prouvé)",
+      "seuils": "⚠️ à 60 %, ❌ à 80 %",
+      "mesurable": false,
+      "etat": "non mesurable aujourd'hui : aucune fonction SQL de taille n'existe dans la base, et l'API de gestion de Supabase exige un jeton personnel (secret nouveau). Mesure automatique dès que Kev lance supabase/migrations/20261008_taille_base_sentinelle.sql (bouton Run) : la sentinelle lit alors pg_database_size avec la clé déjà présente dans GitHub."
+    }
+  }
+}

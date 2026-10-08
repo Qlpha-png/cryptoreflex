@@ -120,7 +120,7 @@ describe("API publique : _meta.lastUpdated = maximum réel des dates des donnée
     const j = await corps(res);
     const lignes = (platformsData as { platforms: Array<Record<string, any>> }).platforms.filter((p) => p?.fees?.verified?.verdict !== "indisponible");
     const attendu = latestIso([
-      ...lignes.flatMap((p) => [p.mica?.lastVerified, p.fees?.verified?.date, p.fees?.cost?.date, p.support?.verified, p.security?.verified, p.ratings?.trustpilotVerified]),
+      ...lignes.flatMap((p) => [p.mica?.lastVerified, p.fees?.verified?.date, p.fees?.cost?.date, p.support?.verified, p.security?.verified]),
       ...Object.values((platformsData as { _meta: Record<string, unknown> })._meta),
     ]);
     expect(j._meta.lastUpdated).toBe(attendu);

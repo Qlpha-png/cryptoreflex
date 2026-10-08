@@ -27,7 +27,7 @@
  *  - "bible-fiscalite" → bible-fiscalite-crypto-2026.pdf
  *  - "checklist"       → checklist-declaration-crypto-2026.pdf
  *  - "glossaire"       → glossaire-fiscal-crypto.pdf
- *  - "guide-plateformes" → guide-plateformes-crypto-2026.pdf (legacy)
+ *  - "guide-plateformes" → 410 depuis le 08/10/2026 (guide retiré)
  */
 
 import { NextRequest, NextResponse } from "next/server";
@@ -61,11 +61,14 @@ const LEAD_MAGNET_FILES: Record<string, { filename: string; title: string }> = {
     filename: "glossaire-fiscal-crypto.pdf",
     title: "Glossaire Fiscal Crypto",
   },
-  "guide-plateformes": {
-    filename: "guide-plateformes-crypto-2026.pdf",
-    title: "Guide Plateformes Crypto 2026",
-  },
 };
+
+/**
+ * Lead magnets retirés : réponse 410 (Gone).
+ * 08/10/2026 : « guide-plateformes » reprenait des notes Trustpilot (reprise interdite par les conditions
+ * de Trustpilot, décision de Kev : retirer les notes).
+ */
+const LEAD_MAGNETS_RETIRES = new Set<string>(["guide-plateformes"]);
 
 /** Validation des id de lead magnet (whitelist stricte). */
 function isValidLeadMagnetId(id: string): id is keyof typeof LEAD_MAGNET_FILES {
@@ -87,7 +90,15 @@ export async function GET(
     );
   }
 
-  // 1) Validation id (whitelist) — 404 si inconnu.
+  // 1) Lead magnet retiré — 410.
+  if (LEAD_MAGNETS_RETIRES.has(id)) {
+    return NextResponse.json(
+      { ok: false, error: "Ce guide n'est plus disponible." },
+      { status: 410 },
+    );
+  }
+
+  // 1 bis) Validation id (whitelist) — 404 si inconnu.
   if (!isValidLeadMagnetId(id)) {
     return NextResponse.json(
       { ok: false, error: "Lead magnet inconnu." },

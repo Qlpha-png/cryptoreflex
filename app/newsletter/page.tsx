@@ -5,7 +5,6 @@ import {
   CheckCircle2,
   Clock,
   ShieldCheck,
-  Sparkles,
   TrendingUp,
   AlertTriangle,
   Calculator,
@@ -80,11 +79,6 @@ const benefits = [
     title: "Scams & arnaques",
     text: "Les arnaques repérées (faux brokers, plateformes douteuses, pumps) et comment les reconnaître.",
   },
-  {
-    icon: Sparkles,
-    title: "Bonus inscription",
-    text: "Tout de suite : le guide PDF « Les plateformes crypto régulées MiCA à utiliser en France 2026 ».",
-  },
 ];
 
 // 06/10/2026 : FAQ entièrement au vouvoiement ; « commissions … plateforme partenaire (Coinbase, Bitpanda) » était faux
@@ -144,7 +138,7 @@ export default function NewsletterPage() {
                 source="newsletter-page"
                 variant="default"
                 title="Inscription à la newsletter"
-                subtitle="Gratuit. Désinscription 1 clic. Bonus PDF immédiat."
+                subtitle="Gratuit. Désinscription 1 clic."
                 ctaLabel="Recevoir la newsletter"
                 leadMagnet
               />

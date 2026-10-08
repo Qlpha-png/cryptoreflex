@@ -3,7 +3,6 @@ import Link from "next/link";
 import dynamic from "next/dynamic";
 import {
   CheckCircle2,
-  Download,
   Mail,
   ArrowRight,
   Calculator,
@@ -38,13 +37,11 @@ const SimpleConfetti = dynamic(
 export const metadata: Metadata = {
   title: "Merci — inscription enregistrée",
   description:
-    "Inscription enregistrée. Téléchargez votre guide PDF crypto et continuez d'explorer Cryptoreflex.",
+    "Inscription enregistrée. Continuez d'explorer Cryptoreflex.",
   alternates: withHreflang(`${BRAND.url}/merci`),
   // CRITIQUE : page de conversion -> hors index
   robots: { index: false, follow: true, nocache: true },
 };
-
-const LEAD_MAGNET_URL = "/lead-magnets/guide-plateformes-crypto-2026.pdf";
 
 const suggestedArticles = [
   {
@@ -101,30 +98,7 @@ export default function MerciPage() {
             quand une information compte, et vous pourrez vous désinscrire en un clic.
           </p>
 
-          {/* Lead magnet en download immédiat — pas besoin d'attendre l'email */}
-          <div className="mt-8 inline-block w-full max-w-md text-left">
-            <div className="glass rounded-2xl p-5">
-              <div className="flex items-start gap-3">
-                <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-primary/15 text-primary shrink-0">
-                  <Download className="h-5 w-5" />
-                </span>
-                <div className="min-w-0">
-                  <h2 className="font-bold text-fg">Votre guide PDF, tout de suite</h2>
-                  <p className="text-xs text-muted mt-1">
-                    Les plateformes crypto régulées MiCA à utiliser en France 2026 (PDF, 57 pages)
-                  </p>
-                </div>
-              </div>
-              <a
-                href={LEAD_MAGNET_URL}
-                download
-                className="btn-primary w-full mt-4 justify-center"
-              >
-                <Download className="h-4 w-4" />
-                Télécharger le guide
-              </a>
-            </div>
-          </div>
+          {/* Bloc « Votre guide PDF » retiré le 08/10/2026 : le guide des plateformes reprenait des notes Trustpilot. */}
 
           <p className="mt-6 text-xs text-muted flex items-center justify-center gap-1.5">
             <Mail className="h-3.5 w-3.5" />

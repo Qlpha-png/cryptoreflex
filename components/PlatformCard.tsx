@@ -15,7 +15,7 @@ import { fmtDateFr, fmtFr } from "@/lib/format-fr";
  *  - Avant : interface `Platform` locale avec champs hardcodés (Icon, gradient,
  *    bonus libellé, features statiques) — IGNORAIT 90% des données du JSON.
  *  - Après : utilise le type `Platform` du lib (source de vérité = data/platforms.json).
- *  - Affiche : badge MiCA·AMF, frais spot, social proof Trustpilot, idealFor.
+ *  - Affiche : badge MiCA·AMF, frais spot, idealFor. Aucune note Trustpilot (retirées le 08/10/2026).
  *
  * VAGUE 2 — A11y EAA P0 (Agent A11y juin 2025)
  *  - <article> au lieu de <div> pour navigation par cards (touche K NVDA).
@@ -147,8 +147,8 @@ export default function PlatformCard({ platform, placement, index = 0 }: Props) 
             </div>
           )}
           {/* Rating français : virgule + tabular-nums + social proof */}
-          {/* La note Trustpilot est affichée avec sa propre valeur et la date du relevé : accolé à NOTRE
-              note, le seul nombre d'avis laissait croire que « 4,4/5 » venait de Trustpilot. */}
+          {/* 08/10/2026 : plus aucune note Trustpilot (conditions de Trustpilot). pickSocialProof ne renvoie
+              qu'une note d'application relevée et datée, et aucune ne l'est à ce jour. */}
           <div
             className="flex flex-wrap items-center gap-1 mt-1"
             role="img"

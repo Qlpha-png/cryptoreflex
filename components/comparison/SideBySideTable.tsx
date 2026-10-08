@@ -18,10 +18,9 @@ import {
   supportChatLabel,
   supportDelayLabel,
   supportPhoneLabel,
-  trustpilotText,
   verifiedBonus,
 } from "@/lib/platforms";
-import { fmtDateFr, fmtFr, fmtNb } from "@/lib/format-fr";
+import { fmtFr, fmtNb } from "@/lib/format-fr";
 
 type Direction = "lower" | "higher" | "bool" | "none";
 
@@ -71,12 +70,6 @@ function determineWinner(row: Row): "a" | "b" | "tie" | "n/a" {
   return av > bv ? "a" : "b";
 }
 
-/** Note Trustpilot relevée, avec sa date ; « — » quand il n'y a pas de note publique. */
-function tpCell(p: Platform): string {
-  const t = trustpilotText(p.ratings);
-  return t ? `${t}, relevé le ${fmtDateFr(p.ratings.trustpilotVerified)}` : "—";
-}
-
 function buildRows(a: Platform, b: Platform): Row[] {
   return [
     // GROUP : SCORING
@@ -122,9 +115,8 @@ function buildRows(a: Platform, b: Platform): Row[] {
     { label: "Téléphone", a: supportPhoneLabel(a.support), b: supportPhoneLabel(b.support), aRaw: a.support.frenchPhone, bRaw: b.support.frenchPhone, direction: "bool" },
     { label: "Délai de réponse annoncé", a: supportDelayLabel(a.support), b: supportDelayLabel(b.support), direction: "none" },
 
-    // GROUP : NOTES UTILISATEURS
-    { group: "Notes utilisateurs", label: "Trustpilot", a: tpCell(a), b: tpCell(b), aRaw: a.ratings.trustpilot, bRaw: b.ratings.trustpilot, direction: "higher" },
-    // App Store / Play Store : retirées le 06/10/2026, aucune note n'a de source ni de date (cf. storeRating, lib/platforms.ts).
+    // Notes utilisateurs : aucune. Trustpilot retiré le 08/10/2026 (ses conditions interdisent de reprendre les notes) ;
+    // App Store / Play Store retirées le 06/10/2026, aucune note n'a de source ni de date (cf. storeRating, lib/platforms.ts).
 
     // GROUP : BONUS (seulement si une offre est relevée — verifiedBonus)
     ...(verifiedBonus(a) || verifiedBonus(b)

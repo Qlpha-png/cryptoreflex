@@ -455,11 +455,6 @@ export function topPlatformsItemListSchema(count = 6): JsonLd {
       // Fix audit SEO 30/04/2026 — URL réelle est /avis/[slug] et non /plateformes/[slug]
       // (cassait le rich result Google ItemList sur 404 cible).
       const itemUrl = abs(`/avis/${p.id}`);
-      const trustpilotCount = p.ratings.trustpilotCount ?? 0;
-
-      // Spam guard — n'émet aggregateRating QUE si on a au moins 5 avis vérifiables.
-      // Avant : `ratingCount: p.ratings.trustpilotCount || 1` = fabrication d'1 avis
-      // factice quand zéro = risque manual action Google "structured data abuse".
       const item: Record<string, unknown> = {
         "@type": "FinancialProduct",
         name: p.name,
@@ -471,10 +466,8 @@ export function topPlatformsItemListSchema(count = 6): JsonLd {
           url: p.websiteUrl,
         },
       };
-      /* Plus d'aggregateRating (audit 03/10/2026) : la note est NOTRE note éditoriale et le
-         nombre d'avis venait de Trustpilot. Google n'accepte que des notes données directement
-         par les utilisateurs du site ; mélanger les deux expose à une action manuelle. */
-      void trustpilotCount;
+      /* Plus d'aggregateRating (audit 03/10/2026) : Google n'accepte que des notes données
+         directement par les utilisateurs du site. Aucune note Trustpilot n'est publiée (08/10/2026). */
 
       return {
         "@type": "ListItem",
@@ -506,7 +499,6 @@ export function topPlatformsItemListSchema(count = 6): JsonLd {
 export function platformReviewSchema(p: Platform): JsonLd {
   const productUrl = abs(`/avis/${p.id}`);
   const ratingValue = clampRating(p.scoring.global);
-  const trustpilotCount = p.ratings.trustpilotCount ?? 0;
 
   const product: Record<string, unknown> = {
     "@context": "https://schema.org",
@@ -547,19 +539,8 @@ export function platformReviewSchema(p: Platform): JsonLd {
     },
   };
 
-  // Plus d'aggregateRating (audit 03/10/2026) : note éditoriale + compteur Trustpilot = données
-  // structurées trompeuses au sens de Google. Seul l'avis signé (Review + reviewRating) reste.
-  if (false) {
-    product.aggregateRating = {
-      "@type": "AggregateRating",
-      ratingValue,
-      bestRating: 5,
-      worstRating: 0,
-      ratingCount: trustpilotCount,
-      reviewCount: trustpilotCount,
-    };
-  }
-
+  // Plus d'aggregateRating (audit 03/10/2026) : seul l'avis signé (Review + reviewRating) reste.
+  // Aucune note ni aucun nombre d'avis Trustpilot n'est publié (08/10/2026, conditions de Trustpilot).
   return product;
 }
 
@@ -575,8 +556,6 @@ export function platformReviewSchema(p: Platform): JsonLd {
  */
 export function platformSoftwareApplicationSchema(p: Platform): JsonLd {
   const productUrl = abs(`/avis/${p.id}`);
-  const ratingValue = clampRating(p.scoring.global);
-  const trustpilotCount = p.ratings.trustpilotCount ?? 0;
 
   const app: Record<string, unknown> = {
     "@context": "https://schema.org",
@@ -597,16 +576,6 @@ export function platformSoftwareApplicationSchema(p: Platform): JsonLd {
   };
 
   // Plus d'aggregateRating du tout (audit 03/10/2026, voir platformReviewSchema).
-  if (false) {
-    app.aggregateRating = {
-      "@type": "AggregateRating",
-      ratingValue,
-      bestRating: 5,
-      worstRating: 0,
-      ratingCount: trustpilotCount,
-    };
-  }
-
   return app;
 }
 

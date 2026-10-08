@@ -67,7 +67,7 @@ import StickyPartnerCta from "./StickyPartnerCta";
 import WaltioFranchise from "@/components/fiscal-tools/WaltioFranchise";
 import { withHreflang } from "@/lib/seo-alternates";
 import { fitTitle } from "@/lib/seo-text";
-import { fmtFr, fmtNb } from "@/lib/format-fr";
+import TrustpilotLink from "@/components/TrustpilotLink";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import VerifieLe from "@/components/ui/VerifieLe";
 
@@ -94,7 +94,7 @@ export function generateMetadata({ params }: Props): Metadata {
   // FIX 2026-05-09 : retiré "par Cryptoreflex" pour éviter doublon avec
   // le template root layout `%s | Cryptoreflex`.
   const title = `${partner.name} : avis 2026, caractéristiques et prix`;
-  const description = `${partner.tagline} Note Trustpilot ${fmtNb(review.rating)}/5 (${review.externalReviewCount.toLocaleString("fr-FR")} avis). Caractéristiques, prix, FAQ et guide de mise en route.`;
+  const description = `${partner.tagline} Caractéristiques, prix, FAQ et guide de mise en route.`;
 
   return {
     title: fitTitle(title),
@@ -142,9 +142,8 @@ export default function PartnerDetailPage({ params }: Props) {
   }
 
   /* ------------------------------ JSON-LD ------------------------------ */
-  // Product simple : pas de Review ni d'AggregateRating. La note affichée est
-  // celle de Trustpilot : Google interdit de baliser des avis agrégés depuis un
-  // autre site, et Cryptoreflex n'a pas testé le produit.
+  // Product simple : pas de Review ni d'AggregateRating (Cryptoreflex n'a pas testé
+  // le produit). Aucune note Trustpilot n'est reprise (08/10/2026, conditions de Trustpilot).
   const productJsonLd = {
     "@context": "https://schema.org",
     "@type": "Product",
@@ -210,11 +209,7 @@ export default function PartnerDetailPage({ params }: Props) {
             />
             <p className="text-xs sm:text-sm text-fg/75 leading-relaxed">
               <span className="font-bold text-fg">Publicité.</span> Cette
-              page contient des liens affiliés (loi 9 juin 2023). La note de{" "}
-              {fmtNb(review.rating)}/5 est celle de Trustpilot (
-              {review.externalReviewCount.toLocaleString("fr-FR")} avis,{" "}
-              <VerifieLe date={review.externalReviewDate} famille="notes" label="relevée" />),
-              pas la nôtre : le partenariat ne la change pas. Notre analyse repose
+              page contient des liens affiliés (loi 9 juin 2023). Notre analyse repose
               sur les informations publiées par {partner.name} et sur des sources
               publiques, pas sur une utilisation personnelle du produit.
               {review.tarifsReleveLe ? (
@@ -327,18 +322,12 @@ function PartnerHero({
               {review.verdict.summary}
             </p>
 
-            {/* Trust row : rating + reviews count */}
+            {/* 08/10/2026 : aucune note Trustpilot reprise, seulement le lien vers la page officielle. */}
             <div className="mt-6 flex items-center gap-5 flex-wrap animate-hero-fade-up-delay-2">
-              <RatingDisplay rating={review.rating} />
-              <a
-                href={review.externalReviewSource.url}
-                target="_blank"
-                rel="noopener nofollow"
-                className="text-xs text-muted hover:text-fg transition-colors"
-              >
-                Note {review.externalReviewSource.name} ·{" "}
-                {review.externalReviewCount.toLocaleString("fr-FR")} avis ↗
-              </a>
+              <TrustpilotLink
+                url={review.trustpilotUrl}
+                className="text-xs text-muted underline decoration-dotted underline-offset-2 hover:text-fg transition-colors"
+              />
             </div>
 
             {/* 07/10/2026 : fuite de données Waltio de janvier 2026, juste avant le bouton principal. */}
@@ -428,12 +417,7 @@ function PartnerHero({
                 ))}
               </ul>
 
-              <div className="mt-6 grid grid-cols-3 gap-2 text-center">
-                <MiniStat
-                  label="Trustpilot"
-                  value={`${fmtNb(review.rating)}/5`}
-                  icon={Star}
-                />
+              <div className="mt-6 grid grid-cols-2 gap-2 text-center">
                 <MiniStat
                   label="Pays"
                   value={partner.country}
@@ -453,37 +437,6 @@ function PartnerHero({
   );
 }
 
-function RatingDisplay({ rating }: { rating: number }) {
-  return (
-    <div
-      className="inline-flex items-center gap-1.5"
-      aria-label={`Note ${rating} sur 5`}
-    >
-      <div className="flex items-center gap-0.5" aria-hidden="true">
-        {[1, 2, 3, 4, 5].map((i) => {
-          const filled = i <= Math.floor(rating);
-          const half = !filled && i - rating < 1 && i - rating > 0;
-          return (
-            <Star
-              key={i}
-              className={`h-4 w-4 ${
-                filled
-                  ? "fill-primary text-primary"
-                  : half
-                    ? "fill-primary/50 text-primary"
-                    : "text-fg/20"
-              }`}
-            />
-          );
-        })}
-      </div>
-      <span className="text-sm font-bold text-fg font-mono tabular-nums">
-        {fmtFr(rating, 1)}
-      </span>
-      <span className="text-xs text-muted">/5</span>
-    </div>
-  );
-}
 
 function MiniStat({
   label,

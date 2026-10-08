@@ -132,10 +132,7 @@
         "validUntil": null
       },
       "ratings": {
-        "trustpilot": 4,
-        "trustpilotCount": 23213,
         "trustpilotUrl": "https://fr.trustpilot.com/review/coinbase.com",
-        "trustpilotVerified": "2026-10-05",
         "appStore": 4.7,
         "playStore": 4.6
       },
@@ -251,11 +248,7 @@
         "validUntil": null
       },
       "ratings": {
-        "trustpilot": null,
-        "trustpilotCount": null,
         "trustpilotUrl": "https://fr.trustpilot.com/review/binance.com",
-        "trustpilotVerified": "2026-10-05",
-        "trustpilotNote": "note suspendue par Trustpilot (violation de ses conditions d'utilisation)",
         "appStore": 4.5,
         "playStore": 4.4
       },
@@ -390,10 +383,7 @@
         "validUntil": null
       },
       "ratings": {
-        "trustpilot": 4.1,
-        "trustpilotCount": 15831,
         "trustpilotUrl": "https://fr.trustpilot.com/review/www.bitpanda.com",
-        "trustpilotVerified": "2026-10-05",
         "appStore": 4.7,
         "playStore": 4.5
       },
@@ -529,10 +519,7 @@
         "validUntil": null
       },
       "ratings": {
-        "trustpilot": 3.2,
-        "trustpilotCount": 9066,
         "trustpilotUrl": "https://fr.trustpilot.com/review/kraken.com",
-        "trustpilotVerified": "2026-10-05",
         "appStore": 4.6,
         "playStore": 4.5
       },
@@ -644,10 +631,7 @@
         "validUntil": null
       },
       "ratings": {
-        "trustpilot": 1.7,
-        "trustpilotCount": 1699,
         "trustpilotUrl": "https://fr.trustpilot.com/review/bitget.com",
-        "trustpilotVerified": "2026-10-05",
         "appStore": 4.6,
         "playStore": 4.5
       },
@@ -769,10 +753,7 @@
         "validUntil": null
       },
       "ratings": {
-        "trustpilot": 4.6,
-        "trustpilotCount": 61083,
         "trustpilotUrl": "https://fr.trustpilot.com/review/www.traderepublic.com",
-        "trustpilotVerified": "2026-10-05",
         "appStore": 4.6,
         "playStore": 4.5
       },
@@ -902,10 +883,7 @@
         "validUntil": null
       },
       "ratings": {
-        "trustpilot": 4.6,
-        "trustpilotCount": 3003,
         "trustpilotUrl": "https://fr.trustpilot.com/review/coinhouse.com",
-        "trustpilotVerified": "2026-10-05",
         "appStore": 4.5,
         "playStore": 4.3
       },
@@ -1023,10 +1001,7 @@
         "validUntil": null
       },
       "ratings": {
-        "trustpilot": 4.2,
-        "trustpilotCount": 1398,
         "trustpilotUrl": "https://fr.trustpilot.com/review/bitstack-app.com",
-        "trustpilotVerified": "2026-10-05",
         "appStore": 4.7,
         "playStore": 4.5
       },
@@ -1156,10 +1131,7 @@
         "validUntil": null
       },
       "ratings": {
-        "trustpilot": 3,
-        "trustpilotCount": 1913,
         "trustpilotUrl": "https://fr.trustpilot.com/review/swissborg.com",
-        "trustpilotVerified": "2026-10-05",
         "appStore": 4.7,
         "playStore": 4.6
       },
@@ -1292,10 +1264,7 @@
         "validUntil": null
       },
       "ratings": {
-        "trustpilot": 2.5,
-        "trustpilotCount": 7744,
         "trustpilotUrl": "https://fr.trustpilot.com/review/bybit.com",
-        "trustpilotVerified": "2026-10-05",
         "appStore": 4.6,
         "playStore": 4.4
       },
@@ -1424,10 +1393,7 @@
         "validUntil": null
       },
       "ratings": {
-        "trustpilot": 4.7,
-        "trustpilotCount": 468850,
         "trustpilotUrl": "https://fr.trustpilot.com/review/www.revolut.com",
-        "trustpilotVerified": "2026-10-05",
         "appStore": 4.7,
         "playStore": 4.5
       },
@@ -1560,10 +1526,7 @@
         "validUntil": null
       },
       "ratings": {
-        "trustpilot": 2.4,
-        "trustpilotCount": 1793,
         "trustpilotUrl": "https://fr.trustpilot.com/review/okx.com",
-        "trustpilotVerified": "2026-10-05",
         "appStore": 4.6,
         "playStore": 4.5
       },
@@ -1575,8 +1538,7 @@
       ],
       "weaknesses": [
         "Langues du support non précisées",
-        "UX dense pour débutants — courbe d'apprentissage",
-        "Note Trustpilot basse (2,4/5, relevé du 5 octobre 2026)"
+        "UX dense pour débutants — courbe d'apprentissage"
       ],
       "badge": null,
       "category": "exchange"
@@ -1700,10 +1662,7 @@
         "validUntil": null
       },
       "ratings": {
-        "trustpilot": 1.9,
-        "trustpilotCount": 9457,
         "trustpilotUrl": "https://fr.trustpilot.com/review/crypto.com",
-        "trustpilotVerified": "2026-10-05",
         "appStore": 4.5,
         "playStore": 4.3
       },
@@ -1817,10 +1776,7 @@
         "validUntil": null
       },
       "ratings": {
-        "trustpilot": 1.3,
-        "trustpilotCount": 1509,
         "trustpilotUrl": "https://fr.trustpilot.com/review/gemini.com",
-        "trustpilotVerified": "2026-10-05",
         "appStore": 4.6,
         "playStore": 4.4
       },
@@ -1947,10 +1903,7 @@
         "validUntil": null
       },
       "ratings": {
-        "trustpilot": 1.4,
-        "trustpilotCount": 1038,
         "trustpilotUrl": "https://fr.trustpilot.com/review/bitstamp.net",
-        "trustpilotVerified": "2026-10-05",
         "appStore": 4.5,
         "playStore": 4.2
       },
@@ -2083,10 +2036,7 @@
         "validUntil": null
       },
       "ratings": {
-        "trustpilot": 4.1,
-        "trustpilotCount": 22995,
         "trustpilotUrl": "https://fr.trustpilot.com/review/bitvavo.com",
-        "trustpilotVerified": "2026-10-05",
         "appStore": 4.6,
         "playStore": 4.5
       },
@@ -2208,10 +2158,7 @@
         "validUntil": null
       },
       "ratings": {
-        "trustpilot": 4,
-        "trustpilotCount": 32137,
         "trustpilotUrl": "https://fr.trustpilot.com/review/www.etoro.com",
-        "trustpilotVerified": "2026-10-05",
         "appStore": 4.4,
         "playStore": 4.3
       },
@@ -2332,10 +2279,7 @@
         "validUntil": null
       },
       "ratings": {
-        "trustpilot": 4.3,
-        "trustpilotCount": 133,
         "trustpilotUrl": "https://fr.trustpilot.com/review/paymium.com",
-        "trustpilotVerified": "2026-10-05",
         "appStore": 3.9,
         "playStore": 3.8
       },
@@ -2453,10 +2397,7 @@
         "validUntil": null
       },
       "ratings": {
-        "trustpilot": 4.4,
-        "trustpilotCount": 8722,
         "trustpilotUrl": "https://fr.trustpilot.com/review/deblock.com",
-        "trustpilotVerified": "2026-10-05",
         "appStore": 4.5,
         "playStore": 4.3
       },
@@ -2568,10 +2509,7 @@
         "validUntil": null
       },
       "ratings": {
-        "trustpilot": 4.4,
-        "trustpilotCount": 18770,
         "trustpilotUrl": "https://fr.trustpilot.com/review/nexo.com",
-        "trustpilotVerified": "2026-10-05",
         "appStore": 4.6,
         "playStore": 4.5
       },
@@ -2693,10 +2631,7 @@
         "validUntil": null
       },
       "ratings": {
-        "trustpilot": 4.1,
-        "trustpilotCount": 115358,
         "trustpilotUrl": "https://fr.trustpilot.com/review/moonpay.com",
-        "trustpilotVerified": "2026-10-05",
         "appStore": 4.7,
         "playStore": 4.5
       },
@@ -2818,11 +2753,7 @@
         "validUntil": null
       },
       "ratings": {
-        "trustpilot": 4.2,
-        "trustpilotCount": 42998,
         "trustpilotUrl": "https://fr.trustpilot.com/review/n26.com",
-        "trustpilotVerified": "2026-10-05",
-        "trustpilotNote": "note de N26 dans son ensemble, pas du seul service crypto",
         "appStore": 4.5,
         "playStore": 4.4
       },
@@ -2942,10 +2873,7 @@
         "validUntil": null
       },
       "ratings": {
-        "trustpilot": 4.8,
-        "trustpilotCount": 1758,
         "trustpilotUrl": "https://fr.trustpilot.com/review/21bitcoin.app",
-        "trustpilotVerified": "2026-10-05",
         "appStore": 4.7,
         "playStore": 4.5
       },
@@ -3053,10 +2981,7 @@
         "validUntil": null
       },
       "ratings": {
-        "trustpilot": 2.4,
-        "trustpilotCount": 17655,
         "trustpilotUrl": "https://fr.trustpilot.com/review/wirexapp.com",
-        "trustpilotVerified": "2026-10-05",
         "appStore": 4.3,
         "playStore": 4
       },
@@ -3172,10 +3097,7 @@
         "validUntil": null
       },
       "ratings": {
-        "trustpilot": 4.4,
-        "trustpilotCount": 974,
         "trustpilotUrl": "https://fr.trustpilot.com/review/youngplatform.com",
-        "trustpilotVerified": "2026-10-05",
         "appStore": 4.5,
         "playStore": 4.3
       },
@@ -3279,11 +3201,7 @@
         "validUntil": null
       },
       "ratings": {
-        "trustpilot": 1.4,
-        "trustpilotCount": 41717,
         "trustpilotUrl": "https://fr.trustpilot.com/review/www.paypal.com",
-        "trustpilotVerified": "2026-10-05",
-        "trustpilotNote": "note de PayPal dans son ensemble, pas du seul service crypto",
         "appStore": 4.6,
         "playStore": 4.5
       },
@@ -3294,8 +3212,7 @@
       ],
       "weaknesses": [
         "Catalogue minimal (4 cryptos : BTC/ETH/LTC/BCH)",
-        "Aucune offre crypto sur paypal.com/fr : pas de grille de frais française à comparer",
-        "Trustpilot PayPal global très bas"
+        "Aucune offre crypto sur paypal.com/fr : pas de grille de frais française à comparer"
       ],
       "badge": "Achat via PayPal",
       "category": "broker"
@@ -3394,10 +3311,7 @@
         "validUntil": null
       },
       "ratings": {
-        "trustpilot": 1.7,
-        "trustpilotCount": 336,
         "trustpilotUrl": "https://fr.trustpilot.com/review/www.bitfinex.com",
-        "trustpilotVerified": "2026-10-05",
         "appStore": 4.3,
         "playStore": 4
       },
@@ -3499,10 +3413,7 @@
         "validUntil": null
       },
       "ratings": {
-        "trustpilot": 3.2,
-        "trustpilotCount": 169,
         "trustpilotUrl": "https://fr.trustpilot.com/review/bsdex.de",
-        "trustpilotVerified": "2026-10-05",
         "appStore": 4,
         "playStore": 3.8
       },
@@ -3609,10 +3520,7 @@
         "validUntil": null
       },
       "ratings": {
-        "trustpilot": 4.2,
-        "trustpilotCount": 20034,
         "trustpilotUrl": "https://fr.trustpilot.com/review/www.plus500.com",
-        "trustpilotVerified": "2026-10-05",
         "appStore": 4.4,
         "playStore": 4
       },
@@ -3716,11 +3624,7 @@
         "validUntil": null
       },
       "ratings": {
-        "trustpilot": 4.1,
-        "trustpilotCount": 15650,
         "trustpilotUrl": "https://fr.trustpilot.com/review/finst.com",
-        "trustpilotVerified": "2026-10-05",
-        "trustpilotNote": "profil Trustpilot de Finst : anycoindirect.eu redirige vers finst.com",
         "appStore": 4.4,
         "playStore": 4.2
       },
@@ -3837,10 +3741,7 @@
         "validUntil": null
       },
       "ratings": {
-        "trustpilot": 4.6,
-        "trustpilotCount": 104751,
         "trustpilotUrl": "https://fr.trustpilot.com/review/trading212.com",
-        "trustpilotVerified": "2026-10-05",
         "appStore": 4.7,
         "playStore": 4.6
       },
@@ -3942,10 +3843,7 @@
         "validUntil": null
       },
       "ratings": {
-        "trustpilot": 4.7,
-        "trustpilotCount": 336,
         "trustpilotUrl": "https://fr.trustpilot.com/review/stackinsat.com",
-        "trustpilotVerified": "2026-10-05",
         "appStore": 4.7,
         "playStore": 4.6
       },
@@ -3953,7 +3851,7 @@
       "strengths": [
         "DCA programmé hebdomadaire ou mensuel",
         "Retrait on-chain BTC inclus",
-        "Service 100 % français + Trustpilot 4,7/5 (relevé du 5 octobre 2026)"
+        "Service 100 % français"
       ],
       "weaknesses": [
         "BTC uniquement",
@@ -4065,11 +3963,7 @@
         "validUntil": null
       },
       "ratings": {
-        "trustpilot": 4.5,
-        "trustpilotCount": 943,
         "trustpilotUrl": "https://fr.trustpilot.com/review/www.meria.com",
-        "trustpilotVerified": "2026-10-05",
-        "trustpilotNote": "profil Trustpilot de Meria, nouveau nom de Just Mining",
         "appStore": 4.2,
         "playStore": 4
       },
@@ -4187,10 +4081,7 @@
         "validUntil": null
       },
       "ratings": {
-        "trustpilot": 3.9,
-        "trustpilotCount": 623,
         "trustpilotUrl": "https://fr.trustpilot.com/review/feel-mining.com",
-        "trustpilotVerified": "2026-10-05",
         "appStore": 4,
         "playStore": 3.9
       },

@@ -115,6 +115,12 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           # 07/10/2026 : lecture du budget CoinMarketCap (/api/diag/cmc-budget) ; jamais écrit dans le rapport
           CRON_SECRET: ${{ secrets.CRON_SECRET }}
+          # 08/10/2026 (lot Z1) : registre des 51 familles (dates en base) et taille de la base ; mêmes secrets que le
+          # recomptage ci-dessus (aucun secret nouveau), jamais écrits dans le rapport
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          # famille n° 43 : le recomptage a réussi dans ce passage (l'étape échoue et arrête le job sinon)
+          RECOMPTAGE_OK: ${{ env.FULL }}
           SENTINELLE_REPORT: sentinelle-report.md
         run: node scripts/sentinelle.mjs ${{ env.FULL == 'true' && '--full' || '' }}
 
@@ -166,6 +172,52 @@ jobs:
                 await github.rest.issues.update({ ...depot, issue_number: issue.number, state: "closed" });
               }
             }
+
+      # 08/10/2026 (lot Z1, architecture 0 € § 6.2) : registre des 51 familles (data/fraicheur/registre.json), contrôle
+      # complet seulement.
+      #  - une famille ❌ → un ticket « [Fraîcheur] n° X — famille » (titre stable = dédoublonnage : jamais deux tickets
+      #    ouverts pour la même famille) ; fermé automatiquement quand la famille repasse ✅ ou ⚠️ ;
+      #  - le dimanche (ou si le dernier date de plus de 8 jours) → ticket « état des 51 familles », lisible sans rien
+      #    ouvrir ; le précédent est fermé.
+      # Reprise Z1 : PAS de continue-on-error. Une famille ❌ n'a pas d'autre signal que son ticket : si cette étape
+      # échoue (jeton, API GitHub, exception), le job doit passer au rouge pour que GitHub envoie le courriel d'échec.
+      - name: Tickets « Fraîcheur » (dépôt privé)
+        if: always() && env.TICKETS_PRIVES == 'true' && env.FULL == 'true' && hashFiles('fraicheur-etat.json') != ''
+        uses: actions/github-script@v9
+        with:
+          github-token: ${{ secrets.SENTINELLE_TOKEN }}
+          script: |
+            const fs = require("fs");
+            const depot = { owner: "Qlpha-png", repo: "cryptoreflex-sentinelle" };
+            const etat = JSON.parse(fs.readFileSync("fraicheur-etat.json", "utf8"));
+            const runUrl = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
+            const ouverts = await github.paginate(github.rest.issues.listForRepo, { ...depot, state: "open", labels: "fraicheur", per_page: 100 });
+            const titres = new Set(etat.tickets.map((t) => t.titre));
+            let crees = 0, fermes = 0;
+            for (const t of etat.tickets) {
+              if (ouverts.some((i) => i.title === t.titre)) continue;
+              await github.rest.issues.create({ ...depot, title: t.titre, body: `${t.corps}\n\n[Voir l'exécution](${runUrl})`, labels: ["fraicheur"] });
+              crees++;
+            }
+            for (const i of ouverts) {
+              if (!i.title.startsWith("[Fraîcheur] n° ") || titres.has(i.title)) continue;
+              const r = etat.resultats.find((x) => i.title === `[Fraîcheur] n° ${x.id} — ${x.famille}`);
+              await github.rest.issues.createComment({ ...depot, issue_number: i.number, body: `${r ? `${r.icone} ${r.msg}` : "Famille absente du registre."}\n\nFermé automatiquement par la sentinelle complète.\n\n[Voir l'exécution](${runUrl})` });
+              await github.rest.issues.update({ ...depot, issue_number: i.number, state: "closed" });
+              fermes++;
+            }
+            // ticket hebdomadaire « état des 51 familles »
+            const { data: hebdos } = await github.rest.issues.listForRepo({ ...depot, state: "all", labels: "fraicheur-hebdo", sort: "created", direction: "desc", per_page: 5 });
+            const dernier = hebdos[0];
+            const ageJ = dernier ? (Date.now() - Date.parse(dernier.created_at)) / 86400e3 : Infinity;
+            const dimanche = new Date().getUTCDay() === 0;
+            if ((dimanche && ageJ > 6) || ageJ > 8) {
+              const corps = fs.existsSync("fraicheur-hebdo.md") ? fs.readFileSync("fraicheur-hebdo.md", "utf8") : "(rapport absent)";
+              const jour = new Date().toLocaleDateString("fr-FR", { timeZone: "Europe/Paris" });
+              await github.rest.issues.create({ ...depot, title: `[Fraîcheur] état des 51 familles — ${jour}`, body: `${corps}\n[Voir l'exécution](${runUrl})`, labels: ["fraicheur-hebdo"] });
+              for (const h of hebdos.filter((x) => x.state === "open")) await github.rest.issues.update({ ...depot, issue_number: h.number, state: "closed" });
+            }
+            core.info(`tickets fraîcheur : ${crees} créé(s), ${fermes} fermé(s)`);
 
       # 05/10/2026 (Kev : « un truc sans jeton et sans devoir que je l'actualise ») : réparations SANS IA, décidées par
       # scripts/sentinelle.mjs (sentinelle-repairs.json) avec garde-fous anti-boucle :

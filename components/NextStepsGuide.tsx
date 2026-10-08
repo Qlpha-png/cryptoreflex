@@ -95,12 +95,6 @@ const POOL: Record<string, Step> = {
     label: "Comparer toutes les plateformes",
     desc: "Frais réels, sécurité, MiCA, support FR — méthodologie publique.",
   },
-  pdfPlateformes: {
-    href: "/lead-magnets/guide-plateformes-crypto-2026.pdf",
-    Icon: Download,
-    label: "Télécharger le PDF gratuit",
-    desc: "57 pages — étude indépendante des plateformes crypto autorisées en France (agrément MiCA).",
-  },
   pdfFiscalite: {
     href: "/lead-magnets/bible-fiscalite-crypto-2026.pdf",
     Icon: Download,
@@ -183,7 +177,7 @@ const POOL: Record<string, Step> = {
     Icon: Mail,
     // 06/10/2026 : plus de « quotidienne / 1 e-mail le matin » (aucune édition envoyée par le code)
     label: "Newsletter crypto FR",
-    desc: "L'essentiel de la crypto en français, sans spam, plus le guide PDF des plateformes offert.",
+    desc: "L'essentiel de la crypto en français, sans spam.",
   },
   outils: {
     href: "/outils",
@@ -211,8 +205,9 @@ function selectSteps(props: Props): Step[] {
       // Audit home 2026-06 : le routage par intention (apprendre / comparer /
       // comprendre) est désormais porté par <StartHere/> EN TÊTE de home. Ce
       // bloc de bas de page se re-spécialise en « ressources à emporter » pour
-      // NE PAS dupliquer le routage : PDF plateformes, calculateur, newsletter.
-      return [POOL.pdfPlateformes, POOL.calculateurFiscalite, POOL.newsletter];
+      // NE PAS dupliquer le routage : comparatif, calculateur, newsletter.
+      // 08/10/2026 : guide PDF des plateformes retiré (il reprenait des notes Trustpilot).
+      return [POOL.comparator, POOL.calculateurFiscalite, POOL.newsletter];
 
     case "article":
       // Article blog → suggérer outils + autres articles selon la catégorie
@@ -220,7 +215,7 @@ function selectSteps(props: Props): Step[] {
         return [POOL.calculateurFiscalite, POOL.pdfFiscalite, POOL.declarationCrypto];
       }
       if (cat.includes("secur") || cat.includes("wallet")) {
-        return [POOL.securiser, POOL.comparator, POOL.pdfPlateformes];
+        return [POOL.securiser, POOL.comparator, POOL.quiz];
       }
       if (cat.includes("debut") || cat.includes("guide") || cat.includes("acheter")) {
         return [POOL.quiz, POOL.premierAchat, POOL.simulateurDCA];
@@ -237,7 +232,7 @@ function selectSteps(props: Props): Step[] {
 
     case "comparator":
       // Page comparateur → quiz pour personnaliser + ressources
-      return [POOL.quiz, POOL.pdfPlateformes, POOL.calculateurROI];
+      return [POOL.quiz, POOL.calculateurROI, POOL.newsletter];
 
     case "quiz-result":
       // Vient de finir le quiz → l'aider à consommer le résultat

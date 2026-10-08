@@ -95,10 +95,7 @@
         "validUntil": null
       },
       "ratings": {
-        "trustpilot": 3.3,
-        "trustpilotCount": 2737,
         "trustpilotUrl": "https://fr.trustpilot.com/review/www.ledger.com",
-        "trustpilotVerified": "2026-10-05",
         "appStore": 4.5,
         "playStore": 4.3
       },
@@ -197,10 +194,7 @@
         "validUntil": null
       },
       "ratings": {
-        "trustpilot": 4.6,
-        "trustpilotCount": 2020,
         "trustpilotUrl": "https://fr.trustpilot.com/review/trezor.io",
-        "trustpilotVerified": "2026-10-05",
         "appStore": 4.4,
         "playStore": 4.1
       },

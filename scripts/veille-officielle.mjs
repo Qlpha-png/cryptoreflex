@@ -29,6 +29,7 @@ import { createHash } from "node:crypto";
 import { readFileSync, writeFileSync, existsSync, appendFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { phrasesLicence } from "./lib/fraicheur-registre.mjs";
 
 const ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
 const ARGS = new Set(process.argv.slice(2));
@@ -51,7 +52,24 @@ const changement = (zone, msg) => lignes.push({ niveau: "fail", zone, msg, chang
 const warn = (zone, msg) => lignes.push({ niveau: "warn", zone, msg });
 const nouveau = (zone, msg) => lignes.push({ niveau: "new", zone, msg });
 const ok = (zone, msg) => lignes.push({ niveau: "ok", zone, msg });
-const observe = { legifrance: {}, bofip: {}, filets: {}, pages: {}, frais: {} };
+const observe = { legifrance: {}, bofip: {}, filets: {}, pages: {}, frais: {}, licences: {} };
+const licencesChangees = [];
+/* Reprise Z1 : référence des pages de licence dans un fichier dédié, écrite AUTOMATIQUEMENT au premier relevé d'une page
+   qui n'en a pas (sinon aucun ticket « relire la licence » ne pouvait s'ouvrir) et commitée par le workflow comme
+   mica-auto.json. Elle n'avance ensuite qu'avec « --enregistrer », après relecture. */
+const LICENCES_REF_PATH = path.join(ROOT, "data/veille/licences-ref.json");
+const LICENCES_REF = existsSync(LICENCES_REF_PATH) ? JSON.parse(readFileSync(LICENCES_REF_PATH, "utf8")) : {};
+LICENCES_REF.pages ??= {};
+let licencesRefModifiee = false;
+/* 08/10/2026 (lot Z1) : empreinte mensuelle des pages de licence (jours 1 à 3 du mois, --licences, ou --enregistrer) ;
+   reprise : aussi chaque nuit tant qu'une page suivie n'a pas de référence (la première s'écrit dès la nuit suivante). */
+const LICENCES = ARGS.has("--licences") || ENREGISTRER || Number(AUJ.slice(8, 10)) <= 3
+  || (SOURCES.licences?.pages || []).some((p) => !LICENCES_REF.pages[p.cle] && !ETAT.licences?.[p.cle]);
+function ecrireLicencesRef() {
+  const pages = Object.fromEntries(Object.keys(LICENCES_REF.pages).sort().map((k) => [k, LICENCES_REF.pages[k]]));
+  const _info = "Référence des phrases de conditions des pages de licence (data/veille/sources.json → licences.pages). Écrite par scripts/veille-officielle.mjs au premier relevé d'une page, puis avancée seulement par « --enregistrer » après relecture. Ne pas écrire à la main.";
+  writeFileSync(LICENCES_REF_PATH, JSON.stringify({ _info, pages }, null, 2) + "\n");
+}
 
 /* Les identifiants PISTE ne doivent JAMAIS apparaître dans un journal (dépôt public) : tout texte imprimé passe par ici. */
 const SECRETS = [process.env.PISTE_CLIENT_ID, process.env.PISTE_CLIENT_SECRET].filter((s) => s && s.length > 6);
@@ -492,9 +510,43 @@ async function veilleFrais() {
   if (illisibles.length) warn("frais", `pages de frais non relues cette nuit (${illisibles.length}) — référence précédente conservée : ${illisibles.join(" ; ")}`);
 }
 
+/* ------------------------------------------------------------------ pages de licence (lot Z1, 08/10/2026) */
+/* Architecture 0 € § 6.2 point 5 : empreinte des phrases de conditions (licence, usage commercial, attribution,
+   redistribution…) des pages S1, S2, S4, S5, S7 et S8. Seules ces phrases comptent : la valeur du jour d'alternative.me
+   ou un prix affiché ne déclenchent rien. Un changement n'est PAS un échec de la veille : il ouvre un ticket « relire la
+   licence » (veille-licences.json, lu par le workflow). La référence n'avance qu'avec « --enregistrer », après relecture. */
+async function veilleLicences() {
+  const pages = SOURCES.licences?.pages || [];
+  for (const p of pages) {
+    let html;
+    try {
+      const res = await req(p.url);
+      html = await res.text();
+      if (!res.ok) { warn("licence", `${p.cle} ${p.nom} : HTTP ${res.status} (non contrôlée ce mois-ci) ; ${p.url}`); continue; }
+    } catch (e) { warn("licence", `${p.cle} ${p.nom} : ${raison(e)} (non contrôlée ce mois-ci)`); continue; }
+    const ph = phrasesLicence(texte(html));
+    if (!ph.length) { warn("licence", `${p.cle} ${p.nom} : aucune phrase de conditions lisible sans navigateur ; ${p.url}`); continue; }
+    const emp = { empreinte: sha(ph.join("|")), phrases: ph.slice(0, 60), releve: AUJ };
+    observe.licences[p.cle] = emp;
+    const ref = LICENCES_REF.pages[p.cle] ?? ETAT.licences?.[p.cle];
+    if (!ref) {
+      LICENCES_REF.pages[p.cle] = emp;
+      licencesRefModifiee = true;
+      nouveau("licence", `${p.cle} ${p.nom} : première référence enregistrée (${ph.length} phrases) dans data/veille/licences-ref.json`);
+      continue;
+    }
+    if (ref.empreinte === emp.empreinte) { ok("licence", `${p.cle} ${p.nom} : conditions inchangées`); continue; }
+    const plus = emp.phrases.filter((x) => !(ref.phrases || []).includes(x)).slice(0, 8);
+    const moins = (ref.phrases || []).filter((x) => !emp.phrases.includes(x)).slice(0, 8);
+    licencesChangees.push({ cle: p.cle, nom: p.nom, url: p.url, depuis: ref.releve ?? null, apparues: plus, disparues: moins });
+    warn("licence", `${p.cle} ${p.nom} : conditions modifiées depuis le ${ref.releve ?? "dernier relevé"} → relire la licence (ticket dédié) ; ${p.url}`);
+  }
+}
+
 /* ------------------------------------------------------------------ exécution */
 const etapes = [["Légifrance", veilleLegifrance], ["BOFiP", veilleBofip], ["pages officielles", veillePages], ["registre MiCA", veilleRegistre]];
 if (!SANS_FRAIS) etapes.push(["grilles de frais", veilleFrais]);
+if (LICENCES) etapes.push(["pages de licence", veilleLicences]);
 for (const [nom, f] of etapes) {
   try { await f(); } catch (e) { fail("veille", `étape ${nom} interrompue : ${raison(e)}`); }
 }
@@ -517,6 +569,10 @@ const md = [
   "</details>",
 ].join("\n");
 writeFileSync(REPORT, propre(md));
+// lot Z1 : changements de licence, lus par le workflow (un ticket « relire la licence » par page, dédoublonné)
+if (licencesChangees.length) writeFileSync(path.join(path.dirname(REPORT), "veille-licences.json"), propre(JSON.stringify(licencesChangees, null, 1)));
+if (ENREGISTRER && Object.keys(observe.licences).length) { Object.assign(LICENCES_REF.pages, observe.licences); licencesRefModifiee = true; }
+if (licencesRefModifiee) ecrireLicencesRef();
 if (process.env.GITHUB_STEP_SUMMARY) appendFileSync(process.env.GITHUB_STEP_SUMMARY, propre(md) + "\n");
 log(md);
 
@@ -531,6 +587,7 @@ if (ENREGISTRER) {
     filets: fusion(ETAT.filets, observe.filets),
     pages: fusion(ETAT.pages, observe.pages),
     frais: fusion(ETAT.frais, observe.frais),
+    licences: fusion(ETAT.licences, observe.licences),
   };
   writeFileSync(ETAT_PATH, JSON.stringify(etat, null, 2) + "\n");
   log(`\nRéférence enregistrée dans data/veille/etat.json (${Object.keys(observe).map((k) => `${k} ${Object.keys(observe[k]).length}`).join(", ")}).`);

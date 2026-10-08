@@ -250,8 +250,8 @@ function AvisHubPage() {
             </h2>
             <p className="mt-2 text-sm text-fg/70 max-w-[34em]">
               Six critères pondérés, mesurés sur la base de
-              données vérifiables (frais affichés, registres AMF/MiCA, avis
-              Trustpilot). Aucune note n'est influencée par les commissions
+              données vérifiables (frais affichés, registres AMF/MiCA).
+              Aucune note n'est influencée par les commissions
               d'affiliation.
             </p>
             <Link

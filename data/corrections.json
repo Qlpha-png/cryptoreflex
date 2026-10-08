@@ -853,6 +853,21 @@
       "avant": "Analyses techniques du 26/04/2026 (Bitcoin, Ethereum, Solana, XRP, Cardano) publiées avec des valeurs d'essai écrites à la main : Bitcoin 95 420 $ (moyenne 200 jours 78 450 $), Ethereum 3 412 $, Solana 185,42 $, XRP 2,45 $, Cardano 0,7825 $ ; reprises dans l'historique des pages d'analyse et dans les fichiers CSV.",
       "après": "Lignes du 26/04/2026 retirées de l'historique et des CSV ; premier calcul publié recalé sur la première ligne réelle (27/04/2026 pour Bitcoin et Ethereum, 06/05/2026 pour Solana et XRP, 31/05/2026 pour Cardano) ; une note sous chaque historique signale le retrait.",
       "nature": "Données de marché fausses : ces valeurs n'étaient pas des cours (impossibles arithmétiquement : la moyenne 200 jours du Bitcoin passait de 78 450 $ à 84 759 $ en un jour)."
+    },
+    {
+      "date": "2026-10-08",
+      "page": "/avis",
+      "avant": "Notes Trustpilot, nombres d'avis et dates de relevé affichés sur les avis, les comparatifs, les pages partenaires et leur image de partage, et publiés dans l'API de données.",
+      "après": "Aucune note Trustpilot n'est reprise : chaque avis propose un lien « Avis des utilisateurs sur Trustpilot » vers la page officielle de la plateforme.",
+      "nature": "Décision éditoriale : les notes d'un site d'avis tiers ne sont plus reprises, seul un lien vers la source est gardé."
+    },
+    {
+      "date": "2026-10-08",
+      "page": "/blog/coinbase-avis-france-2026",
+      "slug": "coinbase-avis-france-2026",
+      "avant": "Note Trustpilot de Coinbase et nombre d'avis, relevés le 5 octobre 2026.",
+      "après": "« Les avis des utilisateurs se lisent sur la page Trustpilot de Coinbase » (lien vers la page officielle).",
+      "nature": "Décision éditoriale : les notes d'un site d'avis tiers ne sont plus reprises, seul un lien vers la source est gardé."
     }
   ]
 }

@@ -1,6 +1,7 @@
 import platformsData from "@/data/platforms.json";
 import walletsData from "@/data/wallets.json";
 import { getAffiliationKind } from "@/lib/partnerships";
+import { trustpilotUrlOrNull } from "@/lib/trustpilot";
 
 /** Fiabilité d'un coût du comparateur : publié en entier, majorant (marge publiée au plus), ou marge non chiffrée en plus. */
 /** exact ; max = « au plus » ; partiel = + marge non publiée ; max-partiel = « au plus », + marge non publiée. */
@@ -173,16 +174,12 @@ export interface Platform {
     validUntil: string | null;
   };
   ratings: {
-    /** TrustScore affiché par Trustpilot ; null = aucune note publique (ex. note suspendue par Trustpilot). */
-    trustpilot: number | null;
-    /** Nombre total d'avis affiché par Trustpilot ; null quand la note est absente. */
-    trustpilotCount: number | null;
-    /** Page Trustpilot relevée (fr.trustpilot.com/review/<domaine>), null si aucune page fiable. */
+    /**
+     * Page Trustpilot officielle de la plateforme (fr.trustpilot.com/review/<domaine>), null si aucune page fiable.
+     * 08/10/2026 (décision de Kev) : les conditions de Trustpilot interdisent de reprendre ses notes. Seul ce lien
+     * est gardé ; aucune note, aucun nombre d'avis ni aucune date de relevé n'est stocké ni affiché.
+     */
     trustpilotUrl: string | null;
-    /** Date du relevé (AAAA-MM-JJ), à afficher à côté de la note. */
-    trustpilotVerified: string;
-    /** Précision à afficher avec la note (profil d'une maison mère, d'une marque renommée, note suspendue…). */
-    trustpilotNote?: string;
     /**
      * Notes App Store / Play Store : valeurs brutes SANS source ni date (06/10/2026 : Coinbase affichée 4,7 contre
      * 4,56 relevé sur l'API iTunes FR, Just Mining et Feel Mining sans application sur l'App Store FR). Elles ne sont
@@ -626,15 +623,9 @@ export function storeRating(p: Pick<Platform, "ratings">, store: "appStore" | "p
   return { rating: p.ratings[store], verified };
 }
 
-/**
- * Note Trustpilot prête à afficher (« 4,0/5 (23 213 avis) »), ou null s'il n'y a pas de note publique.
- * Les valeurs sont relevées à la main sur la page Trustpilot (ratings.trustpilotUrl) : toujours afficher
- * la date du relevé (ratings.trustpilotVerified) à côté.
- */
-export function trustpilotText(r: Platform["ratings"]): string | null {
-  if (r.trustpilot == null || r.trustpilotCount == null) return null;
-  const note = r.trustpilot.toLocaleString("fr-FR", { minimumFractionDigits: 1, maximumFractionDigits: 1 });
-  return `${note}/5 (${r.trustpilotCount.toLocaleString("fr-FR")} avis)`;
+/** Adresse de la page Trustpilot officielle, ou null : seule donnée Trustpilot gardée (aucune note reprise, lib/trustpilot.ts). */
+export function trustpilotLink(p: { ratings?: { trustpilotUrl?: string | null } | null }): string | null {
+  return trustpilotUrlOrNull(p.ratings?.trustpilotUrl);
 }
 
 export const platformsMeta = data._meta;
@@ -653,8 +644,8 @@ export const PLATFORMS_LAST_SCORED: string | null = (() => {
 /**
  * Détermine la meilleure source de social proof à afficher sur PlatformCard.
  * Audit Block 4 RE-AUDIT (Agent SEO/CRO + UX) :
- *  - Trustpilot si rating >= 3.5 (sinon rating bas = anti-conversion).
- *  - Sinon AppStore (par convention plus fiable pour fintech).
+ *  - 08/10/2026 : plus jamais Trustpilot (ses conditions interdisent de reprendre les notes).
+ *  - App Store seulement si la note a été relevée et datée.
  *  - Sinon null (on n'affiche rien plutôt qu'un mauvais signal).
  */
 export function pickSocialProof(p: Platform): {
@@ -664,14 +655,6 @@ export function pickSocialProof(p: Platform): {
   /** Date du relevé (AAAA-MM-JJ) quand la source en a une. */
   verified?: string;
 } | null {
-  if (p.ratings.trustpilot != null && p.ratings.trustpilot >= 3.5 && (p.ratings.trustpilotCount ?? 0) > 0) {
-    return {
-      label: "Trustpilot",
-      rating: p.ratings.trustpilot,
-      count: p.ratings.trustpilotCount,
-      verified: p.ratings.trustpilotVerified,
-    };
-  }
   // Repli App Store seulement si la note a été relevée et datée (storeRating) : aucune ne l'est au 06/10/2026.
   const app = storeRating(p, "appStore");
   if (app && app.rating >= 3.5) {

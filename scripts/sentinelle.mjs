@@ -21,6 +21,9 @@ import { fileURLToPath } from "node:url";
 import { CADENCE, TRACES_CRON, jugerTrace } from "./lib/sentinelle-robots.mjs";
 import { AGE_MAX_H, FICHES_TEMOINS, choisirEchantillon, fichesDuPlan, jugerFiche } from "./lib/sentinelle-cours.mjs";
 import { inventaireDonnees, jugerPageDates, pagesDatesDuJour } from "./lib/inventaire-dates.mjs";
+import {
+  chargerRegistre, compter, evaluerRegistre, jugerCmcJour, jugerExpiration, jugerTailleBase, rapportHebdo, ticketsDefauts, validerRegistre,
+} from "./lib/fraicheur-registre.mjs";
 
 const ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
 const FULL = process.argv.includes("--full");
@@ -338,6 +341,10 @@ async function checkCmcBudget() {
     if (/clé/.test(b?.raison ?? "")) return warn("quota", `CoinMarketCap non utilisé : ${b.raison}`);
     return fail("quota", "garde-fou mensuel CoinMarketCap aveugle : compteur officiel illisible (le site ne règle plus son rythme que par instance)");
   }
+  /* 08/10/2026 (lot Z1, architecture 0 € § 6.2 point 3) : compteur QUOTIDIEN (/v1/key/info) et erreur 1009 (plafond du
+     jour atteint). Le plafond quotidien de l'offre Basic existe mais sa valeur n'est pas publiée : jamais supposé. */
+  const v = jugerCmcJour(b, Date.now());
+  (v.level === "fail" ? fail : v.level === "warn" ? warn : ok)("quota", v.msg);
   const resume = `CoinMarketCap : ${fmt(b.aujourdhui)} crédits aujourd'hui, ${fmt(b.moisUtilises)} sur ${fmt(b.moisPlafond)} ce mois ; rythme ≈ ${fmt(b.rythmeJour)}/jour, soit ≈ ${fmt(b.besoinFinDeMois)} d'ici la fin du mois pour ${fmt(b.disponible)} disponibles (garde-fou : ${b.mode})`;
   if (b.niveau === "alerte") {
     // ligne ❌ STABLE (le ticket n'est complété que si l'ensemble des défauts change) ; chiffres du moment à part
@@ -542,6 +549,105 @@ async function checkDatesVerification() {
   else ok("dates vérifiées", `${inv.length} champs de date sous leur seuil`);
 }
 
+/* ------------------------------------------------------------------ registre des 51 familles (lot Z1, 08/10/2026) */
+/* Architecture 0 € § 6.2 : la vraie date de chaque famille de data/fraicheur/registre.json est lue et notée ✅ / ⚠️ / ❌
+   (date illisible = ❌, jamais « inconnue »). Une famille ❌ ouvre un ticket dédié (étape du workflow, dédoublonné par
+   titre) ; un ticket « état des 51 familles » est publié chaque dimanche. Ici : un décompte et la liste des ❌, en
+   « à surveiller » (le signal par famille est son ticket ; la sentinelle ne passe pas au rouge pour une donnée tenue en
+   session qui attend sa relecture). Fichiers écrits : fraicheur-etat.json, fraicheur-hebdo.md (à côté du rapport). */
+const pagesLues = new Map();
+async function texteDuSite(chemin) {
+  if (!pagesLues.has(chemin)) {
+    pagesLues.set(chemin, (async () => {
+      const { res } = await get(SITE + chemin);
+      const corps = await res.text();
+      return res.status === 200 && !isCheckpoint(res.status, corps) ? corps : null;
+    })());
+  }
+  return pagesLues.get(chemin);
+}
+async function kvLire(cle) {
+  const kvUrl = process.env.KV_REST_API_URL?.replace(/\/$/, "");
+  const kvToken = process.env.KV_REST_API_TOKEN;
+  const r = await fetch(`${kvUrl}/get/${encodeURIComponent(cle)}`, { headers: { Authorization: `Bearer ${kvToken}` }, signal: AbortSignal.timeout(10_000) });
+  const j = await r.json();
+  if (j.error || !r.ok) throw new Error(`HTTP ${r.status}`);
+  return typeof j.result === "string" ? JSON.parse(j.result) : j.result;
+}
+const accesSupabase = () => {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL;
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  return url && key ? { url, key } : null;
+};
+
+async function checkRegistreFraicheur() {
+  let reg;
+  try {
+    reg = chargerRegistre(ROOT);
+  } catch (e) {
+    return fail("registre de fraîcheur", `data/fraicheur/registre.json illisible (${e.message})`);
+  }
+  const erreurs = validerRegistre(reg);
+  if (erreurs.length) fail("registre de fraîcheur", `registre mal formé : ${erreurs.slice(0, 5).join(" ; ")}`);
+  const ctx = {
+    root: ROOT,
+    now: Date.now(),
+    env: process.env,
+    fetch,
+    ua: UA,
+    getTexte: texteDuSite,
+    kvGet: process.env.KV_REST_API_URL && process.env.KV_REST_API_TOKEN ? kvLire : null,
+    github: { token: process.env.GITHUB_TOKEN, repo: process.env.GITHUB_REPOSITORY },
+    supabase: accesSupabase(),
+  };
+  const resultats = await evaluerRegistre(reg, ctx);
+  const n = compter(resultats);
+  const etatDir = path.dirname(REPORT);
+  writeFileSync(path.join(etatDir, "fraicheur-etat.json"), JSON.stringify({ le: new Date(ctx.now).toISOString(), compte: n, resultats, tickets: ticketsDefauts(resultats) }, null, 1));
+  writeFileSync(path.join(etatDir, "fraicheur-hebdo.md"), rapportHebdo(resultats, ctx.now));
+  ok("registre de fraîcheur", `${resultats.length} familles : ${n.ok} ✅, ${n.attention} ⚠️, ${n.defaut} ❌`);
+  const defauts = resultats.filter((r) => r.etat === "defaut");
+  if (defauts.length) warn("registre de fraîcheur", `familles ❌ (un ticket par famille) : ${defauts.map((r) => `n° ${r.id}`).join(", ")}`);
+}
+
+/* Expirations (§ 6.2 point 4) : jetons du Gardien (06/10/2027), cron-job.org ; avertissement à J-30, défaut si expiré. */
+function checkExpirations() {
+  let reg;
+  try { reg = chargerRegistre(ROOT); } catch { return; }
+  for (const e of reg.expirations || []) {
+    const v = jugerExpiration(e, Date.now());
+    (v.level === "fail" ? fail : v.level === "warn" ? warn : ok)("expirations", v.msg);
+  }
+}
+
+/* Taille de la base Supabase (§ 6.2 point 3) : ⚠️ à 60 %, ❌ à 80 % de 500 Mo. Lecture par la fonction SQL
+   cryptoreflex_taille_base (migration 20261008_taille_base_sentinelle.sql, à lancer par Kev) avec la clé déjà présente ;
+   tant qu'elle n'existe pas : « non mesurable », jamais un chiffre supposé. */
+async function checkTailleBase() {
+  let plafond = 524_288_000;
+  try { plafond = chargerRegistre(ROOT).quotas?.supabase?.plafondOctets ?? plafond; } catch { /* plafond par défaut */ }
+  const acces = accesSupabase();
+  if (!acces) return warn("quota", jugerTailleBase(null, plafond, "accès Supabase absent de l'environnement").msg);
+  try {
+    const r = await fetch(`${acces.url.replace(/\/$/, "")}/rest/v1/rpc/cryptoreflex_taille_base`, {
+      method: "POST",
+      headers: { apikey: acces.key, Authorization: `Bearer ${acces.key}`, "content-type": "application/json" },
+      body: "{}",
+      signal: AbortSignal.timeout(15_000),
+    });
+    const corps = await r.json().catch(() => null);
+    if (!r.ok) {
+      const absente = r.status === 404 || /PGRST202|could not find the function/i.test(JSON.stringify(corps ?? ""));
+      return warn("quota", jugerTailleBase(null, plafond, absente ? "fonction SQL cryptoreflex_taille_base absente (migration 20261008_taille_base_sentinelle.sql non lancée)" : `HTTP ${r.status}`).msg);
+    }
+    const v = jugerTailleBase(Number(corps), plafond);
+    (v.level === "fail" ? fail : v.level === "warn" ? warn : ok)("quota", v.msg);
+    if (v.detail) warn("quota", v.detail);
+  } catch (e) {
+    warn("quota", jugerTailleBase(null, plafond, `lecture impossible (${e?.name === "TimeoutError" ? "délai dépassé" : "erreur réseau"})`).msg);
+  }
+}
+
 /* ------------------------------------------------------------------ exécution + rapport */
 await checkKeyPages();
 await checkFreshness();
@@ -555,6 +661,9 @@ if (FULL) {
   await checkPartners();
   await checkCoursFiches();
   await checkDatesVerification();
+  await checkRegistreFraicheur();
+  checkExpirations();
+  await checkTailleBase();
   await checkSitemaps();
 }
 

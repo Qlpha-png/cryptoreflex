@@ -428,5 +428,16 @@
       ]
     },
     "ignorer": []
+  },
+  "licences": {
+    "_lisezmoi": "Lot Z1 (08/10/2026, architecture 0 € § 6.2 point 5) : empreinte mensuelle (jours 1 à 3 de chaque mois, ou option --licences, ou --enregistrer) des pages de conditions dont dépend l'usage des sources. Une empreinte qui change ouvre un ticket « relire la licence » (jamais un échec de la veille). Le contrat commercial de CoinMarketCap est derrière un anti-robot : non surveillable.",
+    "pages": [
+      { "cle": "S1", "nom": "CoinMarketCap, offres de l'API (droits d'usage commercial de l'offre Basic)", "url": "https://coinmarketcap.com/api/pricing/" },
+      { "cle": "S2", "nom": "DexScreener, conditions de l'API", "url": "https://docs.dexscreener.com/api/api-terms-and-conditions" },
+      { "cle": "S4", "nom": "ESMA, mentions légales (réutilisation avec mention de la source)", "url": "https://www.esma.europa.eu/about-esma/legal-notice-and-data-protection" },
+      { "cle": "S5", "nom": "Licence Ouverte d'Etalab (listes de l'AMF sur data.gouv.fr)", "url": "https://raw.githubusercontent.com/etalab/Licence-Ouverte/master/open-licence.md" },
+      { "cle": "S7", "nom": "alternative.me, Fear & Greed (attribution à côté du chiffre)", "url": "https://alternative.me/crypto/fear-and-greed-index/" },
+      { "cle": "S8", "nom": "Federal Reserve, avertissement (domaine public)", "url": "https://www.federalreserve.gov/disclaimer.htm" }
+    ]
   }
 }

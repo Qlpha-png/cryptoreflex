@@ -191,7 +191,8 @@ function calculatorSoftwareSchema(description: string): JsonLd {
     // NOTE — `aggregateRating` volontairement absent : Google peut prendre une
     // manual action si la note n'est pas représentative d'avis utilisateurs
     // réels collectés (cf. policy "Review snippet"). À ré-activer quand on aura
-    // ≥ 5 reviews authentiques (Trustpilot ou formulaire post-utilisation PDF).
+    // ≥ 5 reviews authentiques collectées par le site (formulaire post-utilisation PDF) ;
+    // jamais des notes Trustpilot (reprise interdite par leurs conditions, 08/10/2026).
     // 05/10/2026 : plus de `Review` notée par le site sur son propre outil (avis auto-attribué, et son texte
     // annonçait des « tests internes par l'équipe » invérifiables).
     publisher: {
