@@ -21,6 +21,7 @@ import {
 import { FOOTER_LEGAL } from "@/lib/nav";
 import { TRACKS } from "@/lib/academy-tracks";
 import { getAuthorById } from "@/lib/authors";
+import { getPublishableComparisons } from "@/lib/programmatic";
 
 /**
  * lib/nav-data.ts — source unique de la navigation (lot B3a, architecture finale § 7, 8, 13).
@@ -37,6 +38,7 @@ const APP = path.join(ROOT, "app");
 const INSTANCES: Record<string, (v: string) => boolean> = {
   "academie/[track]": (v) => TRACKS.some((t) => t.id === v),
   "auteur/[slug]": (v) => Boolean(getAuthorById(v)),
+  "comparatif/[slug]": (v) => getPublishableComparisons().some((c) => c.slug === v),
 };
 
 function routeExists(href: string): boolean {

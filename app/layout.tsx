@@ -43,13 +43,8 @@ const WebVitalsReporter = dynamic(
   { ssr: false }
 );
 
-// Audit 26/04/2026 (user "Search Rechercher ne marche pas") : CommandPalette
-// existait dans le repo mais n'était JAMAIS monté = bouton search Navbar dispatch
-// l'event 'cmdk:open' dans le vide. Fix : monté en dynamic ssr:false (chargé
-// après LCP, ne bloque pas le first paint).
-const CommandPalette = dynamic(() => import("@/components/CommandPalette"), {
-  ssr: false,
-});
+// Lot B3b (08/10/2026) : l'ancienne palette ⌘K (CommandPalette, cmdk + fuse.js) est remplacée par la recherche de
+// l'en-tête (components/cplus/SiteSearch.tsx), chargée à la demande par l'îlot de components/Navbar.tsx (« / », Ctrl K).
 
 // FIX BUNDLE 2026-05-06 — NewsletterStickyBar n'apparait qu'après 30s OU
 // 50% scroll → aucun besoin SSR. Lazy-load ssr:false économise 1 hydration
@@ -501,9 +496,6 @@ export default function RootLayout({
           Source unique conservée : ce reporter KV.
         */}
         <WebVitalsReporter />
-        {/* CommandPalette ⌘K — déclenché via window.dispatchEvent('cmdk:open')
-            par les boutons Search Navbar (desktop + mobile). */}
-        <CommandPalette />
         {/* Drawer flottant du comparateur multi-cryptos. Ne s'affiche que
             si l'utilisateur a ajouté ≥ 1 crypto via AddToCompareButton.
             Z-index 95 = au-dessus du MobileBottomNav (z-90), sous les

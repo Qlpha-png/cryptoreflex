@@ -56,7 +56,14 @@ export {
   type SearchItem,
   type SearchResult,
   type SearchType,
+  chercherRapide,
+  scoreRapide,
+  type ItemRapide,
 } from "@/lib/search-client";
+
+// Lot B3b : index court de la recherche de l'en-tête (pages de la navigation, outils, plateformes autorisées, fiches
+// crypto principales, synonymes vers des pages existantes). Servi par app/api/search/rapide (route statique).
+export { construireIndexRapide, SYNONYMES_RECHERCHE } from "@/lib/search-rapide";
 
 /* -------------------------------------------------------------------------- */
 /*  Glossaire — petit dictionnaire pour les termes les plus cherchés         */

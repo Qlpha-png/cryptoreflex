@@ -140,6 +140,21 @@ export const ONGLETS: Onglet[] = [
     "intro": "Ce qui se passe dans la crypto, daté et sourcé",
     "groupes": [
       {
+        "titre": "Aujourd’hui",
+        "liens": [
+          {
+            "href": "/actualites",
+            "label": "Les actus du jour",
+            "phrase": "Les dernières actualités crypto, datées et sourcées"
+          },
+          {
+            "href": "/marche",
+            "label": "Le marché du jour",
+            "phrase": "Les cours des cryptos et leur variation sur 24 heures"
+          }
+        ]
+      },
+      {
         "titre": "Lire et suivre",
         "liens": [
           {
@@ -270,8 +285,8 @@ export const ONGLETS: Onglet[] = [
           },
           {
             "href": "/quiz/plateforme",
-            "label": "Choisir ma plateforme",
-            "phrase": "Quelques questions, sans e-mail"
+            "label": "Filtrer les plateformes autorisées",
+            "phrase": "Vos critères, toutes celles qui y répondent"
           },
           {
             "href": "/comparatif/frais",
@@ -284,8 +299,13 @@ export const ONGLETS: Onglet[] = [
             "phrase": "Les protections de chaque plateforme, côte à côte"
           },
           {
+            "href": "/comparatif/kraken-vs-okx",
+            "label": "Kraken ou OKX ? Le duel",
+            "phrase": "Frais, sécurité et statut MiCA, côte à côte"
+          },
+          {
             "href": "/comparatif#duels",
-            "label": "Duels de plateformes",
+            "label": "Tous les duels de plateformes",
             "phrase": "Deux plateformes face à face, déjà comparées"
           }
         ]
@@ -482,8 +502,8 @@ export const ONGLETS: Onglet[] = [
           },
           {
             "href": "/quiz/plateforme",
-            "label": "Choisir ma plateforme",
-            "phrase": "Quelques questions, sans e-mail"
+            "label": "Filtrer les plateformes autorisées",
+            "phrase": "Vos critères, toutes celles qui y répondent"
           }
         ]
       },
@@ -916,7 +936,7 @@ export const PIED_COLONNES: ColonnePied[] = [
       },
       {
         "href": "/quiz/plateforme",
-        "label": "Choisir ma plateforme"
+        "label": "Filtrer les plateformes autorisées"
       },
       {
         "href": "/comparatif/frais",
@@ -925,6 +945,10 @@ export const PIED_COLONNES: ColonnePied[] = [
       {
         "href": "/comparatif/securite",
         "label": "Sécurité comparée"
+      },
+      {
+        "href": "/comparatif/kraken-vs-okx",
+        "label": "Kraken ou OKX ? Le duel"
       },
       {
         "href": "/avis",
@@ -1292,6 +1316,108 @@ export const LIGNE_LEGALE: NavLien[] = [
   }
 ];
 
+/**
+ * Mon espace (architecture § 4) : menu de l'en-tête, même déconnecté. « Ma collection (album) » dans les deux états
+ * (le jeu est en bêta sans compte). L'en-tête du lot B3b rend la liste « invite » (pages statiques, aucun signal de
+ * session lisible côté serveur) ; « Se connecter » mène à /connexion, qui renvoie vers /mon-compte une fois connecté.
+ */
+export const MON_ESPACE: { invite: NavLien[]; connecte: NavLien[] } = {
+  "invite": [
+    {
+      "href": "/connexion",
+      "label": "Se connecter",
+      "phrase": "Retrouver vos alertes, votre portefeuille et vos favoris"
+    },
+    {
+      "href": "/inscription",
+      "label": "Créer un compte",
+      "phrase": "Gratuit, pour synchroniser vos données"
+    },
+    {
+      "href": "/mot-de-passe-oublie",
+      "label": "Mot de passe oublié ?",
+      "phrase": "Recevoir un lien pour le réinitialiser"
+    },
+    {
+      "href": "/cartes/jouer#album",
+      "label": "Ma collection (album)",
+      "phrase": "Vos cartes, enregistrées dans ce navigateur"
+    },
+    {
+      "href": "/outils/portfolio-tracker",
+      "label": "Suivre mon portefeuille",
+      "phrase": "En euros, enregistré dans ce navigateur, sans compte"
+    },
+    {
+      "href": "/alertes",
+      "label": "Être alerté d’un prix",
+      "phrase": "Un e-mail quand un cours franchit votre seuil"
+    },
+    {
+      "href": "/crypto-wrapped",
+      "label": "Mon année crypto (Crypto Wrapped)",
+      "phrase": "En préparation : le récapitulatif de votre année crypto"
+    }
+  ],
+  "connecte": [
+    {
+      "href": "/mon-compte",
+      "label": "Mon compte",
+      "phrase": "Profil et préférences"
+    },
+    {
+      "href": "/portefeuille",
+      "label": "Mon portefeuille synchronisé (avec compte)",
+      "phrase": "Dans votre espace, avec une plateforme connectée en lecture seule"
+    },
+    {
+      "href": "/watchlist",
+      "label": "Mes cryptos suivies (avec compte)",
+      "phrase": "Votre liste de cryptos favorites"
+    },
+    {
+      "href": "/alertes",
+      "label": "Mes alertes de prix",
+      "phrase": "Les seuils que vous suivez"
+    },
+    {
+      "href": "/academie/mon-parcours",
+      "label": "Ma progression",
+      "phrase": "Parcours suivis, badges, certificats"
+    },
+    {
+      "href": "/cartes/jouer#album",
+      "label": "Ma collection (album)",
+      "phrase": "Vos cartes Reflex"
+    },
+    {
+      "href": "/crypto-wrapped",
+      "label": "Mon année crypto (Crypto Wrapped)",
+      "phrase": "En préparation : le récapitulatif de votre année crypto"
+    },
+    {
+      "href": "/mon-compte/dev",
+      "label": "Créer une clé d’API (avec compte)",
+      "phrase": "Pour l’API avec clé, depuis votre espace"
+    },
+    {
+      "href": "/mon-compte/mot-de-passe",
+      "label": "Changer de mot de passe",
+      "phrase": "Sécurité du compte"
+    },
+    {
+      "href": "#deconnexion",
+      "label": "Se déconnecter",
+      "phrase": "Fermer la session sur cet appareil"
+    }
+  ]
+};
+
+/** Bouton secondaire de l'en-tête (D7, plan SEO § 2.1 : un filtre neutre, jamais « ma » plateforme). */
+// Bouton secondaire de l'en-tête (D7) : besoin n° 1 du plan SEO du 08/10/2026 (« [plateforme] mica », « plateforme
+// autorisée en France »). Décision de Kev du 08/10 : le filtre n'est pas mis en avant (« les gens vont aux plus connues »).
+export const ENTETE_CTA: NavLien = { href: "/outils/verificateur-mica", label: "Vérifier une plateforme" };
+
 /** Bande de confiance (bas des panneaux et du pied). */
 export const BANDE_CONFIANCE: { texte: string; liens: NavLien[] } = {
   "texte": "Gratuit et indépendant",
@@ -1499,7 +1625,7 @@ export const LIBELLE_DE: Record<string, string> = {
   "/staking": "Staking : rendements comparés",
   "/airdrops": "Airdrops",
   "/comparatif": "Comparer les plateformes autorisées",
-  "/quiz/plateforme": "Choisir ma plateforme",
+  "/quiz/plateforme": "Filtrer les plateformes autorisées",
   "/comparatif/frais": "Frais d’achat comparés",
   "/comparatif/securite": "Sécurité comparée",
   "/avis": "Avis détaillés",

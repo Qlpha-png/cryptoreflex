@@ -14,8 +14,8 @@
  * Garde-fous (anti-conflit) :
  *   - Aucun input/textarea/contenteditable focus
  *   - Pas de modificateur (Ctrl/Meta/Alt) — pour ne pas voler ⌘+K, ⌘+A, etc.
- *   - Pas de cmdk palette ouverte (heuristique : `body[data-cmdk-open="true"]`
- *     OU présence d'un élément `[role="dialog"][data-state="open"]`).
+ *   - Pas de dialogue ouvert (recherche de l'en-tête : `body.modal-open` ;
+ *     autres : `[role="dialog"][data-state="open"]`).
  *
  * Retourne `{ selectedId, selectedIndex }` pour permettre au composant de
  * surligner la ligne courante.
@@ -50,7 +50,7 @@ interface KeyboardNavOptions {
 /**
  * Détermine si on doit ignorer un évènement keydown selon le contexte.
  * - Champ texte focus → ne pas voler la frappe
- * - cmdk palette ouverte → la palette gère sa propre nav
+ * - Recherche de l'en-tête ouverte → elle gère sa propre nav
  * - Modale ouverte → laisser passer
  */
 function shouldIgnoreEvent(e: KeyboardEvent): boolean {
@@ -71,13 +71,9 @@ function shouldIgnoreEvent(e: KeyboardEvent): boolean {
       if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT") return true;
       if (active.isContentEditable) return true;
     }
-    // 3. cmdk palette ouverte (heuristique : data-cmdk-open OU dialog open)
-    if (document.body?.dataset?.cmdkOpen === "true") return true;
+    // 3. Dialogue ouvert (recherche de l'en-tête : body.modal-open ; autres : data-state="open")
     if (document.body?.classList?.contains("modal-open")) return true;
-    // Cherche un dialog cmdk ouvert (le composant cmdk pose data-state="open")
-    const openDialog = document.querySelector<HTMLElement>(
-      '[role="dialog"][data-state="open"], [cmdk-root][data-state="open"]'
-    );
+    const openDialog = document.querySelector<HTMLElement>('[role="dialog"][data-state="open"]');
     if (openDialog) return true;
   }
 

@@ -1,5 +1,7 @@
 /* Jetons de couleur --c-* (canaux « R G B »), GÉNÉRÉS par scripts/design/tokens.source.mjs (lot A1). */
 @import "./styles/tokens.css";
+/* En-tête du bureau, méga-menus et recherche (lot B3b). */
+@import "./styles/entete.css";
 /* Lot A2 : les couleurs de ce fichier passent par ces jetons (rgb(var(--c-…) / a)) ; restent en dur les seules teintes
    sans jeton de valeur identique (héros, crème #ffe9c2…), les masques et le voile de [popover]::backdrop. */
 

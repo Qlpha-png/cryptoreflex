@@ -100,21 +100,14 @@ function PortfolioView() {
     };
   }, []);
 
-  /* -------- CommandPalette ⌘K (étude 02/05/2026 — proposition #7) -------
-   * Écoute l'event `cmdk:open-add-holding` émis par CommandPalette quand
-   * l'utilisateur lance l'action "Ajouter au portefeuille…" depuis ⌘K.
-   * Et : si on arrive sur la page via `/portefeuille?add=1` (depuis ⌘K
-   * sur une autre page), on ouvre le dialog au mount. */
+  /* -------- Arrivée avec `/portefeuille?add=1` : dialog ouvert au mount --
+   * (L'ancienne palette ⌘K émettait aussi `cmdk:open-add-holding` ; elle est
+   * retirée au lot B3b, plus rien n'émet cet événement.) */
   const searchParams = useSearchParams();
   useEffect(() => {
-    const onOpen = () => setAddOpen(true);
-    window.addEventListener("cmdk:open-add-holding", onOpen);
     if (searchParams?.get("add") === "1") {
       setAddOpen(true);
     }
-    return () => {
-      window.removeEventListener("cmdk:open-add-holding", onOpen);
-    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -250,7 +243,7 @@ function PortfolioView() {
    *   J / ↓  : sélection suivante       K / ↑  : sélection précédente
    *   X      : delete (avec confirm)    E      : edit (open dialog)
    *   A      : add (open dialog)        Esc    : clear sélection
-   * Garde-fous via shouldIgnoreEvent : skip si input focus ou cmdk open. */
+   * Garde-fous via shouldIgnoreEvent : skip si input focus ou dialogue ouvert. */
   const { selectedId } = useKeyboardNav(holdings, {
     onDelete: (id) => {
       const h = holdings.find((x) => x.id === id);

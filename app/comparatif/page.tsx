@@ -16,6 +16,7 @@ import ComparateurNotice from "@/components/ComparateurNotice";
 import { faqSchema, graphSchema, type JsonLd } from "@/lib/schema";
 import { fitDescription } from "@/lib/seo-text";
 import Breadcrumbs from "@/components/Breadcrumbs";
+import OuvrirAncre from "@/components/OuvrirAncre";
 
 /**
  * /comparatif — refonte du 05/10/2026 (GO de Kev : « beau, fluide, simple, qu'un enfant de 8 ans puisse tout faire »).
@@ -189,7 +190,10 @@ function ComparatifPage() {
               </ul>
             </details>
 
-            <details className="group rounded-2xl border border-border bg-surface p-4">
+            {/* Ancre #duels : cible du lien « Tous les duels de plateformes » du méga-menu Plateformes (lot B3b) ; le bloc
+                s'ouvre à l'arrivée sur l'ancre (OuvrirAncre). */}
+            <OuvrirAncre id="duels" />
+            <details id="duels" className="group scroll-mt-32 rounded-2xl border border-border bg-surface p-4">
               <summary className="flex cursor-pointer list-none items-center justify-between gap-3 text-base font-bold text-fg">
                 <span>Les duels détaillés ({duels.length})</span>
                 <ChevronDown className="h-5 w-5 text-muted transition-transform group-open:rotate-180" aria-hidden="true" />

@@ -108,6 +108,9 @@ export default function ClickFallback() {
       // Skip target=_blank, download, externe
       if (link.target && link.target !== "_self") return;
       if (link.hasAttribute("download")) return;
+      // Lot B3b : un lien devenu bouton de menu (onglets et « Mon espace » de l'en-tête, role="button" posé par
+      // MegaNavIsland) ouvre un panneau au lieu de naviguer : jamais de navigation forcée.
+      if (link.getAttribute("role") === "button") return;
 
       const href = link.getAttribute("href");
       if (!href) return;
