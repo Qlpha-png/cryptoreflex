@@ -706,7 +706,7 @@ function buildTAArticle(crypto, prices, livePriceUsd, change24h) {
   const price = Math.round(livePriceUsd * 100) / 100;
 
   const title = `Analyse technique ${crypto.symbol} du ${frDate(TODAY)}`;
-  const description = `Analyse technique ${crypto.name} (${crypto.symbol}) du ${frDate(TODAY)} : RSI, moyennes mobiles 50 et 200 jours, niveaux clés et scénarios.`;
+  const description = `Analyse technique ${crypto.name} (${crypto.symbol}) du ${frDate(TODAY)} : RSI et moyennes mobiles 50 et 200 jours, calcul automatique daté.`;
   const trendFem = TREND_FEM[trend] ?? trend.toLowerCase();
 
   const frontmatter = `---
@@ -733,24 +733,20 @@ Le ${crypto.name} (${crypto.symbol}) s'échange à **${frUsd(price)}** le ${frDa
 
 | Indicateur | Valeur | Lecture |
 |---|---|---|
-| RSI (14) | ${frNum(rsi, 1)} | ${rsi > 70 ? "Surachat — risque de correction" : rsi < 30 ? "Survente — rebond possible" : "Zone neutre"} |
-| MA 50 | ${frUsd(ma50)} | ${price > ma50 ? "Prix au-dessus (signal haussier)" : "Prix en dessous (prudence)"} |
-| MA 200 | ${frUsd(ma200)} | ${price > ma200 ? "Tendance long terme haussière" : "Tendance long terme baissière"} |
+| RSI (14) | ${frNum(rsi, 1)} | ${rsi > 70 ? "Zone de surachat (RSI au-dessus de 70)" : rsi < 30 ? "Zone de survente (RSI en dessous de 30)" : "Zone neutre (entre 30 et 70)"} |
+| MA 50 | ${frUsd(ma50)} | ${price > ma50 ? "Prix au-dessus de la moyenne" : "Prix en dessous de la moyenne"} |
+| MA 200 | ${frUsd(ma200)} | ${price > ma200 ? "Prix au-dessus de la moyenne" : "Prix en dessous de la moyenne"} |
 
-## Scénarios
-
-**Scénario haussier** : le franchissement de la résistance proche ouvrirait la voie à un prolongement de la tendance${trend === "Neutre" ? " actuelle" : ` ${trendFem}`}.
-
-**Scénario baissier** : cassure du support clé déclencherait une correction vers les zones de support inférieures.
+Ces indicateurs décrivent le passé du prix ; ils ne disent rien de ce qu'il fera. Tendance calculée : « haussière » si le prix est au-dessus de la moyenne 50 jours et celle-ci au-dessus de la moyenne 200 jours, « baissière » dans le cas inverse, « neutre » sinon.
 
 ## Pour aller plus loin
 
-- [Fiche ${crypto.name}](/cryptos/${crypto.slug})
+- [Fiche ${crypto.name} : usage et risques](/cryptos/${crypto.slug})
 - [Heatmap top 100 en temps réel](/marche/heatmap)
-- [Comparatif des plateformes pour acheter ${crypto.symbol}](/comparatif)
+- [Déclarer une vente de crypto](/impots)
 
 <Callout type="warning" title="Avertissement">
-Cette analyse technique est strictement informative. Elle **ne constitue pas un conseil en investissement**. Les performances passées ne préjugent pas des performances futures.
+Calcul automatique sur un gabarit fixe, sans rédaction par une IA. Ces informations **ne constituent pas un conseil en investissement**. Les crypto-actifs sont volatils et peuvent perdre tout ou partie de leur valeur.
 </Callout>
 `;
 

@@ -14,9 +14,9 @@
  * Si l'utilisateur arrive sur /vs/eth/btc → redirect 301 vers /vs/btc/eth.
  *
  * Contenu 100 % data-driven (pas de prose hallucinée) :
- * tout est généré depuis getAllCryptos(), getDecentralizationScore(),
- * fetchCoinDetailDaily() (CoinGecko/KV, cache par coin et par jour) et
- * correlationFromSparklines().
+ * tout est généré depuis getAllCryptos(), getDecentralizationScore() et
+ * fetchCoinDetailDaily() (CoinGecko/KV, cache par coin et par jour).
+ * Lot légal du 08/10/2026 : aucun gagnant, aucun profil → crypto, seules les plateformes autorisées en France.
  */
 
 import type { Metadata } from "next";
@@ -29,7 +29,6 @@ import {
   ExternalLink,
   ShoppingCart,
   Sparkles,
-  Trophy,
 } from "lucide-react";
 import { TOP_PAIRS } from "@/lib/historical-prices";
 
@@ -44,12 +43,9 @@ import {
   getDecentralizationScore,
   formatDecentralizationVerdict,
 } from "@/lib/decentralization-scores";
-import {
-  correlationFromSparklines,
-  describeCorrelation,
-} from "@/lib/correlation";
 import { fetchCoinDetailDaily, formatCompactNumber } from "@/lib/coingecko";
-import { getAllCryptos, listedVenues, type AnyCrypto } from "@/lib/cryptos";
+import { getAllCryptos, type AnyCrypto } from "@/lib/cryptos";
+import { nomsAutorisesFr } from "@/lib/plateformes-autorisees";
 import { BRAND } from "@/lib/brand";
 import { withHreflang } from "@/lib/seo-alternates";
 import { cryptoFinancialProductSchema, faqSchema, graphSchema } from "@/lib/schema";
@@ -122,7 +118,7 @@ export function generateMetadata({ params }: Props): Metadata {
   const title = `${a.symbol} vs ${b.symbol} : comparatif 2026`;
   // Description front-loadée + coupée proprement à 160 chars (le tail unique
   // était systématiquement tronqué par Google sinon). Une seule tagline.
-  const rawDescription = `${a.name} (${a.symbol}) ou ${b.name} (${b.symbol}) en 2026 : market cap, supply, risque, plateformes FR. ${a.tagline.replace(/\.*$/, "")}.`;
+  const rawDescription = `${a.name} (${a.symbol}) ou ${b.name} (${b.symbol}) en 2026 : market cap, supply, consensus, plateformes autorisées en France. ${a.tagline.replace(/\.*$/, "")}.`;
   const description =
     rawDescription.length > 160
       ? rawDescription.slice(0, 159).replace(/[\s,;:.…-]+$/, "").replace(/\s+\S*$/, "").trimEnd() + "…"
@@ -175,27 +171,17 @@ function maxSupplyOf(c: AnyCrypto): string {
   return c.kind === "top10" ? c.maxSupply : c.marketCapRange;
 }
 
-function riskOf(c: AnyCrypto): string {
-  if (c.kind === "top10") return c.riskLevel;
-  // Hidden gems : on dérive un niveau qualitatif depuis le score de fiabilité.
-  const s = c.reliability.score;
-  if (s >= 8.5) return "Modéré";
-  if (s >= 7) return "Élevé";
-  return "Très élevé";
-}
-
-function beginnerScore(c: AnyCrypto): string {
-  return c.kind === "top10" ? `${c.beginnerFriendly}/5` : "—";
-}
+/* Lot légal du 08/10/2026 : plus de « niveau de risque » (« Faible » pour BTC contredit le risque de perte en capital ;
+   celui des autres cryptos dérivait d'une note sans formule publiée), plus de score « débutant », plus de verdict
+   « Plutôt adapté : X » par profil (correspondance profil → crypto = recommandation au sens de l'AMF). */
 
 /**
- * Plateformes (ou protocoles) réellement listés dans whereToBuy. Audit 2026-10-02 :
- * quand aucune plateforme agréée MiCA ne propose la crypto, data/hidden-gems.json
- * porte un libellé « Aucune plateforme agréée MiCA… » — ce n'est pas une
- * plateforme : il ne doit être ni compté, ni présenté comme plateforme commune.
+ * Plateformes AUTORISÉES EN FRANCE (platforms.json + isAvailableFr) parmi la liste éditoriale whereToBuy.
+ * KuCoin, Gate.io, « DEX uniquement », « (selon juridiction) » et la note « Aucune plateforme agréée MiCA… »
+ * ne sont ni comptés ni affichés (lot légal du 08/10/2026).
  */
 function venuesOf(c: AnyCrypto): string[] {
-  return listedVenues(c.whereToBuy);
+  return nomsAutorisesFr(c.whereToBuy);
 }
 
 /**
@@ -241,11 +227,11 @@ function buildKeyDifferences(a: AnyCrypto, b: AnyCrypto): string[] {
   const common = venuesOf(a).filter((p) => venuesOf(b).includes(p));
   if (common.length > 0) {
     diffs.push(
-      `Plateformes communes pour acheter en France : ${common.slice(0, 4).join(", ")}${common.length > 4 ? "…" : ""} (${common.length} au total).`,
+      `Plateformes autorisées en France de notre liste qui proposent les deux : ${common.slice(0, 4).join(", ")}${common.length > 4 ? "…" : ""} (${common.length} au total).`,
     );
   } else {
     diffs.push(
-      `Aucune plateforme commune au catalogue : il faudra deux comptes distincts pour détenir les deux.`,
+      `Aucune plateforme autorisée en France de notre liste ne propose les deux, à notre connaissance.`,
     );
   }
 
@@ -269,18 +255,15 @@ function buildIntro(a: AnyCrypto, b: AnyCrypto, commonCount: number): string {
   parts.push(
     sameCat
       ? `Deux projets du même créneau (${a.category.toLowerCase()}) : ce sont des concurrents directs.`
-      : `Deux créneaux distincts qui peuvent se compléter dans un portefeuille diversifié.`,
+      : `Deux créneaux distincts : ils ne répondent pas au même usage.`,
   );
   if (gap > 0) {
     parts.push(`${elder.name} compte ${gap} an${gap > 1 ? "s" : ""} d'antériorité sur le marché.`);
   }
   parts.push(
-    `Niveau de risque : ${a.name} ${riskOf(a).toLowerCase()}, ${b.name} ${riskOf(b).toLowerCase()}.`,
-  );
-  parts.push(
     commonCount > 0
-      ? `${commonCount} plateforme${commonCount > 1 ? "s" : ""} régulée${commonCount > 1 ? "s" : ""} en France permet${commonCount > 1 ? "tent" : ""} d'acheter les deux.`
-      : `Aucune plateforme française commune aux deux dans notre base éditoriale.`,
+      ? `${commonCount} plateforme${commonCount > 1 ? "s" : ""} autorisée${commonCount > 1 ? "s" : ""} en France de notre liste propose${commonCount > 1 ? "nt" : ""} les deux.`
+      : `Aucune plateforme autorisée en France de notre liste ne propose les deux, à notre connaissance.`,
   );
   return parts.join(" ");
 }
@@ -336,67 +319,6 @@ function buildVsCrossLinks(a: AnyCrypto, b: AnyCrypto): { href: string; label: s
 }
 
 /**
- * BATCH 58 — Verdict editorial unique par paire, base sur les attributs
- * concrets des 2 cryptos. Pas de prose generique, 100% data-driven.
- *
- * Logique :
- *  - Compare l'anciennete (anti-fragility = age sur le marche)
- *  - Compare le risque (qui pour quel profil)
- *  - Compare la categorie (concurrents / complementaires)
- *  - Genere une recommandation explicite "Pour X, Y est preferable car..."
- */
-function buildVerdict(a: AnyCrypto, b: AnyCrypto): {
-  conclusion: string;
-  beginnerChoice: { winner: AnyCrypto; reason: string };
-  experimentedChoice: { winner: AnyCrypto; reason: string };
-  longTermChoice: { winner: AnyCrypto; reason: string };
-} {
-  const sameCategory = a.category === b.category;
-  const ageGap = Math.abs(a.yearCreated - b.yearCreated);
-  const elder = a.yearCreated < b.yearCreated ? a : b;
-  const younger = a.yearCreated < b.yearCreated ? b : a;
-  const riskA = riskOf(a);
-  const riskB = riskOf(b);
-
-  // 1. Conclusion
-  let conclusion: string;
-  if (sameCategory) {
-    conclusion = `${a.name} et ${b.name} sont des concurrents directs sur le créneau "${a.category}". L'arbitrage se fait sur 3 axes : maturité (${elder.name} a ${ageGap} an${ageGap > 1 ? "s" : ""} d'avance), niveau de risque (${riskA} pour ${a.name}, ${riskB} pour ${b.name}) et disponibilité plateformes en France (${venuesOf(a).length} vs ${venuesOf(b).length}).`;
-  } else {
-    conclusion = `${a.name} et ${b.name} sont sur des créneaux différents : ${a.name} cible "${a.category}" tandis que ${b.name} se positionne sur "${b.category}". Ce ne sont pas des concurrents directs — ils peuvent coexister dans un portefeuille diversifié si leurs deux cas d'usage vous intéressent.`;
-  }
-
-  // 2. Choix débutant : le moins risqué + le plus ancien
-  const riskOrder: Record<string, number> = {
-    "Très faible": 0, "Faible": 1, "Modéré": 2, "Élevé": 3, "Très élevé": 4,
-  };
-  const safer = (riskOrder[riskA] ?? 4) <= (riskOrder[riskB] ?? 4) ? a : b;
-  const beginnerScoreA = a.kind === "top10" ? a.beginnerFriendly : 0;
-  const beginnerScoreB = b.kind === "top10" ? b.beginnerFriendly : 0;
-  const beginnerWinner = beginnerScoreA > beginnerScoreB ? a : beginnerScoreB > beginnerScoreA ? b : safer;
-  const beginnerReason =
-    beginnerWinner === safer
-      ? `Niveau de risque ${riskOf(beginnerWinner)} (vs ${riskOf(beginnerWinner === a ? b : a)} pour l'autre). Plus accessible quand on débute.`
-      : `Score « accessible aux débutants » ${beginnerWinner.kind === "top10" ? `${beginnerWinner.beginnerFriendly}/5` : "n/a"} et ${venuesOf(beginnerWinner).length} plateformes FR.`;
-
-  // 3. Choix expérimenté : volatilité + use case sophistiqué
-  const riskier = (riskOrder[riskA] ?? 0) >= (riskOrder[riskB] ?? 0) ? a : b;
-  const expReason = `Risque ${riskOf(riskier)} = volatilité supérieure mais potentiel de gains/pertes asymétrique. Cas d'usage "${riskier.tagline.toLowerCase()}" demande de comprendre la thèse en amont.`;
-
-  // 4. Long terme : ancienneté = anti-fragilité (Lindy effect)
-  const elderAge = new Date().getFullYear() - elder.yearCreated;
-  const youngerAge = new Date().getFullYear() - younger.yearCreated;
-  const longTermReason = `${elder.name} a ${elderAge} ans d'historique (lancé en ${elder.yearCreated}) vs ${youngerAge} an${youngerAge > 1 ? "s" : ""} pour ${younger.name} (${younger.yearCreated}). Effet Lindy : plus une crypto survit, plus son espérance de survie augmente. Niveau de risque ${riskOf(elder)} actuel.`;
-
-  return {
-    conclusion,
-    beginnerChoice: { winner: beginnerWinner, reason: beginnerReason },
-    experimentedChoice: { winner: riskier, reason: expReason },
-    longTermChoice: { winner: elder, reason: longTermReason },
-  };
-}
-
-/**
  * BATCH 58 — Forces uniques de chaque crypto (3 points par crypto).
  * Genere depuis les data MDX (top10 ou hidden-gems).
  */
@@ -404,13 +326,8 @@ function buildStrengths(c: AnyCrypto): string[] {
   if (c.kind === "top10") {
     return c.strengths.slice(0, 3);
   }
-  // Hidden gem : derive depuis tagline + reliability + use case
+  // Hidden gem : tagline + audits publics (lot légal du 08/10/2026 : plus de « score fiabilité », note sans formule publiée)
   const out: string[] = [];
-  if (c.reliability.score >= 8) {
-    out.push(`Score fiabilité ${fmtFr(c.reliability.score, 1)}/10 (équipe identifiée + audits).`);
-  } else if (c.reliability.score >= 7) {
-    out.push(`Score fiabilité correct ${fmtFr(c.reliability.score, 1)}/10 — ${c.reliability.yearsActive} années d'activité.`);
-  }
   if (c.reliability.auditedBy && c.reliability.auditedBy.length > 0) {
     out.push(`Audits par ${c.reliability.auditedBy.slice(0, 2).join(" et ")}.`);
   }
@@ -426,31 +343,31 @@ function buildFaq(a: AnyCrypto, b: AnyCrypto): { q: string; ans: string }[] {
 
   return [
     {
-      q: `Faut-il choisir ${a.name} ou ${b.name} en 2026 ?`,
-      ans: `Aucune des deux n'est meilleure dans l'absolu : ${a.name} (${a.symbol}) cible "${a.tagline.toLowerCase()}" ; ${b.name} (${b.symbol}) cible "${b.tagline.toLowerCase()}". Le bon arbitrage dépend de votre objectif (long terme, paiement, DeFi, NFT…) et de votre tolérance au risque (${riskOf(a)} pour ${a.name}, ${riskOf(b)} pour ${b.name}). Cryptoreflex publie sa méthodologie : aucun signal d'achat n'est donné — c'est à vous de trancher avec ces éléments factuels.`,
+      q: `Quelle différence entre ${a.name} et ${b.name} ?`,
+      ans: `${a.name} (${a.symbol}) : « ${a.tagline.replace(/\.*$/, "")} ». ${b.name} (${b.symbol}) : « ${b.tagline.replace(/\.*$/, "")} ». Ils ne répondent pas forcément au même usage : le tableau ci-dessus compare leurs caractéristiques, sans désigner de gagnant. Ces informations sont générales et ne tiennent pas compte de votre situation : elles ne constituent pas un conseil en investissement.`,
     },
     {
-      q: `Quelle plateforme pour acheter ${a.name} et ${b.name} en France ?`,
+      q: `Où trouver ${a.name} et ${b.name} en France ?`,
       ans:
         common.length > 0
-          ? `Plateformes régulées MiCA disponibles pour les deux : ${common.join(", ")}. Choisir une seule plateforme commune simplifie la fiscalité (un seul export Cerfa 2086) et le suivi de portefeuille.`
-          : `Aucune plateforme MiCA ne propose simultanément ${a.symbol} et ${b.symbol} dans notre base. Pour ${a.name} : ${venuesOf(a).slice(0, 3).join(", ") || "aucune plateforme agréée MiCA à notre connaissance"}. Pour ${b.name} : ${venuesOf(b).slice(0, 3).join(", ") || "aucune plateforme agréée MiCA à notre connaissance"}.`,
+          ? `Plateformes autorisées en France de notre liste qui proposent les deux : ${common.join(", ")}. Liste éditoriale, non exhaustive ; vérifiez le statut de la plateforme avant d'ouvrir un compte.`
+          : `Aucune plateforme autorisée en France de notre liste ne propose les deux, à notre connaissance. Pour ${a.name} : ${venuesOf(a).slice(0, 3).join(", ") || "aucune plateforme autorisée de notre liste"}. Pour ${b.name} : ${venuesOf(b).slice(0, 3).join(", ") || "aucune plateforme autorisée de notre liste"}.`,
     },
     {
-      q: `Quels sont les risques majeurs de ${a.name} et ${b.name} ?`,
-      ans: `Pour ${a.name} (niveau de risque ${riskOf(a)}) : ${
+      q: `Quels sont les risques de ${a.name} et ${b.name} ?`,
+      ans: `Pour ${a.name} : ${
         a.kind === "top10"
           ? a.weaknesses.slice(0, 2).join(" ; ")
           : a.risks.slice(0, 2).join(" ; ")
-      }. Pour ${b.name} (niveau de risque ${riskOf(b)}) : ${
+      }. Pour ${b.name} : ${
         b.kind === "top10"
           ? b.weaknesses.slice(0, 2).join(" ; ")
           : b.risks.slice(0, 2).join(" ; ")
-      }. Volatilité élevée et risque de perte en capital pour les deux — sizer raisonnablement.`,
+      }. Dans les deux cas, le cours peut baisser fortement : risque de perte en capital.`,
     },
     {
       q: `${a.name} et ${b.name} sont-ils conformes MiCA ?`,
-      ans: `MiCA s'applique aux PRESTATAIRES (CASP) et non aux cryptos elles-mêmes. Depuis le 1er juillet 2026, seul un prestataire agréé MiCA peut servir les résidents français. Notre base recense ${venuesOf(a).length} plateforme(s) ou protocole(s) pour ${a.name} et ${venuesOf(b).length} pour ${b.name}. Vérifiez le statut MiCA via notre /outils/verificateur-mica avant de déposer des fonds.`,
+      ans: `MiCA s'applique aux PRESTATAIRES (CASP) et non aux cryptos elles-mêmes. Depuis le 1er juillet 2026, seul un prestataire agréé MiCA peut servir les résidents français. Notre liste compte ${venuesOf(a).length} plateforme(s) autorisée(s) en France pour ${a.name} et ${venuesOf(b).length} pour ${b.name}. Vérifiez le statut d'une plateforme avec notre vérificateur MiCA avant de déposer des fonds.`,
     },
   ];
 }
@@ -478,15 +395,11 @@ export default async function CryptoPairPage({ params }: Props) {
   //    fetchCoinDetail ×2 + getPairCorrelation7d (qui refaisait ×2 en no-store)
   //    → rendus à froid de 6-8 s (fallback CoinGecko per-id en 429 + pauses de
   //    retry) et revalidation ISR effective de 60 s au lieu de 7 j.
-  //    La corrélation est calculée sur les sparklines déjà en main.
+  //    Lot légal du 08/10/2026 : « Corrélation 7j » retirée (7 jours = bruit, présenté comme un fait utile au portefeuille).
   const [detailA, detailB] = await Promise.all([
     fetchCoinDetailDaily(a.coingeckoId),
     fetchCoinDetailDaily(b.coingeckoId),
   ]);
-  const correlation = correlationFromSparklines(
-    detailA?.sparkline7d,
-    detailB?.sparkline7d,
-  );
 
   // 3. Decentralization scores (statiques, peuvent être null).
   const decentA = getDecentralizationScore(a.id);
@@ -506,10 +419,9 @@ export default async function CryptoPairPage({ params }: Props) {
       (p.from === _symB && p.to === _symA),
   );
 
-  // 5. Différences + FAQ + verdict editorial unique
+  // 5. Différences + FAQ (plus de verdict par profil : lot légal du 08/10/2026)
   const keyDiffs = buildKeyDifferences(a, b);
   const faq = buildFaq(a, b);
-  const verdict = buildVerdict(a, b);
   const strengthsA = buildStrengths(a);
   const strengthsB = buildStrengths(b);
 
@@ -585,34 +497,18 @@ export default async function CryptoPairPage({ params }: Props) {
                   b={formatCompactNumber(detailB?.circulatingSupply)}
                 />
                 <Row label="Supply max" a={maxSupplyOf(a)} b={maxSupplyOf(b)} />
-                <Row
-                  label="Année de création"
-                  a={String(a.yearCreated)}
-                  b={String(b.yearCreated)}
-                  winner={a.yearCreated < b.yearCreated ? "a" : a.yearCreated > b.yearCreated ? "b" : null}
-                />
+                <Row label="Année de création" a={String(a.yearCreated)} b={String(b.yearCreated)} />
                 <Row label="Consensus" a={consensusOf(a)} b={consensusOf(b)} />
                 <Row label="Temps de bloc" a={blockTimeOf(a)} b={blockTimeOf(b)} />
-                <Row label="Niveau de risque" a={riskOf(a)} b={riskOf(b)} />
-                <Row label="Accessible aux débutants" a={beginnerScore(a)} b={beginnerScore(b)} />
                 <Row
                   label="Score décentralisation"
                   a={decentA ? `${fmtFr(decentA.score, 1)}/10` : "—"}
                   b={decentB ? `${fmtFr(decentB.score, 1)}/10` : "—"}
-                  winner={
-                    decentA && decentB
-                      ? decentA.score > decentB.score
-                        ? "a"
-                        : decentB.score > decentA.score
-                          ? "b"
-                          : null
-                      : null
-                  }
                 />
                 <Row
-                  label="Disponibilité France"
-                  a={`${venuesOf(a).length} plateformes`}
-                  b={`${venuesOf(b).length} plateformes`}
+                  label="Plateformes autorisées en France (notre liste)"
+                  a={String(venuesOf(a).length)}
+                  b={String(venuesOf(b).length)}
                 />
               </tbody>
             </table>
@@ -644,14 +540,15 @@ export default async function CryptoPairPage({ params }: Props) {
         {/* Plateformes communes */}
         <section className="mt-12">
           <h2 className="text-2xl font-bold tracking-tight">
-            Plateformes communes pour acheter
+            Plateformes autorisées en France qui proposent les deux
           </h2>
           {commonPlatforms.length > 0 ? (
             <>
               <p className="mt-3 text-sm text-muted">
-                {commonPlatforms.length} plateforme{commonPlatforms.length > 1 ? "s" : ""} listent à la fois
+                {commonPlatforms.length} plateforme{commonPlatforms.length > 1 ? "s" : ""} de notre liste
                 {" "}
-                {a.symbol} et {b.symbol} dans notre base éditoriale :
+                {commonPlatforms.length > 1 ? "proposent" : "propose"} à la fois {a.symbol} et {b.symbol} (ordre
+                alphabétique, liste non exhaustive) :
               </p>
               <ul className="mt-4 flex flex-wrap gap-2">
                 {commonPlatforms.map((p) => (
@@ -666,7 +563,8 @@ export default async function CryptoPairPage({ params }: Props) {
             </>
           ) : (
             <p className="mt-3 text-sm text-muted">
-              Aucune plateforme commune dans notre base. Voir les fiches détaillées pour la liste complète.
+              Aucune plateforme autorisée en France de notre liste ne propose les deux, à notre connaissance. Voir
+              les fiches de chaque crypto.
             </p>
           )}
         </section>
@@ -678,11 +576,11 @@ export default async function CryptoPairPage({ params }: Props) {
             existe dans TOP_PAIRS (sinon pas de lien → zéro 404). */}
         <section className="mt-12">
           <h2 className="text-2xl font-bold tracking-tight">
-            Passer à l&apos;achat
+            Où les trouver en France
           </h2>
           <p className="mt-3 text-sm text-muted">
-            Vous avez comparé {a.name} et {b.name} ? Voici comment acheter l&apos;un
-            ou l&apos;autre en France, ou convertir directement entre les deux.
+            Pour chaque crypto : les plateformes autorisées en France de notre liste, les étapes et ce qu&apos;il
+            faut déclarer ensuite.
           </p>
           <div className="mt-4 grid gap-3 sm:grid-cols-2">
             <Link
@@ -720,64 +618,11 @@ export default async function CryptoPairPage({ params }: Props) {
           </div>
         </section>
 
-        {/* BATCH 58 — Verdict editorial unique par paire (data-driven) */}
-        <section className="mt-12 rounded-2xl border border-primary/30 bg-primary/5 p-6">
-          <h2 className="text-2xl font-bold text-fg flex items-center gap-2">
-            <Trophy className="h-6 w-6 text-primary" />
-            {a.name} ou {b.name} : quel profil pour quelle crypto ?
-          </h2>
-          <p className="mt-3 text-base text-fg/85 leading-relaxed">
-            {verdict.conclusion}
-          </p>
-          <div className="mt-6 grid gap-4 sm:grid-cols-3">
-            <div className="rounded-xl border border-border bg-surface p-4">
-              <div className="text-xs font-bold uppercase tracking-wider text-primary-soft">
-                Profil débutant
-              </div>
-              <div className="mt-1 text-lg font-bold text-fg">
-                Plutôt adapté : {verdict.beginnerChoice.winner.name}
-              </div>
-              <p className="mt-2 text-xs text-fg/75 leading-relaxed">
-                {verdict.beginnerChoice.reason}
-              </p>
-            </div>
-            <div className="rounded-xl border border-border bg-surface p-4">
-              <div className="text-xs font-bold uppercase tracking-wider text-primary-soft">
-                Profil expérimenté
-              </div>
-              <div className="mt-1 text-lg font-bold text-fg">
-                Plutôt adapté : {verdict.experimentedChoice.winner.name}
-              </div>
-              <p className="mt-2 text-xs text-fg/75 leading-relaxed">
-                {verdict.experimentedChoice.reason}
-              </p>
-            </div>
-            <div className="rounded-xl border border-border bg-surface p-4">
-              <div className="text-xs font-bold uppercase tracking-wider text-primary-soft">
-                Long terme (5-10 ans)
-              </div>
-              <div className="mt-1 text-lg font-bold text-fg">
-                Plutôt adapté : {verdict.longTermChoice.winner.name}
-              </div>
-              <p className="mt-2 text-xs text-fg/75 leading-relaxed">
-                {verdict.longTermChoice.reason}
-              </p>
-            </div>
-          </div>
-          <p className="mt-5 text-xs text-fg-4 leading-relaxed">
-            ⚠️ Ces correspondances sont DÉRIVÉES des données factuelles (risque, ancienneté,
-            disponibilité). Ce n'est PAS un conseil en investissement individualisé. Voir notre{" "}
-            <Link href="/methodologie" className="underline font-semibold hover:text-primary-soft">
-              méthodologie complète
-            </Link>.
-          </p>
-        </section>
-
         {/* BATCH 58 — Forces uniques côte à côte (data MDX) */}
         <section className="mt-12 grid gap-6 lg:grid-cols-2">
           <div className="rounded-2xl border border-accent-green/30 bg-accent-green/5 p-6">
             <h3 className="text-lg font-bold text-fg">
-              Pourquoi choisir {a.name} ?
+              {a.name} en bref
             </h3>
             <ul className="mt-4 space-y-2.5">
               {strengthsA.map((s, i) => (
@@ -790,7 +635,7 @@ export default async function CryptoPairPage({ params }: Props) {
           </div>
           <div className="rounded-2xl border border-accent-cyan/30 bg-accent-cyan/5 p-6">
             <h3 className="text-lg font-bold text-fg">
-              Pourquoi choisir {b.name} ?
+              {b.name} en bref
             </h3>
             <ul className="mt-4 space-y-2.5">
               {strengthsB.map((s, i) => (
@@ -800,36 +645,6 @@ export default async function CryptoPairPage({ params }: Props) {
                 </li>
               ))}
             </ul>
-          </div>
-        </section>
-
-        {/* Corrélation 90j (en pratique : 7j sparkline horaire CoinGecko) */}
-        <section className="mt-12">
-          <h2 className="text-2xl font-bold tracking-tight">Corrélation 7j</h2>
-          <p className="mt-2 text-sm text-muted">
-            Coefficient de Pearson calculé sur les sparklines horaires CoinGecko des 7
-            derniers jours (168 points). Une corrélation forte signifie que les deux
-            cryptos bougent ensemble — utile pour évaluer la diversification réelle
-            d'un portefeuille.
-          </p>
-          <div className="mt-5 rounded-2xl border border-border bg-surface p-5 sm:p-6">
-            {correlation !== null ? (
-              <>
-                <div className="text-3xl font-extrabold text-fg">
-                  {fmtFr(correlation, 2)}
-                </div>
-                <div className="mt-1 text-sm text-fg/80">{describeCorrelation(correlation)}</div>
-                <div className="mt-3 text-xs text-muted">
-                  Échelle : -1 (mouvements opposés) → 0 (indépendantes) → +1 (mouvements
-                  synchronisés). Source CoinGecko.
-                </div>
-              </>
-            ) : (
-              <p className="text-sm text-muted">
-                Donnée non disponible (sparkline incomplète ou API CoinGecko en rate-limit).
-                Réessayez dans quelques minutes.
-              </p>
-            )}
           </div>
         </section>
 
@@ -951,7 +766,7 @@ function UseCaseCard({ crypto }: { crypto: AnyCrypto }) {
     <div className="rounded-2xl border border-border bg-surface p-6">
       <h3 className="text-lg font-bold text-fg flex items-center gap-2">
         <Sparkles className="h-5 w-5 text-primary" />
-        Quand choisir {crypto.name}
+        À quoi sert {crypto.name}
       </h3>
       <p className="mt-3 text-sm text-fg/85 leading-relaxed">{crypto.useCase}</p>
       <Link

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import dynamic from "next/dynamic";
-import { ArrowRight, Calendar, ExternalLink, ShoppingBag } from "lucide-react";
+import { ArrowRight, Calendar, ExternalLink } from "lucide-react";
 
 import { getTAArticleBySlug, getTASlugs, getAllTASummaries } from "@/lib/ta-mdx";
 import { BRAND } from "@/lib/brand";
@@ -12,7 +12,7 @@ import MdxContent from "@/components/MdxContent";
 import AutoPublishedLine from "@/components/AutoPublishedLine";
 import TrendBadge from "@/components/ta/TrendBadge";
 import IndicatorsTable from "@/components/ta/IndicatorsTable";
-import SupportResistanceList from "@/components/ta/SupportResistanceList";
+import { neutraliserAnalyse } from "@/lib/ta-neutre";
 import RelatedPagesNav from "@/components/RelatedPagesNav";
 import { withHreflang } from "@/lib/seo-alternates";
 import { fitTitle } from "@/lib/seo-text";
@@ -70,7 +70,10 @@ function taTitle(a: { name: string; symbol: string; date: string }): string {
   return `${a.name} (${a.symbol}) : analyse technique du ${formatDateFr(a.date)}`;
 }
 function taDescription(d: string): string {
-  return d.replace(/\b(\d{4}-\d{2}-\d{2})\b/g, (iso) => formatDateFr(iso));
+  /* lot légal du 08/10/2026 : plus de « niveaux clés et scénarios » (sections retirées de la page) */
+  return d
+    .replace(/\b(\d{4}-\d{2}-\d{2})\b/g, (iso) => formatDateFr(iso))
+    .replace(/,? niveaux clés et scénarios/g, "");
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -220,7 +223,8 @@ export default async function TAArticlePage({ params }: Props) {
             />
           </div>
 
-          {/* CTAs en haut — affordance immédiate */}
+          {/* Lot légal du 08/10/2026 : plus de bouton « Acheter » à côté d'indicateurs techniques (incitation à
+              l'achat près d'un indicateur = vocabulaire de recommandation). */}
           <div className="mb-10 flex flex-col sm:flex-row gap-3">
             <Link
               href={`/cryptos/${article.cryptoSlug}`}
@@ -228,14 +232,6 @@ export default async function TAArticlePage({ params }: Props) {
             >
               <ExternalLink className="h-4 w-4" aria-hidden="true" />
               Voir la fiche {article.name}
-            </Link>
-            <Link
-              href="/comparatif"
-              className="inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-bold text-background hover:bg-primary-glow transition-colors"
-            >
-              <ShoppingBag className="h-4 w-4" aria-hidden="true" />
-              Acheter {article.symbol} sur une plateforme régulée
-              <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </Link>
           </div>
 
@@ -249,45 +245,34 @@ export default async function TAArticlePage({ params }: Props) {
             </div>
           )}
 
-          {article.levels && (
-            <div className="mb-10">
-              <SupportResistanceList
-                levels={article.levels}
-                currentPrice={article.currentPrice}
-                limit={3}
-              />
-            </div>
-          )}
+          {/* Lot légal du 08/10/2026 : liste « supports / résistances » retirée (niveaux lus comme des cibles). */}
 
           {/* Body MDX */}
-          <MdxContent source={article.content} />
+          <MdxContent source={neutraliserAnalyse(article.content)} />
 
           {/* D3 (décision de Kev, 06/10/2026) : analyse publiée automatiquement → pas de fiche auteur de Kevin Voisin.
               Le frontmatter des analyses ne cite pas de source : « Publiée automatiquement. ». */}
           <AutoPublishedLine frontmatter={{ source: (article as { source?: string }).source, sourceUrl: (article as { sourceUrl?: string }).sourceUrl }} />
 
-          {/* CTA bas — re-engagement */}
-          <div className="mt-12 rounded-2xl border border-primary/20 bg-primary/5 p-6">
-            <h2 className="text-lg font-bold mb-2">
-              Prêt à passer de l'analyse à l'action ?
-            </h2>
+          {/* Suite logique sans offre (lot légal du 08/10/2026) : comprendre, l'historique, déclarer. */}
+          <div className="mt-12 rounded-2xl border border-border bg-surface p-6">
+            <h2 className="text-lg font-bold mb-2">Et ensuite ?</h2>
             <p className="text-sm text-fg/70 mb-4">
-              Comparez les plateformes régulées MiCA pour acheter {article.name} en France
-              en quelques minutes (frais, sécurité, ergonomie).
+              Ces indicateurs décrivent le passé du prix ; ils ne disent rien de ce qu&apos;il fera.
             </p>
             <div className="flex flex-col sm:flex-row gap-3">
-              <Link
-                href="/comparatif"
-                className="inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-bold text-background hover:bg-primary-glow transition-colors"
-              >
-                Voir le comparatif des plateformes
-                <ArrowRight className="h-4 w-4" aria-hidden="true" />
-              </Link>
               <Link
                 href={`/cryptos/${article.cryptoSlug}`}
                 className="inline-flex items-center justify-center gap-2 rounded-xl border border-border bg-surface px-4 py-2.5 text-sm font-semibold text-fg hover:border-primary/40 transition-colors"
               >
-                Tout savoir sur {article.name}
+                Fiche {article.name} : usage et risques
+                <ArrowRight className="h-4 w-4" aria-hidden="true" />
+              </Link>
+              <Link
+                href="/impots"
+                className="inline-flex items-center justify-center gap-2 rounded-xl border border-border bg-surface px-4 py-2.5 text-sm font-semibold text-fg hover:border-primary/40 transition-colors"
+              >
+                Déclarer une vente de crypto
               </Link>
             </div>
           </div>

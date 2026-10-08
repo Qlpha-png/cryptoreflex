@@ -218,7 +218,7 @@ export const COUNTRIES: Record<CountryCode, CountryConfig> = {
     currency: "EUR",
     regulator: "CCAF",
     regulatorWithArticle: "la CCAF",
-    regulatorUrl: "https://service-public-entreprises.gouv.mc",
+    regulatorUrl: "https://ccaf.mc/", // vérifié le 08/10/2026 (site officiel de la CCAF)
     taxNote:
       "Aucun impôt sur le revenu pour les résidents monégasques (hors nationaux français soumis à la convention fiscale franco-monégasque de 1963).",
     language: "fr",

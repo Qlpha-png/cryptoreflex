@@ -17,8 +17,9 @@ const TOTAL_DUELS = (() => {
 })();
 
 export const metadata: Metadata = {
-  title: fitTitle(`Comparer 2 cryptos — ${TOTAL_DUELS} duels analyses (BTC vs ETH, SOL vs ADA, etc.)`),
-  description: fitDescription(`${TOTAL_DUELS} comparatifs crypto-vs-crypto entre les 100 fiches éditoriales (top 10 + 90 hidden gems). Verdict 3 profils, plateformes communes, FAQ contextuelle, méthodologie publique Cryptoreflex.`),
+  /* Lot légal du 08/10/2026 : plus de « verdict 3 profils » (correspondance profil → crypto retirée des duels). */
+  title: fitTitle(`Comparer 2 cryptos : différences factuelles (BTC vs ETH, SOL vs ADA…)`),
+  description: fitDescription(`Comparez deux cryptos parmi nos 100 fiches : usage, consensus, offre, ancienneté et plateformes autorisées en France qui les proposent. Sans gagnant ni recommandation.`),
   alternates: withHreflang(`${BRAND.url}/comparer`),
   robots: { index: true, follow: true },
 };
@@ -61,8 +62,8 @@ export default function ComparerHubPage() {
           </h1>
           <p className="mt-3 text-base text-muted">
             <strong className="text-fg">{totalDuels} duels</strong> entre les 100 fiches éditoriales
-            (10 top + 90 hidden gems). Tableau side-by-side : ancienneté, cas d&apos;usage, type,
-            disponibilité MiCA, FAQ contextuelle, verdict par profil. Méthodologie publique Cryptoreflex.
+            (10 top + 90 hidden gems). Tableau côte à côte : ancienneté, cas d&apos;usage, type,
+            plateformes autorisées en France, FAQ contextuelle. Aucun gagnant désigné : des différences factuelles.
           </p>
         </header>
 

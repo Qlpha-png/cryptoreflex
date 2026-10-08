@@ -62,7 +62,7 @@ function ToneIcon({ tone }: { tone: "bullish" | "bearish" | "neutral" }) {
 export default function IndicatorsTable({ indicators, currentPrice }: Props) {
   const rsi = indicators.rsi;
   const rsiBucketLabel =
-    rsi >= 70 ? "Surachat" : rsi >= 60 ? "Acheteur" : rsi >= 45 ? "Neutre" : rsi >= 30 ? "Vendeur" : "Survente";
+    rsi >= 70 ? "Zone de surachat" : rsi > 30 ? "Zone neutre" : "Zone de survente"; // lot légal du 08/10/2026 : plus d'« Acheteur / Vendeur »
 
   const ma50Tone = currentPrice > indicators.ma50 ? "bullish" : "bearish";
   const ma200Tone = currentPrice > indicators.ma200 ? "bullish" : "bearish";
@@ -136,7 +136,7 @@ export default function IndicatorsTable({ indicators, currentPrice }: Props) {
           label="Histogramme"
           value={fmtFr(indicators.macd.histogram, 2)}
           tone={macdTone}
-          hint={`Signal : ${fmtFr(indicators.macd.signal, 2)}`}
+          hint={`Ligne de signal du MACD : ${fmtFr(indicators.macd.signal, 2)}`}
         />
       </div>
 

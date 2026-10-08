@@ -23,7 +23,8 @@ import {
   Wallet,
 } from "lucide-react";
 
-import { getAllCryptos, getCryptoBySlug, isNoPlatformNote, listedVenues, type AnyCrypto } from "@/lib/cryptos";
+import { getAllCryptos, getCryptoBySlug, type AnyCrypto } from "@/lib/cryptos";
+import { nomsAutorisesFr } from "@/lib/plateformes-autorisees";
 import {
   COUNTRY_CODES,
   COUNTRIES,
@@ -54,9 +55,8 @@ import AmfDisclaimer from "@/components/AmfDisclaimer";
 // l'orphelinat (audit a confirmé 0 maillage interne avant ce commit).
 import RelatedPagesNav from "@/components/RelatedPagesNav";
 import NextStepsGuide from "@/components/NextStepsGuide";
-import { faqSchema, graphSchema, howToSchema } from "@/lib/schema";
+import { faqSchema, graphSchema } from "@/lib/schema";
 import { withHreflang } from "@/lib/seo-alternates";
-import { fmtFr } from "@/lib/format-fr";
 import Breadcrumbs from "@/components/Breadcrumbs";
 
 // 2026-06-13 — HARD 404 sur params invalides (fix soft-404 SEO). La page
@@ -104,7 +104,7 @@ export function generateMetadata({ params }: Props): Metadata {
   const longTitle = `Acheter ${c.name} (${c.symbol}) ${country.inName} (2026)`;
   const title =
     longTitle.length > 46 ? `Acheter ${c.name} ${country.inName} (2026)` : longTitle;
-  const description = `Acheter ${c.name} ${country.inName} : plateformes, étapes KYC, dépôt en ${country.currency}, fiscalité ${country.regulator} (guide MiCA). Pas-à-pas Cryptoreflex.`;
+  const description = `Acheter ${c.name} ${country.inName} : plateformes autorisées en France qui la proposent, étapes, dépôt en ${country.currency}, régulateur ${country.regulator} et fiscalité. Guide Cryptoreflex.`;
 
   return {
     title: fitTitle(title),
@@ -129,52 +129,81 @@ export function generateMetadata({ params }: Props): Metadata {
 /*  Helpers                                                                   */
 /* -------------------------------------------------------------------------- */
 
+/* Lot légal du 08/10/2026 : pays de l'Union européenne parmi les pages pays. Hors UE (Suisse, Monaco, Québec),
+   un agrément MiCA ne vaut pas autorisation locale. */
+const PAYS_UE = new Set(["fr", "be", "lu"]);
+
+/* Notes fiscales des pays hors France : aucun chiffre étranger tant qu'il n'a pas été lu sur la source officielle du
+   pays (lot légal du 08/10/2026 ; la note belge « pas de régime unifié » était probablement périmée). */
+const ADMINISTRATION_FISCALE: Record<string, string> = {
+  be: "le SPF Finances",
+  ch: "l'Administration fédérale des contributions et l'administration fiscale de votre canton",
+  lu: "l'Administration des contributions directes",
+  mc: "la Direction des services fiscaux de Monaco",
+  "ca-fr": "l'Agence du revenu du Canada et Revenu Québec",
+};
+
+/** France : règles alignées sur scripts/lib/fiscal-guardrails.mjs (seuil de 305 € sur le total des cessions, swaps non imposables). */
+const NOTE_FISCALE_FR =
+  "En France, la plus-value est imposée au PFU de 31,4 % (12,8 % d'impôt sur le revenu et 18,6 % de prélèvements sociaux) lors d'une vente contre des euros ou du paiement d'un bien ou d'un service, si le total de vos cessions de l'année dépasse 305 €. Un échange crypto contre crypto n'est pas imposable. La déclaration se fait sur le formulaire 2086.";
+
+function noteFiscale(country: CountryConfig): string {
+  if (country.code === "fr") return NOTE_FISCALE_FR;
+  const admin = ADMINISTRATION_FISCALE[country.code];
+  return `La fiscalité ${country.inName} dépend de votre situation : référez-vous à ${admin ?? "l'administration fiscale de votre pays"}. Nous ne publions pas de règle chiffrée pour ce pays tant qu'elle n'est pas vérifiée à la source officielle.`;
+}
+
+function noteAgrement(country: CountryConfig): string {
+  return PAYS_UE.has(country.code)
+    ? "Un prestataire agréé MiCA dans un pays de l'Union européenne peut servir les clients d'un autre pays de l'Union s'il y a notifié son passeport (visible sur le registre de l'ESMA)."
+    : `${capitalizeFirst(country.inName)}, hors de l'Union européenne, un agrément MiCA ne vaut pas autorisation : renseignez-vous auprès de ${country.regulatorWithArticle}.`;
+}
+
 /**
- * Plateformes affichées pour une crypto donnée. À défaut d'une matrice
- * "plateforme × pays" (out-of-scope), on garde l'intégralité du `whereToBuy`
- * éditorial avec une mention "vérifier disponibilité locale" pour les pays
- * hors France métropolitaine.
+ * Plateformes affichées pour une crypto donnée : uniquement celles AUTORISÉES EN FRANCE (platforms.json +
+ * isAvailableFr) parmi la liste éditoriale whereToBuy, par ordre alphabétique (lot légal du 08/10/2026 :
+ * KuCoin, Gate.io, « DEX uniquement », « P2P » ne sont plus affichés). Hors France, mention de vérification.
  */
 function platformsForCryptoCountry(
   crypto: AnyCrypto,
   country: CountryConfig,
 ): { platforms: string[]; warning: string | null } {
-  const platforms = listedVenues(crypto.whereToBuy).slice(0, 6);
+  const platforms = nomsAutorisesFr(crypto.whereToBuy).slice(0, 6);
   if (country.code === "fr") {
     return { platforms, warning: null };
   }
   return {
     platforms,
-    warning: `Liste éditoriale FR : vérifier la disponibilité dans votre pays (${country.name}) avant inscription. Les plateformes MiCA opèrent dans toute l'UE, mais les méthodes de dépôt et la fiscalité diffèrent.`,
+    warning: `Liste des plateformes autorisées en France : vérifiez que la plateforme peut servir les résidents ${country.inName} avant de vous inscrire. ${noteAgrement(country)}`,
   };
 }
 
-/** 5 étapes universelles pour acheter une crypto, paramétrées par pays. */
+/** 5 étapes universelles pour acheter une crypto, paramétrées par pays (sans délai ni pourcentage non sourcés). */
 function buildSteps(
   crypto: AnyCrypto,
   country: CountryConfig,
-  topPlatform: string | undefined,
+  hasPlatform: boolean,
 ): { name: string; text: string }[] {
   return [
     {
-      name: `Choisir une plateforme régulée et créer un compte`,
-      text: `${topPlatform ? `Sélectionner une plateforme dans la liste ci-dessous (ex : ${topPlatform}).` : `Aucune plateforme agréée MiCA ne propose ${crypto.name} à notre connaissance : vérifier d'abord qu'une plateforme régulée la liste.`} Vérifier qu'elle est agréée CASP/MiCA ou qu'elle dispose d'une autorisation locale ${country.regulator}. Création de compte avec adresse email + mot de passe fort + 2FA obligatoire.`,
+      name: `Choisir une plateforme autorisée et créer un compte`,
+      text: `${hasPlatform ? `Choisir une plateforme dans la liste ci-dessous.` : `Aucune plateforme autorisée en France de notre liste ne propose ${crypto.name} à notre connaissance : vérifiez d'abord qu'une plateforme autorisée la liste.`} Vérifier qu'elle est agréée MiCA ou qu'elle dispose d'une autorisation locale (${country.regulator}). Créer le compte avec un mot de passe unique et activer la double authentification.`,
     },
     {
-      name: `Compléter la vérification d'identité (KYC)`,
-      text: `Téléverser une pièce d'identité valide (carte d'identité, passeport) et un justificatif de domicile de moins de 3 mois. Délai de validation typique : 5 minutes à 24h selon la plateforme et le volume de demandes.`,
+      name: `Compléter la vérification d'identité`,
+      text: `Envoyer une pièce d'identité et, souvent, un justificatif de domicile, uniquement depuis le site ou l'application officielle de la plateforme. Le délai de validation varie selon la plateforme.`,
     },
     {
-      name: `Effectuer un premier dépôt en ${country.currency}`,
-      text: `Approvisionner le compte par virement SEPA${country.currency === "CHF" ? " ou virement local CHF" : country.currency === "CAD" ? " ou virement Interac/EFT" : ""}, carte bancaire ou Apple Pay/Google Pay. Le virement est généralement gratuit (0 €) mais arrive en 1-2 jours ouvrés ; la CB est instantanée mais coûte 1-3 % de frais.`,
+      name: `Déposer des ${country.currency === "EUR" ? "euros" : country.currency}`,
+      text: `Approvisionner le compte par virement${country.currency === "EUR" ? " SEPA" : country.currency === "CHF" ? " (SEPA ou local en CHF)" : country.currency === "CAD" ? " (Interac ou EFT)" : ""} ou par carte bancaire. Les frais de dépôt diffèrent selon le moyen de paiement : vérifiez la grille de la plateforme.`,
     },
     {
       name: `Acheter ${crypto.name} (${crypto.symbol})`,
-      text: `Rechercher ${crypto.symbol} dans le moteur de la plateforme et passer un ordre d'achat marché (instantané) ou limite (au prix souhaité). Privilégier le mode "spot" / "advanced" plutôt que "instant" pour des frais 3 à 10 fois moins élevés au-delà de 100 ${country.currency}.`,
+      text: `Rechercher ${crypto.symbol} sur la plateforme et passer un ordre au comptant. Beaucoup de plateformes proposent un achat simple et un mode avancé (carnet d'ordres) aux frais différents : comparez-les sur la grille officielle.`,
     },
     {
-      name: `Sécuriser ses fonds sur un wallet personnel`,
-      text: `Pour un capital > 1 000 ${country.currency}, transférer les ${crypto.symbol} vers un hardware wallet (Ledger, Trezor) plutôt que de les laisser sur la plateforme. Règle "not your keys, not your coins" : la plateforme reste un point de défaillance unique tant que vous n'avez pas la clé privée.`,
+      name: `Choisir où garder ses ${crypto.symbol}`,
+      text: `Sur la plateforme, celle-ci conserve les clés à votre place. Sur un portefeuille personnel, vous détenez vous-même les clés et vous seul en êtes responsable : une phrase de récupération perdue ne se récupère pas.`,
     },
   ];
 }
@@ -187,17 +216,19 @@ function buildFaq(
   return [
     {
       q: `Est-il légal d'acheter ${crypto.name} ${country.inName} en 2026 ?`,
-      ans: `Oui. ${crypto.name} (${crypto.symbol}) peut être acheté légalement ${country.inName} via une plateforme agréée par ${country.regulatorWithArticle} ou un CASP MiCA opérant dans l'UE. Il n'y a pas d'interdiction sur la détention ou l'achat de cryptoactifs pour un particulier — seules certaines activités professionnelles (échange contre fiat, custody de fonds tiers) requièrent un agrément.`,
+      ans: PAYS_UE.has(country.code)
+        ? `Oui. ${crypto.name} (${crypto.symbol}) peut être acheté ${country.inName} auprès d'un prestataire agréé MiCA autorisé à servir ce pays (agrément de ${country.regulatorWithArticle} ou passeport européen notifié). La détention et l'achat de crypto-actifs par un particulier ne sont pas interdits.`
+        : `${capitalizeFirst(country.inName)}, l'achat de crypto-actifs par un particulier n'est pas interdit ; la plateforme doit être autorisée localement (${country.regulator}) : un agrément MiCA ne suffit pas hors de l'Union européenne.`,
     },
     {
       q: `Quelle fiscalité s'applique aux gains sur ${crypto.symbol} ${country.inName} ?`,
-      ans: `${country.taxNote} Pour un cas individuel complexe (volume élevé, activité professionnelle, mining/staking), consulter un avocat fiscaliste local. Cryptoreflex publie un calculateur fiscalité (cas FR uniquement à ce jour) sur /outils/calculateur-fiscalite.`,
+      ans: `${noteFiscale(country)}${country.code === "fr" ? " Pour une situation particulière (activité professionnelle, minage, staking), faites-vous accompagner par un professionnel." : ""}`,
     },
     {
-      q: `Quelles plateformes sont recommandées pour acheter ${crypto.name} ${country.fromName} ?`,
-      ans: listedVenues(crypto.whereToBuy).length === 0
-        ? `${crypto.whereToBuy.find(isNoPlatformNote) ?? "Aucune plateforme agréée MiCA ne la propose à notre connaissance"}. Vérifiez le statut de toute plateforme sur le registre de l'ESMA avant d'y déposer des fonds.`
-        : `Notre base éditoriale liste ${listedVenues(crypto.whereToBuy).length} plateforme${listedVenues(crypto.whereToBuy).length > 1 ? "s" : ""} pour ${crypto.name} : ${listedVenues(crypto.whereToBuy).slice(0, 5).join(", ")}${listedVenues(crypto.whereToBuy).length > 5 ? "…" : ""}. Vérifiez le statut MiCA de chacune avant inscription ; par ailleurs, les méthodes de dépôt en ${country.currency} et le support local varient. Tester avec un petit dépôt avant d'engager un capital significatif.`,
+      q: `Sur quelles plateformes autorisées acheter ${crypto.name} ${country.fromName} ?`,
+      ans: nomsAutorisesFr(crypto.whereToBuy).length === 0
+        ? `Aucune plateforme autorisée en France de notre liste ne propose ${crypto.name}, à notre connaissance. Vérifiez le statut de toute plateforme sur le registre de l'ESMA ou avec notre vérificateur avant d'y déposer des fonds.`
+        : `Plateformes autorisées en France de notre liste qui proposent ${crypto.name} (ordre alphabétique) : ${nomsAutorisesFr(crypto.whereToBuy).slice(0, 5).join(", ")}${nomsAutorisesFr(crypto.whereToBuy).length > 5 ? "…" : ""}. Liste éditoriale, non exhaustive : vérifiez le statut de la plateforme avant de vous inscrire ; les moyens de dépôt en ${country.currency} varient.`,
     },
     {
       q: `Puis-je staker mon ${crypto.symbol} ${country.fromName} ?`,
@@ -220,19 +251,12 @@ export default function AcheterPaysPage({ params }: Props) {
   if (!c || !country) notFound();
 
   const { platforms, warning } = platformsForCryptoCountry(c, country);
-  const topPlatform = platforms[0];
-  const steps = buildSteps(c, country, topPlatform);
+  const steps = buildSteps(c, country, platforms.length > 0);
   const faq = buildFaq(c, country);
 
-  // Schemas
+  // Schemas — HowTo retiré (lot légal du 08/10/2026) : durée « 15 min » et coût « 50 » sans source ; plus de
+  // résultat enrichi HowTo dans Google depuis 2026.
   const schemas = graphSchema([
-    howToSchema({
-      name: `Acheter ${c.name} ${country.inName} en 2026`,
-      description: `Guide pas-à-pas pour acheter ${c.name} (${c.symbol}) ${country.inName} via une plateforme régulée ${country.regulator}/MiCA.`,
-      totalTime: "PT15M",
-      estimatedCost: { currency: country.currency, value: 50 },
-      steps: steps.map((s) => ({ name: s.name, text: s.text })),
-    }),
     faqSchema(faq.map((f) => ({ question: f.q, answer: f.ans }))),
   ]);
 
@@ -251,7 +275,7 @@ export default function AcheterPaysPage({ params }: Props) {
             Comment acheter {c.name} {country.inName} en 2026
           </h1>
           <p className="mt-4 text-base text-fg/80 leading-relaxed max-w-[34em]">
-            {`Acheter ${c.name} (${c.symbol}) ${country.fromName} passe par une plateforme régulée — agréée MiCA dans l'UE ou supervisée par l'autorité compétente (${country.regulator}) — avec dépôt en ${country.currency}. ${c.name} se positionne sur « ${c.category.toLowerCase()} » ; notre base recense ${c.whereToBuy.length} plateforme${c.whereToBuy.length > 1 ? "s" : ""} où l'acquérir. Étapes (compte, KYC, dépôt, achat, sécurisation) et fiscalité applicable détaillées ci-dessous — information éducative, jamais un conseil d'investissement.`}
+            {`Acheter ${c.name} (${c.symbol}) ${country.fromName} passe par une plateforme autorisée${PAYS_UE.has(country.code) ? " (agréée MiCA dans l'Union européenne)" : ` localement (${country.regulator})`}, avec dépôt en ${country.currency}. ${c.name} se positionne sur « ${c.category.toLowerCase()} » ; ${platforms.length > 0 ? `${platforms.length} plateforme${platforms.length > 1 ? "s" : ""} autorisée${platforms.length > 1 ? "s" : ""} en France de notre liste la propose${platforms.length > 1 ? "nt" : ""}` : "aucune plateforme autorisée en France de notre liste ne la propose, à notre connaissance"}. Étapes (compte, vérification d'identité, dépôt, achat, conservation) et fiscalité détaillées ci-dessous : information générale, jamais un conseil en investissement.`}
           </p>
           <p className="mt-3 text-sm text-muted">
             Guide MiCA · plateformes régulées · fiscalité {country.regulator} · paiement en {country.currency}
@@ -265,9 +289,16 @@ export default function AcheterPaysPage({ params }: Props) {
             la moindre donnée inventée. Wording neutre/éducatif (pas de conseil). */}
         <CryptoEditorialBlocks c={c} />
 
-        {/* Plateformes recommandées */}
+        {/* Plateformes autorisées (lot légal du 08/10/2026 : plus de « recommandées », plus de numéros de rang,
+            ordre alphabétique, uniquement les plateformes autorisées en France de platforms.json) */}
         <section className="mt-10">
-          <h2 className="text-2xl font-bold tracking-tight">Plateformes recommandées</h2>
+          <h2 className="text-2xl font-bold tracking-tight">Plateformes autorisées en France qui proposent {c.name}</h2>
+          <p className="mt-2 text-xs text-muted">
+            Ordre alphabétique · liste éditoriale, non exhaustive · statut vérifié sur les registres officiels (ESMA, AMF) ·{" "}
+            <Link href="/outils/verificateur-mica" className="underline hover:text-fg">
+              vérifier une plateforme
+            </Link>
+          </p>
           {warning && (
             <p className="mt-3 rounded-xl border border-warning/30 bg-warning/5 p-4 text-xs text-amber-200">
               {warning}
@@ -275,7 +306,7 @@ export default function AcheterPaysPage({ params }: Props) {
           )}
           {platforms.length === 0 && (
             <p className="mt-4 text-sm text-muted">
-              {c.whereToBuy.find(isNoPlatformNote) ?? "Aucune plateforme agréée MiCA ne la propose à notre connaissance"}. Vérifiez le
+              Aucune plateforme autorisée en France de notre liste ne propose {c.name}, à notre connaissance. Vérifiez le
               statut de toute plateforme avec notre{" "}
               <Link href="/outils/verificateur-mica" className="underline hover:text-fg">
                 vérificateur MiCA
@@ -284,16 +315,14 @@ export default function AcheterPaysPage({ params }: Props) {
             </p>
           )}
           <ul className="mt-5 grid gap-3 sm:grid-cols-2">
-            {platforms.map((p, idx) => {
+            {platforms.map((p) => {
               const reviewSlug = PLATFORM_REVIEW_SLUG[p.toLowerCase().trim()];
               return (
                 <li
                   key={p}
                   className="rounded-2xl border border-border bg-surface p-4 flex items-center gap-3"
                 >
-                  <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary/15 text-sm font-bold text-primary-soft">
-                    {idx + 1}
-                  </span>
+                  <ShieldCheck className="h-5 w-5 shrink-0 text-primary-soft" aria-hidden="true" />
                   {reviewSlug ? (
                     <Link
                       href={`/avis/${reviewSlug}`}
@@ -327,7 +356,7 @@ export default function AcheterPaysPage({ params }: Props) {
 
         {/* Étapes rapides */}
         <section className="mt-12">
-          <h2 className="text-2xl font-bold tracking-tight">Étapes rapides (≈ 15 min)</h2>
+          <h2 className="text-2xl font-bold tracking-tight">Les étapes</h2>
           <ol className="mt-5 space-y-4">
             {steps.map((step, idx) => (
               <li
@@ -355,7 +384,7 @@ export default function AcheterPaysPage({ params }: Props) {
             <Euro className="h-6 w-6 text-primary" />
             Fiscalité {country.name}
           </h2>
-          <p className="mt-3 text-base text-fg/85 leading-relaxed">{country.taxNote}</p>
+          <p className="mt-3 text-base text-fg/85 leading-relaxed">{noteFiscale(country)}</p>
           <p className="mt-4 text-xs text-muted">
             Note : Cryptoreflex n'est pas conseiller fiscal. Pour un cas individuel
             complexe, consulter un avocat fiscaliste local.
@@ -372,8 +401,7 @@ export default function AcheterPaysPage({ params }: Props) {
             {capitalizeFirst(country.inName)}, la supervision des prestataires de services sur
             crypto-actifs relève de {country.regulatorWithArticle}. Vérifier l'autorisation d'une
             plateforme avant d'y déposer des fonds reste la première règle d'hygiène
-            financière. Les plateformes opérant sous régime MiCA (UE) bénéficient du
-            passporting européen et sont reconnues dans tous les États membres.
+            financière. {noteAgrement(country)}
           </p>
           <a
             href={country.regulatorUrl}
@@ -505,24 +533,16 @@ function CryptoEditorialBlocks({ c }: { c: AnyCrypto }) {
               )}
             </div>
           )}
-          <dl className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <dl className="grid grid-cols-2 sm:grid-cols-3 gap-3">
             <EditorialStat label="Consensus" value={c.consensus} />
             <EditorialStat label="Temps de bloc" value={c.blockTime} />
             <EditorialStat label="Offre max" value={c.maxSupply} />
-            <EditorialStat label="Profil de risque" value={c.riskLevel} />
           </dl>
         </>
       ) : (
         <>
-          {c.whyHiddenGem && (
-            <div className="rounded-xl border border-border bg-surface p-4">
-              <h3 className="text-sm font-bold text-fg">Pourquoi {c.name} est à surveiller</h3>
-              <p className="mt-2 text-sm text-fg/80 leading-relaxed">{c.whyHiddenGem}</p>
-            </div>
-          )}
-          {/* Signaux de fiabilité (sources publiques) — le levier de confiance
-              le plus fort avant un dépôt sur un actif moins connu. Data locale,
-              cadrage non-jugement (aligné /cryptos), AMF-safe. */}
+          {/* Lot légal du 08/10/2026 : « Pourquoi X est à surveiller » (texte promotionnel whyHiddenGem) et « Score
+              fiabilité » (note sans formule publiée) retirés. */}
           {c.reliability && (
             <div className="rounded-xl border border-border bg-surface p-4">
               <h3 className="text-sm font-bold text-fg">Signaux de fiabilité (sources publiques)</h3>
@@ -530,7 +550,6 @@ function CryptoEditorialBlocks({ c }: { c: AnyCrypto }) {
                 Critères vérifiables sur sources ouvertes (registres, rapports d&apos;audit). Aucun jugement de valeur.
               </p>
               <dl className="mt-3 grid grid-cols-2 sm:grid-cols-3 gap-3">
-                <EditorialStat label="Score fiabilité" value={`${fmtFr(c.reliability.score, 1)}/10`} />
                 <EditorialStat label="Levée de fonds" value={c.reliability.fundingRaised} />
                 <EditorialStat label="Audité par" value={c.reliability.auditedBy.join(", ")} />
               </dl>
