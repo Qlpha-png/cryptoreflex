@@ -122,7 +122,7 @@ export const ONGLETS: Onglet[] = [
           {
             "href": "/analyses-techniques",
             "label": "Analyses techniques",
-            "phrase": "Tendances et niveaux à surveiller, crypto par crypto"
+            "phrase": "RSI et moyennes mobiles, crypto par crypto, recalculés chaque matin"
           }
         ]
       }
@@ -160,7 +160,7 @@ export const ONGLETS: Onglet[] = [
           {
             "href": "/analyses-techniques",
             "label": "Analyses techniques",
-            "phrase": "Tendances et niveaux à surveiller, crypto par crypto"
+            "phrase": "RSI et moyennes mobiles, crypto par crypto, recalculés chaque matin"
           },
           {
             "href": "/calendrier",

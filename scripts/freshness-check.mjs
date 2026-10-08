@@ -2,16 +2,16 @@
 /**
  * scripts/freshness-check.mjs
  *
- * Vérifie que le contenu auto-généré (news + analyses-tech) reste frais.
+ * Vérifie que le contenu auto-généré reste frais.
  *
  * Sans ce check, un échec silencieux du workflow daily-content peut passer
  * inaperçu pendant des jours -> chute de fraîcheur SEO + chute de trafic.
  *
- * Threshold (FRESHNESS_THRESHOLDS) :
- *   - news : ≥ 5 fichiers des 7 derniers jours
- *   - analyses-tech : ≥ 5 fichiers des 7 derniers jours
- *
- * Convention de nommage : `YYYY-MM-DD-slug.mdx` (date ISO en préfixe).
+ * Seuils :
+ *   - news : ≥ 5 fichiers des 7 derniers jours (content/news, date ISO en préfixe du nom)
+ *   - analyses techniques (lot L2 du 08/10/2026 : 5 pages vivantes, plus de fichiers datés) : chacun des 5 fichiers
+ *     data/analyses-techniques/<slug>.json a un dernier calcul réussi (`latest.calculatedAt`) de moins de 48 h
+ *     (règle d'alerte de fraîcheur : 2 jours sans calcul réussi pour une crypto).
  *
  * Usage :
  *   node scripts/freshness-check.mjs
@@ -21,7 +21,7 @@
  *   1 = stale (au moins une catégorie sous le seuil)
  */
 
-import { readdir } from "node:fs/promises";
+import { readdir, readFile } from "node:fs/promises";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -29,19 +29,10 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const REPO_ROOT = join(__dirname, "..");
 
-/** @type {Record<string,{path:string, threshold:number, label:string}>} */
-const FRESHNESS_THRESHOLDS = {
-  news: {
-    path: join(REPO_ROOT, "content", "news"),
-    threshold: 5,
-    label: "news",
-  },
-  analysesTech: {
-    path: join(REPO_ROOT, "content", "analyses-tech"),
-    threshold: 5,
-    label: "analyses-tech",
-  },
-};
+const NEWS = { path: join(REPO_ROOT, "content", "news"), threshold: 5, label: "news" };
+const TA_DIR = join(REPO_ROOT, "data", "analyses-techniques");
+const TA_SLUGS = ["bitcoin", "ethereum", "solana", "xrp", "cardano"];
+const TA_MAX_AGE_H = 48;
 
 const WINDOW_DAYS = 7;
 
@@ -93,6 +84,26 @@ async function countRecentFiles(dirPath, windowDays) {
   return { recent, all };
 }
 
+/** Âge (h) du dernier calcul réussi de chaque analyse ; une crypto illisible ou trop ancienne est en faute. */
+async function checkAnalyses() {
+  const stale = [];
+  const lines = [];
+  for (const slug of TA_SLUGS) {
+    try {
+      const j = JSON.parse(await readFile(join(TA_DIR, `${slug}.json`), "utf8"));
+      const t = Date.parse(j?.latest?.calculatedAt ?? "");
+      const h = (Date.now() - t) / 3_600_000;
+      const ok = Number.isFinite(h) && h <= TA_MAX_AGE_H;
+      lines.push(`    - ${slug} : dernier calcul ${j?.latest?.calculatedAt ?? "absent"} (${Number.isFinite(h) ? Math.round(h) + " h" : "?"}) ${ok ? "OK" : "STALE"}`);
+      if (!ok) stale.push(slug);
+    } catch (err) {
+      lines.push(`    - ${slug} : fichier illisible (${err instanceof Error ? err.message : String(err)})`);
+      stale.push(slug);
+    }
+  }
+  return { stale, lines };
+}
+
 /* -------------------------------------------------------------------------- */
 /*  Main                                                                      */
 /* -------------------------------------------------------------------------- */
@@ -103,39 +114,36 @@ async function main() {
   console.log("---");
 
   const failures = [];
-  const summaries = [];
 
-  for (const [_key, cfg] of Object.entries(FRESHNESS_THRESHOLDS)) {
-    const { recent, all, errored } = await countRecentFiles(cfg.path, WINDOW_DAYS);
-    const ok = !errored && recent.length >= cfg.threshold;
-    console.log(
-      `[freshness-${cfg.label}] path=${cfg.path} recent=${recent.length} threshold=${cfg.threshold} totalFiles=${all} ok=${ok}` +
-        (errored ? ` errored="${errored}"` : "")
-    );
-    if (recent.length > 0) {
-      console.log(`[freshness-${cfg.label}] recent files (last ${WINDOW_DAYS}d):`);
-      for (const f of recent.slice().sort()) {
-        console.log(`    - ${f}`);
-      }
-    }
-    summaries.push({ label: cfg.label, recent: recent.length, threshold: cfg.threshold, total: all, ok });
-    if (!ok) {
-      failures.push({
-        label: cfg.label,
-        path: cfg.path,
-        recent: recent.length,
-        threshold: cfg.threshold,
-        reason: errored ?? `only ${recent.length} files in last ${WINDOW_DAYS}d (need ≥ ${cfg.threshold})`,
-      });
-    }
+  const { recent, all, errored } = await countRecentFiles(NEWS.path, WINDOW_DAYS);
+  const newsOk = !errored && recent.length >= NEWS.threshold;
+  console.log(
+    `[freshness-${NEWS.label}] path=${NEWS.path} recent=${recent.length} threshold=${NEWS.threshold} totalFiles=${all} ok=${newsOk}` +
+      (errored ? ` errored="${errored}"` : ""),
+  );
+  for (const f of recent.slice().sort()) console.log(`    - ${f}`);
+  if (!newsOk) {
+    failures.push({
+      label: NEWS.label,
+      path: NEWS.path,
+      recent: recent.length,
+      threshold: NEWS.threshold,
+      reason: errored ?? `only ${recent.length} files in last ${WINDOW_DAYS}d (need ≥ ${NEWS.threshold})`,
+    });
+  }
+
+  const ta = await checkAnalyses();
+  console.log(`[freshness-analyses-techniques] path=${TA_DIR} max=${TA_MAX_AGE_H}h stale=${ta.stale.length}`);
+  for (const l of ta.lines) console.log(l);
+  if (ta.stale.length) {
+    failures.push({
+      label: "analyses-techniques",
+      path: TA_DIR,
+      reason: `dernier calcul de plus de ${TA_MAX_AGE_H} h ou illisible : ${ta.stale.join(", ")}`,
+    });
   }
 
   console.log("---");
-  console.log(`[freshness] Summary:`);
-  for (const s of summaries) {
-    console.log(`  - ${s.label}: ${s.recent}/${s.threshold} (${s.ok ? "OK" : "STALE"}) — total ${s.total} files`);
-  }
-
   if (failures.length > 0) {
     console.log(`[freshness] FAILURES_JSON=${JSON.stringify(failures)}`);
     console.log(`[freshness] ${failures.length} category/categories STALE.`);

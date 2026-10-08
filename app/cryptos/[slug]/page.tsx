@@ -109,6 +109,7 @@ import {
 import { fitDescription, fitTitle } from "@/lib/seo-text";
 import { fmtFr } from "@/lib/format-fr";
 import { fiatPerUsd } from "@/lib/fx";
+import { TA_PAGE_SLUGS } from "@/lib/ta-redirect";
 
 /* -------------------------------------------------------------------------- */
 /*  Static generation                                                         */
@@ -904,6 +905,20 @@ async function CryptoPage({ params }: Props) {
             (lib/historical-ohlc). Données factuelles par année + maillage vers
             /historique-prix. Rendu UNIQUEMENT si on a des données pour ce coin. */}
         <AnnualPerformance cryptoId={c.id} cryptoName={c.name} />
+
+        {/* Lot L2 du regroupement (08/10/2026) : lien vers la page vivante d'analyse technique (5 cryptos seulement).
+            Lien simple, sans offre ni incitation. */}
+        {TA_PAGE_SLUGS.includes(c.id) && (
+          <p className="mt-6 text-sm text-fg-2" data-lien-analyse="">
+            <Link
+              href={`/analyses-techniques/${c.id}`}
+              className="font-semibold text-fg underline decoration-link-line underline-offset-4 hover:decoration-fg"
+            >
+              Analyse technique du jour
+            </Link>{" "}
+            : RSI, moyennes mobiles 50 et 200 jours et historique des calculs, en euros.
+          </p>
+        )}
 
         {/* ASK AI — Q&A IA contextuelle Pro-only, post-ROISimulator pour
             engager le visiteur déjà conquis par les outils interactifs.

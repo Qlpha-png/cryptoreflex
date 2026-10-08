@@ -30,6 +30,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createServerClient } from "@supabase/ssr";
 import removedNews from "@/lib/news-removed-slugs.json";
 import { isGoneDated, liveSet } from "@/lib/gone-content";
+import { TA_REDIRECT_CACHE, taRedirectTarget } from "@/lib/ta-redirect";
 import { UNIVERS_IDS } from "@/lib/reflex-cards/univers-ids";
 
 /* REFLEX CARDS UNIVERS (04/10/2026) : /cartes/<id> est rendu à la demande (27 711 cartes, dynamicParams) ; un notFound() dans
@@ -44,10 +45,10 @@ const NOT_FOUND_HTML = `<!doctype html><html lang="fr"><head><meta charset="utf-
 /* AUDIT 03/10/2026 — anciennes actus supprimées (mai 2026) : 308 vers le hub au lieu d'un 404 (263 erreurs Search Console). */
 const REMOVED_NEWS = new Set<string>(removedNews.slugs);
 
-/* AUDIT GOOGLE 04/10/2026 — règle automatique : une actu ou une analyse DATÉE de plus de 3 jours qui n'est plus en ligne
-   → 308 vers son hub (lib/gone-content.ts ; listes calculées à chaque build par lib/live-content.cjs). */
+/* AUDIT GOOGLE 04/10/2026 — règle automatique : une actu DATÉE de plus de 3 jours qui n'est plus en ligne
+   → 308 vers son hub (lib/gone-content.ts ; liste calculée à chaque build par lib/live-content.cjs).
+   Les analyses techniques n'utilisent plus cette liste (lot L2 du 08/10/2026 : règle par motif, lib/ta-redirect.ts). */
 const LIVE_NEWS = liveSet(process.env.CR_LIVE_NEWS);
-const LIVE_TA = liveSet(process.env.CR_LIVE_TA);
 
 /**
  * BATCH 21 — Defense-in-depth CSRF : check Origin/Referer sur les mutations
@@ -139,9 +140,15 @@ export async function middleware(request: NextRequest) {
     if (REMOVED_NEWS.has(slug) || isGoneDated(slug, LIVE_NEWS)) return NextResponse.redirect(new URL("/actualites", request.url), 308);
     return NextResponse.next();
   }
+  /* Lot L2 (08/10/2026), règle R1 : ancienne analyse datée → 301 vers la page vivante de sa crypto, sans ancre, en un saut,
+     sans lecture de données (lib/ta-redirect.ts). Slug inconnu : la page répond 404 (dynamicParams = false). */
   if (pathname.startsWith("/analyses-techniques/")) {
-    const slug = decodeURIComponent(pathname.slice("/analyses-techniques/".length)).replace(/\/+$/, "").split("/")[0];
-    if (isGoneDated(slug, LIVE_TA)) return NextResponse.redirect(new URL("/analyses-techniques", request.url), 308);
+    const cible = taRedirectTarget(pathname);
+    if (cible) {
+      const res = NextResponse.redirect(new URL(cible, request.url), 301);
+      res.headers.set("Cache-Control", TA_REDIRECT_CACHE);
+      return res;
+    }
     return NextResponse.next();
   }
 
@@ -249,7 +256,7 @@ export const config = {
   matcher: [
     // anciennes actus supprimées → 308 (voir REMOVED_NEWS) ; le hub /actualites reste hors middleware
     "/actualites/:slug+",
-    // analyses techniques datées supprimées → 308 vers le hub (voir isGoneDated) ; aucun appel Supabase
+    // anciennes analyses techniques datées → 301 vers la page vivante de la crypto (voir taRedirectTarget) ; aucun appel Supabase
     "/analyses-techniques/:slug+",
     // Reflex Cards Univers (04/10/2026) : /cartes/<id> → vrai 404 si l'identifiant n'existe pas (voir universHas) ; aucun appel Supabase
         // FIX PERF 2026-05-02 #8 (audit expert deep-dive) — extension du matcher

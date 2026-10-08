@@ -4,8 +4,9 @@
 const { buildSeoRedirects } = require("./lib/seo-redirects.cjs");
 // News publiées en double, supprimées le 2026-10-02 → 308 vers la première publication.
 const NEWS_DUPLICATE_REDIRECTS = require("./lib/news-duplicate-redirects.cjs");
-// Actus et analyses EN LIGNE, recalculées à chaque build : le middleware redirige (308) les adresses datées
-// absentes de ces listes (contenus supprimés). Voir lib/live-content.cjs et middleware.ts.
+// Actus EN LIGNE, recalculées à chaque build : le middleware redirige (308) les adresses datées absentes de cette
+// liste (contenus supprimés). Voir lib/live-content.cjs et middleware.ts. Les analyses techniques datées ont une règle
+// par motif (lib/ta-redirect.ts, lot L2 du 08/10/2026).
 const { buildLegacyRedirects } = require("./lib/legacy-redirects.cjs");
 const LIVE_CONTENT = require("./lib/live-content.cjs").liveContent();
 
@@ -16,7 +17,6 @@ const nextConfig = {
   // Inliné au build dans tous les bundles, middleware compris (valeurs = chaînes JSON).
   env: {
     CR_LIVE_NEWS: JSON.stringify(LIVE_CONTENT.news),
-    CR_LIVE_TA: JSON.stringify(LIVE_CONTENT.ta),
   },
 
   // Cosmétique sécurité : on n'expose pas la stack technique aux scanners

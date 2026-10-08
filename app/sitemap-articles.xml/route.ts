@@ -1,6 +1,7 @@
 /**
- * /sitemap-articles.xml — Sitemap dédié aux articles éditoriaux (blog + news +
- * analyses TA). Les leçons de l'académie n'y figurent plus (canonical → /blog).
+ * /sitemap-articles.xml — Sitemap dédié aux articles éditoriaux (blog + news).
+ * Les leçons de l'académie n'y figurent plus (canonical → /blog), ni les analyses
+ * techniques (08/10/2026 : /sitemap-analyses.xml).
  *
  * Pourquoi un sitemap dédié ?
  *  - Crawl-budget : Google priorise différemment articles vs pages outils.
@@ -16,7 +17,6 @@
 
 import { getAllArticleSummaries } from "@/lib/mdx";
 import { getAllNewsSummaries } from "@/lib/news-mdx";
-import { getAllTASummaries } from "@/lib/ta-mdx";
 import { BRAND } from "@/lib/brand";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || BRAND.url;
@@ -70,17 +70,10 @@ export async function GET(): Promise<Response> {
   }));
 
   /* ------------------------------------------------------------------ */
-  /*  3. Analyses TA                                                    */
+  /*  3. Analyses TA — RETIRÉES le 08/10/2026 (lot L2 du regroupement)   */
   /* ------------------------------------------------------------------ */
-  const taItems = await getAllTASummaries();
-  const taEntries: Entry[] = taItems.map((t) => ({
-    loc: `${SITE_URL}/analyses-techniques/${t.slug}`,
-    lastmod: new Date(t.date).toISOString(),
-    changefreq: "weekly",
-    priority: 0.65,
-    imageLoc: t.image ? `${SITE_URL}${t.image}` : undefined,
-    imageTitle: t.title,
-  }));
+  // Les 368 analyses datées sont devenues 5 pages vivantes : elles ne sont listées que dans /sitemap-analyses.xml
+  // (les anciennes adresses répondent 301 et ne doivent plus être soumises).
 
   /* ------------------------------------------------------------------ */
   /*  4. Académie (leçons) — RETIRÉES le 2026-10-02 (audit SEO)         */
@@ -89,7 +82,7 @@ export async function GET(): Promise<Response> {
   // un canonical vers /blog/<slug> (déjà listé en 1.) : soumettre ces ~120
   // doublons envoyait un signal contradictoire (« URL soumise non canonique »).
 
-  const allEntries = [...blogEntries, ...newsEntries, ...taEntries];
+  const allEntries = [...blogEntries, ...newsEntries];
 
   const items = allEntries
     .map((e) => {

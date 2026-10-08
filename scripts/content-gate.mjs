@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 /**
- * scripts/content-gate.mjs — contrôle des contenus générés AVANT publication (actus + analyses techniques du robot quotidien).
+ * scripts/content-gate.mjs — contrôle des contenus générés AVANT publication (actus du robot quotidien ; échec si une
+ * analyse technique datée réapparaît dans content/analyses-tech/, voir étape 0).
  *
  * Audit du 05/10/2026 : le garde-fou fiscal (scripts/audit-quality.mjs --fiscal-only) bloquait TOUTE la publication du jour dès
  * qu'UN article généré contenait une formulation fiscale à risque (y compris un faux positif) : 0 actu publiée jusqu'à
@@ -10,13 +11,25 @@
  *   3. si un article DÉJÀ publié est en faute, ou si l'écart ne suffit pas, l'étape échoue (blocage, comme avant).
  * Sortie GitHub : dropped=<nombre>, dropped_list=<fichiers>, fixed=<nombre de fichiers reformatés>.
  *
- * Usage : node scripts/content-gate.mjs [--dirs=content/articles]   (défaut : actus, analyses et leurs images)
+ * Usage : node scripts/content-gate.mjs [--dirs=content/articles]   (défaut : actus et leurs images)
  */
 import { spawnSync, execSync } from "node:child_process";
-import { readFileSync, writeFileSync, existsSync, unlinkSync, appendFileSync } from "node:fs";
+import { readFileSync, writeFileSync, existsSync, unlinkSync, appendFileSync, readdirSync } from "node:fs";
 
-const DIRS = (process.argv.find((a) => a.startsWith("--dirs="))?.slice(7).split(",").filter(Boolean)) || ["content/news", "content/analyses-tech", "public/news-covers"];
+const DIRS = (process.argv.find((a) => a.startsWith("--dirs="))?.slice(7).split(",").filter(Boolean)) || ["content/news", "public/news-covers"];
 const out = (k, v) => { if (process.env.GITHUB_OUTPUT) appendFileSync(process.env.GITHUB_OUTPUT, `${k}=${v}\n`); };
+
+/* ---------- 0. plus AUCUNE analyse technique datée (lot L1 du regroupement, 08/10/2026) ----------
+   Les analyses sont 5 pages vivantes (data/analyses-techniques/*.json) ; les 368 anciennes adresses datées répondent
+   301. Un fichier qui réapparaîtrait dans content/analyses-tech/ (ancien robot réactivé, script oublié) recréerait une
+   page datée par jour : blocage avant tout commit. */
+const TA_DATEES = "content/analyses-tech";
+const reapparues = existsSync(TA_DATEES) ? readdirSync(TA_DATEES).filter((f) => !f.startsWith(".")) : [];
+if (reapparues.length) {
+  console.error(`✗ ${reapparues.length} fichier(s) dans ${TA_DATEES}/ (${reapparues.slice(0, 5).join(", ")}) : les analyses datées sont supprimées depuis le 08/10/2026 → publication bloquée.`);
+  out("dropped", 0);
+  process.exit(1);
+}
 
 /* fichiers nouveaux (non suivis) écrits par le générateur */
 const newFiles = () =>

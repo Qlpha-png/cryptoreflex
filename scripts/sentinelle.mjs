@@ -96,7 +96,12 @@ async function checkAnalyses() {
   try {
     const { res } = await get(SITE + "/analyses-techniques");
     const html = await res.text();
-    const dates = [...html.matchAll(/\/analyses-techniques\/(\d{4}-\d{2}-\d{2})-([a-z0-9]+)-analyse-technique/g)];
+    /* 08/10/2026 (lot L2) : le hub est un « tableau du jour » de 5 pages vivantes ; chaque ligne porte
+       data-calcul="<slug>|<horodatage ISO>". Repli sur l'ancien format (liens datés) tant que la production ne l'a pas. */
+    const vivantes = [...html.matchAll(/data-calcul="([a-z0-9-]+)\|(\d{4}-\d{2}-\d{2})T[0-9:]+Z"/g)];
+    const dates = vivantes.length
+      ? vivantes.map((m) => [m[0], m[2], m[1]])
+      : [...html.matchAll(/\/analyses-techniques\/(\d{4}-\d{2}-\d{2})-([a-z0-9]+)-analyse-technique/g)];
     if (!dates.length) return fail("fraîcheur", "page des analyses techniques sans aucune analyse");
     const last = dates.map((m) => m[1]).sort().pop();
     const h = (Date.now() - Date.parse(last + "T04:30:00Z")) / HOUR;

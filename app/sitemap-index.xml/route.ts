@@ -17,6 +17,7 @@
  */
 
 import { BRAND } from "@/lib/brand";
+import { dernierCalculGlobal } from "@/lib/analyses-techniques";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || BRAND.url;
 
@@ -32,6 +33,8 @@ export async function GET(): Promise<Response> {
     { loc: `${SITE_URL}/sitemap.xml`, lastmod: now },
     { loc: `${SITE_URL}/sitemap-news.xml`, lastmod: now },
     { loc: `${SITE_URL}/sitemap-articles.xml`, lastmod: now },
+    // Lot L2 (08/10/2026) : hub + 5 analyses vivantes ; lastmod = vrai horodatage du dernier calcul réussi.
+    { loc: `${SITE_URL}/sitemap-analyses.xml`, lastmod: dernierCalculGlobal() ?? now },
   ];
 
   const xml = `<?xml version="1.0" encoding="UTF-8"?>

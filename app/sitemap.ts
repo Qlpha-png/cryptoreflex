@@ -13,7 +13,7 @@ import { GLOSSARY_TERMS } from "@/lib/glossary";
 import { ALL_LISTICLES } from "@/lib/listicles";
 // Piliers V2 (26-04) : News auto, Analyses TA auto, Académie certifiante.
 import { getAllNewsSummaries } from "@/lib/news-mdx";
-import { getAllTASummaries } from "@/lib/ta-mdx";
+import { dernierCalculGlobal } from "@/lib/analyses-techniques";
 import { TRACKS } from "@/lib/academy-tracks";
 import { partners as affiliatePartners } from "@/data/partners";
 import { getAllPlatforms, getPlatformById, isAvailableFr } from "@/lib/platforms";
@@ -95,10 +95,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Contenus datés (frontmatter) : servent aussi de lastmod aux hubs qui les listent.
   const articles = await getAllArticleSummaries();
   const newsSummaries = await getAllNewsSummaries();
-  const taSummaries = await getAllTASummaries();
   const latestArticle = latestDate(articles.map((a) => a.lastUpdated ?? a.date));
   const latestNews = latestDate(newsSummaries.map((n) => n.date));
-  const latestTA = latestDate(taSummaries.map((t) => t.date));
+  // Lot L2 (08/10/2026) : les analyses techniques (hub + 5 pages vivantes) ne sont plus ici, mais dans
+  // /sitemap-analyses.xml ; leur dernier calcul compte encore pour la date de l'accueil.
+  const latestTA = toLastModified(dernierCalculGlobal());
   const latestContent = latestDate(
     [latestArticle, latestNews, latestTA].map((d) => d?.toISOString()),
   );
@@ -138,8 +139,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // Pilier "Innovation features killer" (26-04-2026).
     entry("/outils/calculateur-apy-staking", "monthly", 0.7),
     entry("/outils/simulateur-halving-bitcoin", "monthly", 0.7),
-    // Piliers V2 (26-04) : pages-mère News auto, Analyses TA auto, Calendrier.
-    entry("/analyses-techniques", "daily", 0.8, latestTA),
+    // Piliers V2 (26-04) : pages-mère News auto, Calendrier. /analyses-techniques : /sitemap-analyses.xml (lot L2, 08/10/2026).
     entry("/calendrier", "weekly", 0.7),
     // /partenariats a été 301 vers /sponsoring (audit SEO 01/05/2026).
     entry("/partenaires", "weekly", 0.85),
@@ -378,9 +378,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     entry(`/actualites/${n.slug}`, "monthly", 0.5, toLastModified(n.date)),
   );
 
-  const taRoutes: MetadataRoute.Sitemap = taSummaries.map((a) =>
-    entry(`/analyses-techniques/${a.slug}`, "weekly", 0.6, toLastModified(a.date)),
-  );
+  // Analyses techniques : plus aucune adresse datée (301) ; hub + 5 pages vivantes dans /sitemap-analyses.xml.
 
   const academyTrackRoutes: MetadataRoute.Sitemap = TRACKS.map((t) =>
     entry(`/academie/${t.id}`, "weekly", 0.75),
@@ -428,7 +426,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       ...historiquePrixRoutes,
       ...converterPairRoutes,
       ...newsRoutes,
-      ...taRoutes,
       ...academyTrackRoutes,
     ],
     (e) => e.url,

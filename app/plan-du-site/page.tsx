@@ -12,7 +12,7 @@ import counts from "@/data/site-counts.json";
 import { getHistHubCryptos, getHistYearsFor } from "@/lib/historique-prix";
 import { getAllCryptos } from "@/lib/cryptos";
 import { COUNTRY_CODES } from "@/lib/programmatic-pages";
-import { getTASlugs } from "@/lib/ta-mdx";
+import { TA_SLUGS } from "@/lib/analyses-techniques";
 import { GLOSSARY_TERMS } from "@/lib/glossary";
 import { TRACKS } from "@/lib/academy-tracks";
 import { REFLEX_META } from "@/lib/reflex-cards/data";
@@ -74,12 +74,12 @@ function Lien({ l }: { l: NavLien }) {
 async function PlanDuSitePage() {
   const histo = getHistHubCryptos().reduce((n, e) => n + getHistYearsFor(e.crypto).length, 0);
   const achats = getAllCryptos().length * COUNTRY_CODES.length;
-  const analyses = (await getTASlugs()).length;
+  const analyses = TA_SLUGS.length;
   const listes: { href: string; label: string; n: number; unite: string }[] = [
     { href: "/cryptos", label: "Les fiches crypto", n: counts.cryptos, unite: "fiches" },
     { href: "/historique-prix", label: "L’historique des prix, crypto par crypto et année par année", n: histo, unite: "pages" },
     { href: "/acheter", label: "Acheter une crypto, pays par pays", n: achats, unite: "guides" },
-    { href: "/analyses-techniques", label: "Les analyses techniques, crypto par crypto", n: analyses, unite: "analyses" },
+    { href: "/analyses-techniques", label: "Les analyses techniques du jour, crypto par crypto", n: analyses, unite: "cryptos" },
     { href: "/actualites", label: "Les actualités, mois par mois", n: counts.news, unite: "actualités" },
     { href: "/blog", label: "Les articles", n: counts.articles, unite: "articles" },
     { href: "/vs", label: "Les duels de cryptos déjà prêts", n: counts.vsPairs, unite: "duels" },

@@ -37,7 +37,9 @@ const SHOW_AFTER_MS = 30_000;
 const SCROLL_THRESHOLD = 0.5;
 // /embed : widgets en iframe sur des sites tiers (la barre recouvrirait le widget).
 // /comparatif (05/10/2026) : la barre recouvrait la liste et le panier « Comparer » du comparateur sur téléphone.
-const SUPPRESSED_PATHS = ["/newsletter", "/merci", "/embed", "/comparatif"];
+// /analyses-techniques : lot L2 du regroupement (arbitrages du 08/10/2026) — pas de lettre d'information proposée sur les
+// pages d'analyses tant qu'elle n'envoie aucune édition ; seule rétention : alerte de prix et copie du résumé daté.
+const SUPPRESSED_PATHS = ["/newsletter", "/merci", "/embed", "/comparatif", "/analyses-techniques"];
 
 /** Pages vues dans la visite (onglet) : la barre attend la 2e. */
 function countPageview(): number {

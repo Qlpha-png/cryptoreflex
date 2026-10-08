@@ -1,4 +1,4 @@
-name: Freshness check (content/news + analyses-tech)
+name: Freshness check (content/news + analyses techniques)
 
 # Cron quotidien à 9h UTC. C'est 2h après daily-content (7h UTC) -> on laisse
 # le temps au workflow de pousser ses fichiers avant de vérifier la fraîcheur.
@@ -84,7 +84,7 @@ jobs:
                 ``,
                 `### Seuils`,
                 `- \`content/news/\` : ≥ 5 fichiers sur 7 derniers jours`,
-                `- \`content/analyses-tech/\` : ≥ 5 fichiers sur 7 derniers jours`,
+                `- \`data/analyses-techniques/*.json\` : dernier calcul réussi (latest.calculatedAt) de moins de 48 h pour chacune des 5 cryptos`,
                 ``,
                 `### À faire`,
                 `1. Ouvrir le run GH Actions et lire les logs \`[freshness-*]\``,

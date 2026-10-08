@@ -7,6 +7,7 @@ import { getAllPlatforms } from "@/lib/platforms";
 import { getPublishableComparisons, getPublishableReviewSlugs } from "@/lib/programmatic";
 import { HIST_YEARS } from "@/lib/historique-prix";
 import { isGoneDated, liveSet } from "@/lib/gone-content";
+import { TA_SYMBOL_TO_SLUG, taRedirectTarget } from "@/lib/ta-redirect";
 import removedNews from "@/lib/news-removed-slugs.json";
 
 /**
@@ -30,7 +31,7 @@ const legacy = require("../../lib/legacy-redirects.cjs") as {
   publishedComparisons(ids: string[]): string[];
   loadPlatforms(): Array<{ id: string; wallet: boolean }>;
 };
-const { liveContent } = require("../../lib/live-content.cjs") as { liveContent(): { news: string[]; ta: string[] } };
+const { liveContent } = require("../../lib/live-content.cjs") as { liveContent(): { news: string[] } };
 const nextConfig = require("../../next.config.js") as { redirects(): Promise<Redirect[]> };
 const { getPathMatch } = require("next/dist/shared/lib/router/utils/path-match") as {
   getPathMatch: (
@@ -253,26 +254,31 @@ describe("legacy-redirects — les 33 chemins de la Search Console (toutes les r
 describe("contenus datés supprimés (middleware)", () => {
   const live = liveContent();
   const news = liveSet(JSON.stringify(live.news));
-  const ta = liveSet(JSON.stringify(live.ta));
   const removed = new Set<string>(removedNews.slugs);
 
-  it("les listes en ligne reflètent content/ (tous les fichiers, aucune liste tronquée)", () => {
+  it("la liste en ligne reflète content/news (tous les fichiers, aucune liste tronquée)", () => {
     const count = (d: string) => readdirSync(path.join(ROOT, d)).filter((f) => /\.mdx?$/.test(f)).length;
     expect(live.news.length).toBeGreaterThanOrEqual(count("content/news"));
-    expect(live.ta.length).toBeGreaterThanOrEqual(count("content/analyses-tech"));
     expect(news).not.toBeNull();
-    expect(ta).not.toBeNull();
+    // 08/10/2026 (lot L2) : plus de liste des analyses (règle par motif, lib/ta-redirect.ts)
+    expect((live as unknown as Record<string, unknown>).ta).toBeUndefined();
   });
 
+  /* Analyses (T) : depuis le lot L2, règle par motif sans liste (lib/ta-redirect.ts) : BTC/ETH/SOL/XRP/ADA → la page
+     vivante de la crypto, toute autre crypto → le hub (les 2 cas restent redirigés, en un saut). */
   it.each(GSC_DEAD_CONTENT)("%s %s → redirigée vers son hub", (kind, slug) => {
-    const set = kind === "N" ? news : ta;
-    expect(set!.has(slug), `${slug} est de nouveau en ligne : retirer de la liste`).toBe(false);
-    expect(isGoneDated(slug, set) || (kind === "N" && removed.has(slug))).toBe(true);
+    if (kind === "T") {
+      const cible = taRedirectTarget(`/analyses-techniques/${slug}`);
+      const sym = /^\d{4}-\d{2}-\d{2}-([a-z0-9]+)-/.exec(slug)![1];
+      expect(cible).toBe(TA_SYMBOL_TO_SLUG[sym] ? `/analyses-techniques/${TA_SYMBOL_TO_SLUG[sym]}` : "/analyses-techniques");
+      return;
+    }
+    expect(news!.has(slug), `${slug} est de nouveau en ligne : retirer de la liste`).toBe(false);
+    expect(isGoneDated(slug, news) || removed.has(slug)).toBe(true);
   });
 
-  it("aucune actu ni analyse EN LIGNE n'est redirigée", () => {
+  it("aucune actu EN LIGNE n'est redirigée", () => {
     for (const s of live.news) expect(isGoneDated(s, news), s).toBe(false);
-    for (const s of live.ta) expect(isGoneDated(s, ta), s).toBe(false);
   });
 
   it("garde-fous : liste absente ou tronquée, adresse récente, adresse non datée", () => {

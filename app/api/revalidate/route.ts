@@ -41,8 +41,9 @@ export const dynamic = "force-dynamic";
  * puisse bust n'importe quel cache (DoS). On ne expose que les buckets
  * dont le bust est cohérent avec l'usage légitime.
  *
- * Les tags news-mdx / ta-articles / events sont émis par les crons
- * aggregate-news, generate-ta et refresh-events après écriture / refresh ;
+ * Les tags news-mdx / events sont émis par les crons aggregate-news et
+ * refresh-events après écriture / refresh (08/10/2026 : « ta-articles » retiré,
+ * les analyses techniques sont 5 pages statiques reconstruites à chaque déploiement) ;
  * ils doivent être dans la whitelist pour qu'un commit manuel ou un script
  * externe puisse re-bust le cache sans passer par le cron complet.
  */
@@ -52,7 +53,6 @@ const ALLOWED_TAGS = new Set([
   "rss",              // alias historique du flux RSS aggregator
   "news-aggregated",  // tag réel utilisé par lib/news-aggregator.ts (audit Perf 26-04)
   "news-mdx",         // pages /actualites + /actualites/[slug] (Pilier 1)
-  "ta-articles",      // analyses techniques /analyses-tech/[slug] (Pilier 2)
   "events",           // calendrier /calendrier (Pilier 4)
   // Tags CoinGecko (étude #12 2026-05-02) — busts ciblés via cron orchestrator
   // ou debug admin. Le pattern `coingecko:crypto:<id>` est validé séparément

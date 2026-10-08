@@ -1,326 +1,85 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import Link from "next/link";
-import dynamic from "next/dynamic";
-import { ArrowRight, Calendar, ExternalLink } from "lucide-react";
 
-import { getTAArticleBySlug, getTASlugs, getAllTASummaries } from "@/lib/ta-mdx";
 import { BRAND } from "@/lib/brand";
-import { generateSpeakableSchema, organizationSchema, graphSchema } from "@/lib/schema";
 import StructuredData from "@/components/StructuredData";
-import MdxContent from "@/components/MdxContent";
-import AutoPublishedLine from "@/components/AutoPublishedLine";
-import TrendBadge from "@/components/ta/TrendBadge";
-import IndicatorsTable from "@/components/ta/IndicatorsTable";
-import { neutraliserAnalyse } from "@/lib/ta-neutre";
-import RelatedPagesNav from "@/components/RelatedPagesNav";
-import { withHreflang } from "@/lib/seo-alternates";
-import { fitTitle } from "@/lib/seo-text";
-import { getCryptoLogo, getCryptoLogoFromSymbol } from "@/lib/crypto-logos";
-import { fmtFr } from "@/lib/format-fr";
 import Breadcrumbs from "@/components/Breadcrumbs";
+import AnalyseVivante from "@/components/analyses/AnalyseVivante";
+import { withHreflang } from "@/lib/seo-alternates";
+import { fitDescription, fitTitle } from "@/lib/seo-text";
+import { TA_SLUGS, descriptionAnalyse, getAnalyse, h1Analyse, nomAvecSymbole, premierCalcul, titreAnalyse } from "@/lib/analyses-techniques";
 
-/** Icône ronde d'une analyse : le logo de la crypto (CoinGecko), jamais l'image de partage du site (/og-default.png,
- *  affichée en vignette ronde sur 345 analyses) ni un logo local absent (/logos/cardano.svg… en 404, audit 05/10/2026). */
-const taIcon = (a: { coingeckoId: string; symbol: string }) => getCryptoLogo(a.coingeckoId) ?? getCryptoLogoFromSymbol(a.symbol);
-
-// PriceChart : Client Component (fetch /api/historical au mount).
-// Lazy-load pour ne pas casser le SSR ni alourdir le bundle initial.
-// Pattern identique à app/cryptos/[slug]/page.tsx.
-const PriceChart = dynamic(
-  () => import("@/components/crypto-detail/PriceChart"),
-  {
-    loading: () => (
-      <div
-        className="h-64 animate-pulse rounded-2xl bg-elevated/40"
-        aria-label="Chargement du graphique de prix"
-      />
-    ),
-    ssr: false,
-  },
-);
-
-/* -------------------------------------------------------------------------- */
-/*  Static generation                                                         */
-/* -------------------------------------------------------------------------- */
-
-// FIX SEO 2026-06-11 — alignement complet sur le pattern blog/[slug]
-// (2026-05-05) : SSG pur, SANS revalidate. Vérifié en prod : avec
-// `revalidate` (ISR), Next 14 rend la not-found co-localisée mais en
-// HTTP 200 (soft-404) même avec dynamicParams=false ; sans revalidate,
-// le 404 est réel. Les analyses sont des MDX commités (GitHub Actions →
-// rebuild Vercel), le contenu ne change jamais entre deux builds : l'ISR
-// ne servait à rien.
+/**
+ * /analyses-techniques/<crypto> — page VIVANTE (lot L2 du regroupement, 08/10/2026) : 5 adresses fixes (bitcoin,
+ * ethereum, solana, xrp, cardano), mises à jour chaque jour par le robot (data/analyses-techniques/<slug>.json).
+ * Les 368 anciennes adresses datées « AAAA-MM-JJ-<sym>-analyse-technique » répondent 301 vers ces pages (middleware.ts,
+ * règle R1, sans lecture de données).
+ *
+ * SSG pur, SANS revalidate (FIX SEO 2026-06-11, gardé) : avec `revalidate`, Next 14 rend la not-found co-localisée en
+ * HTTP 200 (soft-404) même avec dynamicParams=false ; sans revalidate, un slug inconnu répond un vrai 404 (règle R2).
+ * Le robot pousse ses données chaque matin : le déploiement qui suit reconstruit les 5 pages.
+ */
 export const dynamicParams = false;
 
 interface Props {
   params: { slug: string };
 }
 
-export async function generateStaticParams() {
-  const slugs = await getTASlugs();
-  return slugs.map((slug) => ({ slug }));
+export function generateStaticParams() {
+  return TA_SLUGS.map((slug) => ({ slug }));
 }
 
-/**
- * Titre et description affichés : les fichiers écrits par le robot portent une date ISO (« Analyse technique BTC —
- * 2026-10-05 ») ; Google et les partages reçoivent une date en français (audit du 05/10/2026, 345 analyses).
- */
-function taTitle(a: { name: string; symbol: string; date: string }): string {
-  return `${a.name} (${a.symbol}) : analyse technique du ${formatDateFr(a.date)}`;
-}
-function taDescription(d: string): string {
-  /* lot légal du 08/10/2026 : plus de « niveaux clés et scénarios » (sections retirées de la page) */
-  return d
-    .replace(/\b(\d{4}-\d{2}-\d{2})\b/g, (iso) => formatDateFr(iso))
-    .replace(/,? niveaux clés et scénarios/g, "");
-}
+// Reprise L2 (08/10/2026) : PriceChart RETIRÉ de ces pages (cours « live » d'une autre source que Kraken, courbe rouge
+// à la baisse, bloc vide quand l'API ne répond pas). La courbe des 30 clôtures Kraken est rendue côté serveur.
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const article = await getTAArticleBySlug(params.slug);
-  if (!article) return { robots: { index: false, follow: false } };
+export function generateMetadata({ params }: Props): Metadata {
+  const a = getAnalyse(params.slug);
+  if (!a) return { robots: { index: false, follow: false } };
+  const url = `${BRAND.url}/analyses-techniques/${a.slug}`;
   return {
-    title: fitTitle(taTitle(article)),
-    description: taDescription(article.description),
-    alternates: withHreflang(`${BRAND.url}/analyses-techniques/${article.slug}`),
+    title: fitTitle(titreAnalyse(a)),
+    description: fitDescription(descriptionAnalyse(a)),
+    alternates: withHreflang(url),
     openGraph: {
-      title: taTitle(article),
-      description: taDescription(article.description),
-      url: `${BRAND.url}/analyses-techniques/${article.slug}`,
+      title: titreAnalyse(a),
+      description: fitDescription(descriptionAnalyse(a)),
+      url,
       type: "article",
-      publishedTime: article.date,
+      modifiedTime: a.latest.calculatedAt,
     },
   };
 }
 
-/* -------------------------------------------------------------------------- */
-/*  Page                                                                      */
-/* -------------------------------------------------------------------------- */
+export default function AnalyseTechniquePage({ params }: Props) {
+  const a = getAnalyse(params.slug);
+  if (!a) notFound();
+  const url = `${BRAND.url}/analyses-techniques/${a.slug}`;
 
-function formatDateFr(iso: string): string {
-  return new Date(iso + "T00:00:00Z").toLocaleDateString("fr-FR", {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-    timeZone: "UTC",
-  });
-}
-
-function formatPrice(value: number): string {
-  if (!Number.isFinite(value) || value === 0) return "—";
-  if (value >= 1000) return value.toLocaleString("fr-FR", { maximumFractionDigits: 0 });
-  if (value >= 1) return value.toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-  return value.toLocaleString("fr-FR", { minimumFractionDigits: 4, maximumFractionDigits: 4 });
-}
-
-function formatPct(value: number): string {
-  if (!Number.isFinite(value)) return "—";
-  const sign = value > 0 ? "+" : "";
-  return `${sign}${fmtFr(value, 2)}\u00a0%`;
-}
-
-export default async function TAArticlePage({ params }: Props) {
-  const article = await getTAArticleBySlug(params.slug);
-  if (!article) notFound();
-
-  // "Autres analyses du jour" : même date, autres symboles.
-  const all = await getAllTASummaries();
-  const others = all
-    .filter((a) => a.date === article.date && a.slug !== article.slug)
-    .slice(0, 4);
-
-  /* ---- JSON-LD ---------------------------------------------------------- */
-  // Article (avec sous-typage AnalysisNewsArticle dans additionalType pour
-  // signaler la nature analytique au crawler — Schema.org n'a pas de type
-  // dédié "AnalysisNewsArticle", on utilise Article + additionalType).
+  /* Article : dateModified = horodatage du dernier calcul réussi ; auteur = l'organisation (décision D3 du 06/10/2026 :
+     contenu publié automatiquement → pas de fiche auteur). Le BreadcrumbList est émis par le fil d'Ariane (unique). */
   const articleLd = {
     "@context": "https://schema.org",
     "@type": "Article",
-    headline: taTitle(article),
-    description: taDescription(article.description),
-    datePublished: article.date,
-    dateModified: article.date,
+    headline: h1Analyse(a),
+    description: fitDescription(descriptionAnalyse(a)),
+    datePublished: premierCalcul(a),
+    dateModified: a.latest.calculatedAt,
     author: { "@type": "Organization", name: BRAND.name, url: BRAND.url },
-    publisher: {
-      "@type": "Organization",
-      name: BRAND.name,
-      url: BRAND.url,
-      logo: { "@type": "ImageObject", url: `${BRAND.url}/api/logo` },
-    },
-    mainEntityOfPage: {
-      "@type": "WebPage",
-      "@id": `${BRAND.url}/analyses-techniques/${article.slug}`,
-    },
-    image: [article.image ? `${BRAND.url}${article.image}` : `${BRAND.url}/og-default.png`],
+    publisher: { "@type": "Organization", name: BRAND.name, url: BRAND.url, logo: { "@type": "ImageObject", url: `${BRAND.url}/api/logo` } },
+    mainEntityOfPage: { "@type": "WebPage", "@id": url },
     articleSection: "Analyse technique",
-    additionalType: "https://schema.org/AnalysisNewsArticle",
     inLanguage: "fr-FR",
     isAccessibleForFree: true,
-    keywords: `${article.symbol}, ${article.name}, analyse technique, RSI, MACD, ${article.trend}`,
-    about: {
-      "@type": "Thing",
-      name: `${article.name} (${article.symbol})`,
-    },
-    speakable: generateSpeakableSchema(),
+    about: { "@type": "Thing", name: nomAvecSymbole(a) },
   };
 
-  const changeColor =
-    article.change24h > 0 ? "text-emerald-400" : article.change24h < 0 ? "text-rose-400" : "text-muted";
-
   return (
-    <>
-
-      <article className="py-12 sm:py-16">
-        <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-          {/* Breadcrumb */}
-          <Breadcrumbs chemin={`/analyses-techniques/${article.slug}`} label={`${article.symbol} : analyse du ${formatDateFr(article.date)}`} className="mb-4" />
-
-          {/* Header */}
-          <header className="mb-8">
-            <div className="flex items-center gap-3 mb-3">
-              {taIcon(article) ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={taIcon(article)}
-                  alt=""
-                  className="h-10 w-10 rounded-full bg-elevated"
-                  loading="eager"
-                />
-              ) : (
-                <div className="h-10 w-10 rounded-full bg-elevated grid place-items-center text-xs font-bold text-primary">
-                  {article.symbol.slice(0, 3)}
-                </div>
-              )}
-              <div>
-                <div className="text-xs uppercase tracking-wide text-muted font-mono">{article.symbol}</div>
-                <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
-                  {article.name} — Analyse technique
-                </h1>
-              </div>
-            </div>
-
-            <div className="flex items-center flex-wrap gap-3 text-sm">
-              <TrendBadge trend={article.trend} size="md" />
-              <span className="inline-flex items-center gap-1.5 text-muted">
-                <Calendar className="h-3.5 w-3.5" aria-hidden="true" />
-                {formatDateFr(article.date)}
-              </span>
-              <span className="font-mono text-fg/80">
-                {formatPrice(article.currentPrice)} ${" "}
-                <span className={`ml-1 font-semibold ${changeColor}`}>
-                  {formatPct(article.change24h)}
-                </span>
-              </span>
-            </div>
-          </header>
-
-          {/* Price chart en haut (lazy / no-SSR) */}
-          <div className="mb-8">
-            <PriceChart
-              coingeckoId={article.coingeckoId}
-              currency="usd"
-              cryptoName={article.name}
-            />
-          </div>
-
-          {/* Lot légal du 08/10/2026 : plus de bouton « Acheter » à côté d'indicateurs techniques (incitation à
-              l'achat près d'un indicateur = vocabulaire de recommandation). */}
-          <div className="mb-10 flex flex-col sm:flex-row gap-3">
-            <Link
-              href={`/cryptos/${article.cryptoSlug}`}
-              className="inline-flex items-center justify-center gap-2 rounded-xl border border-border bg-surface px-4 py-2.5 text-sm font-semibold text-fg hover:border-primary/40 transition-colors"
-            >
-              <ExternalLink className="h-4 w-4" aria-hidden="true" />
-              Voir la fiche {article.name}
-            </Link>
-          </div>
-
-          {/* Indicateurs visuels (composants) — rendus en haut pour un aperçu rapide */}
-          {article.indicators && (
-            <div className="mb-8">
-              <IndicatorsTable
-                indicators={article.indicators}
-                currentPrice={article.currentPrice}
-              />
-            </div>
-          )}
-
-          {/* Lot légal du 08/10/2026 : liste « supports / résistances » retirée (niveaux lus comme des cibles). */}
-
-          {/* Body MDX */}
-          <MdxContent source={neutraliserAnalyse(article.content)} />
-
-          {/* D3 (décision de Kev, 06/10/2026) : analyse publiée automatiquement → pas de fiche auteur de Kevin Voisin.
-              Le frontmatter des analyses ne cite pas de source : « Publiée automatiquement. ». */}
-          <AutoPublishedLine frontmatter={{ source: (article as { source?: string }).source, sourceUrl: (article as { sourceUrl?: string }).sourceUrl }} />
-
-          {/* Suite logique sans offre (lot légal du 08/10/2026) : comprendre, l'historique, déclarer. */}
-          <div className="mt-12 rounded-2xl border border-border bg-surface p-6">
-            <h2 className="text-lg font-bold mb-2">Et ensuite ?</h2>
-            <p className="text-sm text-fg/70 mb-4">
-              Ces indicateurs décrivent le passé du prix ; ils ne disent rien de ce qu&apos;il fera.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-3">
-              <Link
-                href={`/cryptos/${article.cryptoSlug}`}
-                className="inline-flex items-center justify-center gap-2 rounded-xl border border-border bg-surface px-4 py-2.5 text-sm font-semibold text-fg hover:border-primary/40 transition-colors"
-              >
-                Fiche {article.name} : usage et risques
-                <ArrowRight className="h-4 w-4" aria-hidden="true" />
-              </Link>
-              <Link
-                href="/impots"
-                className="inline-flex items-center justify-center gap-2 rounded-xl border border-border bg-surface px-4 py-2.5 text-sm font-semibold text-fg hover:border-primary/40 transition-colors"
-              >
-                Déclarer une vente de crypto
-              </Link>
-            </div>
-          </div>
-
-          {/* Autres analyses du jour */}
-          {others.length > 0 && (
-            <section className="mt-12">
-              <h2 className="text-lg font-bold mb-4">
-                Autres analyses du{" "}
-                <span className="gradient-text">{formatDateFr(article.date)}</span>
-              </h2>
-              <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                {others.map((o) => (
-                  <li key={o.slug}>
-                    <Link
-                      href={`/analyses-techniques/${o.slug}`}
-                      className="flex items-center gap-3 rounded-xl border border-border bg-surface p-3 hover:border-primary/40 transition-colors"
-                    >
-                      {taIcon(o) ? (
-                        // eslint-disable-next-line @next/next/no-img-element
-                        <img src={taIcon(o)} alt="" className="h-8 w-8 rounded-full bg-elevated" loading="lazy" />
-                      ) : (
-                        <div className="h-8 w-8 rounded-full bg-elevated grid place-items-center text-xs font-bold text-primary">
-                          {o.symbol.slice(0, 3)}
-                        </div>
-                      )}
-                      <div className="flex-1 min-w-0">
-                        <div className="text-sm font-semibold truncate">{o.name}</div>
-                        <div className="text-xs text-muted font-mono">
-                          {formatPrice(o.currentPrice)} $ · RSI {fmtFr(o.rsi, 1)}
-                        </div>
-                      </div>
-                      <TrendBadge trend={o.trend} size="sm" iconOnly />
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </section>
-          )}
-
-          {/* Maillage interne — cluster sémantique du graphe */}
-          <RelatedPagesNav
-            currentPath={`/analyses-techniques/${article.slug}`}
-            limit={4}
-            variant="default"
-          />
-        </div>
-      </article>
-    </>
+    <article className="py-10 sm:py-14">
+      <StructuredData data={articleLd} id={`analyse-${a.slug}`} />
+      <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+        <Breadcrumbs chemin={`/analyses-techniques/${a.slug}`} label={nomAvecSymbole(a)} className="mb-6" />
+        <AnalyseVivante analyse={a} url={url} />
+      </div>
+    </article>
   );
 }

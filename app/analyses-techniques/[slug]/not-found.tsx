@@ -12,7 +12,7 @@ import { ArrowLeft, LineChart, Search } from "lucide-react";
 export const metadata: Metadata = {
   title: "Analyse technique introuvable — Cryptoreflex",
   description:
-    "Cette analyse technique n'existe pas ou a été archivée. Retrouvez toutes nos analyses crypto quotidiennes : BTC, ETH, SOL et les principales capitalisations.",
+    "Cette analyse technique n'existe pas. Le tableau du jour réunit les analyses de Bitcoin, Ethereum, Solana, XRP et Cardano.",
   robots: { index: false, follow: false },
 };
 
@@ -37,15 +37,15 @@ export default function AnalyseTechniqueNotFound() {
           </h2>
 
           <p className="mt-4 max-w-xl mx-auto text-base text-fg/70">
-            L&apos;analyse que vous cherchez a peut-être été archivée, ou l&apos;URL
-            contient une coquille. Nos analyses sont publiées quotidiennement et
-            restent disponibles depuis l&apos;index.
+            L&apos;adresse contient peut-être une coquille. Les analyses techniques
+            tiennent désormais en une page par crypto (Bitcoin, Ethereum, Solana,
+            XRP, Cardano), recalculée chaque jour, avec l&apos;historique des calculs.
           </p>
 
           <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
             <Link href="/analyses-techniques" className="btn-primary min-h-tap">
               <LineChart className="h-4 w-4" />
-              Toutes les analyses techniques
+              Le tableau du jour
             </Link>
             <Link href="/" className="btn-secondary min-h-tap">
               <ArrowLeft className="h-4 w-4" />

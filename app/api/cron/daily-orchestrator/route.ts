@@ -9,8 +9,8 @@
  *                                         ensuite des prix frais).
  *   1. /api/cron/evaluate-alerts      — déclenche les alertes prix
  *   2. /api/cron/aggregate-news       — réécrit 5-10 news/jour en MDX
- *   3. /api/cron/generate-ta          — génère 5 analyses techniques (BTC/ETH/SOL/XRP/ADA)
- *   4. /api/cron/refresh-events       — refresh la cache des événements crypto
+ *   3. /api/cron/refresh-events       — refresh la cache des événements crypto
+ *   (generate-ta supprimé le 08/10/2026 : analyses techniques calculées par le flux GitHub daily-content)
  *
  * Chaque sous-cron est appelé via fetch interne (HTTP) avec son Bearer CRON_SECRET.
  * Failure d'un sous-cron n'arrête PAS la chaîne (best effort) : on collecte tous
@@ -48,9 +48,8 @@ export const maxDuration = 300;
 /** Deadline globale : 290s (laisse 10s de marge au flush HTTP, total 5min). */
 const ORCHESTRATOR_DEADLINE_MS = 290_000;
 
-/** Timeout par sous-cron : 90s. generate-ta peut prendre 30-60s pour 50
- *  cryptos via Binance, et aggregate-news peut traduire 10-15 articles
- *  via OpenRouter (~5s × 13 = ~65s). Bump 60→90s pour couvrir les 2. */
+/** Timeout par sous-cron : 90s. aggregate-news peut traduire 10-15 articles
+ *  via OpenRouter (~5s × 13 = ~65s). Bump 60→90s. */
 const PER_JOB_TIMEOUT_MS = 90_000;
 
 /**
@@ -58,7 +57,7 @@ const PER_JOB_TIMEOUT_MS = 90_000;
  * Ordre = priorité d'exécution.
  *
  * refresh-prices EN PREMIER : il met à jour price_usd / market_cap des 780
- * cryptos en DB. Tous les jobs suivants (aggregate-news, daily-brief, generate-ta)
+ * cryptos en DB. Tous les jobs suivants (aggregate-news, daily-brief)
  * lisent ces prix pour leur génération de contenu — il faut donc les avoir
  * frais avant. Critical:false car si CoinGecko down, les autres jobs continuent
  * de tourner avec les prix de la veille (graceful degradation).
@@ -86,11 +85,12 @@ const SUB_CRONS = [
   { name: "email-series-fiscalite", path: "/api/cron/email-series-fiscalite", critical: false },
   // DÉMONÉTISATION (juin 2026) : génération de CONTENU AUTO désactivée tant que
   // Kevin n'a pas validé un budget IA + un process éditorial. On retire de
-  // l'orchestrateur : aggregate-news (réécriture news via OpenRouter = coût IA),
-  // generate-ta (analyses techniques auto) et daily-brief (brief auto). Les jobs
-  // DATA/ops (prix, alertes, événements, indexnow, emails) restent actifs.
+  // l'orchestrateur : aggregate-news (réécriture news via OpenRouter = coût IA)
+  // et daily-brief (brief auto). Les jobs DATA/ops (prix, alertes, événements,
+  // indexnow, emails) restent actifs. 08/10/2026 (lot L2) : la route generate-ta
+  // est SUPPRIMÉE (les analyses techniques sont calculées par
+  // scripts/generate-daily-content.mjs, dans le flux GitHub daily-content).
   // { name: "aggregate-news", path: "/api/cron/aggregate-news", critical: false },
-  // { name: "generate-ta", path: "/api/cron/generate-ta", critical: false },
   // { name: "daily-brief", path: "/api/cron/daily-brief", critical: false },
   { name: "refresh-events", path: "/api/cron/refresh-events", critical: false },
   // BATCH 19 — IndexNow daily push (Bing/Yandex/Seznam) sur ~28 URLs

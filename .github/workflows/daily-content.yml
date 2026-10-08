@@ -116,7 +116,7 @@ jobs:
       - name: Detect changes
         id: changes
         run: |
-          git add content/news content/analyses-tech public/news-covers
+          git add content/news data/analyses-techniques public/news-covers
           if git diff --staged --quiet; then
             echo "has_changes=false" >> $GITHUB_OUTPUT
             echo "Aucun nouveau contenu à committer."
@@ -261,7 +261,7 @@ jobs:
                 `### Causes possibles`,
                 `- Sources RSS (Cointelegraph, etc.) down ou rate-limit`,
                 `- Quota OpenRouter dépassé (rewriter LLM)`,
-                `- Conflit de merge sur \`content/news\` ou \`content/analyses-tech\``,
+                `- Conflit de merge sur \`content/news\` ou \`data/analyses-techniques\``,
                 `- Échec push sur main (token expiré ?)`,
                 ``,
                 `### À faire`,

@@ -127,7 +127,6 @@ const RULES = [
     severity: "error",
     allowPaths: [
       "lib/coingecko.ts",
-      "lib/ta-article-generator.ts",
       "components/crypto-detail/AnimatedStat.tsx",
       "components/crypto-detail/WhaleWatcher.tsx",
       "components/crypto-detail/OnChainMetricsLive.tsx",

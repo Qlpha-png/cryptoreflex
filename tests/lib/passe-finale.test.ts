@@ -70,14 +70,16 @@ describe("D3 — contenus publiés automatiquement", () => {
   });
 
   it("actualités et analyses techniques : plus de fiche auteur ; mention IA sur les actus (rédigées par IA), pas sur les analyses (gabarit sans IA)", () => {
-    for (const p of ["app/actualites/[slug]/page.tsx", "app/analyses-techniques/[slug]/page.tsx"]) {
+    // 08/10/2026 (lot L2) : le corps de la page vivante d'analyse est dans components/analyses/AnalyseVivante.tsx.
+    for (const p of ["app/actualites/[slug]/page.tsx", "components/analyses/AnalyseVivante.tsx"]) {
       const src = stripComments(read(p));
       expect(src, p).not.toMatch(/<AuthorCard\b/);
       expect(src, p).toMatch(/<AutoPublishedLine\b/);
       expect(src, p).not.toMatch(/DEFAULT_AUTHOR_ID|redaction-cryptoreflex|La rédaction/);
     }
     expect(stripComments(read("app/actualites/[slug]/page.tsx"))).toMatch(/<AutoPublishedLine\s+redigeeParIA\b/);
-    expect(stripComments(read("app/analyses-techniques/[slug]/page.tsx"))).not.toMatch(/redigeeParIA/);
+    expect(stripComments(read("components/analyses/AnalyseVivante.tsx"))).not.toMatch(/redigeeParIA/);
+    expect(stripComments(read("app/analyses-techniques/[slug]/page.tsx"))).not.toMatch(/redigeeParIA|<AuthorCard\b/);
     expect(stripComments(read("components/news/BriefHero.tsx"))).toMatch(/Rédigée par une IA, publiée automatiquement/);
     expect(stripComments(read("components/news/BriefHero.tsx"))).not.toMatch(/Par \{brief\.author\}/);
   });

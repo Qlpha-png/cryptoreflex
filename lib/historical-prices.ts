@@ -436,8 +436,8 @@ const CG_TO_CC: Record<string, string> = {
   gala: "GALA",
   "theta-token": "THETA",
   "immutable-x": "IMX",
-  // FIX 2026-05-09 — coingeckoIds manquants identifiés via cron generate-ta
-  // logs (8 cryptos qui fall-back sur CG 429). Chaîne Binance → CC → CG.
+  // FIX 2026-05-09 — coingeckoIds manquants identifiés via les journaux de l'ancien cron d'analyses techniques
+  // (supprimé le 08/10/2026) : 8 cryptos qui retombaient sur CG 429. Chaîne Binance → CC → CG.
   "wrapped-bitcoin": "WBTC", // WBTCUSDT existe sur Binance
   vechain: "VET", // VETUSDT
   "quant-network": "QNT", // QNTUSDT

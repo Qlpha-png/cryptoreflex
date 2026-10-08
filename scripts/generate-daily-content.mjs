@@ -3,8 +3,8 @@
  * scripts/generate-daily-content.mjs
  *
  * Script Node CLI standalone qui génère le contenu quotidien du site :
- *   - 5-10 nouvelles MDX dans content/news/
- *   - 5 analyses techniques MDX dans content/analyses-tech/
+ *   - jusqu'à 3 nouvelles MDX dans content/news/
+ *   - la mise à jour des 5 analyses techniques vivantes : data/analyses-techniques/<slug>.json (aucun fichier daté)
  *
  * Conçu pour être exécuté via GitHub Actions (filesystem accessible) plutôt
  * que via Vercel Lambda (read-only). Une fois les fichiers écrits, le workflow
@@ -12,6 +12,7 @@
  *
  * Usage local :
  *   node scripts/generate-daily-content.mjs
+ *   node scripts/generate-daily-content.mjs --seulement=analyses   (analyses techniques seules : lecture publique Kraken)
  *
  * Usage CI (GH Actions, voir .github/workflows/daily-content.yml) :
  *   npm run generate:daily
@@ -22,14 +23,15 @@
  *   - Les libs Next.js (next/cache, etc.) ne sont pas importables hors runtime
  *     Next, donc on duplique la logique métier ici (déterministe, peu de code).
  *
- * Stratégie d'idempotence : chaque fichier MDX dont le slug existe déjà est
- * skippé. Le script peut donc être relancé manuellement sans dégât.
+ * Stratégie d'idempotence : chaque actu MDX dont le slug existe déjà est sautée ; l'analyse du jour d'une crypto
+ * remplace celle du même jour. Le script peut donc être relancé manuellement sans dégât.
  */
 
 import { promises as fs } from "node:fs";
 import path from "node:path";
 import { callLLMRewriter } from "./lib/llm-rewriter.mjs";
 import { fetchAndStorePhoto } from "./lib/news-image.mjs";
+import { generateAnalyses } from "./lib/analyses-techniques.mjs";
 
 /* -------------------------------------------------------------------------- */
 /*  Configuration                                                             */
@@ -37,16 +39,9 @@ import { fetchAndStorePhoto } from "./lib/news-image.mjs";
 
 const REPO_ROOT = path.resolve(process.cwd());
 const NEWS_DIR = path.join(REPO_ROOT, "content", "news");
-const TA_DIR = path.join(REPO_ROOT, "content", "analyses-tech");
+const TA_DATA_DIR = path.join(REPO_ROOT, "data", "analyses-techniques");
 const TODAY = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
-
-const TA_CRYPTOS = [
-  { symbol: "BTC", name: "Bitcoin", coingeckoId: "bitcoin", slug: "bitcoin" },
-  { symbol: "ETH", name: "Ethereum", coingeckoId: "ethereum", slug: "ethereum" },
-  { symbol: "SOL", name: "Solana", coingeckoId: "solana", slug: "solana" },
-  { symbol: "XRP", name: "XRP", coingeckoId: "ripple", slug: "xrp" },
-  { symbol: "ADA", name: "Cardano", coingeckoId: "cardano", slug: "cardano" },
-];
+const ONLY = process.argv.find((a) => a.startsWith("--seulement="))?.slice("--seulement=".length) ?? "";
 
 // Flux RSS sources. fr.cointelegraph (410) et cryptoslate (403) sont morts —
 // remplacés par des feeds fiables (le rewriter Sonnet traduit l'EN en FR).
@@ -579,214 +574,17 @@ async function generateNews() {
 }
 
 /* -------------------------------------------------------------------------- */
-/*  Generate TA (analyses techniques)                                         */
+/*  Analyses techniques : 5 fichiers de données, plus aucun MDX daté          */
 /* -------------------------------------------------------------------------- */
 
-/* 05/10/2026 : CoinGecko (gratuit) répond 429 depuis les machines de GitHub → 3 analyses sur 5 perdues ce jour-là.
-   Source principale : données de marché publiques de Binance (data-api.binance.vision, paire USDT ≈ USD, ouverte depuis tous
-   les pays) ; CoinGecko en secours, avec deux nouvelles tentatives espacées en cas de 429. */
-const BINANCE_DATA = "https://data-api.binance.vision/api/v3";
-const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
-async function withRetry429(fn) {
-  for (let i = 0; ; i++) {
-    try {
-      return await fn();
-    } catch (e) {
-      if (i < 2 && /→ 429/.test(String(e?.message))) { await sleep(20000 * (i + 1)); continue; }
-      throw e;
-    }
-  }
-}
-async function binanceCloses(symbol, days) {
-  const res = await fetch(`${BINANCE_DATA}/klines?symbol=${symbol}USDT&interval=1d&limit=${Math.min(days, 1000)}`, { signal: AbortSignal.timeout(10000) });
-  if (!res.ok) throw new Error(`Binance klines ${symbol} → ${res.status}`);
-  const rows = await res.json();
-  return rows.map((k) => parseFloat(k[4])).filter((x) => Number.isFinite(x) && x > 0);
-}
-async function binanceLive(symbol) {
-  const res = await fetch(`${BINANCE_DATA}/ticker/24hr?symbol=${symbol}USDT`, { signal: AbortSignal.timeout(8000) });
-  if (!res.ok) throw new Error(`Binance ticker ${symbol} → ${res.status}`);
-  const j = await res.json();
-  const price = parseFloat(j.lastPrice), change24h = parseFloat(j.priceChangePercent);
-  if (!(price > 0) || !Number.isFinite(change24h)) throw new Error(`Binance ticker ${symbol} : réponse invalide`);
-  return { price, change24h };
-}
-async function taPrices(crypto, days = 200) {
-  try {
-    const closes = await binanceCloses(crypto.symbol, days);
-    if (closes.length >= 50) return closes;
-    throw new Error(`Binance ${crypto.symbol} : historique trop court (${closes.length})`);
-  } catch (e) {
-    console.warn(`[ta-source] ${e.message} → CoinGecko`);
-    return withRetry429(() => fetchHistoricalPrices(crypto.coingeckoId, days));
-  }
-}
-async function taLive(crypto) {
-  try {
-    return await binanceLive(crypto.symbol);
-  } catch (e) {
-    console.warn(`[ta-source] ${e.message} → CoinGecko`);
-    return withRetry429(() => fetchLivePrice(crypto.coingeckoId));
-  }
-}
-
-async function fetchHistoricalPrices(coingeckoId, days = 200) {
-  const url = `https://api.coingecko.com/api/v3/coins/${coingeckoId}/market_chart?vs_currency=usd&days=${days}&interval=daily`;
-  const res = await fetch(url, {
-    headers: { "User-Agent": "Cryptoreflex-DailyBot/1.0" },
-    signal: AbortSignal.timeout(10000),
-  });
-  if (!res.ok) throw new Error(`CoinGecko ${coingeckoId} → ${res.status}`);
-  const data = await res.json();
-  return (data.prices || []).map(([_, p]) => p);
-}
-
-async function fetchLivePrice(coingeckoId) {
-  const url = `https://api.coingecko.com/api/v3/simple/price?ids=${coingeckoId}&vs_currencies=usd&include_24hr_change=true`;
-  const res = await fetch(url, {
-    headers: { "User-Agent": "Cryptoreflex-DailyBot/1.0" },
-    signal: AbortSignal.timeout(8000),
-  });
-  if (!res.ok) throw new Error(`CoinGecko price ${coingeckoId} → ${res.status}`);
-  const data = await res.json();
-  const obj = data[coingeckoId];
-  return { price: obj?.usd ?? 0, change24h: obj?.usd_24h_change ?? 0 };
-}
-
-function calcRSI(prices, period = 14) {
-  if (prices.length < period + 1) return 50;
-  let gains = 0, losses = 0;
-  for (let i = 1; i <= period; i++) {
-    const diff = prices[i] - prices[i - 1];
-    if (diff > 0) gains += diff;
-    else losses -= diff;
-  }
-  let avgGain = gains / period;
-  let avgLoss = losses / period;
-  for (let i = period + 1; i < prices.length; i++) {
-    const diff = prices[i] - prices[i - 1];
-    const g = diff > 0 ? diff : 0;
-    const l = diff < 0 ? -diff : 0;
-    avgGain = (avgGain * (period - 1) + g) / period;
-    avgLoss = (avgLoss * (period - 1) + l) / period;
-  }
-  if (avgLoss === 0) return 100;
-  const rs = avgGain / avgLoss;
-  return Math.round((100 - 100 / (1 + rs)) * 100) / 100;
-}
-
-function calcMA(prices, period) {
-  if (prices.length < period) return prices[prices.length - 1] ?? 0;
-  const slice = prices.slice(-period);
-  return slice.reduce((s, p) => s + p, 0) / period;
-}
-
-function detectTrend(prices) {
-  const ma50 = calcMA(prices, 50);
-  const ma200 = calcMA(prices, 200);
-  const last = prices[prices.length - 1];
-  if (ma50 > ma200 && last > ma50) return "Haussier";
-  if (ma50 < ma200 && last < ma50) return "Baissier";
-  return "Neutre";
-}
-
-/* Format français des analyses (audit du 05/10/2026) : « 85 921 $ » et non « $85 921 », « +1,20 % », date en toutes
-   lettres, tendance accordée au féminin (« la tendance est haussière »). */
-const frNum = (n, d) => n.toLocaleString("fr-FR", { minimumFractionDigits: d, maximumFractionDigits: d });
-const frUsd = (v) => `${frNum(v, v >= 1000 ? 0 : v >= 1 ? 2 : 4)} $`;
-const frDate = (iso) => new Date(iso + "T00:00:00Z").toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" });
-const TREND_FEM = { Haussier: "haussière", Baissier: "baissière", Neutre: "neutre" };
-
-function buildTAArticle(crypto, prices, livePriceUsd, change24h) {
-  const rsi = calcRSI(prices);
-  const ma50 = Math.round(calcMA(prices, 50) * 100) / 100;
-  const ma200 = Math.round(calcMA(prices, 200) * 100) / 100;
-  const trend = detectTrend(prices);
-  const slug = `${TODAY}-${crypto.symbol.toLowerCase()}-analyse-technique`;
-  const price = Math.round(livePriceUsd * 100) / 100;
-
-  const title = `Analyse technique ${crypto.symbol} du ${frDate(TODAY)}`;
-  const description = `Analyse technique ${crypto.name} (${crypto.symbol}) du ${frDate(TODAY)} : RSI et moyennes mobiles 50 et 200 jours, calcul automatique daté.`;
-  const trendFem = TREND_FEM[trend] ?? trend.toLowerCase();
-
-  const frontmatter = `---
-title: "${yamlString(title)}"
-description: "${yamlString(description)}"
-date: "${TODAY}"
-symbol: "${crypto.symbol}"
-name: "${crypto.name}"
-cryptoSlug: "${crypto.slug}"
-coingeckoId: "${crypto.coingeckoId}"
-currentPrice: ${price}
-trend: "${trend}"
-rsi: ${rsi}
-change24h: ${change24h.toFixed(2)}
-image: "/og-default.png"
-author: "Cryptoreflex"
----`;
-
-  const body = `## Situation actuelle
-
-Le ${crypto.name} (${crypto.symbol}) s'échange à **${frUsd(price)}** le ${frDate(TODAY)}, en variation de **${change24h >= 0 ? "+" : ""}${frNum(change24h, 2)} %** sur 24 heures. La tendance générale est **${trendFem}**.
-
-## Indicateurs techniques
-
-| Indicateur | Valeur | Lecture |
-|---|---|---|
-| RSI (14) | ${frNum(rsi, 1)} | ${rsi > 70 ? "Zone de surachat (RSI au-dessus de 70)" : rsi < 30 ? "Zone de survente (RSI en dessous de 30)" : "Zone neutre (entre 30 et 70)"} |
-| MA 50 | ${frUsd(ma50)} | ${price > ma50 ? "Prix au-dessus de la moyenne" : "Prix en dessous de la moyenne"} |
-| MA 200 | ${frUsd(ma200)} | ${price > ma200 ? "Prix au-dessus de la moyenne" : "Prix en dessous de la moyenne"} |
-
-Ces indicateurs décrivent le passé du prix ; ils ne disent rien de ce qu'il fera. Tendance calculée : « haussière » si le prix est au-dessus de la moyenne 50 jours et celle-ci au-dessus de la moyenne 200 jours, « baissière » dans le cas inverse, « neutre » sinon.
-
-## Pour aller plus loin
-
-- [Fiche ${crypto.name} : usage et risques](/cryptos/${crypto.slug})
-- [Heatmap top 100 en temps réel](/marche/heatmap)
-- [Déclarer une vente de crypto](/impots)
-
-<Callout type="warning" title="Avertissement">
-Calcul automatique sur un gabarit fixe, sans rédaction par une IA. Ces informations **ne constituent pas un conseil en investissement**. Les crypto-actifs sont volatils et peuvent perdre tout ou partie de leur valeur.
-</Callout>
-`;
-
-  return { slug, content: `${frontmatter}\n\n${body}\n` };
-}
-
+/* Lot L1 du regroupement (08/10/2026) : le robot met à jour data/analyses-techniques/<slug>.json (cours de clôture en
+   euros, Kraken puis replis) au lieu d'écrire content/analyses-tech/AAAA-MM-JJ-<sym>-analyse-technique.mdx. Le calcul,
+   les sources et les règles (idempotence, échec = fichier intact) sont dans scripts/lib/analyses-techniques.mjs. */
 async function generateTA() {
-  console.log(`\n=== Génération ANALYSES TECHNIQUES pour ${TODAY} ===`);
-  await fs.mkdir(TA_DIR, { recursive: true });
-
-  let created = 0, skipped = 0, errors = 0;
-
-  for (const crypto of TA_CRYPTOS) {
-    const slug = `${TODAY}-${crypto.symbol.toLowerCase()}-analyse-technique`;
-    const filePath = path.join(TA_DIR, `${slug}.mdx`);
-
-    try {
-      await fs.access(filePath);
-      skipped++;
-      continue;
-    } catch { /* not exists */ }
-
-    try {
-      const prices = await taPrices(crypto, 200);
-      if (prices.length < 50) throw new Error(`historical too short: ${prices.length}`);
-      const live = await taLive(crypto);
-      const { content } = buildTAArticle(crypto, prices, live.price, live.change24h);
-      await fs.writeFile(filePath, content, "utf8");
-      created++;
-      console.log(`[ta-create] ${slug}`);
-      // Rate limit CoinGecko free tier (30 req/min)
-      await new Promise((r) => setTimeout(r, 2000));
-    } catch (err) {
-      errors++;
-      console.error(`[ta-error] ${crypto.symbol}: ${err.message}`);
-    }
-  }
-
-  console.log(`\n[ta] DONE — created=${created} skipped=${skipped} errors=${errors}`);
-  return { created, skipped, errors };
+  console.log(`\n=== Calcul des ANALYSES TECHNIQUES pour ${TODAY} ===`);
+  const res = await generateAnalyses({ dir: TA_DATA_DIR });
+  console.log(`\n[ta] DONE — updated=${res.updated} errors=${res.errors}`);
+  return { created: res.updated, skipped: 0, errors: res.errors };
 }
 
 /* -------------------------------------------------------------------------- */
@@ -799,8 +597,8 @@ async function generateTA() {
   console.log(`  Date: ${TODAY}`);
   console.log(`========================================`);
 
-  const newsRes = await generateNews();
-  const taRes = await generateTA();
+  const newsRes = ONLY === "analyses" ? { created: 0, skipped: 0, errors: 0 } : await generateNews();
+  const taRes = ONLY === "actus" ? { created: 0, skipped: 0, errors: 0 } : await generateTA();
 
   const totalCreated = newsRes.created + taRes.created;
   console.log(`\n=== TOTAL ===`);
@@ -816,6 +614,8 @@ async function generateTA() {
     await fs.appendFile(process.env.GITHUB_OUTPUT, `news_created=${newsRes.created}
 news_errors=${newsRes.errors}
 news_skipped=${newsRes.skipped}
+ta_updated=${taRes.created}
+ta_errors=${taRes.errors}
 `);
   }
   if (newsRes.created === 0 && newsRes.errors > 0) {

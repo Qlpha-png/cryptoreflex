@@ -1,12 +1,10 @@
 /**
  * lib/ta-types.ts — Types partagés pour la section Analyses Techniques.
  *
- * Source unique pour :
- *   - lib/technical-analysis.ts (calculs purs)
- *   - lib/ta-article-generator.ts (génération MDX)
- *   - app/analyses-techniques/* (pages)
- *   - components/ta/* (UI)
- *   - app/api/cron/generate-ta (cron quotidien)
+ * Source unique pour lib/technical-analysis.ts (calculs purs, API /api/v1/*).
+ * 08/10/2026 (lot L2 du regroupement) : les pages /analyses-techniques n'utilisent plus ces types (données :
+ * data/analyses-techniques/*.json, lecteur lib/analyses-techniques.ts) ; le générateur MDX, le cron generate-ta et
+ * components/ta/* sont supprimés. TA_CRYPTOS ci-dessous n'a plus de consommateur de page.
  *
  * Convention : aucun import runtime ici (types only) pour rester
  * gratuit en bundle (élidé au compile).
