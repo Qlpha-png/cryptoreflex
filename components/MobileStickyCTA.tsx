@@ -86,10 +86,8 @@ function MobileStickyCTA({
   const shownDisclaimer = paid ? `Publicité · ${disclaimer}` : disclaimer;
 
   return (
-    // FIX BATCH 20 — bug régression BATCH 11 : MobileStickyCTA s'empilait
-    // au même niveau que MobileBottomNav (tous deux fixed bottom-0 z-40).
-    // Maintenant : positionné EN DESSUS du MobileBottomNav (--mobile-bar-h)
-    // + z-30 (en-dessous de MobileBottomNav z-40 logique navigation prio).
+    // Positionné EN DESSUS de la barre du bas (components/cplus/BarreBas.tsx, --mobile-bar-h)
+    // + z-30 (sous la barre, z-57 : la navigation reste prioritaire).
     // a11y : div décoratif → pas d'aria-label invalide (le <a> interne
     // porte déjà son nom accessible).
     <div
@@ -97,9 +95,9 @@ function MobileStickyCTA({
       aria-label="Achat rapide"
       className="md:hidden fixed inset-x-0 z-30 border-t border-border/80
                  bg-background/95 backdrop-blur-xl animate-slide-up"
+      // Lot B3c : au-dessus de la barre du bas ET de sa zone sûre iOS (la barre fait 64 px + la zone sûre).
       style={{
-        bottom: "var(--mobile-bar-h, 64px)",
-        paddingBottom: "env(safe-area-inset-bottom, 0)",
+        bottom: "calc(var(--mobile-bar-h, 64px) + var(--safe-bottom, 0px))",
       }}
     >
       <div className="flex items-center gap-3 px-4 py-3">

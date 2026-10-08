@@ -22,7 +22,8 @@ export default function PrintButton() {
   }
 
   return (
-    <div className="no-print fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-40">
+    // Reprise B3c : sous 1 024 px, au-dessus de la barre du bas (64 px + zone sûre iOS), qui le couvrait.
+    <div className="no-print fixed bottom-[calc(var(--mobile-bar-h,64px)+var(--safe-bottom,0px)+16px)] right-4 sm:right-6 lg:bottom-6 z-40">
       <button
         type="button"
         onClick={handleClick}

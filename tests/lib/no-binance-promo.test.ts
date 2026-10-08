@@ -18,8 +18,10 @@ const PROMO_FILES = [
   "app/opengraph-image.tsx",
   "app/portefeuille/page.tsx",
   "components/Footer.tsx",
-  "components/BurgerMenu.tsx",
-  "components/MobileBottomNav.tsx",
+  /* Lot B3c : BurgerMenu et MobileBottomNav remplacés par la feuille de menu et la barre du bas. */
+  "components/cplus/MenuFeuille.tsx",
+  "components/cplus/BarreBas.tsx",
+  "lib/nav-data.ts",
 ];
 
 describe("Binance et Bitget absents des textes promotionnels", () => {

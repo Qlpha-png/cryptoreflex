@@ -98,7 +98,9 @@ export default function MegaNavIsland() {
         basculer(t);
         return;
       }
-      if (cible?.closest?.("[data-open-search]") && hdr.contains(cible)) {
+      // Loupe : celle de la rangée 2, de l'en-tête compact ou de la feuille de menu (lot B3c).
+      if (cible?.closest?.("[data-open-search]")) {
+        if (e.button !== 0 || e.ctrlKey || e.metaKey || e.shiftKey || e.altKey) return; // nouvel onglet : /recherche
         e.preventDefault();
         fermer();
         setMode("dialogue");

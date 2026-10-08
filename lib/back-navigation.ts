@@ -59,3 +59,35 @@ export function computeParentPath(pathname: string): string {
   const segments = clean.split("/").filter(Boolean);
   return segments.length > 1 ? "/" + segments.slice(0, -1).join("/") : "/";
 }
+
+/**
+ * Lot B3c (08/10/2026) — le bouton « ← Retour » n'est plus rendu là où la page a un fil d'Ariane (components/Breadcrumbs.tsx) :
+ * il laissait un grand vide au-dessus du fil, qui fait déjà le retour vers la rubrique et la page parente.
+ * Il reste sur les seules pages SANS fil, listées ici sous la forme des dossiers de app/ (segment dynamique = [x]).
+ * tests/lib/mobile-b3c.test.ts parcourt app/ et vérifie que cette liste est exactement celle des pages dont l'arbre de
+ * composants ne rend aucun <Breadcrumbs> (hors accueil, widgets /embed/* et pages qui ne font que rediriger).
+ */
+export const SANS_FIL: ReadonlyArray<string> = [
+  "/admin",
+  "/admin/abtest",
+  "/admin/stats",
+  "/admin/vitals",
+  "/merci",
+  "/mon-compte",
+  "/mon-compte/dev",
+  "/mon-compte/dev/[id]",
+  "/mon-compte/dev/[id]/reveal",
+  "/mon-compte/mot-de-passe",
+  "/offline",
+  "/outils/calculateur-fiscalite/preview-pdf/[sessionId]",
+  "/pro/welcome",
+];
+
+const SANS_FIL_RE = SANS_FIL.map((m) => new RegExp("^" + m.replace(/\[[^\]]+\]/g, "[^/]+") + "$"));
+
+/** Le bouton Retour est-il rendu sur cette page ? Seulement sur une page sans fil d'Ariane. */
+export function afficherRetour(pathname: string): boolean {
+  const c = pathname.split(/[?#]/)[0];
+  const clean = c.length > 1 ? c.replace(/\/+$/, "") : c;
+  return SANS_FIL_RE.some((re) => re.test(clean));
+}

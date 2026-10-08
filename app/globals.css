@@ -2,6 +2,8 @@
 @import "./styles/tokens.css";
 /* En-tête du bureau, méga-menus et recherche (lot B3b). */
 @import "./styles/entete.css";
+/* En-tête compact, barre du bas et feuille de menu sous 1 024 px (lot B3c). */
+@import "./styles/mobile.css";
 /* Lot A2 : les couleurs de ce fichier passent par ces jetons (rgb(var(--c-…) / a)) ; restent en dur les seules teintes
    sans jeton de valeur identique (héros, crème #ffe9c2…), les masques et le voile de [popover]::backdrop. */
 
@@ -78,8 +80,12 @@ body {
   color: var(--color-fg);
   -webkit-font-smoothing: antialiased;
   font-feature-settings: "cv02", "cv03", "cv04", "cv11";
-  /* Empêche le scroll horizontal accidentel sur mobile (bug fréquent overflow tableau) */
+  /* Empêche le scroll horizontal accidentel sur mobile (bug fréquent overflow tableau).
+     Lot B3c : clip et non plus hidden. Avec hidden, body devenait un conteneur de défilement (overflow-y calculé en auto)
+     et position: sticky ne collait plus (en-tête compact). clip coupe pareil sans créer de conteneur de défilement ;
+     un navigateur qui ne connaît pas clip (Safari < 16) garde hidden : l'en-tête n'y colle pas, la barre du bas reste. */
   overflow-x: hidden;
+  overflow-x: clip;
   /* FIX RESPONSIVE 2026-05-02 #6 (audit user "moitié des lignes coupées
      mobile") — overflow-wrap: anywhere casse les chaînes non-cassables
      (adresses wallet 0xABC..., bc1q..., transaction hashes, URLs nues sans
@@ -101,11 +107,20 @@ body {
   word-break: normal;
 }
 
-/* Padding bottom mobile = laisser de la place pour la sticky bar */
-@media (max-width: 768px) {
+/* Padding bottom mobile = laisser de la place pour la barre du bas (components/cplus/BarreBas.tsx, jusqu'à 1 023 px, D20) */
+@media (max-width: 1023.98px) {
   body {
     padding-bottom: calc(var(--mobile-bar-h) + var(--safe-bottom));
   }
+}
+
+/* Reprise B3c — barres de contenu collantes (lettres du glossaire, recherche de /comparer, mois du calendrier).
+   Depuis overflow-x: clip, position: sticky fonctionne ; sous 1 024 px ces barres (100 à 170 px) mangeaient jusqu'au
+   quart de l'écran du téléphone et 100 % à 320 × 256 (zoom 400 %, WCAG 1.4.10), et une bande de texte défilait
+   au-dessus quand l'en-tête compact se masque. Elles ne collent donc que sur le bureau assez haut, sous la rangée 2 de
+   l'en-tête (122 − 73 = 49 px, app/styles/entete.css) ; ailleurs elles défilent avec la page, comme avant le lot. */
+@media (min-width: 1024px) and (min-height: 561px) {
+  .cr-colle { position: sticky; top: 49px; }
 }
 
 /* ============================================================
@@ -635,10 +650,11 @@ h3:not(.uppercase, .font-mono, .font-code, .titre-libre) {
   .hero-pulse-band { height: clamp(170px, 26vh, 240px); }
   .hero-pulse-chip { font-size: 14px; padding: 5px 10px; } /* B1 : 12 → 14 px */
 }
-/* Sous md (768px), la bottom-nav mobile (64px, fixed) recouvrait le bas
-   de la courbe au premier écran : on remonte la bande d'autant. */
-@media (max-width: 767px) {
-  .hero-pulse-band { bottom: var(--mobile-bar-h, 64px); }
+/* Téléphone (jusqu'à 760 px, D20) : la barre du bas (64 px, fixed) recouvrait le bas de la courbe au premier écran : on
+   remonte la bande d'autant. Reprise B3c : pas au-delà ; de 761 à 1 023 px, relevée, la courbe traversait la mention
+   légale du héros (« Investir en cryptomonnaies comporte un risque… ») : elle reste en bas, derrière la barre. */
+@media (max-width: 760px) {
+  .hero-pulse-band { bottom: calc(var(--mobile-bar-h, 64px) + var(--safe-bottom, 0px)); }
 }
 
 /* ── SCRUB de la ligne de vie (desktop, souris) ──────────────────────
@@ -2021,9 +2037,9 @@ section[id^="cat-"] {
 html {
   scroll-padding-bottom: calc(var(--mobile-bar-h, 64px) + 80px + var(--safe-bottom, 0px));
 }
-@media (min-width: 768px) {
+@media (min-width: 1024px) {
   html {
-    /* Sur desktop, pas de mobile bar : juste un confort de 80px. */
+    /* Dès 1 024 px, pas de barre du bas : juste un confort de 80px. */
     scroll-padding-bottom: 80px;
   }
 }

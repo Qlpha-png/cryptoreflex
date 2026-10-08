@@ -94,9 +94,9 @@ function StickyWaltioCta() {
     <div
       role="complementary"
       aria-label="Promotion Waltio — économisez du temps sur votre déclaration crypto"
-      // 07/10/2026 : sous 768 px, au-dessus de la barre de navigation mobile (MobileBottomNav, md:hidden, même
+      // 07/10/2026, lot B3c : sous 1 024 px, au-dessus de la barre du bas (components/cplus/BarreBas.tsx, même
       // convention que MobileStickyCTA) ; avant, le bandeau était en bottom-0 et son bouton passait sous la barre.
-      className="fixed inset-x-0 bottom-[calc(var(--mobile-bar-h,64px)_+_var(--safe-bottom,0px))] md:bottom-0 z-40 px-3 pb-3 sm:px-6 sm:pb-5 pointer-events-none"
+      className="fixed inset-x-0 bottom-[calc(var(--mobile-bar-h,64px)_+_var(--safe-bottom,0px))] lg:bottom-0 z-40 px-3 pb-3 sm:px-6 sm:pb-5 pointer-events-none"
     >
       <div className="mx-auto max-w-5xl pointer-events-auto">
         <div className="flex flex-wrap sm:flex-nowrap items-center gap-x-3 gap-y-1.5 sm:gap-3 rounded-2xl border border-primary/40 bg-elevated/95 backdrop-blur shadow-xl p-3 sm:p-4">

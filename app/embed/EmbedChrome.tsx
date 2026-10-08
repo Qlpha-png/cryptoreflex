@@ -19,7 +19,7 @@ const EMBED_CSS = `
   html, body { background: transparent !important; background-image: none !important; }
   body { padding-bottom: 0 !important; }
   body > header, body > nav, body > footer, body > noscript,
-  body > [role="region"], body > a[href="#main"] { display: none !important; }
+  body > [role="region"], body > a[href="#main"], body > .cr-ms { display: none !important; }
   main { padding: 0 !important; }
 `;
 

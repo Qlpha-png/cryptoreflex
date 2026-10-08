@@ -217,7 +217,8 @@ describe("Inventaire des liens rémunérés Waltio", () => {
 
   it("bandeau collant : au-dessus de la barre mobile, ligne « Publicité · Bon à savoir » sur mobile et sur écran large", () => {
     const src = read("components/fiscal-tools/StickyWaltioCta.tsx");
-    expect(src).toContain("bottom-[calc(var(--mobile-bar-h,64px)_+_var(--safe-bottom,0px))] md:bottom-0");
+    // Lot B3c : la barre du bas existe jusqu'à 1 023 px (D20) → le bandeau ne descend en bas qu'à partir de lg (1 024 px).
+    expect(src).toContain("bottom-[calc(var(--mobile-bar-h,64px)_+_var(--safe-bottom,0px))] lg:bottom-0");
     expect(src).toMatch(/<WaltioFranchise variant="line" lead="Publicité · " className="hidden sm:block" \/>/);
     expect(src).toMatch(/<WaltioFranchise variant="line" lead="Publicité · " className="basis-full sm:hidden" \/>/);
   });

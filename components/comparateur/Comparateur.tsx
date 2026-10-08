@@ -246,7 +246,8 @@ function Comparateur({ rows, duelSlugs }: { rows: Row[]; duelSlugs: string[] }) 
 
       {/* 3. le panier « Comparer » */}
       {chosen.length > 0 && (
-        <div className="fixed inset-x-0 z-40 bottom-[calc(64px+env(safe-area-inset-bottom))] px-3 md:bottom-4 md:px-6">
+        // Reprise B3c : au-dessus de la barre du bas jusqu'à 1 023 px (elle couvrait « Comparer » à 800 et 1 000 px).
+        <div className="fixed inset-x-0 z-40 bottom-[calc(var(--mobile-bar-h,64px)+var(--safe-bottom,0px))] px-3 md:px-6 lg:bottom-4">
           <div className="mx-auto flex max-w-3xl items-center gap-3 rounded-2xl border border-primary/50 bg-background/95 p-3 shadow-e3 backdrop-blur">
             <div className="flex min-w-0 flex-1 flex-wrap gap-1.5">
               {chosen.map((r) => (

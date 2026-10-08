@@ -6,8 +6,8 @@
  * complet de 65 liens, barre du bas, pied de page) qui divergeaient, avec des textes périmés (« Airdrops :
  * Linea, Monad », « 30 cryptos × 8 années », chiffres écrits à la main).
  *
- * Lu par components/Navbar.tsx (onglets du haut), BurgerMenu.tsx (menu complet), MobileBottomNav.tsx (barre du
- * bas sur téléphone) et Footer.tsx. Règles :
+ * Lot B3c (08/10/2026) : en-tête, méga-menus, feuille de menu et barre du bas lisent désormais lib/nav-data.ts ; ici ne
+ * sert plus que FOOTER_LEGAL (pied de page). Les autres listes restent couvertes par tests/lib/nav.test.ts. Règles :
  *  - des mots simples, des verbes ; chaque page publique rangée à UN endroit ;
  *  - AUCUN chiffre ici (un nombre écrit dans un menu finit toujours faux) ;
  *  - tests/lib/nav.test.ts : chaque lien mène à une page qui existe, chaque rubrique publique est rangée.

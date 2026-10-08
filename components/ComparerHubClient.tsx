@@ -62,9 +62,9 @@ export default function ComparerHubClient({ cryptos }: Props) {
 
   return (
     <>
-      {/* Barre de recherche — sticky sous le header pour rester accessible
-          quand l'utilisateur scrolle dans la liste. */}
-      <div className="mt-8 sticky top-16 z-20 bg-background/95 backdrop-blur-md border-b border-border/40 -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8 py-3">
+      {/* Barre de recherche — collante sous l'en-tête sur le bureau seulement (.cr-colle, app/globals.css) ;
+          sous 1 024 px elle défile avec la page (reprise B3c). */}
+      <div className="mt-8 cr-colle z-20 bg-background/95 backdrop-blur-md border-b border-border/40 -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8 py-3">
         <div className="max-w-2xl mx-auto">
           <div className="relative">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted pointer-events-none" />

@@ -4,10 +4,8 @@
  * BackButton — bouton "Retour" global, monté dans app/layout.tsx.
  *
  * UX :
- *  - Apparaît sur toutes les pages SAUF :
- *      • home `/`
- *      • routes embed (layout minimal sans navbar)
- *      • pages d'erreur (Next.js gère son propre fallback)
+ *  - Lot B3c : n'apparaît QUE sur les pages sans fil d'Ariane (SANS_FIL de lib/back-navigation.ts : espace compte,
+ *    administration, pages techniques). Partout ailleurs le fil d'Ariane fait le retour, sans le grand vide de ce bouton.
  *  - Click :
  *      • si historique de navigation interne → `router.back()` (snappy)
  *      • sinon → fallback vers le parent calculé depuis le pathname
@@ -27,17 +25,15 @@ import { usePathname, useRouter } from "next/navigation";
 // Parent calculé hors composant (logique pure + tests) : règles des routes
 // nested-only sans page intermédiaire (/acheter/x/y, /vs/a/b, /historique-prix/x/y,
 // /lp/*, /wizard/*…) → hub valide le plus proche, jamais un 404.
-import { computeParentPath } from "@/lib/back-navigation";
+import { afficherRetour, computeParentPath } from "@/lib/back-navigation";
 
-const HIDE_PREFIXES = ["/embed", "/api"];
 
 export default function BackButton() {
   const router = useRouter();
   const pathname = usePathname() ?? "/";
 
-  // Hide on homepage + embed/api routes
-  if (pathname === "/") return null;
-  if (HIDE_PREFIXES.some((p) => pathname.startsWith(p))) return null;
+  // Lot B3c : seulement sur les pages SANS fil d'Ariane (lib/back-navigation.ts, SANS_FIL). Ailleurs, le fil fait le retour.
+  if (!afficherRetour(pathname)) return null;
 
   const parentPath = computeParentPath(pathname);
 

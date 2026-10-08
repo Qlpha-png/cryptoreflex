@@ -1,8 +1,8 @@
 /* En-tête du bureau (lot B3b, architecture finale § 2-5) : 2 rangées dès 1 024 px, méga-menus rendus côté serveur.
    Sous 1 024 px, cet en-tête est masqué et l'en-tête compact (components/NavbarCompact.tsx) reste en place (lot B3c).
    Hauteurs FIXES dès le premier rendu (aucun décalage de mise en page) : rangée 1 = 72 px (défile avec la page),
-   rangée 2 = 48 px (reste en haut). position: sticky ne fonctionne pas sur ce site (html, body { overflow-x: hidden } :
-   body devient le conteneur de défilement) : le <header> garde sa place dans le flux (122 px) et son contenu
+   rangée 2 = 48 px (reste en haut). position: sticky ne fonctionnait pas sur ce site au lot B3b (html, body { overflow-x: hidden } :
+   body devenait le conteneur de défilement ; corrigé au lot B3c par overflow-x: clip) : le <header> garde sa place dans le flux (122 px) et son contenu
    (.cr-fixe) est FIXÉ ; l'îlot le remonte de min(défilement, 73 px) par transform (--cr-dy), sans décalage de mise en
    page. Sans JavaScript, l'en-tête entier reste visible. Couleurs : jetons --c-* seulement. */
 
@@ -193,4 +193,13 @@
 .cr-sdlg-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
 .cr-sdlg-t { margin: 0; font: 500 20px/1.2 var(--font-serif); }
 .cr-sdlg .cr-search { max-width: none; }
-.cr-sdlg .cr-sq { position: static; margin-top: 8px; box-shadow: none; max-height: 60vh; }
+.cr-sdlg .cr-sq { position: static; min-width: 0; margin-top: 8px; box-shadow: none; max-height: 60vh; }
+/* Lot B3c : sur téléphone (jusqu'à 760 px, D20), la recherche s'ouvre en plein écran (architecture § 6). */
+@media (max-width: 760px) {
+  .cr-sdlg { padding: 0; }
+  .cr-sdlg-panel {
+    width: 100%; min-height: 100vh; min-height: 100dvh; border: 0; border-radius: 0;
+    padding: max(12px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) 16px max(16px, env(safe-area-inset-left));
+  }
+  .cr-sdlg .cr-sq { max-height: none; }
+}

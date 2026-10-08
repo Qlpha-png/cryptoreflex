@@ -43,8 +43,10 @@ export default function StickyPartnerCta({
   return (
     <div
       aria-hidden={!visible}
-      className={`fixed inset-x-0 bottom-0 z-40 lg:hidden transition-transform duration-300 ${
-        visible ? "translate-y-0" : "translate-y-full"
+      // Reprise B3c : sous 1 024 px, au-dessus de la barre du bas (64 px + zone sûre iOS), comme MobileStickyCTA ; masquée,
+      // elle descend de sa hauteur + celle de la barre (hors écran, plus derrière la barre).
+      className={`fixed inset-x-0 bottom-[calc(var(--mobile-bar-h,64px)+var(--safe-bottom,0px))] z-40 lg:hidden transition-transform duration-300 ${
+        visible ? "translate-y-0" : "translate-y-[calc(100%+var(--mobile-bar-h,64px)+var(--safe-bottom,0px))]"
       }`}
     >
       <div className="mx-2 mb-2 rounded-2xl border border-primary/30 bg-elevated/95 backdrop-blur-xl shadow-2xl shadow-black/50 p-2 flex items-center gap-2">

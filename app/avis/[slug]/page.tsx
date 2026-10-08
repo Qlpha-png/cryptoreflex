@@ -490,7 +490,7 @@ function ReviewPage({ params }: Props) {
           </div>
 
           {/* Carte CTA latérale */}
-          <aside className="rounded-2xl border border-border bg-surface p-5 sticky top-24">
+          <aside className="rounded-2xl border border-border bg-surface p-5 lg:sticky lg:top-24">
             <div className="text-xs uppercase tracking-wide text-muted">
               {available ? `Ouvrir le site de ${p.name}` : "Non autorisée en France"}
             </div>

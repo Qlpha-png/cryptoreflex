@@ -414,8 +414,10 @@ function StakingComparator({ pairs }: Props) {
         />
       </div>
 
-      {/* Filtres sticky */}
-      <div className="sticky top-0 z-30 mt-6 -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8 pb-3">
+      {/* Filtres. Lot B3c : ils ne collent pas en haut. Depuis overflow-x: clip (app/globals.css), position: sticky fonctionne ; ce
+          bloc haut de plusieurs centaines de pixels aurait couvert la liste sur téléphone et glissé sous l'en-tête : il
+          garde le comportement d'avant (il défile avec la page), même empilement (z-30). */}
+      <div className="relative z-30 mt-6 -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8 pb-3">
         <div className="glass rounded-2xl border border-border/80 p-4 sm:p-5 backdrop-blur-xl shadow-e2">
           <div className="flex items-center justify-between gap-3 mb-4">
             <div className="flex items-center gap-2 text-sm font-semibold text-fg">

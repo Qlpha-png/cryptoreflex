@@ -1,4 +1,4 @@
-import { existsSync, readdirSync, readFileSync } from "node:fs";
+import { readFileSync } from "node:fs";
 import path from "node:path";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
@@ -19,12 +19,7 @@ import Navbar from "@/components/Navbar";
 import { BANDE_CONFIANCE, ENTETE_CTA, MON_ESPACE, ONGLETS, PIED_EXCLUS, liensDuPied, ongletDe, type NavLien } from "@/lib/nav-data";
 import { SYNONYMES_RECHERCHE, construireIndexRapide } from "@/lib/search";
 import { chercherRapide } from "@/lib/search-client";
-import { TRACKS } from "@/lib/academy-tracks";
-import { GLOSSARY_TERMS } from "@/lib/glossary";
-import { getAllPlatforms } from "@/lib/platforms";
-import { getAllCryptos } from "@/lib/cryptos";
-import { getAuthorById } from "@/lib/authors";
-import { getPublishableComparisons } from "@/lib/programmatic";
+import { APP, ancreExiste, routeExists } from "./_routes-app";
 import { getAllMicaPlatforms } from "@/lib/mica";
 
 /**
@@ -36,51 +31,6 @@ import { getAllMicaPlatforms } from "@/lib/mica";
  *  4. libellés du plan SEO § 2.1 (prudence AMF) ;
  *  5. recherche : index, synonymes vers des pages existantes, résultat vide.
  */
-const APP = path.join(process.cwd(), "app");
-
-const INSTANCES: Record<string, (v: string) => boolean> = {
-  "academie/[track]": (v) => TRACKS.some((t) => t.id === v),
-  "glossaire/[slug]": (v) => GLOSSARY_TERMS.some((t) => t.id === v),
-  "alternative-a/[plateforme]": (v) => getAllPlatforms().some((p) => p.id === v && p.category !== "wallet"),
-  "avis/[slug]": (v) => getAllPlatforms().some((p) => p.id === v),
-  "cryptos/[slug]": (v) => getAllCryptos().some((c) => c.id === v),
-  "auteur/[slug]": (v) => Boolean(getAuthorById(v)),
-  "comparatif/[slug]": (v) => getPublishableComparisons().some((c) => c.slug === v),
-};
-
-function routeExists(href: string): boolean {
-  const clean = href.split("#")[0].split("?")[0];
-  const seg = clean.split("/").filter(Boolean);
-  let dir = APP;
-  const fixes: string[] = [];
-  for (const s of seg) {
-    if (existsSync(path.join(dir, s))) {
-      dir = path.join(dir, s);
-      fixes.push(s);
-      continue;
-    }
-    const dyn = existsSync(dir) ? readdirSync(dir).find((d) => /^\[[^.\]]+\]$/.test(d)) : undefined;
-    if (!dyn) return false;
-    const cle = [...fixes, dyn].join("/");
-    if (!INSTANCES[cle] || !INSTANCES[cle](s)) return false;
-    dir = path.join(dir, dyn);
-    fixes.push(dyn);
-  }
-  return existsSync(path.join(dir, "page.tsx")) || existsSync(path.join(dir, "route.ts"));
-}
-
-/** Les ancres utilisées par les menus, et où elles sont définies. */
-function ancreExiste(href: string): boolean {
-  const [chemin, ancre] = href.split("#");
-  if (!ancre) return true;
-  if (chemin === "/comparatif") return readFileSync(path.join(APP, "comparatif/page.tsx"), "utf8").includes(`id="${ancre}"`);
-  if (chemin === "/cartes/jouer") {
-    // HASH_VIEW du jeu (lecture seule de la zone du jeu) : « #booster » et « #album » ouvrent la bonne vue.
-    const t = readFileSync(path.join(process.cwd(), "lib/reflex-cards/game/template.ts"), "utf8");
-    return new RegExp(`HASH_VIEW[^;]{0,400}\\b${ancre}\\b`).test(t);
-  }
-  return false;
-}
 
 /** Les titres passent par typoFr (espace fine insécable avant « : ») : on compare avec des espaces simples. */
 const espaces = (t?: string) => (t ?? "").replace(/\s/g, " ");

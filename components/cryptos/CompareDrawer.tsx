@@ -13,7 +13,7 @@ import { resolveCryptoLogo } from "@/lib/crypto-logos";
  * a été ajoutée au comparateur, sur toutes les pages du site.
  *
  * Position :
- *  - Mobile  : bottom-right, au-dessus du MobileBottomNav (z-index élevé).
+ *  - Mobile  : bottom-right, au-dessus de la barre du bas (components/cplus/BarreBas.tsx, z-index élevé).
  *  - Desktop : bottom-center, ancré façon "bottom toast" Stripe / Linear.
  *
  * Animation : slide-up + fade-in à l'entrée (CSS keyframe locale, désactivée
@@ -75,7 +75,7 @@ export default function CompareDrawer() {
       <div
         role="region"
         aria-label="Comparateur de cryptos"
-        className="compare-drawer fixed z-[95] left-3 right-3 bottom-[calc(var(--mobile-bar-h,64px)+12px)] sm:left-1/2 sm:right-auto sm:bottom-6 sm:-translate-x-1/2 sm:max-w-2xl"
+        className="compare-drawer fixed z-[95] left-3 right-3 bottom-[calc(var(--mobile-bar-h,64px)+var(--safe-bottom,0px)+12px)] sm:left-1/2 sm:right-auto lg:bottom-6 sm:-translate-x-1/2 sm:max-w-2xl"
         style={{ ["--cx" as string]: "0" }}
       >
         <div className="flex flex-col gap-3 rounded-2xl border border-primary/30 bg-elevated/95 p-3 sm:p-4 shadow-2xl shadow-black/40 backdrop-blur-md sm:flex-row sm:items-center sm:justify-between">

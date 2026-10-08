@@ -57,7 +57,7 @@ export default function EventsList({ events }: EventsListProps) {
     <div className="space-y-8">
       {groups.map(({ month, events: monthEvents }) => (
         <section key={month} aria-label={formatMonthLabel(month)}>
-          <h2 className="sticky top-16 z-10 -mx-4 mb-4 border-b border-border bg-background/85 px-4 py-2 text-h5 font-bold text-fg backdrop-blur-md">
+          <h2 className="cr-colle z-10 -mx-4 mb-4 border-b border-border bg-background/85 px-4 py-2 text-h5 font-bold text-fg backdrop-blur-md">
             {formatMonthLabel(month)}
             <span className="ml-2 text-caption font-normal text-muted">
               ({monthEvents.length} événement{monthEvents.length > 1 ? "s" : ""})

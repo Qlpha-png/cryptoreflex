@@ -127,7 +127,7 @@ function GlossaryIndexPage() {
           {/* Navigation alphabétique */}
           <nav
             aria-label="Navigation alphabétique"
-            className="mt-8 sticky top-16 z-20 -mx-4 sm:mx-0 px-4 sm:px-0 py-3 bg-background/85 backdrop-blur-xl border-y border-border sm:border-0 sm:rounded-xl sm:bg-elevated/50 sm:px-4"
+            className="mt-8 cr-colle z-20 -mx-4 sm:mx-0 px-4 sm:px-0 py-3 bg-background/85 backdrop-blur-xl border-y border-border sm:border-0 sm:rounded-xl sm:bg-elevated/50 sm:px-4"
           >
             <ul className="flex flex-wrap gap-1.5">
               {ALPHABET.map((letter) => {

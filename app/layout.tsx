@@ -3,7 +3,8 @@ import dynamic from "next/dynamic";
 import { JetBrains_Mono, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
-import MobileBottomNav from "@/components/MobileBottomNav";
+import BarreBas from "@/components/cplus/BarreBas";
+import MenuFeuille from "@/components/cplus/MenuFeuille";
 import Footer from "@/components/Footer";
 import BackButton from "@/components/BackButton";
 import CookieBanner from "@/components/CookieBanner";
@@ -442,10 +443,8 @@ export default function RootLayout({
         </noscript>
         <Navbar />
         {/*
-          BackButton global — visible sur toutes les pages sauf `/` et `/embed/*`.
-          Click → router.back() si l'historique le permet, sinon fallback vers
-          le parent calculé depuis le pathname (sécurise les arrivées directes
-          depuis Google/email où window.history.length === 1).
+          BackButton — lot B3c : rendu SEULEMENT sur les pages sans fil d'Ariane (lib/back-navigation.ts, SANS_FIL) ;
+          ailleurs le fil d'Ariane fait le retour (le bouton laissait un grand vide au-dessus du fil).
         */}
         <BackButton />
         <main id="main" tabIndex={-1} className="flex-1 focus:outline-none">
@@ -453,14 +452,12 @@ export default function RootLayout({
         </main>
         <Footer />
         {/*
-          MobileBottomNav — barre de navigation persistante (style Instagram /
-          Twitter / Doctolib) visible uniquement <768px. 4 destinations primaires
-          (Accueil, Comparer, Actu, Outils). Le padding-bottom du body défini
-          dans globals.css (--mobile-bar-h: 64px) réserve déjà la place pour
-          éviter l'overlap avec le contenu. NewsletterStickyBar (z-90) passe
-          par-dessus volontairement quand elle est déclenchée.
+          Lot B3c — sous 1 024 px : barre du bas (Marché · Cryptos · Outils · Cartes · Menu) et feuille de menu (liens
+          dans le HTML serveur, même contenu que les méga-menus). Le padding-bottom du body (globals.css, --mobile-bar-h)
+          réserve la place de la barre. NewsletterStickyBar (z-90) passe par-dessus volontairement quand elle est déclenchée.
         */}
-        <MobileBottomNav />
+        <BarreBas />
+        <MenuFeuille />
         {/*
           NewsletterStickyBar — barre flottante mobile-first (md:hidden) qui
           apparaît après 30s OU 50% scroll, dismissable 7j (localStorage).
@@ -498,7 +495,7 @@ export default function RootLayout({
         <WebVitalsReporter />
         {/* Drawer flottant du comparateur multi-cryptos. Ne s'affiche que
             si l'utilisateur a ajouté ≥ 1 crypto via AddToCompareButton.
-            Z-index 95 = au-dessus du MobileBottomNav (z-90), sous les
+            Z-index 95 = au-dessus de la barre du bas (BarreBas, z-57), sous les
             modales (z-100+). */}
         <CompareDrawer />
         {/* SpotlightDelegate — listener pointermove unique au document qui

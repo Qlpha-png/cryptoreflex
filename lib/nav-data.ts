@@ -1435,6 +1435,51 @@ export const BANDE_CONFIANCE: { texte: string; liens: NavLien[] } = {
   ]
 };
 
+/* ---------- Téléphone et tablette, sous 1 024 px (lot B3c ; architecture finale § 1 D9, D10, D12, D15 et § 6) ---------- */
+
+/**
+ * « Par où commencer ? » en tête de la feuille de menu. Écarts à l'architecture § 6, décision de Kev du 08/10/2026 :
+ * le filtre /quiz/plateforme n'est plus mis en avant (« les gens vont aux plus connues ») et le vérificateur MiCA est le
+ * bouton « Vérifier une plateforme » (ENTETE_CTA), rendu juste au-dessus : il n'est donc pas répété dans cette liste.
+ * Libellés et phrases repris des panneaux (mêmes mots partout).
+ */
+export const MENU_COMMENCER: NavLien[] = [
+  // Reprise B3c (jury visiteur) : D9 retire Plateformes de la barre du bas parce que « Par où commencer ? » y mène en
+  // 2 tapes ; ces 2 entrées (mêmes mots que le tiroir Plateformes) tiennent cette promesse, avec le bouton du vérificateur.
+  { href: "/comparatif", label: "Comparer les plateformes autorisées", phrase: "Statut, frais et sécurité, côte à côte" },
+  { href: "/comparatif/frais", label: "Frais d’achat comparés", phrase: "Le coût réel d’un achat, plateforme par plateforme" },
+  { href: "/wizard/premier-achat", label: "Mon premier achat, pas à pas", phrase: "Le parcours guidé, étape par étape" },
+  { href: "/impots", label: "Tout pour déclarer", phrase: "Calculer, remplir, déclarer, vérifier : les étapes dans l’ordre" },
+  { href: "/academie/debutant", label: "Parcours Débutant", phrase: "Comprendre la crypto depuis zéro, dans l’ordre" },
+  { href: "/academie/arnaques", label: "Éviter les arnaques", phrase: "Les pièges à reconnaître, et comment s’en protéger" },
+];
+
+/**
+ * Bloc secondaire de la feuille (§ 6, point 4), après les 8 rubriques. Newsletter : libellé neutre, aucun rythme ni
+ * promesse (D15 : aucune édition n'est envoyée aujourd'hui). Pas d'« Apparence » ici : le thème est le lot B11.
+ */
+export const MENU_SECONDAIRE: NavLien[] = [
+  { href: "/soutenir", label: "Soutenir le site", phrase: "Contribution libre, le site reste gratuit" },
+  { href: "/newsletter", label: "Newsletter" },
+  { href: "/a-propos", label: "Qui sommes-nous", phrase: "L’éditeur, notre méthode, qui nous rémunère" },
+  { href: "/contact", label: "Contact", phrase: "Une question, une erreur à signaler : écrivez‑nous" }, // trait d'union insécable : pas de « écrivez- / nous » à 320 px
+  { href: "/embeds", label: "Pour votre site", phrase: "Widgets à intégrer : calculateurs, heatmap, badge MiCA" },
+  { href: "/plan-du-site", label: "Plan du site", phrase: "Toutes les pages, rangées par rubrique" },
+];
+
+/** Barre du bas (D9) : Marché · Cryptos · Outils · Cartes, puis « Menu ». Chaque case mène au hub de son onglet. */
+export const BARRE_BAS: OngletId[] = ["marche", "cryptos", "outils", "cartes"];
+
+/** Case Cartes (D10) : le jeu si une partie existe dans ce navigateur (sauvegarde locale du jeu), sinon la présentation. */
+export const CARTES_JEU = "/cartes/jouer";
+/** Clé de la collection, écrite par le jeu dans le stockage local (lib/reflex-cards/game/template.ts, lu sans y toucher). */
+export const CLE_PARTIE_CARTES = "rc9:col";
+
+/** Adresse de la case Cartes selon la présence d'une partie (fonction pure, testée). */
+export function hrefCartes(partieExiste: boolean): string {
+  return partieExiste ? CARTES_JEU : (ONGLETS.find((o) => o.id === "cartes")?.hub ?? "/cartes");
+}
+
 /** Pages volontairement absentes du pied, avec la raison (§ 7). */
 export const PIED_EXCLUS: Record<string, string> = {
   "/partenaires": "passe finale : même sujet que /transparence, un seul nom « Qui nous rémunère » dans la navigation (menu, pied, bande) ; la page reste liée depuis /transparence (à fusionner en production)",
