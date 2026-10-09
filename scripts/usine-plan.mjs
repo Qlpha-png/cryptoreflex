@@ -10,7 +10,8 @@
  * Sorties GitHub (GITHUB_OUTPUT) : cible, titre.
  */
 import { spawnSync } from "node:child_process";
-import { appendFileSync, existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
+import { appendFileSync, existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { classerDefauts, ficheArticle, lireRapportSentinelle, planifier } from "./lib/usine-plan.mjs";
@@ -53,9 +54,9 @@ if (MISSION === "reviseur" || MISSION === "seo") donnees.fiches = lireFiches();
 if (MISSION === "auditeur") donnees.rapportsPrecedents = lireRapports();
 if (MISSION === "chercheur" || MISSION === "prototypeur") donnees.idees = lireIdees();
 if (MISSION === "correcteur") {
-  // contrôle léger de la sentinelle : rapport dans le dossier de sortie (jamais commité), sortie standard = décompte
-  mkdirSync(path.dirname(path.join(ROOT, SORTIE)), { recursive: true });
-  const rapport = path.join(ROOT, path.dirname(SORTIE), "sentinelle-report.md");
+  // contrôle léger de la sentinelle : rapport dans un dossier TEMPORAIRE hors du dépôt (ni commité, ni joint à l'artefact
+  // public, ni lisible par l'agent : il porte des chiffres d'infrastructure), sortie standard = décompte
+  const rapport = path.join(mkdtempSync(path.join(tmpdir(), "usine-sentinelle-")), "sentinelle-report.md");
   const r = spawnSync(process.execPath, ["scripts/sentinelle.mjs", `--site=${SITE}`], {
     cwd: ROOT,
     env: { ...process.env, SENTINELLE_REPORT: rapport },

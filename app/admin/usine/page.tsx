@@ -137,7 +137,10 @@ export default async function UsinePage() {
   const pretes = etat.prs.ouvertes.filter((p) => p.etiquette === "prete");
   const aRelire = etat.prs.ouvertes.filter((p) => p.etiquette !== "prete");
   const fusionnees7j = etat.prs.fusionnees.filter((p) => p.fusionneLe && now - Date.parse(p.fusionneLe) <= 7 * JOUR);
-  const retourRecommande = etat.gardeFou?.action === "revert" && etat.gardeFou.simulation !== false && now - Date.parse(etat.gardeFou.at) < 12 * 3_600_000;
+  const zonesContenu = ["pages", "chiffres", "fiscal", "partenaires", "plans du site", "dates vérifiées"];
+  const sentinelleRougeContenu = (etat.sentinelle.dernier?.defauts ?? []).some((d) => zonesContenu.includes(d.area));
+  const retourRecommande =
+    etat.gardeFou?.action === "revert" && etat.gardeFou.simulation !== false && now - Date.parse(etat.gardeFou.at) < 12 * 3_600_000 && sentinelleRougeContenu;
 
   return (
     <article className="py-10 sm:py-14">

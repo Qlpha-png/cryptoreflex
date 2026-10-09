@@ -147,6 +147,12 @@ Sur GitHub : **Settings → Secrets and variables → Actions → Variables** :
 | `USINE_IA` | `off` | coupe les horaires de tous les agents (absente : ils tournent) ; un lancement manuel marche toujours |
 | `USINE_IA_MAX_PAR_JOUR` | `4` (défaut) | plafond de passages d'agents achevés par jour UTC |
 | `USINE_IA_MODELE` | `claude-opus-5-5` (défaut) | modèle Claude des agents (`claude-sonnet-5-5` pour un coût moindre) |
+| `USINE_RETOUR_ARRIERE` | `off` | le garde-fou ne fait plus que recommander (jamais de retour arrière, même lancé à la main) |
+
+Recommandé en plus, sur GitHub → Settings → Branches : une **protection de `main`** exigeant une pull request. Les
+robots existants poussent directement sur `main` (publication du jour, recomptage…) : il faut alors les ajouter en
+exception (« allow specified actors to bypass »), ou renoncer. Sans protection, le dépôt compte sur les outils bornés
+de l'agent et sur le jeton non persisté du checkout.
 
 Le workflow utilise l'action officielle `anthropics/claude-code-action@v1` avec le jeton GitHub du passage. Si l'action
 exige l'application GitHub « Claude » (message d'erreur sur le jeton), installe-la sur le dépôt :

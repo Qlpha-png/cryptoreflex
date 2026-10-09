@@ -256,7 +256,6 @@ describe("workflows des agents IA", () => {
     expect(o.workflow_call.inputs.mission.required).toBe(true);
     expect(o.workflow_dispatch.inputs.mission.options).toEqual((MISSIONS as { id: string }[]).map((m) => m.id));
     expect(String(commun.jobs.agent.if)).toContain("vars.USINE_IA != 'off'");
-    expect(commun.jobs.agent.concurrency?.group).toBeTruthy();
     const etapes: Yaml[] = commun.jobs.agent.steps;
     const agent = etapes.find((s) => String(s.uses ?? "").startsWith("anthropics/claude-code-action@"));
     expect(agent).toBeDefined();
@@ -293,7 +292,7 @@ describe("workflows des agents IA", () => {
       expect(wf.jobs.agent.uses).toBe("./.github/workflows/usine-agent.yml");
       expect(wf.jobs.agent.with.mission).toBe(m.id);
       expect(wf.jobs.agent.secrets).toBe("inherit");
-      expect(wf.concurrency?.group).toBe("usine-ia");
+      expect(wf.concurrency?.group).toBe(`usine-ia-${m.id}`);
       expect(JSON.stringify(wf.permissions)).not.toMatch(/issues/);
     });
   }
@@ -326,7 +325,7 @@ describe("sentinelle ↔ usine", () => {
   });
 
   it("un agent IA en échec est « à surveiller », jamais rejoué automatiquement", () => {
-    expect(src).toMatch(/estAgent = \(w\) => \/\\\/usine-\[a-z\]\+\\\.yml\$\//);
+    expect(src).toMatch(/estAgent = \(w\) => \/\\\/usine-\[a-z-\]\+\\\.yml\$\//);
     expect(src).toContain('warn("robots", `agent IA « ${w.name} » en échec');
     expect(src).toContain("for (const w of casses) {");
   });

@@ -127,13 +127,14 @@ interface PrBrute {
   created_at: string;
   merged_at: string | null;
   state: string;
-  head?: { ref?: string };
+  head?: { ref?: string; repo?: { full_name?: string } };
+  user?: { login?: string };
 }
 
 function versPr(p: PrBrute): PullRequestUsine {
   const branche = p.head?.ref ?? "";
   const mission = branche.startsWith(PREFIXE_BRANCHE_IA) ? branche.slice(PREFIXE_BRANCHE_IA.length).split("-")[0] || null : null;
-  const etiquette: PullRequestUsine["etiquette"] = /\[prête\]/i.test(p.title) ? "prete" : /\[à relire\]/i.test(p.title) ? "relire" : null;
+  const etiquette: PullRequestUsine["etiquette"] = /^Usine IA — \[prête\]/.test(p.title) ? "prete" : /^Usine IA — \[à relire\]/.test(p.title) ? "relire" : null;
   return {
     numero: p.number,
     titre: p.title,
@@ -152,7 +153,8 @@ async function lirePrs(): Promise<{ ouvertes: PullRequestUsine[]; fusionnees: Pu
     lireGitHub<PrBrute[]>("/pulls?state=open&per_page=50", 180),
     lireGitHub<PrBrute[]>("/pulls?state=closed&sort=updated&direction=desc&per_page=40", 600),
   ]);
-  const estUsine = (p: PrBrute) => (p.head?.ref ?? "").startsWith(PREFIXE_BRANCHE_IA);
+  // dépôt public : seules les branches usine/… du dépôt lui-même, ouvertes par le workflow (github-actions[bot]), sont des propositions
+  const estUsine = (p: PrBrute) => (p.head?.ref ?? "").startsWith(PREFIXE_BRANCHE_IA) && p.head?.repo?.full_name === DEPOT_ROBOTS && p.user?.login === "github-actions[bot]";
   return {
     ouvertes: (ouvertes ?? []).filter(estUsine).map(versPr),
     fusionnees: (fermees ?? []).filter((p) => estUsine(p) && p.merged_at).map(versPr),

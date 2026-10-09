@@ -52,7 +52,7 @@ export function BoutonRetourArriere({ sha }: { sha: string }) {
           setMessage(null);
           demarrer(async () => {
             try {
-              const r = await lancerRetourArriere();
+              const r = await lancerRetourArriere(sha);
               setMessage({ ok: r.ok, texte: r.message });
             } catch {
               setMessage({ ok: false, texte: "Demande impossible (erreur réseau ou session expirée)." });

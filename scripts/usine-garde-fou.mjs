@@ -4,8 +4,9 @@
  * Lancé par .github/workflows/usine-garde-fou.yml quand la sentinelle finit en échec. Décision : scripts/lib/usine-garde-fou.mjs
  * (défaut de CONTENU vu par la sentinelle + fusion automatique de l'Usine depuis moins de 6 h → git revert + push main).
  *
- * Usage : node scripts/usine-garde-fou.mjs [--simulation] [--json]
- * Variables : KV_REST_API_URL / KV_REST_API_TOKEN (résumé de la sentinelle), USINE_RETOUR_ARRIERE=off pour tout couper.
+ * Usage : node scripts/usine-garde-fou.mjs [--simulation] [--sha=<commit demandé par Kevin>] [--json]
+ * Variables : KV_REST_API_URL / KV_REST_API_TOKEN (résumé de la sentinelle), USINE_RETOUR_ARRIERE=off pour tout couper
+ * (simulation forcée), SHA_DEMANDE (équivalent de --sha).
  * Trace KV : usine:garde-fou:dernier (tableau de bord). Sortie standard : décision et raisons (aucun secret).
  */
 import { execFileSync } from "node:child_process";
@@ -16,6 +17,11 @@ import { decider } from "./lib/usine-garde-fou.mjs";
 
 const ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
 const SIMULATION = process.argv.includes("--simulation") || process.env.USINE_RETOUR_ARRIERE === "off";
+const SHA_DEMANDE = (process.argv.find((a) => a.startsWith("--sha="))?.slice(6) || process.env.SHA_DEMANDE || "").trim();
+if (SHA_DEMANDE && !/^[0-9a-f]{7,40}$/i.test(SHA_DEMANDE)) {
+  process.stdout.write("[garde-fou] sha demandé invalide\n");
+  process.exit(2);
+}
 const JSON_OUT = process.argv.includes("--json");
 const now = Date.now();
 const git = (...a) => execFileSync("git", a, { cwd: ROOT, encoding: "utf8" });
@@ -60,31 +66,47 @@ const commits = git("log", "origin/main", "--since=8 hours ago", "--format=%H%x1
     return { sha, email, message, corps, date };
   });
 const resume = await lireResume();
-const decision = decider({ commits, resume, now });
+const decision = decider({ commits, resume, now, shaDemande: SHA_DEMANDE || undefined });
 const trace = { at: new Date(now).toISOString(), simulation: SIMULATION, ...decision };
 
 if (decision.action === "revert" && !SIMULATION) {
   git("config", "user.name", "Cryptoreflex Usine (garde-fou)");
   git("config", "user.email", "usine@cryptoreflex.fr");
-  git("checkout", "-q", "main");
-  git("revert", "--no-edit", decision.sha);
   let pousse = false;
-  for (let i = 0; i < 3 && !pousse; i++) {
+  try {
+    git("checkout", "-q", "-B", "main", "origin/main");
+    git("revert", "--no-edit", decision.sha);
+  } catch (e) {
     try {
-      git("push", "origin", "HEAD:main");
-      pousse = true;
+      git("revert", "--abort");
     } catch {
-      git("fetch", "origin", "main");
+      /* rien à abandonner */
+    }
+    trace.pousse = false;
+    trace.erreur = `revert impossible (conflit avec une modification plus récente) : intervention humaine`;
+  }
+  if (trace.erreur === undefined) {
+    for (let i = 0; i < 3 && !pousse; i++) {
       try {
-        git("rebase", "origin/main");
+        git("push", "origin", "HEAD:main");
+        pousse = true;
       } catch {
-        git("rebase", "--abort");
-        break;
+        try {
+          git("fetch", "origin", "main");
+          git("rebase", "origin/main");
+        } catch {
+          try {
+            git("rebase", "--abort");
+          } catch {
+            /* rien à abandonner */
+          }
+          break;
+        }
       }
     }
+    trace.pousse = pousse;
+    if (!pousse) trace.erreur = "push impossible (conflit) : intervention humaine";
   }
-  trace.pousse = pousse;
-  if (!pousse) trace.erreur = "push impossible (conflit) : intervention humaine";
 }
 await ecrireTrace(trace);
 out("action", decision.action);

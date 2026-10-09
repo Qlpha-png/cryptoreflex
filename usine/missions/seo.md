@@ -14,7 +14,9 @@ caractères, titre de plus de 65 caractères, aucun lien interne vers un hub. Ne
   « Cryptoreflex » (le gabarit du site l'ajoute).
 - `description` : 120 à 155 caractères, une promesse concrète et vraie, pas d'appât, aucun chiffre autre qu'une année.
 - 2 à 4 liens internes pertinents vers des pages qui EXISTENT (vérifie dans `app/` ou `data/` ; `lib/nav-data.ts` et
-  `lib/internal-link-graph.ts` donnent les hubs), insérés dans une phrase existante, jamais en liste artificielle.
+  `lib/internal-link-graph.ts` donnent les hubs), posés sur des MOTS DÉJÀ PRÉSENTS dans une phrase existante
+  (« compare les [plateformes agréées](/comparatif) ») : aucun mot ajouté, aucun mot retiré, jamais de lien `/go/…`,
+  jamais en liste artificielle. C'est la condition pour que la proposition soit classée « prête ».
 - Intertitres hiérarchisés (un seul H1 = le titre, puis H2/H3 dans l'ordre), sans en changer le texte.
 - `seoUsine: "AAAA-MM-JJ"` dans le frontmatter.
 

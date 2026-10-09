@@ -7,7 +7,8 @@
 # (usine:garde-fou:dernier) pour le tableau de bord /admin/usine, qui montre alors « Retour arrière recommandé » avec la
 # fusion en cause ; Kevin lance le retour arrière en un clic (ce workflow, à la main, simulation décochée) : le commit
 # est annulé (git revert) et poussé, le site revient à l'état d'avant, la sentinelle rejuge au déploiement suivant.
-# Décision : scripts/lib/usine-garde-fou.mjs (testée) ; exécution : scripts/usine-garde-fou.mjs. Aucun ticket ici.
+# Décision : scripts/lib/usine-garde-fou.mjs (testée) ; exécution : scripts/usine-garde-fou.mjs. Variable de dépôt
+# USINE_RETOUR_ARRIERE=off : simulation forcée, même à la main. Aucun ticket ici.
 name: Usine — garde-fou (dégradation)
 
 on:
@@ -20,6 +21,11 @@ on:
         description: "Simulation : décider et tracer sans rien pousser (décocher pour exécuter le retour arrière)"
         type: boolean
         default: true
+      sha:
+        description: "Commit de fusion à annuler (celui affiché par /admin/usine) ; vide = la fusion la plus récente en cause"
+        type: string
+        required: false
+        default: ""
 
 permissions:
   contents: write
@@ -53,6 +59,8 @@ jobs:
         env:
           KV_REST_API_URL: ${{ secrets.KV_REST_API_URL }}
           KV_REST_API_TOKEN: ${{ secrets.KV_REST_API_TOKEN }}
+          USINE_RETOUR_ARRIERE: ${{ vars.USINE_RETOUR_ARRIERE }}
+          SHA_DEMANDE: ${{ inputs.sha }}
           SIMULATION: ${{ github.event_name != 'workflow_dispatch' || inputs.simulation == true || inputs.simulation == 'true' }}
         run: |
           git fetch origin main

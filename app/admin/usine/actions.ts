@@ -75,9 +75,12 @@ export async function fusionnerProposition(numero: number): Promise<ResultatActi
   try {
     const lecture = await fetch(`https://api.github.com/repos/${DEPOT_ROBOTS}/pulls/${n}`, { headers: entetes, cache: "no-store", signal: AbortSignal.timeout(10_000) });
     if (!lecture.ok) return { ok: false, message: `Pull request introuvable (GitHub ${lecture.status}).` };
-    const pr = (await lecture.json()) as { title?: string; state?: string; merged?: boolean; head?: { ref?: string } };
+    const pr = (await lecture.json()) as { title?: string; state?: string; merged?: boolean; head?: { ref?: string; repo?: { full_name?: string } }; user?: { login?: string } };
     const branche = pr.head?.ref ?? "";
-    if (!branche.startsWith(PREFIXE_BRANCHE_IA)) return { ok: false, message: "Cette pull request ne vient pas de l'Usine : fusion refusée ici." };
+    // dépôt public : une branche « usine/… » d'un fork, ou ouverte par quelqu'un d'autre que le workflow, n'est pas une proposition de l'Usine
+    if (!branche.startsWith(PREFIXE_BRANCHE_IA) || pr.head?.repo?.full_name !== DEPOT_ROBOTS || pr.user?.login !== "github-actions[bot]") {
+      return { ok: false, message: "Cette pull request ne vient pas de l'Usine : fusion refusée ici." };
+    }
     if (pr.state !== "open" || pr.merged) return { ok: false, message: "Cette pull request n'est plus ouverte." };
     const mission = branche.slice(PREFIXE_BRANCHE_IA.length).split("-")[0] || "agent";
     const titre = String(pr.title ?? "").replace(/^Usine IA — \[[^\]]+\]\s*/, "").slice(0, 110);
@@ -87,7 +90,7 @@ export async function fusionnerProposition(numero: number): Promise<ResultatActi
       body: JSON.stringify({
         merge_method: "squash",
         commit_title: `usine(${mission}): ${titre}`,
-        commit_message: `Proposition de l'agent « ${mission} » relue et fusionnée par Kevin depuis /admin/usine (pull request #${n}).`,
+        commit_message: `Proposition de l'agent « ${mission} » relue et fusionnée par Kevin depuis /admin/usine (pull request #${n}).\n\nCo-Authored-By: Cryptoreflex Usine <usine@cryptoreflex.fr>`,
       }),
       cache: "no-store",
       signal: AbortSignal.timeout(15_000),
@@ -105,13 +108,14 @@ export async function fusionnerProposition(numero: number): Promise<ResultatActi
   }
 }
 
-/** Lancer le retour arrière recommandé par le garde-fou (workflow usine-garde-fou.yml, simulation décochée), à la demande de Kevin. */
-export async function lancerRetourArriere(): Promise<ResultatAction> {
+/** Lancer le retour arrière recommandé par le garde-fou (workflow usine-garde-fou.yml, simulation décochée) sur LE commit affiché, à la demande de Kevin. */
+export async function lancerRetourArriere(sha: string): Promise<ResultatAction> {
   const user = await getUser();
   if (!user || !user.isAdmin) return { ok: false, message: "Accès refusé." };
+  if (!/^[0-9a-f]{7,40}$/i.test(String(sha))) return { ok: false, message: "Commit invalide." };
   const jeton = process.env.GITHUB_GARDIEN_TOKEN;
   if (!jeton) return { ok: false, message: "Jeton GitHub du Gardien absent : lance « Usine — garde-fou » sur GitHub, case simulation décochée." };
-  const r = await demanderLancement("usine-garde-fou.yml", { simulation: "false" }, jeton);
+  const r = await demanderLancement("usine-garde-fou.yml", { simulation: "false", sha: String(sha) }, jeton);
   revalidatePath("/admin/usine");
   return r.ok
     ? { ok: true, message: "Retour arrière demandé : le workflow annule la dernière fusion de l'Usine en cause et pousse main. Vercel redéploie l'état précédent." }

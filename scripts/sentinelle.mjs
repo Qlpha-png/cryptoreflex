@@ -216,7 +216,7 @@ async function checkRobots() {
     const broken = [...latest.values()].filter((w) => w.conclusion === "failure");
     /* 09/10/2026 (Usine) : un agent IA en échec (usine-*.yml) n'est pas un défaut du site — sa production est une proposition
        relue par Kevin — : « à surveiller », et jamais rejoué automatiquement (chaque passage coûte). */
-    const estAgent = (w) => /\/usine-[a-z]+\.yml$/.test(w.path || "");
+    const estAgent = (w) => /\/usine-[a-z-]+\.yml$/.test(w.path || "");
     const casses = broken.filter((w) => !estAgent(w));
     if (casses.length) for (const w of casses) fail("robots", `tâche « ${w.name} » en échec (${w.html_url})`);
     else ok("robots", `${latest.size} tâches GitHub, aucune en échec sur 26 h`);
@@ -721,13 +721,26 @@ async function ecrireResumeUsine() {
   const court = (r) => ({ area: r.area, msg: String(r.msg).slice(0, 200) });
   const defauts = results.filter((r) => r.level === "fail");
   const surveiller = results.filter((r) => r.level === "warn");
+  const maintenant = new Date().toISOString();
+  // date de première apparition de chaque défaut (relue dans le résumé précédent) : le garde-fou de l'Usine n'incrimine une
+  // fusion que pour un défaut apparu APRÈS elle
+  const anciens = new Map();
+  try {
+    const r = await fetch(`${kvUrl}/get/${encodeURIComponent("usine:sentinelle:dernier")}`, { headers: { Authorization: `Bearer ${kvToken}` }, signal: AbortSignal.timeout(10_000) });
+    const j = await r.json();
+    const prev = typeof j.result === "string" ? JSON.parse(j.result) : j.result;
+    for (const d of prev?.defauts ?? []) if (d?.area && d?.msg) anciens.set(`${d.area}|${d.msg}`, d.depuis ?? prev.at);
+  } catch {
+    /* premier passage ou KV muet : tous les défauts datent de maintenant */
+  }
+  const date = (d) => ({ ...d, depuis: anciens.get(`${d.area}|${d.msg}`) ?? maintenant });
   const resume = {
-    at: new Date().toISOString(),
+    at: maintenant,
     full: FULL,
     fails: defauts.length,
     warns: surveiller.length,
     oks: results.length - defauts.length - surveiller.length,
-    defauts: defauts.slice(0, 40).map(court),
+    defauts: defauts.slice(0, 40).map(court).map(date),
     surveiller: surveiller.slice(0, 40).map(court),
     reparations: repairs,
   };

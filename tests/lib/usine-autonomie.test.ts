@@ -20,8 +20,8 @@ import {
   planifier,
   validerRegistreIdees,
 } from "@/scripts/lib/usine-plan.mjs";
-import { classerProposition, lignesDuPatch, raisonsFichier } from "@/scripts/lib/usine-risque.mjs";
-import { commitsCandidats, decider, defautsContenu } from "@/scripts/lib/usine-garde-fou.mjs";
+import { classerProposition, comparerLignes, lignesDuPatch, raisonsFichier } from "@/scripts/lib/usine-risque.mjs";
+import { commitsCandidats, decider, defautsApres, defautsContenu, estFusionUsine } from "@/scripts/lib/usine-garde-fou.mjs";
 
 const RACINE = path.resolve(__dirname, "../..");
 const WF = path.join(RACINE, ".github", "workflows");
@@ -124,52 +124,75 @@ describe("plan du jour", () => {
 
 /* ------------------------------------------------------------------ risque */
 describe("classement du risque", () => {
-  const apresSeo = mdx({ title: "Guide 2026", description: "Une promesse claire, sans chiffre.", seoUsine: "2026-10-09" }, "Texte. Voir [le comparatif](/comparatif).");
-  it("SEO : frontmatter sûr + lien interne → prête", () => {
-    const f = { chemin: "content/articles/x.mdx", statut: "M", apres: apresSeo, patch: '-title: "Vieux titre bien trop long"\n+title: "Guide 2026"\n+seoUsine: "2026-10-09"\n-Texte.\n+Texte. Voir [le comparatif](/comparatif).' };
+  const apresSeo = mdx({ title: "Guide 2026", description: "Une promesse claire, sans chiffre.", seoUsine: "2026-10-09" }, "Compare les [plateformes agréées](/comparatif) avant de choisir.");
+  const fichier = (patch: string, apres = apresSeo, chemin = "content/articles/x.mdx", statut = "M") => ({ chemin, statut, apres, patch });
+
+  it("SEO : frontmatter sûr + lien interne posé sur des mots existants → prête", () => {
+    const f = fichier('-title: "Vieux titre bien trop long"\n+title: "Guide 2026"\n+seoUsine: "2026-10-09"\n-Compare les plateformes agréées avant de choisir.\n+Compare les [plateformes agréées](/comparatif) avant de choisir.');
     expect(raisonsFichier(f)).toEqual([]);
     expect(classerProposition([f]).verdict).toBe("auto");
   });
 
-  it("BOM en tête de fichier : le frontmatter reste reconnu (titre changé = sûr)", () => {
-    const apres = "\uFEFF" + mdx({ title: "Guide 2026", updated: "2026-10-09" }, "Texte.");
-    expect(raisonsFichier({ chemin: "content/articles/x.mdx", statut: "M", apres, patch: '-title: "Vieux"\n+title: "Guide 2026"\n+updated: "2026-10-09"' })).toEqual([]);
+  it("corps : phrase ajoutée, supprimée ou réécrite → relecture, même sans chiffre", () => {
+    expect(raisonsFichier(fichier("+Ce produit est sans risque.")).join()).toContain("ajoutée ou réécrite");
+    expect(raisonsFichier(fichier("-Attention : tu peux perdre tout ton capital.")).join()).toContain("supprimée");
+    expect(raisonsFichier(fichier("-Binance est enregistrée auprès de l'AMF.\n+Binance n'est pas enregistrée auprès de l'AMF.")).join()).toContain("réécrite");
+    expect(raisonsFichier(fichier("-Texte.\n+Texte. Voir [le comparatif](/comparatif).")).join()).toContain("réécrite"); // mots ajoutés autour du lien
+    expect(comparerLignes("Le staking est imposable.", "Le staking est exonéré.").ok).toBe(false);
   });
 
-  it("un chiffre, une date, € ou % dans le corps → relecture ; une année dans le titre reste sûre", () => {
-    const f = (patch: string, apres = apresSeo) => raisonsFichier({ chemin: "content/articles/x.mdx", statut: "M", apres, patch });
-    expect(f("+Le taux passe à 12,8 %.").join()).toContain("chiffre");
-    expect(f("+Depuis le 1er janvier.").join()).toContain("chiffre");
-    expect(f("+Prix : 305 €.").join()).toContain("chiffre");
-    expect(f("-Ancien texte avec 3 étapes.\n+Nouveau texte sans nombre.").join()).toContain("retirée");
-    expect(f('+title: "Bilan 2026"', mdx({ title: "Bilan 2026" }, ""))).toEqual([]);
-    expect(f('+description: "Jusqu\'à 30 % de frais"', mdx({ description: "Jusqu'à 30 % de frais" }, "")).join()).toContain("chiffre dans « description »");
+  it("corps : coquille d'un mot (deux lettres, sans chiffre ni mot sensible) → sûre ; chiffre, date, €, % → relecture", () => {
+    expect(comparerLignes("La plateforme est reçue.", "La platforme est recue.").ok).toBe(true);
+    expect(raisonsFichier(fichier("-La platforme est fiable.\n+La plateforme est fiable."))).toEqual([]);
+    expect(raisonsFichier(fichier("-Le taux passe à 12 %.\n+Le taux passe à 13 %.")).join()).toContain("réécrite");
+    expect(raisonsFichier(fichier("-Depuis le 1er janvier.\n+Depuis le 2 janvier.")).join()).toContain("réécrite");
+    expect(comparerLignes("Prix : 305 €.", "Prix : 300 €.").ok).toBe(false);
+    expect(comparerLignes("C'est gratuit.", "C'est payant.").ok).toBe(false);
+    expect(comparerLignes("Lire la doc là.", "Lire la doc ici.").ok).toBe(false);
   });
 
-  it("lien externe ajouté → relecture ; lien externe conservé dans une phrase réécrite → sûr ; lien retiré → sûr", () => {
-    const f = (patch: string, apres: string) => raisonsFichier({ chemin: "content/articles/x.mdx", statut: "M", apres, patch });
-    expect(f("+Voir [la doc](https://exemple.fr/doc).", mdx({}, "Voir [la doc](https://exemple.fr/doc).")).join()).toContain("lien externe ajouté");
-    expect(f("-Lire [la doc](https://exemple.fr/doc) ici.\n+Lire [la doc](https://exemple.fr/doc) là.", mdx({}, "Lire [la doc](https://exemple.fr/doc) là."))).toEqual([]);
-    expect(f("-Lire [la doc](https://mort.fr) ici.\n+Lire la doc ici.", mdx({}, "Lire la doc ici."))).toEqual([]);
+  it("liens : interne sur mots existants → sûr ; externe, protocole-relatif, /go/, balise HTML, expression MDX → relecture", () => {
+    expect(raisonsFichier(fichier("-Voir la doc.\n+Voir [la doc](https://exemple.fr/doc).")).join()).toContain("adresse externe");
+    expect(raisonsFichier(fichier("-Voir la doc.\n+Voir [la doc](//exemple.fr/doc).")).join()).toContain("adresse externe");
+    expect(raisonsFichier(fichier("-Ouvre un compte sur Binance.\n+Ouvre un compte sur [Binance](/go/binance).")).join()).toContain("rémunéré");
+    expect(raisonsFichier(fichier('-Voir x.\n+Voir <a href="https://evil.example">x</a>.')).join()).toContain("balise");
+    expect(raisonsFichier(fichier("-Voir x.\n+Voir {x}.")).join()).toContain("expression");
+    expect(raisonsFichier(fichier("+import Truc from './truc'")).join()).toContain("expression");
+    // lien externe conservé dans une phrase corrigée d'une coquille, ou retiré : sûr
+    expect(raisonsFichier(fichier("-Lire [la doc](https://exemple.fr/doc) ici, sans faute.\n+Lire [la doc](https://exemple.fr/doc) ici, sans fautes.", mdx({}, "Lire [la doc](https://exemple.fr/doc) ici, sans fautes.")))).toEqual([]);
+    expect(raisonsFichier(fichier("-Lire [la doc](https://mort.fr) ici.\n+Lire la doc ici.", mdx({}, "Lire la doc ici.")))).toEqual([]);
   });
 
-  it("hors liste blanche, suppression, journal des corrections, champ de frontmatter inconnu → relecture", () => {
-    expect(classerProposition([{ chemin: "lib/x.ts", statut: "M", patch: "+a", apres: "a" }]).verdict).toBe("relecture");
-    expect(classerProposition([{ chemin: "content/articles/x.mdx", statut: "D", patch: "", apres: "" }]).raisons.join()).toContain("suppression");
-    expect(classerProposition([{ chemin: "data/corrections.json", statut: "M", patch: "+{}", apres: "{}" }]).raisons.join()).toContain("journal des corrections");
-    expect(raisonsFichier({ chemin: "content/articles/x.mdx", statut: "M", apres: mdx({ author: "X" }, ""), patch: '+author: "X"' }).join()).toContain("author");
-    expect(classerProposition([{ chemin: "usine/rnd/idees/2026-10-09-a.md", statut: "A", patch: "+# Idée", apres: "# Idée" }, { chemin: "usine/rnd/registre.json", statut: "M", patch: "+x", apres: "{}" }]).verdict).toBe("auto");
-    expect(classerProposition([{ chemin: "docs/usine/rapports/2026-10-09-audit.md", statut: "A", patch: "+# Audit 2026 : 3 défauts", apres: "# Audit" }]).verdict).toBe("auto");
+  it("frontmatter : champ inconnu, symbole ou nombre hors année dans titre/description, frontmatter non reconnu → relecture", () => {
+    expect(raisonsFichier(fichier('+author: "X"', mdx({ author: "X" }, ""))).join()).toContain("author");
+    expect(raisonsFichier(fichier('+description: "Jusqu\'à 30 % de frais"', mdx({ description: "Jusqu'à 30 % de frais" }, ""))).join()).toContain("chiffre ou symbole");
+    expect(raisonsFichier(fichier('+description: "Jusqu\'à 2000 € de bonus"', mdx({ description: "Jusqu'à 2000 € de bonus" }, ""))).join()).toContain("chiffre ou symbole");
+    expect(raisonsFichier(fichier('+title: "Bilan 2026"', mdx({ title: "Bilan 2026" }, "")))).toEqual([]);
+    expect(raisonsFichier(fichier('+title: "Voir https://x.fr"', mdx({ title: "Voir https://x.fr" }, ""))).join()).toContain("adresse");
+    expect(raisonsFichier(fichier("+title: x", "pas de frontmatter")).join()).toContain("non reconnu");
+    // BOM en tête de fichier : le frontmatter reste reconnu
+    expect(raisonsFichier(fichier('-title: "Vieux"\n+title: "Guide 2026"\n+updated: "2026-10-09"', "\uFEFF" + mdx({ title: "Guide 2026", updated: "2026-10-09" }, "Texte.")))).toEqual([]);
   });
 
-  it("limites : trop de fichiers, mission à relecture obligatoire, demande de l'agent, aucune modification", () => {
-    const sur = { chemin: "content/articles/x.mdx", statut: "M", apres: apresSeo, patch: "+seoUsine: \"2026-10-09\"" };
+  it("hors liste blanche, suppression, renommage, journal des corrections → relecture ; rapports et fiches R&D → prête", () => {
+    expect(classerProposition([fichier("+a", "a", "lib/x.ts")]).verdict).toBe("relecture");
+    expect(classerProposition([fichier("", "", "content/articles/x.mdx", "D")]).raisons.join()).toContain("suppression");
+    expect(classerProposition([fichier("+a", apresSeo, "content/articles/y.mdx", "R")]).raisons.join()).toContain("renommage");
+    expect(classerProposition([fichier("+{}", "{}", "data/corrections.json")]).raisons.join()).toContain("journal des corrections");
+    expect(classerProposition([fichier("+# Idée 2026 : 3 pistes", "# Idée", "usine/rnd/idees/2026-10-09-a.md", "A"), fichier("+x", "{}", "usine/rnd/registre.json")]).verdict).toBe("auto");
+    expect(classerProposition([fichier("+# Audit 2026 : 3 défauts", "# Audit", "docs/usine/rapports/2026-10-09-audit.md", "A")]).verdict).toBe("auto");
+    expect(classerProposition([fichier("+x", "x", "content/articles/x.txt")]).raisons.join()).toContain("MDX");
+  });
+
+  it("limites : trop de fichiers, mission à relecture obligatoire, demande de l'agent, aucune modification ; en-têtes de diff", () => {
+    const sur = fichier('+seoUsine: "2026-10-09"');
     expect(classerProposition(Array.from({ length: 13 }, () => sur)).raisons.join()).toContain("13 fichiers");
     expect(classerProposition([sur], { missionRelectureObligatoire: true }).verdict).toBe("relecture");
     expect(classerProposition([sur], { declaration: "relecture" }).verdict).toBe("relecture");
     expect(classerProposition([sur], { declaration: "auto" }).verdict).toBe("auto");
     expect(classerProposition([]).verdict).toBe("relecture");
-    expect(lignesDuPatch("--- a\n+++ b\n-x\n+y").ajoutees).toEqual(["y"]);
+    expect(lignesDuPatch("--- a/x\n+++ b/x\n@@ -1 +1 @@\n-x\n+++ y")).toEqual({ ajoutees: ["++ y"], supprimees: ["x"] });
+    expect(lignesDuPatch("-x\n+y").ajoutees).toEqual(["y"]);
   });
 });
 
@@ -178,9 +201,16 @@ describe("garde-fou de dégradation", () => {
   const commit = (over: Record<string, unknown>) => ({ sha: "abcdef1234567", email: "usine@cryptoreflex.fr", message: "usine(seo): titres", corps: "", date: "2026-10-09T10:00:00Z", ...over });
   const resume = (defauts: { area: string; msg: string }[]) => ({ at: "2026-10-09T11:50:00Z", fails: defauts.length, defauts });
 
-  it("candidats : de l'Usine, récents, non annulés", () => {
+  it("candidats : de l'Usine (auteur ou corps marqué, sujet usine( ou Usine IA —), récents, non annulés", () => {
     expect(commitsCandidats([commit({})], NOW)).toHaveLength(1);
     expect(commitsCandidats([commit({ email: "kevin@cryptoreflex.fr" })], NOW)).toHaveLength(0);
+    // fusion « squash » faite par Kevin depuis l'application ou sur GitHub : l'auteur n'est pas l'Usine, le corps l'est
+    expect(estFusionUsine({ email: "noreply@github.com", message: "usine(seo): titres", corps: "Proposition relue (pull request #12).\n\nCo-Authored-By: Cryptoreflex Usine <usine@cryptoreflex.fr>" })).toBe(true);
+    expect(estFusionUsine({ email: "noreply@github.com", message: "Usine IA — [prête] Titres (#12)", corps: "Co-Authored-By: Cryptoreflex Usine <usine@cryptoreflex.fr>" })).toBe(true);
+    expect(estFusionUsine({ email: "noreply@github.com", message: "usine(seo): titres", corps: "" })).toBe(false);
+    // un commit annulant deux fusions les exclut toutes les deux
+    const revertAB = { sha: "fff", email: "usine@cryptoreflex.fr", message: 'Revert "usine(seo): a"', corps: "This reverts commit abcdef1234567.\nThis reverts commit 1234567abcdef.", date: "2026-10-09T11:00:00Z" };
+    expect(commitsCandidats([revertAB, commit({}), commit({ sha: "1234567abcdef" })], NOW)).toHaveLength(0);
     expect(commitsCandidats([commit({ message: "chore(content): x" })], NOW)).toHaveLength(0);
     expect(commitsCandidats([commit({ date: "2026-10-09T02:00:00Z" })], NOW)).toHaveLength(0);
     expect(commitsCandidats([{ sha: "fff", email: "usine@cryptoreflex.fr", message: 'Revert "usine(seo): titres"', corps: "This reverts commit abcdef1234567.", date: "2026-10-09T11:00:00Z" }, commit({})], NOW)).toHaveLength(0);
@@ -193,6 +223,22 @@ describe("garde-fou de dégradation", () => {
     expect(decider({ now: NOW, resume: null, commits: [commit({})] }).action).toBe("rien");
     expect(decider({ now: NOW, resume: { ...resume([{ area: "pages", msg: "x" }]), at: "2026-10-09T05:00:00Z" }, commits: [commit({})] }).raison).toContain("trop ancien");
     expect(defautsContenu(resume([{ area: "fiscal", msg: "x" }, { area: "robots", msg: "y" }]))).toHaveLength(1);
+  });
+
+  it("un défaut antérieur à la fusion ne l'incrimine pas ; un défaut daté après, si", () => {
+    const avant = { area: "pages", msg: "/impots 500", depuis: "2026-10-07T09:00:00Z" };
+    const apres = { area: "chiffres", msg: "accueil : description périmée", depuis: "2026-10-09T11:40:00Z" };
+    expect(decider({ now: NOW, resume: resume([avant]), commits: [commit({})] }).raison).toContain("antérieurs");
+    const d = decider({ now: NOW, resume: resume([avant, apres]), commits: [commit({})] });
+    expect(d.action).toBe("revert");
+    expect(d.raisons).toEqual(["[chiffres] accueil : description périmée"]);
+    expect(defautsApres(resume([{ area: "pages", msg: "sans date" }]), Date.parse("2026-10-09T10:00:00Z"))).toHaveLength(1); // prudence
+  });
+
+  it("sha demandé par Kevin : seulement une fusion récente de l'Usine non annulée", () => {
+    expect(decider({ now: NOW, resume: null, commits: [commit({})], shaDemande: "abcdef1" })).toMatchObject({ action: "revert", sha: "abcdef1234567" });
+    expect(decider({ now: NOW, resume: null, commits: [commit({ email: "kevin@cryptoreflex.fr" })], shaDemande: "abcdef1" }).action).toBe("rien");
+    expect(decider({ now: NOW, resume: null, commits: [], shaDemande: "0000000" }).action).toBe("rien");
   });
 });
 
@@ -221,11 +267,18 @@ describe("workflows de l'autonomie", () => {
     expect(brut).not.toMatch(/gh pr merge|pulls\/\d+\/merge|--auto\b/);
     expect(brut).toContain("gh pr create");
     expect(String(agent.jobs.agent.if)).toContain("vars.USINE_IA != 'off'");
+    const checkout = etapes.find((s) => String(s.uses ?? "").startsWith("actions/checkout@"));
+    expect(checkout.with["persist-credentials"]).toBe(false);
+    expect(etapes.some((s) => s.name === "Contrôle des fuites")).toBe(true);
+    expect(etapes.findIndex((s) => s.name === "Contrôle des fuites")).toBeLessThan(idx("diff"));
+    expect(brut).toContain("gh auth setup-git");
+    expect(brut).not.toMatch(/\[ -n "\$MOTIFS" \] &&/);
     expect(agent.on?.workflow_dispatch?.inputs?.mission?.options ?? lireWf("usine-agent.yml")[true as unknown as string]?.workflow_dispatch?.inputs?.mission?.options).toEqual((MISSIONS as { id: string }[]).map((m) => m.id));
     for (const m of MISSIONS as { id: string }[]) {
       const wf = lireWf(`usine-${m.id}.yml`);
       expect(String(wf.jobs.agent.if), m.id).toContain("vars.USINE_IA != 'off'");
       expect(wf.jobs.agent.with.mission).toBe(m.id);
+      expect(wf.concurrency?.group, m.id).toBe(`usine-ia-${m.id}`); // un groupe partagé annulerait les passages en attente
     }
   });
 
@@ -236,6 +289,9 @@ describe("workflows de l'autonomie", () => {
     expect(String(wf.jobs.retour.if)).toContain("workflow_run.conclusion == 'failure'");
     const decision: Yaml = wf.jobs.retour.steps.find((s: Yaml) => s.id === "decision");
     expect(String(decision.env.SIMULATION)).toContain("github.event_name != 'workflow_dispatch'");
+    expect(String(decision.env.SHA_DEMANDE)).toBe("${{ inputs.sha }}");
+    expect(String(decision.env.USINE_RETOUR_ARRIERE)).toBe("${{ vars.USINE_RETOUR_ARRIERE }}");
+    expect(on.workflow_dispatch.inputs.sha.type).toBe("string");
     expect(String(decision.run)).toContain("--simulation");
     expect(on.workflow_dispatch.inputs.simulation.default).toBe(true);
     expect(JSON.stringify(wf.permissions)).not.toMatch(/issues|pull-requests/);

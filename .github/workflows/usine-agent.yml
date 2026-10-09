@@ -63,9 +63,6 @@ jobs:
     if: ${{ !inputs.planifie || vars.USINE_IA != 'off' }}
     runs-on: ubuntu-latest
     timeout-minutes: 75
-    concurrency:
-      group: usine-ia-agent
-      cancel-in-progress: false
     env:
       MISSION: ${{ inputs.mission }}
       CIBLE: ${{ inputs.cible }}
@@ -99,12 +96,15 @@ jobs:
           echo "go=true" >> "$GITHUB_OUTPUT"
           echo "Feu vert : mission « $MISSION », $n passage(s) déjà aujourd'hui sur $plafond, modèle $modele."
 
+      # persist-credentials: false — le jeton du job ne reste pas dans .git/config pendant le travail de l'agent (il ne
+      # peut ni pousser ni lire le jeton) ; l'étape finale s'authentifie elle-même (gh auth setup-git).
       - name: Checkout main
         if: steps.garde.outputs.go == 'true'
         uses: actions/checkout@v6
         with:
           ref: main
           fetch-depth: 0
+          persist-credentials: false
 
       - name: Setup Node 20
         if: steps.garde.outputs.go == 'true'
@@ -175,6 +175,29 @@ jobs:
           titre=$(grep -m1 -E '^Titre[[:space:]]*:' "$f" | sed -E 's/^Titre[[:space:]]*:[[:space:]]*//' | cut -c1-110)
           [ -n "$titre" ] || titre="${TITRE_PLAN:-mission $MISSION du $(date -u +%d/%m/%Y)}"
           echo "titre=$titre" >> "$GITHUB_OUTPUT"
+
+      # Rien ne part (ni PR, ni résumé de job, ni artefact) si un secret ou une clé apparaît dans la sortie de l'agent ou
+      # dans ses fichiers : le passage échoue (dépôt public = journaux publics). Les valeurs ne sont jamais affichées.
+      - name: Contrôle des fuites
+        if: steps.garde.outputs.go == 'true'
+        env:
+          CLE: ${{ secrets.ANTHROPIC_API_KEY }}
+          GH: ${{ github.token }}
+          KV: ${{ secrets.KV_REST_API_TOKEN }}
+          CRON: ${{ secrets.CRON_SECRET }}
+        run: |
+          fuite=0
+          for v in "$CLE" "$GH" "$KV" "$CRON"; do
+            [ -n "$v" ] || continue
+            if git diff --no-color | grep -qF -- "$v" || grep -rqF -- "$v" usine/.sortie 2>/dev/null; then fuite=1; fi
+          done
+          if git diff --no-color | grep -qE 'sk-ant-[A-Za-z0-9_-]{8,}|gh[ps]_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{20,}' || grep -rqE 'sk-ant-[A-Za-z0-9_-]{8,}|gh[ps]_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{20,}' usine/.sortie 2>/dev/null; then fuite=1; fi
+          if [ "$fuite" = "1" ]; then
+            rm -rf usine/.sortie
+            echo "::error::Un secret ou une clé apparaît dans la sortie de l'agent : passage arrêté, rien n'est publié."
+            exit 1
+          fi
+          echo "Aucune fuite détectée."
 
       - name: Modifications proposées ?
         id: diff
@@ -271,6 +294,7 @@ jobs:
         run: |
           git config user.name "Cryptoreflex Usine (IA)"
           git config user.email "usine@cryptoreflex.fr"
+          gh auth setup-git
           if git diff --staged --quiet; then
             echo "Plus rien à proposer après le garde-fou (article écarté)."
             echo "### ⚠️ Modifications écartées par le garde-fou des contenus" >> "$GITHUB_STEP_SUMMARY"
@@ -288,7 +312,7 @@ jobs:
             echo
             echo "---"
             echo "### Classement de l'Usine : ${ETIQUETTE}"
-            [ -n "$MOTIFS" ] && echo "Motifs : ${MOTIFS}"
+            if [ -n "$MOTIFS" ]; then echo "Motifs : ${MOTIFS}"; fi
             echo
             echo "- Garde-fou des contenus : ${GATE} · audit de qualité : ${QUALITE} · types : ${TYPES} · tests unitaires : ${TESTS} · build : ${BUILD:-non lancé}"
             echo "- Passage : ${RUN_URL}"
@@ -303,7 +327,7 @@ jobs:
           echo "Pull request : $url"
           echo "### 📬 Pull request ${ETIQUETTE} : Usine IA — ${TITRE}" >> "$GITHUB_STEP_SUMMARY"
           echo "$url" >> "$GITHUB_STEP_SUMMARY"
-          [ -n "$MOTIFS" ] && echo "Motifs : ${MOTIFS}" >> "$GITHUB_STEP_SUMMARY"
+          if [ -n "$MOTIFS" ]; then echo "Motifs : ${MOTIFS}" >> "$GITHUB_STEP_SUMMARY"; fi
 
       - name: Aucune modification
         if: steps.garde.outputs.go == 'true' && steps.diff.outputs.has != 'true'
