@@ -1,0 +1,36 @@
+# L'USINE — agent IA « reviseur » (relit un article de fond, faits et dates vérifiés avec sources).
+# Horaire : 20 5 * * 1-6 (UTC). Coupé par la variable de dépôt USINE_IA=off (le passage est alors « sauté » : le tableau de bord
+# /admin/usine le montre « en veille ») ; un lancement manuel marche toujours (cible facultative).
+# Mécanique commune : .github/workflows/usine-agent.yml ; mission : usine/missions/reviseur.md.
+name: Usine IA — réviseur d'articles
+
+on:
+  schedule:
+    - cron: "20 5 * * 1-6"
+  workflow_dispatch:
+    inputs:
+      cible:
+        description: "Cible facultative (slug d'article, chemin de page, texte d'un défaut, identifiant d'idée)"
+        type: string
+        required: false
+        default: ""
+
+permissions:
+  contents: write
+  pull-requests: write
+  actions: read
+  id-token: write
+
+concurrency:
+  group: usine-ia-reviseur
+  cancel-in-progress: false
+
+jobs:
+  agent:
+    if: ${{ github.event_name != 'schedule' || vars.USINE_IA != 'off' }}
+    uses: ./.github/workflows/usine-agent.yml
+    with:
+      mission: reviseur
+      planifie: ${{ github.event_name == 'schedule' }}
+      cible: ${{ inputs.cible || '' }}
+    secrets: inherit

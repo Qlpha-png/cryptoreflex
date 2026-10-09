@@ -1,0 +1,346 @@
+# L'USINE — agent IA (09/10/2026). Workflow RÉUTILISABLE appelé par les workflows usine-<mission>.yml (un horaire chacun)
+# ou lancé à la main ici (« Run workflow », choix de la mission).
+#
+# Un passage, dans l'ordre — « une usine qui sait exactement quoi faire et ne dégrade pas le site » :
+#  1. garde : plafond USINE_IA_MAX_PAR_JOUR (4 par défaut, tous agents confondus), secret ANTHROPIC_API_KEY présent ;
+#     les horaires sont coupés par la variable de dépôt USINE_IA=off (testée par les workflows appelants) ;
+#  2. PLAN DU JOUR déterministe (scripts/usine-plan.mjs → usine/.sortie/plan.md) : la cible n'est pas choisie par l'agent ;
+#  3. branche usine/<mission>-<date>-<n°> depuis main ; l'agent Claude Code lit usine/missions/_commun.md, sa mission et
+#     le plan, et travaille SANS aucune commande git (outils bornés : lecture, édition, web, tests) ;
+#  4. CLASSEMENT DU RISQUE (scripts/usine-risque.mjs) : « prête » seulement pour des changements sans fait (texte, SEO,
+#     liens internes, rapports, idées R&D) ; tout chiffre, date, code, donnée ou journal des corrections → « à relire » ;
+#  5. CONTRÔLES : garde-fou des contenus, audit de qualité, types, tests unitaires ; puis, pour « prête » seulement, le
+#     BUILD COMPLET du site. Un contrôle rouge rétrograde en « à relire » ;
+#  6. le WORKFLOW (pas l'agent) commite, pousse et ouvre la pull request « Usine IA — [prête|à relire] … ». Kevin
+#     fusionne (en un clic depuis /admin/usine ou sur GitHub) ; rien n'est écrit sur main par l'agent.
+# Variables de dépôt : USINE_IA (off = horaires coupés), USINE_IA_MAX_PAR_JOUR, USINE_IA_MODELE (claude-opus-5-5 par
+# défaut). Aucun ticket n'est créé ici (les tickets restent dans le dépôt privé de la sentinelle).
+name: Usine IA (agent)
+
+on:
+  workflow_call:
+    inputs:
+      mission:
+        description: "Mission (fichier usine/missions/<mission>.md)"
+        type: string
+        required: true
+      planifie:
+        description: "Lancement par un horaire"
+        type: boolean
+        default: false
+      cible:
+        description: "Cible facultative transmise au plan (slug d'article, chemin, texte d'un défaut, identifiant d'idée)"
+        type: string
+        default: ""
+  workflow_dispatch:
+    inputs:
+      mission:
+        description: "Mission à exécuter"
+        type: choice
+        options:
+          - reviseur
+          - correcteur
+          - seo
+          - auditeur
+          - chercheur
+          - prototypeur
+        default: reviseur
+      cible:
+        description: "Cible facultative (slug d'article, chemin de page, texte d'un défaut, identifiant d'idée)"
+        type: string
+        required: false
+        default: ""
+
+permissions:
+  contents: write
+  pull-requests: write
+  actions: read
+  id-token: write
+
+jobs:
+  agent:
+    # Interrupteur : un horaire ne lance l'agent que si USINE_IA ne vaut pas « off » ; à la main, toujours.
+    if: ${{ !inputs.planifie || vars.USINE_IA != 'off' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 75
+    env:
+      MISSION: ${{ inputs.mission }}
+      CIBLE: ${{ inputs.cible }}
+    steps:
+      - name: Garde (plafond du jour, clé, modèle)
+        id: garde
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PLAFOND: ${{ vars.USINE_IA_MAX_PAR_JOUR }}
+          MODELE: ${{ vars.USINE_IA_MODELE }}
+          CLE_PRESENTE: ${{ secrets.ANTHROPIC_API_KEY != '' }}
+        run: |
+          modele="${MODELE:-claude-opus-5-5}"
+          echo "modele=$modele" >> "$GITHUB_OUTPUT"
+          if [ "$CLE_PRESENTE" != "true" ]; then
+            echo "go=false" >> "$GITHUB_OUTPUT"
+            echo "::warning::Secret ANTHROPIC_API_KEY absent : aucun agent ne peut tourner."
+            echo "### 💤 Agent non lancé : secret ANTHROPIC_API_KEY absent" >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          plafond="${PLAFOND:-4}"
+          # passages d'agents déjà ACHEVÉS aujourd'hui (UTC), tous workflows « Usine IA — … », hors sautés et annulés
+          n=$(gh run list -R "$GITHUB_REPOSITORY" --limit 100 --created ">=$(date -u +%F)" --json workflowName,conclusion \
+              --jq '[.[] | select(.workflowName | startswith("Usine IA")) | select(.conclusion == "success" or .conclusion == "failure" or .conclusion == "timed_out")] | length' || echo 0)
+          if [ "${n:-0}" -ge "$plafond" ]; then
+            echo "go=false" >> "$GITHUB_OUTPUT"
+            echo "Plafond du jour atteint : $n passage(s) d'agent déjà achevé(s) (USINE_IA_MAX_PAR_JOUR=$plafond)."
+            echo "### 💤 Agent non lancé : plafond du jour atteint ($n/$plafond)" >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          echo "go=true" >> "$GITHUB_OUTPUT"
+          echo "Feu vert : mission « $MISSION », $n passage(s) déjà aujourd'hui sur $plafond, modèle $modele."
+
+      # persist-credentials: false — le jeton du job ne reste pas dans .git/config pendant le travail de l'agent (il ne
+      # peut ni pousser ni lire le jeton) ; l'étape finale s'authentifie elle-même (gh auth setup-git).
+      - name: Checkout main
+        if: steps.garde.outputs.go == 'true'
+        uses: actions/checkout@v6
+        with:
+          ref: main
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Setup Node 20
+        if: steps.garde.outputs.go == 'true'
+        uses: actions/setup-node@v6
+        with:
+          node-version: "20"
+          cache: npm
+
+      - name: Dépendances
+        if: steps.garde.outputs.go == 'true'
+        run: npm ci --no-audit --no-fund
+
+      - name: Mission et branche de travail
+        id: branche
+        if: steps.garde.outputs.go == 'true'
+        run: |
+          test -f "usine/missions/$MISSION.md" || { echo "::error::mission inconnue : $MISSION (usine/missions/$MISSION.md absent)"; exit 1; }
+          nom="usine/${MISSION}-$(date -u +%Y-%m-%d)-${GITHUB_RUN_NUMBER}"
+          git checkout -b "$nom"
+          mkdir -p usine/.sortie
+          echo "nom=$nom" >> "$GITHUB_OUTPUT"
+          echo "Branche $nom ; mission usine/missions/$MISSION.md ; cible demandée : « ${CIBLE:-aucune} »."
+
+      # Le plan est calculé par le dépôt, pas par l'agent. Pour le correcteur : contrôle léger de la sentinelle (les
+      # secrets ci-dessous servent à CE pas seulement ; l'agent ne les voit pas, le rapport reste dans l'artefact).
+      - name: Plan du jour
+        id: plan
+        if: steps.garde.outputs.go == 'true'
+        env:
+          KV_REST_API_URL: ${{ secrets.KV_REST_API_URL }}
+          KV_REST_API_TOKEN: ${{ secrets.KV_REST_API_TOKEN }}
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          node scripts/usine-plan.mjs --mission="$MISSION" --cible="$CIBLE"
+          echo "## Plan du jour" >> "$GITHUB_STEP_SUMMARY"
+          sed -n '1,40p' usine/.sortie/plan.md >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Agent Claude Code
+        if: steps.garde.outputs.go == 'true'
+        uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          prompt: |
+            Tu es un poste de l'Usine Cryptoreflex (dépôt ${{ github.repository }}).
+            Lis dans l'ordre : usine/missions/_commun.md (règles communes, obligatoires), usine/missions/${{ inputs.mission }}.md
+            (ta mission), puis usine/.sortie/plan.md (ton PLAN DU JOUR : la cible y est fixée, ne t'en écarte pas).
+            Exécute la mission jusqu'au bout. Tu es déjà sur la branche ${{ steps.branche.outputs.nom }}.
+            Ne fais AUCUNE opération git : le workflow classe le risque, passe les contrôles, commite, pousse et ouvre la
+            pull request à partir de tes fichiers modifiés et de usine/.sortie/resume.md (obligatoire, avec la ligne « Risque : »).
+          claude_args: |
+            --model ${{ steps.garde.outputs.modele }}
+            --max-turns 90
+            --allowedTools "Read,Edit,Write,Glob,Grep,WebFetch,WebSearch,Bash(npm test),Bash(npx vitest run:*),Bash(npx tsc --noEmit:*),Bash(npm run audit:quality),Bash(npm run audit:quality:strict),Bash(npm run audit:fiscal),Bash(npm run audit:sitemap),Bash(npm audit:*),Bash(node scripts/content-gate.mjs:*),Bash(node scripts/audit-quality.mjs:*),Bash(node scripts/audit-sitemap.mjs:*),Bash(node scripts/health-check.mjs:*),Bash(node scripts/freshness-check.mjs:*),Bash(git diff:*),Bash(git status:*),Bash(git log:*),Bash(ls:*),Bash(cat:*),Bash(head:*),Bash(tail:*),Bash(wc:*),Bash(date:*)"
+
+      - name: Résumé de l'agent
+        id: resume
+        if: steps.garde.outputs.go == 'true'
+        env:
+          TITRE_PLAN: ${{ steps.plan.outputs.titre }}
+        run: |
+          f=usine/.sortie/resume.md
+          if [ ! -s "$f" ]; then
+            mkdir -p usine/.sortie
+            printf 'Aucune modification\n\nL'"'"'agent n'"'"'a pas écrit usine/.sortie/resume.md (passage interrompu ou mission sans conclusion).\n' > "$f"
+          fi
+          titre=$(grep -m1 -E '^Titre[[:space:]]*:' "$f" | sed -E 's/^Titre[[:space:]]*:[[:space:]]*//' | cut -c1-110)
+          [ -n "$titre" ] || titre="${TITRE_PLAN:-mission $MISSION du $(date -u +%d/%m/%Y)}"
+          echo "titre=$titre" >> "$GITHUB_OUTPUT"
+
+      # Rien ne part (ni PR, ni résumé de job, ni artefact) si un secret ou une clé apparaît dans la sortie de l'agent ou
+      # dans ses fichiers : le passage échoue (dépôt public = journaux publics). Les valeurs ne sont jamais affichées.
+      - name: Contrôle des fuites
+        if: steps.garde.outputs.go == 'true'
+        env:
+          CLE: ${{ secrets.ANTHROPIC_API_KEY }}
+          GH: ${{ github.token }}
+          KV: ${{ secrets.KV_REST_API_TOKEN }}
+          CRON: ${{ secrets.CRON_SECRET }}
+        run: |
+          fuite=0
+          for v in "$CLE" "$GH" "$KV" "$CRON"; do
+            [ -n "$v" ] || continue
+            if git diff --no-color | grep -qF -- "$v" || grep -rqF -- "$v" usine/.sortie 2>/dev/null; then fuite=1; fi
+          done
+          if git diff --no-color | grep -qE 'sk-ant-[A-Za-z0-9_-]{8,}|gh[ps]_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{20,}' || grep -rqE 'sk-ant-[A-Za-z0-9_-]{8,}|gh[ps]_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{20,}' usine/.sortie 2>/dev/null; then fuite=1; fi
+          if [ "$fuite" = "1" ]; then
+            rm -rf usine/.sortie
+            echo "::error::Un secret ou une clé apparaît dans la sortie de l'agent : passage arrêté, rien n'est publié."
+            exit 1
+          fi
+          echo "Aucune fuite détectée."
+
+      - name: Modifications proposées ?
+        id: diff
+        if: steps.garde.outputs.go == 'true'
+        run: |
+          git add -A -- . ':!usine/.sortie' ':!sentinelle-report.md' ':!sentinelle-repairs.json' ':!veille-report.md' ':!fraicheur-etat.json' ':!fraicheur-hebdo.md'
+          if git diff --staged --quiet; then
+            echo "has=false" >> "$GITHUB_OUTPUT"
+            echo "Aucune modification proposée par l'agent."
+          else
+            echo "has=true" >> "$GITHUB_OUTPUT"
+            git diff --staged --stat
+          fi
+
+      - name: Classement du risque
+        id: risque
+        if: steps.diff.outputs.has == 'true'
+        run: node scripts/usine-risque.mjs --mission="$MISSION"
+
+      # Contrôles communs (déterminent l'étiquette « prête » ; informatifs pour une relecture).
+      - name: Garde-fou des contenus
+        id: gate
+        if: steps.diff.outputs.has == 'true'
+        continue-on-error: true
+        run: |
+          node scripts/content-gate.mjs --dirs=content/news,content/articles
+          git add -A -- content data public ':!usine/.sortie'
+
+      - name: Audit de qualité éditoriale
+        id: qualite
+        if: steps.diff.outputs.has == 'true'
+        continue-on-error: true
+        run: npm run audit:quality
+
+      - name: Types
+        id: types
+        if: steps.diff.outputs.has == 'true'
+        continue-on-error: true
+        run: npx tsc --noEmit
+
+      - name: Tests unitaires
+        id: tests
+        if: steps.diff.outputs.has == 'true'
+        continue-on-error: true
+        run: npx vitest run --reporter=dot
+
+      # Le build complet n'est payé que pour une proposition classée sans fait, tous contrôles au vert.
+      - name: Build complet (propositions sans fait seulement)
+        id: build
+        if: steps.diff.outputs.has == 'true' && steps.risque.outputs.verdict == 'auto' && steps.gate.outcome == 'success' && steps.qualite.outcome == 'success' && steps.types.outcome == 'success' && steps.tests.outcome == 'success'
+        continue-on-error: true
+        env:
+          NEXT_TELEMETRY_DISABLED: "1"
+        run: npm run build
+
+      - name: Étiquette de la proposition
+        id: etiquette
+        if: steps.diff.outputs.has == 'true'
+        env:
+          VERDICT: ${{ steps.risque.outputs.verdict }}
+          RAISONS: ${{ steps.risque.outputs.raisons }}
+          GATE: ${{ steps.gate.outcome }}
+          QUALITE: ${{ steps.qualite.outcome }}
+          TYPES: ${{ steps.types.outcome }}
+          TESTS: ${{ steps.tests.outcome }}
+          BUILD: ${{ steps.build.outcome }}
+        run: |
+          mode="$VERDICT"; motifs="$RAISONS"
+          for c in "garde-fou des contenus:$GATE" "audit de qualité:$QUALITE" "types:$TYPES" "tests unitaires:$TESTS"; do
+            if [ "${c##*:}" != "success" ]; then mode="relecture"; motifs="$motifs ; ${c%%:*} en échec"; fi
+          done
+          if [ "$mode" = "auto" ] && [ "$BUILD" != "success" ]; then mode="relecture"; motifs="$motifs ; build en échec ($BUILD)"; fi
+          if [ "$mode" = "auto" ]; then etiquette="[prête]"; else etiquette="[à relire]"; fi
+          echo "mode=$mode" >> "$GITHUB_OUTPUT"
+          echo "etiquette=$etiquette" >> "$GITHUB_OUTPUT"
+          echo "motifs=${motifs# ; }" >> "$GITHUB_OUTPUT"
+          echo "Étiquette : $etiquette${motifs:+ — $motifs}"
+
+      - name: Commit, push, pull request
+        if: steps.diff.outputs.has == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BRANCHE: ${{ steps.branche.outputs.nom }}
+          TITRE: ${{ steps.resume.outputs.titre }}
+          MODE: ${{ steps.etiquette.outputs.mode }}
+          ETIQUETTE: ${{ steps.etiquette.outputs.etiquette }}
+          MOTIFS: ${{ steps.etiquette.outputs.motifs }}
+          GATE: ${{ steps.gate.outcome }}
+          QUALITE: ${{ steps.qualite.outcome }}
+          TYPES: ${{ steps.types.outcome }}
+          TESTS: ${{ steps.tests.outcome }}
+          BUILD: ${{ steps.build.outcome }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          git config user.name "Cryptoreflex Usine (IA)"
+          git config user.email "usine@cryptoreflex.fr"
+          gh auth setup-git
+          if git diff --staged --quiet; then
+            echo "Plus rien à proposer après le garde-fou (article écarté)."
+            echo "### ⚠️ Modifications écartées par le garde-fou des contenus" >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          git commit -q -m "usine(${MISSION}): ${TITRE}" \
+            -m "Proposé par l'agent IA « ${MISSION} » de l'Usine (.github/workflows/usine-agent.yml). Étiquette : ${ETIQUETTE}. Relecture et fusion par Kevin." \
+            -m "" \
+            -m "Co-Authored-By: Cryptoreflex Usine <usine@cryptoreflex.fr>"
+          git push -u origin "$BRANCHE"
+          {
+            echo "## Mission « ${MISSION} » — $(date -u +%d/%m/%Y) — ${ETIQUETTE}"
+            echo
+            cat usine/.sortie/resume.md
+            echo
+            echo "---"
+            echo "### Classement de l'Usine : ${ETIQUETTE}"
+            if [ -n "$MOTIFS" ]; then echo "Motifs : ${MOTIFS}"; fi
+            echo
+            echo "- Garde-fou des contenus : ${GATE} · audit de qualité : ${QUALITE} · types : ${TYPES} · tests unitaires : ${TESTS} · build : ${BUILD:-non lancé}"
+            echo "- Passage : ${RUN_URL}"
+            echo
+            if [ "$MODE" = "auto" ]; then
+              echo "_Proposition sans fait (texte, SEO, liens internes, rapport ou idée), tous les contrôles et le build au vert : prête à fusionner en un clic. La sentinelle contrôle le site après chaque déploiement ; le garde-fou de l'Usine signale toute dégradation._"
+            else
+              echo "_Relecture approfondie : un fait, un chiffre, du code ou une donnée change. Kevin fusionne ou refuse. Rien n'est publié sans lui._"
+            fi
+          } > usine/.sortie/pr.md
+          url=$(gh pr create -R "$GITHUB_REPOSITORY" --base main --head "$BRANCHE" --title "Usine IA — ${ETIQUETTE} ${TITRE}" --body-file usine/.sortie/pr.md)
+          echo "Pull request : $url"
+          echo "### 📬 Pull request ${ETIQUETTE} : Usine IA — ${TITRE}" >> "$GITHUB_STEP_SUMMARY"
+          echo "$url" >> "$GITHUB_STEP_SUMMARY"
+          if [ -n "$MOTIFS" ]; then echo "Motifs : ${MOTIFS}" >> "$GITHUB_STEP_SUMMARY"; fi
+
+      - name: Aucune modification
+        if: steps.garde.outputs.go == 'true' && steps.diff.outputs.has != 'true'
+        run: |
+          echo "### 📝 Aucune modification proposée (mission « $MISSION »)" >> "$GITHUB_STEP_SUMMARY"
+          echo >> "$GITHUB_STEP_SUMMARY"
+          cat usine/.sortie/resume.md >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Joindre la sortie de l'agent
+        if: always() && steps.garde.outputs.go == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: usine-${{ inputs.mission }}-${{ github.run_number }}
+          path: usine/.sortie/
+          retention-days: 14
+          if-no-files-found: ignore

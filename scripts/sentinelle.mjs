@@ -214,9 +214,14 @@ async function checkRobots() {
     const latest = new Map();
     for (const w of runs) if (!latest.has(w.name)) latest.set(w.name, w);
     const broken = [...latest.values()].filter((w) => w.conclusion === "failure");
-    if (broken.length) for (const w of broken) fail("robots", `tâche « ${w.name} » en échec (${w.html_url})`);
+    /* 09/10/2026 (Usine) : un agent IA en échec (usine-*.yml) n'est pas un défaut du site — sa production est une proposition
+       relue par Kevin — : « à surveiller », et jamais rejoué automatiquement (chaque passage coûte). */
+    const estAgent = (w) => /\/usine-[a-z-]+\.yml$/.test(w.path || "");
+    const casses = broken.filter((w) => !estAgent(w));
+    if (casses.length) for (const w of casses) fail("robots", `tâche « ${w.name} » en échec (${w.html_url})`);
     else ok("robots", `${latest.size} tâches GitHub, aucune en échec sur 26 h`);
-    for (const w of broken) {
+    for (const w of broken.filter(estAgent)) warn("robots", `agent IA « ${w.name} » en échec (${w.html_url})`);
+    for (const w of casses) {
       if (/daily-content\.yml$/.test(w.path || "")) repairs.dailyContent ??= "publication du jour en échec";
       else if ((w.run_attempt ?? 1) === 1 && !/audit-navigateur|e2e|coolify-crons/.test(w.path || "")) repairs.rerun.push({ id: w.id, name: w.name });
     }
@@ -704,6 +709,63 @@ function ecrireEtatFraicheur() {
   writeFileSync(path.join(dir, "fraicheur-hebdo.md"), rapportHebdo(resultats, now) + (consommation ? "\n" + consommation.markdown : ""));
 }
 
+/* ------------------------------------------------------------------ résumé pour l'Usine (KV), 09/10/2026 */
+/* Tableau de bord /admin/usine (lib/usine/etat.ts) : résumé « dernier passage » — comptes, défauts et points à surveiller
+   (mêmes textes que le ticket privé : sans secret ni donnée personnelle), réparations décidées ; le contrôle complet y ajoute
+   l'état des 51 familles, la consommation du mois et la taille de la base. UNE commande SET par passage (deux la nuit) ;
+   un KV absent ou en panne n'écrit rien et ne change pas le verdict. */
+async function ecrireResumeUsine() {
+  const kvUrl = process.env.KV_REST_API_URL?.replace(/\/$/, "");
+  const kvToken = process.env.KV_REST_API_TOKEN;
+  if (!kvUrl || !kvToken) return;
+  const court = (r) => ({ area: r.area, msg: String(r.msg).slice(0, 200) });
+  const defauts = results.filter((r) => r.level === "fail");
+  const surveiller = results.filter((r) => r.level === "warn");
+  const maintenant = new Date().toISOString();
+  // date de première apparition de chaque défaut (relue dans le résumé précédent) : le garde-fou de l'Usine n'incrimine une
+  // fusion que pour un défaut apparu APRÈS elle
+  const anciens = new Map();
+  try {
+    const r = await fetch(`${kvUrl}/get/${encodeURIComponent("usine:sentinelle:dernier")}`, { headers: { Authorization: `Bearer ${kvToken}` }, signal: AbortSignal.timeout(10_000) });
+    const j = await r.json();
+    const prev = typeof j.result === "string" ? JSON.parse(j.result) : j.result;
+    for (const d of prev?.defauts ?? []) if (d?.area && d?.msg) anciens.set(`${d.area}|${d.msg}`, d.depuis ?? prev.at);
+  } catch {
+    /* premier passage ou KV muet : tous les défauts datent de maintenant */
+  }
+  const date = (d) => ({ ...d, depuis: anciens.get(`${d.area}|${d.msg}`) ?? maintenant });
+  const resume = {
+    at: maintenant,
+    full: FULL,
+    fails: defauts.length,
+    warns: surveiller.length,
+    oks: results.length - defauts.length - surveiller.length,
+    defauts: defauts.slice(0, 40).map(court).map(date),
+    surveiller: surveiller.slice(0, 40).map(court),
+    reparations: repairs,
+  };
+  if (FULL) {
+    if (etatFraicheur?.compte) resume.fraicheur = etatFraicheur.compte;
+    if (consommation?.bilan) resume.consommation = consommation.bilan;
+    resume.tailleBase = tailleBase;
+  }
+  const ecrire = async (key, ttl) => {
+    const r = await fetch(kvUrl, {
+      method: "POST",
+      headers: { Authorization: `Bearer ${kvToken}`, "content-type": "application/json" },
+      body: JSON.stringify(["SET", key, JSON.stringify(resume), "EX", ttl]),
+      signal: AbortSignal.timeout(10_000),
+    });
+    await r.body?.cancel().catch(() => {});
+  };
+  try {
+    await ecrire("usine:sentinelle:dernier", 3 * 86_400);
+    if (FULL) await ecrire("usine:sentinelle:complet", 8 * 86_400);
+  } catch {
+    /* KV indisponible : le tableau de bord affiche « résumé non écrit » ; le verdict de ce passage ne change pas */
+  }
+}
+
 /* ------------------------------------------------------------------ exécution + rapport */
 await checkKeyPages();
 await checkFreshness();
@@ -744,6 +806,7 @@ const lines = [
 ];
 writeFileSync(REPORT, lines.join("\n") + "\n");
 writeFileSync(path.join(path.dirname(REPORT), "sentinelle-repairs.json"), JSON.stringify(repairs, null, 1));
+await ecrireResumeUsine();
 /* 07/10/2026 : dépôt public = journal public. Sur la sortie standard, un simple décompte ; le détail (défauts, réparations,
    chiffres d'infrastructure) reste dans le fichier du rapport, publié seulement dans le ticket du dépôt privé. */
 console.log(`${fails.length} défaut(s), ${warns.length} à surveiller, ${results.filter((r) => r.level === "ok").length} contrôles réussis`);
