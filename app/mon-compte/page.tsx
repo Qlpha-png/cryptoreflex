@@ -74,7 +74,7 @@ export default async function AccountPage() {
             </p>
           </div>
           <div className="flex items-center gap-2 flex-wrap">
-            {user.isAdmin && (
+            {user.isAdmin ? (
               <Link
                 href="/admin"
                 className="inline-flex items-center gap-1.5 rounded-full border border-primary-glow/40 bg-primary-glow/10 px-3 py-1 text-xs font-bold text-primary-soft hover:bg-primary-glow/20 transition-colors"
@@ -82,6 +82,15 @@ export default async function AccountPage() {
               >
                 <ShieldCheck className="h-3.5 w-3.5" aria-hidden="true" />
                 Admin
+              </Link>
+            ) : (
+              /* 09/10/2026 : diagnostic de l'accès administrateur (le compte voit pourquoi /admin lui répond 404) */
+              <Link
+                href="/mon-compte/acces-admin"
+                className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs text-muted hover:text-fg hover:bg-elevated/60 transition-colors min-h-[44px]"
+              >
+                <ShieldCheck className="h-3.5 w-3.5" aria-hidden="true" />
+                Accès admin ?
               </Link>
             )}
             <form action="/api/auth/logout" method="POST">
