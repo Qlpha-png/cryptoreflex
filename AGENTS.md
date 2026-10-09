@@ -33,5 +33,8 @@ Repo local (git) : `C:\Users\kevin\Desktop\Projets\Sites\Cryptoreflex`.
 - Tableau de bord : `/admin/usine` (admin seulement) ; ligne de commande : `npm run usine` (`--json` pour un agent).
 - Registre unique des postes : `scripts/lib/usine-registre.mjs` (un nouveau robot ou une nouvelle tâche Vercel s'y ajoute,
   le test `tests/lib/usine.test.ts` vérifie la cohérence avec `lib/gardien.ts`, `vercel.json` et `.github/workflows/`).
-- Agents IA (`.github/workflows/usine-*.yml`, consignes dans `usine/missions/`) : éteints tant que la variable de dépôt
-  GitHub `USINE_IA` ne vaut pas `on` ; ils ne proposent que des pull requests, jamais rien sur `main`.
+- Agents IA (`.github/workflows/usine-*.yml`, consignes dans `usine/missions/`) : ils tournent à leurs horaires (variable
+  de dépôt GitHub `USINE_IA` = `off` pour les couper), suivent un plan du jour calculé par le dépôt
+  (`scripts/usine-plan.mjs`) et ne proposent que des pull requests étiquetées « prête » (aucun fait touché, contrôles et
+  build au vert) ou « à relire » ; Kevin fusionne. Jamais rien sur `main` par un agent.
+- Laboratoire R&D : `usine/rnd/` (idées de l'agent chercheur, statut à changer par Kevin, prototypes de l'agent prototypeur).

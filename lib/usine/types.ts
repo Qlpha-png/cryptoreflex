@@ -4,7 +4,7 @@
  * ces types en sont la lecture typée côté site.
  */
 
-export type AtelierId = "actualiser" | "entretenir" | "proteger" | "ameliorer";
+export type AtelierId = "actualiser" | "entretenir" | "proteger" | "ameliorer" | "rnd";
 export type Genre = "robot" | "agent-ia" | "garde-fou";
 export type Moteur = "github" | "vercel" | "integre";
 export type Statut = "ok" | "en-cours" | "retard" | "attention" | "echec" | "veille" | "jamais" | "inconnu" | "integre";
@@ -31,7 +31,7 @@ export interface Poste {
   workflow?: string;
   gardien?: string[];
   traceKv?: string;
-  lecture?: "frein-r1" | "sentinelle-complet" | "sentinelle-dernier" | "gardien-traces";
+  lecture?: "frein-r1" | "sentinelle-complet" | "sentinelle-dernier" | "gardien-traces" | "garde-fou-kv";
   horaire?: string;
   cadence: string;
   declencheur: string;
@@ -100,6 +100,50 @@ export interface PullRequestUsine {
   creeLe: string;
   fusionneLe: string | null;
   etat: "ouverte" | "fusionnee" | "fermee";
+  /** Étiquette posée par le workflow dans le titre : « prête » (aucun fait, tout au vert) ou « à relire ». */
+  etiquette: "prete" | "relire" | null;
+}
+
+/** Agent en train de travailler : passage en cours et étape courante (API GitHub /jobs). */
+export interface AgentEnDirect {
+  run: Run;
+  job: string;
+  etape: string | null;
+  numero: number;
+  total: number;
+  depuis: string | null;
+}
+
+export interface Idee {
+  id: string;
+  titre: string;
+  statut: "proposee" | "retenue" | "en-cours" | "faite" | "ecartee";
+  date: string;
+  impact?: string;
+  effort?: string;
+  fichier: string;
+  resume?: string;
+}
+
+/** Plan du jour calculé par le dépôt (scripts/lib/usine-plan.mjs), le même que celui donné aux agents. */
+export interface PlanDuJour {
+  reviseur: { slug: string; titre: string; updatedAt: string | null; revisionUsine: string | null } | null;
+  seo: { slug: string; titre: string; defauts: string[] }[];
+  correcteur: { depot: { area: string; msg: string }[]; horsDepot: number; autres: { area: string; msg: string }[] };
+  rnd: { total: number; parStatut: Record<string, number>; retenues: Idee[]; recentes: Idee[]; erreurs: string[] };
+}
+
+/** Décision du garde-fou de dégradation (KV usine:garde-fou:dernier). */
+export interface TraceGardeFou {
+  at: string;
+  action: "revert" | "rien";
+  simulation?: boolean;
+  sha?: string;
+  message?: string;
+  raisons?: string[];
+  raison?: string;
+  pousse?: boolean;
+  erreur?: string;
 }
 
 /** Résumé écrit dans le KV par scripts/sentinelle.mjs (clés usine:sentinelle:dernier / :complet). */
@@ -176,5 +220,8 @@ export interface EtatUsine {
   sentinelle: { dernier: ResumeSentinelle | null; complet: ResumeSentinelle | null };
   budget: BudgetCmc;
   prs: { ouvertes: PullRequestUsine[]; fusionnees: PullRequestUsine[] };
+  enDirect: AgentEnDirect[];
+  plan: PlanDuJour;
+  gardeFou: TraceGardeFou | null;
   journal: Run[];
 }

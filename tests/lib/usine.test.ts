@@ -56,7 +56,7 @@ describe("registre des postes", () => {
       expect(p.produit.length, p.id).toBeGreaterThan(10);
       if (p.horaire) expect(() => parseCron(p.horaire!)).not.toThrow();
     }
-    expect(ATELIERS).toHaveLength(4);
+    expect(ATELIERS).toHaveLength(5);
   });
 
   it("chaque workflow cité existe ; chaque robot du Gardien est un poste, avec le même workflow", () => {
@@ -94,7 +94,7 @@ describe("registre des postes", () => {
       const p = postes.find((x) => x.mission === m.id);
       expect(p, m.id).toBeDefined();
       expect(p!.genre).toBe("agent-ia");
-      expect(p!.atelier).toBe("ameliorer");
+      expect(["ameliorer", "rnd"]).toContain(p!.atelier);
       expect(p!.workflow).toBe(`usine-${m.id}.yml`);
     }
     for (const p of postes.filter((x) => x.genre === "agent-ia")) expect((MISSIONS as { id: string }[]).some((m) => m.id === p.mission), p.id).toBe(true);
@@ -251,11 +251,11 @@ describe("production, verdict, formats", () => {
 describe("workflows des agents IA", () => {
   const commun = lireWf("usine-agent.yml");
 
-  it("usine-agent.yml : réutilisable, missions déclarées, interrupteur, garde, PR par le workflow", () => {
+  it("usine-agent.yml : réutilisable, missions déclarées, interrupteur USINE_IA=off, garde, PR par le workflow", () => {
     const o = on(commun);
     expect(o.workflow_call.inputs.mission.required).toBe(true);
     expect(o.workflow_dispatch.inputs.mission.options).toEqual((MISSIONS as { id: string }[]).map((m) => m.id));
-    expect(String(commun.jobs.agent.if)).toContain("vars.USINE_IA == 'on'");
+    expect(String(commun.jobs.agent.if)).toContain("vars.USINE_IA != 'off'");
     expect(commun.jobs.agent.concurrency?.group).toBeTruthy();
     const etapes: Yaml[] = commun.jobs.agent.steps;
     const agent = etapes.find((s) => String(s.uses ?? "").startsWith("anthropics/claude-code-action@"));
@@ -282,13 +282,13 @@ describe("workflows des agents IA", () => {
   });
 
   for (const m of MISSIONS as { id: string }[]) {
-    it(`usine-${m.id}.yml : horaire du registre, interrupteur USINE_IA, appel du workflow commun`, () => {
+    it(`usine-${m.id}.yml : horaire du registre, interrupteur USINE_IA=off, appel du workflow commun`, () => {
       const wf = lireWf(`usine-${m.id}.yml`);
       const p = postes.find((x) => x.mission === m.id)!;
       expect(String(wf.name)).toMatch(/^Usine IA — /);
       expect(on(wf).schedule.map((s: { cron: string }) => s.cron)).toEqual([p.horaire]);
       expect(Object.prototype.hasOwnProperty.call(on(wf), "workflow_dispatch")).toBe(true);
-      expect(String(wf.jobs.agent.if)).toContain("vars.USINE_IA == 'on'");
+      expect(String(wf.jobs.agent.if)).toContain("vars.USINE_IA != 'off'");
       expect(String(wf.jobs.agent.if)).toContain("github.event_name != 'schedule'");
       expect(wf.jobs.agent.uses).toBe("./.github/workflows/usine-agent.yml");
       expect(wf.jobs.agent.with.mission).toBe(m.id);

@@ -1,0 +1,4 @@
+{
+  "_lisezmoi": "Registre des idées du laboratoire R&D de l'Usine (usine/rnd/README.md). Écrit par l'agent chercheur (statut proposee), trié par date décroissante ; Kevin change le statut (retenue, ecartee) ; l'agent prototypeur passe une idée retenue en en-cours ; faite quand le prototype est fusionné et publié. Validé par tests/lib/usine.test.ts.",
+  "idees": []
+}

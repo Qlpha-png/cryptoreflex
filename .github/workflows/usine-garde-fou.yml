@@ -1,0 +1,76 @@
+# L'USINE — garde-fou de dégradation (09/10/2026, « une usine qui ne dégrade pas le site »).
+#
+# Après chaque fusion d'une proposition de l'Usine, Vercel déploie et la sentinelle contrôle la production (déclencheur
+# deployment_status). Quand la sentinelle finit en ÉCHEC, ce workflow lit son résumé (KV usine:sentinelle:dernier) et
+# cherche la cause : un défaut dans une zone que le contenu peut casser (pages, chiffres, fiscal, partenaires, plans du
+# site, dates vérifiées) ET une fusion de l'Usine depuis moins de 6 h. Il écrit sa décision dans le KV
+# (usine:garde-fou:dernier) pour le tableau de bord /admin/usine, qui montre alors « Retour arrière recommandé » avec la
+# fusion en cause ; Kevin lance le retour arrière en un clic (ce workflow, à la main, simulation décochée) : le commit
+# est annulé (git revert) et poussé, le site revient à l'état d'avant, la sentinelle rejuge au déploiement suivant.
+# Décision : scripts/lib/usine-garde-fou.mjs (testée) ; exécution : scripts/usine-garde-fou.mjs. Aucun ticket ici.
+name: Usine — garde-fou (dégradation)
+
+on:
+  workflow_run:
+    workflows: ["Sentinelle (détection d'erreurs)"]
+    types: [completed]
+  workflow_dispatch:
+    inputs:
+      simulation:
+        description: "Simulation : décider et tracer sans rien pousser (décocher pour exécuter le retour arrière)"
+        type: boolean
+        default: true
+
+permissions:
+  contents: write
+
+concurrency:
+  group: usine-garde-fou
+  cancel-in-progress: false
+
+jobs:
+  retour:
+    # seulement après une sentinelle en échec (ou à la main)
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'failure' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v6
+        with:
+          ref: main
+          fetch-depth: 100
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node 20
+        uses: actions/setup-node@v6
+        with:
+          node-version: "20"
+
+      # Lancé par la sentinelle : toujours en simulation (décision tracée, rien poussé). À la main : selon la case.
+      - name: Décision (et retour arrière si demandé à la main)
+        id: decision
+        env:
+          KV_REST_API_URL: ${{ secrets.KV_REST_API_URL }}
+          KV_REST_API_TOKEN: ${{ secrets.KV_REST_API_TOKEN }}
+          SIMULATION: ${{ github.event_name != 'workflow_dispatch' || inputs.simulation == true || inputs.simulation == 'true' }}
+        run: |
+          git fetch origin main
+          if [ "$SIMULATION" = "true" ]; then node scripts/usine-garde-fou.mjs --simulation; else node scripts/usine-garde-fou.mjs; fi
+
+      - name: Résumé
+        if: always()
+        env:
+          ACTION: ${{ steps.decision.outputs.action }}
+          SHA: ${{ steps.decision.outputs.sha }}
+          RAISON: ${{ steps.decision.outputs.raison }}
+          SIMULATION: ${{ github.event_name != 'workflow_dispatch' || inputs.simulation == true || inputs.simulation == 'true' }}
+        run: |
+          if [ "$ACTION" = "revert" ] && [ "$SIMULATION" = "true" ]; then
+            echo "### ⚠️ Retour arrière recommandé : fusion ${SHA} (rien n'a été poussé)" >> "$GITHUB_STEP_SUMMARY"
+          elif [ "$ACTION" = "revert" ]; then
+            echo "### ↩️ Retour arrière exécuté : fusion ${SHA} annulée" >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "### ✅ Rien à annuler" >> "$GITHUB_STEP_SUMMARY"
+          fi
+          echo "${RAISON}" >> "$GITHUB_STEP_SUMMARY"

@@ -1,14 +1,16 @@
 /**
  * /admin/usine — L'USINE : salle de contrôle des robots, agents IA et gardes-fous de cryptoreflex.fr (09/10/2026).
  *
- * Kev : « une vraie usine autonome d'agents pour le site, qui actualise, entretient, protège, améliore… un système
- * avec une application où je vois comment ça avance et la production ». Cette page est l'application : un seul écran,
- * lu toutes les 60 s, qui montre les 4 ateliers (Actualiser, Entretenir, Protéger, Améliorer), la chaîne du jour, la
- * production, la protection (sentinelle, budget, fraîcheur) et les pull requests des agents IA.
+ * Kev : « une vraie usine autonome d'agents… une application sur mon bureau où je peux voir une usine réelle d'agents qui
+ * travaillent avec un vrai processus et une vraie ligne de gestion, et un endroit où des agents font de la R&D ».
+ * Cette page est l'application : installable depuis Chrome ou Edge (manifeste /admin/usine/app.webmanifest, fenêtre
+ * autonome sans l'en-tête du site), relue toutes les 60 s. Elle montre : la ligne de production du jour (plan → agents
+ * au travail, étape par étape → contrôles → propositions prêtes ou à relire → fusionnées → vérifiées par la sentinelle),
+ * la ligne de gestion (à faire, en cours, à décider avec les boutons Fusionner / Retour arrière, fait), le plan du jour
+ * calculé par le dépôt, les 5 ateliers poste par poste, le laboratoire R&D, la production, la protection, le journal.
  *
  * Données : lib/usine/etat.ts (API GitHub, KV, fichiers du dépôt, CoinMarketCap) ; registre : scripts/lib/usine-registre.mjs.
  * Accès : administrateurs seulement (ADMIN_EMAILS), 404 strict sinon — même règle que /admin. Page noindex.
- * Rendu : Server Component, un seul îlot client pour le rafraîchissement et un pour les boutons « Lancer ».
  */
 
 import type { Metadata } from "next";
@@ -20,10 +22,14 @@ import {
   Crown,
   ExternalLink,
   Factory,
+  FlaskConical,
   Gauge,
   GitPullRequest,
+  ListChecks,
+  MonitorDown,
   Newspaper,
   ShieldCheck,
+  Workflow,
   Wrench,
   type LucideIcon,
 } from "lucide-react";
@@ -31,9 +37,11 @@ import { getUser } from "@/lib/auth";
 import { BRAND } from "@/lib/brand";
 import { DEPOT_ROBOTS } from "@/lib/gardien";
 import { lireEtatUsine } from "@/lib/usine/etat";
-import type { AtelierId, EtatChaine, EtatUsine, Jugement, Run, Statut } from "@/lib/usine/types";
+import type { AtelierId, EtatChaine, EtatUsine, Idee, Jugement, PullRequestUsine, Run, Statut } from "@/lib/usine/types";
 import AutoRefresh from "@/components/admin/usine/AutoRefresh";
 import BoutonLancer from "@/components/admin/usine/BoutonLancer";
+import { BoutonFusionner, BoutonRetourArriere } from "@/components/admin/usine/BoutonAction";
+import UsineChrome from "@/components/admin/usine/UsineChrome";
 import { estLancable } from "@/scripts/lib/usine-registre.mjs";
 import { STATUTS, dateHeureParis, dateParis, depuis, heureParis } from "@/scripts/lib/usine-etat.mjs";
 
@@ -41,6 +49,7 @@ export const metadata: Metadata = {
   title: "Admin — L'Usine",
   description: "Salle de contrôle des robots, agents IA et gardes-fous de Cryptoreflex (réservé éditeur).",
   robots: { index: false, follow: false },
+  manifest: "/admin/usine/app.webmanifest",
 };
 
 export const dynamic = "force-dynamic";
@@ -77,9 +86,18 @@ const ICONES_ATELIER: Record<AtelierId, LucideIcon> = {
   entretenir: Wrench,
   proteger: ShieldCheck,
   ameliorer: Bot,
+  rnd: FlaskConical,
 };
 
 const GENRE_LIBELLE = { robot: "robot", "agent-ia": "agent IA", "garde-fou": "garde-fou" } as const;
+
+const STATUT_IDEE: Record<Idee["statut"], { libelle: string; ton: Ton }> = {
+  proposee: { libelle: "proposée", ton: "info" },
+  retenue: { libelle: "retenue", ton: "ok" },
+  "en-cours": { libelle: "prototype en cours", ton: "attention" },
+  faite: { libelle: "faite", ton: "ok" },
+  ecartee: { libelle: "écartée", ton: "neutre" },
+};
 
 function tonConclusion(run: Run): { libelle: string; ton: Ton } {
   if (run.status !== "completed") return { libelle: run.status === "queued" ? "en attente" : "en cours", ton: "info" };
@@ -99,6 +117,9 @@ function tonConclusion(run: Run): { libelle: string; ton: Ton } {
 }
 
 const nb = (n: number | null | undefined) => (typeof n === "number" && Number.isFinite(n) ? n.toLocaleString("fr-FR") : "—");
+const JOUR = 86_400_000;
+const titreCourt = (p: PullRequestUsine) => p.titre.replace(/^Usine IA — \[[^\]]+\]\s*/, "");
+const lienDepot = (chemin: string) => `https://github.com/${DEPOT_ROBOTS}/blob/main/${chemin}`;
 
 /* -------------------------------------------------------------------------- */
 /*  Page                                                                      */
@@ -109,14 +130,18 @@ export default async function UsinePage() {
   if (!user || !user.isAdmin) notFound();
 
   const etat = await lireEtatUsine();
+  const now = Date.parse(etat.genereLe);
   const parAtelier = (id: AtelierId) => etat.jugements.filter((j) => j.poste.atelier === id);
   const mesures = etat.jugements.filter((j) => j.poste.genre !== "garde-fou" && typeof j.poste.ageMaxH === "number");
   const aLHeure = mesures.filter((j) => j.statut === "ok" || j.statut === "en-cours").length;
-  const agents = etat.jugements.filter((j) => j.poste.genre === "agent-ia");
-  const agentsEnVeille = agents.filter((j) => j.statut === "veille" || j.statut === "jamais").length;
+  const pretes = etat.prs.ouvertes.filter((p) => p.etiquette === "prete");
+  const aRelire = etat.prs.ouvertes.filter((p) => p.etiquette !== "prete");
+  const fusionnees7j = etat.prs.fusionnees.filter((p) => p.fusionneLe && now - Date.parse(p.fusionneLe) <= 7 * JOUR);
+  const retourRecommande = etat.gardeFou?.action === "revert" && etat.gardeFou.simulation !== false && now - Date.parse(etat.gardeFou.at) < 12 * 3_600_000;
 
   return (
     <article className="py-10 sm:py-14">
+      <UsineChrome />
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <nav aria-label="Fil d'Ariane" className="text-xs text-muted">
           <Link href="/" className="hover:text-fg">Accueil</Link>
@@ -131,14 +156,21 @@ export default async function UsinePage() {
             <span className="inline-flex items-center gap-2 rounded-full border border-primary-glow/40 bg-primary-glow/10 px-3 py-1 text-xs font-bold text-primary-soft">
               <Crown className="h-3.5 w-3.5" aria-hidden />
               ADMIN — salle de contrôle
+              <span className="usine-app-seulement items-center gap-1 rounded-full bg-elevated px-2 py-0.5 text-[10px] font-semibold text-fg/80">
+                <MonitorDown className="h-3 w-3" aria-hidden />
+                application installée
+              </span>
             </span>
             <h1 className="mt-3 flex items-center gap-3 text-3xl font-extrabold tracking-tight sm:text-4xl">
               <Factory className="h-8 w-8 text-primary" aria-hidden />
               L&apos;Usine <span className="gradient-text">{BRAND.name}</span>
             </h1>
             <p className="mt-2 max-w-3xl text-sm text-muted">
-              {etat.jugements.length} postes dans 4 ateliers. Chaque robot prouve son travail ; chaque agent IA propose une pull request que
-              tu relis ; rien ne part en ligne sans toi.
+              {etat.jugements.length} postes dans 5 ateliers. Chaque robot prouve son travail ; chaque agent IA suit un plan du jour calculé par le dépôt
+              et finit par une proposition « prête » ou « à relire » ; tu fusionnes en un clic ; la sentinelle vérifie après chaque déploiement.
+            </p>
+            <p className="mt-1 text-[11px] text-muted">
+              Sur l&apos;ordinateur : menu de Chrome ou Edge → « Installer l&apos;application » pour ouvrir l&apos;Usine dans sa propre fenêtre.
             </p>
           </div>
           <div className="flex flex-col items-end gap-2">
@@ -149,13 +181,28 @@ export default async function UsinePage() {
 
         <Verdict etat={etat} />
 
+        {retourRecommande && etat.gardeFou?.sha && (
+          <div className={`mt-4 rounded-2xl border p-4 ${TON_CLASSES.attention}`}>
+            <div className="flex flex-wrap items-start justify-between gap-3">
+              <div className="text-sm">
+                <strong>↩️ Retour arrière recommandé</strong> {depuis(etat.gardeFou.at, now)} : la sentinelle voit un défaut de contenu après la fusion{" "}
+                <code className="font-mono">{etat.gardeFou.sha.slice(0, 10)}</code>
+                {etat.gardeFou.message ? ` « ${etat.gardeFou.message} »` : ""}.
+                {etat.gardeFou.raisons?.length ? <ul className="mt-1 list-inside list-disc text-xs opacity-90">{etat.gardeFou.raisons.slice(0, 4).map((r, i) => <li key={i}>{r}</li>)}</ul> : null}
+                <p className="mt-1 text-xs opacity-90">Un clic annule cette fusion et redéploie l&apos;état précédent ; la sentinelle rejuge ensuite.</p>
+              </div>
+              <BoutonRetourArriere sha={etat.gardeFou.sha} />
+            </div>
+          </div>
+        )}
+
         {/* Indicateurs */}
         <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
           <Indicateur label="Actus publiées · 7 j" valeur={nb(etat.production.totaux.j7.actus)} accent="primary" detail={`${nb(etat.production.totaux.j30.actus)} sur 30 j`} />
           <Indicateur label="Analyses calculées · 7 j" valeur={nb(etat.production.totaux.j7.analyses)} accent="ice" detail={`${etat.analyses.length} pages vivantes`} />
-          <Indicateur label="Articles de fond · 30 j" valeur={nb(etat.production.totaux.j30.articles)} accent="purple" detail={`${nb(Number(etat.compteurs.articles))} au total`} />
+          <Indicateur label="Agents au travail" valeur={nb(etat.enDirect.length)} accent={etat.enDirect.length ? "purple" : "emerald"} detail={etat.enDirect.length ? etat.enDirect.map((a) => a.run.name.replace(/^Usine IA — /, "")).join(", ") : "aucun passage en cours"} />
           <Indicateur label="Postes à l'heure" valeur={`${aLHeure}/${mesures.length}`} accent={aLHeure === mesures.length ? "emerald" : "amber"} detail={`${etat.verdict.echecs} en échec, ${etat.verdict.retards} à surveiller`} />
-          <Indicateur label="PR des agents ouvertes" valeur={nb(etat.prs.ouvertes.length)} accent="purple" detail={`${nb(etat.prs.fusionnees.length)} fusionnées récemment`} />
+          <Indicateur label="Propositions à décider" valeur={nb(etat.prs.ouvertes.length)} accent={pretes.length ? "emerald" : "purple"} detail={`${pretes.length} prête(s), ${aRelire.length} à relire · ${fusionnees7j.length} fusionnée(s) sur 7 j`} />
           <Indicateur
             label="Budget CoinMarketCap"
             valeur={etat.budget.lu && typeof etat.budget.moisUtilises === "number" && etat.budget.moisPlafond ? `${Math.round((etat.budget.moisUtilises / etat.budget.moisPlafond) * 100)} %` : "—"}
@@ -164,8 +211,24 @@ export default async function UsinePage() {
           />
         </div>
 
+        {/* Ligne de production */}
+        <Section titre="Ligne de production" Icone={Workflow} sousTitre="Le processus des agents, de gauche à droite : plan du jour → travail (étape par étape, en direct) → contrôles et build → proposition prête ou à relire → fusion par toi → déploiement Vercel et vérification par la sentinelle.">
+          <LigneProduction etat={etat} pretes={pretes} aRelire={aRelire} fusionnees7j={fusionnees7j} />
+        </Section>
+
+        {etat.enDirect.length > 0 && (
+          <Section titre="Agents au travail, en direct" Icone={Activity} sousTitre="Étape courante de chaque passage d'agent en cours (relu toutes les 60 s).">
+            <AgentsEnDirect etat={etat} />
+          </Section>
+        )}
+
+        {/* Ligne de gestion */}
+        <Section titre="Ligne de gestion" Icone={ListChecks} sousTitre="À faire (le plan calculé par le dépôt), en cours, à décider (un clic pour fusionner une proposition prête), fait sur 7 jours.">
+          <LigneGestion etat={etat} pretes={pretes} aRelire={aRelire} fusionnees7j={fusionnees7j} />
+        </Section>
+
         {/* Chaîne du jour */}
-        <Section titre="Chaîne de production du jour" Icone={Activity} sousTitre={`Heure de Paris · jour UTC ${dateParis(etat.genereLe)} · les postes en continu (${etat.chaine.continus.map((p) => p.nom).join(", ") || "aucun"}) tournent toute la journée.`}>
+        <Section titre="Chaîne du jour, poste par poste" Icone={Activity} sousTitre={`Heure de Paris · jour UTC ${dateParis(etat.genereLe)} · les postes en continu (${etat.chaine.continus.map((p) => p.nom).join(", ") || "aucun"}) tournent toute la journée.`}>
           <TableauChaine etat={etat} />
         </Section>
 
@@ -175,7 +238,7 @@ export default async function UsinePage() {
           const juges = parAtelier(atelier.id);
           return (
             <Section key={atelier.id} titre={`Atelier ${atelier.nom}`} Icone={Icone} sousTitre={atelier.description}>
-              {atelier.id === "ameliorer" && <NoteAgents etat={etat} enVeille={agentsEnVeille} total={agents.length} />}
+              {atelier.id === "rnd" && <LaboratoireRnd etat={etat} />}
               <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
                 {juges.map((j) => (
                   <CartePoste key={j.poste.id} jugement={j} />
@@ -186,7 +249,7 @@ export default async function UsinePage() {
         })}
 
         {/* Production */}
-        <Section titre="Production des 14 derniers jours" Icone={Newspaper} sousTitre="Ce que l'usine a réellement fabriqué, jour par jour (jours UTC) : actualités, analyses techniques recalculées, articles de fond, corrections journalisées, pull requests d'agents fusionnées.">
+        <Section titre="Production des 14 derniers jours" Icone={Newspaper} sousTitre="Ce que l'usine a réellement fabriqué, jour par jour (jours UTC) : actualités, analyses techniques recalculées, articles de fond, corrections journalisées, propositions d'agents fusionnées.">
           <TableauProduction etat={etat} />
         </Section>
 
@@ -198,11 +261,6 @@ export default async function UsinePage() {
           </div>
         </Section>
 
-        {/* Agents IA */}
-        <Section titre="Agents IA : ce qu'ils proposent" Icone={GitPullRequest} sousTitre="Chaque passage d'agent se termine par une pull request préfixée « Usine IA ». Tu relis, tu fusionnes ou tu refuses ; l'agent n'écrit jamais sur main.">
-          <BlocPullRequests etat={etat} />
-        </Section>
-
         {/* Journal */}
         <Section titre="Journal des 40 derniers passages" Icone={Gauge} sousTitre={`Tous les workflows du dépôt ${DEPOT_ROBOTS}, du plus récent au plus ancien.`}>
           <Journal runs={etat.journal} disponible={etat.sources.github} />
@@ -212,9 +270,11 @@ export default async function UsinePage() {
           <h3 className="mb-2 font-bold text-fg">📚 Comment lire cette page</h3>
           <ul className="list-inside list-disc space-y-1.5">
             <li>Un poste est <strong>à l&apos;heure</strong> quand son dernier passage a réussi depuis moins que son délai maximal ; <strong>en retard</strong> au-delà ; <strong>en échec</strong> si le dernier passage achevé a échoué.</li>
-            <li>Les <strong>agents IA</strong> restent <strong>en veille</strong> tant que la variable de dépôt <code className="rounded bg-elevated px-1.5 py-0.5 font-mono text-xs">USINE_IA</code> n&apos;est pas à <code className="rounded bg-elevated px-1.5 py-0.5 font-mono text-xs">on</code> sur GitHub ; un lancement manuel marche toujours. Plafond quotidien : <code className="rounded bg-elevated px-1.5 py-0.5 font-mono text-xs">USINE_IA_MAX_PAR_JOUR</code> (4 par défaut).</li>
-            <li>« Lancer maintenant » demande à GitHub de démarrer le workflow avec les mêmes entrées sûres que le Gardien (jeton <code className="rounded bg-elevated px-1.5 py-0.5 font-mono text-xs">GITHUB_GARDIEN_TOKEN</code>).</li>
-            <li>Le détail des défauts reste dans les tickets du dépôt privé ; ici, un résumé sans secret ni donnée personnelle. Documentation : <code className="rounded bg-elevated px-1.5 py-0.5 font-mono text-xs">usine/README.md</code> · ligne de commande : <code className="rounded bg-elevated px-1.5 py-0.5 font-mono text-xs">npm run usine</code>.</li>
+            <li>Les <strong>agents IA</strong> tournent à leurs horaires. Pour les arrêter : variable de dépôt GitHub <code className="rounded bg-elevated px-1.5 py-0.5 font-mono text-xs">USINE_IA</code> = <code className="rounded bg-elevated px-1.5 py-0.5 font-mono text-xs">off</code>. Plafond quotidien : <code className="rounded bg-elevated px-1.5 py-0.5 font-mono text-xs">USINE_IA_MAX_PAR_JOUR</code> (4 par défaut).</li>
+            <li>Une proposition est <strong>prête</strong> quand elle ne touche aucun fait (texte, SEO, liens internes, rapport, idée) et que garde-fou des contenus, audit de qualité, types, tests et build complet sont au vert ; sinon elle est <strong>à relire</strong>. Dans les deux cas, c&apos;est toi qui fusionnes.</li>
+            <li>Après chaque déploiement, la sentinelle contrôle le site ; si elle voit un défaut de contenu juste après une fusion de l&apos;Usine, le <strong>garde-fou</strong> recommande un retour arrière, que tu lances en un clic.</li>
+            <li>« Lancer maintenant » demande à GitHub de démarrer le workflow avec les entrées sûres du Gardien ; « Fusionner » et « Retour arrière » passent par le jeton <code className="rounded bg-elevated px-1.5 py-0.5 font-mono text-xs">GITHUB_GARDIEN_TOKEN</code> (droit « Pull requests » en écriture pour la fusion).</li>
+            <li>Documentation : <code className="rounded bg-elevated px-1.5 py-0.5 font-mono text-xs">usine/README.md</code> · ligne de commande : <code className="rounded bg-elevated px-1.5 py-0.5 font-mono text-xs">npm run usine</code> · laboratoire : <code className="rounded bg-elevated px-1.5 py-0.5 font-mono text-xs">usine/rnd/</code>.</li>
           </ul>
         </section>
       </div>
@@ -307,6 +367,230 @@ function Pastille({ statut }: { statut: Statut }) {
   );
 }
 
+function Chip({ ton, children }: { ton: Ton; children: React.ReactNode }) {
+  return <span className={`inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[11px] font-semibold ${TON_CLASSES[ton]}`}>{children}</span>;
+}
+
+function LienPr({ p }: { p: PullRequestUsine }) {
+  return (
+    <a href={p.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 font-semibold text-fg hover:text-primary">
+      #{p.numero} {titreCourt(p)}
+      <ExternalLink className="h-3 w-3" aria-hidden />
+    </a>
+  );
+}
+
+/* ------------------------------------------------------------------ ligne de production */
+
+function LigneProduction({ etat, pretes, aRelire, fusionnees7j }: { etat: EtatUsine; pretes: PullRequestUsine[]; aRelire: PullRequestUsine[]; fusionnees7j: PullRequestUsine[] }) {
+  const now = Date.parse(etat.genereLe);
+  const agentsDuJour = etat.chaine.lignes.filter((l) => l.genre === "agent-ia");
+  const faits = agentsDuJour.filter((l) => l.etat === "fait" || l.etat === "echec").length;
+  const s = etat.sentinelle.dernier;
+  const etapes: { titre: string; valeur: string; detail: string; ton: Ton }[] = [
+    {
+      titre: "1 · Plan du jour",
+      valeur: `${faits}/${agentsDuJour.length}`,
+      detail: agentsDuJour.length ? agentsDuJour.map((l) => `${heureParis(l.heure)} ${l.nom.replace(/^Agent /, "")} (${ETAT_CHAINE[l.etat].libelle})`).join(" · ") : "aucun agent programmé aujourd'hui",
+      ton: "neutre",
+    },
+    {
+      titre: "2 · Travail",
+      valeur: nb(etat.enDirect.length),
+      detail: etat.enDirect.length ? etat.enDirect.map((a) => `${a.run.name.replace(/^Usine IA — /, "")} : ${a.etape ?? a.job}`).join(" · ") : "aucun agent en train de travailler",
+      ton: etat.enDirect.length ? "info" : "neutre",
+    },
+    {
+      titre: "3 · Contrôles",
+      valeur: nb(etat.enDirect.filter((a) => /Garde-fou|Audit|Types|Tests|Build|Classement/.test(a.etape ?? "")).length),
+      detail: "garde-fou des contenus, audit de qualité, types, tests, build complet pour une proposition sans fait",
+      ton: "neutre",
+    },
+    {
+      titre: "4 · À décider",
+      valeur: `${pretes.length} + ${aRelire.length}`,
+      detail: `${pretes.length} prête(s) à fusionner en un clic, ${aRelire.length} à relire`,
+      ton: pretes.length ? "ok" : aRelire.length ? "attention" : "neutre",
+    },
+    {
+      titre: "5 · Fusionné · 7 j",
+      valeur: nb(fusionnees7j.length),
+      detail: fusionnees7j.length ? fusionnees7j.slice(0, 3).map((p) => `#${p.numero} ${titreCourt(p).slice(0, 40)}`).join(" · ") : "rien de fusionné cette semaine",
+      ton: fusionnees7j.length ? "ok" : "neutre",
+    },
+    {
+      titre: "6 · Déployé et vérifié",
+      valeur: s ? (s.fails > 0 ? `${s.fails} ❌` : "✅") : "—",
+      detail: s ? `sentinelle ${depuis(s.at, now)} : ${s.fails} défaut(s), ${s.warns} à surveiller` : "sentinelle non encore lue",
+      ton: s ? (s.fails > 0 ? "defaut" : "ok") : "neutre",
+    },
+  ];
+  return (
+    <ol className="grid gap-2 sm:grid-cols-3 xl:grid-cols-6">
+      {etapes.map((e, i) => (
+        <li key={e.titre} className={`relative rounded-2xl border p-3 ${TON_CLASSES[e.ton]}`}>
+          <div className="text-[11px] font-semibold uppercase tracking-wider opacity-80">{e.titre}</div>
+          <div className="mt-1 text-2xl font-extrabold tabular-nums">{e.valeur}</div>
+          <p className="mt-1 text-[11px] leading-snug opacity-90" title={e.detail}>{e.detail.length > 140 ? `${e.detail.slice(0, 140)}…` : e.detail}</p>
+          {i < etapes.length - 1 && <span aria-hidden className="absolute -right-2 top-1/2 hidden -translate-y-1/2 text-muted xl:block">›</span>}
+        </li>
+      ))}
+    </ol>
+  );
+}
+
+function AgentsEnDirect({ etat }: { etat: EtatUsine }) {
+  const now = Date.parse(etat.genereLe);
+  return (
+    <ul className="grid gap-3 md:grid-cols-2">
+      {etat.enDirect.map((a) => {
+        const pct = a.total ? Math.round((a.numero / a.total) * 100) : 0;
+        return (
+          <li key={a.run.id} className={`rounded-2xl border p-4 ${TON_CLASSES.info}`}>
+            <div className="flex items-center justify-between gap-2">
+              <a href={a.run.html_url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-sm font-bold hover:underline">
+                {a.run.name.replace(/^Usine IA — /, "")} <ExternalLink className="h-3 w-3" aria-hidden />
+              </a>
+              <span className="text-[11px] opacity-90">lancé {depuis(a.run.created_at, now)}</span>
+            </div>
+            <p className="mt-1 text-xs">
+              <span className="opacity-80">étape {a.numero}/{a.total || "?"} :</span> <strong>{a.etape ?? a.job}</strong>
+              {a.depuis ? <span className="opacity-80"> · depuis {depuis(a.depuis, now)}</span> : null}
+            </p>
+            <div className="mt-2 h-1.5 w-full overflow-hidden rounded bg-elevated" aria-hidden>
+              <div className="h-full rounded bg-info" style={{ width: `${pct}%` }} />
+            </div>
+          </li>
+        );
+      })}
+    </ul>
+  );
+}
+
+/* ------------------------------------------------------------------ ligne de gestion */
+
+function LigneGestion({ etat, pretes, aRelire, fusionnees7j }: { etat: EtatUsine; pretes: PullRequestUsine[]; aRelire: PullRequestUsine[]; fusionnees7j: PullRequestUsine[] }) {
+  const now = Date.parse(etat.genereLe);
+  const plan = etat.plan;
+  const enCours = etat.chaine.lignes.filter((l) => l.etat === "en-cours");
+  const Colonne = ({ titre, compte, children }: { titre: string; compte: number; children: React.ReactNode }) => (
+    <div className="flex flex-col rounded-2xl border border-border bg-surface p-3">
+      <h3 className="flex items-center justify-between text-sm font-bold text-fg">
+        {titre}
+        <span className="rounded-full bg-elevated px-2 py-0.5 text-[11px] tabular-nums text-muted">{compte}</span>
+      </h3>
+      <ul className="mt-2 space-y-2 text-xs">{children}</ul>
+    </div>
+  );
+  const Carte = ({ children, ton = "neutre" }: { children: React.ReactNode; ton?: Ton }) => <li className={`rounded-xl border p-2.5 ${TON_CLASSES[ton]}`}>{children}</li>;
+  const aFaire = [
+    plan.reviseur ? { ton: "neutre" as Ton, texte: <>Relire <code className="font-mono">{plan.reviseur.slug}</code> <span className="opacity-80">(mis à jour le {plan.reviseur.updatedAt ?? "?"}{plan.reviseur.revisionUsine ? `, relu le ${plan.reviseur.revisionUsine}` : ", jamais relu par l'Usine"})</span></> } : { ton: "ok" as Ton, texte: <>Aucun article à relire : tous relus depuis moins de 60 jours.</> },
+    { ton: plan.seo.length ? ("neutre" as Ton) : ("ok" as Ton), texte: plan.seo.length ? <>SEO : {plan.seo.length} page(s) à optimiser <span className="opacity-80">({plan.seo.slice(0, 3).map((p) => p.slug).join(", ")}{plan.seo.length > 3 ? "…" : ""})</span></> : <>SEO : aucune page candidate.</> },
+    { ton: plan.correcteur.depot.length ? ("attention" as Ton) : ("ok" as Ton), texte: plan.correcteur.depot.length ? <>Corriger {plan.correcteur.depot.length} défaut(s) du dépôt <span className="opacity-80">({plan.correcteur.depot.slice(0, 2).map((d) => d.msg.slice(0, 60)).join(" · ")})</span>{plan.correcteur.horsDepot ? <span className="opacity-80"> · {plan.correcteur.horsDepot} hors dépôt</span> : null}</> : <>Aucun défaut du dépôt vu par la sentinelle{plan.correcteur.horsDepot ? ` (${plan.correcteur.horsDepot} hors dépôt)` : ""}.</> },
+    { ton: plan.rnd.retenues.length ? ("info" as Ton) : ("neutre" as Ton), texte: plan.rnd.retenues.length ? <>R&amp;D : {plan.rnd.retenues.length} idée(s) retenue(s) à prototyper <span className="opacity-80">({plan.rnd.retenues[0].titre})</span></> : <>R&amp;D : aucune idée retenue (retenir une idée dans <code className="font-mono">usine/rnd/registre.json</code>).</> },
+  ];
+  return (
+    <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+      <Colonne titre="À faire (plan du jour)" compte={aFaire.length}>
+        {aFaire.map((a, i) => (
+          <Carte key={i} ton={a.ton}>{a.texte}</Carte>
+        ))}
+      </Colonne>
+      <Colonne titre="En cours" compte={etat.enDirect.length + enCours.length}>
+        {etat.enDirect.map((a) => (
+          <Carte key={a.run.id} ton="info">
+            <a href={a.run.html_url} target="_blank" rel="noopener noreferrer" className="font-semibold hover:underline">{a.run.name.replace(/^Usine IA — /, "")}</a>
+            <div className="opacity-90">{a.etape ?? a.job} · lancé {depuis(a.run.created_at, now)}</div>
+          </Carte>
+        ))}
+        {enCours.filter((l) => l.genre !== "agent-ia").map((l) => (
+          <Carte key={`${l.posteId}-${l.heure}`} ton="info">{l.nom} <span className="opacity-80">· {heureParis(l.heure)}</span></Carte>
+        ))}
+        {etat.enDirect.length + enCours.length === 0 && <Carte>Rien en cours.</Carte>}
+      </Colonne>
+      <Colonne titre="À décider" compte={etat.prs.ouvertes.length}>
+        {pretes.map((p) => (
+          <Carte key={p.numero} ton="ok">
+            <Chip ton="ok">prête</Chip> <LienPr p={p} />
+            <div className="mt-1 opacity-80">{etat.missions.find((m) => m.id === p.mission)?.nom ?? p.mission} · ouverte {depuis(p.creeLe, now)}</div>
+            <div className="mt-2"><BoutonFusionner numero={p.numero} titre={titreCourt(p)} /></div>
+          </Carte>
+        ))}
+        {aRelire.map((p) => (
+          <Carte key={p.numero} ton="attention">
+            <Chip ton="attention">à relire</Chip> <LienPr p={p} />
+            <div className="mt-1 opacity-80">{etat.missions.find((m) => m.id === p.mission)?.nom ?? p.mission} · ouverte {depuis(p.creeLe, now)} · relis sur GitHub, puis fusionne ou refuse</div>
+          </Carte>
+        ))}
+        {etat.prs.ouvertes.length === 0 && <Carte>{etat.sources.github ? "Aucune proposition en attente." : "API GitHub indisponible pour le moment."}</Carte>}
+      </Colonne>
+      <Colonne titre="Fait · 7 jours" compte={fusionnees7j.length}>
+        {fusionnees7j.map((p) => (
+          <Carte key={p.numero} ton="ok">
+            <LienPr p={p} />
+            <div className="mt-1 opacity-80">fusionnée {p.fusionneLe ? depuis(p.fusionneLe, now) : ""}</div>
+          </Carte>
+        ))}
+        {fusionnees7j.length === 0 && <Carte>Rien de fusionné cette semaine.</Carte>}
+        {etat.gardeFou && (
+          <Carte ton={etat.gardeFou.action === "revert" ? "attention" : "neutre"}>
+            Garde-fou {depuis(etat.gardeFou.at, now)} : {etat.gardeFou.action === "revert" ? `retour arrière ${etat.gardeFou.simulation === false ? (etat.gardeFou.pousse === false ? "échoué" : "exécuté") : "recommandé"} (${String(etat.gardeFou.sha ?? "").slice(0, 10)})` : etat.gardeFou.raison ?? "rien à annuler"}
+          </Carte>
+        )}
+      </Colonne>
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------------ R&D */
+
+function LaboratoireRnd({ etat }: { etat: EtatUsine }) {
+  const r = etat.plan.rnd;
+  const proto = etat.jugements.find((j) => j.poste.id === "usine-prototypeur");
+  return (
+    <div className="mb-4 grid gap-3 lg:grid-cols-3">
+      <div className="rounded-2xl border border-border bg-surface p-4">
+        <h3 className="text-sm font-bold text-fg">Registre des idées</h3>
+        <div className="mt-2 flex flex-wrap gap-1.5">
+          {(Object.keys(STATUT_IDEE) as Idee["statut"][]).map((s) => (
+            <Chip key={s} ton={STATUT_IDEE[s].ton}>{r.parStatut[s] ?? 0} {STATUT_IDEE[s].libelle}</Chip>
+          ))}
+        </div>
+        <p className="mt-3 text-xs text-muted">
+          {r.total === 0 ? "Aucune idée encore : l'agent chercheur passe le jeudi (ou lance-le maintenant)." : `${r.total} idée(s) au registre.`} Pour retenir ou écarter une idée : changer son statut dans{" "}
+          <a href={lienDepot("usine/rnd/registre.json")} target="_blank" rel="noopener noreferrer" className="font-mono hover:text-primary">usine/rnd/registre.json</a>.
+        </p>
+        {r.erreurs.length > 0 && <p className="mt-2 text-xs text-danger-fg">Registre invalide : {r.erreurs.slice(0, 3).join(" ; ")}</p>}
+      </div>
+      <div className="rounded-2xl border border-border bg-surface p-4 lg:col-span-2">
+        <h3 className="text-sm font-bold text-fg">Idées récentes {r.retenues.length ? `· ${r.retenues.length} retenue(s) en attente de prototype` : ""}</h3>
+        {r.recentes.length === 0 ? (
+          <p className="mt-2 text-xs text-muted">Les fiches apparaîtront ici : problème ou opportunité avec preuves, proposition, impact, effort, risques et plan de prototype.</p>
+        ) : (
+          <ul className="mt-2 space-y-1.5 text-xs">
+            {r.recentes.map((i) => (
+              <li key={i.id} className="flex flex-wrap items-center gap-x-2 gap-y-0.5">
+                <Chip ton={STATUT_IDEE[i.statut]?.ton ?? "neutre"}>{STATUT_IDEE[i.statut]?.libelle ?? i.statut}</Chip>
+                <a href={lienDepot(i.fichier)} target="_blank" rel="noopener noreferrer" className="font-semibold text-fg hover:text-primary">{i.titre}</a>
+                <span className="text-muted">{i.date}{i.impact ? ` · impact ${i.impact}` : ""}{i.effort ? ` · effort ${i.effort}` : ""}</span>
+                {i.resume && <span className="w-full text-muted">{i.resume}</span>}
+              </li>
+            ))}
+          </ul>
+        )}
+        {r.retenues.length > 0 && proto && estLancable(proto.poste) && (
+          <div className="mt-2 text-xs text-muted">
+            Prototyper la plus ancienne idée retenue maintenant :
+            <BoutonLancer posteId="usine-prototypeur" nom="Agent prototypeur R&D" />
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------------ postes */
+
 function CartePoste({ jugement }: { jugement: Jugement }) {
   const { poste, statut, raison, dernier } = jugement;
   const run = dernier && typeof dernier === "object" && "html_url" in dernier ? (dernier as Run) : null;
@@ -341,29 +625,11 @@ function CartePoste({ jugement }: { jugement: Jugement }) {
         )}
         {poste.mission && (
           <span className="ml-2">
-            · mission <code className="font-mono">usine/missions/{poste.mission}.md</code>
+            · mission <a href={lienDepot(`usine/missions/${poste.mission}.md`)} target="_blank" rel="noopener noreferrer" className="font-mono hover:text-primary">{poste.mission}.md</a>
           </span>
         )}
       </div>
       {estLancable(poste) && <BoutonLancer posteId={poste.id} nom={poste.nom} />}
-    </div>
-  );
-}
-
-function NoteAgents({ etat, enVeille, total }: { etat: EtatUsine; enVeille: number; total: number }) {
-  const ton: Ton = enVeille === total ? "neutre" : "info";
-  return (
-    <div className={`mb-4 rounded-xl border px-4 py-3 text-xs ${TON_CLASSES[ton]}`}>
-      {enVeille === total ? (
-        <>
-          <strong>Les {total} agents sont en veille.</strong> Pour les mettre en route : sur GitHub, Settings → Secrets and variables → Actions → Variables, créer{" "}
-          <code className="font-mono">USINE_IA</code> = <code className="font-mono">on</code> (et vérifier que le secret <code className="font-mono">ANTHROPIC_API_KEY</code> a du crédit). Chaque agent peut aussi être lancé à la main dès maintenant.
-        </>
-      ) : (
-        <>
-          <strong>{total - enVeille} agent(s) actif(s)</strong> sur {total}. Missions : {etat.missions.map((m) => `${m.nom} (${m.resume})`).join(" · ")}.
-        </>
-      )}
     </div>
   );
 }
@@ -393,7 +659,7 @@ function TableauChaine({ etat }: { etat: EtatUsine }) {
               <tr key={`${l.posteId}-${l.heure}-${i}`} className={`border-t border-border/60 ${estProchaine ? "bg-primary/5" : ""}`}>
                 <td className="px-3 py-2 font-mono tabular-nums text-fg">{heureParis(l.heure)}{estProchaine ? <span className="ml-2 text-[10px] text-primary">prochaine</span> : null}</td>
                 <td className="px-3 py-2 text-fg">{l.nom}{l.genre === "agent-ia" ? <span className="ml-1.5 rounded bg-elevated px-1 py-0.5 text-[10px] text-muted">IA</span> : null}</td>
-                <td className="px-3 py-2 capitalize text-muted">{l.atelier}</td>
+                <td className="px-3 py-2 capitalize text-muted">{l.atelier === "rnd" ? "R&D" : l.atelier}</td>
                 <td className="px-3 py-2"><span className={`rounded-full border px-2 py-0.5 text-[11px] font-semibold ${TON_CLASSES[e.ton]}`}>{e.libelle}</span></td>
                 <td className="px-3 py-2 text-muted">
                   {l.run?.html_url ? (
@@ -420,7 +686,7 @@ function TableauProduction({ etat }: { etat: EtatUsine }) {
     { cle: "analyses", label: "Analyses", ton: "bg-ice/60" },
     { cle: "articles", label: "Articles", ton: "bg-purple-500/60" },
     { cle: "corrections", label: "Corrections", ton: "bg-warning/60" },
-    { cle: "prs", label: "PR IA fusionnées", ton: "bg-emerald-500/60" },
+    { cle: "prs", label: "Propositions fusionnées", ton: "bg-emerald-500/60" },
   ];
   const max = Math.max(1, ...lignes.flatMap((l) => colonnes.map((c) => l[c.cle])));
   return (
@@ -572,37 +838,6 @@ function BlocConsommation({ etat }: { etat: EtatUsine }) {
         <p className="mt-3 text-xs text-muted">Tableau des services (CoinMarketCap, Supabase, GitHub Actions, Upstash, Vercel) écrit par la sentinelle complète, chaque nuit.</p>
       )}
       {conso?.le && <p className="mt-2 text-[11px] text-muted">Mesuré le {dateHeureParis(conso.le)} (mois {conso.mois}).</p>}
-    </div>
-  );
-}
-
-function BlocPullRequests({ etat }: { etat: EtatUsine }) {
-  const nomMission = (id: string | null) => etat.missions.find((m) => m.id === id)?.nom ?? (id ?? "mission inconnue");
-  const Liste = ({ titre, prs, vide }: { titre: string; prs: EtatUsine["prs"]["ouvertes"]; vide: string }) => (
-    <div className="rounded-2xl border border-border bg-surface p-4">
-      <h3 className="text-sm font-bold text-fg">{titre}</h3>
-      {prs.length === 0 ? (
-        <p className="mt-2 text-xs text-muted">{vide}</p>
-      ) : (
-        <ul className="mt-2 space-y-2 text-xs">
-          {prs.map((p) => (
-            <li key={p.numero} className="flex flex-wrap items-center gap-x-2 gap-y-0.5">
-              <a href={p.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 font-semibold text-fg hover:text-primary">
-                #{p.numero} {p.titre}
-                <ExternalLink className="h-3 w-3" aria-hidden />
-              </a>
-              <span className="rounded bg-elevated px-1.5 py-0.5 text-[10px] text-muted">{nomMission(p.mission)}</span>
-              <span className="text-muted">{p.etat === "fusionnee" && p.fusionneLe ? `fusionnée ${depuis(p.fusionneLe, Date.parse(etat.genereLe))}` : `ouverte ${depuis(p.creeLe, Date.parse(etat.genereLe))}`}</span>
-            </li>
-          ))}
-        </ul>
-      )}
-    </div>
-  );
-  return (
-    <div className="grid gap-4 lg:grid-cols-2">
-      <Liste titre={`À relire (${etat.prs.ouvertes.length})`} prs={etat.prs.ouvertes} vide={etat.sources.github ? "Aucune pull request d'agent en attente." : "API GitHub indisponible pour le moment."} />
-      <Liste titre={`Fusionnées récemment (${etat.prs.fusionnees.length})`} prs={etat.prs.fusionnees} vide="Aucune pull request d'agent fusionnée récemment." />
     </div>
   );
 }

@@ -123,7 +123,7 @@ export function jugerRuns(runs, ageMaxH, now = Date.now(), opts = {}) {
   const dernier = runs[0];
   if (dernier.status !== "completed") return { statut: "en-cours", dernier, ageH: null, raison: `passage en cours (lancé ${depuis(dernier.created_at, now)})` };
   if (dernier.conclusion === "skipped" && opts.genre === "agent-ia") {
-    return { statut: "veille", dernier, ageH: null, raison: "dernier passage sauté : interrupteur USINE_IA éteint ou plafond du jour atteint" };
+    return { statut: "veille", dernier, ageH: null, raison: "dernier passage sauté : horaires coupés (USINE_IA=off) ou plafond du jour atteint" };
   }
   const acheves = runs.filter((r) => r.status === "completed" && r.conclusion !== "cancelled" && r.conclusion !== "skipped");
   if (acheves.length === 0) return { statut: "jamais", dernier, ageH: null, raison: "aucun passage achevé (annulés ou sautés seulement)" };
@@ -190,6 +190,14 @@ export function jugerGardeFou(poste, ctx) {
         return { statut: "echec", raison: `${refus.length} demande(s) refusée(s) sur 24 h : ${refus.map(([k, v]) => `${k.slice("gardien:dernier:".length)} (${v.raison ?? v.statut ?? "?"})`).join(", ")}` };
       }
       return { statut: "ok", raison: `${recentes.length} demande(s) sur 24 h, toutes acceptées par GitHub (${entrees.length} robots tracés)` };
+    }
+    case "garde-fou-kv": {
+      const t = traces["usine:garde-fou:dernier"];
+      if (!t || typeof t !== "object" || !t.at) return { statut: "ok", raison: "aucune décision récente (aucune sentinelle en échec après une fusion de l'Usine)" };
+      const quand = depuis(t.at, now);
+      if (t.action === "revert" && t.simulation !== false) return { statut: "attention", raison: `retour arrière RECOMMANDÉ ${quand} : fusion ${String(t.sha ?? "").slice(0, 10)} (${(t.raisons ?? []).slice(0, 2).join(" ; ")})` };
+      if (t.action === "revert") return { statut: t.pousse === false ? "echec" : "attention", raison: `retour arrière ${t.pousse === false ? "ÉCHOUÉ" : "exécuté"} ${quand} : fusion ${String(t.sha ?? "").slice(0, 10)} annulée${t.erreur ? ` (${t.erreur})` : ""}` };
+      return { statut: "ok", raison: `rien à annuler ${quand} : ${String(t.raison ?? "")}` };
     }
     default:
       return { statut: "integre", raison: poste.produit ?? "" };

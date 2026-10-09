@@ -26,6 +26,7 @@ import {
   regrouperRuns,
   verdictGlobal,
 } from "./lib/usine-etat.mjs";
+import { bilanIdees, candidatsSeo, choisirArticleAReviser, ficheArticle } from "./lib/usine-plan.mjs";
 
 const ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
 const DEPOT = "Qlpha-png/cryptoreflex";
@@ -111,10 +112,16 @@ function lireLocal() {
     }
   };
   const actus = lister("content/news").map(dateNomFichier).filter(Boolean);
-  const articles = lister("content/articles")
+  const fiches = lister("content/articles")
     .filter((f) => /\.mdx?$/.test(f))
-    .map((f) => dateFrontmatter(readFileSync(path.join(ROOT, "content/articles", f), "utf8").slice(0, 2048)))
-    .filter(Boolean);
+    .map((f) => ficheArticle(f.replace(/\.mdx?$/, ""), readFileSync(path.join(ROOT, "content/articles", f), "utf8")));
+  const articles = fiches.map((f) => f.date ?? dateFrontmatter("")).filter(Boolean);
+  let idees = [];
+  try {
+    idees = JSON.parse(readFileSync(path.join(ROOT, "usine/rnd/registre.json"), "utf8")).idees ?? [];
+  } catch {
+    /* registre absent */
+  }
   const analyses = lister("data/analyses-techniques")
     .filter((f) => f.endsWith(".json"))
     .map((f) => {
@@ -131,7 +138,7 @@ function lireLocal() {
   } catch {
     /* journal absent */
   }
-  return { actus, articles, analyses, corrections };
+  return { actus, articles, fiches, idees, analyses, corrections };
 }
 
 /* ------------------------------------------------------------------ exécution */
@@ -193,7 +200,15 @@ for (const l of production.parJour) lignes.push(`  ${l.jour}  ${String(l.actus).
 const t = production.totaux;
 lignes.push(`  7 j : ${t.j7.actus} actus, ${t.j7.analyses} analyses, ${t.j7.articles} articles, ${t.j7.corrections} corrections, ${t.j7.prs} PR IA · 30 j : ${t.j30.actus} actus, ${t.j30.analyses} analyses, ${t.j30.articles} articles`);
 lignes.push("");
-lignes.push(`── AGENTS IA ── ${prs.ouvertes.length} PR à relire, ${prs.fusionnees.length} fusionnée(s) récemment`);
+lignes.push("── PLAN DU JOUR (calculé par le dépôt) ──");
+const aReviser = choisirArticleAReviser(local.fiches, now);
+lignes.push(`  réviseur : ${aReviser ? `${aReviser.slug} (mis à jour le ${aReviser.updatedAt ?? "?"}${aReviser.revisionUsine ? `, relu le ${aReviser.revisionUsine}` : ", jamais relu par l'Usine"})` : "aucun article candidat"}`);
+const lotSeo = candidatsSeo(local.fiches, now);
+lignes.push(`  SEO : ${lotSeo.length} page(s)${lotSeo.length ? ` — ${lotSeo.slice(0, 4).map((p) => p.slug).join(", ")}${lotSeo.length > 4 ? "…" : ""}` : ""}`);
+const rnd = bilanIdees({ idees: local.idees });
+lignes.push(`  R&D : ${rnd.total} idée(s) — ${Object.entries(rnd.parStatut).map(([s, n]) => `${n} ${s}`).join(", ")}`);
+lignes.push("");
+lignes.push(`── PROPOSITIONS DES AGENTS ── ${prs.ouvertes.length} à décider (${prs.ouvertes.filter((p) => /\[prête\]/i.test(p.title)).length} prête(s)), ${prs.fusionnees.length} fusionnée(s) récemment`);
 for (const p of prs.ouvertes) lignes.push(`  📬 #${p.number} ${p.title} — ${p.html_url}`);
 for (const p of prs.fusionnees.slice(0, 5)) lignes.push(`  ✔ #${p.number} ${p.title} (${dateHeureParis(p.merged_at)})`);
 process.stdout.write(lignes.join("\n") + "\n");

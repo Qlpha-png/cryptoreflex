@@ -21,6 +21,7 @@ import { lireTraceR1 } from "@/lib/marche-robot";
 import siteCounts from "@/data/site-counts.json";
 import micaAuto from "@/data/veille/mica-auto.json";
 import { ATELIERS, CLES_KV_USINE, MISSIONS, POSTES, PREFIXE_BRANCHE_IA, workflowsDuRegistre } from "@/scripts/lib/usine-registre.mjs";
+import { bilanIdees, candidatsSeo, choisirArticleAReviser, classerDefauts, ficheArticle, validerRegistreIdees } from "@/scripts/lib/usine-plan.mjs";
 import {
   chaineDuJour,
   compterProduction,
@@ -32,18 +33,22 @@ import {
   verdictGlobal,
 } from "@/scripts/lib/usine-etat.mjs";
 import type {
+  AgentEnDirect,
   AnalyseTechnique,
   Atelier,
   BudgetCmc,
   EtatUsine,
+  Idee,
   Jugement,
   LigneChaine,
   Mission,
+  PlanDuJour,
   Poste,
   Production,
   PullRequestUsine,
   ResumeSentinelle,
   Run,
+  TraceGardeFou,
   Verdict,
 } from "./types";
 
@@ -128,6 +133,7 @@ interface PrBrute {
 function versPr(p: PrBrute): PullRequestUsine {
   const branche = p.head?.ref ?? "";
   const mission = branche.startsWith(PREFIXE_BRANCHE_IA) ? branche.slice(PREFIXE_BRANCHE_IA.length).split("-")[0] || null : null;
+  const etiquette: PullRequestUsine["etiquette"] = /\[prête\]/i.test(p.title) ? "prete" : /\[à relire\]/i.test(p.title) ? "relire" : null;
   return {
     numero: p.number,
     titre: p.title,
@@ -137,6 +143,7 @@ function versPr(p: PrBrute): PullRequestUsine {
     creeLe: p.created_at,
     fusionneLe: p.merged_at,
     etat: p.merged_at ? "fusionnee" : p.state === "open" ? "ouverte" : "fermee",
+    etiquette,
   };
 }
 
@@ -152,6 +159,32 @@ async function lirePrs(): Promise<{ ouvertes: PullRequestUsine[]; fusionnees: Pu
   };
 }
 
+interface JobBrut {
+  name: string;
+  status: string;
+  started_at?: string | null;
+  steps?: { name: string; status: string; number: number }[];
+}
+
+/** Étape courante des passages d'agents EN COURS (au plus 5 passages, 30 s de cache) : « voir les agents travailler ». */
+async function lireAgentsEnDirect(runs: Run[]): Promise<AgentEnDirect[]> {
+  const enCours = runs.filter((r) => r.status !== "completed" && /^usine-/.test(r.workflow)).slice(0, 5);
+  const reponses = await Promise.all(enCours.map((r) => lireGitHub<{ jobs?: JobBrut[] }>(`/actions/runs/${r.id}/jobs?per_page=10`, 30)));
+  const out: AgentEnDirect[] = [];
+  enCours.forEach((run, i) => {
+    const jobs = reponses[i]?.jobs ?? [];
+    const job = jobs.find((j) => j.status === "in_progress") ?? jobs[jobs.length - 1];
+    if (!job) {
+      out.push({ run, job: "en attente d'un exécuteur", etape: null, numero: 0, total: 0, depuis: null });
+      return;
+    }
+    const steps = job.steps ?? [];
+    const courante = steps.find((s) => s.status === "in_progress") ?? [...steps].reverse().find((s) => s.status === "completed") ?? null;
+    out.push({ run, job: job.name, etape: courante?.name ?? null, numero: courante?.number ?? 0, total: steps.length, depuis: job.started_at ?? null });
+  });
+  return out;
+}
+
 /* ------------------------------------------------------------------ KV */
 
 function clesKv(): string[] {
@@ -162,7 +195,25 @@ function clesKv(): string[] {
     "cron:evaluate-alerts:last",
     CLES_KV_USINE.sentinelleDernier,
     CLES_KV_USINE.sentinelleComplet,
+    "usine:garde-fou:dernier",
   ];
+}
+
+function traceGardeFou(v: unknown): TraceGardeFou | null {
+  if (!v || typeof v !== "object") return null;
+  const o = v as Record<string, unknown>;
+  if (typeof o.at !== "string" || (o.action !== "revert" && o.action !== "rien")) return null;
+  return {
+    at: o.at,
+    action: o.action,
+    simulation: typeof o.simulation === "boolean" ? o.simulation : undefined,
+    sha: typeof o.sha === "string" ? o.sha : undefined,
+    message: typeof o.message === "string" ? o.message : undefined,
+    raisons: Array.isArray(o.raisons) ? o.raisons.map(String) : undefined,
+    raison: typeof o.raison === "string" ? o.raison : undefined,
+    pousse: typeof o.pousse === "boolean" ? o.pousse : undefined,
+    erreur: typeof o.erreur === "string" ? o.erreur : undefined,
+  };
 }
 
 async function lireTraces(): Promise<{ traces: Record<string, unknown>; disponible: boolean }> {
@@ -223,11 +274,25 @@ async function listerMdx(dossier: string): Promise<string[]> {
   }
 }
 
+interface Fiche {
+  slug: string;
+  titre: string;
+  description: string;
+  date: string | null;
+  updatedAt: string | null;
+  revisionUsine: string | null;
+  seoUsine: string | null;
+  liensInternes: string[];
+  liensExternes: string[];
+}
+
 interface ProductionLocale {
   actus: string[];
   articles: string[];
+  fiches: Fiche[];
   analyses: AnalyseTechnique[];
   corrections: string[];
+  rnd: { idees: Idee[]; erreurs: string[] };
 }
 
 async function lireProductionLocale(now: number): Promise<ProductionLocale> {
@@ -241,18 +306,26 @@ async function lireProductionLocale(now: number): Promise<ProductionLocale> {
       .catch(() => [] as { date?: string }[]),
   ]);
   const actus = fichiersActus.map((f) => dateNomFichier(f) as string | null).filter((d): d is string => !!d);
-  // articles : date du frontmatter, lue sur les 2 premiers Ko (94 fichiers, lecture partielle)
-  const articles = (
+  // articles : fiche complète (frontmatter + liens), la même lecture que le plan du jour des agents
+  const fiches = (
     await Promise.all(
       fichiersArticles.map(async (f) => {
         try {
-          return dateFrontmatter(await lireDebut(path.join(RACINE, "content", "articles", f))) as string | null;
+          return ficheArticle(f.replace(/\.mdx?$/, ""), await fs.readFile(path.join(RACINE, "content", "articles", f), "utf8")) as Fiche;
         } catch {
           return null;
         }
       }),
     )
-  ).filter((d): d is string => !!d);
+  ).filter((f): f is Fiche => !!f);
+  const articles = fiches.map((f) => f.date ?? dateFrontmatter("")).filter((d): d is string => !!d);
+  let rnd: ProductionLocale["rnd"] = { idees: [], erreurs: [] };
+  try {
+    const reg = JSON.parse(await fs.readFile(path.join(RACINE, "usine", "rnd", "registre.json"), "utf8")) as { idees?: Idee[] };
+    rnd = { idees: Array.isArray(reg.idees) ? reg.idees : [], erreurs: validerRegistreIdees(reg) as string[] };
+  } catch (err) {
+    rnd = { idees: [], erreurs: [`registre illisible (${err instanceof Error ? err.message.slice(0, 80) : "?"})`] };
+  }
   const analyses: AnalyseTechnique[] = (
     await Promise.all(
       fichiersAnalyses
@@ -280,8 +353,24 @@ async function lireProductionLocale(now: number): Promise<ProductionLocale> {
   return {
     actus,
     articles,
+    fiches,
     analyses,
     corrections: corrections.map((c) => c.date ?? "").filter(Boolean),
+    rnd,
+  };
+}
+
+/** Plan du jour, identique à celui que scripts/usine-plan.mjs écrit pour les agents. */
+function planDuJour(local: ProductionLocale, sentinelle: ResumeSentinelle | null, now: number): PlanDuJour {
+  const choisi = choisirArticleAReviser(local.fiches, now) as Fiche | null;
+  const lot = candidatsSeo(local.fiches, now) as { slug: string; titre: string; defauts: string[] }[];
+  const classes = classerDefauts(sentinelle?.defauts ?? []) as { depot: { area: string; msg: string }[]; horsDepot: unknown[]; autres: { area: string; msg: string }[] };
+  const bilan = bilanIdees({ idees: local.rnd.idees }) as { total: number; parStatut: Record<string, number>; retenues: Idee[]; recentes: Idee[] };
+  return {
+    reviseur: choisi ? { slug: choisi.slug, titre: choisi.titre, updatedAt: choisi.updatedAt, revisionUsine: choisi.revisionUsine } : null,
+    seo: lot,
+    correcteur: { depot: classes.depot, horsDepot: classes.horsDepot.length, autres: classes.autres },
+    rnd: { ...bilan, erreurs: local.rnd.erreurs },
   };
 }
 
@@ -316,6 +405,7 @@ async function lireBudget(): Promise<{ budget: BudgetCmc; disponible: boolean }>
 
 export async function lireEtatUsine(now: number = Date.now()): Promise<EtatUsine> {
   const [github, prs, kv, local, budget] = await Promise.all([lireRuns(), lirePrs(), lireTraces(), lireProductionLocale(now), lireBudget()]);
+  const enDirect = github.disponible ? await lireAgentsEnDirect(github.runs) : [];
   const ctx = { runsParWorkflow: github.parWorkflow, traces: kv.traces, now, githubDisponible: github.disponible, kvDisponible: kv.disponible };
   const jugements = POSTES_USINE.map((p) => jugerPoste(p, ctx) as Jugement);
   const dernier = resumeSentinelle(kv.traces[CLES_KV_USINE.sentinelleDernier]);
@@ -355,6 +445,9 @@ export async function lireEtatUsine(now: number = Date.now()): Promise<EtatUsine
     sentinelle: { dernier, complet },
     budget: budget.budget,
     prs,
+    enDirect,
+    plan: planDuJour(local, dernier, now),
+    gardeFou: traceGardeFou(kv.traces["usine:garde-fou:dernier"]),
     journal: github.runs.slice(0, 40),
   };
 }
