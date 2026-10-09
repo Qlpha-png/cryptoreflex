@@ -1,0 +1,237 @@
+# L'USINE — agent IA (09/10/2026). Workflow RÉUTILISABLE appelé par usine-reviseur.yml, usine-correcteur.yml, usine-seo.yml,
+# usine-auditeur.yml (un horaire chacun), ou lancé à la main ici (« Run workflow », choix de la mission).
+#
+# Ce que fait un passage :
+#  1. garde : interrupteur USINE_IA (variable de dépôt, « on » pour les horaires ; un lancement manuel passe toujours),
+#     plafond USINE_IA_MAX_PAR_JOUR (4 par défaut, tous agents confondus), secret ANTHROPIC_API_KEY présent ;
+#  2. branche usine/<mission>-<date>-<n°> depuis main ; l'agent Claude Code lit usine/missions/_commun.md puis
+#     usine/missions/<mission>.md et travaille SANS aucune commande git (outils bornés : lecture, édition, web, tests) ;
+#  3. le WORKFLOW (pas l'agent) passe le garde-fou des contenus et les tests, commite, pousse la branche et ouvre la pull
+#     request « Usine IA — … » avec usine/.sortie/resume.md comme corps. Rien n'est écrit sur main : Kevin relit et fusionne.
+# Coût : un passage = quelques dizaines de minutes de Claude Code au plus (--max-turns), modèle USINE_IA_MODELE
+# (claude-opus-5-5 par défaut). Aucun ticket n'est créé (les tickets restent dans le dépôt privé de la sentinelle).
+name: Usine IA (agent)
+
+on:
+  workflow_call:
+    inputs:
+      mission:
+        description: "Mission (fichier usine/missions/<mission>.md)"
+        type: string
+        required: true
+      planifie:
+        description: "Lancement par un horaire : exige la variable de dépôt USINE_IA = on"
+        type: boolean
+        default: false
+      cible:
+        description: "Cible facultative transmise à l'agent (slug d'article, chemin, texte d'un défaut)"
+        type: string
+        default: ""
+  workflow_dispatch:
+    inputs:
+      mission:
+        description: "Mission à exécuter"
+        type: choice
+        options:
+          - reviseur
+          - correcteur
+          - seo
+          - auditeur
+        default: reviseur
+      cible:
+        description: "Cible facultative (slug d'article, chemin de page, texte d'un défaut)"
+        type: string
+        required: false
+        default: ""
+
+permissions:
+  contents: write
+  pull-requests: write
+  actions: read
+  id-token: write
+
+jobs:
+  agent:
+    # Interrupteur : un horaire ne lance l'agent que si USINE_IA vaut « on » (tout le passage est alors « sauté ») ;
+    # à la main (workflow_dispatch, planifie absent), toujours.
+    if: ${{ !inputs.planifie || vars.USINE_IA == 'on' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    concurrency:
+      group: usine-ia-agent
+      cancel-in-progress: false
+    env:
+      MISSION: ${{ inputs.mission }}
+      CIBLE: ${{ inputs.cible }}
+    steps:
+      - name: Garde (plafond du jour, clé, modèle)
+        id: garde
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PLAFOND: ${{ vars.USINE_IA_MAX_PAR_JOUR }}
+          MODELE: ${{ vars.USINE_IA_MODELE }}
+          CLE_PRESENTE: ${{ secrets.ANTHROPIC_API_KEY != '' }}
+        run: |
+          modele="${MODELE:-claude-opus-5-5}"
+          echo "modele=$modele" >> "$GITHUB_OUTPUT"
+          if [ "$CLE_PRESENTE" != "true" ]; then
+            echo "go=false" >> "$GITHUB_OUTPUT"
+            echo "::warning::Secret ANTHROPIC_API_KEY absent : aucun agent ne peut tourner."
+            echo "### 💤 Agent non lancé : secret ANTHROPIC_API_KEY absent" >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          plafond="${PLAFOND:-4}"
+          # passages d'agents déjà ACHEVÉS aujourd'hui (UTC), tous workflows « Usine IA — … », hors sautés et annulés
+          n=$(gh run list -R "$GITHUB_REPOSITORY" --limit 100 --created ">=$(date -u +%F)" --json workflowName,conclusion \
+              --jq '[.[] | select(.workflowName | startswith("Usine IA")) | select(.conclusion == "success" or .conclusion == "failure" or .conclusion == "timed_out")] | length' || echo 0)
+          if [ "${n:-0}" -ge "$plafond" ]; then
+            echo "go=false" >> "$GITHUB_OUTPUT"
+            echo "Plafond du jour atteint : $n passage(s) d'agent déjà achevé(s) (USINE_IA_MAX_PAR_JOUR=$plafond)."
+            echo "### 💤 Agent non lancé : plafond du jour atteint ($n/$plafond)" >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          echo "go=true" >> "$GITHUB_OUTPUT"
+          echo "Feu vert : mission « $MISSION », $n passage(s) déjà aujourd'hui sur $plafond, modèle $modele."
+
+      - name: Checkout main
+        if: steps.garde.outputs.go == 'true'
+        uses: actions/checkout@v6
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Setup Node 20
+        if: steps.garde.outputs.go == 'true'
+        uses: actions/setup-node@v6
+        with:
+          node-version: "20"
+          cache: npm
+
+      - name: Dépendances
+        if: steps.garde.outputs.go == 'true'
+        run: npm ci --no-audit --no-fund
+
+      - name: Mission et branche de travail
+        id: branche
+        if: steps.garde.outputs.go == 'true'
+        run: |
+          test -f "usine/missions/$MISSION.md" || { echo "::error::mission inconnue : $MISSION (usine/missions/$MISSION.md absent)"; exit 1; }
+          nom="usine/${MISSION}-$(date -u +%Y-%m-%d)-${GITHUB_RUN_NUMBER}"
+          git checkout -b "$nom"
+          mkdir -p usine/.sortie
+          echo "nom=$nom" >> "$GITHUB_OUTPUT"
+          echo "Branche $nom ; mission usine/missions/$MISSION.md ; cible : « ${CIBLE:-aucune} »."
+
+      - name: Agent Claude Code
+        if: steps.garde.outputs.go == 'true'
+        uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          prompt: |
+            Tu es un poste de l'Usine Cryptoreflex (dépôt ${{ github.repository }}).
+            Lis d'abord usine/missions/_commun.md (règles communes, obligatoires), puis usine/missions/${{ inputs.mission }}.md
+            (ta mission), et exécute-la jusqu'au bout.
+            Cible facultative : « ${{ inputs.cible }} » (vide = choisis toi-même selon la mission).
+            Tu es déjà sur la branche ${{ steps.branche.outputs.nom }}. Ne fais AUCUNE opération git : le workflow commite,
+            pousse et ouvre la pull request à partir de tes fichiers modifiés et de usine/.sortie/resume.md (obligatoire).
+          claude_args: |
+            --model ${{ steps.garde.outputs.modele }}
+            --max-turns 80
+            --allowedTools "Read,Edit,Write,Glob,Grep,WebFetch,WebSearch,Bash(npm test),Bash(npx vitest run:*),Bash(npx tsc --noEmit:*),Bash(npm run audit:quality),Bash(npm run audit:quality:strict),Bash(npm run audit:fiscal),Bash(npm run audit:sitemap),Bash(npm audit:*),Bash(node scripts/sentinelle.mjs:*),Bash(node scripts/content-gate.mjs:*),Bash(node scripts/audit-quality.mjs:*),Bash(node scripts/audit-sitemap.mjs:*),Bash(node scripts/health-check.mjs:*),Bash(node scripts/freshness-check.mjs:*),Bash(git diff:*),Bash(git status:*),Bash(git log:*),Bash(ls:*),Bash(cat:*),Bash(head:*),Bash(tail:*),Bash(wc:*),Bash(date:*)"
+
+      - name: Résumé de l'agent
+        id: resume
+        if: steps.garde.outputs.go == 'true'
+        run: |
+          f=usine/.sortie/resume.md
+          if [ ! -s "$f" ]; then
+            mkdir -p usine/.sortie
+            echo "Aucune modification" > "$f"
+            echo "" >> "$f"
+            echo "L'agent n'a pas écrit usine/.sortie/resume.md (passage interrompu ou mission sans conclusion)." >> "$f"
+          fi
+          titre=$(grep -m1 -E '^Titre[[:space:]]*:' "$f" | sed -E 's/^Titre[[:space:]]*:[[:space:]]*//' | cut -c1-110)
+          [ -n "$titre" ] || titre="mission $MISSION du $(date -u +%d/%m/%Y)"
+          echo "titre=$titre" >> "$GITHUB_OUTPUT"
+
+      - name: Modifications proposées ?
+        id: diff
+        if: steps.garde.outputs.go == 'true'
+        run: |
+          git add -A -- . ':!usine/.sortie' ':!sentinelle-report.md' ':!sentinelle-repairs.json' ':!veille-report.md'
+          if git diff --staged --quiet; then
+            echo "has=false" >> "$GITHUB_OUTPUT"
+            echo "Aucune modification proposée par l'agent."
+          else
+            echo "has=true" >> "$GITHUB_OUTPUT"
+            git diff --staged --stat
+          fi
+
+      # Le même garde-fou que la publication du jour : décimales françaises, règle fiscale ; un article fautif est écarté.
+      - name: Garde-fou des contenus
+        id: gate
+        if: steps.diff.outputs.has == 'true'
+        continue-on-error: true
+        run: |
+          node scripts/content-gate.mjs
+          git add -A -- content data public ':!usine/.sortie'
+
+      - name: Tests unitaires
+        id: tests
+        if: steps.diff.outputs.has == 'true'
+        continue-on-error: true
+        run: npx vitest run --reporter=dot
+
+      - name: Commit, push, pull request
+        if: steps.diff.outputs.has == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BRANCHE: ${{ steps.branche.outputs.nom }}
+          TITRE: ${{ steps.resume.outputs.titre }}
+          GATE: ${{ steps.gate.outcome }}
+          TESTS: ${{ steps.tests.outcome }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          git config user.name "Cryptoreflex Usine (IA)"
+          git config user.email "usine@cryptoreflex.fr"
+          if git diff --staged --quiet; then
+            echo "Plus rien à proposer après le garde-fou (article écarté)."
+            echo "### ⚠️ Modifications écartées par le garde-fou des contenus" >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          git commit -q -m "usine(${MISSION}): ${TITRE}" \
+            -m "Proposé par l'agent IA « ${MISSION} » de l'Usine (.github/workflows/usine-agent.yml). Relecture humaine obligatoire avant fusion." \
+            -m "" \
+            -m "Co-Authored-By: Cryptoreflex Usine <usine@cryptoreflex.fr>"
+          git push -u origin "$BRANCHE"
+          {
+            echo "## Mission « ${MISSION} » — $(date -u +%d/%m/%Y)"
+            echo
+            cat usine/.sortie/resume.md
+            echo
+            echo "---"
+            echo "- Garde-fou des contenus (scripts/content-gate.mjs) : ${GATE}"
+            echo "- Tests unitaires (vitest) : ${TESTS}"
+            echo "- Passage : ${RUN_URL}"
+            echo
+            echo "_Proposé par l'agent IA de l'Usine Cryptoreflex. Rien n'est publié sans relecture et fusion par Kevin._"
+          } > usine/.sortie/pr.md
+          gh pr create -R "$GITHUB_REPOSITORY" --base main --head "$BRANCHE" --title "Usine IA — ${TITRE}" --body-file usine/.sortie/pr.md
+          echo "### ✅ Pull request ouverte : Usine IA — ${TITRE}" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Aucune modification
+        if: steps.garde.outputs.go == 'true' && steps.diff.outputs.has != 'true'
+        run: |
+          echo "### 📝 Aucune modification proposée (mission « $MISSION »)" >> "$GITHUB_STEP_SUMMARY"
+          echo >> "$GITHUB_STEP_SUMMARY"
+          cat usine/.sortie/resume.md >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Joindre la sortie de l'agent
+        if: always() && steps.garde.outputs.go == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: usine-${{ inputs.mission }}-${{ github.run_number }}
+          path: usine/.sortie/
+          retention-days: 14
+          if-no-files-found: ignore

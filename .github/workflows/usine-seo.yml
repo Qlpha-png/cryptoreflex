@@ -1,0 +1,36 @@
+# L'USINE — agent IA « seo » (titres, descriptions, liens internes d'un lot de pages, le mardi).
+# Horaire : 0 6 * * 2 (UTC). L'horaire ne lance l'agent que si la variable de dépôt USINE_IA vaut « on » (sinon le passage est
+# « sauté » : le tableau de bord /admin/usine le montre « en veille ») ; un lancement manuel marche toujours.
+# Mécanique commune : .github/workflows/usine-agent.yml ; mission : usine/missions/seo.md.
+name: Usine IA — SEO
+
+on:
+  schedule:
+    - cron: "0 6 * * 2"
+  workflow_dispatch:
+    inputs:
+      cible:
+        description: "Cible facultative (slug d'article, chemin de page, texte d'un défaut)"
+        type: string
+        required: false
+        default: ""
+
+permissions:
+  contents: write
+  pull-requests: write
+  actions: read
+  id-token: write
+
+concurrency:
+  group: usine-ia
+  cancel-in-progress: false
+
+jobs:
+  agent:
+    if: ${{ github.event_name != 'schedule' || vars.USINE_IA == 'on' }}
+    uses: ./.github/workflows/usine-agent.yml
+    with:
+      mission: seo
+      planifie: ${{ github.event_name == 'schedule' }}
+      cible: ${{ inputs.cible || '' }}
+    secrets: inherit

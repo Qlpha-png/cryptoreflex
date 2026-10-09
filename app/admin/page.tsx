@@ -65,6 +65,13 @@ const ADMIN_LINKS_GROUPS: Array<{
   {
     label: "🚨 Outils prioritaires",
     links: [
+      {
+        href: "/admin/usine",
+        title: "🏭 L'Usine — salle de contrôle",
+        description: "Robots, agents IA, gardes-fous : état, chaîne du jour, production, PR à relire",
+        Icon: Activity,
+        variant: "primary",
+      },
       // FIX SEC 2026-05-02 #15 (audit expert backend) — `/api/admin/debug-auth`
       // SUPPRIMÉ : leakait des prefixes d'env vars en prod même protégé par
       // x-admin-secret (verbose dans les logs Vercel). Pour debug auth en

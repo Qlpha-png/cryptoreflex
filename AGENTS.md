@@ -27,3 +27,11 @@ Repo local (git) : `C:\Users\kevin\Desktop\Projets\Sites\Cryptoreflex`.
 - Contenu crypto : tout chiffre, date ou point de réglementation doit être vérifié (recherche web)
   avant publication — la réputation de Kev est en jeu.
 - Avant une modification massive de fichiers : faire une sauvegarde.
+
+## L'Usine (09/10/2026)
+- Vue d'ensemble de tout ce qui tourne sans Kevin (robots, gardes-fous, agents IA) : `usine/README.md`.
+- Tableau de bord : `/admin/usine` (admin seulement) ; ligne de commande : `npm run usine` (`--json` pour un agent).
+- Registre unique des postes : `scripts/lib/usine-registre.mjs` (un nouveau robot ou une nouvelle tâche Vercel s'y ajoute,
+  le test `tests/lib/usine.test.ts` vérifie la cohérence avec `lib/gardien.ts`, `vercel.json` et `.github/workflows/`).
+- Agents IA (`.github/workflows/usine-*.yml`, consignes dans `usine/missions/`) : éteints tant que la variable de dépôt
+  GitHub `USINE_IA` ne vaut pas `on` ; ils ne proposent que des pull requests, jamais rien sur `main`.

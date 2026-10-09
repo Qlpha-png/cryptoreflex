@@ -19,6 +19,7 @@
     "audit:quality:strict": "node scripts/audit-quality.mjs --strict",
     "audit:fiscal": "node scripts/audit-quality.mjs --fiscal-only",
     "audit:all": "npm run audit:quality && npm run audit:sitemap",
+    "usine": "node scripts/usine.mjs",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:cov": "vitest run --coverage",

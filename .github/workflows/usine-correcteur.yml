@@ -1,0 +1,36 @@
+# L'USINE — agent IA « correcteur » (rejoue la sentinelle et corrige dans le code ce qui peut l'être, après la sentinelle complète).
+# Horaire : 15 6 * * * (UTC). L'horaire ne lance l'agent que si la variable de dépôt USINE_IA vaut « on » (sinon le passage est
+# « sauté » : le tableau de bord /admin/usine le montre « en veille ») ; un lancement manuel marche toujours.
+# Mécanique commune : .github/workflows/usine-agent.yml ; mission : usine/missions/correcteur.md.
+name: Usine IA — correcteur
+
+on:
+  schedule:
+    - cron: "15 6 * * *"
+  workflow_dispatch:
+    inputs:
+      cible:
+        description: "Cible facultative (slug d'article, chemin de page, texte d'un défaut)"
+        type: string
+        required: false
+        default: ""
+
+permissions:
+  contents: write
+  pull-requests: write
+  actions: read
+  id-token: write
+
+concurrency:
+  group: usine-ia
+  cancel-in-progress: false
+
+jobs:
+  agent:
+    if: ${{ github.event_name != 'schedule' || vars.USINE_IA == 'on' }}
+    uses: ./.github/workflows/usine-agent.yml
+    with:
+      mission: correcteur
+      planifie: ${{ github.event_name == 'schedule' }}
+      cible: ${{ inputs.cible || '' }}
+    secrets: inherit
