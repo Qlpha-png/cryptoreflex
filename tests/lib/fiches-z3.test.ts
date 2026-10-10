@@ -80,9 +80,10 @@ describe("appariement CoinMarketCap (symbole ET nom ET prix ± 5 %)", () => {
     expect(apparier([{ id: "bitcoin", symbol: "BTC", name: "Bitcoin", prix: 60_000, prixLe: "2026-10-08T12:00:00Z" }], [c], {}).map.bitcoin).toEqual({ id: 1, symbol: "BTC" });
   });
   it("tolérance : 5 % passe, 5,1 % non", () => {
-    const c = cmc(9, "x", "Xcoin", "X", 1.05);
-    expect(apparier([{ id: "x", symbol: "X", name: "Xcoin", prix: 1, prixLe: le }], [c], {}).map.x).toBeDefined();
-    expect(apparier([{ id: "x", symbol: "X", name: "Xcoin", prix: 0.9985, prixLe: le }], [cmc(9, "x", "Xcoin", "X", 1.05)], {}).map.x).toBeUndefined();
+    // 10/10/2026 : prix à 10 $ (un prix à 1 $ relève désormais de la règle des dollars numériques : adresse commune exigée)
+    const c = cmc(9, "x", "Xcoin", "X", 10.5);
+    expect(apparier([{ id: "x", symbol: "X", name: "Xcoin", prix: 10, prixLe: le }], [c], {}).map.x).toBeDefined();
+    expect(apparier([{ id: "x", symbol: "X", name: "Xcoin", prix: 9.985, prixLe: le }], [cmc(9, "x", "Xcoin", "X", 10.5)], {}).map.x).toBeUndefined();
     expect(ecartPct(1.05, 1)).toBe(5);
   });
   it("un identifiant CMC revendiqué par deux fiches : les deux sont exclues", () => {

@@ -262,12 +262,13 @@ describe("F4 : référence de secours de la table CoinMarketCap", () => {
   const leCmc = "2026-10-10T08:47:03.000Z";
   const cmc = (id: number, slug: string, name: string, symbol: string, price: number) =>
     normaliserCmc({ id, slug, name, symbol, last_updated: leCmc, quote: { USD: { price, last_updated: leCmc } } })!;
-  // prix en base relevé il y a 3 jours : jamais une référence valable (impasse d'avant)
-  const fiche = { id: "ex-coin", symbol: "EXC", name: "Ex Coin", prix: 3.1, prixLe: "2026-10-07T08:00:00.000Z" };
-  const candidat = cmc(4242, "ex-coin", "Ex Coin", "EXC", 1.02);
+  // prix en base relevé il y a 3 jours : jamais une référence valable (impasse d'avant). 10/10/2026 : prix à 10 $ (à 1 $,
+  // la règle des dollars numériques exige une adresse commune, hors du sujet de ces cas).
+  const fiche = { id: "ex-coin", symbol: "EXC", name: "Ex Coin", prix: 31, prixLe: "2026-10-07T08:00:00.000Z" };
+  const candidat = cmc(4242, "ex-coin", "Ex Coin", "EXC", 10.2);
 
   it("prix en base périmé + secours frais à 2 % → appariée, source notée", () => {
-    const r = apparier([fiche], [candidat], { secours: { "ex-coin": { prix: 1.0, le: "2026-10-10T08:47:20.000Z", source: "dexscreener" } }, maintenant: MAINTENANT });
+    const r = apparier([fiche], [candidat], { secours: { "ex-coin": { prix: 10, le: "2026-10-10T08:47:20.000Z", source: "dexscreener" } }, maintenant: MAINTENANT });
     expect(r.map["ex-coin"]).toEqual({ id: 4242, symbol: "EXC" });
     expect(r.details["ex-coin"]).toMatchObject({ statut: "apparié", ecartPrixPct: 2, referenceSecours: "dexscreener" });
     expect(bilanSecours(r.details, 1)).toMatchObject({ demandees: 1, utilisees: 1, appariees: { "ex-coin": "dexscreener" }, parSource: { dexscreener: 1 } });
@@ -275,23 +276,23 @@ describe("F4 : référence de secours de la table CoinMarketCap", () => {
   it("secours absent → non appariée, avec le motif actuel", () => {
     const r = apparier([fiche], [candidat], { secours: {}, maintenant: MAINTENANT });
     expect(r.map["ex-coin"]).toBeUndefined();
-    expect(r.details["ex-coin"].motif).toBe("aucun prix de référence relevé à moins de 6 h du prix CoinMarketCap");
+    expect(r.details["ex-coin"].motif).toBe("aucun prix de référence indépendant relevé à moins de 6 h du prix CoinMarketCap");
     expect(r.details["ex-coin"]).not.toHaveProperty("referenceSecours");
   });
   it("secours à 8 % → non appariée (règle ± 5 % inchangée)", () => {
-    const r = apparier([fiche], [candidat], { secours: { "ex-coin": { prix: 0.9444, le: "2026-10-10T08:40:00.000Z", source: "coingecko" } }, maintenant: MAINTENANT });
+    const r = apparier([fiche], [candidat], { secours: { "ex-coin": { prix: 9.444, le: "2026-10-10T08:40:00.000Z", source: "coingecko" } }, maintenant: MAINTENANT });
     expect(r.map["ex-coin"]).toBeUndefined();
     expect(r.details["ex-coin"].motif).toMatch(/^écart de prix 8 % \(référence de secours : coingecko\)$/);
     expect(r.details["ex-coin"].referenceSecours).toBe("coingecko");
   });
   it("secours de plus d'une heure, ou nom incompatible : jamais utilisé", () => {
-    const vieux = apparier([fiche], [candidat], { secours: { "ex-coin": { prix: 1.0, le: "2026-10-10T07:40:00.000Z", source: "coingecko" } }, maintenant: MAINTENANT });
+    const vieux = apparier([fiche], [candidat], { secours: { "ex-coin": { prix: 10, le: "2026-10-10T07:40:00.000Z", source: "coingecko" } }, maintenant: MAINTENANT });
     expect(vieux.map["ex-coin"]).toBeUndefined();
     expect(vieux.details["ex-coin"].motif).toMatch(/aucun prix de référence/);
-    const autreNom = apparier([{ ...fiche, name: "Tout Autre" }], [cmc(4243, "autre-slug", "Ex Coin", "EXC", 1.02)], { secours: { "ex-coin": { prix: 1.02, le: "2026-10-10T08:47:20.000Z", source: "dexscreener" } }, maintenant: MAINTENANT });
+    const autreNom = apparier([{ ...fiche, name: "Tout Autre" }], [cmc(4243, "autre-slug", "Ex Coin", "EXC", 10.2)], { secours: { "ex-coin": { prix: 10.2, le: "2026-10-10T08:47:20.000Z", source: "dexscreener" } }, maintenant: MAINTENANT });
     expect(autreNom.map["ex-coin"]).toBeUndefined();
-    // prix en base valable : le secours n'est pas consulté
-    const frais = apparier([{ ...fiche, prix: 1.0, prixLe: "2026-10-10T08:00:00.000Z" }], [candidat], { secours: { "ex-coin": { prix: 5, le: "2026-10-10T08:47:20.000Z", source: "dexscreener" } }, maintenant: MAINTENANT });
+    // prix en base valable (indépendant de CoinMarketCap) : le secours n'est pas consulté
+    const frais = apparier([{ ...fiche, prix: 10, prixLe: "2026-10-10T08:00:00.000Z" }], [candidat], { secours: { "ex-coin": { prix: 50, le: "2026-10-10T08:47:20.000Z", source: "dexscreener" } }, maintenant: MAINTENANT });
     expect(frais.details["ex-coin"]).toMatchObject({ statut: "apparié", ecartPrixPct: 2 });
     expect(frais.details["ex-coin"]).not.toHaveProperty("referenceSecours");
   });
@@ -300,7 +301,9 @@ describe("F4 : référence de secours de la table CoinMarketCap", () => {
     const sansCandidat = { id: "seul", symbol: "ZZZ", name: "Seul", prix: 1, prixLe: "2026-10-01T00:00:00.000Z" };
     expect(fichesSansReference([fiche, frais, sansCandidat], [candidat, cmc(7, "frais", "Frais", "FRS", 1)], {})).toEqual(["ex-coin"]);
   });
-  it("referencesSecours (fetch simulé) : DexScreener par adresse d'abord, CoinGecko groupé pour le reste, 1 requête/s", async () => {
+  // 10/10/2026 : ordre inversé (CoinGecko d'abord : identifiant de fiche = identifiant CoinGecko ; DexScreener donnait
+  // 3 faux écarts sur la table réelle), voir scripts/lib/cmc-secours.mjs
+  it("referencesSecours (fetch simulé) : CoinGecko groupé d'abord, DexScreener par adresse pour le reste, 1 requête/s", async () => {
     const appels: string[] = [];
     const pauses: number[] = [];
     let horloge = MAINTENANT;
@@ -309,12 +312,12 @@ describe("F4 : référence de secours de la table CoinMarketCap", () => {
       appels.push(url);
       if (url.startsWith("https://api.dexscreener.com/tokens/v1/ethereum/")) {
         return new Response(JSON.stringify([
-          { baseToken: { address: adresse }, priceUsd: "1.00", liquidity: { usd: 80_000 }, pairAddress: "p1", chainId: "ethereum" },
-          { baseToken: { address: adresse }, priceUsd: "9.99", liquidity: { usd: 20_000 }, pairAddress: "p2", chainId: "ethereum" },
+          { baseToken: { address: adresse }, priceUsd: "1.00", liquidity: { usd: 80_000 }, volume: { h24: 40_000 }, pairAddress: "p1", chainId: "ethereum" },
+          { baseToken: { address: adresse }, priceUsd: "9.99", liquidity: { usd: 20_000 }, volume: { h24: 40_000 }, pairAddress: "p2", chainId: "ethereum" },
         ]), { status: 200 });
       }
       if (url.startsWith("https://api.coingecko.com/api/v3/simple/price?")) {
-        return new Response(JSON.stringify({ "autre-coin": { usd: 2.5, last_updated_at: Math.floor(MAINTENANT / 1000) - 120 }, "sans-heure": { usd: 4 } }), { status: 200 });
+        return new Response(JSON.stringify({ "autre-coin": { usd: 2.5, usd_24h_vol: 25_000, last_updated_at: Math.floor(MAINTENANT / 1000) - 120 }, "sans-heure": { usd: 4, usd_24h_vol: 25_000 } }), { status: 200 });
       }
       return new Response("{}", { status: 404 });
     };
@@ -322,12 +325,12 @@ describe("F4 : référence de secours de la table CoinMarketCap", () => {
       [{ id: "ex-coin", adresses: [{ reseau: "ethereum", adresse }] }, { id: "autre-coin", adresses: [] }, { id: "sans-heure" }],
       { fetch: faux as unknown as typeof fetch, maintenant: () => horloge, pause: async (ms: number) => { pauses.push(ms); horloge += ms; } },
     );
-    expect(r.secours["ex-coin"]).toEqual({ prix: 1, le: new Date(MAINTENANT).toISOString(), source: "dexscreener" });
+    expect(r.secours["ex-coin"]).toEqual({ prix: 1, le: new Date(MAINTENANT + 1000).toISOString(), source: "dexscreener" });
     expect(r.secours["autre-coin"]).toEqual({ prix: 2.5, le: new Date(MAINTENANT - 120_000).toISOString(), source: "coingecko" });
     expect(r.secours["sans-heure"]).toBeUndefined(); // sans heure du prix : moins d'une heure non prouvé
     expect(appels).toEqual([
+      "https://api.coingecko.com/api/v3/simple/price?ids=ex-coin,autre-coin,sans-heure&vs_currencies=usd&include_last_updated_at=true&include_24hr_vol=true",
       `https://api.dexscreener.com/tokens/v1/ethereum/${adresse}`,
-      "https://api.coingecko.com/api/v3/simple/price?ids=autre-coin,sans-heure&vs_currencies=usd&include_last_updated_at=true",
     ]);
     expect(r.appels).toEqual({ dexscreener: 1, coingecko: 1 });
     expect(pauses).toEqual([1000]); // la seconde requête attend 1 s
@@ -362,7 +365,7 @@ describe("F4 : référence de secours de la table CoinMarketCap", () => {
   });
   it("le constructeur de table branche le secours et le rapporte (jamais écrit en base)", () => {
     const src = lire("scripts/construire-cmc-id-map.mjs");
-    expect(src).toMatch(/fichesSansReference\(fiches, candidats, \{ manuels: MANUELS \}\)/);
+    expect(src).toMatch(/fichesSansReference\(fiches, candidats, \{ manuels: MANUELS, precedente \}\)/);
     expect(src).toMatch(/apparier\(fiches, candidats, \{ manuels: MANUELS, secours: rs\.secours, precedente, maintenant: Date\.now\(\) \}\)/);
     expect(src).toMatch(/referencesSecours: \{ demandees: secours\.demandees/);
     expect(src).not.toMatch(/method: "(PATCH|POST)"/);

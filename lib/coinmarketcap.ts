@@ -696,8 +696,8 @@ export async function cmcFearGreed(): Promise<{ value: number; classification: s
  *  - R1 relancé par l'orchestrateur de 07:00 : au plus 1 crédit/jour (souvent 0 : mémoire de 300 s) ;
  *  - R1 métriques globales : 1 crédit, au premier passage de chaque heure = 24/jour ;
  *  - R2 fiches (lot Z3, app/api/cron/refresh-prices) : 7 lots de 100 × 3 passages = 21/jour (frein actif : 2 passages) ;
- *  - table de correspondance (scripts/construire-cmc-id-map.mjs, à la demande, au plus mensuelle) : ≈ 8 crédits par
- *    construction avec la clé, compté 1/jour par prudence.
+ *  - table de correspondance (scripts/construire-cmc-id-map.mjs, à la demande, au plus mensuelle) : ≈ 10 à 16 crédits
+ *    par construction avec la clé (1 par lot de 100 candidats + carte ; 10 le 10/10/2026), compté 1/jour par prudence.
  * Plafond retenu par l'architecture : ~250 crédits/jour (15 000/mois ÷ 30 = 500 ; marge pour le plafond quotidien non
  * publié de Basic). Le garde-fou /v1/key/info (mode économe à 80 % de l'allocation du jour) reste en place.
  */

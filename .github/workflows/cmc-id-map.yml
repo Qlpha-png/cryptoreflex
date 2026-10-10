@@ -2,20 +2,33 @@ name: Table CoinMarketCap des fiches (chaque mois)
 
 # 10/10/2026 (reprise du lot Z3, I5) — demande de Kev : « tout ce qui n'est pas automatisé doit l'être ».
 # Reconstruit data/cmc-id-map.json (id de fiche → id CoinMarketCap) lue par le robot des fiches R2 :
-# même symbole ET nom compatible ET prix CMC à ± 5 % du prix de la fiche en base (scripts/lib/cmc-appariement.mjs).
-# Le 1er du mois à 08:30 UTC, juste après le passage de 08:00 de R2 (prix de référence de moins de 6 h).
-# Budget : /v1/key/info (0 crédit) puis /v1/cryptocurrency/map + cotations des seuls candidats (≈ 8 crédits par mois) ;
-# refus si le frein du mois est actif ou s'il reste moins de 300 crédits (scripts/lib/budget-mois.mjs).
-# Garde-fou : jamais de table à moins de 90 % des correspondances actuelles (robot rouge, la table reste en place).
-# Finitions Z3 (F4) : fiche au prix en base de plus de 6 h → référence de secours de moins d'une heure (DexScreener par
-# adresse de contrat, sinon CoinGecko public, 1 requête/s, validation interne seulement) ; bilan dans le résumé du run.
+# même symbole ET nom compatible, identité par contrat (adresse commune obligatoire pour un actif à 1 $ ou un
+# stablecoin, contrat différent = rejet) ET prix CMC à ± 5 % d'une référence indépendante de CoinMarketCap
+# (scripts/lib/cmc-appariement.mjs). Continuité : reconduction seulement avec une adresse de contrat commune.
+# Le 1er du mois à 08:30 UTC.
+# Budget : /v1/key/info (0 crédit) puis /v1/cryptocurrency/map + cotations des seuls candidats (≈ 10 à 16 crédits par
+# mois : 1 par lot de 100 candidats + carte) ; refus si le frein du mois est actif ou s'il reste moins de 300 crédits
+# (scripts/lib/budget-mois.mjs).
+# Garde-fous (robot ROUGE, la table reste en place) : moins de 90 % des correspondances actuelles dont la fiche est encore
+# en base ; lecture partielle de la base (moins de fiches lues que le total exact annoncé par la base). Shell bash avec
+# pipefail (defaults ci-dessous) : un refus ou un plantage du script fait échouer l'étape, son motif part en annotation
+# ::error:: et figure en tête du résumé du run (étape « Résumé », toujours exécutée). Refus voulu (purge exceptionnelle…) :
+# lancement manuel avec l'entrée « forcer » cochée.
+# Référence de secours : fiche sans prix de référence indépendant (prix en base venu de CoinMarketCap ou de plus de 6 h)
+# → CoinGecko public (identifiant de la fiche, volume sur 24 h d'au moins 100 $, 2 nouveaux essais sur HTTP 429 dans la
+# limite de 5 min d'attente cumulée), sinon DexScreener par adresse de contrat, moins d'une heure, 1 requête/s, validation
+# interne ; refus seulement si une fiche suivie perdue dépendait d'un lot de référence en panne ; bilan dans le résumé.
 # Clé CMC : elle reste sur Vercel. Le robot demande les lignes CMC à la route du site /api/cron/cmc-lignes (CRON_SECRET),
-# puis construit la table ici avec les prix de référence de la base (SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY) ; aucun
-# secret n'est affiché.
+# puis construit la table ici avec la base (SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY) ; aucun secret n'est affiché.
 on:
   schedule:
     - cron: "30 8 1 * *"
   workflow_dispatch:
+    inputs:
+      forcer:
+        description: "Écrire la table malgré un refus des garde-fous (--forcer) : seulement après avoir lu le motif du refus"
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -24,10 +37,17 @@ concurrency:
   group: cmc-id-map
   cancel-in-progress: false
 
+# shell: bash = « bash --noprofile --norc -eo pipefail {0} » : sans pipefail, « node … | tee » rendait le code de tee (0)
+defaults:
+  run:
+    shell: bash
+
 jobs:
   table:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    # 25 min : nouveaux essais CoinGecko plafonnés à 5 min d'attente cumulée (scripts/lib/cmc-secours.mjs,
+    # ATTENTE_ESSAIS_MAX_MS), route CMC ≤ 200 s, construction normale ≈ 2 à 5 min (1 requête/s de référence de secours)
+    timeout-minutes: 25
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -50,19 +70,45 @@ jobs:
             echo "## ❌ Route /api/cron/cmc-lignes : HTTP $HTTP ${ERR}" >> "$GITHUB_STEP_SUMMARY"
             exit 1
           fi
-          node -e "const j=require('/tmp/cmc-lignes.json');if(!Array.isArray(j.data)||!j.data.length){console.error('réponse sans lignes');process.exit(1)}console.log(j.source+' : '+j.candidats+' candidats, '+j.data.length+' lignes, '+j.fiches+' fiches')"
+          if ! node -e "const j=require('/tmp/cmc-lignes.json');if(!Array.isArray(j.data)||!j.data.length){console.error('réponse sans lignes');process.exit(1)}console.log(j.source+' : '+j.candidats+' candidats, '+j.data.length+' lignes, '+j.fiches+' fiches')"; then
+            echo "## ❌ Route /api/cron/cmc-lignes : réponse sans lignes (HTTP 200), table non reconstruite" >> "$GITHUB_STEP_SUMMARY"
+            echo "::error::[cmc-map] route /api/cron/cmc-lignes : réponse sans lignes"
+            exit 1
+          fi
 
-      - name: Reconstruction de la table (symbole + nom + prix à ± 5 %)
+      - name: Reconstruction de la table (symbole + nom + contrat + prix à ± 5 %)
+        id: construction
         env:
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          FORCER: ${{ inputs.forcer }}
         run: |
-          node scripts/construire-cmc-id-map.mjs --liste /tmp/cmc-lignes.json --ecrire | tee /tmp/cmc-map.log
+          # --forcer seulement sur lancement manuel avec l'entrée « forcer » cochée (vide sur le lancement mensuel)
+          OPTIONS=""
+          if [ "$FORCER" = "true" ]; then
+            OPTIONS="--forcer"
+            echo "### ⚠️ Lancement manuel avec --forcer : garde-fous ignorés" >> "$GITHUB_STEP_SUMMARY"
+          fi
+          # stderr recopié dans le journal (motif d'un refus : « [cmc-map] échec : … ») ; pipefail : code de node conservé
+          node scripts/construire-cmc-id-map.mjs --liste /tmp/cmc-lignes.json --ecrire $OPTIONS 2>&1 | tee /tmp/cmc-map.log
+
+      - name: Résumé de la construction (toujours écrit, même en cas d'échec)
+        if: always()
+        run: |
           {
             echo "## Table CoinMarketCap des fiches"
             echo ""
+            # failure, cancelled (délai dépassé) ou skipped (route en échec) : jamais un résumé sans ❌
+            if [ "${{ steps.construction.outcome }}" != "success" ]; then
+              echo "### ❌ Table non écrite (la table actuelle reste en place) : étape de construction « ${{ steps.construction.outcome }} »"
+              echo ""
+              if [ -f /tmp/cmc-map.log ]; then
+                MOTIF=$(grep -m1 "\[cmc-map\] échec" /tmp/cmc-map.log || true)
+                if [ -n "$MOTIF" ]; then echo "**Motif : ${MOTIF}**"; echo ""; fi
+              fi
+            fi
             echo '```'
-            cat /tmp/cmc-map.log
+            if [ -f /tmp/cmc-map.log ]; then cat /tmp/cmc-map.log; else echo "journal absent (étape précédente en échec avant la construction)"; fi
             echo '```'
           } >> "$GITHUB_STEP_SUMMARY"
 

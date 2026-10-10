@@ -69,6 +69,15 @@ jobs:
                 echo "::warning::refresh-prices : $RAISON"
                 echo "## ⚠️ $RAISON" >> "$GITHUB_STEP_SUMMARY"
               fi
+              # 10/10/2026 (identité CMC) : fiche appariée dont le symbole affiché (base) diffère du symbole de la table
+              # CoinMarketCap (nom ou symbole périmé en base, ex. RNDR pour RENDER) → avertissement, le run reste vert.
+              # Divergences acceptées (acceptee = true, DIVERGENCES_ACCEPTEES de scripts/lib/fiches-prix.mjs, ex.
+              # the-open-network TON>GRAM) : gardées dans la réponse, sans avertissement.
+              DIVERGENTS=$(jq -r '[(.symbolesDivergents // [])[] | select(.acceptee != true) | "\(.id) (\(.symboleBase) en base, \(.symboleTable) chez CMC)"] | join(", ")' /tmp/body.json 2>/dev/null || echo "")
+              if [ -n "$DIVERGENTS" ]; then
+                echo "::warning::refresh-prices : symbole en base différent de la table CoinMarketCap : $DIVERGENTS"
+                echo "## ⚠️ Symboles en base différents de la table CoinMarketCap : $DIVERGENTS" >> "$GITHUB_STEP_SUMMARY"
+              fi
               # 10/10/2026 (lot Z3) : processed = fiches appariées à CoinMarketCap, updated = appariées réellement écrites ;
               # rouge si une erreur ou si la couverture est sous 95 %. Passage sauté par le frein du mois (cours de moins
               # de 12 h gardés) : vert, sans écriture.

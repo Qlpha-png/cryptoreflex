@@ -44,6 +44,7 @@ import {
   freinR2SautePassage,
   lireToutesLesPages,
   suspectesRepetees,
+  symbolesDivergents,
   ligneDepuisCmc,
   ligneDepuisCoingecko,
   ligneDepuisDex,
@@ -255,6 +256,8 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
 
     // 1) CoinMarketCap par identifiant
     const appariees = fiches.filter((f) => getCmcEntry(f.coingecko_id));
+    // 10/10/2026 : symbole affiché (base) ≠ symbole de la table (nom ou symbole périmé en base) → signalé, cours écrit
+    const divergents = symbolesDivergents(appariees, getCmcEntry);
     const lignes: Ligne[] = [];
     const repli: string[] = [];
     let lotsCmcOk = 0;
@@ -354,10 +357,12 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       archive: archive.archive,
       archivePoints: archive.points,
       colonnesEtendues: colonnesEtendues ? "oui" : "non disponibles (migration 20261010 à lancer)",
+      nbSymbolesDivergents: divergents.length,
     };
+    // symbolesDivergents : la trace KV ne garde que des valeurs simples, « id:BASE>TABLE » séparés par des virgules
     await writeCronTrace(
       CRON_TRACE_KEYS.refreshPrices,
-      { ok: verdict.ok, attention: raisonAttention !== null, ...(raison ? { raison } : {}), ...(raisonAttention ? { raisonAttention: raisonAttention.slice(0, 200) } : {}), errors: erreurs.length, dureeMs: durationMs, ...resume, suspectesIds: suspectes.map((s) => s.id).join(",") },
+      { ok: verdict.ok, attention: raisonAttention !== null, ...(raison ? { raison } : {}), ...(raisonAttention ? { raisonAttention: raisonAttention.slice(0, 200) } : {}), errors: erreurs.length, dureeMs: durationMs, ...resume, suspectesIds: suspectes.map((s) => s.id).join(","), symbolesDivergents: divergents.map((d) => `${d.id}:${d.symboleBase}>${d.symboleTable}`).join(",").slice(0, 1000) },
       new Date(),
     );
     console.info(`[refresh-prices-end] session=${sessionId} ${JSON.stringify(resume)} errors=${erreurs.length} durationMs=${durationMs}`);
@@ -371,6 +376,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
         errorDetails: erreurs.length ? erreurs.slice(0, 20) : undefined,
         lignesSuspectes: suspectes.length ? suspectes.slice(0, 20) : undefined,
         suspectesRepetees: repetees,
+        symbolesDivergents: divergents,
         attention: raisonAttention !== null,
         raison,
         ...resume,

@@ -2912,11 +2912,6 @@
    "cmcSlug": "silver",
    "ecartPrixPct": -51.1
   },
-  "mantra": {
-   "cmcId": 6536,
-   "cmcSlug": "mantra",
-   "ecartPrixPct": -61
-  },
   "siren-2": {
    "cmcId": 35766,
    "cmcSlug": "siren-bsc",
@@ -2926,11 +2921,6 @@
    "cmcId": 35965,
    "cmcSlug": "usda-stablecoin",
    "ecartPrixPct": 0.5
-  },
-  "usda-3": {
-   "cmcId": 37721,
-   "cmcSlug": "usda-alphapartner",
-   "ecartPrixPct": 0
   }
  }
 }

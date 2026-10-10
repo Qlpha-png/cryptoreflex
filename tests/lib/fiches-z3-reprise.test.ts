@@ -192,7 +192,12 @@ describe("I5 : suspectes, médiane de l'archive, table CMC mensuelle", () => {
     expect(wf).not.toMatch(/secrets\.CMC_API_KEY/);
     expect(wf).toMatch(/Authorization: Bearer \$CRON_SECRET" "https:\/\/www\.cryptoreflex\.fr\/api\/cron\/cmc-lignes"/);
     expect(wf).toMatch(/node scripts\/construire-cmc-id-map\.mjs --liste \/tmp\/cmc-lignes\.json --ecrire/);
-    expect(wf).not.toMatch(/--forcer/);
+    // reprise CMC identité (10/10/2026) : --forcer seulement sur lancement MANUEL avec l'entrée « forcer » cochée
+    // (défaut false) ; le lancement mensuel ne force jamais
+    expect(wf).not.toMatch(/--ecrire --forcer/);
+    expect(wf).toMatch(/forcer:\s+description: [^\n]+\s+type: boolean\s+default: false/);
+    expect(wf).toMatch(/FORCER: \$\{\{ inputs\.forcer \}\}/);
+    expect(wf).toMatch(/if \[ "\$FORCER" = "true" \]; then\s+OPTIONS="--forcer"/);
     expect((POSTES as Array<{ id: string; workflow?: string; horaire?: string }>).find((p) => p.id === "cmc-id-map")).toMatchObject({ workflow: "cmc-id-map.yml", horaire: "30 8 1 * *" });
     const lib = lire("scripts/lib/cmc-lignes.mjs");
     expect(lib).toMatch(/frein\.actif\) throw/);

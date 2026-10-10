@@ -208,6 +208,39 @@ export function variationSuspecte(prix, precedent, precedentLe, maintenant, medi
 }
 
 /**
+ * Fiches appariées dont le symbole EN BASE (affiché par le site) diffère du symbole de la table CoinMarketCap
+ * (10/10/2026, cause racine des 8 fiches perdues : RNDR affiché pour RENDER, OM pour MANTRA…). Signal seulement : le
+ * cours reste écrit (le symbole de la table est celui que CMC renvoie). Tri par identifiant.
+ * Divergence ACCEPTÉE (DIVERGENCES_ACCEPTEES, exactement « BASE>TABLE ») : gardée dans la réponse et la trace, marquée
+ * `acceptee: true`, et exclue de l'avertissement du workflow (sinon un ::warning:: 3 fois par jour sans fin, où un
+ * nouveau cas se noierait). Si la divergence change (autre symbole d'un côté), elle redevient un avertissement.
+ * @param {Array<{coingecko_id: string, symbol?: string|null}>} appariees
+ * @param {(id: string) => {symbol: string}|null} entree  lecture de la table (getCmcEntry)
+ * @param {Record<string, string>} [acceptees]
+ * @returns {Array<{id: string, symboleBase: string, symboleTable: string, acceptee?: true}>}
+ */
+export function symbolesDivergents(appariees, entree, acceptees = DIVERGENCES_ACCEPTEES) {
+  const out = [];
+  for (const f of appariees) {
+    const e = entree(f.coingecko_id);
+    if (!e) continue;
+    const base = String(f.symbol ?? "").trim().toUpperCase();
+    const table = String(e.symbol ?? "").trim().toUpperCase();
+    if (base === table) continue;
+    const ok = String(acceptees?.[f.coingecko_id] ?? "").toUpperCase() === `${base}>${table}`;
+    out.push({ id: f.coingecko_id, symboleBase: base, symboleTable: table, ...(ok ? { acceptee: true } : {}) });
+  }
+  return out.sort((a, b) => a.id.localeCompare(b.id));
+}
+/**
+ * Divergences de symbole acceptées en connaissance de cause (identifiant de fiche → « BASE>TABLE »).
+ * the-open-network : la fiche garde « Toncoin (TON) », fiche éditoriale du top (data/top-cryptos.json), alors que
+ * CoinGecko et CoinMarketCap affichent « Gram (prev. Toncoin) » (GRAM) depuis le renommage (relevés du 10/10/2026) ; le
+ * renommage en base reste une décision de Kev (bloc commenté de fiches-noms.sql, scratchpad du lot CMC identité).
+ */
+export const DIVERGENCES_ACCEPTEES = { "the-open-network": "TON>GRAM" };
+
+/**
  * Fiches suspectes deux passages de suite (reprise Z3, I5) : ticket par le workflow de R2. precedentes = identifiants
  * suspects du passage précédent (trace KV), actuelles = [{ id, ecartPct, source }].
  */

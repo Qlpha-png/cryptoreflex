@@ -21,7 +21,9 @@ const IDS_TABLE = Object.values((tableActuelle as { map?: Record<string, { id: n
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
-// carte paginée + cotations des candidats espacées de 1,5 s (limite de 30 appels par minute de l'offre Basic)
+// /v1/key/info puis CHAQUE appel suivant (pages de carte et lots de cotations, le premier compris) précédé d'une pause de
+// 2,1 s (ATTENTE_COTATIONS_MS : moins de 29 appels sur toute fenêtre de 60 s, sous la limite de 30 de l'offre Basic, quel
+// que soit le volume ; 2 pages + 16 lots ≈ 38 s d'attente) ; ≈ 10 à 16 crédits par construction
 export const maxDuration = 180;
 
 export async function GET(req: Request) {
