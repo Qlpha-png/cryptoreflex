@@ -1,6 +1,6 @@
 {
   "_lisezmoi": "État de référence relu et accepté des sources officielles (voir data/veille/sources.json). Réécrit par « node scripts/veille-officielle.mjs --enregistrer » : à ne lancer qu'après avoir mis le site à jour.",
-  "_enregistre": "2026-10-08",
+  "_enregistre": "2026-10-10",
   "legifrance": {
     "CGI art. 150 VH bis": {
       "id": "LEGIARTI000050366751",
@@ -313,11 +313,11 @@
         ]
       },
       "https://help.bitstack-app.com/fr/articles/6379341-quels-sont-les-modes-de-paiement-disponibles-sur-l-application": {
-        "phrases": "7aaaf80fb3e778c5",
+        "phrases": "fd6941f0a5d6292a",
         "liste": [
           "Quels sont les prix et les frais pratiqués par Bitstack ?",
           "See the License for the specific language governing permissions and limitations under the License.",
-          "Écrit par Gerardo Mis à jour aujourd'hui Table des matières Les modes de paiement acceptés Bitstack prend en charge les modes de paiement suivants pour les clie"
+          "Écrit par Gerardo Mis à jour cette semaine Table des matières Les modes de paiement acceptés Bitstack prend en charge les modes de paiement suivants pour les cl"
         ]
       },
       "https://help.bitstack-app.com/fr/articles/12784290-comment-effectuer-un-virement-depuis-mon-compte-euro-bitstack": {
@@ -779,7 +779,7 @@
     },
     "21bitcoin": {
       "https://21bitcoin.app/en/fees": {
-        "jetons": "107552784ff75e24",
+        "jetons": "5f885ab916121158",
         "liste": [
           "0%",
           "0,49%",
@@ -793,7 +793,7 @@
           "1,49%",
           "1,5%",
           "10,000€",
-          "100,000€",
+          "200,000€",
           "21,000€"
         ]
       },
@@ -1185,46 +1185,46 @@
     },
     "trading212": {
       "https://helpcentre.trading212.com/hc/en-us/articles/30752021087005-What-fees-does-Trading-212-charge-for-crypto-trading": {
-        "jetons": "84da96e75c299cb2",
+        "jetons": "348ffdae32ae1a8b",
         "liste": [
-          "77%"
+          "76%"
         ]
       },
       "https://helpcentre.trading212.com/hc/en-us/articles/30719568726173-How-can-I-manage-my-funds": {
-        "jetons": "84da96e75c299cb2",
+        "jetons": "348ffdae32ae1a8b",
         "liste": [
-          "77%"
+          "76%"
         ]
       },
       "https://helpcentre.trading212.com/hc/en-us/articles/360007139838-What-are-the-fees-for-funding-my-account": {
-        "jetons": "ea5ed3c57f9bb08a",
+        "jetons": "f44549600b827f79",
         "liste": [
           "0,7%",
-          "77%"
+          "76%"
         ]
       },
       "https://helpcentre.trading212.com/hc/en-us/articles/360013564178-Instant-Bank-Transfer-Open-Banking-Deposits": {
-        "jetons": "84da96e75c299cb2",
+        "jetons": "348ffdae32ae1a8b",
         "liste": [
-          "77%"
+          "76%"
         ]
       },
       "https://helpcentre.trading212.com/hc/en-us/articles/30721439008797-What-are-the-types-of-orders": {
-        "jetons": "84da96e75c299cb2",
+        "jetons": "348ffdae32ae1a8b",
         "liste": [
-          "77%"
+          "76%"
         ]
       },
       "https://helpcentre.trading212.com/hc/en-us/articles/30717768082461-What-is-the-Trading-212-Crypto-account": {
-        "jetons": "84da96e75c299cb2",
+        "jetons": "348ffdae32ae1a8b",
         "liste": [
-          "77%"
+          "76%"
         ]
       },
       "https://helpcentre.trading212.com/hc/en-us/articles/30718913607709-Trading-212-Markets-Ltd-Crypto-Account-Regulations": {
-        "jetons": "84da96e75c299cb2",
+        "jetons": "348ffdae32ae1a8b",
         "liste": [
-          "77%"
+          "76%"
         ]
       },
       "https://www.trading212.com/legal-documentation/cy/common/Costs-and-Charges-Disclosure_EN.pdf": {
@@ -1250,6 +1250,134 @@
       "https://feel-mining.com/documents/FEELMINING_CGV_B2C.pdf": {
         "pdf": "8fbf4fe41d117b58"
       }
+    }
+  },
+  "licences": {
+    "S1": {
+      "empreinte": "a225956651f77f07",
+      "phrases": [
+        "Basic through Professional all include commercial use rights — the free Basic tier included — giving you the licensing terms and legal framework your commercial activity needs.",
+        "Can I use the DEX API for commercial purposes?",
+        "Commercial use approved means that the API plan you've selected grants you the right to integrate CoinMarketCap data into commercial products, services, or applications that you intend to distribute, sell, or use in a business context.",
+        "Enterprise comes with its own custom license, where scope and limits are agreed for your deployment.",
+        "For commercial applications, the Enterprise plan is the one we recommend the most.",
+        "For the full terms, see our Commercial Terms of Use .",
+        "Get Your Free API Key Explore Keyless API Compare Editions And Top Features Basic Free Get Free API Key Builder $29/mo Get Started Recommended Startup $79/mo Get Started Growth $299/mo Get Started Professional $699/mo Get Started Enterprise",
+        "It includes essential market data such as rankings, latest pricing, and listings, and it comes with commercial use rights, making it a great starting point for smaller projects or for those who want to test the API before committing to a pa",
+        "It offers custom solutions tailored to your business needs, including commercial licensing, unlimited queries, and access to advanced data features.",
+        "Limited-time offer 🎉 10% off all yearly plans with code at checkout 10_perc_off_yearly_cmc Monthly Yearly Save up to 20% Builder Personal projects $ 29 /mo $ 420 $ 348/year Get Started 60+ data endpoints 150K call credits/mo 3 years of his",
+        "That commercial license is limited, non-exclusive and non-transferable, and covers one product with up to 100k users.",
+        "The data must remain an integrated component of a larger product offering, designed for end users who use your product for personal, non-commercial purposes.",
+        "This ensures you have the necessary resources and permissions to integrate the API into your commercial projects.",
+        "Under the commercial license you can use the data inside your own product, but you may not redistribute or resell it as a standalone service, whether through your own API or as part of a data distribution product.",
+        "What does 'commercial use approved' mean in the pricing plans?",
+        "Yes, the DEX API can be used for commercial purposes starting from the Basic plan."
+      ],
+      "releve": "2026-10-10"
+    },
+    "S2": {
+      "empreinte": "8eeb0b74579ee325",
+      "phrases": [
+        "113 se 1st Ave #640, Miami, Florida 33131, United States of America   API Terms of Use Agreement 1.",
+        "API Terms & Conditions | DEX Screener - Docs DEX Screener - Docs ⌘ Ctrl k DEX Screener - Docs ❓ FAQ 📱 Mobile App 🔥 Trending ⚡ Boosting 🫧 Metas Token Listing DEX Listing Chain Listing TradingView Charts 🤖 API Reference WebSockets API Ter",
+        "Amendments We may modify this Agreement at any time, with such modified terms effective immediately upon posting.",
+        "By accessing or using our API Services, you agree to be fully bound by the terms of this Agreement.",
+        "Commercial Use The API Services may be used for both non-commercial and commercial purposes, subject to the limitations set forth in this Agreement.",
+        "Copy On this page 🤖 API API Terms & Conditions Last updated: August 18, 2023 API Terms of Use Agreement This Terms of Use Agreement (\"Agreement\") is a legally binding contract between you (\"You\" or \"User\") and DEX Screener, Inc.",
+        "If you are entering into this Agreement on behalf of a company or other entity, you represent that you are authorized to bind that entity to this agreement's terms.",
+        "Licensing The Company continues to own all right, title, interest, and copyright in and to the API Services.",
+        "Resell Restrictions You are prohibited from assigning, selling, marketing, licensing, or otherwise dealing in any way with the API Services for any unauthorized purpose, including but not limited to making the API Services, or any portion t",
+        "Scope of Use You are granted a limited, non-exclusive, non-transferable, non-assignable, and revocable license to use the API Services and any updates."
+      ],
+      "releve": "2026-10-10"
+    },
+    "S4": {
+      "empreinte": "46962e48a9d5e894",
+      "phrases": [
+        "By accessing any part of this website, you will be deemed to have accepted the terms of this legal notice.",
+        "ESMA will only disclose information to third parties if that is necessary for the fulfilment of the purpose(s) identified above and to the mentioned (categories of) recipients.",
+        "ESMA's logo and other images may not be used without prior permission except when reproducing ESMA material containing the logo or other images.",
+        "In particular, the following safeguards are provided to personal data exchanged under the AA: ESMA will only transfer personal data that are relevant, adequate and limited to what is necessary for the purposes for which they are requested b",
+        "Reproduction of all information on this site (ESMA Library) is authorised except as otherwise stated, provided the source is acknowledged and: where the original material is incorporated in documents that are sold (regardless of the medium)",
+        "This copyright does not extend to any legislative text which is publicly available or to other third party's materials.",
+        "Where copyright vests in a third party, permission for reproduction must be obtained from this copyright holder.",
+        "by making a summary of it or by translating it) and republished, this must be stated explicitly through the following disclaimer: 'This document has been drafted using material downloaded from ESMA's website' (or alternatively 'This documen",
+        "white_background primary_grey_background Basic principles As a general principle, ESMA only processes personal data for the performance of tasks carried out in the public interest on the basis of the Treaty on the Functioning of the Europea",
+        "white_background primary_grey_background Legal notice Copyright notice ESMA owns the copyright for all material on this website.",
+        "white_background primary_grey_background Third party websites ESMA's website provides links to third party sites."
+      ],
+      "releve": "2026-10-10"
+    },
+    "S5": {
+      "empreinte": "506218c0d8ec8c59",
+      "phrases": [
+        "# OPEN LICENCE 2.0/LICENCE OUVERTE 2.0 ## \"Reuse\" of the \"Information\" covered by this licence The \"Grantor\" grants the \"Reuser\" the free, non-exclusive right to \"Reuse\" the \"Information\" subject of this licence, for commercial or non-comme",
+        "## About this licence This licence is intended to be used by administrations for the reuse of their public information.",
+        "## Applicable legislation This licence is governed by French law.",
+        "## Definitions Within the meaning of this licence, are to be considered as: - The \"Grantor\": any person granting the right to \"Reuse\" \"Information\" under the rights and conditions set out in this licence.",
+        "## Intellectual property rights It is guaranteed to The \"Reuser\" that potential \"Intellectual property rights\" held by third parties or by the \"Grantor\" on \"Information\" do not interfere with the rights granted by this licence.",
+        "## Liability The \"Information\" is made available as it is produced or received by the \"Grantor\", without any other express or tacit guarantee than those set out in this licence.",
+        "## Personal data The \"Information\" made available may contain \"Personal data\" that may be subject to \"Reuse\".",
+        "### Compatibility of this licence This licence has been designed to be compatible with any free licence that at least requires an acknowledgement of authorship, and specifically with the previous version of this licence as well as with the ",
+        "**Subject to:** - An acknowledgement of the authorship of the \"Information\": its source (at least, the name of the \"Grantor\") and the date of the most recent update of the reused \"Information\".",
+        "**The \"Reuser\" is free to reuse the \"Information\":** - To reproduce it, copy it.",
+        "- \"Derived information\": any new data or information created directly from the \"Information\" or from a combination of the \"Information\" and other data or information not subject to this licence.",
+        "- \"Intellectual property rights\": all rights identified as such under the _Code de la propriété intellectuelle_ (including copyright, rights related to copyright, sui generis rights of database producers, etc.).",
+        "- The \"Reuse\": the use of the \"Information\" for other purposes than those for which it was produced or received.",
+        "- The \"Reuser\": any person reusing the \"Information\" in accordance with the conditions of this licence.",
+        "- To exploit it for commercial purposes, e.g., by combining it with other information, or by including it in his/her own product or application.",
+        "- To share, disseminate, redistribute, publish and transmit it.",
+        "300-2 of the _Code des relations entre le public et l'administration (CRPA)_, - any information made available by any person under the terms and conditions of this licence.",
+        "Etalab has drawn up the Open Licence to facilitate the unrestricted and free of charge reuse of public information, as defined by article L.",
+        "Etalab reserves the right to propose new versions of the Open Licence.",
+        "France has a comprehensive legal framework aiming at the spontaneous dissemination by the administrations of their public information in order to ensure the widest possible reuse of this information.",
+        "He/she cannot be held responsible for any loss, prejudice or damage of any kind caused to third parties as a result of the \"Reuse\".",
+        "If this is the case, the \"Grantor\" informs the \"Reuser\" about its existence.",
+        "It can also be used by any individual wishing to supply \"Information\" under the conditions defined in this licence.",
+        "Its \"Reuse\" is conditional on the respect of the existing legal framework.",
+        "Nevertheless, \"Reusers\" may continue to reuse information obtained under this licence should they so wish.",
+        "Specifically, the \"Reuser\" may satisfy this condition by pointing, via a hypertext link, to the source of the \"Information\" and so supplying an actual acknowledgement of its authorship.",
+        "The \"Information\" may be freely reused, within the rights granted by this licence, subject to compliance with the legal framework relating to personal data protection.",
+        "The \"Reuser\" is solely responsible for the \"Reuse\" of the \"Information\".",
+        "The right to \"Reuse\" the administrations' \"Information\" is governed by the _Code des relations entre le public et l'administration (CRPA)_.",
+        "This \"Reuse\" must not mislead third parties as to the contents of the \"Information\", its source or its date of update.",
+        "This acknowledgement of authorship does not confer any official status on the \"Reuse\" of the \"Information\", and must not suggest any sort of recognition or endorsement on the part of the \"Grantor\", or any other public entity, of the \"Reuser",
+        "This licence facilitates the unrestricted and free of charge reuse of public information and is one of the licences which can be used by the administration pursuant to the decree issued under article L.",
+        "This licence is version 2.0 of the Open Licence.",
+        "When the \"Grantor\" holds transferable \"Intellectual property rights\" on the \"Information\", he/she assigns these to the \"Reuser\" on a non-exclusive basis, free of charge, worldwide, for the entire duration of the \"Intellectual property right"
+      ],
+      "releve": "2026-10-10"
+    },
+    "S7": {
+      "empreinte": "4b22a19a2eb563d4",
+      "phrases": [
+        "&copy; tobieskrambs GmbH Terms & Privacy",
+        "Commercial use is allowed as long as the attribution is given right next to the display of the data.",
+        "We also list various softwares and their alternatives , so that nobody has to buy too expensive licenses anymore, when there is also a reasonable open source alternative."
+      ],
+      "releve": "2026-10-10"
+    },
+    "S8": {
+      "empreinte": "37a60ff0380fbb2c",
+      "phrases": [
+        "&sect; 709) prohibits the unauthorized use of the words 'Federal Reserve\" or the sign or symbol of the Board or Federal Reserve in a manner calculated to convey the impression that a nonmember bank, banking association, firm or partnership ",
+        "Access to or use of this website constitutes consent to these terms.",
+        "Assets Large Banks and Large Foreign Banks Global Systemically Important Banks Financial Market Utilities Consumer Compliance Resources for Supervised Institutions Reports Federal Reserve Supervision and Regulation Report Reporting Forms Re",
+        "Branches and Agencies of Foreign Banks Charge-Off and Delinquency Rates on Loans and Leases at Commercial Banks Senior Financial Officer Survey Senior Loan Officer Opinion Survey on Bank Lending Practices Bank Structure Data Large Commercia",
+        "Copyright/trademark Unless otherwise indicated, information on Board's website is in the public domain and may be copied and distributed without permission.",
+        "Corporations Dealer Financing Terms Senior Credit Officer Opinion Survey on Dealer Financing Terms Exchange Rates and International Data Foreign Exchange Rates - H.10/G.5 International Summary Statistics Securities Holdings and Transactions",
+        "For any photo, graphic, or other material that is identified as being associated with a non-Board (such as materials with a copyright or trademark) permission to copy and distribute such photo, graphic, or material must be obtained from the",
+        "In no event will the Board be liable to you or to any third party for any direct, indirect, incidental, consequential, special or exemplary damages or lost profit related to the Models, including, but not limited to, the installation or att",
+        "Offices of Foreign Banks Business Finance Commercial Paper Finance Companies - G.20 New Security Issues, State and Local Governments New Security Issues, U.S.",
+        "Offices of Foreign Entities Financial Holding Companies Interstate Branching Securities Underwriting and Dealing Subsidiaries State Member Banks Supervised by the Federal Reserve Financial Stability Financial Stability Assessments About Fin",
+        "Permission to use copyrighted materials must be obtained from the original source and cannot be obtained from the Board.",
+        "Please cite to the Board as the source of the information.",
+        "Reference to any specific commercial product, process, or service by trade name, trademark, manufacture, or otherwise does not constitute an endorsement, a recommendation, or a favoring by the U.S.",
+        "Seals/Logos The use of the Board seals, logos and other official insignia is protected by federal law and may not be used or reproduced without the Board's written permission.",
+        "These sites may contain information that is copyrighted with restrictions on reuse.",
+        "This permission extends only to a hyperlink, however, and does not include authority to engage in any other activities such as the \"framing\" of the Board's website on another website (e.g., by creating a part of another website that indepen"
+      ],
+      "releve": "2026-10-10"
     }
   }
 }
