@@ -384,9 +384,9 @@ const OVERRIDES: Record<string, SlugOverride> = {
   "bitpanda-vs-swissborg": {
     angle: "Broker EU généraliste vs spécialiste yield + best execution",
     pick: (a, b) =>
-      `Pour maximiser le yield (Earn jusqu'à 20 % APR) et le best execution multi-exchange : ${b.name}. Pour la diversification multi-actifs crypto + actions + ETF + métaux : ${a.name}.`,
+      `Pour maximiser le yield (Earn annoncé jusqu'à 15 % par an au 10/10/2026) et le best execution multi-exchange : ${b.name}. Pour la diversification multi-actifs crypto + actions + ETF + métaux : ${a.name}.`,
     finalVerdict: (a, b) =>
-      `${b.name} se distingue par son Smart Engine (best execution sur plusieurs exchanges, ce qui lisse spreads et slippage) et par un programme Earn (jusqu'à 20 % APR sur certains assets via le token BORG). ${a.name} compense par la diversification : 480 cryptos + actions fractionnées + ETF + métaux précieux dans une seule interface, agrément MiCA (${a.mica.authority ?? a.mica.status}), plans d'épargne automatiques. Pour un détenteur crypto pur cherchant à faire fructifier son capital : ${b.name}. Pour bâtir un portefeuille diversifié multi-classes d'actifs : ${a.name}. Frais comparables (~1 % chez les deux), différence se joue donc sur les fonctionnalités.`,
+      `${b.name} se distingue par son Smart Engine (best execution sur plusieurs exchanges, ce qui lisse spreads et slippage) et par un programme Earn (jusqu'à 15 % par an annoncés sur swissborg.com au 10/10/2026, selon l'actif). ${a.name} compense par la diversification : 480 cryptos + actions fractionnées + ETF + métaux précieux dans une seule interface, agrément MiCA (${a.mica.authority ?? a.mica.status}), plans d'épargne automatiques. Pour un détenteur crypto pur cherchant à faire fructifier son capital : ${b.name}. Pour bâtir un portefeuille diversifié multi-classes d'actifs : ${a.name}. Frais comparables (~1 % chez les deux), différence se joue donc sur les fonctionnalités.`,
     faq: defaultFaq,
     profiles: defaultProfiles,
   },

@@ -68,8 +68,17 @@ function formatLockUp(days: number): string {
   return `${days} j`;
 }
 
-function avgApy(pair: StakingPair): number {
-  return (pair.apyMin + pair.apyMax) / 2;
+/** Milieu de fourchette, ou null si aucun taux n'a été relevé (Z5-bis : jamais de chiffre inventé). */
+function avgApy(pair: StakingPair): number | null {
+  return pair.apyMin === null || pair.apyMax === null ? null : (pair.apyMin + pair.apyMax) / 2;
+}
+
+/** Tri par taux : les lignes sans taux relevé passent toujours en dernier. */
+function compareApy(a: StakingPair, b: StakingPair, sens: 1 | -1): number {
+  const x = avgApy(a);
+  const y = avgApy(b);
+  if (x === null || y === null) return x === y ? 0 : x === null ? 1 : -1;
+  return sens * (x - y);
 }
 
 function platformLabel(id: string): string {
@@ -97,9 +106,9 @@ function applySort(list: StakingPair[], sort: SortKey): StakingPair[] {
   const arr = [...list];
   switch (sort) {
     case "apyDesc":
-      return arr.sort((a, b) => avgApy(b) - avgApy(a));
+      return arr.sort((a, b) => compareApy(a, b, -1));
     case "apyAsc":
-      return arr.sort((a, b) => avgApy(a) - avgApy(b));
+      return arr.sort((a, b) => compareApy(a, b, 1));
     case "lockAsc":
       return arr.sort((a, b) => a.lockUpDays - b.lockUpDays);
     case "riskAsc":
@@ -203,12 +212,22 @@ function StakingCardBase({ pair }: { pair: StakingPair }) {
           </h3>
           <div className="text-xs font-mono text-muted">{pair.symbol}</div>
         </div>
-        <span className="shrink-0 rounded-full border border-success/40 bg-success/10 px-2.5 py-1 text-xs font-mono font-semibold text-success">
-          {fmtNb(pair.apyMin)}% – {fmtNb(pair.apyMax)}%
-        </span>
+        {pair.apyMin !== null && pair.apyMax !== null ? (
+          <span className="shrink-0 rounded-full border border-success/40 bg-success/10 px-2.5 py-1 text-xs font-mono font-semibold text-success">
+            {fmtNb(pair.apyMin)}% – {fmtNb(pair.apyMax)}%
+          </span>
+        ) : (
+          <span className="shrink-0 rounded-full border border-border bg-elevated/60 px-2.5 py-1 text-xs font-semibold text-muted" data-taux-non-releve="">
+            Taux non relevé
+          </span>
+        )}
       </header>
 
-      <ApyBar min={pair.apyMin} max={pair.apyMax} />
+      {pair.apyMin !== null && pair.apyMax !== null ? (
+        <ApyBar min={pair.apyMin} max={pair.apyMax} />
+      ) : (
+        <p className="mt-2 text-xs text-muted">Aucun taux publié par une source que nous pouvons citer : consultez la plateforme.</p>
+      )}
 
       <dl className="mt-4 grid grid-cols-2 gap-3 text-sm">
         <div>
@@ -354,7 +373,11 @@ function StakingComparator({ pairs }: Props) {
   const filtered = useMemo(() => {
     const list = pairs.filter((p) => {
       // APY range : on inclut la pair si son range chevauche [apyMin..apyMax].
-      const apyOverlap = p.apyMax >= apyMin && p.apyMin <= apyMax;
+      // Sans taux relevé : visible seulement tant que le filtre d'APY n'est pas resserré.
+      const apyOverlap =
+        p.apyMin === null || p.apyMax === null
+          ? apyMin === APY_MIN_BOUND && apyMax === APY_MAX_BOUND
+          : p.apyMax >= apyMin && p.apyMin <= apyMax;
       if (!apyOverlap) return false;
       if (!passesLockFilter(p.lockUpDays, lockFilter)) return false;
       if (p.risk > maxRisk) return false;

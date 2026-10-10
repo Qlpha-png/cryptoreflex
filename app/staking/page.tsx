@@ -18,7 +18,7 @@ export const revalidate = 86400;
 export const metadata: Metadata = {
   title: fitTitle("Staking crypto en France 2026 — APY, plateformes MiCA, risques"),
   description: fitDescription(
-    "Comparateur staking 2026 pour 20 cryptos : filtres APY, lock-up, risque et plateforme. Plateformes agréées MiCA (Coinbase, Kraken, Bitpanda…) pour trouver le meilleur staking en France.",
+    "Comparateur staking 2026 pour 20 cryptos : APY annoncés par Kraken et Bitpanda avec leur date de relevé, lock-up, risque et plateformes agréées MiCA en France.",
   ),
   alternates: withHreflang(`${BRAND.url}/staking`),
 };
@@ -40,7 +40,12 @@ export default function StakingIndexPage() {
           <p className="mt-3 text-fg/70">
             20 cryptos staking-éligibles. Filtre par APY, lock-up, risque ou
             plateforme MiCA pour trouver le couple rendement / sécurité qui vous
-            convient. <VerifieLe dates={STAKING_PAIRS.map((p) => p.releve)} famille="rendements" label="APY estimés" />, à recouper avec les UI exchange.
+            convient. Fourchettes annoncées par les plateformes (pages publiques de{" "}
+            <a href="https://www.kraken.com/pro/staking" target="_blank" rel="noopener noreferrer nofollow" className="underline hover:text-fg">Kraken</a>{" "}
+            et de{" "}
+            <a href="https://www.bitpanda.com/fr/staking" target="_blank" rel="noopener noreferrer nofollow" className="underline hover:text-fg">Bitpanda</a>),{" "}
+            <VerifieLe dates={STAKING_PAIRS.map((p) => p.releve)} famille="rendements" label="relevées" /> : taux variables, à vérifier sur la
+            plateforme avant de staker.
           </p>
           {/* lot Z5 (10/10/2026) : seul repère tenu chaque jour par le robot R8 (Lido, source autorisée) */}
           {TAUX_LIDO && (

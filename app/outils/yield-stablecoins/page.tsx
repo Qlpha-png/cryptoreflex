@@ -51,13 +51,13 @@ export const revalidate = 86400; // 24h — donnée éditoriale, pas live
 export const metadata: Metadata = {
   /* Hors index (audit 03/10/2026, confirmé au lot Z5 le 10/10/2026) : aucun taux sourcé et daté de moins de 14 jours */
   robots: { index: false, follow: true },
-  title: fitTitle("Rendements des stablecoins 2026 — USDC et DAI (DeFi), taux datés"),
+  title: fitTitle("Rendements des stablecoins 2026 — USDC, EURCV, DAI, taux datés"),
   description: fitDescription(
-    "Rendements (APY) de l'USDC et du DAI en DeFi (Aave, Compound), chaque taux avec sa date de relevé. Offres Earn sur USDC, EURC et USDT retirées (MiCA).",
+    "Rendements (APY) de l'USDC, de l'EURCV et du DAI, chaque taux avec sa date de relevé : Earn de Bitpanda (prêt hors MiCA) et DeFi (Aave, Compound).",
   ),
   alternates: withHreflang(`${BRAND.url}/outils/yield-stablecoins`),
   openGraph: {
-    title: "Rendements des stablecoins USDC et DAI (DeFi) — Cryptoreflex",
+    title: "Rendements des stablecoins USDC, EURCV et DAI — Cryptoreflex",
     description:
       "Rendements de stablecoins avec leur date de relevé : vérifiez toujours le taux du jour sur le protocole.",
     url: `${BRAND.url}/outils/yield-stablecoins`,
@@ -84,8 +84,8 @@ export default function YieldStablecoinsPage() {
       a: "Les intérêts/récompenses perçus sont imposables, mais le régime et le moment exacts (revenu à la perception, ou plus-value à la cession) ne sont pas tranchés par une source officielle dédiée — à vérifier selon votre situation. Un échange crypto→crypto sans soulte n'est, lui, pas un fait générateur (sursis, art. 150 VH bis CGI) ; l'imposition intervient à la cession contre euro.",
     },
     {
-      q: "Pourquoi les offres « Earn » sur USDC, EURC et USDT ne figurent-elles plus ici ?",
-      a: "Le règlement européen MiCA interdit aux plateformes agréées de rémunérer la détention de jetons de monnaie électronique comme l'USDC ou l'EURC (voir notre guide pour acheter de l'USDC en France). L'USDT n'a pas d'émetteur agréé dans l'Union européenne : le 17/01/2025, l'ESMA a demandé aux plateformes d'arrêter leurs services sur ce type de jeton. Sans relevé daté qui prouve qu'une telle offre est ouverte en France, nous ne l'affichons pas. Les lignes DeFi (Aave, Compound) restent en référence : elles exposent à un risque de smart contract (piratage, faille) et de dépeg.",
+      q: "Peut-on encore toucher un rendement sur l'USDC ou l'EURC en France ?",
+      a: "Le règlement européen MiCA interdit à un prestataire agréé de verser des intérêts sur un jeton de monnaie électronique comme l'USDC ou l'EURC (voir notre guide pour acheter de l'USDC en France). Les offres qui restent passent donc par un autre montage : chez Bitpanda, « Earn on Stablecoins » est un prêt de vos USDC ou EURCV à Bitpanda, présenté par Bitpanda comme un produit non réglementé, non couvert par MiCA, sans protection des dépôts, avec 14 jours pour récupérer vos fonds. L'USDT n'a pas d'émetteur agréé dans l'Union européenne : le 17/01/2025, l'ESMA a demandé aux plateformes d'arrêter leurs services sur ce type de jeton, d'où l'absence de ligne USDT. Les lignes DeFi (Aave, Compound) exposent à un risque de smart contract (piratage, faille) et de dépeg.",
     },
     {
       q: "Comment vérifier que le taux affiché est encore actuel ?",
@@ -93,7 +93,7 @@ export default function YieldStablecoinsPage() {
     },
     {
       q: "Quelle différence entre USDC et EURC ?",
-      a: "USDC est adossé au dollar, EURC à l'euro (les deux émis par Circle, conformes MiCA). Pour un Français, EURC évite le risque de change EUR/USD. Aucune ligne EURC n'est affichée ici : nous n'avons pas de relevé daté d'un rendement EURC ouvert en France.",
+      a: "USDC est adossé au dollar, EURC à l'euro (les deux émis par Circle, conformes MiCA). Pour un Français, un stablecoin en euro évite le risque de change EUR/USD. Aucune ligne EURC n'est affichée ici : nous n'avons pas de relevé daté d'un rendement EURC ouvert en France ; l'offre de Bitpanda porte sur l'EURCV, un autre stablecoin en euro.",
     },
   ];
 
@@ -126,8 +126,9 @@ export default function YieldStablecoinsPage() {
             <span className="gradient-text">stablecoin</span> ?
           </h1>
           <p className="mt-4 text-base sm:text-lg text-fg/80 leading-relaxed max-w-2xl">
-            Rendements (APY) de l&apos;USDC et du DAI en DeFi, chaque taux avec sa date de
-            relevé. Les offres « Earn » sur USDC, EURC et USDT ne sont plus listées (règlement MiCA).
+            Rendements (APY) de l&apos;USDC, de l&apos;EURCV et du DAI, chaque taux avec sa date de
+            relevé. Sous MiCA, une plateforme agréée ne verse pas d&apos;intérêts sur ces jetons : l&apos;offre
+            de Bitpanda est un prêt hors MiCA, sans protection des dépôts.
           </p>
         </header>
 
@@ -138,7 +139,7 @@ export default function YieldStablecoinsPage() {
             bullets={[
               {
                 emoji: "🧾",
-                text: "Offres « Earn » sur USDC et EURC retirées (MiCA interdit aux plateformes agréées de rémunérer ces jetons), et sur USDT (jeton sans émetteur agréé dans l'UE)",
+                text: "Bitpanda : 3 % fixes + bonus jusqu'à 7 % sur l'USDC et l'EURCV, mais c'est un prêt hors MiCA, sans protection des dépôts (retrait sous 14 jours)",
               },
               {
                 emoji: "🔎",

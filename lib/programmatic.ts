@@ -342,17 +342,31 @@ export function getCrypto(id: string): CryptoMeta | undefined {
  * (plateformes non autorisées en France depuis le 1er juillet 2026).
  */
 
+/** Page publique lue pour une fourchette de staking. */
+export interface StakingSource {
+  nom: string;
+  url: string;
+}
+
+const KRAKEN: StakingSource = { nom: "Kraken", url: "https://www.kraken.com/pro/staking" };
+const BITPANDA: StakingSource = { nom: "Bitpanda", url: "https://www.bitpanda.com/fr/staking" };
+
 export interface StakingPair {
   cryptoId: string;
   symbol: string;
   name: string;
-  /** Fourchette d'APY relevée sur les plateformes (date : `releve`). */
-  apyMin: number;
-  apyMax: number;
+  /** Fourchette d'APY annoncée par les plateformes de `sources` (date : `releve`). null = aucun taux relevé auprès
+   *  d'une source citable : la page affiche « Taux non relevé » et renvoie à la plateforme, jamais un chiffre inventé. */
+  apyMin: number | null;
+  apyMax: number | null;
   /** Date du relevé de la fourchette (AAAA-MM ou AAAA-MM-JJ) : affichée avec son âge (<VerifieLe>), jamais rajeunie.
    *  Lot Z5 (10/10/2026) : aucune source automatique autorisée pour ces lignes (Kraken : conditions EEE ; Coinbase,
-   *  Bitpanda : aucune API) ; seul l'APR de Lido est tenu par le robot R8 (repère ETH, lib/rendements.ts). */
+   *  Bitpanda : aucune API) ; seul l'APR de Lido est tenu par le robot R8 (repère ETH, lib/rendements.ts).
+   *  Z5-bis (10/10/2026) : relecture en session des pages publiques de Kraken (version française) et de Bitpanda
+   *  (bitpanda.com/fr/staking) ; les fourchettes d'avril 2026 étaient fausses (ex. DOT 10-14 % contre 1-3 %). */
   releve: string;
+  /** Pages lues pour la fourchette (nom affiché + adresse). */
+  sources: ReadonlyArray<StakingSource>;
   /** Lock-up minimum en jours (0 = liquid staking). */
   lockUpDays: number;
   /** Plateformes (id) qui proposent ce staking en FR. */
@@ -362,26 +376,28 @@ export interface StakingPair {
 }
 
 export const STAKING_PAIRS: StakingPair[] = [
-  { cryptoId: "ethereum", symbol: "ETH", name: "Ethereum", apyMin: 2.8, apyMax: 4.5, lockUpDays: 0, availableOn: ["coinbase", "kraken", "bitpanda", "swissborg"], risk: 2, releve: "2026-04" },
-  { cryptoId: "solana", symbol: "SOL", name: "Solana", apyMin: 5.5, apyMax: 7.8, lockUpDays: 2, availableOn: ["coinbase", "kraken", "bitpanda"], risk: 2, releve: "2026-04" },
-  { cryptoId: "cardano", symbol: "ADA", name: "Cardano", apyMin: 2.5, apyMax: 4.0, lockUpDays: 0, availableOn: ["coinbase", "kraken", "bitpanda"], risk: 1, releve: "2026-04" },
-  { cryptoId: "polkadot", symbol: "DOT", name: "Polkadot", apyMin: 10.0, apyMax: 14.0, lockUpDays: 28, availableOn: ["kraken", "bitpanda"], risk: 3, releve: "2026-04" },
-  { cryptoId: "cosmos", symbol: "ATOM", name: "Cosmos", apyMin: 11.0, apyMax: 16.0, lockUpDays: 21, availableOn: ["kraken", "bitpanda"], risk: 3, releve: "2026-04" },
-  { cryptoId: "tezos", symbol: "XTZ", name: "Tezos", apyMin: 4.0, apyMax: 6.0, lockUpDays: 0, availableOn: ["coinbase", "kraken", "bitpanda"], risk: 1, releve: "2026-04" },
-  { cryptoId: "polygon", symbol: "MATIC", name: "Polygon", apyMin: 3.5, apyMax: 5.5, lockUpDays: 3, availableOn: ["bitpanda"], risk: 2, releve: "2026-04" },
-  { cryptoId: "avalanche", symbol: "AVAX", name: "Avalanche", apyMin: 6.0, apyMax: 8.5, lockUpDays: 14, availableOn: ["kraken", "coinbase"], risk: 2, releve: "2026-04" },
-  { cryptoId: "near-protocol", symbol: "NEAR", name: "NEAR Protocol", apyMin: 8.0, apyMax: 11.0, lockUpDays: 2, availableOn: [], risk: 3, releve: "2026-04" },
-  { cryptoId: "celestia", symbol: "TIA", name: "Celestia", apyMin: 12.0, apyMax: 17.0, lockUpDays: 21, availableOn: ["kraken"], risk: 4, releve: "2026-04" },
-  { cryptoId: "injective", symbol: "INJ", name: "Injective", apyMin: 10.0, apyMax: 15.0, lockUpDays: 21, availableOn: [], risk: 4, releve: "2026-04" },
-  { cryptoId: "algorand", symbol: "ALGO", name: "Algorand", apyMin: 1.5, apyMax: 3.0, lockUpDays: 0, availableOn: ["kraken"], risk: 1, releve: "2026-04" },
-  { cryptoId: "tron", symbol: "TRX", name: "TRON", apyMin: 4.0, apyMax: 6.5, lockUpDays: 14, availableOn: ["bitpanda"], risk: 3, releve: "2026-04" },
-  { cryptoId: "aptos", symbol: "APT", name: "Aptos", apyMin: 6.5, apyMax: 8.0, lockUpDays: 14, availableOn: ["coinbase"], risk: 3, releve: "2026-04" },
-  { cryptoId: "sui", symbol: "SUI", name: "Sui", apyMin: 4.0, apyMax: 6.0, lockUpDays: 1, availableOn: [], risk: 3, releve: "2026-04" },
-  { cryptoId: "internet-computer", symbol: "ICP", name: "Internet Computer", apyMin: 7.0, apyMax: 11.0, lockUpDays: 180, availableOn: ["coinbase"], risk: 3, releve: "2026-04" },
-  { cryptoId: "hedera", symbol: "HBAR", name: "Hedera", apyMin: 3.0, apyMax: 5.0, lockUpDays: 0, availableOn: ["bitpanda"], risk: 2, releve: "2026-04" },
-  { cryptoId: "stacks", symbol: "STX", name: "Stacks", apyMin: 6.0, apyMax: 9.0, lockUpDays: 14, availableOn: ["okx"], risk: 4, releve: "2026-04" },
-  { cryptoId: "lido-dao", symbol: "LDO", name: "Lido DAO", apyMin: 1.5, apyMax: 3.0, lockUpDays: 0, availableOn: ["kraken"], risk: 3, releve: "2026-04" },
-  { cryptoId: "mina-protocol", symbol: "MINA", name: "Mina Protocol", apyMin: 8.0, apyMax: 12.0, lockUpDays: 0, availableOn: ["kraken"], risk: 3, releve: "2026-04" },
+  { cryptoId: "ethereum", symbol: "ETH", name: "Ethereum", apyMin: 2.0, apyMax: 4.0, lockUpDays: 0, availableOn: ["coinbase", "kraken", "bitpanda", "swissborg"], risk: 2, releve: "2026-10-10", sources: [KRAKEN, BITPANDA] },
+  { cryptoId: "solana", symbol: "SOL", name: "Solana", apyMin: 2.6, apyMax: 6.0, lockUpDays: 2, availableOn: ["coinbase", "kraken", "bitpanda"], risk: 2, releve: "2026-10-10", sources: [KRAKEN, BITPANDA] },
+  { cryptoId: "cardano", symbol: "ADA", name: "Cardano", apyMin: 1.0, apyMax: 3.0, lockUpDays: 0, availableOn: ["coinbase", "kraken", "bitpanda"], risk: 1, releve: "2026-10-10", sources: [KRAKEN, BITPANDA] },
+  { cryptoId: "polkadot", symbol: "DOT", name: "Polkadot", apyMin: 1.0, apyMax: 3.0, lockUpDays: 28, availableOn: ["kraken", "bitpanda"], risk: 3, releve: "2026-10-10", sources: [KRAKEN, BITPANDA] },
+  // ATOM : Kraken 10,52 % (souple) ; son 22,13 % « verrouillé » est écarté : il dépasse l'émission du réseau (≈ 15,5 %
+  // brut, paramètres publics de Cosmos lus le 10/10/2026) et la page Kraken annonce elle-même « jusqu'à 21 % » ; Bitpanda 14-16 %.
+  { cryptoId: "cosmos", symbol: "ATOM", name: "Cosmos", apyMin: 10.5, apyMax: 16.0, lockUpDays: 21, availableOn: ["kraken", "bitpanda"], risk: 3, releve: "2026-10-10", sources: [KRAKEN, BITPANDA] },
+  { cryptoId: "tezos", symbol: "XTZ", name: "Tezos", apyMin: 2.0, apyMax: 7.8, lockUpDays: 0, availableOn: ["coinbase", "kraken", "bitpanda"], risk: 1, releve: "2026-10-10", sources: [KRAKEN, BITPANDA] },
+  { cryptoId: "polygon", symbol: "POL", name: "Polygon", apyMin: 1.8, apyMax: 5.0, lockUpDays: 3, availableOn: ["kraken", "bitpanda"], risk: 2, releve: "2026-10-10", sources: [KRAKEN, BITPANDA] },
+  { cryptoId: "avalanche", symbol: "AVAX", name: "Avalanche", apyMin: 2.6, apyMax: 6.0, lockUpDays: 14, availableOn: ["kraken", "coinbase", "bitpanda"], risk: 2, releve: "2026-10-10", sources: [KRAKEN, BITPANDA] },
+  { cryptoId: "near-protocol", symbol: "NEAR", name: "NEAR Protocol", apyMin: 2.8, apyMax: 5.7, lockUpDays: 2, availableOn: ["kraken", "bitpanda"], risk: 3, releve: "2026-10-10", sources: [KRAKEN, BITPANDA] },
+  { cryptoId: "celestia", symbol: "TIA", name: "Celestia", apyMin: 2.7, apyMax: 5.4, lockUpDays: 21, availableOn: ["kraken", "bitpanda"], risk: 4, releve: "2026-10-10", sources: [KRAKEN, BITPANDA] },
+  { cryptoId: "injective", symbol: "INJ", name: "Injective", apyMin: 3.8, apyMax: 7.7, lockUpDays: 21, availableOn: ["kraken", "bitpanda"], risk: 4, releve: "2026-10-10", sources: [KRAKEN, BITPANDA] },
+  { cryptoId: "algorand", symbol: "ALGO", name: "Algorand", apyMin: 3.0, apyMax: 5.0, lockUpDays: 0, availableOn: ["bitpanda"], risk: 1, releve: "2026-10-10", sources: [BITPANDA] },
+  { cryptoId: "tron", symbol: "TRX", name: "TRON", apyMin: 1.8, apyMax: 3.7, lockUpDays: 14, availableOn: ["kraken", "bitpanda"], risk: 3, releve: "2026-10-10", sources: [KRAKEN, BITPANDA] },
+  { cryptoId: "aptos", symbol: "APT", name: "Aptos", apyMin: 1.0, apyMax: 3.0, lockUpDays: 14, availableOn: ["coinbase", "bitpanda"], risk: 3, releve: "2026-10-10", sources: [BITPANDA] },
+  { cryptoId: "sui", symbol: "SUI", name: "Sui", apyMin: 1.0, apyMax: 3.0, lockUpDays: 1, availableOn: ["kraken", "bitpanda"], risk: 3, releve: "2026-10-10", sources: [KRAKEN, BITPANDA] },
+  { cryptoId: "internet-computer", symbol: "ICP", name: "Internet Computer", apyMin: null, apyMax: null, lockUpDays: 180, availableOn: ["coinbase"], risk: 3, releve: "2026-10-10", sources: [] },
+  { cryptoId: "hedera", symbol: "HBAR", name: "Hedera", apyMin: null, apyMax: null, lockUpDays: 0, availableOn: [], risk: 2, releve: "2026-10-10", sources: [] },
+  { cryptoId: "stacks", symbol: "STX", name: "Stacks", apyMin: null, apyMax: null, lockUpDays: 14, availableOn: ["okx"], risk: 4, releve: "2026-10-10", sources: [] },
+  { cryptoId: "lido-dao", symbol: "LDO", name: "Lido DAO", apyMin: null, apyMax: null, lockUpDays: 0, availableOn: ["kraken"], risk: 3, releve: "2026-10-10", sources: [] },
+  { cryptoId: "mina-protocol", symbol: "MINA", name: "Mina Protocol", apyMin: 8.0, apyMax: 11.2, lockUpDays: 0, availableOn: ["kraken", "bitpanda"], risk: 3, releve: "2026-10-10", sources: [KRAKEN, BITPANDA] },
 ];
 
 export function getStakingPair(cryptoId: string): StakingPair | undefined {

@@ -57,7 +57,9 @@ export function generateMetadata({ params }: Props): Metadata {
   const title = `Staking ${pair.name} (${pair.symbol}) 2026 — APY, plateformes MiCA, risques`;
   // lot Z5 : jamais une fourchette sans sa date (données d'avril 2026, calculée depuis la ligne)
   // reprise Z5 : longueur bornée (fitDescription) ; « Guide Cryptoreflex. » retiré (Google tronquait la fin)
-  const description = fitDescription(`Comment staker ${pair.name} en France en 2026 : APY ${fmtNb(pair.apyMin)}% – ${fmtNb(pair.apyMax)}% (données ${deLaPeriode(pair.releve)}), ${pair.lockUpDays === 0 ? "liquid staking" : `lock-up ${pair.lockUpDays}j`}, plateformes régulées MiCA et risques (slashing, smart contract).`);
+  // Z5-bis : fourchette annoncée par les plateformes (Kraken, Bitpanda), datée ; sans taux relevé, aucun chiffre
+  const taux = pair.apyMin !== null && pair.apyMax !== null ? `APY ${fmtNb(pair.apyMin)}% – ${fmtNb(pair.apyMax)}% (relevé ${deLaPeriode(pair.releve)})` : "taux non relevé";
+  const description = fitDescription(`Comment staker ${pair.name} en France en 2026 : ${taux}, ${pair.lockUpDays === 0 ? "liquid staking" : `lock-up ${pair.lockUpDays}j`}, plateformes régulées MiCA et risques (slashing, smart contract).`);
   return {
     title: fitTitle(title),
     description,
@@ -137,7 +139,9 @@ export default function StakingDetailPage({ params }: Props) {
     .sort((a, b) => b.scoring.global - a.scoring.global);
 
   const risk = RISK_LABELS[pair.risk];
-  const apyAvg = (pair.apyMin + pair.apyMax) / 2;
+  // Z5-bis : null quand aucune source citable ne publie de taux (la page le dit, aucun chiffre inventé)
+  const apyAvg = pair.apyMin !== null && pair.apyMax !== null ? (pair.apyMin + pair.apyMax) / 2 : null;
+  const sourcesTexte = pair.sources.map((x) => x.nom).join(" et ");
   // lot Z5 (10/10/2026) : repère ETH tenu chaque jour par le robot R8 (APR de Lido, source autorisée)
   const lido = pair.cryptoId === "ethereum" ? TAUX_LIDO : null;
   const periode = deLaPeriode(pair.releve);
@@ -146,17 +150,25 @@ export default function StakingDetailPage({ params }: Props) {
   // reprise Z5 : sur la fiche ETH, la projection part du dernier taux mesuré (APR de Lido daté), pas du milieu d'une
   // fourchette d'avril 2026 que ce repère contredit ; ailleurs, milieu de fourchette (dit comme tel)
   const tauxProjection = lido ? lido.valeurPct : apyAvg;
-  const projection1y = netYield(1000, tauxProjection, 1);
-  const projection5y = netYield(1000, tauxProjection, 5);
+  const projection1y = tauxProjection === null ? null : netYield(1000, tauxProjection, 1);
+  const projection5y = tauxProjection === null ? null : netYield(1000, tauxProjection, 5);
   const baseProjection = lido
     ? `sur l'APR de Lido au ${formatJJMMAAAA(lido.date)} (${fmtFr(lido.valeurPct, 2)} %, net de sa commission)`
-    : `sur le milieu de la fourchette ${periode} (${fmtFr(apyAvg, 1)} %)`;
-  const positionFourchette = !lido ? null : lido.valeurPct < pair.apyMin ? "au-dessus du" : lido.valeurPct > pair.apyMax ? "en dessous du" : "cohérente avec le";
+    : apyAvg === null
+      ? ""
+      : `sur le milieu de la fourchette relevée ${periode} (${fmtFr(apyAvg, 1)} %)`;
+  const positionFourchette =
+    !lido || pair.apyMin === null || pair.apyMax === null
+      ? null
+      : lido.valeurPct < pair.apyMin ? "au-dessus du" : lido.valeurPct > pair.apyMax ? "en dessous du" : "cohérente avec le";
 
   const faqs = [
     {
       question: `Combien rapporte le staking de ${pair.name} en 2026 ?`,
-      answer: `Le rendement annuel (APY) du staking ${pair.name} oscillait entre ${fmtNb(pair.apyMin)}% et ${fmtNb(pair.apyMax)}% selon nos données ${periode}, soit ~${fmtFr(apyAvg, 1)}% en milieu de fourchette.${lido ? ` Repère plus récent : l'APR de Lido (stETH, net de sa commission) est de ${fmtFr(lido.valeurPct, 2)} % (médiane sur 7 jours au ${formatJJMMAAAA(lido.date)}, source : Lido).` : ""} Sur 1 000 € stakés pendant 1 an, le gain estimé ${baseProjection} serait d'environ ${fmtFr(projection1y, 0)} € (estimation avant fiscalité, taux variable, non garanti). Note : l'APY varie selon la demande et les frais du validateur ou de la plateforme.`,
+      answer:
+        pair.apyMin === null || pair.apyMax === null || apyAvg === null || projection1y === null
+          ? `Nous n'avons pas de taux de staking ${pair.name} publié par une source que nous pouvons citer (relecture ${periode}) : consultez le taux affiché par la plateforme avant de staker. L'APY varie selon la demande et les frais du validateur ou de la plateforme.`
+          : `Les plateformes (${sourcesTexte}) annonçaient entre ${fmtNb(pair.apyMin)}% et ${fmtNb(pair.apyMax)}% par an pour le staking ${pair.name} (relevé ${periode}), soit ~${fmtFr(apyAvg, 1)}% en milieu de fourchette.${lido ? ` Repère tenu chaque jour : l'APR de Lido (stETH, net de sa commission) est de ${fmtFr(lido.valeurPct, 2)} % (médiane sur 7 jours au ${formatJJMMAAAA(lido.date)}, source : Lido).` : ""} Sur 1 000 € stakés pendant 1 an, le gain estimé ${baseProjection} serait d'environ ${fmtFr(projection1y, 0)} € (estimation avant fiscalité, taux variable, non garanti). Note : l'APY varie selon la demande et les frais du validateur ou de la plateforme.`,
     },
     {
       question: `Y a-t-il un lock-up sur le staking ${pair.name} ?`,
@@ -213,8 +225,8 @@ export default function StakingDetailPage({ params }: Props) {
                 <Stat
                   Icon={TrendingUp}
                   label="APY"
-                  value={`${fmtNb(pair.apyMin)}%–${fmtNb(pair.apyMax)}%`}
-                  hint={`Milieu de fourchette : ~${fmtFr(apyAvg, 1)}%`}
+                  value={pair.apyMin !== null && pair.apyMax !== null ? `${fmtNb(pair.apyMin)}%–${fmtNb(pair.apyMax)}%` : "Non relevé"}
+                  hint={apyAvg !== null ? `Milieu de fourchette : ~${fmtFr(apyAvg, 1)}%` : "Voir la plateforme"}
                 />
                 <Stat
                   Icon={Lock}
@@ -237,12 +249,25 @@ export default function StakingDetailPage({ params }: Props) {
                 />
               </dl>
               <p className="mt-4 text-xs text-muted">
-                <VerifieLe date={pair.releve} famille="rendements" label="Fourchette d'APY relevée" />, à recouper avec la plateforme.
+                {pair.sources.length > 0 ? (
+                  <>
+                    Fourchette annoncée par{" "}
+                    {pair.sources.map((x, i) => (
+                      <span key={x.url}>
+                        {i > 0 ? " et " : null}
+                        <a href={x.url} target="_blank" rel="noopener noreferrer nofollow" className="underline hover:text-fg">{x.nom}</a>
+                      </span>
+                    ))}
+                    , <VerifieLe date={pair.releve} famille="rendements" label="relevée" />, à recouper avec la plateforme.
+                  </>
+                ) : (
+                  <>Aucun taux publié par une source que nous pouvons citer (<VerifieLe date={pair.releve} famille="rendements" label="relecture" />) : consultez la plateforme.</>
+                )}
                 {lido && (
                   <>
                     {" "}
                     <TauxSource taux={lido} libelle="Repère Ethereum, APR de Lido (stETH, net de sa commission)" />
-                    . La fourchette {periode} est {positionFourchette} dernier taux mesuré.
+                    {positionFourchette ? <>. La fourchette relevée {periode} est {positionFourchette} dernier taux mesuré.</> : "."}
                   </>
                 )}
               </p>
@@ -314,33 +339,42 @@ export default function StakingDetailPage({ params }: Props) {
             )}
           </section>
 
-          {/* Projection */}
+          {/* Projection — Z5-bis : seulement sur un taux relevé (jamais sur un chiffre inventé) */}
           <section className="mt-12">
             <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
               Combien rapporte le staking {pair.name} ?
             </h2>
-            <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <ProjectionCard
-                label="Sur 1 an"
-                amount={1000}
-                gain={projection1y}
-                apy={tauxProjection}
-                badge={lido ? `${fmtFr(lido.valeurPct, 2)} % APR` : undefined}
-                description={lido ? `Avec l'APR de Lido au ${formatJJMMAAAA(lido.date)}, récompenses réinvesties chaque année` : `Avec le milieu de fourchette (${fmtFr(apyAvg, 1)} %), composé annuel`}
-              />
-              <ProjectionCard
-                label="Sur 5 ans"
-                amount={1000}
-                gain={projection5y}
-                apy={tauxProjection}
-                badge={lido ? `${fmtFr(lido.valeurPct, 2)} % APR` : undefined}
-                description={`Effet boule de neige des intérêts composés`}
-              />
-            </div>
-            <p className="mt-3 text-xs text-muted">
-              Estimation indicative {baseProjection}, taux variable et non garanti. Hors fiscalité : récompenses imposables, régime et moment
-              d&apos;imposition non tranchés par une doctrine dédiée ; cession contre euros au PFU de 31,4 %.
-            </p>
+            {tauxProjection !== null && projection1y !== null && projection5y !== null ? (
+              <>
+                <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <ProjectionCard
+                    label="Sur 1 an"
+                    amount={1000}
+                    gain={projection1y}
+                    apy={tauxProjection}
+                    badge={lido ? `${fmtFr(lido.valeurPct, 2)} % APR` : undefined}
+                    description={lido ? `Avec l'APR de Lido au ${formatJJMMAAAA(lido.date)}, récompenses réinvesties chaque année` : `Avec le milieu de fourchette (${fmtFr(tauxProjection, 1)} %), composé annuel`}
+                  />
+                  <ProjectionCard
+                    label="Sur 5 ans"
+                    amount={1000}
+                    gain={projection5y}
+                    apy={tauxProjection}
+                    badge={lido ? `${fmtFr(lido.valeurPct, 2)} % APR` : undefined}
+                    description={`Effet boule de neige des intérêts composés`}
+                  />
+                </div>
+                <p className="mt-3 text-xs text-muted">
+                  Estimation indicative {baseProjection}, taux variable et non garanti. Hors fiscalité : récompenses imposables, régime et moment
+                  d&apos;imposition non tranchés par une doctrine dédiée ; cession contre euros au PFU de 31,4 %.
+                </p>
+              </>
+            ) : (
+              <p className="mt-4 max-w-2xl text-fg/70">
+                Aucun taux de staking {pair.name} publié par une source que nous pouvons citer : pas d&apos;estimation ici.
+                Le taux affiché par la plateforme au moment de staker fait foi.
+              </p>
+            )}
             <Link
               href="/outils#calculateur"
               className="mt-6 inline-flex items-center gap-1.5 text-sm font-semibold text-primary-soft hover:text-primary"

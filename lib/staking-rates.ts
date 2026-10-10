@@ -5,9 +5,11 @@
  *  - « Lido (stETH) » : APR publié par Lido, relu chaque jour par le robot R8 (data/rendements.json, lib/rendements.ts),
  *    médiane sur 7 jours, NET de la commission de Lido (apyNet) ; date et source affichées avec la ligne. Si le fichier
  *    est illisible, la ligne n'est pas affichée (jamais une valeur sans date) ;
- *  - toutes les autres : moyennes indicatives relevées au T1 2026 (champ `releve`, début de période = janvier : on ne
- *    rajeunit jamais une donnée), sans source automatique autorisée (Kraken, Coinbase : conditions d'utilisation ;
- *    Rocket Pool : contrôlé par R8, jamais affiché). Leur âge est affiché par <VerifieLe>.
+ *  - toutes les autres : taux relevés à la main (champ `releve`, jamais rajeuni), sans source automatique autorisée
+ *    (Kraken, Coinbase : conditions d'utilisation ; Rocket Pool : contrôlé par R8, jamais affiché). Leur âge est affiché
+ *    par <VerifieLe>. Z5-bis (10/10/2026) : relecture des pages publiques (ethereum.org, Kraken version française,
+ *    Marinade, Jito) et des paramètres publics des réseaux (Solana, NEAR) ; les lignes du T1 2026 restantes ne sont pas
+ *    contredites (Coinbase illisible : HTTP 403) ; une ligne sans aucune source citable porte `nonReleve`.
  * Les chiffres SONT INDICATIFS — pas de promesse de rendement.
  *
  * Audit 2026-10-02 : providers « Binance Earn » retirés (Binance ne fournit plus
@@ -45,10 +47,14 @@ export interface StakingProviderRate {
   taux?: TauxLido;
   /** Ligne contrôlée par le robot R8 (data/rendements.json) : en écart, le taux n'est plus affiché (reprise Z5). */
   controle?: IdControle;
+  /** Z5-bis : aucun taux publié par une source citable ; `apy` n'est ni affiché ni utilisé (ligne « Taux non relevé »). */
+  nonReleve?: true;
 }
 
 /** Relevé éditorial du calculateur : « APY indicatifs Q1 2026 » (08/10/2026, lot fraîcheur A2 ; aucun jour inventé). */
 const T1_2026: PeriodeReleve = { debut: "2026-01", texte: "T1 2026" };
+/** Relecture du 10/10/2026 (Z5-bis). */
+const RELU_10_10: PeriodeReleve = { debut: "2026-10-10", texte: "10/10/2026" };
 
 /** Ligne Lido tenue par le robot R8, ou rien si data/rendements.json est illisible. */
 function ligneLido(t: TauxLido | null): StakingProviderRate[] {
@@ -89,7 +95,7 @@ export const STAKING_RATES: StakingCryptoData[] = [
       "Risque smart contract sur les solutions liquid staking (Lido, Rocket Pool).",
     ],
     providers: [
-      { provider: "Validateur direct (32 ETH)", apy: 3.4, lockupDays: 14, feePct: 0, method: "direct", infoUrl: "https://ethereum.org/staking", releve: T1_2026 },
+      { provider: "Validateur direct (32 ETH)", apy: 2.5, lockupDays: 14, feePct: 0, method: "direct", infoUrl: "https://ethereum.org/fr/staking/", releve: RELU_10_10 },
       ...ligneLido(TAUX_LIDO),
       { provider: "Rocket Pool (rETH)", apy: 2.9, lockupDays: 0, feePct: 14, method: "liquid", infoUrl: "https://rocketpool.net", releve: T1_2026, controle: "rocketpool-reth" },
       { provider: "Coinbase Stake", apy: 2.4, lockupDays: 7, feePct: 25, method: "cex", infoUrl: "https://www.coinbase.com/staking", releve: T1_2026 },
@@ -105,9 +111,9 @@ export const STAKING_RATES: StakingCryptoData[] = [
       "Concentration validateurs : risque de censure si vous choisissez mal.",
     ],
     providers: [
-      { provider: "Validateur direct", apy: 6.8, lockupDays: 4, feePct: 0, method: "direct", infoUrl: "https://solana.com/staking", releve: T1_2026 },
-      { provider: "Marinade (mSOL)", apy: 6.5, lockupDays: 0, feePct: 6, method: "liquid", infoUrl: "https://marinade.finance", releve: T1_2026 },
-      { provider: "Jito (jitoSOL)", apy: 7.4, lockupDays: 0, feePct: 4, method: "liquid", infoUrl: "https://jito.network", releve: T1_2026 },
+      { provider: "Validateur direct", apy: 5.2, lockupDays: 4, feePct: 0, method: "direct", infoUrl: "https://solana.com/staking", releve: RELU_10_10 },
+      { provider: "Marinade (mSOL)", apy: 4.75, apyNet: true, lockupDays: 0, feePct: 6, method: "liquid", infoUrl: "https://marinade.finance", releve: RELU_10_10 },
+      { provider: "Jito (jitoSOL)", apy: 4.89, apyNet: true, lockupDays: 0, feePct: 4, method: "liquid", infoUrl: "https://jito.network", releve: RELU_10_10 },
       { provider: "Coinbase Stake", apy: 4.8, lockupDays: 5, feePct: 30, method: "cex", infoUrl: "https://www.coinbase.com/staking", releve: T1_2026 },
     ],
   },
@@ -122,7 +128,7 @@ export const STAKING_RATES: StakingCryptoData[] = [
     ],
     providers: [
       { provider: "Délégation pool (wallet Daedalus/Yoroi)", apy: 3.0, lockupDays: 0, feePct: 1, method: "direct", infoUrl: "https://cardano.org/stake-pool-delegation/", releve: T1_2026 },
-      { provider: "Kraken Staking", apy: 2.5, lockupDays: 0, feePct: 15, method: "cex", infoUrl: "https://www.kraken.com/features/staking-coins", releve: T1_2026 },
+      { provider: "Kraken Staking", apy: 2.65, lockupDays: 0, feePct: 15, method: "cex", infoUrl: "https://www.kraken.com/pro/staking", releve: RELU_10_10 },
     ],
   },
   {
@@ -135,8 +141,8 @@ export const STAKING_RATES: StakingCryptoData[] = [
       "Nomination minimale (~ 250 DOT) pour le staking direct, sinon nomination pool.",
     ],
     providers: [
-      { provider: "Nomination pool (wallet)", apy: 11.5, lockupDays: 28, feePct: 0, method: "direct", infoUrl: "https://wiki.polkadot.network/docs/learn-nomination-pools", releve: T1_2026 },
-      { provider: "Kraken Staking", apy: 10.0, lockupDays: 28, feePct: 15, method: "cex", infoUrl: "https://www.kraken.com/features/staking-coins", releve: T1_2026 },
+      { provider: "Nomination pool (wallet)", apy: 0, nonReleve: true, lockupDays: 28, feePct: 0, method: "direct", infoUrl: "https://wiki.polkadot.network/docs/learn-nomination-pools", releve: RELU_10_10 },
+      { provider: "Kraken Staking", apy: 1.37, lockupDays: 0, feePct: 15, method: "cex", infoUrl: "https://www.kraken.com/pro/staking", releve: RELU_10_10 },
     ],
   },
   {
@@ -150,7 +156,7 @@ export const STAKING_RATES: StakingCryptoData[] = [
     ],
     providers: [
       { provider: "Délégation Keplr / Cosmostation", apy: 14.5, lockupDays: 21, feePct: 5, method: "direct", infoUrl: "https://cosmos.network/learn/staking", releve: T1_2026 },
-      { provider: "Kraken Staking", apy: 12.0, lockupDays: 21, feePct: 15, method: "cex", infoUrl: "https://www.kraken.com/features/staking-coins", releve: T1_2026 },
+      { provider: "Kraken Staking", apy: 10.52, lockupDays: 0, feePct: 15, method: "cex", infoUrl: "https://www.kraken.com/pro/staking", releve: RELU_10_10 },
     ],
   },
   {
@@ -163,7 +169,7 @@ export const STAKING_RATES: StakingCryptoData[] = [
       "Récompenses payées en NEAR — exposition au prix du token.",
     ],
     providers: [
-      { provider: "Délégation pool (wallet NEAR)", apy: 9.0, lockupDays: 3, feePct: 5, method: "direct", infoUrl: "https://near.org/stake", releve: T1_2026 },
+      { provider: "Délégation pool (wallet NEAR)", apy: 5.6, lockupDays: 3, feePct: 5, method: "direct", infoUrl: "https://near.org/stake", releve: RELU_10_10 },
     ],
   },
 ];

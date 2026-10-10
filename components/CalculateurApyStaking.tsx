@@ -79,12 +79,14 @@ function CalculateurApyStaking({ maintenant: maintenantFixe }: { maintenant?: nu
         const netReward = computeStakingReward(amount, apyNetFournisseur(p), months);
         // reprise Z5 : une ligne que le contrôle du robot contredit n'affiche plus de taux et sort du classement
         const enVerification = !!p.controle && statutControle(p.controle, afficheControle(p)) === "ecart";
+        // Z5-bis : aucune source citable → pas de taux, pas de gain, en fin de tableau (comme une ligne en écart)
+        const sansTaux = enVerification || !!p.nonReleve;
         return {
           ...p,
           grossReward,
           netReward,
           finalValue: amount + netReward,
-          enVerification,
+          enVerification: sansTaux,
         };
       })
       .sort((a, b) => Number(a.enVerification) - Number(b.enVerification) || b.netReward - a.netReward);
@@ -243,7 +245,7 @@ function CalculateurApyStaking({ maintenant: maintenantFixe }: { maintenant?: nu
                       <td className="px-4 py-3 text-right text-fg-max/80">
                         {r.enVerification ? (
                           <span className="inline-block min-w-[9rem] text-xs font-semibold text-warning-fg [overflow-wrap:normal] [word-break:normal]" data-taux-en-verification="">
-                            Taux en cours de vérification : consultez le protocole
+                            {r.nonReleve ? "Taux non relevé : consultez le protocole" : "Taux en cours de vérification : consultez le protocole"}
                           </span>
                         ) : (
                           <>

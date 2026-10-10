@@ -532,7 +532,8 @@ describe("affichage : attribution et aucune valeur sans date", () => {
     expect(texte).toContain(`Lido (stETH) Liquid staking ${v} % APR net, frais déduits au ${jourLido} 10 %`);
     expect(texte).toContain(`Lido (stETH), APR net de sa commission : ${v} % · Taux variable, médiane sur 7 jours au ${jourLido} · Source : Lido`);
     expect(texte).toContain("Autres APY indicatifs relevés au T1 2026");
-    expect(texte).toContain("Validateur direct (32 ETH) Staking direct 3,40 % brut relevé au T1 2026");
+    // Z5-bis (10/10/2026) : APR affiché par ethereum.org, relu en session
+    expect(texte).toContain("Validateur direct (32 ETH) Staking direct 2,50 % brut relevé au 10/10/2026");
     expect(texte).toContain("APR, APY, médiane, stETH : que signifient ces termes ?");
     expect(texte).not.toMatch(/au le /);
     // encadré (juré droit D3) : seulement sur un taux daté de moins de 14 jours, jamais le validateur direct (32 ETH)
@@ -577,8 +578,9 @@ describe("affichage : attribution et aucune valeur sans date", () => {
   it("aucune valeur sans date : chaque rendement de stablecoin et chaque fourchette de /staking ont une date de relevé", () => {
     for (const y of STABLECOIN_YIELDS) expect(y.releveLe, `${y.platformName} ${y.stablecoin}`).toMatch(/^\d{4}-\d{2}-\d{2}$/);
     for (const p of STAKING_PAIRS) expect(p.releve, p.cryptoId).toMatch(/^\d{4}-\d{2}(-\d{2})?$/);
-    // offres « Earn » USDC / EURC retirées (MiCA, guide du site) ; Kraken USDT retiré (absent chez Kraken le 10/10/2026)
-    expect(STABLECOIN_YIELDS.filter((y) => y.productType === "Earn" && (y.stablecoin === "USDC" || y.stablecoin === "EURC"))).toEqual([]);
+    // offres « Earn » USDC / EURC : aucune présentée comme agréée MiCA (art. 50) ; Z5-bis : seule l'offre de prêt de
+    // Bitpanda (« non réglementée », relue le 10/10/2026) est affichée, avec ce statut ; Kraken USDT retiré
+    expect(STABLECOIN_YIELDS.filter((y) => y.productType === "Earn" && (y.stablecoin === "USDC" || y.stablecoin === "EURC") && y.regulation !== "Non réglementé")).toEqual([]);
     expect(STABLECOIN_YIELDS.find((y) => y.platformId === "kraken")).toBeUndefined();
     // reprise Z5 (juré droit D1) : plus aucune offre USDT (jeton sans émetteur agréé dans l'UE, déclaration ESMA du 17/01/2025)
     expect(STABLECOIN_YIELDS.filter((y) => y.stablecoin === "USDT")).toEqual([]);
@@ -689,7 +691,7 @@ describe("déclarations : Gardien, vercel.json, Usine, sentinelle, registre de f
     // et sur le vrai dépôt : les trois familles se lisent (sans juger la valeur du jour)
     for (const f of [f32, f33, f54]) expect((await lireFamille(f, { root: RACINE, now: Date.now() })).erreur, f.id).toBeUndefined();
     // « tous » : toutes les dates d'un fichier source, la plus ancienne
-    expect(lireConstante(RACINE, { fichier: "lib/programmatic.ts", motif: 'releve:\\s*"([\\d-]+)"', tous: true, mode: "plusAncienne" })).toMatchObject({ date: "2026-04" });
+    expect(lireConstante(RACINE, { fichier: "lib/programmatic.ts", motif: 'releve:\\s*"([\\d-]+)"', tous: true, mode: "plusAncienne" })).toMatchObject({ date: "2026-10-10" }); // Z5-bis : relecture du 10/10/2026
   });
 
   it("inventaire des dates : une date par ligne (drapeau g), fichier du robot lu, seuils inchangés, /staking/ethereum suivie", () => {
