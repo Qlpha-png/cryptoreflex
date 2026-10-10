@@ -166,8 +166,8 @@
     {
       "rank": 4,
       "id": "render",
-      "name": "Render Network",
-      "symbol": "RNDR",
+      "name": "Render",
+      "symbol": "RENDER",
       "coingeckoId": "render-token",
       "marketCapRange": "2Md$ - 4Md$",
       "yearCreated": 2017,
@@ -207,7 +207,7 @@
       "monitoringSignals": [
         "Jobs de rendu complétés par mois (dashboard Render)",
         "Node operators actifs",
-        "Croissance du burn-and-mint (BME) de RNDR"
+        "Croissance du burn-and-mint (BME) de RENDER"
       ]
     },
     {
@@ -1575,7 +1575,7 @@
     {
       "rank": 33,
       "id": "sky-maker",
-      "name": "Sky (ex-Maker)",
+      "name": "Maker",
       "symbol": "MKR",
       "coingeckoId": "maker",
       "marketCapRange": "1Md$ - 3Md$",
@@ -2265,8 +2265,8 @@
     {
       "rank": 47,
       "id": "frax-share",
-      "name": "Frax Share",
-      "symbol": "FXS",
+      "name": "Frax (prev. FXS)",
+      "symbol": "FRAX",
       "coingeckoId": "frax-share",
       "marketCapRange": "150M$ - 500M$",
       "yearCreated": 2020,
@@ -2295,7 +2295,7 @@
       },
       "risks": [
         "Complexité de la suite Frax (multi-produits) qui dilue l'attention",
-        "Token FXS avec tokenomics en révision (fork frxUSD, FRAX vers Fraxtal gas)",
+        "Token FRAX (ex-FXS) avec tokenomics en révision (fork frxUSD, FRAX vers Fraxtal gas)",
         "Concurrence de Sky/USDS et Ethena sur la stablecoin yield"
       ],
       "useCase": "Stablecoin frxUSD (ex-FRAX), LST ETH avec frxETH/sfrxETH, lending Fraxlend, gas token sur Fraxtal L2, staking veFXS pour gouvernance",
@@ -3194,14 +3194,14 @@
     {
       "rank": 66,
       "id": "story-protocol",
-      "name": "Story Protocol",
-      "symbol": "IP",
+      "name": "Data Network (anciennement Story Protocol)",
+      "symbol": "DATA",
       "coingeckoId": "story-2",
       "marketCapRange": "500M$ - 2,5Md$",
       "yearCreated": 2025,
       "category": "AI / Intellectual Property Layer 1",
       "tagline": "La blockchain dédiée à la propriété intellectuelle à l'ère de l'IA générative",
-      "what": "Story Protocol est une L1 EVM-compatible spécialisée dans la tokenisation et la gestion de la propriété intellectuelle (IP). Permet aux créateurs de licencier leurs œuvres on-chain avec royalties programmables, particulièrement pertinent face à l'IA générative.",
+      "what": "Data Network (anciennement Story Protocol) est une L1 EVM-compatible spécialisée dans la tokenisation et la gestion de la propriété intellectuelle (IP). Permet aux créateurs de licencier leurs œuvres on-chain avec royalties programmables, particulièrement pertinent face à l'IA générative.",
       "whyHiddenGem": "Levée 140M$ en série B mené par a16z et Polychain en 2024 (valorisation 2,25Md$). Mainnet lancé en février 2025. Use case clair : permettre aux artistes de protéger et monétiser leur IP face aux modèles IA. PIL (Programmable IP License) standardisé.",
       "reliability": {
         "score": 6,
@@ -4293,13 +4293,13 @@
       "rank": 89,
       "id": "mantra",
       "name": "MANTRA",
-      "symbol": "OM",
+      "symbol": "MANTRA",
       "coingeckoId": "mantra",
       "marketCapRange": "200M$ - 1Md$",
       "yearCreated": 2020,
       "category": "RWA / L1",
       "tagline": "Chaîne RWA conforme régulation, mais crash flash 90% en avril 2025",
-      "what": "MANTRA est une L1 (basée sur Cosmos SDK) dédiée aux Real World Assets (RWA) tokenisés, avec focus conformité régulatoire (KYC natif, partenariats institutionnels Moyen-Orient). OM est le token utilitaire et de gouvernance.",
+      "what": "MANTRA est une L1 (basée sur Cosmos SDK) dédiée aux Real World Assets (RWA) tokenisés, avec focus conformité régulatoire (KYC natif, partenariats institutionnels Moyen-Orient). MANTRA, qui a succédé à l'ancien jeton OM, est le token utilitaire et de gouvernance.",
       "whyHiddenGem": "Positionnement RWA crédible avec partenariats VARA Dubaï, mais le crash flash de avril 2025 (-90% en 2h) avec suspicions de manipulation par insiders a sérieusement entamé la confiance. À surveiller avec une extrême prudence.",
       "reliability": {
         "score": 5,
