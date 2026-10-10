@@ -1,0 +1,40 @@
+# Sonde Gemini (lot Z7, 10/10/2026) : vérifie, à la demande, que le secret GEMINI_API_KEY répond encore et liste les
+# modèles qu'il ouvre (offre gratuite). Aucune donnée du site n'est envoyée ; la clé n'est jamais affichée (GitHub la
+# masque, et elle ne passe que par un en-tête). Lancement manuel seulement.
+on:
+  workflow_dispatch:
+
+name: Sonde Gemini (clé et modèles)
+
+permissions:
+  contents: read
+
+jobs:
+  sonde:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Clé présente et modèles ouverts
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: |
+          set -o pipefail
+          if [ -z "$GEMINI_API_KEY" ]; then echo "::error::secret GEMINI_API_KEY absent"; exit 1; fi
+          code=$(curl -s -o modeles.json -w "%{http_code}" -H "x-goog-api-key: $GEMINI_API_KEY" "https://generativelanguage.googleapis.com/v1beta/models?pageSize=200")
+          echo "Liste des modèles : HTTP $code"
+          if [ "$code" != "200" ]; then jq -r '.error.status + " : " + .error.message' modeles.json || true; exit 1; fi
+          jq -r '.models[] | select(.supportedGenerationMethods | index("generateContent")) | .name' modeles.json | sed 's#^models/##' | sort | tee -a "$GITHUB_STEP_SUMMARY"
+
+      - name: Appel minimal (gemini-2.5-flash)
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: |
+          set -o pipefail
+          corps='{"contents":[{"parts":[{"text":"Réponds uniquement par le mot OK."}]}],"generationConfig":{"temperature":0}}'
+          code=$(curl -s -o reponse.json -w "%{http_code}" -H "x-goog-api-key: $GEMINI_API_KEY" -H "Content-Type: application/json" -d "$corps" "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent")
+          echo "Appel minimal : HTTP $code"
+          jq -r '(.candidates[0].content.parts[0].text // "") , (.error.status // "") , (.error.message // "")' reponse.json || true
+          [ "$code" = "200" ]
