@@ -8,7 +8,8 @@
  *  3. les autres gardent leur dernier cours, masqué au-delà de 48 h par le site (lib/cours-fiche.ts, lot A).
  * Garde-fous : prix > 0 ; variation de plus de 60 % par rapport au cours précédent de la même fiche relevé il y a moins de
  * 48 h (sinon la médiane des 7 derniers jours de l'archive) → ligne non écrite (« suspecte » ; deux passages de suite → ticket par le workflow) ; symbole renvoyé ≠ symbole de la table → ligne ignorée.
- * Verdict : ROUGE si une erreur, ou si moins de 95 % des fiches appariées à CoinMarketCap sont écrites.
+ * Verdict : ROUGE si une erreur, ou si moins de 95 % des fiches appariées à CoinMarketCap sont écrites ; ⚠️ (attention)
+ * si un lot CoinMarketCap au moins n'a pas réussi (finitions Z3, M5 et reprise D7 : attentionR2).
  * Zéro dépendance (Node 20 et bundle Next). Fonctions pures, testées par tests/lib/fiches-z3.test.ts.
  */
 
@@ -65,6 +66,9 @@ const pos = (v) => {
   return n !== null && n > 0 ? n : null;
 };
 
+/** Caractères admis dans une adresse de contrat envoyée dans le chemin DexScreener (reprise des finitions Z3, D8). */
+export const ADRESSE_SURE = /^[A-Za-z0-9:._-]+$/;
+
 /** Adresses de contrat d'une fiche, réseaux connus de DexScreener seulement : [{ reseau, adresse }]. */
 export function adressesFiche(ligne) {
   const out = [];
@@ -72,7 +76,12 @@ export function adressesFiche(ligne) {
   const ajouter = (plateforme, valeur) => {
     const reseau = RESEAUX_DEX[String(plateforme ?? "").toLowerCase()];
     const adresse = typeof valeur === "string" ? valeur.trim() : typeof valeur?.contract_address === "string" ? valeur.contract_address.trim() : "";
-    if (!reseau || !adresse || adresse.length < 20 || /\s|,/.test(adresse)) return;
+    // finitions Z3 (mesure F4) : une adresse avec « / » (ex. dénomination IBC d'Osmosis « ibc/1648… ») casse le chemin
+    // /tokens/v1/<réseau>/<adresses> de DexScreener (HTTP 404 sur tout le lot). Reprise (D8) : liste BLANCHE de
+    // caractères (lettres, chiffres, « : », « . », « _ », « - » ; garde les formes Sui/Aptos « 0x…::module::JETON ») :
+    // « ? », « # », « % », « / », espace ou virgule = adresse ignorée. Mesure du 10/10/2026 : 0 des 1 226 adresses en
+    // base sur ces réseaux n'est écartée par cette règle.
+    if (!reseau || !adresse || adresse.length < 20 || !ADRESSE_SURE.test(adresse)) return;
     const k = `${reseau}:${adresse.toLowerCase()}`;
     if (vu.has(k)) return;
     vu.add(k);
@@ -273,6 +282,23 @@ export function verdictR2({ erreurs, appariees, ecritesAppariees }) {
   if (erreurs > 0) return { ok: false, couverturePct: c, raison: `${erreurs} erreur(s)` };
   if (c < COUVERTURE_MIN_PCT) return { ok: false, couverturePct: c, raison: `couverture ${c} % des fiches appariées (95 % exigés)` };
   return { ok: true, couverturePct: c, raison: "ok" };
+}
+
+/**
+ * Avertissement du passage (finitions Z3, M5 ; reprise D7) : si UN lot CoinMarketCap au moins n'a pas réussi (clé
+ * absente, lot en échec), les cours de ses fiches viennent du repli CoinGecko (offre Demo sans licence commerciale) ou ne
+ * sont pas écrits : le passage n'est pas « vert », même si les cours ont bien été écrits. Renvoie la raison (lots en
+ * repli nommés), ou null.
+ * @param {{ lotsCmcOk: number, lotsCmcDemandes: number, cmcActif: boolean, lotsEnRepli?: number[] }} o
+ */
+export function attentionR2({ lotsCmcOk, lotsCmcDemandes, cmcActif, lotsEnRepli = [] }) {
+  if (lotsCmcDemandes > 0 && lotsCmcOk >= lotsCmcDemandes) return null;
+  if (!cmcActif) return "clé CoinMarketCap absente : aucun lot CoinMarketCap, cours du seul repli CoinGecko";
+  if (!(lotsCmcDemandes > 0)) return "aucun lot CoinMarketCap demandé (aucune fiche appariée)";
+  if (!(lotsCmcOk > 0)) return `aucun lot CoinMarketCap réussi (${lotsCmcDemandes} en échec) : cours du seul repli CoinGecko`;
+  // Reprise des finitions Z3 (D7a) : un seul lot en repli suffit (même motif de licence que « aucun lot »), lots nommés.
+  const noms = lotsEnRepli.length ? ` (${lotsEnRepli.map((i) => `cmc-lot-${i}`).join(", ")})` : "";
+  return `${lotsCmcDemandes - lotsCmcOk} lot(s) CoinMarketCap sur ${lotsCmcDemandes} en échec${noms} : leurs fiches passent par le repli CoinGecko`;
 }
 
 /** Points de l'archive des cours (R4) pour les lignes écrites. */

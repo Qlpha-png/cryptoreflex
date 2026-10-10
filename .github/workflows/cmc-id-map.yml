@@ -7,6 +7,8 @@ name: Table CoinMarketCap des fiches (chaque mois)
 # Budget : /v1/key/info (0 crédit) puis /v1/cryptocurrency/map + cotations des seuls candidats (≈ 8 crédits par mois) ;
 # refus si le frein du mois est actif ou s'il reste moins de 300 crédits (scripts/lib/budget-mois.mjs).
 # Garde-fou : jamais de table à moins de 90 % des correspondances actuelles (robot rouge, la table reste en place).
+# Finitions Z3 (F4) : fiche au prix en base de plus de 6 h → référence de secours de moins d'une heure (DexScreener par
+# adresse de contrat, sinon CoinGecko public, 1 requête/s, validation interne seulement) ; bilan dans le résumé du run.
 # Clé CMC : elle reste sur Vercel. Le robot demande les lignes CMC à la route du site /api/cron/cmc-lignes (CRON_SECRET),
 # puis construit la table ici avec les prix de référence de la base (SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY) ; aucun
 # secret n'est affiché.

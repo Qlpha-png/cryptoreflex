@@ -59,15 +59,23 @@ jobs:
               {
                 echo "## Robot des fiches (R2)"
                 echo ""
-                jq -r '"| Mesure | Valeur |\n|---|---|\n| Fiches en base | \(.fiches // "?") |\n| Appariées à CoinMarketCap | \(.appariees // "?") |\n| Appariées écrites | \(.ecritesAppariees // "?") (\(.couverturePct // "?") %) |\n| Écrites par CoinMarketCap | \(.coinmarketcap // "?") |\n| Écrites par le repli CoinGecko | \(.coingecko // "?") |\n| Écrites par DexScreener (adresse) | \(.dexscreener // "?") sur \(.dexCandidates // "?") candidates (\(.dexAppels // "?") appels) |\n| Sans source (masquées au-delà de 48 h) | \(.sansSource // "?") |\n| Lignes suspectes (variation > 60 %) | \(.suspectes // "?") |\n| Archive des cours | \(.archive // "?") (\(.archivePoints // 0) points) |\n| Colonnes étendues | \(.colonnesEtendues // "?") |\n| Erreurs | \(.errors // "?") |\n| Durée | \(.durationMs // "?") ms |"' /tmp/body.json 2>/dev/null || echo "résumé illisible"
+                jq -r '"| Mesure | Valeur |\n|---|---|\n| Fiches en base | \(.fiches // "?") |\n| Appariées à CoinMarketCap | \(.appariees // "?") |\n| Appariées écrites | \(.ecritesAppariees // "?") (\(.couverturePct // "?") %) |\n| Lots CoinMarketCap réussis | \(.lotsCmcOk // "?") sur \(.lotsCmcDemandes // "?") |\n| Écrites par CoinMarketCap | \(.coinmarketcap // "?") |\n| Écrites par le repli CoinGecko | \(.coingecko // "?") |\n| Écrites par DexScreener (adresse) | \(.dexscreener // "?") sur \(.dexCandidates // "?") candidates (\(.dexAppels // "?") appels) |\n| Sans source (masquées au-delà de 48 h) | \(.sansSource // "?") |\n| Lignes suspectes (variation > 60 %) | \(.suspectes // "?") |\n| Archive des cours | \(.archive // "?") (\(.archivePoints // 0) points) |\n| Colonnes étendues | \(.colonnesEtendues // "?") |\n| Erreurs | \(.errors // "?") |\n| Durée | \(.durationMs // "?") ms |"' /tmp/body.json 2>/dev/null || echo "résumé illisible"
               } >> "$GITHUB_STEP_SUMMARY"
+              # Finitions Z3 (M5) : aucun lot CoinMarketCap réussi (clé absente ou tous les lots en échec) → ⚠️ dans le
+              # résumé et avertissement du run ; le run reste vert si les cours ont bien été écrits (règle ci-dessous).
+              ATTENTION=$(jq -r '.attention // false' /tmp/body.json 2>/dev/null || echo "false")
+              if [ "$ATTENTION" = "true" ]; then
+                RAISON=$(jq -r '.raison // "raison non lue"' /tmp/body.json 2>/dev/null || echo "raison non lue")
+                echo "::warning::refresh-prices : $RAISON"
+                echo "## ⚠️ $RAISON" >> "$GITHUB_STEP_SUMMARY"
+              fi
               # 10/10/2026 (lot Z3) : processed = fiches appariées à CoinMarketCap, updated = appariées réellement écrites ;
               # rouge si une erreur ou si la couverture est sous 95 %. Passage sauté par le frein du mois (cours de moins
               # de 12 h gardés) : vert, sans écriture.
               SAUTE=$(jq -r '.saute // false' /tmp/body.json 2>/dev/null || echo "false")
               if [ "$SAUTE" = "true" ] || { [ "$ERRS" = "0" ] && [ "$UPD" != "?" ] && [ "$PROC" != "?" ] && [ "$UPD" -gt 0 ] 2>/dev/null \
                 && [ $(( UPD * 100 )) -ge $(( PROC * 95 )) ] 2>/dev/null; }; then
-                echo "✅ Success (updated=$UPD / processed=$PROC, errors=0, sauté par le frein : $SAUTE)"
+                echo "✅ Success (updated=$UPD / processed=$PROC, errors=0, sauté par le frein : $SAUTE, attention : $ATTENTION)"
                 exit 0
               fi
               echo "::error::refresh-prices : errors=$ERRS, updated=$UPD sur processed=$PROC (95 % exigés)"

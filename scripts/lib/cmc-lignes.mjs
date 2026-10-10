@@ -71,10 +71,12 @@ async function cmcGet(p, key, fetchImpl) {
 /**
  * Lignes CMC (cotations complètes) des candidats d'appariement : identifiants actifs dont le symbole est celui d'une fiche,
  * ou dont le slug est désigné dans MANUELS.
- * @param {{ symboles: string[], key: string, fetchImpl?: typeof fetch, attendreMs?: number, now?: number }} o
+ * @param {{ symboles: string[], key: string, idsEnPlus?: number[], fetchImpl?: typeof fetch, attendreMs?: number, now?: number }} o
+ *   idsEnPlus : identifiants de la table actuelle, toujours cotés (règle de continuité de scripts/lib/cmc-appariement.mjs :
+ *   une fiche renommée chez CoinMarketCap garde son identifiant si le prix concorde).
  * @returns {Promise<{ lignes: object[], candidats: number, credits: number, source: string }>}
  */
-export async function lireLignesCmc({ symboles, key, fetchImpl = fetch, attendreMs = 1500, now = Date.now() }) {
+export async function lireLignesCmc({ symboles, key, idsEnPlus = [], fetchImpl = fetch, attendreMs = 1500, now = Date.now() }) {
   const info = await cmcGet("/v1/key/info", key, fetchImpl);
   const u = info.data?.usage?.current_month;
   const limite = Number(info.data?.plan?.credit_limit_monthly) || 15_000;
@@ -96,7 +98,12 @@ export async function lireLignesCmc({ symboles, key, fetchImpl = fetch, attendre
   }
   const voulus = new Set(symboles.map((s) => String(s).toUpperCase()));
   const slugs = new Set(Object.values(MANUELS).map((m) => m.cmcSlug));
-  const ids = [...new Set(carteData.filter((c) => voulus.has(String(c.symbol).toUpperCase()) || slugs.has(c.slug)).map((c) => c.id))];
+  const ids = [
+    ...new Set([
+      ...carteData.filter((c) => voulus.has(String(c.symbol).toUpperCase()) || slugs.has(c.slug)).map((c) => c.id),
+      ...idsEnPlus.filter((id) => Number.isInteger(id) && id > 0),
+    ]),
+  ];
   const lignes = [];
   for (let i = 0; i < ids.length; i += 100) {
     const lot = ids.slice(i, i + 100);

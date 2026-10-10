@@ -30,9 +30,13 @@ jobs:
     env:
       TICKETS_PRIVES: ${{ secrets.SENTINELLE_TOKEN != '' }}
     steps:
+      # Reprise des finitions Z3 (D1) : « ref: main » = pointe de main lue AU DÉMARRAGE du job, pas le commit figé au
+      # déclenchement (github.sha). Un second passage mis en file (Gardien + filet natif, même heure) lit donc le fichier
+      # que le premier vient de publier : état des liens à jour, et comparaison de l'étape « Commit » juste.
       - name: Checkout
         uses: actions/checkout@v6
         with:
+          ref: main
           fetch-depth: 1
 
       - name: Setup Node 20
@@ -45,9 +49,31 @@ jobs:
         continue-on-error: true
         run: node scripts/fiches-liens.mjs
 
+      # Finitions Z3 (M6) : commit seulement si le CONTENU utile change (listes de liens morts, en échec, défauts de pages,
+      # résumé ; passeLe et dureeS ignorés : scripts/fiches-defauts-changement.mjs). Un lien déjà mort ne réécrit plus
+      # son état chaque nuit. LIMITE ACTUELLE : tant que la carte n° 52 du registre lit passeLe dans ce fichier, il est
+      # republié une fois par date UTC (premier passage du jour) : il reste donc un commit, et un déploiement Vercel, par
+      # nuit. Il disparaîtra quand la carte n° 52 ne lira plus passeLe (passer alors --sans-garde ci-dessous).
+      # Le fichier publié est relu sur la pointe ACTUELLE de main (fetch) : jamais comparé à une version périmée.
       - name: Commit du résultat (avec reprise anti-course)
         if: always()
         run: |
+          rm -f /tmp/defauts-publie.json
+          # fetch SANS --depth (comme la boucle de reprise ci-dessous) : l'historique reste relié au commit extrait, donc
+          # « git rebase origin/main » garde une base commune.
+          if git fetch --quiet origin main; then
+            git show FETCH_HEAD:data/fiches/defauts.json > /tmp/defauts-publie.json 2>/dev/null || rm -f /tmp/defauts-publie.json
+          else
+            git show HEAD:data/fiches/defauts.json > /tmp/defauts-publie.json 2>/dev/null || rm -f /tmp/defauts-publie.json
+          fi
+          set +e
+          node scripts/fiches-defauts-changement.mjs --ancien /tmp/defauts-publie.json --nouveau data/fiches/defauts.json
+          DECISION=$?
+          set -e
+          if [ "$DECISION" = "10" ]; then
+            echo "Contenu utile inchangé (hors passeLe et dureeS) : aucun commit, aucun déploiement." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
           git add data/fiches/defauts.json
           if git diff --staged --quiet; then
             echo "Résultat inchangé." >> "$GITHUB_STEP_SUMMARY"

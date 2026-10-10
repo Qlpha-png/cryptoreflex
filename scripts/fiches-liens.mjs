@@ -99,7 +99,8 @@ function sortieGithub(cle, valeur) {
 
 async function main() {
   const precedent = existsSync(SORTIE) ? JSON.parse(readFileSync(SORTIE, "utf8")) : null;
-  const nuit = new Date().toISOString().slice(0, 10);
+  const debutIso = new Date().toISOString();
+  const nuit = debutIso.slice(0, 10);
   const plan = await lirePlan();
   const pages = plan.pages.slice(0, MAX_PAGES);
   // minimum de pages : seulement sur un passage complet (--max-pages sert aux essais locaux)
@@ -178,7 +179,7 @@ async function main() {
     }
     resultats[url] = { classe, code: r.code || r.erreur || null };
   }
-  const etat = etatSortants(precedent, sortants, resultats, nuit);
+  const etat = etatSortants(precedent, sortants, resultats, nuit, debutIso);
 
   const dureeS = Math.round((Date.now() - T0) / 1000);
   const complet = lues === pages.length && internesControles === internes.size && Object.keys(resultats).length === sortants.size;

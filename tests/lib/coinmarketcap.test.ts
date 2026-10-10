@@ -103,7 +103,7 @@ describe("table data/cmc-id-map.json", () => {
     if (MAP["frax-share"]) expect(MAP["frax-share"]).toEqual({ id: 6953, symbol: "FRAX" });
   });
 
-  it("intégrité : ids uniques, symboles en majuscules, 779 fiches = table + exclues", () => {
+  it("intégrité : ids uniques, symboles en majuscules, toutes les fiches lues = table + exclues", () => {
     const ids = Object.values(MAP).map((e) => e.id);
     expect(new Set(ids).size).toBe(ids.length);
     for (const e of Object.values(MAP)) {
@@ -111,7 +111,11 @@ describe("table data/cmc-id-map.json", () => {
       expect(e.symbol).toBe(e.symbol.toUpperCase());
     }
     for (const x of EXCLUS) expect(MAP[x]).toBeUndefined();
-    expect(Object.keys(MAP).length + EXCLUS.length).toBe(779);
+    // 10/10/2026 : nombre de fiches lu dans la construction (779 le 10/10 à 07:04, 780 ensuite), jamais écrit en dur
+    const fiches = (cmcMapJson as { _construction?: { fiches?: number } })._construction?.fiches;
+    expect(fiches).toBeGreaterThanOrEqual(779);
+    expect(Object.keys(MAP).length + EXCLUS.length).toBe(fiches);
+    expect((cmcMapJson as { _total?: number })._total).toBe(Object.keys(MAP).length);
   });
 
   it("lots fixes de 100 ids au plus, couvrant toute la table", async () => {

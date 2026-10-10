@@ -12,6 +12,12 @@ import { NextResponse } from "next/server";
 import { verifyBearer } from "@/lib/auth";
 import { createSupabaseServiceRoleClient } from "@/lib/supabase/server";
 import { lireLignesCmc } from "@/scripts/lib/cmc-lignes.mjs";
+import tableActuelle from "@/data/cmc-id-map.json";
+
+/** Identifiants de la table déployée : toujours cotés (règle de continuité, scripts/lib/cmc-appariement.mjs). */
+const IDS_TABLE = Object.values((tableActuelle as { map?: Record<string, { id: number }> }).map ?? {})
+  .map((e) => e.id)
+  .filter((id) => Number.isInteger(id) && id > 0);
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -38,7 +44,7 @@ export async function GET(req: Request) {
   if (!symboles.length) return NextResponse.json({ ok: false, error: "aucune fiche lue en base" }, { status: 502 });
 
   try {
-    const r = await lireLignesCmc({ symboles, key });
+    const r = await lireLignesCmc({ symboles, key, idsEnPlus: IDS_TABLE });
     return NextResponse.json(
       { ok: true, source: r.source, candidats: r.candidats, credits: r.credits, fiches: symboles.length, data: r.lignes },
       { headers: { "Cache-Control": "no-store" } },

@@ -12,7 +12,9 @@
  * Écrit : price_usd, market_cap_usd, market_cap_rank, volume, offre, variations, price_source et la date du cours
  * (date de la source, jamais l'heure du passage quand la source donne la sienne). Puis l'archive des cours (R4,
  * table cours_archive) et la trace KV cron:refresh-prices:last.
- * Règles pures : scripts/lib/fiches-prix.mjs. Verdict : rouge si erreurs > 0 ou couverture < 95 % des fiches appariées.
+ * Règles pures : scripts/lib/fiches-prix.mjs. Verdict : rouge si erreurs > 0 ou couverture < 95 % des fiches appariées ;
+ * « attention » (avertissement, raison dans la réponse et la trace KV) si aucun lot CoinMarketCap n'a réussi (finitions Z3,
+ * M5 : clé absente ou tous les lots en échec → cours du seul repli CoinGecko).
  * Archive absente (migration supabase/migrations/20261010_cours_archive.sql pas encore lancée) : « archive non
  * disponible » dans la trace, le passage reste vert pour les prix ; la sentinelle met la famille en ⚠️.
  * Reprise Z3 : écritures dans scripts/lib/fiches-prix.mjs (ecrireCours : colonnes absentes → colonnes de base pour
@@ -36,6 +38,7 @@ import { getKv } from "@/lib/kv";
 import { decisionFrein } from "@/scripts/lib/budget-mois.mjs";
 import {
   adressesFiche,
+  attentionR2,
   choisirPaire,
   ecrireCours,
   freinR2SautePassage,
@@ -77,11 +80,17 @@ interface Erreur {
 
 const pause = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
-async function lireTraceR2(): Promise<{ at?: string; saute?: boolean } | null> {
+async function lireTraceR2(): Promise<{ at?: string; saute?: boolean; attention?: boolean; raisonAttention?: string; archive?: string } | null> {
   try {
     const v = await getKv().get<Record<string, unknown>>(CRON_TRACE_KEYS.refreshPrices);
     if (!v || typeof v !== "object") return null;
-    return { at: typeof v.at === "string" ? v.at : undefined, saute: v.saute === true };
+    return {
+      at: typeof v.at === "string" ? v.at : undefined,
+      saute: v.saute === true,
+      attention: typeof v.attention === "boolean" ? v.attention : undefined,
+      raisonAttention: typeof v.raisonAttention === "string" ? v.raisonAttention : undefined,
+      archive: typeof v.archive === "string" ? v.archive : undefined,
+    };
   } catch {
     return null;
   }
@@ -224,7 +233,14 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       const dernierReel = precedente && !precedente.saute ? precedente.at : undefined;
       if (freinR2SautePassage(frein.actif, maintenant.getTime(), dernierReel) && req.nextUrl.searchParams.get("force") !== "1") {
         const corps = { ok: true, saute: true, sessionId, processed: 0, updated: 0, errors: 0, couverturePct: null, raison: `frein du mois : ${frein.raison}`, durationMs: Date.now() - t0, startedAt };
-        await writeCronTrace(CRON_TRACE_KEYS.refreshPrices, { ok: true, saute: true, raison: corps.raison }, maintenant);
+        // Reprise des finitions Z3 (D7c) : la trace d'un passage sauté garde l'avertissement (attention, raisonAttention)
+        // et l'état de l'archive du dernier passage réel, sinon la ⚠️ de supervision clignoterait (⚠️ puis ✅ au saut).
+        const garde = {
+          ...(precedente?.attention !== undefined ? { attention: precedente.attention } : {}),
+          ...(precedente?.raisonAttention ? { raisonAttention: precedente.raisonAttention } : {}),
+          ...(precedente?.archive ? { archive: precedente.archive } : {}),
+        };
+        await writeCronTrace(CRON_TRACE_KEYS.refreshPrices, { ok: true, saute: true, raison: corps.raison, ...garde }, maintenant);
         return NextResponse.json(corps, { status: 200, headers: { "Cache-Control": "no-store" } });
       }
     }
@@ -242,12 +258,16 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     const lignes: Ligne[] = [];
     const repli: string[] = [];
     let lotsCmcOk = 0;
+    let lotsCmcDemandes = 0;
+    const lotsEnRepli: number[] = [];
     const cmcParId = new Map<number, string>(appariees.map((f) => [getCmcEntry(f.coingecko_id)!.id, f.coingecko_id]));
     for (let i = 0; i < CMC_CHUNKS.length; i++) {
       const idsDuLot = CMC_CHUNKS[i].map((c) => cmcParId.get(c)).filter((x): x is string => !!x);
       if (!idsDuLot.length) continue;
+      lotsCmcDemandes++;
       if (!cmcEnabled()) {
         repli.push(...idsDuLot);
+        lotsEnRepli.push(i);
         continue;
       }
       try {
@@ -261,6 +281,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       } catch (e) {
         erreurs.push({ stage: `cmc-lot-${i}`, message: e instanceof Error ? e.message.slice(0, 80) : "erreur" });
         repli.push(...idsDuLot);
+        lotsEnRepli.push(i);
       }
     }
     // 2) repli CoinGecko pour les seuls lots CMC en échec (ou sans clé)
@@ -309,6 +330,10 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     }
 
     const verdict = verdictR2({ erreurs: erreurs.length, appariees: appariees.length, ecritesAppariees });
+    // Finitions Z3 (M5) : aucun lot CoinMarketCap réussi → passage pas « vert » (attention + raison), même cours écrits.
+    // Reprise D7 : un seul lot en repli suffit (lots nommés) ; verdict rouge = les DEUX raisons gardées.
+    const raisonAttention = attentionR2({ lotsCmcOk, lotsCmcDemandes, cmcActif: cmcEnabled(), lotsEnRepli });
+    const raison = verdict.ok ? raisonAttention ?? undefined : [verdict.raison, raisonAttention].filter(Boolean).join(" ; ");
     const durationMs = Date.now() - t0;
     const compte = (s: string) => aEcrire.filter((l) => l.source === s && ecrites.has(l.id)).length;
     const resume = {
@@ -324,6 +349,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       sansSource: fiches.length - ecrites.size,
       suspectes: suspectes.length,
       lotsCmcOk,
+      lotsCmcDemandes,
       cmcErreurs,
       archive: archive.archive,
       archivePoints: archive.points,
@@ -331,7 +357,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     };
     await writeCronTrace(
       CRON_TRACE_KEYS.refreshPrices,
-      { ok: verdict.ok, ...(verdict.ok ? {} : { raison: verdict.raison }), errors: erreurs.length, dureeMs: durationMs, ...resume, suspectesIds: suspectes.map((s) => s.id).join(",") },
+      { ok: verdict.ok, attention: raisonAttention !== null, ...(raison ? { raison } : {}), ...(raisonAttention ? { raisonAttention: raisonAttention.slice(0, 200) } : {}), errors: erreurs.length, dureeMs: durationMs, ...resume, suspectesIds: suspectes.map((s) => s.id).join(",") },
       new Date(),
     );
     console.info(`[refresh-prices-end] session=${sessionId} ${JSON.stringify(resume)} errors=${erreurs.length} durationMs=${durationMs}`);
@@ -345,7 +371,8 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
         errorDetails: erreurs.length ? erreurs.slice(0, 20) : undefined,
         lignesSuspectes: suspectes.length ? suspectes.slice(0, 20) : undefined,
         suspectesRepetees: repetees,
-        raison: verdict.ok ? undefined : verdict.raison,
+        attention: raisonAttention !== null,
+        raison,
         ...resume,
         durationMs,
         startedAt,

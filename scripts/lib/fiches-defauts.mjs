@@ -6,7 +6,9 @@
  * du site (et /acheter/<slug>/fr) et contrôle :
  *  (a) chaque lien interne répond 200, ou 301/308 vers une page qui répond 200 (un seul saut) ;
  *  (b) chaque lien sortant répond < 400 (GET, User-Agent de navigateur, 2 essais espacés) ; « mort » seulement pour un
- *      échec DNS, 404, 410 ou 5xx DEUX nuits de suite ; 401, 403, 429 = refus du robot, non concluant (jamais retiré) ;
+ *      échec DNS, 404, 410 ou 5xx DEUX nuits de suite (la veille et ce jour, dates UTC, échecs espacés d'au moins 12 h :
+ *      une nuit non concluante ou un trou remet le compteur à 1) ; 401, 403, 429 = refus du robot, non concluant (jamais
+ *      retiré) ;
  *  (c) aucun « NaN », « undefined », « null », « [object Object] » dans le texte visible, aucun prix à 0, aucune image
  *      sans adresse, un h1, des données structurées JSON-LD lisibles.
  * Résultat : data/fiches/defauts.json (commit du robot), lu au rendu par lib/liens-morts.ts : un lien sortant mort est
@@ -127,8 +129,9 @@ export function sortantsAControler(desPages, precedent) {
  * @param {Map<string, {url: string, pages: string[], retire: boolean}>} aControler
  * @param {Record<string, {classe: string, code: any}>} resultats  par adresse brute
  * @param {string} nuit
+ * @param {string} [maintenant]  heure ISO du début du passage (écart minimal entre deux échecs comptés)
  */
-export function etatSortants(precedent, aControler, resultats, nuit) {
+export function etatSortants(precedent, aControler, resultats, nuit, maintenant) {
   const precEchec = {};
   for (const [u, e] of Object.entries(precedent?.sortantsEnEchec ?? {})) {
     const k = normaliserUrl(u);
@@ -136,7 +139,7 @@ export function etatSortants(precedent, aControler, resultats, nuit) {
   }
   const prec = {};
   for (const [k, v] of aControler) if (precEchec[k]) prec[v.url] = precEchec[k].e;
-  const fusion = fusionnerSortants(prec, resultats, nuit);
+  const fusion = fusionnerSortants(prec, resultats, nuit, maintenant);
   for (const v of aControler.values()) if (!resultats[v.url] && prec[v.url]) fusion.enEchec[v.url] = prec[v.url];
   const morts = Object.entries(fusion.enEchec).filter(([, e]) => e.nuits >= NUITS_AVANT_MORT).map(([u]) => u).sort();
   const dejaMorts = new Set((precedent?.liensSortantsMorts ?? []).map((u) => normaliserUrl(u)).filter(Boolean));
@@ -161,6 +164,50 @@ export function pagesInsuffisantes(nbPages, nbFiches, precedent) {
 
 /** Une redirection d'un lien sortant est suivie une fois (M3) : un 301 vers une page 404 n'est pas « ok ». */
 export const CODES_REDIRECTION = new Set([301, 302, 303, 307, 308]);
+
+/**
+ * Faut-il publier (commit, donc déploiement Vercel) le nouveau data/fiches/defauts.json ? (finitions Z3, M6)
+ * Contenu UTILE = tout le fichier sauf passeLe et dureeS (qui changent à chaque passage) : listes de liens morts, en
+ * échec, défauts de pages, résumé, complet. Comparaison par valeur, indépendante de l'ordre des clés et de la mise en page.
+ * Garde de fraîcheur : la carte n° 52 du registre (data/fraicheur/registre.json) retient la PLUS ANCIENNE de « dernier
+ * passage réussi du workflow » et « passeLe du fichier publié » (⚠️ au-delà de 30 h) : tant qu'elle lit passeLe, le
+ * fichier est republié une fois par DATE UTC (reprise des finitions Z3, D5, au lieu d'un seuil de 12 h) : publié si la
+ * date du passeLe publié diffère de celle de ce passage. Le premier passage de chaque jour publie donc, un passage en
+ * double le même jour non, et un lancement manuel l'après-midi n'empêche plus la publication de la nuit suivante.
+ * garde = false : garde désactivée (à faire seulement quand la carte n° 52 ne lira plus passeLe : il ne restera alors
+ * aucun commit sans changement utile).
+ * @param {any} ancien  fichier publié (null s'il est absent ou illisible)
+ * @param {any} nouveau fichier de ce passage
+ * @param {{ garde?: boolean }} [o]
+ * @returns {{ publier: boolean, raison: string }}
+ */
+export function changementUtile(ancien, nouveau, { garde = true } = {}) {
+  if (!nouveau || typeof nouveau !== "object") return { publier: false, raison: "nouveau résultat illisible : rien à publier" };
+  if (!ancien || typeof ancien !== "object") return { publier: true, raison: "aucun résultat publié lisible" };
+  const utile = (o) => {
+    const { passeLe: _p, dureeS: _d, ...reste } = o;
+    return canonique(reste);
+  };
+  if (utile(ancien) !== utile(nouveau)) return { publier: true, raison: "contenu utile modifié" };
+  if (garde) {
+    const jour = (v) => {
+      const t = Date.parse(String(v ?? ""));
+      return Number.isFinite(t) ? new Date(t).toISOString().slice(0, 10) : null;
+    };
+    const jA = jour(ancien.passeLe);
+    const jN = jour(nouveau.passeLe) ?? new Date().toISOString().slice(0, 10);
+    if (!jA) return { publier: true, raison: "date de passage publiée absente (lue par la carte de fraîcheur n° 52)" };
+    if (jA !== jN) return { publier: true, raison: `contenu inchangé, mais date de passage publiée du ${jA} (une publication par date UTC ; lue par la carte de fraîcheur n° 52)` };
+  }
+  return { publier: false, raison: "contenu utile inchangé (hors passeLe et dureeS)" };
+}
+
+/** JSON canonique : clés d'objet triées, récursivement (l'ordre des tableaux compte). */
+function canonique(v) {
+  if (Array.isArray(v)) return `[${v.map(canonique).join(",")}]`;
+  if (v && typeof v === "object") return `{${Object.keys(v).sort().map((k) => `${JSON.stringify(k)}:${canonique(v[k])}`).join(",")}}`;
+  return JSON.stringify(v ?? null);
+}
 
 /** Texte visible : sans <script>, <style>, <noscript>, <template>, commentaires ni balises. */
 export function texteVisible(html) {
@@ -240,16 +287,36 @@ export function classerSortant(code, erreur) {
   return "non-concluant";
 }
 
+/** Veille (date UTC AAAA-MM-JJ) d'une nuit AAAA-MM-JJ ; null si la date est illisible. */
+export function veille(nuit) {
+  const t = Date.parse(`${nuit}T00:00:00Z`);
+  return Number.isFinite(t) ? new Date(t - 86_400_000).toISOString().slice(0, 10) : null;
+}
+
+/** Écart minimal (heures) entre deux échecs comptés comme deux nuits (reprise des finitions Z3, D6). */
+export const ECART_MIN_ECHECS_H = 12;
+
 /**
- * Fusion avec l'état de la nuit précédente : un lien sortant est MORT après 2 nuits d'échec de suite ; un succès le
- * guérit (il sort de la liste) ; un non-concluant ne change rien.
- * @param {Record<string, {nuits:number, depuis:string, code:string|number|null, derniereNuit:string}>} precedent
+ * Fusion avec l'état de la nuit précédente : un lien sortant est MORT après 2 nuits d'échec DE SUITE ; un succès le
+ * guérit (il sort de la liste) ; un non-concluant ne change rien à l'état gardé.
+ * Finitions Z3 (M4), « de suite » strict : le compteur n'augmente que si le dernier échec concluant (derniereNuit) date
+ * de la VEILLE (date UTC). Après une nuit non concluante, un lien non contrôlé (budget) ou un trou d'un jour ou plus,
+ * l'échec redevient « première nuit » (compteur à 1, depuis = cette nuit). Un même jour rejoué ne compte pas deux fois.
+ * Un lien DÉJÀ mort (deux nuits de suite établies) le reste à chaque nouvel échec, même après un trou : seul un succès le
+ * guérit (sinon il reviendrait sur la fiche un jour sur deux, défaut B2 de la reprise). Son état n'est plus réécrit.
+ * Deux échecs comptés doivent être espacés d'au moins ECART_MIN_ECHECS_H heures (dernierEchecLe, si `maintenant` est
+ * donné et si l'état précédent porte l'heure).
+ * @param {Record<string, {nuits:number, depuis:string, code:string|number|null, derniereNuit:string, dernierEchecLe?:string}>} precedent
  * @param {Record<string, {classe:string, code:any}>} resultats
  * @param {string} nuit  date AAAA-MM-JJ de ce passage
+ * @param {string} [maintenant]  heure ISO du passage (début), pour l'écart minimal entre deux échecs comptés
  */
-export function fusionnerSortants(precedent, resultats, nuit) {
-  /** @type {Record<string, {nuits:number, depuis:string, code:string|number|null, derniereNuit:string}>} */
+export function fusionnerSortants(precedent, resultats, nuit, maintenant) {
+  /** @type {Record<string, {nuits:number, depuis:string, code:string|number|null, derniereNuit:string, dernierEchecLe?:string}>} */
   const etat = {};
+  const hier = veille(nuit);
+  const tMaintenant = Date.parse(String(maintenant ?? ""));
+  const horodatage = Number.isFinite(tMaintenant) ? { dernierEchecLe: new Date(tMaintenant).toISOString() } : {};
   for (const [url, r] of Object.entries(resultats)) {
     const p = precedent?.[url];
     if (r.classe === "ok") continue;
@@ -257,8 +324,31 @@ export function fusionnerSortants(precedent, resultats, nuit) {
       if (p) etat[url] = p;
       continue;
     }
-    const nuits = p ? (p.derniereNuit === nuit ? p.nuits : p.nuits + 1) : 1;
-    etat[url] = { nuits, depuis: p?.depuis ?? nuit, code: r.code ?? null, derniereNuit: nuit };
+    // Reprise des finitions Z3 (D2) : un lien DÉJÀ mort qui échoue encore garde son état tel quel (nuits plafonné à
+    // NUITS_AVANT_MORT, derniereNuit et code non réécrits) : le fichier ne change qu'à une vraie transition (1 → 2,
+    // remise à 1, guérison), donc pas de commit ni de déploiement chaque nuit à cause d'un compteur.
+    if (p && p.nuits >= NUITS_AVANT_MORT) {
+      etat[url] = p.nuits === NUITS_AVANT_MORT ? p : { ...p, nuits: NUITS_AVANT_MORT };
+      continue;
+    }
+    // Même nuit rejouée (passage en double) : rien ne change.
+    if (p && p.derniereNuit === nuit) {
+      etat[url] = p;
+      continue;
+    }
+    if (p && p.derniereNuit === hier) {
+      // Reprise des finitions Z3 (D6) : la « nuit » est la date UTC du passage ; un échec à 23:59 puis un autre à 03:40
+      // ne valent pas deux nuits. Il faut aussi au moins ECART_MIN_ECHECS_H heures entre les deux échecs comptés ; sinon
+      // c'est la même nuit qui glisse sur la date suivante (compteur et heure du premier échec gardés).
+      const tP = Date.parse(String(p.dernierEchecLe ?? ""));
+      if (Number.isFinite(tP) && Number.isFinite(tMaintenant) && tMaintenant - tP < ECART_MIN_ECHECS_H * 3_600_000) {
+        etat[url] = { ...p, derniereNuit: nuit };
+        continue;
+      }
+      etat[url] = { nuits: p.nuits + 1, depuis: p.depuis ?? hier ?? nuit, code: r.code ?? null, derniereNuit: nuit, ...horodatage };
+      continue;
+    }
+    etat[url] = { nuits: 1, depuis: nuit, code: r.code ?? null, derniereNuit: nuit, ...horodatage };
   }
   const morts = Object.entries(etat).filter(([, e]) => e.nuits >= NUITS_AVANT_MORT).map(([u]) => u).sort();
   return { enEchec: etat, morts };
