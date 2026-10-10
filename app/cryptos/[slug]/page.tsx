@@ -170,13 +170,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   // quand même, métadonnées (canonical) de la fiche éditoriale.
   const c = getCryptoBySlug(toCryptoPageSlug(canonical));
   // Fall-back DB pour les fiches LLM (Phase 1 scaling).
-  // params.slug = coingecko_id (= slug DB column).
+  // params.slug = slug de la fiche en base (égal à coingecko_id, sauf fiche rattachée à un nouvel identifiant).
   if (!c) {
     const fiche = await getCryptoFiche(canonical);
     if (fiche) {
       // lot fraîcheur A2 (L3 d) : description sans les montants de marché figés du jour de la génération
       const llm = { tldr: retirerMontantsFiges(corrigerAccentsProfond((fiche.llm_content ?? {}) as { tldr?: string }).tldr) || undefined };
-      const url = `${BRAND.url}/cryptos/${canonical}`;
+      const url = `${BRAND.url}/cryptos/${fiche.slug}`;
       return {
         title: fitTitle(`${fiche.name} (${fiche.symbol}) — fiche complète`),
         description: fitDescription(
@@ -423,6 +423,9 @@ async function CryptoPage({ params }: Props) {
   if (!c) {
     const fiche = await getCryptoFiche(canonical);
     if (!fiche) notFound();
+    // /cryptos/<coingecko_id> d'une fiche dont l'URL publique est le slug (telcoin-2 → telcoin) : filet du 308 de
+    // next.config.js (lib/seo-redirects.cjs, FICHES_CG_TO_SLUG).
+    if (fiche.slug && fiche.slug !== canonical) permanentRedirect(`/cryptos/${fiche.slug}`);
     return <LLMFicheView fiche={fiche} knownIds={await getLinkableCryptoIds()} />;
   }
 

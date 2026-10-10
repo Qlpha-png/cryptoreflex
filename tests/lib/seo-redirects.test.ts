@@ -1,6 +1,6 @@
 import { createRequire } from "node:module";
 import { describe, expect, it, vi } from "vitest";
-import { EDITORIAL_CG_TO_ID, cryptoPagePath, toCryptoPageSlug } from "@/lib/crypto-page-slug";
+import { EDITORIAL_CG_TO_ID, FICHES_CG_TO_SLUG, cryptoPagePath, toCryptoPageSlug } from "@/lib/crypto-page-slug";
 import { SLUG_ALIASES } from "@/lib/crypto-slug-aliases";
 import { HIST_LATEST_YEAR, HIST_YEARS } from "@/lib/historique-prix";
 import { getAllCryptos } from "@/lib/cryptos";
@@ -20,6 +20,7 @@ interface SeoRedirectsModule {
   HIST_YEARS: string[];
   HIST_LATEST_YEAR: string;
   CRYPTO_SLUG_ALIASES: Record<string, string>;
+  FICHES_CG_TO_SLUG: Record<string, string>;
   loadEditorialCryptos(): Array<{ id: string; coingeckoId: string }>;
   buildEditorialCgMap(c: Array<{ id: string; coingeckoId: string }>): Record<string, string>;
   buildSeoRedirects(opts?: { cryptos?: Array<{ id: string; coingeckoId: string }> }): Redirect[];
@@ -89,6 +90,22 @@ describe("seo-redirects — synchronisation avec la data et les modules TS", () 
 
   it("les alias d'URL CJS sont identiques à SLUG_ALIASES (lib/crypto-slug-aliases.ts)", () => {
     expect(seo.CRYPTO_SLUG_ALIASES).toEqual(SLUG_ALIASES);
+  });
+
+  it("fiches en base rattachées à un nouvel identifiant CoinGecko : URL publique gardée (telcoin-2 → telcoin)", () => {
+    expect(seo.FICHES_CG_TO_SLUG).toEqual(FICHES_CG_TO_SLUG);
+    expect(FICHES_CG_TO_SLUG).toEqual({ "telcoin-2": "telcoin" });
+    expect(cryptoPagePath("telcoin-2")).toBe("/cryptos/telcoin");
+    expect(toCryptoPageSlug("telcoin")).toBe("telcoin");
+    expect(resolve("/cryptos/telcoin-2")).toBe("/cryptos/telcoin");
+    expect(resolve("/cryptos/telcoin-2/acheter-en-france")).toBe("/cryptos/telcoin/acheter-en-france");
+    expect(resolve("/cryptos/telcoin")).toBeNull();
+    // jamais une fiche éditoriale ni un alias existant
+    const ids = new Set(getAllCryptos().map((c) => c.id));
+    for (const [cg, slug] of Object.entries(FICHES_CG_TO_SLUG)) {
+      expect(ids.has(cg) || ids.has(slug), cg).toBe(false);
+      expect(cg in SLUG_ALIASES || cg in EDITORIAL_CG_TO_ID, cg).toBe(false);
+    }
   });
 
   it("les années de l'historique sont identiques à lib/historique-prix.ts", () => {

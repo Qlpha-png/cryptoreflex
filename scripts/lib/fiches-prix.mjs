@@ -234,11 +234,10 @@ export function symbolesDivergents(appariees, entree, acceptees = DIVERGENCES_AC
 }
 /**
  * Divergences de symbole acceptées en connaissance de cause (identifiant de fiche → « BASE>TABLE »).
- * the-open-network : la fiche garde « Toncoin (TON) », fiche éditoriale du top (data/top-cryptos.json), alors que
- * CoinGecko et CoinMarketCap affichent « Gram (prev. Toncoin) » (GRAM) depuis le renommage (relevés du 10/10/2026) ; le
- * renommage en base reste une décision de Kev (bloc commenté de fiches-noms.sql, scratchpad du lot CMC identité).
+ * Vide depuis le 10/10/2026 : the-open-network (TON>GRAM) renommée « Gram (prev. Toncoin) » (GRAM) en base et dans
+ * data/hidden-gems.json, comme chez CoinGecko et CoinMarketCap (décision de Kev).
  */
-export const DIVERGENCES_ACCEPTEES = { "the-open-network": "TON>GRAM" };
+export const DIVERGENCES_ACCEPTEES = {};
 
 /**
  * Fiches suspectes deux passages de suite (reprise Z3, I5) : ticket par le workflow de R2. precedentes = identifiants

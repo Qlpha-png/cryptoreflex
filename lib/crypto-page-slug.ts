@@ -46,9 +46,18 @@ export const EDITORIAL_CG_TO_ID: Readonly<Record<string, string>> = {
   "worldcoin-wld": "worldcoin",
 };
 
-/** Id éditorial si `idOrCoingeckoId` est le coingeckoId d'une fiche éditoriale, sinon inchangé. */
+/**
+ * Fiches EN BASE rattachées à un nouvel identifiant CoinGecko en gardant leur URL publique (colonne slug ≠ coingecko_id).
+ * telcoin-2 : nouveau jeton Telcoin (TEL) ; « telcoin » est devenu « Telcoin [OLD] » chez CoinGecko (10/10/2026).
+ * Miroir de FICHES_CG_TO_SLUG dans lib/seo-redirects.cjs (308) ; tests/lib/seo-redirects.test.ts vérifie l'égalité.
+ */
+export const FICHES_CG_TO_SLUG: Readonly<Record<string, string>> = {
+  "telcoin-2": "telcoin",
+};
+
+/** Id éditorial (ou slug d'une fiche en base) si `idOrCoingeckoId` est un coingeckoId à URL différente, sinon inchangé. */
 export function toCryptoPageSlug(idOrCoingeckoId: string): string {
-  return EDITORIAL_CG_TO_ID[idOrCoingeckoId] ?? idOrCoingeckoId;
+  return EDITORIAL_CG_TO_ID[idOrCoingeckoId] ?? FICHES_CG_TO_SLUG[idOrCoingeckoId] ?? idOrCoingeckoId;
 }
 
 /** Chemin canonique de la fiche : `/cryptos/<slug>`. */

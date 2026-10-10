@@ -623,16 +623,20 @@ describe("reprise du 10/10/2026 : robot (identifiants changés, lecture partiell
     expect(instants.length).toBe(1 + 1 + 40);
     for (let i = 0; i < instants.length; i++) expect(instants.filter((t) => t >= instants[i] && t < instants[i] + 60_000).length).toBeLessThan(30);
   });
-  it("R2 : divergence acceptée (the-open-network TON>GRAM) gardée dans la réponse mais sans avertissement ; une autre divergence reste signalée", () => {
-    expect(DIVERGENCES_ACCEPTEES).toEqual({ "the-open-network": "TON>GRAM" });
+  it("R2 : divergence acceptée gardée dans la réponse mais sans avertissement ; une autre divergence reste signalée", () => {
+    // 10/10/2026 : Toncoin renommée Gram en base → plus aucune divergence acceptée ; TON en base redevient un avertissement
+    expect(DIVERGENCES_ACCEPTEES).toEqual({});
     const table: Record<string, { id: number; symbol: string }> = { "the-open-network": { id: 11419, symbol: "GRAM" }, mantra: { id: 39611, symbol: "MANTRA" } };
-    const r = symbolesDivergents([{ coingecko_id: "the-open-network", symbol: "TON" }, { coingecko_id: "mantra", symbol: "OM" }], (id: string) => table[id] ?? null);
+    expect(symbolesDivergents([{ coingecko_id: "the-open-network", symbol: "GRAM" }], (id: string) => table[id] ?? null)).toEqual([]);
+    expect(symbolesDivergents([{ coingecko_id: "the-open-network", symbol: "TON" }], (id: string) => table[id] ?? null)[0].acceptee).toBeUndefined();
+    const acceptees = { "the-open-network": "TON>GRAM" };
+    const r = symbolesDivergents([{ coingecko_id: "the-open-network", symbol: "TON" }, { coingecko_id: "mantra", symbol: "OM" }], (id: string) => table[id] ?? null, acceptees);
     expect(r).toEqual([
       { id: "mantra", symboleBase: "OM", symboleTable: "MANTRA" },
       { id: "the-open-network", symboleBase: "TON", symboleTable: "GRAM", acceptee: true },
     ]);
     // la divergence change (autre symbole en base) : redevient un avertissement
-    expect(symbolesDivergents([{ coingecko_id: "the-open-network", symbol: "TONCOIN" }], (id: string) => table[id] ?? null)[0].acceptee).toBeUndefined();
+    expect(symbolesDivergents([{ coingecko_id: "the-open-network", symbol: "TONCOIN" }], (id: string) => table[id] ?? null, acceptees)[0].acceptee).toBeUndefined();
     expect(lire(".github/workflows/refresh-prices-db.yml")).toMatch(/select\(\.acceptee != true\)/);
   });
 });

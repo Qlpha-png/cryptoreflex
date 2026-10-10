@@ -297,15 +297,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       if (!sb) return [];
       const { data, error } = await sb
         .from("cryptos")
-        .select("coingecko_id, last_refreshed_at, market_cap_rank")
+        .select("coingecko_id, slug, last_refreshed_at, market_cap_rank")
         .eq("source", "llm-pipeline")
         .eq("is_published", true)
         .order("market_cap_rank", { ascending: true, nullsFirst: false })
         .limit(2000);
       if (error || !data) return [];
-      return data.map((r: { coingecko_id: string; last_refreshed_at: string | null; market_cap_rank: number | null }) =>
+      // URL publique = slug (10/10/2026 : telcoin garde /cryptos/telcoin, rattachée à telcoin-2)
+      return data.map((r: { coingecko_id: string; slug?: string | null; last_refreshed_at: string | null; market_cap_rank: number | null }) =>
         entry(
-          `/cryptos/${r.coingecko_id}`,
+          `/cryptos/${r.slug || r.coingecko_id}`,
           "weekly",
           // Priorité dégressive selon market_cap_rank : top 100 = 0.7,
           // 100-300 = 0.6, 300-700 = 0.5, 700+ = 0.4.

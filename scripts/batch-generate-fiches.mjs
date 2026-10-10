@@ -1040,6 +1040,9 @@ async function main() {
         const chunk = ids.slice(i, i + 500);
         const { data: existing } = await sb.from("cryptos").select("coingecko_id").in("coingecko_id", chunk);
         for (const r of existing ?? []) existingIds.add(r.coingecko_id);
+        // 10/10/2026 : un ancien identifiant CoinGecko gardé comme slug (telcoin → fiche telcoin-2) n'est pas recréé
+        const { data: parSlug } = await sb.from("cryptos").select("slug").in("slug", chunk);
+        for (const r of parSlug ?? []) existingIds.add(r.slug);
       }
       const before = topCryptos.length;
       topCryptos = topCryptos.filter((c) => !existingIds.has(c.id));
@@ -1109,6 +1112,9 @@ async function main() {
     const ids = topCryptos.map((c) => c.id);
     const { data: existing } = await sb.from("cryptos").select("coingecko_id").in("coingecko_id", ids);
     const existingSet = new Set((existing ?? []).map((r) => r.coingecko_id));
+    // 10/10/2026 : slug déjà pris (ancien identifiant CoinGecko gardé comme URL) = fiche existante
+    const { data: parSlug } = await sb.from("cryptos").select("slug").in("slug", ids);
+    for (const r of parSlug ?? []) existingSet.add(r.slug);
     toProcess = topCryptos.filter((c) => !existingSet.has(c.id));
     console.log(`  ✓ ${existingSet.size} skipped (already in DB), ${toProcess.length} to process`);
   } else if (COINGECKO_IDS.length > 0) {

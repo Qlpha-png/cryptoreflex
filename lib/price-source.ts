@@ -290,7 +290,7 @@ const COIN_META: Record<string, { symbol: string; name: string }> = {
   chainlink:  { symbol: "LINK",name: "Chainlink" },
   polkadot:   { symbol: "DOT", name: "Polkadot" },
   "matic-network": { symbol: "MATIC", name: "Polygon" },
-  "the-open-network": { symbol: "TON", name: "Toncoin" },
+  "the-open-network": { symbol: "GRAM", name: "Gram (prev. Toncoin)" },
   "shiba-inu": { symbol: "SHIB", name: "Shiba Inu" },
   litecoin:   { symbol: "LTC", name: "Litecoin" },
   "bitcoin-cash": { symbol: "BCH", name: "Bitcoin Cash" },

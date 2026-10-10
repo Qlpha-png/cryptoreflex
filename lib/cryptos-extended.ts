@@ -89,9 +89,11 @@ const unifiedCached = unstable_cache(
     const staticIds = new Set([...statics.map((c) => c.coingeckoId), ...statics.map((c) => c.id)]);
     // + une seule entrée par identifiant (deux lignes en base pour la même crypto = un seul lien, comme le plan du site).
     const seenLlm = new Set<string>();
+    // 10/10/2026 : l'id d'une fiche en base est son slug (URL publique), coingeckoId reste l'identifiant CoinGecko.
     const llmFiltered = llm.filter((f) => {
-      if (staticIds.has(f.coingecko_id) || f.coingecko_id in SLUG_ALIASES || seenLlm.has(f.coingecko_id)) return false;
-      seenLlm.add(f.coingecko_id);
+      const id = f.slug || f.coingecko_id;
+      if (staticIds.has(f.coingecko_id) || staticIds.has(id) || f.coingecko_id in SLUG_ALIASES || seenLlm.has(id)) return false;
+      seenLlm.add(id);
       return true;
     });
 
@@ -105,7 +107,7 @@ const unifiedCached = unstable_cache(
         source: "static" as const,
       })),
       ...llmFiltered.map((f) => ({
-        id: f.coingecko_id,
+        id: f.slug || f.coingecko_id,
         coingeckoId: f.coingecko_id,
         name: f.name,
         symbol: f.symbol,
@@ -117,7 +119,8 @@ const unifiedCached = unstable_cache(
   },
   // v2 : nouvelle clé pour repartir propre (l'ancienne "cryptos-unified" pouvait
   // être figée à ~100, peuplée pendant un build sans accès Supabase + filtre tier).
-  ["cryptos-unified-v5"], // v5 (05/10/2026) : doublons retirés (alias, identifiants éditoriaux, lignes en double)
+  // v6 (10/10/2026) : id = slug de la fiche en base (telcoin) ; v5 (05/10/2026) : doublons retirés
+  ["cryptos-unified-v6"],
   // Cache 6h : la liste change rarement (1×/jour via cron LLM-pipeline).
   { tags: ["cryptos", "cryptos-llm"], revalidate: 21600 },
 );

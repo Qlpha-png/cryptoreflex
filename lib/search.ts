@@ -280,7 +280,7 @@ function buildLLMFicheItems(fiches: CryptoFicheLight[]): SearchItem[] {
       id: `crypto:${f.coingecko_id}`,
       title: `${f.name} (${f.symbol.toUpperCase()})`,
       type: "crypto" as const,
-      url: `/cryptos/${f.coingecko_id}`,
+      url: `/cryptos/${f.slug || f.coingecko_id}`,
       snippet,
       keywords: [
         f.symbol,

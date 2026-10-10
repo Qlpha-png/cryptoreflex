@@ -118,22 +118,28 @@ export interface CryptoFicheRow {
  * configurées en SSG/ISR. Comme on lit uniquement des fiches publiques
  * (is_published=true), pas besoin de session — service-role va bien.
  */
-async function _getCryptoFicheUncached(coingeckoId: string): Promise<CryptoFicheRow | null> {
+async function _getCryptoFicheUncached(slugOuId: string): Promise<CryptoFicheRow | null> {
   const sb = fichesReadClient();
   if (!sb) return null;
   try {
-    const { data, error } = await sb
-      .from("cryptos")
-      .select("*")
-      .eq("coingecko_id", coingeckoId)
-      .eq("is_published", true)
-      .maybeSingle();
-    if (error) throw new Error(`[cryptos-db] getCryptoFiche(${coingeckoId}) : ${error.message}`);
-    return (data as CryptoFicheRow) ?? null;
+    // 10/10/2026 (Telcoin) : le segment d'URL est d'abord cherché comme `slug` (URL publique), puis comme
+    // `coingecko_id`. Une fiche rattachée à un nouvel identifiant CoinGecko garde ainsi son URL (slug « telcoin »,
+    // coingecko_id « telcoin-2 ») ; l'ancienne forme /cryptos/<coingecko_id> est redirigée par la page vers le slug.
+    for (const colonne of ["slug", "coingecko_id"] as const) {
+      const { data, error } = await sb
+        .from("cryptos")
+        .select("*")
+        .eq(colonne, slugOuId)
+        .eq("is_published", true)
+        .maybeSingle();
+      if (error) throw new Error(`[cryptos-db] getCryptoFiche(${slugOuId}) : ${error.message}`);
+      if (data) return data as CryptoFicheRow;
+    }
+    return null;
   } catch (err) {
     rethrowNextInternal(err);
     // eslint-disable-next-line no-console
-    console.warn(`[cryptos-db] getCryptoFiche(${coingeckoId}) exception:`, err);
+    console.warn(`[cryptos-db] getCryptoFiche(${slugOuId}) exception:`, err);
     throw err; // jamais de null mis en cache sur une panne
   }
 }
@@ -156,11 +162,13 @@ async function _getCryptoFicheUncached(coingeckoId: string): Promise<CryptoFiche
  */
 export const CRYPTO_FICHES_COURS_TAG = "crypto-fiches-cours";
 
-export async function getCryptoFiche(coingeckoId: string): Promise<CryptoFicheRow | null> {
+/** Fiche publiée par slug d'URL, sinon par identifiant CoinGecko (voir _getCryptoFicheUncached). */
+export async function getCryptoFiche(slugOuId: string): Promise<CryptoFicheRow | null> {
   const cached = unstable_cache(
-    () => _getCryptoFicheUncached(coingeckoId),
-    [`crypto-fiche-v2`, coingeckoId], // v2 (05/10/2026) : purge des faux « introuvable » mis en cache
-    { revalidate: 21600, tags: [`crypto-fiche:${coingeckoId}`, CRYPTO_FICHES_COURS_TAG] },
+    () => _getCryptoFicheUncached(slugOuId),
+    // v3 (10/10/2026) : lecture par slug d'abord ; v2 (05/10/2026) : purge des faux « introuvable » mis en cache
+    [`crypto-fiche-v3`, slugOuId],
+    { revalidate: 21600, tags: [`crypto-fiche:${slugOuId}`, CRYPTO_FICHES_COURS_TAG] },
   );
   return cached();
 }
@@ -244,13 +252,15 @@ export async function getPublishedCoingeckoIds(
 /**
  * OPTIM 2026-05-10 — version LIGHT pour les cas qui n'ont pas besoin de
  * raw_data_snapshot + llm_content (qui font 90% de la taille des rows).
- * Champs : juste coingecko_id, name, symbol, categories, market_cap_rank.
+ * Champs : juste coingecko_id, slug (URL publique), name, symbol, categories, market_cap_rank.
  *
  * Bandwidth : ~200 bytes/row vs 2127 bytes/row = -90%.
  * Utilisé par getAllCryptosUnified (cache 1h × 1000 rows × 2 MB → 200 KB).
  */
 export interface CryptoFicheLight {
   coingecko_id: string;
+  /** URL publique /cryptos/<slug> (égale à coingecko_id sauf fiche rattachée à un nouvel identifiant, ex. telcoin). */
+  slug: string;
   name: string;
   symbol: string;
   categories: string[];
@@ -266,7 +276,7 @@ export async function getFeaturedCryptosLight(
   try {
     const { data, error } = await sb
       .from("cryptos")
-      .select("coingecko_id, name, symbol, categories, market_cap_rank")
+      .select("coingecko_id, slug, name, symbol, categories, market_cap_rank")
       .eq("is_published", true)
       .in("quality_tier", tiers)
       .order("market_cap_rank", { ascending: true, nullsFirst: false })
@@ -295,7 +305,7 @@ export async function getAllPublishedLlmCryptosLight(limit = 2000): Promise<Cryp
   try {
     const { data, error } = await sb
       .from("cryptos")
-      .select("coingecko_id, name, symbol, categories, market_cap_rank")
+      .select("coingecko_id, slug, name, symbol, categories, market_cap_rank")
       .eq("source", "llm-pipeline")
       .eq("is_published", true)
       .order("market_cap_rank", { ascending: true, nullsFirst: false })
@@ -352,7 +362,7 @@ async function _searchCryptosUncached(
     const term = `%${query.trim()}%`;
     const { data, error } = await sb
       .from("cryptos")
-      .select("coingecko_id, name, symbol, categories, market_cap_rank")
+      .select("coingecko_id, slug, name, symbol, categories, market_cap_rank")
       .eq("is_published", true)
       .or(`name.ilike.${term},symbol.ilike.${term},slug.ilike.${term}`)
       .order("market_cap_rank", { ascending: true, nullsFirst: false })

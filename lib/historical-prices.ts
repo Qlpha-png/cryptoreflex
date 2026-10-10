@@ -94,7 +94,7 @@ export const COIN_NAMES: Record<string, string> = {
   usdc: "USD Coin",
   doge: "Dogecoin",
   trx: "TRON",
-  ton: "Toncoin",
+  ton: "Gram (prev. Toncoin)",
   matic: "Polygon",
   dot: "Polkadot",
   avax: "Avalanche",

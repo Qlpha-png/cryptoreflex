@@ -54,7 +54,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     if (fiche) {
       return {
         title: fitTitle(`${fiche.name} (${fiche.symbol}) — fiche complète`),
-        alternates: { canonical: `${BRAND.url}/cryptos/${fiche.coingecko_id}` },
+        alternates: { canonical: `${BRAND.url}/cryptos/${fiche.slug}` },
         robots: { index: false, follow: true },
       };
     }
@@ -137,7 +137,7 @@ export default async function AcheterEnFrancePage({ params }: Props) {
     // notFound() (HTTP 200 + page 404 — anti-SEO), on redirige 308 vers
     // la fiche principale qui, elle, existe et a du contenu utile.
     const fiche = await getCryptoFiche(params.slug);
-    if (fiche) redirect(`/cryptos/${fiche.coingecko_id}`);
+    if (fiche) redirect(`/cryptos/${fiche.slug}`);
     notFound();
   }
 

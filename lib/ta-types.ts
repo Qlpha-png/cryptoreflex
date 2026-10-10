@@ -229,7 +229,7 @@ export const TA_CRYPTOS: TACryptoMeta[] = [
   { symbol: "TRX", name: "TRON", slug: "tron", coingeckoId: "tron", image: "/logos/tron.svg" },
   { symbol: "SHIB", name: "Shiba Inu", slug: "shiba-inu", coingeckoId: "shiba-inu", image: "/logos/shiba-inu.svg" },
   { symbol: "DOT", name: "Polkadot", slug: "polkadot", coingeckoId: "polkadot", image: "/logos/polkadot.svg" },
-  { symbol: "TON", name: "Toncoin", slug: "toncoin", coingeckoId: "the-open-network", image: "/logos/toncoin.svg" },
+  { symbol: "GRAM", name: "Gram (prev. Toncoin)", slug: "toncoin", coingeckoId: "the-open-network", image: "/logos/toncoin.svg" },
   { symbol: "LINK", name: "Chainlink", slug: "chainlink", coingeckoId: "chainlink", image: "/logos/chainlink.svg" },
   { symbol: "MATIC", name: "Polygon", slug: "polygon", coingeckoId: "matic-network", image: "/logos/polygon.svg" },
   { symbol: "WBTC", name: "Wrapped Bitcoin", slug: "wbtc", coingeckoId: "wrapped-bitcoin", image: "/logos/wbtc.svg" },

@@ -951,8 +951,8 @@
     {
       "rank": 20,
       "id": "toncoin",
-      "name": "Toncoin",
-      "symbol": "TON",
+      "name": "Gram (prev. Toncoin)",
+      "symbol": "GRAM",
       "coingeckoId": "the-open-network",
       "marketCapRange": "8Md$ - 20Md$",
       "yearCreated": 2021,

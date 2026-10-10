@@ -111,6 +111,7 @@ export const SYMBOL_TO_COINGECKO_ID: Record<string, string> = {
   MATIC: "matic-network",
   SHIB: "shiba-inu",
   TON: "the-open-network",
+  GRAM: "the-open-network",
   LTC: "litecoin",
   BCH: "bitcoin-cash",
   UNI: "uniswap",

@@ -71,8 +71,8 @@ jobs:
               fi
               # 10/10/2026 (identité CMC) : fiche appariée dont le symbole affiché (base) diffère du symbole de la table
               # CoinMarketCap (nom ou symbole périmé en base, ex. RNDR pour RENDER) → avertissement, le run reste vert.
-              # Divergences acceptées (acceptee = true, DIVERGENCES_ACCEPTEES de scripts/lib/fiches-prix.mjs, ex.
-              # the-open-network TON>GRAM) : gardées dans la réponse, sans avertissement.
+              # Divergences acceptées (acceptee = true, DIVERGENCES_ACCEPTEES de scripts/lib/fiches-prix.mjs, vide
+              # depuis le renommage Gram du 10/10/2026) : gardées dans la réponse, sans avertissement.
               DIVERGENTS=$(jq -r '[(.symbolesDivergents // [])[] | select(.acceptee != true) | "\(.id) (\(.symboleBase) en base, \(.symboleTable) chez CMC)"] | join(", ")' /tmp/body.json 2>/dev/null || echo "")
               if [ -n "$DIVERGENTS" ]; then
                 echo "::warning::refresh-prices : symbole en base différent de la table CoinMarketCap : $DIVERGENTS"

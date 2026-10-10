@@ -100,7 +100,7 @@ function LLMFicheViewBase({ fiche, knownIds }: { fiche: CryptoFicheRow; knownIds
   const llm = nettoyerContenuLlm(corrigerAccentsProfond((fiche.llm_content || {}) as LLMContent) as unknown as Record<string, unknown>) as LLMContent;
   // L3 a : cours masqué si le relevé du cours (price_updated_at, jamais updated_at seul) est trop ancien (lib/cours-fiche.ts)
   const cours = etatCours(releveDuCours(fiche), Date.now());
-  const pageUrl = `${BRAND.url}/cryptos/${fiche.coingecko_id}`;
+  const pageUrl = `${BRAND.url}/cryptos/${fiche.slug}`; // URL publique (slug), jamais l'identifiant CoinGecko
   // Lot Z3 : un lien sortant déclaré mort par le robot de nuit (lib/liens-morts.ts) est retiré jusqu'à guérison.
   const siteOfficiel = lienVivant(fiche.homepage_url);
   const whitepaper = lienVivant(fiche.whitepaper_url);
@@ -124,17 +124,17 @@ function LLMFicheViewBase({ fiche, knownIds }: { fiche: CryptoFicheRow; knownIds
   ];
   const schemas = graphSchema([
     articleSchema({
-      slug: `cryptos/${fiche.coingecko_id}`,
+      slug: `cryptos/${fiche.slug}`,
       title: `${fiche.name} (${fiche.symbol}) — fiche complète Cryptoreflex`,
       description,
       date: fiche.published_at ?? fiche.last_refreshed_at,
       dateModified: fiche.last_refreshed_at,
       category: fiche.categories?.[0] ?? "Crypto",
       tags: [fiche.name, fiche.symbol, "crypto", ...(fiche.categories ?? [])],
-      cover: `/cryptos/${fiche.coingecko_id}/opengraph-image`,
+      cover: `/cryptos/${fiche.slug}/opengraph-image`,
     }),
     cryptoFinancialProductSchema({
-      slug: fiche.coingecko_id,
+      slug: fiche.slug,
       name: fiche.name,
       symbol: fiche.symbol,
       description,
@@ -147,7 +147,7 @@ function LLMFicheViewBase({ fiche, knownIds }: { fiche: CryptoFicheRow; knownIds
   return (
     <article className="container mx-auto max-w-4xl px-4 py-8">
       {/* Breadcrumb */}
-      <Breadcrumbs chemin={`/cryptos/${fiche.coingecko_id}`} label={fiche.name} className="mb-6" />
+      <Breadcrumbs chemin={`/cryptos/${fiche.slug}`} label={fiche.name} className="mb-6" />
 
       {/* Hero */}
       <header className="mb-8">
