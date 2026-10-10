@@ -11,7 +11,8 @@
  */
 import { test, expect } from "@playwright/test";
 
-/* jeu ouvert (date de lancement dans le build, ex. jour 1 = 02/10/2026) : XRP (jour 43) reste « à venir » */
+/* jeu ouvert (date de lancement dans le build, jour 1 = 02/10/2026) : toutes les cartes sont en jeu depuis le premier
+   jour (d5fd54ca, 05/10/2026) ; XRP a donc sa carte entière. Les cas « à venir » ne valent qu'avant lancement. */
 const LAUNCHED = !!process.env.NEXT_PUBLIC_REFLEX_CARDS_LAUNCH_DATE;
 
 test.describe("Reflex Cards — cartes pas encore sorties", () => {
@@ -19,8 +20,10 @@ test.describe("Reflex Cards — cartes pas encore sorties", () => {
     await page.goto("/cartes");
     await expect(page.getByRole("heading", { level: 1, name: /Reflex Cards/i })).toBeVisible();
     await expect(page.locator(".rc-card").filter({ visible: true }).first()).toBeVisible();
-    await expect(page.getByText(/Révélée le jour 43/)).toBeVisible();
-    await expect(page.getByRole("link", { name: "XRP" })).toHaveCount(0);
+    if (!LAUNCHED) {
+      await expect(page.getByText(/Révélée le jour 43/)).toBeVisible();
+      await expect(page.getByRole("link", { name: "XRP" })).toHaveCount(0);
+    }
     /* avant lancement : aucune liste ; jeu ouvert : la liste des cartes sorties et le bouton « Jouer maintenant » */
     if (LAUNCHED) {
       expect(await page.locator("details").count()).toBeGreaterThan(0);
@@ -45,6 +48,13 @@ test.describe("Reflex Cards — cartes pas encore sorties", () => {
 
   test("carte pas encore sortie : page « à venir » neutre (noindex), image de partage neutre", async ({ page, request }) => {
     expect((await page.goto("/cartes/ripple"))?.status()).toBe(200);
+    if (LAUNCHED) {
+      /* jeu ouvert : carte entière, page indexable */
+      await expect(page.getByRole("heading", { level: 1, name: /XRP/ })).toBeVisible();
+      await expect(page.locator(".rc-card").first()).toBeVisible();
+      await expect(page.locator(".rc-back")).toHaveCount(0);
+      return;
+    }
     await expect(page.getByRole("heading", { level: 1, name: /XRP : carte Reflex à venir/ })).toBeVisible();
     await expect(page.locator(".rc-back")).toBeVisible();
     await expect(page.locator(".rc-card, .rc-ph")).toHaveCount(0);
@@ -66,6 +76,12 @@ test.describe("Reflex Cards — cartes pas encore sorties", () => {
     await page.goto("/cryptos/xrp");
     const promo = page.getByRole("region", { name: /Carte Reflex XRP/ });
     await expect(promo).toBeVisible();
+    if (LAUNCHED) {
+      /* jeu ouvert : la fiche annonce la carte et y mène */
+      await expect(promo).toContainText(/XRP a sa carte/);
+      await expect(promo.getByRole("link", { name: /Voir la carte/ }).first()).toHaveAttribute("href", /\/cartes\/ripple/);
+      return;
+    }
     await expect(promo.locator(".rc-back")).toBeVisible();
     await expect(promo).toContainText("XRP aura sa carte Reflex");
     await expect(promo).not.toContainText(/Légendaire|Ultra rare|Super rare|Commune|Rare/);
