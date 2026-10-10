@@ -13,6 +13,7 @@ import { redirect } from "next/navigation";
 import { CheckCircle2, ShieldCheck, XCircle } from "lucide-react";
 import { getUser, isAdminEmail } from "@/lib/auth";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 export const metadata: Metadata = {
   title: "Accès administrateur — diagnostic",
@@ -45,11 +46,8 @@ export default async function AccesAdminPage() {
   return (
     <section className="min-h-[70vh] py-12 sm:py-16">
       <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:px-8">
-        <nav aria-label="Fil d'Ariane" className="text-xs text-muted">
-          <Link href="/mon-compte" className="hover:text-fg">Mon compte</Link>
-          <span className="mx-2">/</span>
-          <span className="text-fg/80">Accès administrateur</span>
-        </nav>
+        {/* 10/10/2026 : fil d'Ariane du site (un seul émetteur de BreadcrumbList, rubrique « compte » dans lib/nav-data.ts) */}
+        <Breadcrumbs chemin="/mon-compte/acces-admin" />
         <h1 className="mt-4 flex items-center gap-2 text-2xl font-extrabold text-fg sm:text-3xl">
           <ShieldCheck className="h-6 w-6 text-primary" aria-hidden />
           Accès administrateur : {admin ? "oui" : "non"}

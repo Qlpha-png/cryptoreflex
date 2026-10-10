@@ -75,7 +75,6 @@ export const SANS_FIL: ReadonlyArray<string> = [
   "/admin/vitals",
   "/merci",
   "/mon-compte",
-  "/mon-compte/acces-admin",
   "/mon-compte/dev",
   "/mon-compte/dev/[id]",
   "/mon-compte/dev/[id]/reveal",
