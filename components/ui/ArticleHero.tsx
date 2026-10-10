@@ -2,25 +2,18 @@ import { avecTypoSync } from "@/components/ui/Typo";
 import { BookOpen, FileText, ShieldCheck, TrendingUp, Zap, Wallet, Coins, Layers } from "lucide-react";
 
 /**
- * ArticleHero — visual placeholder for blog cards.
+ * ArticleHero — visuel de repli d'une carte d'article, 100 % CSS (aucune requête, aucun risque de 500).
  *
- * Avant : on chargeait `/blog/[slug]/opengraph-image` comme hero (PNG dynamique
- * 1200×630 généré par next/og). Problème observé en production :
- *  - HTTP 500 systématique sur la route opengraph-image (serverless cold-start
- *    + lecture fs des MDX). Le hero s'affichait vide → cards "cassées".
- *  - Premier hit lent (génération PNG côté Vercel).
- *
- * Solution : hero 100% CSS — gradient (déjà défini par article) + icône
- * catégorie + watermark texte. Zéro requête réseau, zéro risque de 500,
- * affichage immédiat. L'OG image dynamique reste utilisée pour Twitter/LinkedIn
- * (metadata.openGraph.images), où elle est requise.
+ * Ronde 1 du jury B4 (10/10/2026) : aligné sur le gabarit d'article C+. Le dégradé du frontmatter (`gradient`), les halos,
+ * la grille et le filigrane d'initiales sont supprimés : fond plat « sunken », filet, icône de catégorie dans une plaque
+ * « surface » et nom de la catégorie en texte. La prop `gradient` reste acceptée (appels existants) mais n'est plus lue.
  */
 
 interface Props {
   category: string;
   title: string;
-  /** Tailwind gradient utilities ex: "from-warning/40 to-orange-600/40". */
-  gradient: string;
+  /** Plus lu depuis B4 (le gabarit C+ n'a pas de dégradé décoratif). */
+  gradient?: string;
   /** Tailwind height (défaut "h-40"). Passe "h-full" si le parent contraint. */
   height?: string;
   className?: string;
@@ -46,60 +39,19 @@ function categoryIcon(category: string) {
   return FileText;
 }
 
-function ArticleHero({
-  category,
-  title,
-  gradient,
-  height = "h-40",
-  className = "",
-}: Props) {
+function ArticleHero({ category, title: _title, height = "h-40", className = "" }: Props) {
   const Icon = categoryIcon(category);
-  // Initiales du titre (max 3 mots significatifs) pour un watermark discret.
-  const initials = title
-    .split(/\s+/)
-    .filter((w) => w.length >= 3)
-    .slice(0, 3)
-    .map((w) => w[0]!.toUpperCase())
-    .join("");
-
   return (
     <div
-      className={`relative ${height} w-full overflow-hidden bg-gradient-to-br ${gradient} ${className}`}
+      className={`relative ${height} w-full overflow-hidden border-b border-border bg-sunken ${className}`}
       aria-hidden="true"
     >
-      {/* Pattern décoratif — grille subtile + halo radial */}
-      <div
-        className="absolute inset-0 opacity-30"
-        style={{
-          backgroundImage:
-            "radial-gradient(circle at 30% 20%, rgb(var(--c-fg-max) / 0.18) 0, transparent 45%), radial-gradient(circle at 80% 90%, rgb(var(--c-fg-max) / 0.12) 0, transparent 50%)",
-        }}
-      />
-      <div
-        className="absolute inset-0 opacity-[0.07]"
-        style={{
-          backgroundImage:
-            "linear-gradient(rgb(var(--c-fg-max) / 0.6) 1px, transparent 1px), linear-gradient(90deg, rgb(var(--c-fg-max) / 0.6) 1px, transparent 1px)",
-          backgroundSize: "24px 24px",
-        }}
-      />
-      {/* Watermark initiales (huge, low opacity) */}
-      {initials && (
-        <div
-          className="absolute -bottom-4 -right-2 select-none font-extrabold tracking-tighter text-fg-max/15"
-          style={{ fontSize: 96, lineHeight: 1 }}
-        >
-          {initials}
-        </div>
-      )}
-      {/* Icône catégorie centrale */}
       <div className="absolute inset-0 flex items-center justify-center">
-        <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-fg-max/15 backdrop-blur-sm border border-fg-max/20 shadow-lg">
-          <Icon className="h-8 w-8 text-fg-max" />
+        <div className="flex h-16 w-16 items-center justify-center rounded-2xl border border-border bg-surface shadow-e1">
+          <Icon className="h-8 w-8 text-muted" />
         </div>
       </div>
-      {/* Badge catégorie en haut */}
-      <span className="absolute left-3 top-3 z-10 rounded-full bg-background/80 px-2.5 py-1 text-xs font-semibold backdrop-blur">
+      <span className="absolute left-3 top-3 z-10 rounded-full bg-surface px-2.5 py-1 text-sm font-semibold text-fg-2">
         {category}
       </span>
     </div>

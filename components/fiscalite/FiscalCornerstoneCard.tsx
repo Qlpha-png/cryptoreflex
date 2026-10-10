@@ -90,4 +90,4 @@ function FiscalCornerstoneCard({
   );
 }
 
-export default avecTypoSync(FiscalCornerstoneCard);
+export default avecTypoSync(FiscalCornerstoneCard, { riche: true });

@@ -66,7 +66,7 @@ const VARIANTS: Record<AmfVariant, VariantConfig> = {
     extra:
       "Ce comparatif présente des plateformes agréées MiCA (CASP) " +
       "par l'AMF ou par leur régulateur européen. Seuls les liens marqués « Publicité » " +
-      "sont rémunérés (affiliation ou parrainage), sans surcoût pour vous ; " +
+      "sont rémunérés (affiliation ou parrainage) ; " +
       "cela n'influence ni le classement éditorial, ni la note attribuée. " +
       "Vérifiez systématiquement le statut MiCA de la plateforme avant tout dépôt.",
     tone: "warn",

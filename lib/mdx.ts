@@ -40,6 +40,38 @@ export interface ArticleFrontmatter {
   gradient: string;
   /** Optionnel : chemin vers une image de cover (`/blog/foo.jpg`). */
   cover?: string;
+  /**
+   * Optionnel (lot B4) : sources de l'article, affichées dans l'encadré de confiance. `sources: ["Nom — https://…"]` ou
+   * `sources: [{ label, url }]`. Aucune n'est inventée : sans ce champ, l'encadré ne liste que les sites officiels déjà
+   * cités dans le texte (lib/article-confiance.ts).
+   */
+  sources?: { label: string; url: string }[];
+}
+
+/** Normalise le champ `sources` du frontmatter (chaînes « Nom — url » ou objets { label|name|title, url }). */
+function normalizeSources(raw: unknown): { label: string; url: string }[] | undefined {
+  if (!Array.isArray(raw)) return undefined;
+  const out: { label: string; url: string }[] = [];
+  for (const it of raw) {
+    let label = "";
+    let url = "";
+    if (typeof it === "string") {
+      const m = /^(.*?)\s+[—–-]\s+(https?:\/\/\S+)$/.exec(it.trim());
+      if (m) {
+        label = m[1].trim();
+        url = m[2];
+      } else if (/^https?:\/\/\S+$/.test(it.trim())) {
+        url = it.trim();
+        label = url;
+      }
+    } else if (it && typeof it === "object") {
+      const o = it as Record<string, unknown>;
+      url = typeof o.url === "string" ? o.url.trim() : "";
+      label = String(o.label ?? o.name ?? o.title ?? url).trim();
+    }
+    if (/^https?:\/\//i.test(url) && label) out.push({ label, url });
+  }
+  return out.length ? out : undefined;
 }
 
 export interface Article extends ArticleFrontmatter {
@@ -175,6 +207,7 @@ function normalizeFrontmatter(
     keywords,
     gradient,
     cover: typeof raw.cover === "string" ? raw.cover : undefined,
+    sources: normalizeSources(raw.sources),
   };
 }
 

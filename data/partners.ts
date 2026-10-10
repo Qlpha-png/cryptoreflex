@@ -5,7 +5,7 @@
  * Conçu suite aux recommandations de 20 agents experts vitrine.
  *
  * Disclosure RGPD obligatoire : chaque partenaire = lien affilié. Cryptoreflex
- * perçoit une commission sans surcoût pour l'utilisateur (loi 9 juin 2023 +
+ * perçoit une commission (loi 9 juin 2023 +
  * décret 2022-928).
  */
 

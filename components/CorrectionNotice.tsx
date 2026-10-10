@@ -41,4 +41,4 @@ function CorrectionNotice({ slug }: { slug: string }) {
   );
 }
 
-export default avecTypoSync(CorrectionNotice);
+export default avecTypoSync(CorrectionNotice, { riche: true });

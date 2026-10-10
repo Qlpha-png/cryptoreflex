@@ -124,13 +124,13 @@ describe("Ledger (affiliation) et Bitpanda (parrainage personnel)", () => {
       renderToStaticMarkup(createElement(MdxAffiliateLink, { ...props, children: "lien" }));
     // 06/10/2026 : même libellé que partout ailleurs (annoncé sur /transparence).
     const ledger = md({ platform: "ledger" });
-    expect(text(ledger)).toContain("(Publicité — Cryptoreflex perçoit une commission)");
+    expect(text(ledger)).toContain("Publicité — Cryptoreflex perçoit une commission");
     expect(ledger).toMatch(/rel="sponsored[^"]*"/);
     const waltio = md({ platform: "waltio" });
     expect(waltio).toMatch(/href="https:\/\/www\.waltio\.com\/fr\/\?a_aid=Cryptoreflex/);
-    expect(text(waltio)).toContain("(Publicité — Cryptoreflex perçoit une commission)");
+    expect(text(waltio)).toContain("Publicité — Cryptoreflex perçoit une commission");
     const bitpanda = md({ platform: "bitpanda" });
-    expect(text(bitpanda)).toContain("(Publicité — lien de parrainage personnel)");
+    expect(text(bitpanda)).toContain("Publicité — lien de parrainage personnel");
     expect(text(bitpanda)).not.toMatch(/commission/i);
     const kraken = md({ href: "https://www.kraken.com/" });
     expect(text(kraken)).not.toMatch(PAID_MENTION);
@@ -171,14 +171,14 @@ describe("liens Markdown bruts des articles (MdxLink)", () => {
 
   it("vrai code de parrainage Bitpanda / Trade Republic : mention visible + rel sponsored", () => {
     const bp = link("https://www.bitpanda.com/?ref=146755795768201190");
-    expect(text(bp)).toContain("(Publicité — lien de parrainage personnel)");
+    expect(text(bp)).toContain("Publicité — lien de parrainage personnel");
     expect(bp).toMatch(/rel="[^"]*sponsored/);
     const tr = link("https://refnocode.trade.re/cc7ffrbj");
-    expect(text(tr)).toContain("(Publicité — lien de parrainage personnel)");
+    expect(text(tr)).toContain("Publicité — lien de parrainage personnel");
   });
 
   it("lien Ledger d'affiliation : mention « commission »", () => {
-    expect(text(link(AFFILIATE_URLS.ledger))).toContain("(Publicité — Cryptoreflex perçoit une commission)");
+    expect(text(link(AFFILIATE_URLS.ledger))).toContain("Publicité — Cryptoreflex perçoit une commission");
   });
 
   it("lien sans code (Bitpanda sans ref, Kraken, Coinbase) : aucune mention ni sponsored", () => {

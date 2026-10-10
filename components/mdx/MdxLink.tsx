@@ -1,9 +1,15 @@
 import type { ComponentProps } from "react";
 import Link from "next/link";
+import { ExternalLink } from "lucide-react";
 import GlossaryLink from "@/components/mdx/GlossaryLink";
 import { findPaidPlatformByUrl } from "@/lib/platforms";
 import { paidLinkCaption } from "@/lib/partnerships";
 import { getGlossaryEntry } from "@/lib/glossary";
+import { typoFrRiche } from "@/lib/typo-fr";
+
+/** Lien de texte C+ : couleur link, soulignement link-line de 2 px sous les jambages, 3 px au survol (kit : .lnk). */
+const LIEN =
+  "text-link underline decoration-link-line decoration-2 underline-offset-[0.28em] transition-colors hover:text-link-hover hover:decoration-[3px]";
 
 /**
  * <MdxLink/> — rendu d'un lien Markdown dans un MDX d'article (override de `a`).
@@ -48,21 +54,32 @@ export default function MdxLink({ href, children, ...rest }: ComponentProps<"a">
           href={href}
           rel={paid ? "noopener nofollow sponsored" : "noopener nofollow"}
           target="_blank"
-          className="text-primary-glow underline decoration-primary/40 underline-offset-2 hover:decoration-primary"
+          className={LIEN}
           {...rest}
         >
           {children}
+          <ExternalLink className="ml-1 inline h-[0.8em] w-[0.8em] align-baseline opacity-70" aria-hidden />
+          <span className="sr-only"> (site externe, nouvel onglet)</span>
         </a>
-        {caption && <span className="not-prose ml-1 text-[0.875em] text-muted">({caption})</span>}
+        {caption && (
+          <>
+            {" "}
+            <Link
+              href="/transparence"
+              className="not-prose rounded-[14px] bg-sunken px-2.5 py-0.5 text-[0.875em] text-fg-2 no-underline hover:text-fg hover:underline inline-block max-w-[calc(100%-1.5em)] align-baseline leading-snug [overflow-wrap:normal]"
+            >
+              {typoFrRiche(caption)}
+            </Link>
+            {/* U+2060 (joint de mots) : la ponctuation qui suit la pastille ne passe jamais seule à la ligne */}
+            {String.fromCharCode(0x2060)}
+          </>
+        )}
       </>
     );
   }
 
   return (
-    <Link
-      href={href}
-      className="text-primary-glow underline decoration-primary/40 underline-offset-2 hover:decoration-primary"
-    >
+    <Link href={href} className={LIEN}>
       {children}
     </Link>
   );

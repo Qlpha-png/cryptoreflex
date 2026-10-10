@@ -2,7 +2,7 @@ import Link from "next/link";
 import { filAriane, type Miette } from "@/lib/nav-data";
 import { jsonLdSafe } from "@/lib/schema";
 import { BRAND } from "@/lib/brand";
-import { typoFr } from "@/lib/typo-fr";
+import { typoFr, typoFrRiche } from "@/lib/typo-fr";
 
 /**
  * Breadcrumbs — LE fil d'Ariane du site (lot B3a, 08/10/2026 ; architecture § 8).
@@ -31,6 +31,8 @@ export interface BreadcrumbsProps {
   label?: string;
   /** Parent réel quand il est lui-même un gabarit (fiche, parcours). */
   parent?: Miette;
+  /** Sous 640 px : seul le parent direct reste visible, précédé de « ‹ » (« ‹ Articles ») ; le JSON-LD garde le fil entier. */
+  compactMobile?: boolean;
   /** Marges de placement dans la page. */
   className?: string;
 }
@@ -54,30 +56,39 @@ export function breadcrumbListDe(fil: Miette[]) {
   };
 }
 
-export default function Breadcrumbs({ chemin, label, parent, className = "" }: BreadcrumbsProps) {
-  const fil = filAriane(chemin, { label, parent }).map((m) => ({ href: m.href, label: typoFr(m.label) }));
+export default function Breadcrumbs({ chemin, label, parent, className = "", compactMobile = false }: BreadcrumbsProps) {
+  // `visible` : typographie riche (apostrophe ’, tiret insécable) pour le texte affiché ; le JSON-LD garde typoFr (inchangé).
+  const fil = filAriane(chemin, { label, parent }).map((m) => ({ href: m.href, label: typoFr(m.label), visible: typoFrRiche(m.label) }));
   const dernier = fil.length - 1;
   return (
     <>
       <nav aria-label="Fil d’Ariane" className={`text-sm text-fg-2 ${className}`.trim()} data-fil-ariane="">
         <ol className="flex flex-wrap items-center gap-x-1 gap-y-0.5">
           {fil.map((m, i) => (
-            <li key={m.href} className="inline-flex min-w-0 items-center gap-x-1">
+            <li
+              key={m.href}
+              className={`inline-flex min-w-0 items-center gap-x-1 ${compactMobile && i < dernier - 1 ? "max-sm:hidden" : ""} ${compactMobile && i === dernier ? "max-sm:hidden" : ""}`.trim()}
+            >
+              {compactMobile && i === dernier - 1 && (
+                <span aria-hidden="true" className="text-muted sm:hidden">
+                  ‹
+                </span>
+              )}
               {i < dernier ? (
                 <>
                   <Link
                     href={m.href}
                     className="inline-flex min-h-[24px] items-center rounded-sm text-fg-2 underline decoration-transparent underline-offset-4 hover:text-fg hover:decoration-link-line focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
                   >
-                    {m.label}
+                    {m.visible}
                   </Link>
-                  <span aria-hidden="true" className="text-muted">
+                  <span aria-hidden="true" className={`text-muted ${compactMobile ? "max-sm:hidden" : ""}`.trim()}>
                     ›
                   </span>
                 </>
               ) : (
                 <span aria-current="page" className="min-w-0 break-words text-fg">
-                  {m.label}
+                  {m.visible}
                 </span>
               )}
             </li>

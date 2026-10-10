@@ -234,7 +234,7 @@ function ComparatifPage() {
           </section>
 
           <p className="mt-10 max-w-[34em] text-xs leading-relaxed text-muted">
-            Cryptoreflex est un média indépendant. Certains liens sont rémunérés, sans surcoût pour vous et sans effet sur le
+            Cryptoreflex est un média indépendant. Certains liens sont rémunérés, sans effet sur le
             classement (<Link href="/transparence" className="underline hover:text-fg">transparence</Link>,{" "}
             <Link href="/methodologie" className="underline hover:text-fg">méthodologie</Link>). Investir dans les crypto-actifs
             comporte un risque de perte en capital. Cette page ne constitue pas un conseil en investissement.

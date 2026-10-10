@@ -411,7 +411,7 @@ export default function TransparencePage() {
           <div className="mt-6 grid md:grid-cols-3 gap-4">
             <BenefitCard
               Icon={CheckCircle2}
-              title="Sans surcoût pour vous"
+              title="Grille publique de la plateforme"
               body="Les frais appliqués sont ceux de la grille publique de la plateforme. La commission ou la prime de parrainage est versée par la plateforme : elle n'est pas prélevée sur votre dépôt."
             />
             <BenefitCard

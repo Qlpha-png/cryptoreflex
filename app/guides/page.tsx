@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowRight, BookOpenCheck, Calendar, Clock } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { BRAND } from "@/lib/brand";
 import StructuredData from "@/components/StructuredData";
 import { graphSchema, type JsonLd } from "@/lib/schema";
@@ -59,9 +59,9 @@ const GUIDES: GuideCard[] = [
 ];
 
 const TOPIC_LABELS: Record<GuideCard["topic"], { label: string; color: string }> = {
-  fiscalite: { label: "Fiscalité", color: "text-success" },
-  securite: { label: "Sécurité", color: "text-info" },
-  regulation: { label: "Réglementation", color: "text-primary-soft" },
+  fiscalite: { label: "Fiscalité", color: "text-primary" },
+  securite: { label: "Sécurité", color: "text-primary" },
+  regulation: { label: "Réglementation", color: "text-primary" },
   trading: { label: "Trading", color: "text-primary" },
 };
 
@@ -93,66 +93,60 @@ export default function GuidesHubPage() {
     <div className="min-h-screen bg-background text-fg">
       <StructuredData id="guides-jsonld" data={jsonLd} />
 
-      {/* Hero */}
-      <section className="border-b border-fg-max/5 bg-gradient-to-b from-success/5 to-transparent">
-        <div className="mx-auto max-w-5xl px-4 py-16 sm:px-6 lg:px-8">
-          <Breadcrumbs chemin="/guides" className="mb-6" />
+      {/* En-tête (maquette C+ : surtitre, filet or, titre en serif, chapô) — plus de dégradé de fond (lot B4) */}
+      <section className="border-b border-border">
+        <div className="mx-auto max-w-5xl px-4 pb-12 pt-10 sm:px-6 lg:px-8">
+          <Breadcrumbs chemin="/guides" />
 
-          <div className="inline-flex items-center gap-2 rounded-full border border-success/30 bg-success/10 px-3 py-1 text-xs font-medium text-success">
-            <BookOpenCheck className="h-3.5 w-3.5" />
-            Guides pas-à-pas — actionnables
-          </div>
+          <p className="mt-8 text-base font-semibold text-primary">Guides pas-à-pas, actionnables</p>
+          <span aria-hidden="true" className="mt-3 block h-[3px] w-16 rounded-full bg-link-line" />
 
-          <h1 className="mt-4 text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl">
+          <h1 className="mt-5 text-[2.5rem] font-medium leading-[1.08] tracking-[-0.02em] text-fg md:text-[3.25rem]">
             Guides pratiques
           </h1>
-          <p className="mt-4 max-w-[34em] text-lg text-fg-2">
-            Vous avez déjà compris le sujet ? Passe à l'action. Ces guides sont
-            courts (5-10 min), structurés en étapes à cocher, imprimables, et
-            terminent toujours par un CTA concret.
+          <p className="lead mt-5 max-w-[34em] text-[1.25rem] leading-normal text-fg-2">
+            Vous avez déjà compris le sujet ? Passez à l&apos;action. Ces guides sont
+            courts (5 à 10 minutes), structurés en étapes à cocher, imprimables, et
+            se terminent par une action concrète.
           </p>
         </div>
       </section>
 
       {/* Guides grid */}
-      <section className="mx-auto max-w-5xl px-4 py-16 sm:px-6 lg:px-8">
+      <section className="mx-auto max-w-5xl px-4 py-12 sm:px-6 lg:px-8">
         <div className="grid gap-6">
           {GUIDES.map((g) => (
             <article
               key={g.slug}
-              className="group rounded-2xl border border-fg-max/10 bg-fg-max/[0.02] p-6 transition hover:border-success/30"
+              className="group rounded-2xl border border-border bg-surface p-6 shadow-e1 transition hover:border-border-strong hover:shadow-e2"
             >
-              <header className="flex flex-wrap items-start justify-between gap-3">
-                <div className="flex items-center gap-3 text-xs">
-                  <span
-                    className={`inline-flex items-center gap-1.5 rounded-full border border-fg-max/10 bg-fg-max/5 px-2.5 py-1 font-medium ${TOPIC_LABELS[g.topic].color}`}
-                  >
-                    {TOPIC_LABELS[g.topic].label}
-                  </span>
-                  <span className="inline-flex items-center gap-1 text-muted">
-                    <Calendar className="h-3.5 w-3.5" />
-                    {new Date(g.date).toLocaleDateString("fr-FR", {
-                      day: "numeric",
-                      month: "long",
-                      year: "numeric",
-                    })}
-                  </span>
-                  <span className="inline-flex items-center gap-1 text-muted">
-                    <Clock className="h-3.5 w-3.5" />
-                    {g.duration}
-                  </span>
-                </div>
+              <header className="flex flex-wrap items-center gap-x-3 gap-y-1 text-base text-muted">
+                <span className={`font-semibold ${TOPIC_LABELS[g.topic].color}`}>{TOPIC_LABELS[g.topic].label}</span>
+                <span aria-hidden="true" className="text-fg-4">
+                  ·
+                </span>
+                <span>
+                  {new Date(g.date).toLocaleDateString("fr-FR", {
+                    day: "numeric",
+                    month: "long",
+                    year: "numeric",
+                  })}
+                </span>
+                <span aria-hidden="true" className="text-fg-4">
+                  ·
+                </span>
+                <span>{g.duration}</span>
               </header>
 
-              <Link href={`/guides/${g.slug}`} className="block">
-                <h2 className="mt-4 text-2xl font-bold tracking-tight text-fg-max group-hover:text-success transition">
+              <Link href={`/guides/${g.slug}`} className="block focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-focus">
+                <h2 className="mt-3 text-[1.75rem] font-medium leading-tight tracking-tight text-fg group-hover:underline group-hover:decoration-link-line group-hover:decoration-2 group-hover:underline-offset-[0.28em]">
                   {g.title}
                 </h2>
-                <p className="mt-3 text-sm text-fg-2 leading-relaxed">{g.subtitle}</p>
+                <p className="mt-3 text-lg leading-[1.6] text-fg-2">{g.subtitle}</p>
 
-                <div className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-success">
+                <div className="mt-4 inline-flex items-center gap-1.5 text-base font-semibold text-link">
                   Lire le guide
-                  <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" />
+                  <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" aria-hidden="true" />
                 </div>
               </Link>
             </article>

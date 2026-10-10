@@ -278,18 +278,22 @@ export const POLICES = [
   // par la CSP font-src 'self' data:) au lieu d'un fichier : une requête de police de moins (≈ 2,2 Ko d'en-têtes + corps),
   // ce qui garde Inter + Newsreader + espace fine sous le budget de 110 Ko (b1/r3-*).
   ["Cryptoreflex NNBSP", "cr-nnbsp.woff2", null, null, "U+202F", true],
-  // font-display: optional pour Inter ET Newsreader (jury B1, ronde 2 ; mesuré le 07/10/2026, fin/isoler.mjs) : en swap,
+  // Passe finale B4 (10/10/2026, jury ronde 2) : « fallback » (blocage ~100 ms, bascule possible pendant 3 s) remplace « optional » : avec
+  // « optional », 3 visites à froid sur 4 affichaient Times / Arial (la police ne tenait pas dans les ~100 ms), 8 sur 8 en Fast 3G.
+  // Les replis sont maintenant à métriques ajustées (Arial pour Inter, Georgia puis Times pour Newsreader) et les deux fichiers
+  // sont préchargés (app/layout.tsx) ; la bascule est mesurée (CLS) avant livraison.
+  // Ancienne décision B1 : font-display: optional pour Inter ET Newsreader (jury B1, ronde 2 ; mesuré le 07/10/2026, fin/isoler.mjs) : en swap,
   // une ligne proche de la largeur du conteneur changeait de nombre de lignes à l'arrivée de la police (rangée « MiCA ·
   // 10 min · 25/04/2026 · MAJ » au-dessus du h1 des articles et actus : 1 ligne avec le repli, 2 avec Inter) → CLS 0,17 à
   // 0,22 sur des articles et actus à 390-412 px, 0,01 à 0,04 sur la fiche, le comparatif, l'accueil et /academie à
   // 360-412 px. Aucun repli n'a exactement la chasse de la vraie police : seul « optional » supprime la cause. La page
   // garde la police disponible au premier rendu (repli mesuré si le fichier n'est pas encore là, ~100 ms) et la vraie
   // police sert dès la page suivante (cache immuable).
-  ["Inter", "inter-latin.woff2", "normal", "100 900", PLAGE_LATIN, false, "optional"],
+  ["Inter", "inter-latin.woff2", "normal", "100 900", PLAGE_LATIN, false, "fallback"],
   // Newsreader réduit par le kit : axe opsz figé à 40, axe wght 200-800 gardé (58 Ko au lieu de 132).
-  ["Newsreader", "newsreader-latin.woff2", "normal", "200 800", PLAGE_LATIN, false, "optional"],
+  ["Newsreader", "newsreader-latin.woff2", "normal", "200 800", PLAGE_LATIN, false, "fallback"],
   // Italique : fichier statique (graisse 500, opsz figé à 48), chargé à la demande (aucun préchargement).
-  ["Newsreader", "newsreader-italic-latin.woff2", "italic", "400 600", PLAGE_LATIN, false, "optional"],
+  ["Newsreader", "newsreader-italic-latin.woff2", "italic", "400 600", PLAGE_LATIN, false, "fallback"],
 ];
 /**
  * Replis MESURÉS (pas d'estimation) : la police locale est mise à la chasse de la vraie police, pour que le texte ne
@@ -308,6 +312,9 @@ const LOCAL_ARIAL_GRAS = ["Arial Bold", "Arial-BoldMT", "Liberation Sans Bold", 
 const LOCAL_TIMES = ["Times New Roman", "TimesNewRomanPSMT", "Liberation Serif", "Tinos"];
 const LOCAL_TIMES_GRAS = ["Times New Roman Bold", "TimesNewRomanPS-BoldMT", "Liberation Serif Bold", "Tinos Bold"];
 const LOCAL_TIMES_ITALIQUE = ["Times New Roman Italic", "TimesNewRomanPS-ItalicMT", "Liberation Serif Italic", "Tinos Italic"];
+const LOCAL_GEORGIA = ["Georgia", "Georgia-Regular"];
+const LOCAL_GEORGIA_GRAS = ["Georgia Bold", "Georgia-Bold"];
+const LOCAL_GEORGIA_ITALIQUE = ["Georgia Italic", "Georgia-Italic"];
 export const REPLIS = [
   ["Inter Fallback", LOCAL_ARIAL, "normal", "100 450", "106.25%", "91.17%", "22.70%"],
   // 500 (navigation, libellés) : Inter 500 est 1,68 % plus large que le repli à 106,25 % (mesuré sur 73 éléments réels de 13 pages,
@@ -321,11 +328,19 @@ export const REPLIS = [
   ["Newsreader Fallback", LOCAL_TIMES_GRAS, "normal", "651 750", "105.46%", "69.69%", "25.13%"],
   ["Newsreader Fallback", LOCAL_TIMES_GRAS, "normal", "751 900", "109.77%", "66.96%", "24.14%"],
   ["Newsreader Fallback", LOCAL_TIMES_ITALIQUE, "italic", "100 900", "100.14%", "73.39%", "26.46%"],
+  // Passe finale B4 (10/10/2026, jury ronde 2) : Georgia (Windows, macOS, iOS) est plus proche de Newsreader que Times. Valeurs
+  // mesurées par outils/metriques-georgia.py (même méthode que les replis Times : largeur moyenne d'un échantillon français,
+  // ascent/descent = hhea de Newsreader / size-adjust). Famille à part : si Georgia manque (Android), la pile passe au repli Times.
+  ["Newsreader Fallback G", LOCAL_GEORGIA, "normal", "100 550", "97.19%", "75.63%", "27.27%"],
+  ["Newsreader Fallback G", LOCAL_GEORGIA_GRAS, "normal", "551 650", "85.41%", "86.05%", "31.03%"],
+  ["Newsreader Fallback G", LOCAL_GEORGIA_GRAS, "normal", "651 750", "87.68%", "83.82%", "30.22%"],
+  ["Newsreader Fallback G", LOCAL_GEORGIA_GRAS, "normal", "751 900", "91.23%", "80.56%", "29.05%"],
+  ["Newsreader Fallback G", LOCAL_GEORGIA_ITALIQUE, "italic", "100 900", "90.79%", "80.95%", "29.19%"],
 ];
 /** Piles (variables CSS) : --font-sans remplace la variable que posait next/font Inter (retiré au lot B1). */
 export const PILES = [
   ["font-sans", '"Inter", "Inter Fallback", system-ui, sans-serif', "Texte courant (Tailwind font-sans et font-mono)"],
-  ["font-serif", '"Newsreader", "Newsreader Fallback", Georgia, serif', "Titres éditoriaux (Tailwind font-display et font-serif)"],
+  ["font-serif", '"Newsreader", "Newsreader Fallback G", "Newsreader Fallback", Georgia, serif', "Titres éditoriaux (Tailwind font-display et font-serif)"],
 ];
 
 export function genererPolices() {

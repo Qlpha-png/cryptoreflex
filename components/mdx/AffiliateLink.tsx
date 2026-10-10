@@ -1,10 +1,11 @@
-import type { ReactNode } from "react";
+import { useId, type ReactNode } from "react";
+import Link from "next/link";
 import { ExternalLink } from "lucide-react";
 import { BRAND } from "@/lib/brand";
-import { findPaidPlatformByUrl, getPlatformById } from "@/lib/platforms";
-import { getFiscalToolById } from "@/lib/fiscal-tools";
-import { isPaidLink, paidLinkCaption } from "@/lib/partnerships";
+import { lienAffilie } from "@/lib/lien-affilie";
+import { paidLinkCaption } from "@/lib/partnerships";
 import { acceptsUtm } from "@/lib/partner-links";
+import { typoFrRiche } from "@/lib/typo-fr";
 
 interface AffiliateLinkProps {
   /** ID d'une plateforme dans `data/platforms.json` (ex: "binance"). Prioritaire sur `href`. */
@@ -41,6 +42,13 @@ function withUtm(rawUrl: string): string {
  *  - `platform="waltio"` (outil fiscal, absent de data/platforms.json) menait à « # » : l'URL est aussi
  *    cherchée dans data/fiscal-tools.json.
  *
+ * Lot B4 (10/10/2026) — apparence seulement, la logique ci-dessus est inchangée :
+ *  - lien de texte : couleur link, soulignement link-line de 2 px (3 px au survol), icône de sortie + « (site externe) » pour
+ *    les lecteurs d'écran ;
+ *  - bouton : jamais plein (règle C+ : un lien publicitaire n'est jamais un bouton plein) → bouton SECONDAIRE (contour) ;
+ *  - mention « Publicité — … » COLLÉE au lien, dans une pastille (fond sunken, 14 px) qui revient à la ligne si besoin,
+ *    reliée au lien par aria-describedby ; elle mène à /transparence.
+ *
  * Usage MDX :
  *   <AffiliateLink platform="ledger">le site officiel Ledger</AffiliateLink>
  *   <AffiliateLink href="https://example.com/partner" variant="button">Voir l'offre</AffiliateLink>
@@ -52,19 +60,28 @@ export default function AffiliateLink({
   variant = "inline",
   noIcon,
 }: AffiliateLinkProps) {
-  const p = platform ? getPlatformById(platform) : undefined;
-  const tool = platform && !p ? getFiscalToolById(platform) : null;
-  const rawHref = p?.affiliateUrl ?? tool?.affiliateUrl ?? href ?? "#";
+  const idMention = useId();
+  const { p, tool, rawHref, paidId } = lienAffilie({ platform, href });
   const finalHref = withUtm(rawHref);
   const label = children ?? p?.name ?? tool?.name ?? "Voir l'offre";
 
-  const paidId = platform ? (isPaidLink(platform, rawHref) ? platform : null) : findPaidPlatformByUrl(rawHref)?.id ?? null;
   const rel = paidId ? "sponsored nofollow noopener" : "nofollow noopener noreferrer";
   // Même libellé que partout ailleurs (/transparence l'annonce) : « Publicité — Cryptoreflex perçoit une commission »
   // ou « Publicité — lien de parrainage personnel ».
   const mention = paidId ? paidLinkCaption(paidId, rawHref) : null;
   const mentionNode = mention ? (
-    <span className="not-prose ml-1 text-[0.875em] text-muted">({mention})</span>
+    <>
+      {" "}
+      <Link
+        id={idMention}
+        href="/transparence"
+        className="not-prose rounded-[14px] bg-sunken px-2.5 py-0.5 text-[0.875em] text-fg-2 no-underline hover:text-fg hover:underline inline-block max-w-[calc(100%-1.5em)] align-baseline leading-snug [overflow-wrap:normal]"
+      >
+        {typoFrRiche(mention)}
+      </Link>
+      {/* U+2060 (joint de mots) : la ponctuation qui suit la pastille ne passe jamais seule à la ligne */}
+      {String.fromCharCode(0x2060)}
+    </>
   ) : null;
 
   if (variant === "button") {
@@ -74,10 +91,12 @@ export default function AffiliateLink({
           href={finalHref}
           rel={rel}
           target="_blank"
-          className="not-prose inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-background no-underline transition-colors hover:bg-primary-glow"
+          aria-describedby={mention ? idMention : undefined}
+          className="btn-ghost not-prose text-[1rem]"
         >
           {label}
           {!noIcon && <ExternalLink className="h-4 w-4" aria-hidden />}
+          <span className="sr-only"> (site externe, nouvel onglet)</span>
         </a>
         {mentionNode}
       </>
@@ -90,15 +109,17 @@ export default function AffiliateLink({
         href={finalHref}
         rel={rel}
         target="_blank"
-        className="text-primary-glow underline decoration-primary/40 underline-offset-2 transition-colors hover:text-primary hover:decoration-primary"
+        aria-describedby={mention ? idMention : undefined}
+        className="text-link underline decoration-link-line decoration-2 underline-offset-[0.28em] transition-colors hover:text-link-hover hover:decoration-[3px]"
       >
         {label}
         {!noIcon && (
           <ExternalLink
-            className="ml-0.5 inline h-3.5 w-3.5 align-text-top opacity-70"
+            className="ml-1 inline h-[0.8em] w-[0.8em] align-baseline opacity-70"
             aria-hidden
           />
         )}
+        <span className="sr-only"> (site externe, nouvel onglet)</span>
       </a>
       {mentionNode}
     </>

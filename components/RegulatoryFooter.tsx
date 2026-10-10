@@ -57,7 +57,7 @@ function RegulatoryFooter({
           en cryptoactifs comporte un risque élevé de perte totale en capital.
           Les liens marqués{" "}
           <span className="text-fg/80">« Publicité »</span> sont des liens
-          rémunérés (affiliation ou parrainage), sans surcoût pour vous ; les autres
+          rémunérés (affiliation ou parrainage) ; les autres
           ne le sont pas. Détails sur{" "}
           <Link
             href="/transparence"

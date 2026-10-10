@@ -250,6 +250,8 @@ const config: Config = {
             },
             "a:hover": { color: "rgb(var(--c-link-hover))", textDecorationThickness: "3px" },
             fontSize: "1.125rem",
+            // Lot B4 : lecture à 20 px dès lg (--fs-read du kit : 18 px mobile, 20 px bureau), mesure 34 em inchangée.
+            "@media (min-width: 1024px)": { fontSize: "1.25rem" },
             lineHeight: "1.65",
             p: { maxWidth: "34em" },
             li: { maxWidth: "34em" },

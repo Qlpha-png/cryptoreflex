@@ -20,6 +20,7 @@ import { avecTypoSync } from "@/components/ui/Typo";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { getRelatedPages, getClusterFor } from "@/lib/internal-link-graph";
+import { DESCRIPTIONS_LIENS } from "@/lib/liens-description";
 
 export interface RelatedPagesNavProps {
   /** Path canonique de la page courante (ex: /outils/calculateur-fiscalite). */
@@ -122,33 +123,30 @@ function RelatedPagesNav({
       aria-label="Pages liées"
       className={`mt-12 ${className}`}
     >
-      <h2 className="text-xl sm:text-2xl font-bold text-fg mb-4">
+      <h2 className="mb-4 text-2xl font-medium tracking-tight text-fg sm:text-[1.75rem]">
         {sectionTitle}
       </h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         {related.map((node) => (
           <Link
             key={node.path}
             href={node.path}
-            className="group flex flex-col h-full p-4 rounded-xl
-                       border border-border/60 bg-elevated/40
-                       hover:border-primary/60 hover:bg-elevated
+            className="group flex flex-col h-full p-4 rounded-xl shadow-e1
+                       border border-border bg-surface
+                       hover:border-border-strong
                        transition-colors
                        focus:outline-none focus-visible:ring-2 focus-visible:ring-primary
                        focus-visible:ring-offset-2 focus-visible:ring-offset-background"
           >
-            <span className="font-semibold text-fg text-sm mb-2">
+            <span className="mb-2 text-base font-semibold text-fg">
               {node.label}
             </span>
-            {node.description && (
-              <span className="text-xs text-muted leading-relaxed mb-3 flex-1">
-                {node.description}
+            {(node.description || DESCRIPTIONS_LIENS[node.path]) && (
+              <span className="mb-3 flex-1 text-base leading-relaxed text-fg-2">
+                {node.description || DESCRIPTIONS_LIENS[node.path]}
               </span>
             )}
-            <span className="inline-flex items-center gap-1 text-xs text-primary-soft group-hover:text-primary-glow font-semibold mt-auto">
-              Découvrir
-              <ArrowRight className="h-3 w-3 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
-            </span>
+            <ArrowRight className="mt-auto h-4 w-4 text-link transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
           </Link>
         ))}
       </div>
@@ -156,4 +154,4 @@ function RelatedPagesNav({
   );
 }
 
-export default avecTypoSync(RelatedPagesNav);
+export default avecTypoSync(RelatedPagesNav, { riche: true });

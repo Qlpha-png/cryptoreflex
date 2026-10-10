@@ -2,7 +2,7 @@
 
 import { avecTypoSync } from "@/components/ui/Typo";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { List } from "lucide-react";
+import { ChevronDown, List } from "lucide-react";
 import { track } from "@/lib/analytics";
 
 interface Heading {
@@ -21,6 +21,12 @@ interface Props {
   slug?: string;
   /** Min headings pour afficher le TOC. Défaut : 3. */
   minHeadings?: number;
+  /**
+   * Ronde 1 du jury B4 : « mobile » (accordéon, placé APRÈS l'en-tête dans la colonne de lecture, avec la barre de progression) ou
+   * « bureau » (liste collante de la colonne latérale). Le point de rupture est en em (64 em) : il suit la taille de texte du
+   * visiteur, la colonne de lecture ne s'effondre plus à 200 %. Défaut : les deux.
+   */
+  variante?: "mobile" | "bureau" | "les-deux";
 }
 
 /**
@@ -51,6 +57,7 @@ function ArticleToc({
   rootSelector,
   slug,
   minHeadings = 3,
+  variante = "les-deux",
 }: Props) {
   const [headings, setHeadings] = useState<Heading[]>([]);
   const [activeId, setActiveId] = useState<string | null>(null);
@@ -103,7 +110,7 @@ function ArticleToc({
 
   /* ----- Progress bar + tracking 25/50/75/100% ----- */
   useEffect(() => {
-    if (typeof window === "undefined") return;
+    if (typeof window === "undefined" || variante === "bureau") return;
 
     const onScroll = () => {
       const doc = document.documentElement;
@@ -131,7 +138,7 @@ function ArticleToc({
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
-  }, [slug]);
+  }, [slug, variante]);
 
   /* ----- Click handler : track + smooth scroll ----- */
   function onJump(e: React.MouseEvent<HTMLAnchorElement>, id: string) {
@@ -154,85 +161,85 @@ function ArticleToc({
 
   if (items.length < minHeadings) return null;
 
+  const afficheMobile = variante !== "bureau";
+  const afficheBureau = variante !== "mobile";
+
   return (
     <>
-      {/* Progress bar fixe en haut de page (gold gradient) */}
-      <div
-        aria-hidden="true"
-        className="fixed top-0 inset-x-0 z-30 h-0.5 bg-transparent pointer-events-none"
-      >
-        <div
-          className="h-full bg-gradient-to-r from-primary via-primary-glow to-primary transition-[width] duration-150 ease-out"
-          style={{ width: `${progress}%` }}
-        />
-      </div>
-
-      {/* Audit Mobile UX 26/04/2026 : avant `hidden lg:block` masquait le TOC
-          sur mobile alors que les articles font ~12 sections. UX dégradée pour
-          70% du trafic. Maintenant : sur mobile, TOC en accordéon collapsable
-          (details/summary) ; sur lg+, sticky sidebar comme avant. */}
-
-      {/* MOBILE : accordéon natif HTML (pas de JS) */}
-      <details className="lg:hidden not-prose mb-6 rounded-xl border border-border/60 bg-elevated/40 overflow-hidden">
-        <summary className="flex items-center justify-between gap-2 px-4 py-3 cursor-pointer text-sm font-semibold text-primary-soft hover:bg-elevated transition-colors list-none [&::-webkit-details-marker]:hidden">
-          <span className="inline-flex items-center gap-2">
-            <List className="h-4 w-4" aria-hidden="true" />
-            Sommaire ({items.length} sections)
-          </span>
-          <span aria-hidden="true" className="text-muted text-xs">▼</span>
-        </summary>
-        <ol className="space-y-1 text-sm px-4 py-3 border-t border-border/40">
-          {items.map((h) => (
-            <li key={`mobile-${h.id}`} className={h.level === 3 ? "pl-4" : ""}>
-              <a
-                href={`#${h.id}`}
-                onClick={(e) => onJump(e, h.id)}
-                className="block py-1.5 text-fg/80 hover:text-primary-soft transition-colors"
-              >
-                {h.text}
-              </a>
-            </li>
-          ))}
-        </ol>
-      </details>
-
-      {/* DESKTOP : sticky sidebar (inchangé) */}
-      <nav
-        aria-label="Sommaire de l'article"
-        className="not-prose hidden lg:block sticky top-24 max-h-[calc(100vh-7rem)] overflow-y-auto pr-2"
-      >
-        <div className="mb-3 inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-primary-soft">
-          <List className="h-3.5 w-3.5" aria-hidden="true" />
-          Dans cet article
+      {/* Barre de progression fixe en haut de page (filet or), posée par la variante « mobile » ou « les-deux » */}
+      {afficheMobile && (
+        <div aria-hidden="true" className="pointer-events-none fixed inset-x-0 top-0 z-30 h-0.5 bg-transparent">
+          <div
+            className="h-full bg-link-line transition-[width] duration-150 ease-out"
+            style={{ width: `${progress}%` }}
+          />
         </div>
-        <ol className="space-y-1.5 text-sm">
-          {items.map((h) => {
-            const isActive = h.id === activeId;
-            return (
-              <li
-                key={h.id}
-                className={h.level === 3 ? "pl-3" : ""}
-                aria-current={isActive ? "location" : undefined}
-              >
-                <a
-                  href={`#${h.id}`}
-                  onClick={(e) => onJump(e, h.id)}
-                  className={`block leading-snug py-1 border-l-2 pl-3 -ml-px transition-colors ${
-                    isActive
-                      ? "border-primary text-fg font-semibold"
-                      : "border-transparent text-muted hover:text-fg hover:border-border"
-                  }`}
-                >
-                  {h.text}
-                </a>
-              </li>
-            );
-          })}
-        </ol>
-        <p className="mt-4 text-xs text-muted">
-          {progress}% lu · {items.length} sections
-        </p>
-      </nav>
+      )}
+
+      {/* PETIT ÉCRAN (et texte agrandi) : accordéon natif HTML, après l'en-tête de l'article, dans un repère de navigation. */}
+      {afficheMobile && (
+        <nav aria-label="Sommaire de l'article" className="not-prose mb-6 [@media(min-width:64em)]:hidden">
+          <details className="group overflow-hidden rounded-xl border border-border bg-surface">
+            <summary className="flex min-h-[44px] cursor-pointer list-none items-center justify-between gap-2 px-4 py-3 text-base font-semibold text-fg transition-colors hover:bg-elevated focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-focus [&::-webkit-details-marker]:hidden">
+              <span className="inline-flex items-center gap-2">
+                <List className="h-4 w-4" aria-hidden="true" />
+                Sommaire ({items.length} sections)
+              </span>
+              <ChevronDown className="h-5 w-5 shrink-0 text-muted transition-transform group-open:rotate-180" aria-hidden="true" />
+            </summary>
+            <ol className="space-y-1 border-t border-border px-4 py-3 text-base">
+              {items.map((h) => (
+                <li key={`mobile-${h.id}`} className={h.level === 3 ? "pl-4" : ""}>
+                  <a
+                    href={`#${h.id}`}
+                    onClick={(e) => onJump(e, h.id)}
+                    className="block py-1.5 text-fg-2 transition-colors hover:text-fg"
+                  >
+                    {h.text}
+                  </a>
+                </li>
+              ))}
+            </ol>
+          </details>
+        </nav>
+      )}
+
+      {/* BUREAU (≥ 64 em) : liste collante dans la colonne latérale */}
+      {afficheBureau && (
+        <nav
+          aria-label="Sommaire de l'article"
+          className="not-prose sticky top-24 hidden max-h-[calc(100vh-7rem)] overflow-y-auto pr-2 [@media(min-width:64em)]:block"
+        >
+          <div className="mb-3 inline-flex items-center gap-2 text-sm font-semibold text-muted">
+            <List className="h-3.5 w-3.5" aria-hidden="true" />
+            Dans cet article
+          </div>
+          <ol className="space-y-1.5 text-base">
+            {items.map((h) => {
+              const isActive = h.id === activeId;
+              return (
+                <li key={h.id} className={h.level === 3 ? "pl-3" : ""}>
+                  <a
+                    href={`#${h.id}`}
+                    onClick={(e) => onJump(e, h.id)}
+                    aria-current={isActive ? "location" : undefined}
+                    className={`-ml-px block border-l-2 py-1 pl-3 leading-snug transition-colors ${
+                      isActive
+                        ? "border-link-line font-semibold text-fg"
+                        : "border-transparent text-fg-2 hover:border-border-strong hover:text-fg"
+                    }`}
+                  >
+                    {h.text}
+                  </a>
+                </li>
+              );
+            })}
+          </ol>
+          <p className="mt-4 text-sm text-muted">
+            {progress}&nbsp;% lu · {items.length} sections
+          </p>
+        </nav>
+      )}
     </>
   );
 }

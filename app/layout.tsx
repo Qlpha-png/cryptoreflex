@@ -322,7 +322,15 @@ export default function RootLayout({
             data-theme="light" que sous l'interrupteur d'essai (?theme=papier, mémorisé ; ?theme=encre revient),
             qui affiche Papier depuis le lot B2. Détail et tests : lib/theme/anti-flash.ts. CSP : script-src 'unsafe-inline'. */}
         <script dangerouslySetInnerHTML={{ __html: SCRIPT_AVANT_AFFICHAGE }} />
-        {/* Lot B1 finitions F1 : pas de <link rel="preload"> sur les polices (mesuré plus lent, voir plus haut). */}
+        {/* Passe finale B4 (10/10/2026, jury ronde 2) : préchargement d'Inter et de Newsreader (latin, les deux fichiers
+            réellement utilisés au-dessus de la ligne de flottaison : corps de texte et titres). Avec `font-display: optional`,
+            une police qui n'est pas arrivée dans la courte fenêtre de blocage n'est JAMAIS appliquée à cette visite : sans
+            préchargement, 3 visites à froid sur 4 affichaient Times New Roman / Arial (mesuré). Replis à métriques ajustées :
+            Arial pour Inter, Georgia puis Times pour Newsreader (app/styles/tokens.css). crossOrigin obligatoire pour une
+            police, même sur la même origine. Remplace la décision F1 du lot B1 (« aucune police préchargée »), prise sur
+            le seul LCP. */}
+        <link rel="preload" href="/fonts/cplus-v1/inter-latin.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
+        <link rel="preload" href="/fonts/cplus-v1/newsreader-latin.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
         {/* Lighthouse perf audit 26/04/2026 (Agent Mobile 2) win #2 :
             preconnect aux CDN tiers utilises above-fold => -100ms LCP.
             CoinGecko a 2 CDNs distincts : assets.coingecko.com (logos legacy)

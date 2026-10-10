@@ -106,6 +106,6 @@ function RelatedCardBase({ news }: { news: NewsSummary }) {
   );
 }
 
-const RelatedCard = avecTypoSync(RelatedCardBase);
+const RelatedCard = avecTypoSync(RelatedCardBase, { riche: true });
 
-export default avecTypoSync(RelatedNews);
+export default avecTypoSync(RelatedNews, { riche: true });

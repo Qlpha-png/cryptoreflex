@@ -92,4 +92,4 @@ function PackCTABlock({
   );
 }
 
-export default avecTypoSync(PackCTABlock);
+export default avecTypoSync(PackCTABlock, { riche: true });

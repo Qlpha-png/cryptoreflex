@@ -554,9 +554,9 @@ function ReviewPage({ params }: Props) {
             {available && (
             <p className="mt-3 text-xs text-muted leading-relaxed">
               {paidKind === "affiliate"
-                ? "Publicité — Cryptoreflex perçoit une commission si vous passez par ce lien, sans surcoût pour vous. "
+                ? "Publicité — Cryptoreflex perçoit une commission si vous passez par ce lien. "
                 : paidKind === "referral"
-                  ? "Publicité — lien de parrainage personnel du fondateur, sans surcoût pour vous. "
+                  ? "Publicité — lien de parrainage personnel du fondateur. "
                   : `Lien direct vers le site officiel de ${p.name}. `}
               {paidKind ? "Cela ne change pas notre note" : "Notre note suit une méthodologie publique"} (cf. <Link href="/methodologie" className="underline hover:text-fg-max">méthodologie</Link> et <Link href="/transparence" className="underline hover:text-fg-max">page transparence</Link>).
             </p>
@@ -1251,9 +1251,9 @@ function ReviewPage({ params }: Props) {
               </>
             )}
             {paidKind === "affiliate"
-              ? `${BRAND.name} perçoit une commission via les liens vers ${p.name} marqués « Publicité », sans surcoût ni biais sur la note attribuée`
+              ? `${BRAND.name} perçoit une commission via les liens vers ${p.name} marqués « Publicité », sans effet sur la note attribuée`
               : paidKind === "referral"
-                ? `Les liens vers ${p.name} marqués « Publicité » sont des liens de parrainage personnel du fondateur, sans surcoût ni biais sur la note attribuée`
+                ? `Les liens vers ${p.name} marqués « Publicité » sont des liens de parrainage personnel du fondateur, sans effet sur la note attribuée`
                 : available
                   ? `Les liens vers ${p.name} mènent à son site officiel`
                   : `${p.name} n'étant pas autorisée en France, cette page ne renvoie pas vers son site`}{" "}

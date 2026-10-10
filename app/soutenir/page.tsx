@@ -317,7 +317,7 @@ export default function SoutenirPage() {
             {[
               {
                 q: "Comment le site est-il financé si tout est gratuit ?",
-                a: "Par quelques liens rémunérés, tous marqués « Publicité » (quand vous achetez un portefeuille Ledger ou Trezor, ou vous abonnez à Waltio, via nos liens, le partenaire nous reverse une commission, sans surcoût pour vous ; le fondateur partage aussi ses liens de parrainage personnels Bitpanda et Trade Republic) et par le soutien libre, facultatif. Aucun paywall, aucun abonnement.",
+                a: "Par quelques liens rémunérés, tous marqués « Publicité » (quand vous achetez un portefeuille Ledger ou Trezor, ou vous abonnez à Waltio, via nos liens, le partenaire nous reverse une commission ; le fondateur partage aussi ses liens de parrainage personnels Bitpanda et Trade Republic) et par le soutien libre, facultatif. Aucun paywall, aucun abonnement.",
               },
               {
                 q: "Le soutien donne-t-il des avantages ou influence-t-il les classements ?",

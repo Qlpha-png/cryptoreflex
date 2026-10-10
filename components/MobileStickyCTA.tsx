@@ -1,7 +1,7 @@
 "use client";
 
 import { avecTypoSync } from "@/components/ui/Typo";
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { ArrowRight } from "lucide-react";
 import { trackAffiliateClick } from "@/lib/analytics";
 import { isPaidLink, outboundRel } from "@/lib/partnerships";
@@ -46,6 +46,21 @@ function MobileStickyCTA({
   surface = "mobile-sticky",
 }: Props) {
   const [visible, setVisible] = useState(false);
+  // Passe finale B4 : texte agrandi (≥ 150 %) = le bandeau couvrait ~90 % de l'écran. Au-delà de 25 % de la hauteur de l'écran :
+  // version compacte (une ligne, le bouton seul), puis masqué si elle dépasse encore (le lien existe dans la page).
+  const [mode, setMode] = useState<"complet" | "compact" | "masque">("complet");
+  const racine = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const reset = () => setMode("complet");
+    window.addEventListener("resize", reset);
+    return () => window.removeEventListener("resize", reset);
+  }, []);
+
+  useLayoutEffect(() => {
+    if (!visible || !racine.current) return;
+    if (racine.current.offsetHeight > window.innerHeight * 0.25) setMode((m) => (m === "complet" ? "compact" : "masque"));
+  }, [visible, mode]);
 
   useEffect(() => {
     const onScroll = () => {
@@ -77,7 +92,7 @@ function MobileStickyCTA({
     }
   };
 
-  if (!visible) return null;
+  if (!visible || mode === "masque") return null;
 
   // 06/10/2026 : « sponsored » et mention « Publicité » seulement si le lien est réellement rémunéré
   // (lib/partnerships.ts) ; un lien interne (/comparatif/frais) s'ouvre dans le même onglet.
@@ -91,6 +106,7 @@ function MobileStickyCTA({
     // a11y : div décoratif → pas d'aria-label invalide (le <a> interne
     // porte déjà son nom accessible).
     <div
+      ref={racine}
       role="region"
       aria-label="Achat rapide"
       className="md:hidden fixed inset-x-0 z-30 border-t border-border/80
@@ -100,13 +116,13 @@ function MobileStickyCTA({
         bottom: "calc(var(--mobile-bar-h, 64px) + var(--safe-bottom, 0px))",
       }}
     >
-      <div className="flex items-center gap-3 px-4 py-3">
-        <div className="min-w-0 flex-1">
+      <div className={`flex items-center gap-3 px-4 ${mode === "compact" ? "py-2" : "py-3"}`}>
+        <div className={mode === "compact" ? "sr-only" : "min-w-0 flex-1"}>
           {title && (
-            <p className="text-xs font-semibold text-fg/90 truncate">{title}</p>
+            <p className="text-sm font-semibold leading-tight text-fg">{title}</p>
           )}
           {/* Mention de risque : jamais tronquée (jury B1 : « Capital à risque ·… » à 14 px), elle passe à la ligne. */}
-          <p className="text-xs text-muted leading-tight">
+          <p className="text-sm leading-tight text-muted">
             {shownDisclaimer}
           </p>
         </div>
@@ -115,12 +131,12 @@ function MobileStickyCTA({
           target={internal ? undefined : "_blank"}
           rel={internal ? undefined : outboundRel(platformId, href)}
           onClick={handleClick}
-          className="inline-flex shrink-0 items-center justify-center gap-1.5
+          className={`inline-flex items-center justify-center gap-1.5 ${mode === "compact" ? "w-full" : "shrink-0"}
                      min-h-[44px] px-4 py-2.5 rounded-xl text-sm font-semibold
                      bg-primary text-background hover:bg-primary-glow
                      transition-colors focus:outline-none focus-visible:ring-2
                      focus-visible:ring-primary focus-visible:ring-offset-2
-                     focus-visible:ring-offset-background"
+                     focus-visible:ring-offset-background`}
         >
           {label}
           <ArrowRight className="h-4 w-4" aria-hidden="true" />

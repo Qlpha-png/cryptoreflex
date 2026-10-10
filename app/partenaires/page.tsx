@@ -318,7 +318,7 @@ function PartnerShowcase({
 
             <p className="text-xs text-center text-muted leading-relaxed">
               Publicité — lien affilié : Cryptoreflex perçoit{" "}
-              {partner.commission ?? "une commission"} sans surcoût pour vous.
+              {partner.commission ?? "une commission"}.
             </p>
           </div>
         </div>

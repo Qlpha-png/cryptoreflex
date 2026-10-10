@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { typoFr } from "@/lib/typo-fr";
-import { ArrowLeft, ArrowRight, Clock, Calendar, GraduationCap } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 
 import {
   getArticleBySlug,
@@ -11,19 +11,19 @@ import {
   getRelatedArticles,
 } from "@/lib/mdx";
 import MdxContent from "@/components/MdxContent";
-import ArticleHero from "@/components/ui/ArticleHero";
-import AuthorCard from "@/components/AuthorCard";
+import TrustBox from "@/components/ui/TrustBox";
+import Callout from "@/components/mdx/Callout";
+import { typesRemuneres, sourcesOfficielles } from "@/lib/article-confiance";
+import { getAffiliationKind, isPaidLink, lignesRemuneration } from "@/lib/partnerships";
 import { findLessonBySlug, getTrack } from "@/lib/academy-tracks";
-import AmfDisclaimer from "@/components/AmfDisclaimer";
+import { RISK } from "@/lib/risk-text";
+import { derniereModification } from "@/lib/article-dates";
 import CorrectionNotice from "@/components/CorrectionNotice";
 import StructuredData from "@/components/StructuredData";
 import NewsletterInline from "@/components/NewsletterInline";
-import PopularArticles from "@/components/blog/PopularArticles";
 import ArticleToc from "@/components/blog/ArticleToc";
 import RelatedPagesNav from "@/components/RelatedPagesNav";
-import RelatedEntities from "@/components/RelatedEntities";
 import MobileStickyCTA from "@/components/MobileStickyCTA";
-import NextStepsGuide from "@/components/NextStepsGuide";
 import { getAllPlatforms, isAvailableFr } from "@/lib/platforms";
 import { BRAND } from "@/lib/brand";
 import { withHreflang } from "@/lib/seo-alternates";
@@ -90,7 +90,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title: seoTitle,
       description: seoDescription,
       publishedTime: article.date,
-      modifiedTime: article.lastUpdated,
+      modifiedTime: derniereModification(article),
       authors: [`/auteur/${author.id}`],
       tags: article.keywords,
       siteName: BRAND.name,
@@ -115,65 +115,6 @@ function formatFrenchDate(iso: string): string {
   // le site (avant : "DD mois YYYY" en français long, incohérent avec les
   // fiches crypto et le calculateur).
   return new Date(iso).toLocaleDateString("fr-FR");
-}
-
-/**
- * FIX #2 audit conversion 2026-04-26 — mappe la `category` éditoriale d'un
- * article vers un `context` consommé par <NewsletterInline /> pour servir un
- * copy ciblé (ex: catégorie "Fiscalité" → copy "Optimise ta fisca crypto 2026").
- *
- * Categories libres autorisées dans le frontmatter MDX → match insensible à la
- * casse + tolérant aux accents. Si aucun match → return undefined (le copy
- * "blog-cta" générique reste appliqué).
- */
-function categoryToNewsletterContext(
-  category?: string,
-):
-  | "fiscalite"
-  | "securite"
-  | "trading"
-  | "debutant"
-  | "actualites"
-  | "defi"
-  | "regulation"
-  | undefined {
-  if (!category) return undefined;
-  const c = category
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[̀-ͯ]/g, "");
-  if (c.includes("fisc") || c.includes("impot") || c.includes("tax"))
-    return "fiscalite";
-  if (
-    c.includes("secur") ||
-    c.includes("scam") ||
-    c.includes("arnaque") ||
-    c.includes("wallet") ||
-    c.includes("hack")
-  )
-    return "securite";
-  if (c.includes("trading") || c.includes("analyse")) return "trading";
-  if (
-    c.includes("debut") ||
-    c.includes("guide") ||
-    c.includes("comprendre") ||
-    c.includes("acheter") ||
-    c.includes("apprend")
-  )
-    return "debutant";
-  if (c.includes("defi") || c.includes("staking") || c.includes("yield"))
-    return "defi";
-  if (
-    c.includes("regul") ||
-    c.includes("mica") ||
-    c.includes("amf") ||
-    c.includes("psan") ||
-    c.includes("loi")
-  )
-    return "regulation";
-  if (c.includes("actu") || c.includes("news") || c.includes("marche"))
-    return "actualites";
-  return undefined;
 }
 
 /**
@@ -244,6 +185,8 @@ async function BlogArticlePage({ params }: Props) {
   // - Breadcrumb : déjà présent.
   // - Pas de FAQPage ici car le frontmatter MDX actuel n'a pas de
   //   `quickAnswerQuestion` — à réintroduire si on étend le contrat data.
+  // Date de dernière modification RÉELLE (frontmatter + corrections publiées) : en-tête, encadré, JSON-LD et Open Graph la partagent.
+  const derniere = derniereModification(article);
   const articleJsonLd = articleSchema({
     slug: article.slug,
     title: article.title,
@@ -252,7 +195,7 @@ async function BlogArticlePage({ params }: Props) {
     category: article.category,
     tags: article.keywords,
     date: article.date,
-    dateModified: article.lastUpdated,
+    dateModified: derniere,
     readTime: article.readTime,
     cover: article.cover,
     author: author.name,
@@ -296,127 +239,91 @@ async function BlogArticlePage({ params }: Props) {
     }
   }
 
+  // Lot B4 — encadré de confiance : ce que la page affiche réellement, lu dans l'article (lib/article-confiance.ts) :
+  //  · types de liens rémunérés = ceux du texte MDX + celui du bouton collant mobile s'il en affiche un ;
+  //  · sources = celles du frontmatter, sinon les sites officiels déjà cités dans le texte (rien d'inventé).
+  const typesLiens = typesRemuneres(article.content);
+  if (stickyPlatform && isPaidLink(stickyPlatform.id, stickyPlatform.affiliateUrl)) {
+    const k = getAffiliationKind(stickyPlatform.id);
+    if (k) typesLiens.add(k);
+  }
+  const lignesRemu = lignesRemuneration(typesLiens);
+  const sourcesFront = article.sources && article.sources.length > 0 ? article.sources : null;
+  const sourcesAffichees = sourcesFront ?? sourcesOfficielles(article.content);
+  const sourcesTitre = sourcesFront ? "Sources" : "Textes officiels cités";
+  const lecture = /lecture/i.test(article.readTime) ? article.readTime : `${article.readTime} de lecture`;
+
   return (
     <>
       <StructuredData data={schemas} id="article-graph" />
 
-      <article className="py-12 sm:py-16">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          {/* Layout : article principal + sidebar (lg+).
-              FIX RESPONSIVE 2026-05-02 #6 (audit user "moitié des lignes
-              coupées en mobile") : `min-w-0` essentiel sur les 2 niveaux
-              (grid + child). Par défaut `min-width: auto` sur les grid items
-              = `min-content`, donc dès qu'une table MDX large ou un long
-              titre apparait, la cellule explose au-delà de 1fr → article
-              rendu à 605px dans un viewport 390px → contenu coupé à droite.
-              `body { overflow-x: hidden }` masquait juste le bug.
-              Solution : `min-w-0 w-full` force la cellule à respecter le
-              container, le scroll horizontal local des tables se réactive. */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 lg:gap-12 min-w-0">
-            <div className="lg:col-span-2 max-w-3xl mx-auto lg:mx-0 min-w-0 w-full">
-              <Breadcrumbs chemin={`/blog/${article.slug}`} label={article.title} className="mb-6" />
-              {/* Retour */}
-              <Link
-                href="/blog"
-                className="inline-flex items-center gap-2 text-sm text-muted hover:text-fg
-                           focus:outline-none focus-visible:underline rounded"
-              >
-                <ArrowLeft className="h-4 w-4" />
-                Retour au blog
-              </Link>
+      <article className="py-10 sm:py-14">
+        <div className="mx-auto max-w-[70rem] px-4 sm:px-6 lg:px-8">
+          <Breadcrumbs chemin={`/blog/${article.slug}`} label={article.title} compactMobile />
 
-              {/* Header */}
-              <header className="mt-6">
-                <div className="flex flex-wrap items-center gap-3 text-xs">
-                  <span className="rounded-full bg-elevated px-2.5 py-1 font-semibold text-fg/80">
-                    {article.category}
-                  </span>
-                  <span className="inline-flex items-center gap-1 text-muted">
-                    <Clock className="h-3.5 w-3.5" />
-                    {article.readTime}
-                  </span>
-                  <span className="inline-flex items-center gap-1 text-muted">
-                    <Calendar className="h-3.5 w-3.5" />
-                    {formatFrenchDate(article.date)}
-                  </span>
-                  {article.lastUpdated &&
-                    article.lastUpdated !== article.date && (
-                      <span className="text-muted">
-                        MAJ {formatFrenchDate(article.lastUpdated)}
-                      </span>
-                    )}
-                </div>
+          {/* Mise en page (maquette C+) : sommaire collant à gauche dès 64 em, colonne de lecture de 34 em à droite.
+              Ronde 1 du jury B4 : le point de rupture est en em (il suit la taille de texte du visiteur) et la mise en page
+              est un « flex-wrap » dont la colonne de lecture garde au moins 36 rem : à 200 % la colonne ne s'effondre plus
+              (elle passe en pleine largeur, sommaire en accordéon), avant : 240 px soit 12 signes par ligne.
+              FIX RESPONSIVE 2026-05-02 #6 : `min-w-0` sur les enfants (une table large ou un long titre ne gonfle pas la
+              colonne, le défilement local des tableaux reste actif). */}
+          <div className="mt-8 flex flex-wrap justify-center gap-x-14 gap-y-0">
+            <aside className="hidden min-w-0 [@media(min-width:64em)]:block [@media(min-width:64em)]:flex-[0_1_16rem]">
+              <ArticleToc slug={article.slug} minHeadings={3} variante="bureau" />
+            </aside>
 
-                <h1 className="mt-4 text-4xl font-extrabold tracking-tight leading-tight sm:text-5xl">
+            <div className="w-full min-w-0 max-w-[42.5rem] flex-[1_1_36rem]">
+              {/* En-tête (maquette) : surtitre catégorie · temps de lecture, filet or, titre, chapô, signature. Le dégradé
+                  `gradient` du frontmatter n'est plus lu et l'image de couverture décorative est retirée (la page garde
+                  son og:image dans les métadonnées). */}
+              <header>
+                <p className="flex flex-wrap items-center gap-x-3 text-base font-semibold text-primary">
+                  <span>{article.category}</span>
+                  <span aria-hidden="true" className="-mx-1 hidden font-normal text-fg-4 sm:inline">
+                    ·
+                  </span>
+                  <span className="font-normal text-muted">{lecture}</span>
+                </p>
+                <span aria-hidden="true" className="mt-3 block h-[3px] w-16 rounded-full bg-link-line" />
+
+                <h1 className="mt-5 text-[2.5rem] font-medium leading-[1.08] tracking-[-0.02em] text-fg md:text-[3.25rem]">
                   {typoFr(article.title)}
                 </h1>
 
-                <p className="mt-4 text-lg text-fg/70">{typoFr(article.description)}</p>
-
-                {/* BATCH 56#14 (2026-05-03) — Hero article : utilise OG image
-                    dynamique (bug 'HTTP 500 fs serverless' corrige depuis,
-                    HTTP 200 OK confirme + Cache 1 an). Plus engageant qu'un
-                    placeholder CSS, coherent avec preview cards (BATCH 56#11). */}
-                <div className="mt-8 rounded-2xl overflow-hidden bg-elevated aspect-[1200/630]">
-                  <img
-                    src={`/blog/${article.slug}/opengraph-image?v=${article.lastUpdated || article.date}`}
-                    alt={`Cover : ${article.title}`}
-                    className="w-full h-full object-cover"
-                    loading="eager"
-                    fetchPriority="high"
-                    decoding="async"
-                    width={1200}
-                    height={630}
-                  />
-                </div>
+                <p className="lead mt-5 max-w-[34em] text-[1.25rem] leading-normal text-fg-2">{typoFr(article.description)}</p>
 
                 <div className="mt-6">
-                  <AuthorCard
-                    authorId={articleAuthorId(article.author)}
-                    variant="compact"
-                    date={article.date}
-                    dateModified={article.lastUpdated}
-                    readTime={article.readTime}
+                  <TrustBox
+                    variante="ligne"
+                    auteur={articleAuthorId(article.author)}
+                    publieLe={article.date}
+                    misAJourLe={derniere}
                   />
                 </div>
               </header>
 
-              {/* Disclaimer AMF haut */}
-              <div className="mt-8">
-                <AmfDisclaimer variant="educatif" compact />
+              {/* Sommaire sur petit écran (et texte agrandi) : APRÈS l'en-tête, dans un repère de navigation. Sa place est
+                  réservée (accordéon fermé 54 px + marge 24 px) : aucun décalage de mise en page au chargement. */}
+              <div className="mt-6 min-h-[78px] [@media(min-width:64em)]:hidden">
+                <ArticleToc slug={article.slug} minHeadings={3} variante="mobile" />
               </div>
+
+              {/* Avertissement unique (ronde 1 du jury) : le risque, une fois, en tête, avec la phrase de lib/risk-text.ts.
+                  Plus d'« Avertissement — comparatif » en fin d'article : il parlait de comparatif et d'une absence de surcoût
+                  sur des articles qui n'en sont pas ; la rémunération est dite par l'encadré de confiance, une seule fois. */}
+              <Callout type="danger" title="Avertissement">
+                {RISK.short}
+              </Callout>
 
               {/* Maillage fiscal (reprise B3a) : chaque article de fiscalité mène au hub des outils pour déclarer */}
               {article.category?.trim().toLowerCase() === "fiscalité" && (
-                <p className="mt-6 rounded-xl border border-border bg-surface p-4 text-sm text-fg-2">
+                <p className="mt-6 max-w-none rounded-xl border border-border bg-surface p-4 text-base text-fg-2">
                   <strong className="text-fg">Passer à la déclaration : </strong>
-                  <Link href="/impots" className="font-semibold text-fg underline decoration-link-line underline-offset-4 hover:decoration-fg">
+                  <Link href="/impots" className="font-semibold text-fg underline decoration-link-line decoration-2 underline-offset-[0.28em] hover:decoration-[3px]">
                     les outils gratuits pour calculer, remplir le Cerfa 2086 et le 3916-bis
                   </Link>
                   , étape par étape.
                 </p>
-              )}
-
-              {/* Maillage académie : cet article est une leçon d'un parcours */}
-              {academyTrack && (
-                <div className="mt-6 flex flex-col gap-2 rounded-xl border border-primary/30 bg-primary/5 p-4 sm:flex-row sm:items-center sm:justify-between">
-                  <p className="text-sm text-fg/85">
-                    <GraduationCap
-                      className="mr-1.5 inline h-4 w-4 text-primary-glow"
-                      aria-hidden="true"
-                    />
-                    Cet article est une leçon du parcours{" "}
-                    <strong className="text-fg">{academyTrack.title}</strong> de
-                    l&apos;académie — progression suivie et quiz de validation.
-                  </p>
-                  <Link
-                    href={`/academie/${academyTrack.id}`}
-                    className="inline-flex shrink-0 items-center gap-1 text-sm font-semibold text-primary-glow hover:underline"
-                  >
-                    Suivre le parcours
-                    <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
-                  </Link>
-                </div>
               )}
 
               {/* Contenu MDX — split ~60% pour insérer la NewsletterInline */}
@@ -424,17 +331,9 @@ async function BlogArticlePage({ params }: Props) {
                 <MdxContent source={contentHead} />
               </div>
 
-              {/* NewsletterInline — encart au cœur de l'article (P1-9).
-                  FIX #2 audit conversion 2026-04-26 : on passe `context` mappé
-                  depuis la catégorie d'article. Le copy générique reste fallback
-                  si la catégorie ne matche aucun preset. Les overrides
-                  title/subtitle ne sont plus passés explicitement pour laisser
-                  le contexte ciblé prendre le dessus. */}
+              {/* NewsletterInline — encart au cœur de l'article (P1-9). Composant et texte uniques (lot B4). */}
               <div className="my-10">
-                <NewsletterInline
-                  source="blog-cta"
-                  context={categoryToNewsletterContext(article.category)}
-                />
+                <NewsletterInline source="blog-cta" />
               </div>
 
               {contentTail && (
@@ -443,116 +342,83 @@ async function BlogArticlePage({ params }: Props) {
                 </div>
               )}
 
-              {/* Disclaimer AMF complet */}
-              <div className="mt-12">
-                <AmfDisclaimer variant="comparatif" />
-              </div>
-
               {/* « Corrigé le … » (06/10/2026) : corrections publiées dans data/corrections.json pour ce slug ;
                   ne rend rien si l'article n'a aucune correction. Avant la signature, comme le promet /charte. */}
               <CorrectionNotice slug={article.slug} />
 
-              {/* Author full */}
-              <AuthorCard authorId={articleAuthorId(article.author)} variant="full" />
+              {/* Fin d'article sobre (ronde 1 du jury) : encadré de confiance (sources comprises), puis la suite de lecture. */}
+              <TrustBox
+                variante="complet"
+                auteur={articleAuthorId(article.author)}
+                publieLe={article.date}
+                misAJourLe={derniere}
+                remuneration={lignesRemu}
+                sources={sourcesAffichees}
+                sourcesTitre={sourcesTitre}
+                retour={{ href: "/blog", label: "Tous les articles" }}
+              />
 
-              {/* Articles similaires */}
+              {/* Maillage académie : cet article est une leçon d'un parcours */}
+              {academyTrack && (
+                <Callout type="info" title="À savoir">
+                  Cet article est une leçon du parcours <strong>{academyTrack.title}</strong> de l&apos;académie, avec
+                  progression suivie et quiz de validation.{" "}
+                  <Link
+                    href={`/academie/${academyTrack.id}`}
+                    className="text-link underline decoration-link-line decoration-2 underline-offset-[0.28em] hover:text-link-hover hover:decoration-[3px]"
+                  >
+                    Suivre le parcours
+                  </Link>
+                </Callout>
+              )}
+
+              {/* Articles similaires : cartes de texte (le dégradé du frontmatter n'est plus lu, plus d'image décorative) */}
               {related.length > 0 && (
                 <section className="mt-16">
-                  <h2 className="text-2xl font-bold tracking-tight text-fg">
-                    Articles similaires
-                  </h2>
-                  <div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2">
+                  <h2 className="text-2xl font-medium tracking-tight text-fg sm:text-[1.75rem]">Articles similaires</h2>
+                  <div className="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2">
                     {related.map((r) => (
                       <Link
                         key={r.slug}
                         href={`/blog/${r.slug}`}
-                        className="group glass overflow-hidden rounded-2xl transition-transform hover:translate-y-[-2px]
-                                   focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                        className="group block rounded-2xl border border-border bg-surface p-5 shadow-e1 transition hover:-translate-y-0.5 hover:border-border-strong hover:shadow-e2 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-focus"
                       >
-                        {/* Design lot 0 (06/10/2026) — audit : aplats violet/teal
-                            vides. Vraie image de l'article = son OG image
-                            (même source que le héros et l'index du blog ; les
-                            `cover:` MDX pointent tous vers des fichiers absents).
-                            Dessous, ArticleHero (icône de catégorie + initiales)
-                            sert de repli pendant le chargement ou si l'image
-                            échoue. alt="" : le titre du lien suit juste après. */}
-                        <div className="relative aspect-[1200/630] overflow-hidden bg-elevated">
-                          <div className="absolute inset-0">
-                            <ArticleHero
-                              category={r.category}
-                              title={r.title}
-                              gradient={r.gradient}
-                              height="h-full"
-                            />
-                          </div>
-                          {/* eslint-disable-next-line @next/next/no-img-element */}
-                          <img
-                            src={`/blog/${r.slug}/opengraph-image?v=${r.lastUpdated || r.date}`}
-                            alt=""
-                            className="absolute inset-0 z-20 h-full w-full object-cover transition-transform duration-slow group-hover:scale-[1.03]"
-                            loading="lazy"
-                            decoding="async"
-                            width={1200}
-                            height={630}
-                          />
-                        </div>
-                        <div className="p-4">
-                          <h3 className="font-semibold text-fg group-hover:text-primary-glow">
-                            {r.title}
-                          </h3>
-                          <p className="mt-1 text-xs text-muted">
-                            {r.readTime} · {formatFrenchDate(r.date)}
-                          </p>
-                        </div>
+                        <p className="text-base text-muted">
+                          {r.readTime} · {formatFrenchDate(r.date)}
+                        </p>
+                        <h3 className="mt-1 text-lg font-semibold leading-snug text-fg group-hover:underline group-hover:decoration-link-line group-hover:decoration-2 group-hover:underline-offset-[0.28em]">
+                          {r.title}
+                        </h3>
+                        <p className="mt-2 text-base leading-relaxed text-fg-2">{r.description}</p>
                       </Link>
                     ))}
                   </div>
 
-                  <div className="mt-8 text-center">
+                  <p className="mt-6">
                     <Link
                       href="/blog"
-                      className="inline-flex items-center gap-2 text-sm font-semibold text-primary-glow hover:underline"
+                      className="inline-flex items-center gap-2 text-base font-semibold text-link underline decoration-link-line decoration-2 underline-offset-[0.28em] hover:text-link-hover hover:decoration-[3px]"
                     >
                       Voir tous les articles
-                      <ArrowRight className="h-4 w-4" />
+                      <ArrowRight className="h-4 w-4" aria-hidden="true" />
                     </Link>
-                  </div>
+                  </p>
                 </section>
               )}
 
-              {/* "Voir aussi" entity-driven — cryptos / plateformes / outils
-                  / termes mentionnés dans le texte de l'article. Complémentaire
-                  du graphe cluster (RelatedPagesNav) : ce bloc-ci est dérivé
-                  data, l'autre est curaté humainement. */}
-              <RelatedEntities text={article.content} limit={6} />
-
-              {/* Maillage interne — cluster sémantique du graphe */}
+              {/* Une seule suite, issue du graphe de maillage curaté (lib/internal-link-graph.ts). « Articles récents »,
+                  « Voir aussi » (RelatedEntities) et « Prochaines étapes » (NextStepsGuide, 2e carte newsletter) ne sont plus
+                  rendus dans le gabarit d'article : 6 blocs de liens après l'encadré de confiance (ronde 1 du jury). */}
               <RelatedPagesNav
                 currentPath={`/blog/${article.slug}`}
                 limit={4}
                 variant="default"
+                title="Allez plus loin"
               />
             </div>
-
-            {/* Sidebar — TOC sticky + Articles populaires.
-                FIX #3 audit conversion 2026-04-26 : ArticleToc ajouté en
-                premier (au-dessus du fold sidebar) pour donner une vue
-                d'ensemble de l'article + progress bar haut de page. */}
-            <aside className="lg:col-span-1">
-              <div className="space-y-8">
-                <ArticleToc slug={article.slug} minHeadings={3} />
-                <div className="lg:sticky lg:top-24">
-                  <PopularArticles excludeSlug={article.slug} limit={5} />
-                </div>
-              </div>
-            </aside>
           </div>
         </div>
       </article>
-
-      {/* Next Steps Guide — main tenue : 3 prochaines étapes contextuelles
-          selon la catégorie de l'article (fiscalité, sécurité, débutant…). */}
-      <NextStepsGuide context="article" articleCategory={article.category} />
 
       {/* Sticky CTA mobile (intent commercial uniquement).
           FIX #5 audit conversion 2026-04-26 : sur articles "acheter X", on
@@ -561,7 +427,7 @@ async function BlogArticlePage({ params }: Props) {
       {isTransactionalArticle && stickyPlatform && (
         <MobileStickyCTA
           platformId={stickyPlatform.id}
-          title={`Recommandé : ${stickyPlatform.name}`}
+          title={stickyPlatform.name}
           label={`Aller sur ${stickyPlatform.name}`}
           href={stickyPlatform.affiliateUrl}
           surface="blog-transactional"
@@ -571,4 +437,4 @@ async function BlogArticlePage({ params }: Props) {
   );
 }
 
-export default avecTypo(BlogArticlePage);
+export default avecTypo(BlogArticlePage, { riche: true });

@@ -321,7 +321,7 @@ function CalculateurApyStaking({ maintenant: maintenantFixe }: { maintenant?: nu
           <div className="grid gap-4 lg:grid-cols-2">
             {ledger && (
               <div className="glass rounded-2xl p-6">
-                <span className="badge-info">Sécurité maximale</span>
+                <span className="badge-info">Vos clés restent chez vous</span>
                 <h4 className="mt-3 font-bold text-fg-max">Stake via Ledger Live</h4>
                 <p className="mt-2 text-sm text-fg-max/70">
                   Gardez le contrôle de vos clés privées et stakez ETH, SOL, ADA, DOT

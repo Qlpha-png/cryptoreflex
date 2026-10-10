@@ -10,7 +10,6 @@ import {
   ChevronRight,
 } from "lucide-react";
 import type { ArticleSummary } from "@/lib/mdx";
-import ArticleHero from "@/components/ui/ArticleHero";
 
 /**
  * BlogIndexClient — filtre catégorie + recherche client-side + pagination.
@@ -239,51 +238,29 @@ export default function BlogIndexClient({ articles, categories }: Props) {
       ) : (
         <div className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
           {visible.map((a) => (
+            // Ronde 1 du jury B4 : cartes de texte du gabarit d'article (plus d'image de couverture générée avec son dégradé ni
+            // de halo) — surtitre durée · date, titre, chapô.
             <Link
               key={a.slug}
               href={`/blog/${a.slug}`}
-              className="group glass overflow-hidden rounded-2xl transition-transform hover:translate-y-[-2px]
-                         focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+              className="group block rounded-2xl border border-border bg-surface p-5 shadow-e1 transition hover:-translate-y-0.5 hover:border-border-strong hover:shadow-e2
+                         focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-focus"
             >
-              {/* BATCH 56#11 (2026-05-03) — User feedback : "sur les blog tu peux
-                  pas faire des photo qui correspond a chaque blog ?"
-                  Solution : utiliser l'OG image dynamique generee par
-                  app/blog/[slug]/opengraph-image.tsx (existait deja, juste
-                  jamais branchee comme cover de card).
-                  - 1 image unique par article (titre + categorie + brand)
-                  - HTTP 200 confirme + Cache-Control 1 an immutable
-                  - Format PNG, 1200x630, ratio 16/9 parfait pour les cards
-                  - Fallback : ArticleHero CSS si l'image echoue (onError)
-                  Le bug "loading=lazy ne charge pas" du commentaire precedent
-                  vient du SSR/hydration. Solution : suppressHydrationWarning
-                  + loading="eager" pour les premiers visibles + lazy pour le reste. */}
-              <div className="relative aspect-[16/9] overflow-hidden bg-elevated">
-                <img
-                  src={`/blog/${a.slug}/opengraph-image?v=${a.lastUpdated || a.date}`}
-                  alt={`Cover : ${a.title}`}
-                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-slow group-hover:scale-[1.03]"
-                  loading="lazy"
-                  decoding="async"
-                  width={1200}
-                  height={630}
-                />
-              </div>
-              <div className="p-5">
-                <h2 className="text-lg font-semibold text-fg group-hover:text-primary-glow">
-                  {a.title}
-                </h2>
-                <p className="mt-2 line-clamp-3 text-sm text-fg/70">
-                  {a.description}
-                </p>
-                <div className="mt-4 flex items-center gap-3 text-xs text-muted">
-                  <span className="inline-flex items-center gap-1">
-                    <Clock className="h-3.5 w-3.5" />
-                    {a.readTime}
-                  </span>
-                  <span>·</span>
-                  <span>{formatDate(a.date)}</span>
-                </div>
-              </div>
+              <p className="flex flex-wrap items-center gap-x-2 text-base text-muted">
+                <span className="font-semibold text-primary">{a.category}</span>
+                <span aria-hidden="true" className="text-fg-4">
+                  ·
+                </span>
+                <span>{a.readTime}</span>
+                <span aria-hidden="true" className="text-fg-4">
+                  ·
+                </span>
+                <span>{formatDate(a.date)}</span>
+              </p>
+              <h2 className="mt-2 text-xl font-semibold leading-snug text-fg group-hover:underline group-hover:decoration-link-line group-hover:decoration-2 group-hover:underline-offset-[0.28em]">
+                {a.title}
+              </h2>
+              <p className="mt-2 line-clamp-3 text-base leading-relaxed text-fg-2">{a.description}</p>
             </Link>
           ))}
         </div>

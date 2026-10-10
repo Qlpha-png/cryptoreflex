@@ -1,6 +1,6 @@
 import { avecTypo } from "@/components/ui/Typo";
 import Link from "next/link";
-import { Clock, Flame } from "lucide-react";
+import { Clock } from "lucide-react";
 import { getAllArticleSummaries } from "@/lib/mdx";
 
 /**
@@ -45,10 +45,9 @@ async function PopularArticles({
     >
       <h2
         id="popular-articles-title"
-        className="text-sm font-bold uppercase tracking-wider text-fg flex items-center gap-2"
+        className="text-xl font-medium text-fg"
       >
-        <Flame className="h-4 w-4 text-primary" aria-hidden="true" />
-        Articles populaires
+        Articles récents
       </h2>
 
       <ol className="mt-4 space-y-3">
@@ -56,23 +55,23 @@ async function PopularArticles({
           <li key={a.slug}>
             <Link
               href={`/blog/${a.slug}`}
-              className="group block rounded-lg p-2 -m-2 hover:bg-elevated/40 transition-colors
-                         focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-surface"
+              className="group block rounded-lg p-2 -m-2 hover:bg-elevated transition-colors
+                         focus:outline-none focus-visible:ring-[3px] focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface"
             >
               <div className="flex items-start gap-3">
                 <span
                   aria-hidden="true"
-                  className="shrink-0 inline-flex h-6 w-6 items-center justify-center rounded-md bg-primary/10 text-xs font-bold font-mono text-primary"
+                  className="shrink-0 inline-flex h-6 w-6 items-center justify-center rounded-full bg-sunken text-sm font-semibold text-fg-2"
                 >
                   {i + 1}
                 </span>
                 <div className="min-w-0 flex-1">
-                  <h3 className="text-sm font-semibold text-fg leading-snug group-hover:text-primary-glow">
+                  <h3 className="text-base font-semibold text-fg leading-snug group-hover:underline group-hover:decoration-link-line group-hover:decoration-2 group-hover:underline-offset-[0.28em]">
                     {a.title}
                   </h3>
-                  <div className="mt-1 flex items-center gap-2 text-xs text-muted">
+                  <div className="mt-1 flex items-center gap-2 text-sm text-muted">
                     <span className="inline-flex items-center gap-0.5">
-                      <Clock className="h-3 w-3" aria-hidden="true" />
+                      <Clock className="h-3.5 w-3.5" aria-hidden="true" />
                       {a.readTime}
                     </span>
                     <span aria-hidden="true">·</span>

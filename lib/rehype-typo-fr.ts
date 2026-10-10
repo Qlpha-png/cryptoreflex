@@ -6,7 +6,7 @@
  * les styles sont laissés tels quels. À placer APRÈS rehype-slug : les identifiants d'ancres sont calculés sur le texte
  * d'origine.
  */
-import { typoFr } from "./typo-fr";
+import { typoFrRiche } from "./typo-fr";
 
 type NoeudHast = { type: string; value?: string; tagName?: string; children?: NoeudHast[] };
 
@@ -15,7 +15,7 @@ const IGNORES = new Set(["code", "pre", "script", "style", "textarea"]);
 function parcourir(noeud: NoeudHast): void {
   if (noeud.type === "element" && noeud.tagName && IGNORES.has(noeud.tagName)) return;
   if (noeud.type === "text" && typeof noeud.value === "string") {
-    noeud.value = typoFr(noeud.value);
+    noeud.value = typoFrRiche(noeud.value);
     return;
   }
   if (noeud.children) for (const enfant of noeud.children) parcourir(enfant);

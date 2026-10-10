@@ -116,7 +116,7 @@ const QUESTIONS: Question[] = [
       { value: "tiny", label: "Moins de 100 €", hint: "Tester le marché" },
       { value: "small", label: "100 – 1 000 €", hint: "Premier vrai capital" },
       { value: "medium", label: "1 000 – 10 000 €", hint: "Investissement sérieux" },
-      { value: "large", label: "10 000 € et plus", hint: "Patrimoine — sécurité maximale" },
+      { value: "large", label: "10 000 € et plus", hint: "Patrimoine — priorité à la sécurité" },
     ],
   },
   {

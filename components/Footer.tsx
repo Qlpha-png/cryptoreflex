@@ -127,7 +127,7 @@ function Footer() {
                   {l}
                 </a>
               ) : (
-                <span key={l} className="inline-flex min-h-[32px] min-w-[28px] items-center justify-center text-muted/60" aria-hidden="true">
+                <span key={l} className="inline-flex min-h-[32px] min-w-[28px] items-center justify-center text-fg-4" aria-hidden="true">
                   {l}
                 </span>
               ),

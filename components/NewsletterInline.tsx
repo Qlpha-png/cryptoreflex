@@ -3,7 +3,6 @@
 import { avecTypoSync } from "@/components/ui/Typo";
 import { useState, FormEvent, useEffect, useRef } from "react";
 import {
-  Mail,
   ArrowRight,
   CheckCircle2,
   AlertCircle,
@@ -52,118 +51,26 @@ interface NewsletterInlineProps {
 }
 
 /**
- * Defaults de copy par contexte (source). Ne sont appliques que si le caller
- * ne fournit pas explicitement title/subtitle/ctaLabel.
- *
- * Pourquoi ? Le meme composant est utilise sur 5+ surfaces (sidebar, bottom
- * d'article, hero, footer, newsletter page). Forcer un copy generique partout
- * baisse la conversion ; un copy contextuel (ex: "Tu as aime cet article ?
- * Recois la suite par email" en bottom-article) peut faire +20-40 % de signup
- * (benchmark conservatif a verifier en A/B Plausible).
+ * Lot B4 (10/10/2026) — TEXTE UNIQUE de la newsletter (spec C+, § 7 « Newsletter ») : titre « Newsletter », phrase
+ * « Nous n'écrivons que quand une information compte. Désinscription en un clic. », bouton « M'inscrire », note
+ * « Votre adresse ne sert qu'à la newsletter. » Aucun rythme promis (aucune édition n'est envoyée par le code), aucun
+ * témoignage. Les anciens textes par surface (« bottom-article », « sidebar », « hero »…) et par thème d'article
+ * (`context` : fiscalité, sécurité…) sont supprimés ; `title`, `subtitle`, `ctaLabel` et `context` restent acceptés par
+ * le composant pour ne pas casser les appels existants, mais sont ignorés : un seul texte sur tout le site.
  */
-const COPY_DEFAULTS: Record<
-  string,
-  { title: string; subtitle: string; ctaLabel: string }
-> = {
-  // 06/10/2026 : aucun rythme promis (quotidien, 7h, chaque mardi, hebdo…) — aucune édition n'est envoyée par le code.
-  "bottom-article": {
-    title: "Vous avez aimé cet article ?",
-    subtitle: "Recevez la newsletter : l'essentiel de la crypto en français, sans spam.",
-    ctaLabel: "Recevoir la newsletter",
-  },
-  sidebar: {
-    title: "Newsletter crypto FR",
-    subtitle: "L'essentiel de la crypto en français. Sans hype, sans pub.",
-    ctaLabel: "M'abonner",
-  },
-  hero: {
-    title: "Recevoir la newsletter",
-    subtitle: "Gratuit. Désinscription en 1 clic.",
-    ctaLabel: "Recevoir la newsletter",
-  },
-  "newsletter-page": {
-    title: "Inscription à la newsletter",
-    subtitle: "Gratuit. Désinscription en 1 clic.",
-    ctaLabel: "Recevoir la newsletter",
-  },
-};
-
-/**
- * Copy ciblé par contexte d'article (FIX #2 audit conversion 2026-04-26).
- * Appliqué uniquement si `context` est fourni ET qu'aucun title/subtitle
- * explicite n'override.
- */
-const CONTEXT_COPY: Record<
-  NonNullable<NewsletterInlineProps["context"]>,
-  { title: string; subtitle: string; ctaLabel: string }
-> = {
-  fiscalite: {
-    title: "Optimisez votre fisca crypto 2026",
-    subtitle:
-      "Les points de fiscalité FR qui comptent (PFU, Cerfa 2086, BNC pro) et les échéances à ne pas rater.",
-    ctaLabel: "Recevoir la newsletter",
-  },
-  securite: {
-    title: "Restez à l'abri des arnaques crypto",
-    subtitle:
-      "Nouvelles arnaques en France, piratages de plateformes, bonnes pratiques wallet.",
-    ctaLabel: "Recevoir la newsletter",
-  },
-  trading: {
-    title: "Le récap trading crypto FR",
-    subtitle:
-      "Niveaux clés BTC/ETH et actualité macro, expliqués sans jargon.",
-    ctaLabel: "Recevoir la newsletter",
-  },
-  debutant: {
-    title: "Démarrez la crypto sans vous faire avoir",
-    subtitle:
-      "Les bases expliquées simplement, et l'essentiel de l'actu crypto en français.",
-    ctaLabel: "Recevoir la newsletter",
-  },
-  actualites: {
-    title: "L'essentiel de l'actu crypto FR",
-    subtitle:
-      "Régulation, marché, plateformes : ce qui compte vraiment, sans hype.",
-    ctaLabel: "Recevoir la newsletter",
-  },
-  defi: {
-    title: "DeFi crypto, version pédagogique",
-    subtitle:
-      "Protocoles audités, rendements réels, risques expliqués.",
-    ctaLabel: "Recevoir la newsletter",
-  },
-  regulation: {
-    title: "MiCA & AMF : tout comprendre",
-    subtitle:
-      "Suivi des décisions régulateurs FR/UE et impact concret sur votre portefeuille.",
-    ctaLabel: "Recevoir la newsletter",
-  },
-};
+const TITRE = "Newsletter";
+const PHRASE = "Nous n’écrivons que quand une information compte. Désinscription en un clic.";
+const BOUTON = "M’inscrire";
+const NOTE = "Votre adresse ne sert qu’à la newsletter.";
 
 function NewsletterInline({
   source = "inline",
   variant = "default",
-  title,
-  subtitle,
-  ctaLabel,
   showPreview = false,
-  context,
 }: NewsletterInlineProps) {
-  // Précédence du copy : props explicites > context d'article > defaults par source > generic.
-  // Le contexte ciblé d'article a priorité sur le default de source car plus pertinent
-  // (ex : un article fiscalité bénéficie d'un copy fisca plutôt que "blog-cta" générique).
-  const ctxArticle = context ? CONTEXT_COPY[context] : undefined;
-  const ctxDefault = COPY_DEFAULTS[source];
-  const resolvedTitle =
-    title ?? ctxArticle?.title ?? ctxDefault?.title ?? "La newsletter crypto FR";
-  const resolvedSubtitle =
-    subtitle ??
-    ctxArticle?.subtitle ??
-    ctxDefault?.subtitle ??
-    "L'essentiel de la crypto en français, sans spam.";
-  const resolvedCtaLabel =
-    ctaLabel ?? ctxArticle?.ctaLabel ?? ctxDefault?.ctaLabel ?? "S'abonner";
+  const resolvedTitle = TITRE;
+  const resolvedSubtitle = PHRASE;
+  const resolvedCtaLabel = BOUTON;
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [errorMsg, setErrorMsg] = useState("");
@@ -249,22 +156,17 @@ function NewsletterInline({
 
   const wrapperClass =
     variant === "default"
-      ? "glass rounded-2xl p-5 sm:p-6"
+      ? "rounded-2xl border border-border bg-surface p-5 shadow-e1 sm:p-6"
       : "bg-transparent";
 
   return (
     <>
       <div className={wrapperClass}>
         {variant === "default" && (
-          <div className="flex items-center gap-3 mb-3">
-            <span className="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-primary/15 text-primary">
-              <Mail className="h-4 w-4" />
-            </span>
-            <div className="min-w-0">
-              {/* plus de truncate (06/10/2026) : le titre était coupé (« La newsletter quotidienne crypt… ») */}
-              <h3 className="text-base font-bold text-fg leading-tight">{resolvedTitle}</h3>
-              <p className="text-xs text-muted">{resolvedSubtitle}</p>
-            </div>
+          <div className="mb-4 min-w-0">
+            {/* plus de truncate (06/10/2026) : le titre était coupé (« La newsletter quotidienne crypt… ») */}
+            <h3 className="titre-libre font-serif text-2xl font-medium leading-tight tracking-[-0.01em] text-fg">{resolvedTitle}</h3>
+            <p className="mt-1 max-w-none text-base text-fg-2">{resolvedSubtitle}</p>
           </div>
         )}
 
@@ -288,9 +190,9 @@ function NewsletterInline({
             aria-invalid={status === "error"}
             aria-describedby={status === "error" ? `nl-inline-err-${source}` : undefined}
             disabled={status === "loading" || status === "success"}
-            className="flex-1 min-w-0 rounded-xl bg-background border border-border px-4 py-2.5 text-sm text-fg
-                       placeholder:text-muted focus:outline-none focus:border-primary/60
-                       focus:ring-2 focus:ring-primary/30 disabled:opacity-50"
+            className="min-h-tap flex-1 min-w-0 rounded-xl bg-background border border-border-input px-4 py-2.5 text-base text-fg
+                       placeholder:text-fg-4 focus:outline-none focus-visible:ring-[3px] focus-visible:ring-focus
+                       focus-visible:ring-offset-2 focus-visible:ring-offset-surface disabled:opacity-50"
           />
           {/* data-allow-invalid (06/10/2026) : sinon form:has(input:invalid) le grise à .55 tant que le champ
               est vide (« S'abonner », « Recevoir les alertes sécu » à 3,49:1) ; la saisie est vérifiée au clic. */}
@@ -298,7 +200,7 @@ function NewsletterInline({
             type="submit"
             data-allow-invalid
             disabled={status === "loading" || status === "success"}
-            className="btn-primary text-sm py-2.5 px-4 disabled:opacity-60 disabled:cursor-not-allowed shrink-0"
+            className="btn-primary disabled:opacity-60 disabled:cursor-not-allowed shrink-0"
           >
             {status === "loading" ? "…" : resolvedCtaLabel}
             {status !== "loading" && status !== "success" && (
@@ -307,6 +209,15 @@ function NewsletterInline({
             {status === "success" && <CheckCircle2 className="h-4 w-4" />}
           </button>
         </form>
+
+        {variant === "default" && (
+          <p className="mt-3 max-w-none text-sm text-muted">
+            {NOTE}{" "}
+            <a href="/confidentialite" className="text-link underline decoration-link-line decoration-2 underline-offset-[0.28em] hover:text-link-hover">
+              Confidentialité
+            </a>
+          </p>
+        )}
 
         {showPreview && variant === "default" && status === "idle" && (
           <details className="mt-3 group">
@@ -336,25 +247,30 @@ function NewsletterInline({
           <p
             id={`nl-inline-err-${source}`}
             role="alert"
-            className="mt-2 text-xs text-danger-fg inline-flex items-center gap-1.5"
+            className="mt-2 text-sm text-danger-fg inline-flex items-center gap-1.5"
           >
             <AlertCircle className="h-3.5 w-3.5" />
             {errorMsg}
           </p>
         )}
 
-        {status === "success" && !showPopin && (
-          <p
-            className={`mt-2 text-xs inline-flex items-center gap-1.5 ${
-              mocked ? "text-primary-soft" : "text-accent-green"
-            }`}
-          >
-            <CheckCircle2 className="h-3.5 w-3.5" />
-            {mocked
-              ? "Email noté — newsletter en cours de configuration."
-              : "Inscription enregistrée, merci !"}
-          </p>
-        )}
+        {/* WCAG 4.1.3 : région de statut toujours présente, elle reçoit « Envoi en cours » puis la confirmation (annoncées
+            par les lecteurs d'écran). Le message d'erreur garde son role="alert". */}
+        <div role="status" aria-live="polite">
+          {status === "loading" && <span className="sr-only">Envoi en cours…</span>}
+          {status === "success" && !showPopin && (
+            <p
+              className={`mt-2 text-sm inline-flex items-center gap-1.5 ${
+                mocked ? "text-primary-soft" : "text-accent-green"
+              }`}
+            >
+              <CheckCircle2 className="h-3.5 w-3.5" aria-hidden="true" />
+              {mocked
+                ? "Email noté — newsletter en cours de configuration."
+                : "Inscription enregistrée, merci !"}
+            </p>
+          )}
+        </div>
       </div>
 
       {/* Pop-in succès — overlay accessible (role=dialog, focus trap basique) */}

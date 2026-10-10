@@ -112,3 +112,28 @@ export function paidLinkCaption(platformId: string, href?: string): string | nul
     ? "Publicité — Cryptoreflex perçoit une commission"
     : "Publicité — lien de parrainage personnel";
 }
+
+/*
+ * Lot B4 (10/10/2026) — lignes « Rémunération » de l'encadré de confiance (components/ui/TrustBox.tsx).
+ * Formulations EXACTES de la spec C+ (bloc 00-R2) ; le type de relation vient de PARTNERSHIPS (getAffiliationKind),
+ * jamais d'une liste recopiée. Aucune promesse d'absence de surcoût n'y figure (non vérifiée).
+ *  - commission : Ledger, Trezor, Waltio ;
+ *  - parrainage : Bitpanda, Trade Republic (code de Kevin Voisin, fondateur) ;
+ *  - aucun lien rémunéré dans la page : constat simple.
+ */
+export const REMUNERATION: Record<PartnershipKind | "aucune", string> = {
+  affiliate:
+    "Publicité — Cryptoreflex perçoit une commission si vous achetez ou vous abonnez par ce lien. Cela ne change ni l’ordre ni la note.",
+  referral:
+    "Publicité — lien de parrainage personnel : Kevin Voisin, fondateur, peut toucher une prime si vous ouvrez un compte par ce lien. Cela ne change ni l’ordre ni la note.",
+  aucune: "Aucun lien publicitaire dans cet article.",
+};
+
+/** Lignes de rémunération à afficher pour les types de relation trouvés dans une page (une ligne par type, ordre stable). */
+export function lignesRemuneration(types: Iterable<PartnershipKind>, aucune: string = REMUNERATION.aucune): string[] {
+  const set = new Set(types);
+  const out: string[] = [];
+  if (set.has("affiliate")) out.push(REMUNERATION.affiliate);
+  if (set.has("referral")) out.push(REMUNERATION.referral);
+  return out.length ? out : [aucune];
+}

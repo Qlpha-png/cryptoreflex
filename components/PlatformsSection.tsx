@@ -98,7 +98,7 @@ function PlatformsSection() {
             <Link href="/transparence" className="underline underline-offset-2 hover:text-fg">
               Pourquoi ?
             </Link>
-            {" — "}Sans surcoût pour vous, le site reste gratuit.
+            {" — "}Le site reste gratuit.
           </span>
         </p>
 

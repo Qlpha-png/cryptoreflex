@@ -18,7 +18,7 @@
   src: url("/fonts/cplus-v1/inter-latin.woff2") format("woff2");
   font-style: normal;
   font-weight: 100 900;
-  font-display: optional;
+  font-display: fallback;
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 @font-face {
@@ -26,7 +26,7 @@
   src: url("/fonts/cplus-v1/newsreader-latin.woff2") format("woff2");
   font-style: normal;
   font-weight: 200 800;
-  font-display: optional;
+  font-display: fallback;
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 @font-face {
@@ -34,7 +34,7 @@
   src: url("/fonts/cplus-v1/newsreader-italic-latin.woff2") format("woff2");
   font-style: italic;
   font-weight: 400 600;
-  font-display: optional;
+  font-display: fallback;
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 @font-face {
@@ -137,12 +137,62 @@
   descent-override: 26.46%;
   line-gap-override: 0%;
 }
+@font-face {
+  font-family: "Newsreader Fallback G";
+  src: local("Georgia"), local("Georgia-Regular");
+  font-style: normal;
+  font-weight: 100 550;
+  size-adjust: 97.19%;
+  ascent-override: 75.63%;
+  descent-override: 27.27%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: "Newsreader Fallback G";
+  src: local("Georgia Bold"), local("Georgia-Bold");
+  font-style: normal;
+  font-weight: 551 650;
+  size-adjust: 85.41%;
+  ascent-override: 86.05%;
+  descent-override: 31.03%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: "Newsreader Fallback G";
+  src: local("Georgia Bold"), local("Georgia-Bold");
+  font-style: normal;
+  font-weight: 651 750;
+  size-adjust: 87.68%;
+  ascent-override: 83.82%;
+  descent-override: 30.22%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: "Newsreader Fallback G";
+  src: local("Georgia Bold"), local("Georgia-Bold");
+  font-style: normal;
+  font-weight: 751 900;
+  size-adjust: 91.23%;
+  ascent-override: 80.56%;
+  descent-override: 29.05%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: "Newsreader Fallback G";
+  src: local("Georgia Italic"), local("Georgia-Italic");
+  font-style: italic;
+  font-weight: 100 900;
+  size-adjust: 90.79%;
+  ascent-override: 80.95%;
+  descent-override: 29.19%;
+  line-gap-override: 0%;
+}
 
 /* Encre : thème sombre bleu-nuit, rendu par défaut (aucun attribut). */
 :root {
   color-scheme: dark;
   --font-sans: "Inter", "Inter Fallback", system-ui, sans-serif; /* Texte courant (Tailwind font-sans et font-mono) */
-  --font-serif: "Newsreader", "Newsreader Fallback", Georgia, serif; /* Titres éditoriaux (Tailwind font-display et font-serif) */
+  --font-serif: "Newsreader", "Newsreader Fallback G", "Newsreader Fallback", Georgia, serif; /* Titres éditoriaux (Tailwind font-display et font-serif) */
   --c-background: 17 26 43; /* Fond de page (papier doux / encre bleu-nuit) */
   --c-surface: 23 34 53; /* Cartes, panneaux */
   --c-elevated: 30 42 64; /* Menus, popovers, en-tête collant */

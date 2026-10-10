@@ -71,7 +71,7 @@ function WhereToBuy({ cryptoName, platformNames }: Props) {
       <p className="mt-2 text-sm text-muted max-w-[34em]">
         Plateformes agréées MiCA avec un accès à la France (registre de l&apos;ESMA) qui listent{" "}
         {cryptoName}, et protocoles décentralisés le cas échéant. Ouvrez un compte directement depuis Cryptoreflex
-        {anyPaid ? " (les liens marqués « Publicité » sont rémunérés, sans surcoût pour vous)" : ""}.
+        {anyPaid ? " (les liens marqués « Publicité » sont rémunérés)" : ""}.
       </p>
 
       <div className="mt-6 grid gap-3 sm:grid-cols-2">

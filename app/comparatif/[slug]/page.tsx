@@ -696,7 +696,7 @@ function ComparisonPage({ params }: Props) {
               </>
             ) : null}
             . {(okA && isPaidLink(a.id, a.affiliateUrl)) || (okB && isPaidLink(b.id, b.affiliateUrl))
-              ? "Les liens marqués « Publicité » sont rémunérés (affiliation ou parrainage), sans surcoût pour vous, ce qui n'influence pas l'attribution du verdict"
+              ? "Les liens marqués « Publicité » sont rémunérés (affiliation ou parrainage) ; cela n'influence pas l'attribution du verdict"
               : "Les liens vers les plateformes mènent à leur site officiel ; le verdict suit notre méthodologie"}{" "}
             — voir <Link href="/methodologie" className="underline hover:text-fg-max">/methodologie</Link> et <Link href="/transparence" className="underline hover:text-fg-max">/transparence</Link>. Investir dans les cryptoactifs présente un risque de perte en capital. Ce comparatif n'est pas un conseil en investissement.
           </p>

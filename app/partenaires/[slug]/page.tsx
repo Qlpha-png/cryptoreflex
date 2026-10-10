@@ -361,7 +361,7 @@ function PartnerHero({
 
             {/* Disclosure légère */}
             <p className="mt-3 text-xs text-muted">
-              Publicité — lien affilié, sans surcoût pour vous.
+              Publicité — lien rémunéré : Cryptoreflex perçoit une commission.
             </p>
           </div>
 
@@ -884,7 +884,7 @@ function BeforeAfter({
           <ExternalLink className="h-4 w-4" aria-hidden="true" />
         </Link>
         <p className="mt-2 text-xs text-muted">
-          Publicité — lien affilié, sans surcoût pour vous.
+          Publicité — lien rémunéré : Cryptoreflex perçoit une commission.
         </p>
       </div>
     </section>
@@ -1516,7 +1516,7 @@ function FinalCta({
         </div>
 
         <p className="mt-5 text-xs text-muted">
-          Publicité — lien affilié : Cryptoreflex perçoit {partner.commission ?? "une commission"} sans surcoût pour vous. Si {partner.name}{" "}
+          Publicité — lien affilié : Cryptoreflex perçoit {partner.commission ?? "une commission"}. Si {partner.name}{" "}
           cesse d&apos;être recommandable, on retire la page.
         </p>
       </div>

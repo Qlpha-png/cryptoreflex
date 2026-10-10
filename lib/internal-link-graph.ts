@@ -110,7 +110,7 @@ export const CLUSTERS: Cluster[] = [
       { path: "/blog/fiscalite-staking-eth-sol-ada-france-2026-guide-complet", label: "Fiscalité staking", weight: 1 },
       { path: "/blog/fiscalite-defi-france-2026-bic-ou-bnc-guide-pratique", label: "Fiscalité DeFi", weight: 1 },
       { path: "/blog/fiscalite-nft-france-2026-guide-complet-creation-achat-vente", label: "Fiscalité NFT", weight: 1 },
-      { path: "/ressources", label: "Lead magnets fiscalité gratuits", weight: 1 },
+      { path: "/ressources", label: "Ressources gratuites sur la fiscalité", weight: 1 },
     ],
     crossLinks: ["/outils", "/transparence"],
   },
@@ -156,7 +156,7 @@ export const CLUSTERS: Cluster[] = [
     name: "Acheter de la crypto (débutant)",
     hubPath: "/wizard/premier-achat",
     nodes: [
-      { path: "/wizard/premier-achat", label: "Wizard premier achat", weight: 3 },
+      { path: "/wizard/premier-achat", label: "Premier achat pas à pas", weight: 3 },
       { path: "/quiz/plateforme", label: "Filtre des plateformes autorisées en France", weight: 3 },
       { path: "/blog/premier-achat-crypto-france-2026-guide-step-by-step", label: "Premier achat crypto guide", weight: 3 },
       { path: "/blog/comment-acheter-bitcoin-france-2026-guide-debutant", label: "Acheter Bitcoin", weight: 2 },

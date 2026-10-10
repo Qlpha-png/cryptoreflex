@@ -2,12 +2,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import {
   ArrowRight,
-  BookOpenCheck,
-  Calendar,
-  CheckSquare,
+
   Printer,
-  Clock,
-  AlertTriangle,
+
 } from "lucide-react";
 import { BRAND } from "@/lib/brand";
 import StructuredData from "@/components/StructuredData";
@@ -18,6 +15,10 @@ import FiscalCornerstoneCard from "@/components/fiscalite/FiscalCornerstoneCard"
 import { withHreflang } from "@/lib/seo-alternates";
 import { fitDescription, fitTitle } from "@/lib/seo-text";
 import Breadcrumbs from "@/components/Breadcrumbs";
+import TrustBox from "@/components/ui/TrustBox";
+import Callout from "@/components/mdx/Callout";
+import { avecTypo } from "@/components/ui/Typo";
+import { formatJJMMAAAA } from "@/lib/fraicheur";
 
 /**
  * /guides/declaration-crypto-2026-checklist
@@ -37,7 +38,7 @@ import Breadcrumbs from "@/components/Breadcrumbs";
 const PUBLISHED_DATE = "2026-05-06";
 
 const TITLE =
-  "Checklist déclaration crypto 2026 : 8 étapes avant votre déclaration";
+  "Checklist déclaration crypto 2026 : 8 étapes";
 const DESCRIPTION =
   "Checklist pas-à-pas pour déclarer correctement vos cryptomonnaies en 2026. 8 étapes à cocher, imprimable, couvre Cerfa 2086 + 3916-bis. Pour vous organiser avant la deadline.";
 
@@ -151,7 +152,7 @@ const howTo = howToSchema({
 
 const jsonLd: JsonLd = graphSchema([howTo]);
 
-export default function ChecklistPage() {
+function ChecklistPage() {
   return (
     <div className="min-h-screen bg-background text-fg">
       <StructuredData id="checklist-jsonld" data={jsonLd} />
@@ -180,66 +181,55 @@ export default function ChecklistPage() {
         }}
       />
 
-      {/* Hero */}
-      <section className="border-b border-fg-max/5 bg-gradient-to-b from-success/5 to-transparent">
-        <div className="mx-auto max-w-3xl px-4 py-12 sm:px-6 lg:px-8">
-          <Breadcrumbs chemin="/guides/declaration-crypto-2026-checklist" className="mb-6" />
+      {/* En-tête (maquette C+ : surtitre, filet or, titre en serif, chapô, dates) — plus de dégradé de fond */}
+      <section className="border-b border-border">
+        <div className="mx-auto max-w-3xl px-4 pb-10 pt-10 sm:px-6 lg:px-8">
+          <Breadcrumbs chemin="/guides/declaration-crypto-2026-checklist" label="Checklist de déclaration crypto 2026" />
 
-          <div className="inline-flex items-center gap-2 rounded-full border border-success/30 bg-success/10 px-3 py-1 text-xs font-medium text-success no-print">
-            <BookOpenCheck className="h-3.5 w-3.5" />
-            Guide pratique — checklist imprimable
-          </div>
+          <p className="no-print mt-8 text-base font-semibold text-primary">Guide pratique · checklist imprimable</p>
+          <span aria-hidden="true" className="no-print mt-3 block h-[3px] w-16 rounded-full bg-link-line" />
 
-          <h1 className="mt-4 text-3xl font-bold tracking-tight sm:text-4xl print-h1">
+          <h1 className="print-h1 mt-5 text-[2.5rem] font-medium leading-[1.08] tracking-[-0.02em] text-fg md:text-[3.25rem]">
             Checklist déclaration crypto 2026 :<br className="hidden sm:block" /> 8 étapes avant votre déclaration
           </h1>
 
-          <div className="mt-5 flex flex-wrap items-center gap-3 text-xs text-muted print-muted no-print">
-            <span className="inline-flex items-center gap-1.5">
-              <Calendar className="h-3.5 w-3.5" />
-              Publié le{" "}
-              {new Date(PUBLISHED_DATE).toLocaleDateString("fr-FR", {
-                day: "numeric",
-                month: "long",
-                year: "numeric",
-              })}
+          <p className="print-muted no-print mt-5 flex flex-wrap items-center gap-x-2 text-base text-muted">
+            <span>
+              Publié le {formatJJMMAAAA(PUBLISHED_DATE)}
             </span>
-            <span className="inline-flex items-center gap-1.5">
-              <Clock className="h-3.5 w-3.5" />
-              5 min de lecture
+            <span aria-hidden="true" className="text-fg-4">
+              ·
             </span>
-          </div>
+            <span>5 min de lecture</span>
+          </p>
 
-          <p className="mt-6 text-lg text-fg-2 leading-relaxed print-muted">
-            Vous avez déjà compris la fiscalité crypto FR (sinon, lisez l'
+          <p className="lead print-muted mt-6 max-w-[34em] text-[1.25rem] leading-normal text-fg-2">
+            Vous avez déjà compris la fiscalité crypto FR (sinon, lisez l&apos;
             <Link
               href="/etudes/fiscalite-crypto-france-2026-guide-cerfa"
-              className="text-info hover:underline"
+              className="text-link underline decoration-link-line decoration-2 underline-offset-[0.28em] hover:text-link-hover hover:decoration-[3px]"
             >
               étude complète
             </Link>
-            ). Passez à l'action avec cette checklist en 8 étapes. Cochez au fur
+            ). Passez à l&apos;action avec cette checklist en 8 étapes. Cochez au fur
             et à mesure, imprimez si vous préférez travailler sur papier.
           </p>
 
-          <div className="mt-6 flex flex-wrap gap-3 no-print">
-            <a
-              href="/outils/cerfa-2086-auto"
-              className="inline-flex items-center gap-2 rounded-[22px] bg-action px-5 py-2.5 text-sm font-bold text-on-action shadow-action transition-colors hover:bg-action-hover"
-            >
-              Lancer l'outil Cerfa 2086
-              <ArrowRight className="h-4 w-4" />
+          <div className="no-print mt-7 flex flex-wrap gap-3">
+            <a href="/outils/cerfa-2086-auto" className="btn-primary">
+              Lancer l&apos;outil Cerfa 2086
+              <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </a>
             <button
               type="button"
-              className="inline-flex items-center gap-2 rounded-xl border border-fg-max/10 bg-fg-max/5 px-5 py-2.5 text-sm font-medium text-fg-2 hover:bg-fg-max/10"
+              className="btn-ghost"
               onClick={undefined}
               // Le formatter est purement Server Component — bouton fonctionne via
               // le pattern progressif suivant : on encapsule l'action dans un
               // `data-` attribute lu par un mini-script inline.
               data-print="true"
             >
-              <Printer className="h-4 w-4" />
+              <Printer className="h-4 w-4" aria-hidden="true" />
               Imprimer cette checklist
             </button>
           </div>
@@ -256,47 +246,35 @@ export default function ChecklistPage() {
         </div>
       </section>
 
-      {/* Steps */}
+      {/* Étapes */}
       <section className="mx-auto max-w-3xl px-4 py-12 sm:px-6 lg:px-8">
         <ol className="space-y-4">
           {STEPS.map((s) => (
             <li
               key={s.n}
               id={`step-${s.n}`}
-              className="print-card rounded-2xl border border-fg-max/10 bg-fg-max/[0.02] p-6"
+              className="print-card rounded-2xl border border-border bg-surface p-5 shadow-e1 sm:p-6"
             >
-              <div className="flex items-start gap-4">
-                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-success/15 text-success font-bold">
+              {/* Passe finale B4 (jury ronde 2) : numéro et titre sur la même ligne, le corps prend TOUTE la largeur de la
+                  carte sur téléphone (avant : colonne du numéro de 130 px, 20 à 28 signes par ligne) ; dès 640 px il s'aligne
+                  sur le bord gauche du titre. Plus d'icône de case devant le titre (la 2e ligne repartait sous l'icône). */}
+              <div className="grid grid-cols-[auto_minmax(0,1fr)] gap-x-3 gap-y-3 sm:gap-x-4">
+                <div className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-action font-semibold text-on-action">
                   {s.n}
                 </div>
-                <div className="flex-1 min-w-0">
-                  <h2 className="text-lg font-bold tracking-tight text-fg-max print-h1">
-                    <CheckSquare
-                      className="mr-2 inline h-4 w-4 align-text-bottom text-success"
-                      aria-hidden="true"
-                    />
-                    {s.title}
-                  </h2>
-                  <p className="mt-3 text-sm text-fg-2 leading-relaxed print-muted">
-                    {s.detail}
-                  </p>
-                  <p className="mt-3 inline-flex items-start gap-2 rounded-lg bg-fg-max/5 px-3 py-2 text-xs text-fg-2 print-muted">
-                    <AlertTriangle
-                      className="mt-0.5 h-3.5 w-3.5 shrink-0 text-primary-glow"
-                      aria-hidden="true"
-                    />
-                    <span>
-                      <strong className="text-primary-soft">Pourquoi.</strong>{" "}
-                      {s.why}
-                    </span>
-                  </p>
+                <h2 className="ds-h3 print-h1 min-w-0 text-fg">{s.title}</h2>
+                <div className="col-span-2 min-w-0 sm:col-span-1 sm:col-start-2">
+                  <p className="print-muted max-w-[34em] text-lg leading-[1.6] text-fg-2">{s.detail}</p>
+                  <Callout type="warning" title="Pourquoi">
+                    {s.why}
+                  </Callout>
                   {s.link && (
                     <Link
                       href={s.link.href}
-                      className="mt-3 inline-flex items-center gap-1 text-sm font-medium text-info hover:underline no-print"
+                      className="no-print mt-3 inline-flex items-center gap-1 text-base font-semibold text-link underline decoration-link-line decoration-2 underline-offset-[0.28em] hover:text-link-hover hover:decoration-[3px]"
                     >
                       {s.link.label}
-                      <ArrowRight className="h-3.5 w-3.5" />
+                      <ArrowRight className="h-4 w-4" aria-hidden="true" />
                     </Link>
                   )}
                 </div>
@@ -305,38 +283,34 @@ export default function ChecklistPage() {
           ))}
         </ol>
 
+        {/* Encadré de confiance (lot B4) : rédaction, date, méthode ; aucune rubrique « Rémunération » ou « Sources » ici,
+            la page n'a pas calculé ces informations (rien n'est annoncé par défaut). */}
+        <div className="no-print">
+          <TrustBox variante="complet" publieLe={PUBLISHED_DATE} titre="Comment ce guide est vérifié" />
+        </div>
+
         {/* CTA primaire */}
-        <div className="mt-12 rounded-2xl border border-info/20 bg-gradient-to-br from-info/10 to-success/10 p-8 text-center no-print">
-          <h2 className="text-2xl font-bold tracking-tight">
+        <div className="no-print mt-12 rounded-2xl border border-border-strong bg-surface p-6 text-center shadow-e1 sm:p-8">
+          <h2 className="text-2xl font-medium tracking-tight text-fg">
             Vous voulez automatiser les étapes 2 et 3 ?
           </h2>
-          <p className="mt-2 max-w-xl mx-auto text-fg-2">
+          <p className="mx-auto mt-3 max-w-xl text-lg leading-[1.6] text-fg-2">
             Recopiez vos opérations dans le modèle CSV de l&apos;outil Cryptoreflex :
             il calcule chaque plus-value selon l&apos;article 150 VH bis et vous
             donne le récapitulatif Cerfa 2086 + les fiches 3916-bis à recopier.
             Gratuit ; aperçu sans compte, PDF avec un compte gratuit.
           </p>
-          <Link
-            href="/outils/cerfa-2086-auto"
-            className="mt-5 inline-flex items-center gap-2 rounded-[22px] bg-action px-6 py-3 font-bold text-on-action shadow-action hover:bg-action-hover transition-colors"
-          >
-            Lancer l'outil
-            <ArrowRight className="h-5 w-5" />
+          <Link href="/outils/cerfa-2086-auto" className="btn-primary mt-6">
+            Lancer l&apos;outil
+            <ArrowRight className="h-5 w-5" aria-hidden="true" />
           </Link>
         </div>
       </section>
 
-      {/* Newsletter capture */}
-      <section className="border-t border-fg-max/5 bg-fg-max/[0.02] no-print">
+      {/* Newsletter : composant et texte uniques (lot B4), aucun rythme promis */}
+      <section className="no-print border-t border-border bg-sunken">
         <div className="mx-auto max-w-3xl px-4 py-12 sm:px-6 lg:px-8">
-          <NewsletterInline
-            source="bottom-article"
-            context="fiscalite"
-            variant="default"
-            title="Gardez une longueur d'avance sur la prochaine déclaration"
-            subtitle="On envoie un rappel personnalisé en mars 2027 + nos analyses fiscales mises à jour BOFiP. 1 envoi par trimestre, 0 spam."
-            ctaLabel="M'abonner à la veille fiscale"
-          />
+          <NewsletterInline source="bottom-article" variant="default" />
         </div>
       </section>
 
@@ -349,30 +323,30 @@ export default function ChecklistPage() {
       </section>
 
       {/* Cross-links */}
-      <section className="border-t border-fg-max/5 no-print">
+      <section className="no-print border-t border-border">
         <div className="mx-auto max-w-3xl px-4 py-12 sm:px-6 lg:px-8">
-          <h2 className="text-lg font-bold tracking-tight">Pour aller plus loin</h2>
-          <div className="mt-4 grid gap-3 sm:grid-cols-2 text-sm">
+          <h2 className="text-2xl font-medium tracking-tight text-fg">Pour aller plus loin</h2>
+          <div className="mt-4 grid gap-3 text-base sm:grid-cols-2">
             <Link
               href="/etudes/fiscalite-crypto-france-2026-guide-cerfa"
-              className="rounded-xl border border-fg-max/10 bg-fg-max/[0.02] p-4 hover:border-success/30 hover:text-success transition"
+              className="rounded-xl border border-border bg-surface p-4 shadow-e1 transition hover:border-border-strong"
             >
-              <div className="font-semibold text-fg-max">
+              <div className="font-semibold text-fg">
                 Étude complète — Fiscalité crypto FR 2026
               </div>
-              <div className="mt-1 text-muted">
+              <div className="mt-1 text-fg-2">
                 Le guide académique : 22 min, sources BOFiP, cas particuliers
                 staking/NFT/DeFi.
               </div>
             </Link>
             <Link
               href="/etudes/mica-juillet-2026-etat-des-lieux"
-              className="rounded-xl border border-fg-max/10 bg-fg-max/[0.02] p-4 hover:border-warning/30 hover:text-primary-soft transition"
+              className="rounded-xl border border-border bg-surface p-4 shadow-e1 transition hover:border-border-strong"
             >
-              <div className="font-semibold text-fg-max">
+              <div className="font-semibold text-fg">
                 Étude — MiCA juillet 2026
               </div>
-              <div className="mt-1 text-muted">
+              <div className="mt-1 text-fg-2">
                 Quelles plateformes ne sont plus autorisées en France ?
                 Implications fiscales de la migration.
               </div>
@@ -395,3 +369,5 @@ export default function ChecklistPage() {
     </div>
   );
 }
+
+export default avecTypo(ChecklistPage, { riche: true });

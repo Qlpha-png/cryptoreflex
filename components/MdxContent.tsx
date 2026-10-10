@@ -36,6 +36,7 @@ import MdxLink from "@/components/mdx/MdxLink";
 import WaltioFranchise from "@/components/fiscal-tools/WaltioFranchise";
 import ScrollableTable from "@/components/ui/ScrollableTable";
 import { sansTypo } from "@/components/ui/Typo";
+import { avecTitreFaq } from "@/lib/mdx-faq";
 
 /* -------------------------------------------------------------------------- */
 /*  Components mappés → markdown HTML                                         */
@@ -74,15 +75,17 @@ const mdxComponents = {
   // académie). Rendu visuel identique à un H2 de section. Sans `id` : ce titre
   // répète le H1 de la page, il ne doit pas entrer dans le sommaire
   // (ArticleToc liste les `h2[id]`).
+  // Lot B4 : h2 = échelle .ds-h2 (Newsreader 500, 30 px mobile / 36 px bureau, interligne 1,15) ; plus de barre
+  // décorative à gauche. scroll-mt-24 : l'ancre ne passe pas sous l'en-tête collant.
   h1: ({ id: _slugId, ...props }: ComponentProps<"h1">) => (
     <h2
-      className="mt-12 scroll-mt-24 border-l-4 border-primary pl-3 text-2xl font-bold tracking-tight text-fg-max sm:text-3xl"
+      className="ds-h2 mb-4 mt-14 scroll-mt-24 text-fg"
       {...props}
     />
   ),
   h2: (props: ComponentProps<"h2">) => (
     <h2
-      className="mt-12 scroll-mt-24 border-l-4 border-primary pl-3 text-2xl font-bold tracking-tight text-fg-max sm:text-3xl"
+      className="ds-h2 mb-4 mt-14 scroll-mt-24 text-fg"
       {...props}
     />
   ),
@@ -90,24 +93,26 @@ const mdxComponents = {
   // corps 18 px (20 px au plus), interligne 1,3 → rapport h2/h3 de 1,33 sur téléphone et 1,5 au-delà.
   h3: (props: ComponentProps<"h3">) => (
     <h3
-      className="mt-8 scroll-mt-24 text-base leading-[1.3] font-semibold text-fg-max sm:text-lg sm:leading-[1.3]"
+      className="ds-h3 titre-libre mb-2 mt-9 scroll-mt-24 font-serif text-fg"
       {...props}
     />
   ),
   h4: (props: ComponentProps<"h4">) => (
     <h4
-      className="mt-6 scroll-mt-24 text-lg font-semibold text-fg-max"
+      className="mt-6 scroll-mt-24 text-lg font-semibold text-fg"
       {...props}
     />
   ),
 
+  // Lot B4 : texte de lecture sur les jetons (fg-2 = corps, fg = titres et mots forts), sans opacité ni teinte propre :
+  // la couleur du corps vient des variables du plugin typography (tailwind.config.ts), les deux thèmes d'un coup.
   p: (props: ComponentProps<"p">) => (
-    <p className="leading-[1.65] text-fg-max/80" {...props} />
+    <p className="leading-[1.65]" {...props} />
   ),
 
   ul: (props: ComponentProps<"ul">) => (
     <ul
-      className="list-disc space-y-1.5 pl-6 marker:text-primary/70"
+      className="list-disc space-y-1.5 pl-6 marker:text-primary"
       {...props}
     />
   ),
@@ -118,12 +123,12 @@ const mdxComponents = {
     />
   ),
   li: (props: ComponentProps<"li">) => (
-    <li className="text-fg-max/80" {...props} />
+    <li {...props} />
   ),
 
   blockquote: (props: ComponentProps<"blockquote">) => (
     <blockquote
-      className="my-6 rounded-r-lg border-l-4 border-primary bg-primary/5 px-5 py-3 italic text-fg-max/90"
+      className="my-6 border-l-[3px] border-link-line pl-5 font-normal not-italic text-fg [&_p]:before:content-none [&_p]:after:content-none"
       {...props}
     />
   ),
@@ -131,25 +136,25 @@ const mdxComponents = {
   hr: () => <hr className="my-10 border-border" />,
 
   strong: (props: ComponentProps<"strong">) => (
-    <strong className="font-semibold text-fg-max" {...props} />
+    <strong className="font-semibold text-fg" {...props} />
   ),
 
   em: (props: ComponentProps<"em">) => (
-    <em className="italic text-fg-max/90" {...props} />
+    <em className="italic" {...props} />
   ),
 
   // Reprise B1-bis : `code` et `pre` sont des fonctions (pas des balises) ; marqués sansTypo pour que typoNode ne
   // traite jamais le code MDX placé dans un composant enveloppé (Callout, FAQ, KeyTakeaways, Tldr…).
   code: sansTypo((props: ComponentProps<"code">) => (
     <code
-      className="rounded bg-elevated px-1.5 py-0.5 font-mono text-[0.875em] text-primary-glow before:content-none after:content-none"
+      className="rounded bg-sunken px-1.5 py-0.5 font-code text-[0.875em] text-fg before:content-none after:content-none"
       {...props}
     />
   )),
 
   pre: sansTypo((props: ComponentProps<"pre">) => (
     <pre
-      className="my-6 overflow-x-auto rounded-xl border border-border bg-surface p-4 text-sm leading-relaxed [&_code]:bg-transparent [&_code]:p-0 [&_code]:text-fg-max/90"
+      className="my-6 overflow-x-auto rounded-xl border border-border bg-sunken p-4 text-sm leading-relaxed [&_code]:bg-transparent [&_code]:p-0 [&_code]:text-fg-2"
       {...props}
     />
   )),
@@ -164,29 +169,31 @@ const mdxComponents = {
   // `overflow-wrap: anywhere` hérité du body qui coupait les mots en plein
   // milieu dans les cellules ; `my-0` supprime les marges prose (2 × 28 px)
   // qui laissaient une bande vide en haut et en bas, dans le cadre.
+  // Lot B4 — tableau responsive C+ : cadre ScrollableTable (ombres de défilement, zone focusable, première colonne
+  // figée), en-tête sunken 14 px graisse 600 en muted (plus de capitales), cellules en fg-2, chiffres tabulaires.
   table: (props: ComponentProps<"table">) => (
     <ScrollableTable
       className="my-6 max-w-full rounded-xl border border-border bg-surface"
-      fadeFrom="from-surface"
       label="Tableau de l'article, défilant horizontalement"
+      colonneFigee
     >
-      <table className="my-0 w-full min-w-[480px] border-collapse text-sm break-normal" {...props} />
+      <table className="my-0 w-full min-w-[480px] border-collapse text-sm break-normal tabular-nums" {...props} />
     </ScrollableTable>
   ),
   thead: (props: ComponentProps<"thead">) => (
-    <thead className="bg-elevated text-left text-xs uppercase tracking-wide text-fg-max/70" {...props} />
+    <thead className="bg-sunken text-left text-sm text-muted" {...props} />
   ),
   tbody: (props: ComponentProps<"tbody">) => (
     <tbody className="divide-y divide-border" {...props} />
   ),
   tr: (props: ComponentProps<"tr">) => (
-    <tr className="hover:bg-elevated/40" {...props} />
+    <tr className="transition-colors hover:bg-elevated" {...props} />
   ),
   th: (props: ComponentProps<"th">) => (
-    <th className="border-b border-border px-4 py-2.5 font-semibold" {...props} />
+    <th scope="col" className="border-b border-border-strong px-4 py-2.5 text-left !font-sans text-[0.875rem] !font-semibold !text-muted" {...props} />
   ),
   td: (props: ComponentProps<"td">) => (
-    <td className="px-4 py-2.5 align-top text-fg-max/85" {...props} />
+    <td className="px-4 py-2.5 align-top text-fg-2" {...props} />
   ),
 
   img: (props: ComponentProps<"img">) => (
@@ -218,18 +225,16 @@ export default function MdxContent({ source, components }: MdxContentProps) {
         // ceinture+bretelles si le parent grid perd `min-w-0`. Évite que
         // les URLs nues longues (0xABC..., bc1q..., transaction hashes)
         // ou les mots techniques non-cassables fassent déborder l'article.
-        "prose prose-invert max-w-none min-w-0 w-full break-words",
+        // Lot B4 : « prose » seul (le plugin lit les jetons dans les deux thèmes, tailwind.config.ts) ; plus de
+        // prose-invert ni de surcharge prose-a (les liens suivent la règle C+ : couleur link, soulignement link-line).
+        "prose max-w-none min-w-0 w-full break-words",
         "prose-headings:font-display prose-headings:font-medium prose-h3:font-semibold prose-h4:font-semibold prose-h1:tracking-[-0.02em] prose-h2:tracking-[-0.015em] prose-h3:tracking-[-0.01em] prose-h4:tracking-[-0.01em]", // B1 F2 : Newsreader 500/600 (spec C+), plus 700-800 serré
-        "prose-a:text-primary-glow prose-a:no-underline hover:prose-a:underline",
-        "prose-strong:text-fg-max",
+        "prose-strong:text-fg",
         "prose-code:before:content-none prose-code:after:content-none",
-        "prose-pre:bg-surface prose-pre:border prose-pre:border-border",
-        "prose-blockquote:border-primary prose-blockquote:text-fg-max/90",
-        "prose-li:marker:text-primary/70",
       ].join(" ")}
     >
       <MDXRemote
-        source={source}
+        source={avecTitreFaq(source)}
         components={{ ...mdxComponents, ...(components ?? {}) }}
         options={{
           // ⚠ next-mdx-remote v6 (sécurité) : `blockJS` est `true` par défaut,

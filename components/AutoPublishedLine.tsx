@@ -23,7 +23,7 @@ function AutoPublishedLine({
     <Fragment key={`${s.name}-${i}`}>
       {i > 0 ? (i === sources.length - 1 ? " et " : ", ") : null}
       {s.url ? (
-        <a href={s.url} target="_blank" rel="noopener nofollow" className="underline hover:text-fg">
+        <a href={s.url} target="_blank" rel="noopener nofollow" className="text-link underline decoration-link-line decoration-2 underline-offset-[0.28em] hover:text-link-hover">
           {s.name}
         </a>
       ) : (
@@ -52,4 +52,4 @@ function AutoPublishedLine({
   );
 }
 
-export default avecTypoSync(AutoPublishedLine);
+export default avecTypoSync(AutoPublishedLine, { riche: true });

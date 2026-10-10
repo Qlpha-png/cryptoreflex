@@ -466,7 +466,7 @@
           "q": "Quel mécanisme de consensus utilise Dogecoin ?",
           "choices": ["Proof of Stake", "Proof of Work (merged mining avec Litecoin)", "Proof of Authority", "Délégation"],
           "correctIdx": 1,
-          "explanation": "Dogecoin utilise Proof of Work avec merged mining : les mineurs Litecoin minent simultanément du DOGE sans surcoût énergétique notable."
+          "explanation": "Dogecoin utilise Proof of Work avec merged mining : les mineurs Litecoin minent simultanément du DOGE sans dépense d'énergie supplémentaire notable."
         },
         {
           "q": "Que désigne 'D.O.G.E.' dans l'actualité politique américaine 2024-2025 ?",

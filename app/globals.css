@@ -288,6 +288,34 @@ h3:not(.uppercase, .font-mono, .font-code, .titre-libre) {
   .ds-h1 {
     @apply font-display text-h2 sm:text-h1 text-fg;
   }
+  /* Lot B4 — titre de section C+ (spec § 4 : h2 Newsreader 500, 36 px bureau / 30 px mobile, interligne 1,15, −0,015 em).
+     La famille et la graisse viennent de la règle h2 de B1 plus haut ; ici seulement l'échelle. Pour les h2 du MDX
+     (MdxContent), du FAQ et des blocs d'article : un seul réglage. */
+  .ds-h2 {
+    font-size: 1.875rem;
+    line-height: 1.15;
+    letter-spacing: -0.015em;
+    text-wrap: balance;
+  }
+  @media (min-width: 761px) {
+    .ds-h2 {
+      font-size: 2.25rem;
+    }
+  }
+  /* Ronde 1 du jury B4 : sous-titre de section C+ (spec § 4 : h3 Newsreader 600, 26 px bureau / 24 px mobile, interligne 1,25,
+     −0,01 em). À combiner avec .titre-libre (la règle h3 de B1 impose Inter) et font-serif. */
+  .ds-h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+    text-wrap: balance;
+  }
+  @media (min-width: 761px) {
+    .ds-h3 {
+      font-size: 1.625rem;
+    }
+  }
   .ds-lead {
     @apply text-body sm:text-lead text-fg/75;
   }

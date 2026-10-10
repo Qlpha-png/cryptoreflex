@@ -1223,7 +1223,7 @@ async function CryptoPage({ params }: Props) {
           <VerifieLe date={FICHE_REVIEWED_DATE} famille="editorial" label="Données éditoriales vérifiées" age={false} /> par le
           fondateur {BRAND.name} (Kevin Voisin).{" "}
           {anyPaidPlatform
-            ? "Les liens marqués « Publicité » sont rémunérés (affiliation ou parrainage), sans surcoût pour vous et sans impact sur le classement."
+            ? "Les liens marqués « Publicité » sont rémunérés (affiliation ou parrainage), sans impact sur le classement."
             : "Les liens vers les plateformes présentées mènent à leur site officiel."}{" "}
           Pour le détail, voir notre{" "}
           <Link href="/methodologie" className="underline hover:text-fg">méthodologie</Link>{" "}

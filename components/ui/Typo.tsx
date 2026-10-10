@@ -14,9 +14,10 @@
  * Sans cela, un `width:100%` ou une étape `0%` de keyframes deviendrait « 100 % » et casserait le CSS sans bruit.
  *
  * Usage : `export default avecTypo(Page)` pour une page ou un composant, ou `<Typo>…</Typo>` autour d'un bloc.
+ * Option `{ riche: true }` (lot B4) : typoFrRiche() = + apostrophes ’, guillemets « », cadratin insécable (voir lib/typo-fr.ts).
  */
 import { cloneElement, isValidElement, type ComponentType, type ReactElement, type ReactNode } from "react";
-import { typoFr } from "@/lib/typo-fr";
+import { typoFr, typoFrRiche } from "@/lib/typo-fr";
 
 const IGNORES = new Set(["code", "pre", "kbd", "samp", "script", "style", "textarea", "option", "select", "input", "title", "svg"]);
 
@@ -47,32 +48,32 @@ function estIgnore(type: unknown): boolean {
   return t[MARQUEUR] === true || (typeof type === "function" && typeof t.dynamic === "function");
 }
 
-export function typoNode(noeud: ReactNode): ReactNode {
-  if (typeof noeud === "string") return typoFr(noeud);
+export function typoNode(noeud: ReactNode, riche = false): ReactNode {
+  if (typeof noeud === "string") return riche ? typoFrRiche(noeud) : typoFr(noeud);
   if (noeud == null || typeof noeud !== "object") return noeud;
-  if (Array.isArray(noeud)) return noeud.map(typoNode);
+  if (Array.isArray(noeud)) return noeud.map((n) => typoNode(n, riche));
   if (!isValidElement(noeud)) return noeud;
   const el = noeud as ReactElement<{ children?: ReactNode; dangerouslySetInnerHTML?: unknown }>;
   if (estIgnore(el.type)) return el;
   const enfants = el.props?.children;
   if (enfants === undefined || enfants === null || typeof enfants === "function" || el.props.dangerouslySetInnerHTML) return el;
-  return cloneElement(el, { children: typoNode(enfants) });
+  return cloneElement(el, { children: typoNode(enfants, riche) });
 }
 
 /** Bloc de JSX à traiter : `<Typo>…</Typo>`. */
-export function Typo({ children }: { children?: ReactNode }) {
-  return <>{typoNode(children)}</>;
+export function Typo({ children, riche = false }: { children?: ReactNode; riche?: boolean }) {
+  return <>{typoNode(children, riche)}</>;
 }
 
 /** Enveloppe un composant (ou une page) dont le rendu est un arbre React : le résultat passe par `typoNode`. */
-export function avecTypo<P extends object>(Composant: (props: P) => ReactNode | Promise<ReactNode>): (props: P) => Promise<ReactElement> {
+export function avecTypo<P extends object>(Composant: (props: P) => ReactNode | Promise<ReactNode>, options: { riche?: boolean } = {}): (props: P) => Promise<ReactElement> {
   // Le type de retour reste celui d'un composant serveur asynchrone (JSX.Element) ; le rendu réel peut être null ou une chaîne.
-  const Enveloppe = async (props: P) => typoNode(await Composant(props)) as ReactElement;
+  const Enveloppe = async (props: P) => typoNode(await Composant(props), options.riche) as ReactElement;
   return Enveloppe;
 }
 
 /** Idem pour un composant synchrone (client ou serveur) : reste synchrone, hooks autorisés dans le composant d'origine. */
-export function avecTypoSync<P extends object>(Composant: ComponentType<P> | ((props: P) => ReactNode)): (props: P) => ReactElement {
-  const Enveloppe = (props: P) => typoNode((Composant as (props: P) => ReactNode)(props)) as ReactElement;
+export function avecTypoSync<P extends object>(Composant: ComponentType<P> | ((props: P) => ReactNode), options: { riche?: boolean } = {}): (props: P) => ReactElement {
+  const Enveloppe = (props: P) => typoNode((Composant as (props: P) => ReactNode)(props), options.riche) as ReactElement;
   return Enveloppe;
 }

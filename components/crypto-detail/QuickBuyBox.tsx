@@ -93,7 +93,7 @@ function QuickBuyBox({
         {anyPaid ? (
           <>
             Les liens marqués « Publicité » sont rémunérés (affiliation ou parrainage),
-            sans surcoût pour vous — cela ne change ni le classement, ni la note (
+            cela ne change ni le classement, ni la note (
             <Link href="/transparence" className="underline hover:text-fg">
               détail
             </Link>

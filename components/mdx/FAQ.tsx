@@ -19,7 +19,7 @@ interface FAQProps {
  * Si tu veux garder le contrôle sur le schema (ex: une page injecte déjà
  * un graph FAQPage), passer `noSchema` (à ajouter si besoin).
  */
-function FAQ({ items, title = "Questions fréquentes" }: FAQProps) {
+function FAQ({ items, title }: FAQProps) {
   if (!items || items.length === 0) return null;
 
   // JSON-LD FAQPage pour Google rich results
@@ -37,21 +37,22 @@ function FAQ({ items, title = "Questions fréquentes" }: FAQProps) {
   };
 
   return (
-    <section className="not-prose my-10">
-      <h2 className="text-2xl font-extrabold tracking-tight text-fg sm:text-3xl">
-        {title}
-      </h2>
-      <div className="mt-6 space-y-3">
+    <section className="not-prose my-10" aria-label={title ?? "Questions fréquentes"}>
+      {title && (
+        <h2 id="questions-frequentes" className="ds-h2 mb-4 scroll-mt-24 text-fg">
+          {title}
+        </h2>
+      )}
+      {/* Lot B4 : accordéon C+ — liste à filets (surface, border), question en 18 px graisse 600, chevron discret ;
+          <details> natif, zéro JS ; le texte de la réponse passe à 18 px (lecture). Le JSON-LD ci-dessous est inchangé. */}
+      <div className={`divide-y divide-border overflow-hidden rounded-2xl border border-border bg-surface`}>
         {items.map((it) => (
-          <details
-            key={it.question}
-            className="group rounded-xl border border-border bg-elevated/40 p-5 transition-colors hover:border-primary/40"
-          >
-            <summary className="flex cursor-pointer items-start justify-between gap-4 list-none font-semibold text-fg">
+          <details key={it.question} className="group">
+            <summary className="flex min-h-[44px] cursor-pointer list-none items-start justify-between gap-4 px-5 py-4 text-lg font-semibold leading-snug text-fg hover:bg-elevated focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-focus">
               <span>{it.question}</span>
-              <ChevronDown className="h-5 w-5 shrink-0 text-primary-soft transition-transform group-open:rotate-180" />
+              <ChevronDown className="mt-1 h-5 w-5 shrink-0 text-muted transition-transform group-open:rotate-180" aria-hidden />
             </summary>
-            <p className="mt-3 text-sm leading-relaxed text-fg/80">{it.answer}</p>
+            <p className="border-t border-border px-5 py-4 text-lg leading-[1.6] text-fg-2">{it.answer}</p>
           </details>
         ))}
       </div>
@@ -65,4 +66,4 @@ function FAQ({ items, title = "Questions fréquentes" }: FAQProps) {
   );
 }
 
-export default avecTypoSync(FAQ);
+export default avecTypoSync(FAQ, { riche: true });

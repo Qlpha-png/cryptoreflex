@@ -257,8 +257,7 @@ export default function AProposPage() {
                 </li>
               </ul>
               <p>
-                Les liens rémunérés sont signalés «&nbsp;Publicité&nbsp;»,{" "}
-                <strong>sans surcoût pour vous</strong>. Ils{" "}
+                Les liens rémunérés sont signalés «&nbsp;Publicité&nbsp;». Ils{" "}
                 <strong>n'influencent pas les notes</strong>&nbsp;: toutes les plateformes
                 sont notées avec la même{" "}
                 <Link href="/methodologie" className="text-primary-soft hover:underline">

@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { typoFr } from "@/lib/typo-fr";
 import { notFound } from "next/navigation";
-import { ExternalLink, ChevronLeft, Clock } from "lucide-react";
+import { ExternalLink, ChevronLeft } from "lucide-react";
 
 import { BRAND } from "@/lib/brand";
 import { stripBrandSuffix } from "@/lib/seo-title";
@@ -20,12 +20,12 @@ import { graphSchema, organizationSchema, generateSpeakableSchema, type JsonLd }
 import { formatRelativeFr, hasTimeOfDay } from "@/lib/news-aggregator";
 import StructuredData from "@/components/StructuredData";
 import MdxContent from "@/components/MdxContent";
+import CalloutActualite from "@/components/news/CalloutActualite";
 import AutoPublishedLine from "@/components/AutoPublishedLine";
 import RelatedNews from "@/components/news/RelatedNews";
 import { SentimentBadge } from "@/components/news/NewsCard";
 import NewsletterInline from "@/components/NewsletterInline";
 import RelatedPagesNav from "@/components/RelatedPagesNav";
-import NextStepsGuide from "@/components/NextStepsGuide";
 import { fitDescription, fitTitle } from "@/lib/seo-text";
 import Breadcrumbs from "@/components/Breadcrumbs";
 
@@ -183,49 +183,46 @@ async function NewsDetailPage({ params }: PageProps) {
         {/* Back link mobile-friendly */}
         <Link
           href="/actualites"
-          className="mt-6 inline-flex items-center gap-1 text-xs font-semibold text-muted hover:text-fg transition-colors"
+          className="mt-6 inline-flex items-center gap-1 text-base text-muted underline decoration-transparent decoration-2 underline-offset-[0.28em] transition-colors hover:text-fg hover:decoration-link-line"
         >
-          <ChevronLeft className="h-3.5 w-3.5" aria-hidden="true" />
+          <ChevronLeft className="h-4 w-4" aria-hidden="true" />
           Toutes les actualités
         </Link>
 
         {/* HEADER */}
         <header className="mt-4 mb-8">
-          <div className="flex flex-wrap items-center gap-3">
+          {/* Surtitre aligné sur celui des articles (ronde 1 du jury B4) : catégorie, « Publié le », durée, puis le filet or. */}
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-base">
             <Link
               href={`/actualites?categorie=${catSlug}`}
-              className="inline-flex items-center rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-semibold uppercase tracking-wider text-primary-glow ring-1 ring-primary/20 hover:bg-primary/20 transition-colors"
+              className="font-semibold text-primary underline decoration-transparent decoration-2 underline-offset-[0.28em] transition-colors hover:decoration-link-line"
             >
               {catLabel}
             </Link>
             <SentimentBadge title={news.title} description={news.description} />
-            <time
-              dateTime={news.date}
-              className="text-xs font-mono text-muted"
-            >
-              {new Date(news.date).toLocaleDateString("fr-FR", {
-                day: "numeric",
-                month: "long",
-                year: "numeric",
-              })}
-              {relDate && <span className="ml-2 text-fg-4">· {relDate}</span>}
-            </time>
+            <span className="text-muted">
+              Publié le{" "}
+              <time dateTime={news.date}>
+                {new Date(news.date).toLocaleDateString("fr-FR", {
+                  day: "numeric",
+                  month: "long",
+                  year: "numeric",
+                })}
+              </time>
+              {relDate && <span className="text-fg-4"> · {relDate}</span>}
+            </span>
             {/* Temps de lecture — ~200 mots/min, calculé sur le body MDX */}
-            <span className="text-xs text-muted">
-              <Clock
-                className="mr-1 inline-block h-3 w-3 align-[-1px]"
-                aria-hidden="true"
-              />
-              {Math.max(1, Math.round(news.content.split(/\s+/).length / 200))}{" "}
-              min de lecture
+            <span className="text-muted">
+              {Math.max(1, Math.round(news.content.split(/\s+/).length / 200))} min de lecture
             </span>
           </div>
+          <span aria-hidden="true" className="mt-3 block h-[3px] w-16 rounded-full bg-link-line" />
 
-          <h1 className="mt-4 text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight leading-tight text-fg">
+          <h1 className="mt-5 text-[2.5rem] font-medium leading-[1.08] tracking-[-0.02em] text-fg md:text-[3.25rem]">
             {typoFr(news.title)}
           </h1>
 
-          <p className="mt-4 text-base sm:text-lg text-muted leading-relaxed">
+          <p className="lead mt-5 max-w-[34em] text-[1.25rem] leading-normal text-fg-2">
             {news.description}
           </p>
 
@@ -267,18 +264,18 @@ async function NewsDetailPage({ params }: PageProps) {
         </header>
 
         {/* BODY MDX */}
-        <MdxContent source={news.content} />
+        <MdxContent source={news.content} components={{ Callout: CalloutActualite }} />
 
         {/* SOURCES */}
         {news.isBrief && news.sources && news.sources.length > 0 ? (
           <aside
             aria-labelledby="sources-heading"
-            className="mt-10 rounded-2xl border border-border bg-elevated/40 p-5"
+            className="mt-10 rounded-2xl border border-border bg-surface p-5"
           >
-            <h2 id="sources-heading" className="text-sm font-semibold text-fg/85">
+            <h2 id="sources-heading" className="text-xl font-medium text-fg">
               Sources de ce brief
             </h2>
-            <p className="mt-2 text-sm text-muted leading-relaxed">
+            <p className="mt-2 text-base leading-relaxed text-fg-2">
               Cette synthèse Cryptoreflex s'appuie sur les publications suivantes
               (analyse originale, pas de reproduction du contenu) :
             </p>
@@ -293,7 +290,7 @@ async function NewsDetailPage({ params }: PageProps) {
                       href={url ?? "#"}
                       target="_blank"
                       rel="noopener nofollow"
-                      className="inline-flex items-start gap-1.5 text-sm font-semibold text-primary-glow hover:underline break-all"
+                      className="inline-flex items-start gap-1.5 text-base font-semibold text-link underline decoration-link-line decoration-2 underline-offset-[0.28em] hover:text-link-hover break-all"
                     >
                       <ExternalLink className="h-3.5 w-3.5 shrink-0 mt-0.5" aria-hidden="true" />
                       <span>{name}</span>
@@ -306,21 +303,21 @@ async function NewsDetailPage({ params }: PageProps) {
         ) : (
           <aside
             aria-labelledby="source-heading"
-            className="mt-10 rounded-2xl border border-border bg-elevated/40 p-5"
+            className="mt-10 rounded-2xl border border-border bg-surface p-5"
           >
-            <h2 id="source-heading" className="text-sm font-semibold text-fg/85">
+            <h2 id="source-heading" className="text-xl font-medium text-fg">
               Source originale
             </h2>
-            <p className="mt-2 text-sm text-muted leading-relaxed">
+            <p className="mt-2 text-base leading-relaxed text-fg-2">
               Cette analyse s'appuie sur une publication de{" "}
-              <strong className="text-fg/85">{news.source}</strong>. Pour lire
+              <strong className="text-fg">{news.source}</strong>. Pour lire
               l'article complet (anglais ou français selon le média) :
             </p>
             <a
               href={news.sourceUrl}
               target="_blank"
               rel="noopener nofollow"
-              className="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-primary-glow hover:underline break-all"
+              className="mt-3 inline-flex items-center gap-1.5 text-base font-semibold text-link underline decoration-link-line decoration-2 underline-offset-[0.28em] hover:text-link-hover break-all"
             >
               <ExternalLink className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
               {news.sourceUrl}
@@ -349,10 +346,8 @@ async function NewsDetailPage({ params }: PageProps) {
         />
       </div>
 
-      {/* Next Steps Guide — main tenue : autres news, calendrier, newsletter. */}
-      <NextStepsGuide context="news" />
     </article>
   );
 }
 
-export default avecTypo(NewsDetailPage);
+export default avecTypo(NewsDetailPage, { riche: true });
