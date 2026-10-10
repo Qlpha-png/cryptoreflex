@@ -23,7 +23,9 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
+import { revalidateTag } from "next/cache";
 import * as Sentry from "@sentry/nextjs";
+import { CRYPTO_FICHES_COURS_TAG } from "@/lib/cryptos-db";
 
 import { verifyBearer } from "@/lib/auth";
 import { createSupabaseServiceRoleClient } from "@/lib/supabase/server";
@@ -294,6 +296,17 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     const ecritesAppariees = appariees.filter((f) => ecrites.has(f.coingecko_id)).length;
     const archive = await archiver(sb, aEcrire.filter((l) => ecrites.has(l.id)));
     if (archive.archive === "erreur") erreurs.push({ stage: "archive", message: archive.raison ?? "erreur" });
+    // 10/10/2026 : les fiches lisent la base à travers un cache de 6 h (lib/cryptos-db.ts) : sans cette purge, un visiteur
+    // voyait encore « Cours non suivi depuis … » des heures après l'écriture du cours. Une seule étiquette pour toutes les
+    // fiches ; Next régénère chaque page à sa prochaine visite (ISR).
+    if (ecrites.size > 0) {
+      try {
+        revalidateTag(CRYPTO_FICHES_COURS_TAG);
+      } catch (e) {
+        // hors du serveur Next (tests) ; en production, un échec de purge ne doit pas faire échouer le passage
+        console.warn(`[refresh-prices] purge du cache des fiches impossible : ${e instanceof Error ? e.message : String(e)}`);
+      }
+    }
 
     const verdict = verdictR2({ erreurs: erreurs.length, appariees: appariees.length, ecritesAppariees });
     const durationMs = Date.now() - t0;

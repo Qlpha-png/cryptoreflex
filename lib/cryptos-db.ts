@@ -149,11 +149,18 @@ async function _getCryptoFicheUncached(coingeckoId: string): Promise<CryptoFiche
  * Cache key inclut coingeckoId. Tag granulaire pour invalidation ciblée
  * via revalidateTag(`crypto-fiche:${id}`) si raw_data_snapshot mis à jour.
  */
+/**
+ * 10/10/2026 (lot Z3) : étiquette commune à toutes les fiches lues en base. Le robot des fiches (app/api/cron/refresh-prices,
+ * 3 fois par jour) la purge après avoir écrit les cours : la fiche affiche le cours frais dès la visite suivante au lieu
+ * d'attendre la fin du cache de 6 h.
+ */
+export const CRYPTO_FICHES_COURS_TAG = "crypto-fiches-cours";
+
 export async function getCryptoFiche(coingeckoId: string): Promise<CryptoFicheRow | null> {
   const cached = unstable_cache(
     () => _getCryptoFicheUncached(coingeckoId),
     [`crypto-fiche-v2`, coingeckoId], // v2 (05/10/2026) : purge des faux « introuvable » mis en cache
-    { revalidate: 21600, tags: [`crypto-fiche:${coingeckoId}`] },
+    { revalidate: 21600, tags: [`crypto-fiche:${coingeckoId}`, CRYPTO_FICHES_COURS_TAG] },
   );
   return cached();
 }
@@ -188,7 +195,7 @@ export async function getCryptoFicheBySlug(slug: string): Promise<CryptoFicheRow
     () => _getCryptoFicheBySlugUncached(slug),
     [`crypto-fiche-by-slug-v1`, slug],
     // OPTIM 2026-05-10 — 1h → 6h (idem getCryptoFiche)
-    { revalidate: 21600, tags: [`crypto-fiche-slug:${slug}`] },
+    { revalidate: 21600, tags: [`crypto-fiche-slug:${slug}`, CRYPTO_FICHES_COURS_TAG] },
   );
   return cached();
 }
