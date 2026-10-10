@@ -28,13 +28,20 @@ jobs:
           if [ "$code" != "200" ]; then jq -r '.error.status + " : " + .error.message' modeles.json || true; exit 1; fi
           jq -r '.models[] | select(.supportedGenerationMethods | index("generateContent")) | .name' modeles.json | sed 's#^models/##' | sort | tee -a "$GITHUB_STEP_SUMMARY"
 
-      - name: Appel minimal (gemini-2.5-flash)
+      # 10/10/2026 : gemini-2.5-flash est fermé aux nouveaux comptes (« no longer available to new users ») ; on essaie
+      # les modèles actuels, un appel chacun, espacés de 2 s. Réussite si au moins un répond.
+      - name: Appel minimal par modèle
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: |
           set -o pipefail
           corps='{"contents":[{"parts":[{"text":"Réponds uniquement par le mot OK."}]}],"generationConfig":{"temperature":0}}'
-          code=$(curl -s -o reponse.json -w "%{http_code}" -H "x-goog-api-key: $GEMINI_API_KEY" -H "Content-Type: application/json" -d "$corps" "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent")
-          echo "Appel minimal : HTTP $code"
-          jq -r '(.candidates[0].content.parts[0].text // "") , (.error.status // "") , (.error.message // "")' reponse.json || true
-          [ "$code" = "200" ]
+          ok=0
+          for m in gemini-3.8-flash gemini-flash-latest gemini-3.5-flash-lite gemini-flash-lite-latest; do
+            code=$(curl -s -o reponse.json -w "%{http_code}" -H "x-goog-api-key: $GEMINI_API_KEY" -H "Content-Type: application/json" -d "$corps" "https://generativelanguage.googleapis.com/v1beta/models/$m:generateContent")
+            texte=$(jq -r '(.candidates[0].content.parts[0].text // "") + (.error.status // "")' reponse.json 2>/dev/null | tr -d '\n' | cut -c1-60)
+            echo "$m : HTTP $code ${texte}" | tee -a "$GITHUB_STEP_SUMMARY"
+            [ "$code" = "200" ] && ok=1
+            sleep 2
+          done
+          [ "$ok" = "1" ]
