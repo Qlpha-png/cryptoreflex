@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "passeLe": "2026-10-10T12:50:25Z",
+  "passeLe": "2026-10-10T13:09:00Z",
   "bornes": {
     "minPct": 0,
     "maxPct": 25
@@ -11,16 +11,12 @@
     "docUrl": "https://docs.lido.fi/integrations/api",
     "pageUrl": "https://lido.fi",
     "methode": "mediane-7-jours",
-    "date": "2026-10-09",
-    "horodatage": "2026-10-09T12:22:35Z",
+    "date": "2026-10-10",
+    "horodatage": "2026-10-10T12:23:23Z",
     "valeurPct": 2.24,
     "medianePct": 2.238,
-    "smaPct": 2.2456,
+    "smaPct": 2.2493,
     "points": [
-      {
-        "date": "2026-10-03",
-        "aprPct": 2.19
-      },
       {
         "date": "2026-10-04",
         "aprPct": 2.175
@@ -44,12 +40,29 @@
       {
         "date": "2026-10-09",
         "aprPct": 2.238
+      },
+      {
+        "date": "2026-10-10",
+        "aprPct": 2.216
       }
     ],
-    "precedent": null,
+    "precedent": {
+      "date": "2026-10-09",
+      "valeurPct": 2.24
+    },
+    "historique": [
+      {
+        "date": "2026-10-09",
+        "valeurPct": 2.24
+      },
+      {
+        "date": "2026-10-10",
+        "valeurPct": 2.24
+      }
+    ],
     "controle": {
       "statut": "ok",
-      "verifieLe": "2026-10-10T11:46:15Z",
+      "verifieLe": "2026-10-10T13:09:00Z",
       "detail": null,
       "refuse": null
     }
