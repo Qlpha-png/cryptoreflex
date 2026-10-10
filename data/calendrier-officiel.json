@@ -117,29 +117,32 @@
   },
   "halving": {
     "bloc": 1050000,
-    "hauteur": 970748,
-    "horodatageBloc": "2026-10-10T09:15:51Z",
-    "blocsRestants": 79252,
+    "rang": 5,
+    "recompenseAvant": 3.125,
+    "recompenseApres": 1.5625,
+    "hauteur": 970754,
+    "horodatageBloc": "2026-10-10T10:55:41Z",
+    "blocsRestants": 79246,
     "reference": {
       "hauteur": 840000,
       "horodatage": 1713571767,
       "iso": "2024-04-20T00:09:27Z"
     },
-    "tempsMoyenS": 596.97,
-    "tempsEpoqueS": 582.88,
+    "tempsMoyenS": 596.98,
+    "tempsEpoqueS": 584.66,
     "ecart": 0.05,
-    "ecartMesure": 0.0236,
-    "estimation": "2028-04-09T23:07:03Z",
+    "ecartMesure": 0.0206,
+    "estimation": "2028-04-10T00:11:31Z",
     "fourchette": {
-      "debut": "2028-03-13T14:01:30Z",
-      "fin": "2028-05-07T08:12:37Z",
-      "tempsBasS": 567.12,
-      "tempsHautS": 626.81
+      "debut": "2028-03-13T15:07:43Z",
+      "fin": "2028-05-07T09:15:18Z",
+      "tempsBasS": 567.13,
+      "tempsHautS": 626.83
     },
     "source": "https://mempool.space",
     "recoupement": {
       "source": "https://blockstream.info",
-      "hauteur": 970748
+      "hauteur": 970754
     },
     "calculeLe": "2026-10-10"
   }
