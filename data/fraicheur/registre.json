@@ -1,7 +1,7 @@
 {
   "_lisezmoi": "Registre de fraîcheur des 51 familles de données de cryptoreflex.fr (+ 18b), lot Z1 du 08/10/2026 (architecture 0 €, § 6.2). Numéros = carte de fraîcheur du 08/10/2026. Pour chaque famille : source, robot, cadence, âge maximal (ageMaxH, au-delà ⚠️) et âge critique (critiqueH, au-delà ❌), et la façon de lire la VRAIE date (lecture). Lu chaque nuit par la sentinelle complète (scripts/sentinelle.mjs, scripts/lib/fraicheur-registre.mjs) : chaque famille reçoit ✅, ⚠️ ou ❌ ; une date illisible vaut ❌ (jamais « inconnue »). Une famille ❌ ouvre un ticket dédoublonné ; un ticket « état des 51 familles » est publié chaque dimanche. Méthodes de lecture : kv, workflow, fichier, constante, dossier, page, page-calcul, supabase, recomptage, echeance-jeu, absence, aucune.",
   "version": 1,
-  "majLe": "2026-10-08",
+  "majLe": "2026-10-10",
   "familles": [
     {
       "id": "1",
@@ -76,22 +76,22 @@
     {
       "id": "8",
       "famille": "Fear & Greed",
-      "source": "alternative.me (S7, attribution à côté du chiffre)",
+      "source": "alternative.me (S7) ; mention « Source : alternative.me » avec lien à côté de chaque affichage de l'indice, avec la date de la valeur (lot Z4)",
       "robot": "rendu ISR 1 h",
       "cadence": "1 fois par jour",
       "ageMaxH": 36,
       "critiqueH": 72,
-      "lecture": { "methode": "page", "chemin": "/marche/fear-greed", "motif": "Dernière mise à jour[\\s\\S]{0,60}?<time [dD]ate[tT]ime=\"([^\"]+)\"", "mode": "plusRecente", "format": "auto", "explication": "attribut dateTime de « Dernière mise à jour » (horodatage de la valeur d'alternative.me)" }
+      "lecture": { "methode": "page", "chemin": "/marche/fear-greed", "motif": "Valeur du[\\s\\S]{0,60}?<time [dD]ate[tT]ime=\"([^\"]+)\"", "mode": "plusRecente", "format": "auto", "explication": "attribut dateTime de « Valeur du » sous la jauge de /marche/fear-greed (horodatage de la valeur d'alternative.me)" }
     },
     {
       "id": "9",
-      "famille": "Taux de change du convertisseur",
-      "source": "taux de secours écrit dans le code ; BCE (S6) prévue au lot Z4 (R6)",
-      "robot": "aucun (R6 au lot Z4)",
+      "famille": "Taux de change (BCE) : convertisseur, fiches, portefeuille, alertes",
+      "source": "BCE, eurofxref-daily.xml (S6), publication quotidienne des jours ouvrés",
+      "robot": "GitHub fx-bce (R6), lancé par le Gardien les jours ouvrés à 15 h 35 UTC (lot Z4)",
       "cadence": "1 fois par jour ouvré",
-      "ageMaxH": 24,
-      "critiqueH": 96,
-      "lecture": { "methode": "constante", "fichier": "lib/fx-fallback.ts", "motif": "FX_FALLBACK\\s*=\\s*\\{[^}]*date:\\s*\"(\\d{4}-\\d{2}-\\d{2})\"", "explication": "date du taux de secours FX_FALLBACK (la BCE échoue depuis Vercel : ce secours est servi)" }
+      "ageMaxH": 96,
+      "critiqueH": 144,
+      "lecture": { "methode": "fichier", "fichier": "data/fx-bce.json", "chemin": "date", "mode": "plusRecente", "attentionSi": [{ "chemin": "controle.statut", "egal": "variation-refusee", "raison": "variation de 3 % ou plus refusée : valeurs précédentes gardées (ticket privé)" }], "explication": "date de la publication de la BCE dans data/fx-bce.json (champ date), écrit par le robot R6 ; ⚠️ si une variation a été refusée. Seuils en heures : 96 h couvrent le week-end, 144 h Pâques" }
     },
     {
       "id": "10",
@@ -156,7 +156,7 @@
     {
       "id": "16",
       "famille": "Statut MiCA des 34 plateformes",
-      "source": "ESMA CASPS.csv (S4) ; AMF (S5) prévue",
+      "source": "ESMA CASPS.csv (S4) ; AMF, liste blanche (S5, lot Z4 : champs « amf » de data/psan-registry.json)",
       "robot": "veille de nuit (R5) ; correction humaine",
       "cadence": "1 fois par semaine",
       "ageMaxH": 336,
@@ -175,23 +175,23 @@
     },
     {
       "id": "18",
-      "famille": "Liste blanche AMF, registre PSAN",
-      "source": "AMF via data.gouv.fr (S5, prévue au lot Z4)",
-      "robot": "aucun (ajout à R5 au lot Z4)",
-      "cadence": "1 fois par semaine",
-      "ageMaxH": 168,
-      "critiqueH": 336,
-      "lecture": { "methode": "fichier", "fichier": "data/psan-registry.json", "chemin": "_meta.lastUpdated", "mode": "plusAncienne", "explication": "_meta.lastUpdated de data/psan-registry.json" }
+      "famille": "Liste blanche AMF (prestataires sur crypto-actifs)",
+      "source": "AMF via data.gouv.fr (S5), ressource stable e03f8899-2499-4826-aaae-6842f520bdac, Licence Ouverte 2.0",
+      "robot": "veille de nuit R5 (scripts/veille-amf.mjs, lot Z4) : champs machine de data/psan-registry.json",
+      "cadence": "1 fois par jour (l'AMF publie chaque jour ouvré ; l'export daté du 08/10/2026 a paru le 09/10 à 08 h 05 UTC, après la veille de 04 h 40 UTC : jusqu'à environ 101 h d'âge le lundi et le mardi, d'où 120 h)",
+      "ageMaxH": 120,
+      "critiqueH": 192,
+      "lecture": { "methode": "fichier", "fichier": "data/psan-registry.json", "chemin": "_meta.amf.publication", "mode": "plusAncienne", "et": [{ "methode": "fichier", "fichier": "data/psan-registry.json", "chemin": "_meta.amf.controle", "mode": "plusAncienne" }], "explication": "date de publication de la liste blanche par l'AMF (_meta.amf.publication) ET date du dernier contrôle réussi du robot (_meta.amf.controle) : la plus ancienne des deux" }
     },
     {
       "id": "18b",
       "famille": "Liste noire AMF (alerte d'usurpation)",
       "source": "AMF via data.gouv.fr (S5, liste noire ; e-mails jamais republiés)",
-      "robot": "aucun (ajout à R5 au lot Z4)",
+      "robot": "veille de nuit R5 (scripts/veille-amf.mjs, lot Z4) : correspondances → ticket privé, rien publié",
       "cadence": "1 fois par jour",
-      "ageMaxH": 24,
-      "critiqueH": 48,
-      "lecture": { "methode": "aucune", "raison": "aucun robot ne lit encore la liste noire de l'AMF (ajout prévu au lot Z4)", "explication": "aucune date à lire tant que le robot n'existe pas : la famille reste ❌" }
+      "ageMaxH": 36,
+      "critiqueH": 72,
+      "lecture": { "methode": "fichier", "fichier": "data/psan-registry.json", "chemin": "_meta.amf.listeNoire.controle", "mode": "plusAncienne", "explication": "date du dernier contrôle réussi de la liste noire par le robot (_meta.amf.listeNoire.controle) ; l'AMF ne republie pas la liste noire chaque jour, sa propre date n'est donc pas le bon témoin" }
     },
     {
       "id": "19",
@@ -346,12 +346,12 @@
     {
       "id": "34",
       "famille": "Calendrier /calendrier",
-      "source": "Fed (S8) pour le FOMC ; événements crypto tenus en session",
-      "robot": "GitHub refresh-fomc (R7) pour le FOMC ; weekly-events sans clé",
+      "source": "Fed (S8) pour le FOMC, BCE (S9) pour les décisions de politique monétaire, mempool.space (S10) pour le halving ; autres événements crypto relus en session (EVENTS_SEED_REVU_LE)",
+      "robot": "GitHub refresh-fomc (R7 étendu au lot Z4 : Fed, BCE, halving en fourchette)",
       "cadence": "1 fois par semaine",
-      "ageMaxH": 720,
-      "critiqueH": 1440,
-      "lecture": { "methode": "constante", "fichier": "lib/events-seed.ts", "motif": "EVENTS_SEED_REVU_LE\\s*=\\s*\"([\\d-]+)\"", "explication": "constante EVENTS_SEED_REVU_LE (dernière revue du seed)" }
+      "ageMaxH": 216,
+      "critiqueH": 432,
+      "lecture": { "methode": "fichier", "fichier": "data/calendrier-officiel.json", "chemin": "releveLe", "mode": "plusRecente", "explication": "releveLe de data/calendrier-officiel.json : dernier passage où la Fed, la BCE et le halving ont été relus ensemble (robot hebdomadaire ; 216 h = 9 jours)" }
     },
     {
       "id": "35",

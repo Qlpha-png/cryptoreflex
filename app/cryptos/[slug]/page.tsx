@@ -67,7 +67,6 @@ import {
   CryptoQuickSwitcher,
   CryptoQuiz,
   FloatingShareButton,
-  HalvingCountdown,
   NextEventCountdown,
   OnChainMetricsLive,
   PairConverter,
@@ -100,6 +99,7 @@ import NextStepsGuide from "@/components/NextStepsGuide";
 import { getWalletsForCrypto } from "@/lib/crypto-wallets";
 import { getRoadmapFor } from "@/lib/crypto-roadmaps";
 import { FUTURE_HALVINGS } from "@/lib/bitcoin-halving-cycles";
+import { PROCHAIN_HALVING, dateLongue } from "@/lib/calendrier-officiel";
 import { getUpcomingEventsFor } from "@/lib/crypto-events";
 // Programmatic SEO #8 (ETUDE-2026-05-02) : maillage interne vers les pages
 // /comparer/[a]/[b] (435 paires) et /acheter/[crypto]/[pays] (600 guides).
@@ -632,9 +632,7 @@ async function CryptoPage({ params }: Props) {
         )}
 
         {/* HALVING COUNTDOWN — BTC-only (innovation BATCH 28 expert agents
-            quick win #4). Catalyseur narratif majeur : compte à rebours live
-            JJ/HH/MM/SS jusqu'au prochain halving (~avril 2028). Engagement
-            lecteur + retours réguliers sur la fiche. */}
+            quick win #4). Lot Z4 : date estimée en fourchette (robot R7), méthode affichée. */}
         {c.id === "bitcoin" && FUTURE_HALVINGS.length > 0 && (
           <section className="mt-10" aria-labelledby="btc-halving-countdown-title">
             <header className="mb-4 flex items-baseline justify-between gap-4 flex-wrap">
@@ -659,7 +657,19 @@ async function CryptoPage({ params }: Props) {
                 <ExternalLink className="h-3 w-3" aria-hidden="true" />
               </Link>
             </header>
-            <HalvingCountdown targetDate={new Date(FUTURE_HALVINGS[0].dateIso)} />
+            {/* lot Z4 : fourchette calculée par le robot R7 (data/calendrier-officiel.json), plus de compte à la seconde */}
+            {PROCHAIN_HALVING ? (
+              <div className="rounded-2xl border border-border bg-surface p-5">
+                <p className="text-lg font-bold text-fg">Vers le {dateLongue(PROCHAIN_HALVING.estimation)}</p>
+                <p className="mt-1 text-sm text-fg/85">
+                  Entre le {dateLongue(PROCHAIN_HALVING.debut)} et le {dateLongue(PROCHAIN_HALVING.fin)}.
+                </p>
+                <p className="mt-2 text-xs text-muted">
+                  {PROCHAIN_HALVING.methode}{" "}
+                  <VerifieLe date={PROCHAIN_HALVING.calculeLe} famille="officiel" label="Calculé" age={false} />
+                </p>
+              </div>
+            ) : null}
           </section>
         )}
 
@@ -981,14 +991,14 @@ async function CryptoPage({ params }: Props) {
               À savoir sur le Bitcoin
             </h2>
             <p className="mt-2 text-sm text-fg/85 leading-relaxed">
-              Le prochain halving Bitcoin est attendu en avril 2028. Cet
+              Le prochain halving Bitcoin est {PROCHAIN_HALVING ? `estimé ${PROCHAIN_HALVING.resume}` : "attendu en 2028"}. Cet
               évènement programmé divise par deux la récompense des mineurs
               tous les 4 ans et structure l'inflation du BTC.{" "}
               <Link
                 href="/halving-bitcoin"
                 className="underline font-semibold hover:text-amber-200"
               >
-                Voir le compte à rebours et l'analyse →
+                Voir la date estimée et l'analyse →
               </Link>
             </p>
           </section>

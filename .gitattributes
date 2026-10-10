@@ -7,3 +7,5 @@
 *.json text eol=lf
 *.css text eol=lf
 *.md text eol=lf
+# fixtures XML lues avec des motifs « \n » (tests/lib/fx-bce.test.ts) : LF même dans un checkout Windows neuf
+*.xml text eol=lf

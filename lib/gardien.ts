@@ -126,6 +126,15 @@ export const ROBOTS_GARDIEN: readonly RobotGardien[] = [
     horaire: "40 3 * * *",
     description: "Fiches sans défaut : liens internes et sortants, textes cassés, prix à 0, h1, données structurées, chaque nuit.",
   },
+  {
+    cle: "fx-bce",
+    workflow: "fx-bce.yml",
+    // 10/10/2026 (lot Z4, robot R6) : taux de référence de la BCE → data/fx-bce.json (commit seulement si la valeur change) ;
+    // jours ouvrés à 15 h 35 UTC, après la publication de la BCE (vers 16 h, heure de Francfort ; 15 h UTC en hiver).
+    inputs: {},
+    horaire: "35 15 * * 1-5",
+    description: "Taux de change de référence de la BCE (euro, dollar, livre, franc suisse), chaque jour ouvré.",
+  },
 ];
 
 /** Robot de la table, ou undefined si la clé est inconnue. */

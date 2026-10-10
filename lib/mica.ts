@@ -48,6 +48,20 @@ export interface PlatformMica {
   wikipediaSource: string | null;
   lastVerified: string;
   notes: string;
+  /** Lot Z4 : autorisation en vigueur trouvée dans la liste blanche de l'AMF par la veille R5 (scripts/veille-amf.mjs). */
+  amf?: { noAmf: string | null; passeport: boolean; entite: string; nature: string; statut: string; debut: string | null; rapprochement: string; controle: string };
+}
+
+/** Lot Z4 : liste blanche de l'AMF relue par la veille R5 (data.gouv.fr, Licence Ouverte 2.0). */
+export interface AmfMeta {
+  source: string;
+  url: string;
+  ressource: string;
+  /** date de publication de la liste par l'AMF (AAAA-MM-JJ) */
+  publication: string;
+  controle: string;
+  lignes: number;
+  entitesActives: number;
 }
 
 export interface PsanRegistryMeta {
@@ -62,6 +76,7 @@ export interface PsanRegistryMeta {
   };
   disclaimer: string;
   schemaVersion: string;
+  amf?: AmfMeta;
 }
 
 export interface PsanRegistry {

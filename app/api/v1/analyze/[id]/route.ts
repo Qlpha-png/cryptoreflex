@@ -95,17 +95,18 @@ export async function GET(
   const resistance = levels.resistances[0] ?? null;
 
   // 3. Fear & Greed (sentiment global)
-  let fearGreed: { value: number; label: string } | null = null;
+  let fearGreed: { value: number; label: string; date: string | null } | null = null;
   try {
     const r = await fetch("https://api.alternative.me/fng/?limit=1", {
       next: { revalidate: 3600 },
       signal: AbortSignal.timeout(5000),
     });
     if (r.ok) {
-      const json = (await r.json()) as { data?: Array<{ value: string; value_classification: string }> };
+      const json = (await r.json()) as { data?: Array<{ value: string; value_classification: string; timestamp?: string }> };
       const first = json.data?.[0];
       if (first) {
-        fearGreed = { value: Number(first.value), label: first.value_classification };
+        const t = Number(first.timestamp);
+        fearGreed = { value: Number(first.value), label: first.value_classification, date: Number.isFinite(t) && t > 0 ? new Date(t * 1000).toISOString() : null };
       }
     }
   } catch {
@@ -192,6 +193,10 @@ export async function GET(
         ? {
             fear_greed_value: fearGreed.value,
             fear_greed_label: fearGreed.label,
+            // lot Z4 : attribution exigée par alternative.me, à côté de la donnée, avec la date de la valeur
+            date: fearGreed.date,
+            source: "alternative.me",
+            source_url: "https://alternative.me/crypto/fear-and-greed-index/",
           }
         : null,
       events_upcoming: events,

@@ -5,20 +5,17 @@ import { Bitcoin, Clock, Calendar, TrendingUp, AlertTriangle } from "lucide-reac
 import { BRAND } from "@/lib/brand";
 import { articleSchema, faqSchema, graphSchema } from "@/lib/schema";
 import StructuredData from "@/components/StructuredData";
-import HalvingCountdown from "@/components/HalvingCountdown";
+import VerifieLe from "@/components/ui/VerifieLe";
+import { PROCHAIN_HALVING, dateLongue, joursAvant } from "@/lib/calendrier-officiel";
 import { withHreflang } from "@/lib/seo-alternates";
 import { fitTitle } from "@/lib/seo-text";
 import Breadcrumbs from "@/components/Breadcrumbs";
 
 /**
- * /halving-bitcoin — Page evergreen avec compte à rebours et contenu pédagogique.
+ * /halving-bitcoin — Page evergreen : date estimée du prochain halving (fourchette) et contenu pédagogique.
  *
- * Server Component, ISR 1h : la page se ré-update toute seule, le countdown
- * tourne ensuite côté Client à partir de la date cible passée en props.
- *
- * Date cible V1 : estimation conservative (mi-avril 2028, block ~1 050 000).
- * À raffiner ultérieurement avec l'API mempool.space pour calculer la date
- * dynamiquement à partir du blockheight courant et du temps moyen entre blocs.
+ * Lot Z4 (10/10/2026) : date calculée chaque semaine par le robot R7 (data/calendrier-officiel.json, mempool.space) et
+ * affichée en FOURCHETTE avec sa méthode ; plus de compte à rebours à la seconde vers une date écrite à la main.
  */
 
 // QUOTA VERCEL 2026-06-11 — revalidate allongé (ISR writes 409K/200K Hobby) :
@@ -26,31 +23,41 @@ import Breadcrumbs from "@/components/Breadcrumbs";
 export const revalidate = 86400;
 
 const PAGE_URL = `${BRAND.url}/halving-bitcoin`;
-const NEXT_HALVING_DATE = new Date("2028-04-15T00:00:00Z");
-const NEXT_HALVING_BLOCK = 1_050_000;
+const NEXT_HALVING_BLOCK = PROCHAIN_HALVING?.bloc ?? 1_050_000;
+const ESTIMATION = PROCHAIN_HALVING ? `estimé ${PROCHAIN_HALVING.resume}` : "date estimée indisponible";
+// reprise Z4 : plus de « compte à rebours » promis (la page affiche une fourchette, pas une date cible exacte)
+const TITRE = "Halving Bitcoin 2028 — date estimée, fourchette, impact prix";
+/** Effet d'un écart de 1 % sur le temps de bloc = 1 % du temps restant au moment du calcul (jamais un chiffre figé). */
+const JOURS_RESTANTS_CALCUL = PROCHAIN_HALVING ? joursAvant(PROCHAIN_HALVING.estimation, Date.parse(`${PROCHAIN_HALVING.calculeLe}T12:00:00Z`)) : null;
+const EFFET_1PCT =
+  JOURS_RESTANTS_CALCUL === null
+    ? "d'environ 1 % du temps restant"
+    : JOURS_RESTANTS_CALCUL < 50
+      ? "de moins d'un jour"
+      : `d'environ ${Math.round(JOURS_RESTANTS_CALCUL / 100)} jour${Math.round(JOURS_RESTANTS_CALCUL / 100) > 1 ? "s" : ""} (1 % du temps restant au moment du calcul)`;
 
 export const metadata: Metadata = {
-  title: fitTitle("Halving Bitcoin 2028 — Compte à rebours, date, impact prix"),
+  title: fitTitle(TITRE),
   description:
-    "Prochain halving Bitcoin : compte à rebours en direct jusqu'au block 1 050 000 (~avril 2028). Historique des halvings, impact sur le prix BTC, FAQ.",
+    "Prochain halving Bitcoin au bloc 1 050 000 : date estimée en fourchette, recalculée chaque semaine depuis la hauteur de bloc. Historique des halvings, impact sur le prix BTC, FAQ.",
   alternates: withHreflang(PAGE_URL),
   openGraph: {
-    title: "Halving Bitcoin 2028 — Compte à rebours et impact",
+    title: "Halving Bitcoin 2028 — date estimée et impact",
     description:
-      "Compte à rebours du prochain halving Bitcoin, historique, impact prix et FAQ.",
+      "Date estimée du prochain halving Bitcoin (fourchette recalculée chaque semaine), historique, impact prix et FAQ.",
     url: PAGE_URL,
     type: "article",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Halving Bitcoin 2028 — Compte à rebours",
+    title: "Halving Bitcoin 2028 — date estimée",
     description:
-      "Compte à rebours du prochain halving Bitcoin et tout ce qu'il faut savoir.",
+      "Date estimée du prochain halving Bitcoin (fourchette) et tout ce qu'il faut savoir.",
   },
   keywords: [
     "halving bitcoin",
     "halving 2028",
-    "compte à rebours halving",
+    "date halving bitcoin",
     "halving btc date",
     "impact prix halving",
   ],
@@ -127,7 +134,7 @@ const FAQ = [
   },
   {
     q: "Quand aura lieu le prochain halving Bitcoin ?",
-    a: "Le prochain halving est attendu vers avril 2028, au block 1 050 000. La date exacte dépend du temps moyen entre les blocs (environ 10 minutes), qui peut varier légèrement selon la puissance de calcul du réseau (hashrate). Le compte à rebours en haut de cette page reflète l'estimation actuelle.",
+    a: `Le prochain halving aura lieu au bloc 1 050 000, ${ESTIMATION}. La date exacte dépend du temps moyen entre les blocs (environ 10 minutes), qui varie avec la puissance de calcul du réseau : 1 % d'écart sur ce temps décale la date ${EFFET_1PCT}. L'estimation en haut de cette page est recalculée chaque semaine, méthode à l'appui.`,
   },
   {
     q: "Le halving fait-il monter le prix du Bitcoin ?",
@@ -144,15 +151,14 @@ const FAQ = [
 ];
 
 export default function HalvingPage() {
-  const targetIso = NEXT_HALVING_DATE.toISOString();
-  const dateModified = "2026-06-11"; // dernière modification réelle de la page (git) — plus de « aujourd'hui » (audit 03/10/2026)
+  const dateModified = "2026-10-10"; // dernière modification réelle du contenu (lot Z4) — plus de « aujourd'hui » (audit 03/10/2026)
 
   const schemas = graphSchema([
     articleSchema({
       slug: "halving-bitcoin",
-      title: "Halving Bitcoin 2028 — Compte à rebours, date, impact prix",
+      title: TITRE,
       description:
-        "Tout ce qu'il faut savoir sur le prochain halving Bitcoin : compte à rebours, historique, impact sur le prix.",
+        "Tout ce qu'il faut savoir sur le prochain halving Bitcoin : date estimée en fourchette, historique, impact sur le prix.",
       date: "2026-04-25",
       dateModified,
       category: "Bitcoin",
@@ -179,8 +185,7 @@ export default function HalvingPage() {
             Prochain <span className="gradient-text">halving Bitcoin</span>
           </h1>
           <p className="mt-3 text-base sm:text-lg text-muted max-w-2xl leading-relaxed">
-            Compte à rebours en direct jusqu'au block {NEXT_HALVING_BLOCK.toLocaleString("fr-FR")},
-            estimé pour mi-avril 2028. La récompense par bloc passera de 3,125 BTC à 1,5625 BTC.
+            Bloc {NEXT_HALVING_BLOCK.toLocaleString("fr-FR")}, {ESTIMATION}. La récompense par bloc passera de 3,125 BTC à 1,5625 BTC.
           </p>
         </header>
 
@@ -194,20 +199,27 @@ export default function HalvingPage() {
             className="text-xs uppercase tracking-wider text-primary-soft font-semibold flex items-center gap-2"
           >
             <Clock className="h-4 w-4" aria-hidden="true" />
-            Temps restant avant le halving 2028
+            Date estimée du prochain halving
           </h2>
-          <div className="mt-4">
-            <HalvingCountdown targetDate={new Date(targetIso)} />
-          </div>
-          <p className="mt-4 text-xs text-muted">
-            Date cible estimée : {NEXT_HALVING_DATE.toLocaleDateString("fr-FR", {
-              day: "2-digit",
-              month: "long",
-              year: "numeric",
-            })}{" "}
-            · Block {NEXT_HALVING_BLOCK.toLocaleString("fr-FR")}. L'estimation
-            peut varier de quelques jours selon le hashrate réseau.
-          </p>
+          {PROCHAIN_HALVING ? (
+            <>
+              <p className="mt-4 text-2xl sm:text-3xl font-extrabold text-fg">
+                Vers le {dateLongue(PROCHAIN_HALVING.estimation)}
+              </p>
+              <p className="mt-2 text-base text-fg/85">
+                Entre le {dateLongue(PROCHAIN_HALVING.debut)} et le {dateLongue(PROCHAIN_HALVING.fin)}, soit dans environ{" "}
+                {joursAvant(PROCHAIN_HALVING.estimation, Date.parse(`${PROCHAIN_HALVING.calculeLe}T12:00:00Z`))} jours au moment du calcul
+                (entre {joursAvant(PROCHAIN_HALVING.debut, Date.parse(`${PROCHAIN_HALVING.calculeLe}T12:00:00Z`))} et{" "}
+                {joursAvant(PROCHAIN_HALVING.fin, Date.parse(`${PROCHAIN_HALVING.calculeLe}T12:00:00Z`))}).
+              </p>
+              <p className="mt-4 text-xs text-muted">
+                {PROCHAIN_HALVING.methode}{" "}
+                <VerifieLe date={PROCHAIN_HALVING.calculeLe} famille="officiel" label="Calculé" />
+              </p>
+            </>
+          ) : (
+            <p className="mt-4 text-sm text-muted">Estimation momentanément indisponible.</p>
+          )}
         </section>
 
         {/* WHAT */}

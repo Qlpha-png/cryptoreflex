@@ -28,6 +28,10 @@ export const SEUILS_JOURS = {
   fiscalite: 30,
   notes: 30,
   "tarifs-partenaires": 90,
+  // lot Z4 (10/10/2026) : robots R6 (taux BCE, 4 jours ouvrés + week-end), R5 (liste blanche AMF), R7 (Fed, BCE, halving : hebdomadaire)
+  change: 6,
+  amf: 7,
+  officiel: 9,
 } as const;
 
 export type FamilleFraicheur = keyof typeof SEUILS_JOURS;

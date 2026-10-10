@@ -168,7 +168,7 @@ export default function VerificateurMicaPage({ searchParams }: PageProps) {
               </span>
               <span className="flex items-center gap-1.5">
                 <ShieldCheck className="h-4 w-4 text-primary" />
-                Sources officielles uniquement
+                Sources : ESMA et AMF
               </span>
             </div>
           </div>
@@ -214,14 +214,11 @@ export default function VerificateurMicaPage({ searchParams }: PageProps) {
           <h2 className="text-2xl sm:text-3xl font-extrabold text-fg-max">
             Notre méthodologie
           </h2>
-          <p className="mt-2 text-fg-max/70 max-w-[34em]">
-            Transparence totale sur les sources et critères de classification.
-          </p>
 
           <div className="mt-8 grid md:grid-cols-3 gap-4">
             <MethodCard
               icon={Database}
-              title="Sources officielles uniquement"
+              title="Sources : ESMA et AMF"
               text={`Registre intérimaire MiCA de l'ESMA (prestataires agréés, autorité, date d'agrément, pays couverts par passeport) et liste blanche de l'AMF (numéros d'agrément des prestataires français) ; date de la dernière vérification en haut de page.`}
             />
             <MethodCard

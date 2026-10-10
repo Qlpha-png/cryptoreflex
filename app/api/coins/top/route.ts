@@ -51,7 +51,7 @@ export async function GET(request: Request) {
     }));
     // 08/10/2026 (lot fraîcheur A) : heure RÉELLE du plus ancien relevé servi (fetchedAt), plus l'heure de la réponse
     return NextResponse.json(
-      { coins, updatedAt: pricesUpdatedAt(top) },
+      { coins, updatedAt: pricesUpdatedAt(top), fx: { date: fx.date, source: "BCE" } },
       {
         headers: {
           "Cache-Control": "public, s-maxage=600, stale-while-revalidate=1200",

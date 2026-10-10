@@ -9,6 +9,7 @@
  * Les données sont 100% statiques (JSON éditorial) — pas de fetch externe en V1.
  */
 import eventsData from "@/data/crypto-events.json";
+import { PROCHAIN_HALVING, jourParis } from "@/lib/calendrier-officiel";
 import { getCryptoBySlug } from "@/lib/cryptos";
 
 export type CryptoEventType =
@@ -43,7 +44,12 @@ interface EventsFile {
 }
 
 const FILE = eventsData as EventsFile;
-const EVENTS_BY_CRYPTO: Record<string, RawCryptoEvent[]> = FILE.events ?? {};
+/* Lot Z4 (10/10/2026) : le halving Bitcoin à venir est injecté depuis data/calendrier-officiel.json (robot R7, estimation
+   centrale + fourchette dans la description) ; plus de date écrite à la main dans data/crypto-events.json. */
+const HALVING_BTC: RawCryptoEvent[] = PROCHAIN_HALVING
+  ? [{ date: jourParis(PROCHAIN_HALVING.estimation), type: "halving", title: "Halving Bitcoin #5 (estimation)", description: `Récompense des mineurs : 3,125 → 1,5625 BTC par bloc. Estimation ${PROCHAIN_HALVING.resume} (mempool.space, calcul du ${PROCHAIN_HALVING.calculeLe.split("-").reverse().join("/")}).`, importance: "low", sourceUrl: "https://mempool.space" }]
+  : [];
+const EVENTS_BY_CRYPTO: Record<string, RawCryptoEvent[]> = { ...(FILE.events ?? {}), bitcoin: [...(FILE.events?.bitcoin ?? []), ...HALVING_BTC] };
 const GLOBAL_EVENTS: RawGlobalEvent[] = FILE.globalEvents ?? [];
 
 /** Date de dernière vérification éditoriale (affichée en footer du composant). */

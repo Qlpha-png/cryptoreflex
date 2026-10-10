@@ -1,0 +1,139 @@
+# Taux de change BCE — robot R6 (lot Z4, 10/10/2026). Demande de Kev : « tout ce qui n'est pas automatisé doit l'être »,
+# « 0 euro », données « toujours à jour ».
+#
+# Lit https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml (scripts/fx-bce.mjs), contrôle la publication
+# (scripts/lib/fx-bce.mjs : structure ; au plus 4 jours ouvrés ; variation de moins de 3 % sur USD, GBP, CHF, sinon
+# valeurs précédentes gardées + ticket privé) et commite data/fx-bce.json SEULEMENT si la date ou les valeurs changent
+# (un commit = un déploiement). Le site lit ce fichier partout où un taux USD↔EUR sert (lib/fx-bce.ts) : plus aucun
+# appel réseau au rendu (la BCE et ses relais échouaient depuis Vercel).
+# Source injoignable ou structure changée : ROUGE, rien n'est écrit, le site garde le fichier en place avec son âge.
+#
+# Lancé par l'horloge Vercel (lib/gardien.ts, /api/cron/gardien/fx-bce, jours ouvrés 15 h 35 UTC : la BCE publie vers
+# 16 h, heure de Francfort) ; les horaires ci-dessous sont le filet natif de GitHub (doublon sans danger : groupe de
+# concurrence, commit seulement si la valeur change). Premier passage : à la fusion (push qui modifie le robot).
+on:
+  schedule:
+    - cron: "35 15 * * 1-5" # filet de l'horloge Vercel
+    - cron: "10 17 * * 1-5" # second filet, si la BCE publie en retard
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - scripts/fx-bce.mjs
+      - scripts/lib/fx-bce.mjs
+      - .github/workflows/fx-bce.yml
+
+name: Taux de change BCE
+
+permissions:
+  contents: write
+
+concurrency:
+  group: fx-bce
+  cancel-in-progress: false
+
+jobs:
+  fx:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      TICKETS_PRIVES: ${{ secrets.SENTINELLE_TOKEN != '' }}
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v6
+        with:
+          ref: main
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node 20
+        uses: actions/setup-node@v6
+        with:
+          node-version: "20"
+          cache: npm
+
+      - name: Lire le taux de la BCE
+        id: fx
+        continue-on-error: true
+        run: node scripts/fx-bce.mjs
+
+      - name: Dépendances (tests)
+        if: steps.fx.outputs.changed == 'true'
+        run: npm ci --no-audit --no-fund
+
+      # Bloquant avant tout commit : le fichier doit être lisible par le site et le projet doit compiler.
+      - name: Tests du taux
+        if: steps.fx.outputs.changed == 'true'
+        run: |
+          npx vitest run tests/lib/fx-bce.test.ts tests/lib/fx.test.ts
+          npx tsc --noEmit -p .
+
+      - name: Commit + push (avec reprise anti-course)
+        if: steps.fx.outputs.changed == 'true'
+        run: |
+          git add data/fx-bce.json
+          if git diff --staged --quiet; then
+            echo "Aucun fichier modifié." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          git config user.name "Cryptoreflex Bot"
+          git config user.email "bot@cryptoreflex.fr"
+          git commit -m "chore(fx): taux BCE ($(node -p "require('./data/fx-bce.json').date"))" \
+            -m "Taux de référence de la BCE relus par .github/workflows/fx-bce.yml" \
+            -m "" \
+            -m "Co-Authored-By: Cryptoreflex Bot <bot@cryptoreflex.fr>"
+          for i in 1 2 3; do
+            if git push origin HEAD:main; then
+              echo "Taux BCE publié (commit $(git rev-parse --short HEAD))." >> "$GITHUB_STEP_SUMMARY"
+              exit 0
+            fi
+            echo "Push rejeté, rebase puis nouvel essai ($i / 3)…"
+            git fetch origin main
+            git rebase origin/main || { git rebase --abort; break; }
+            sleep 2
+          done
+          echo "## ❌ Push du taux BCE impossible après 3 essais" >> "$GITHUB_STEP_SUMMARY"
+          exit 1
+
+      # always() : un échec des tests ou du push ne doit jamais faire sauter le ticket ni l'échec final.
+      - name: Tickets privés non configurés
+        if: always() && (steps.fx.outputs.alerte == 'true' || steps.fx.outcome == 'failure') && env.TICKETS_PRIVES != 'true'
+        run: |
+          echo "Secret SENTINELLE_TOKEN absent : aucun ticket (l'échec du job reste le signal)."
+
+      - name: Ticket « taux BCE » (dépôt privé)
+        if: always() && (steps.fx.outputs.alerte == 'true' || steps.fx.outcome == 'failure') && env.TICKETS_PRIVES == 'true'
+        uses: actions/github-script@v9
+        with:
+          github-token: ${{ secrets.SENTINELLE_TOKEN }}
+          script: |
+            const depot = { owner: "Qlpha-png", repo: "cryptoreflex-sentinelle" };
+            const fs = require("fs");
+            const date = new Date().toISOString().slice(0, 10);
+            const runUrl = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
+            let j = {};
+            try { j = JSON.parse(fs.readFileSync("data/fx-bce.json", "utf8")); } catch (e) { j = {}; }
+            const c = j.controle || {};
+            const corps = [
+              `Le robot du taux BCE signale un problème : taux en place du ${j.date || "?"} (statut du contrôle : ${c.statut || "?"}).`,
+              ``,
+              c.detail ? `**Détail** : ${c.detail}` : `**Détail** : source injoignable, structure changée ou publication trop ancienne (voir le résumé du run).`,
+              `**Run** : ${runUrl}`,
+              `**Date** : ${date}`,
+              ``,
+              `Le site garde le taux en place et affiche sa date. Une variation de 3 % ou plus n'est acceptée que si la publication suivante la confirme (moins de 1 % d'écart).`,
+              ``,
+              `_Ticket créé par \`.github/workflows/fx-bce.yml\` (lot Z4)._`,
+            ].join("\n");
+            const existants = await github.rest.issues.listForRepo({ ...depot, state: "open", labels: "fx-bce", per_page: 50 });
+            const deja = existants.data.find((i) => i.title.startsWith("[fx-bce]"));
+            if (deja) {
+              await github.rest.issues.createComment({ ...depot, issue_number: deja.number, body: corps });
+              return;
+            }
+            await github.rest.issues.create({ ...depot, title: `[fx-bce] taux de change BCE - ${date}`, body: corps, labels: ["bug", "fx-bce", "monitoring"] });
+
+      - name: Échec si alerte
+        if: always() && (steps.fx.outputs.alerte == 'true' || steps.fx.outcome == 'failure')
+        run: |
+          echo "Taux BCE : alerte (voir le résumé et le ticket)."
+          exit 1

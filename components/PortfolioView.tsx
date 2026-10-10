@@ -9,6 +9,7 @@ import {
   useState,
 } from "react";
 import Link from "next/link";
+import { mentionConversionBce } from "@/lib/fx-bce";
 import { cryptoPagePath } from "@/lib/crypto-page-slug";
 import { useSearchParams } from "next/navigation";
 import CryptoLogo from "@/components/ui/CryptoLogo";
@@ -378,6 +379,8 @@ function PortfolioView() {
               </span>
             </>
           )}
+          {" · "}
+          <span className="text-xs">cours en dollars {mentionConversionBce()}</span>
         </div>
         <div className="flex items-center gap-2 flex-wrap">
           <button

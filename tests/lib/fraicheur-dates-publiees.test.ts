@@ -218,8 +218,8 @@ describe("/api/prices (et routes sœurs) : updatedAt = heure du relevé servi", 
 describe("convertisseur : paires fiat→fiat datées, plus de « il y a 0 min »", () => {
   it("mention datée du taux journalier", () => {
     expect(fxRateLabel({ date: "2026-10-02", source: "bce" }, { from: "eur", to: "usd" })).toBe("taux de référence BCE du 2 octobre 2026");
-    expect(fxRateLabel({ date: "2026-10-02", source: "secours" }, { from: "eur", to: "gbp" })).toMatch(/^taux de secours \(référence BCE du 2 octobre 2026\)/);
-    expect(fxRateLabel({ date: "2026-10-08", source: "binance" }, { from: "usd", to: "eur" })).toBe("taux EUR/USDT de Binance du 8 octobre 2026");
+    // lot Z4 : plus de branche « Binance » ; repli = dernier taux BCE connu, daté
+    expect(fxRateLabel({ date: "2026-10-09", source: "secours" }, { from: "eur", to: "gbp" })).toBe("dernier taux de référence BCE connu, du 9 octobre 2026");
   });
   it("le code n'assigne plus l'heure de la réponse aux taux fiat et à l'identité", () => {
     const src = lire("lib/historical-prices.ts");

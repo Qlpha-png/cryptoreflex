@@ -31,7 +31,7 @@ export default async function OgImage({ params }: Props) {
   // partiel) — on rend une image générique cohérente avec le brand.
   const name = platform?.name ?? "Plateforme crypto";
   const tagline =
-    platform?.tagline ?? "Comparatifs et avis indépendants Cryptoreflex";
+    platform?.tagline ?? "Frais, sécurité et statut MiCA";
   const score = platform?.scoring.global ?? null;
   const micaCompliant = platform?.mica.micaCompliant ?? false;
 

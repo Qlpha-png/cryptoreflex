@@ -10,7 +10,25 @@
       "regulation": "Règlement (UE) 2023/1114 (MiCA) · période transitoire française terminée le 1er juillet 2026"
     },
     "disclaimer": "Données vérifiées le 02/10/2026 sur les registres officiels (ESMA au 29/09/2026, AMF). Information fournie à titre indicatif : consultez toujours le registre officiel avant toute décision. Cryptoreflex ne fournit pas de conseil en investissement.",
-    "schemaVersion": "1.0"
+    "schemaVersion": "1.0",
+    "amf": {
+      "source": "AMF, liste blanche des prestataires sur crypto-actifs (data.gouv.fr, Licence Ouverte 2.0)",
+      "url": "https://www.data.gouv.fr/datasets/653135cf052c9a87787413c2",
+      "ressource": "https://www.data.gouv.fr/fr/datasets/r/e03f8899-2499-4826-aaae-6842f520bdac",
+      "publication": "2026-10-08",
+      "lastModified": "Fri, 09 Oct 2026 08:05:01 GMT",
+      "controle": "2026-10-10",
+      "lignes": 1151,
+      "entitesActives": 195,
+      "autorisationsActives": 196,
+      "fichesRapprochees": 25,
+      "listeNoire": {
+        "lastModified": "Thu, 08 Oct 2026 06:30:01 GMT",
+        "lignes": 3484,
+        "inscriptionMax": "2026-09-28",
+        "controle": "2026-10-10"
+      }
+    }
   },
   "platforms": [
     {
@@ -69,7 +87,17 @@
       "publicSource": "https://www.coinbase.com/legal/licenses",
       "wikipediaSource": "https://en.wikipedia.org/wiki/Coinbase",
       "lastVerified": "2026-10-02",
-      "notes": "Agrément MiCA délivré le 20/06/2025 à Coinbase Luxembourg S.A. (CSSF, Luxembourg), passeporté vers la France."
+      "notes": "Agrément MiCA délivré le 20/06/2025 à Coinbase Luxembourg S.A. (CSSF, Luxembourg), passeporté vers la France.",
+      "amf": {
+        "noAmf": null,
+        "passeport": true,
+        "entite": "COINBASE LUXEMBOURG S.A.",
+        "nature": "Agrément MICA",
+        "statut": "Agréé",
+        "debut": "2025-06-20",
+        "rapprochement": "domaine",
+        "controle": "2026-10-10"
+      }
     },
     {
       "id": "binance",
@@ -156,7 +184,17 @@
       "publicSource": "https://www.bitpanda.com/en/legal",
       "wikipediaSource": "https://en.wikipedia.org/wiki/Bitpanda",
       "lastVerified": "2026-10-02",
-      "notes": "Agrément MiCA délivré le 09/04/2025 à Bitpanda GmbH (FMA, Autriche), passeporté vers la France."
+      "notes": "Agrément MiCA délivré le 09/04/2025 à Bitpanda GmbH (FMA, Autriche), passeporté vers la France.",
+      "amf": {
+        "noAmf": null,
+        "passeport": true,
+        "entite": "BITPANDA ASSET MANAGEMENT GMBH",
+        "nature": "Agrément MICA",
+        "statut": "Agréé",
+        "debut": "2025-02-21",
+        "rapprochement": "domaine",
+        "controle": "2026-10-10"
+      }
     },
     {
       "id": "kraken",
@@ -214,7 +252,17 @@
       "publicSource": "https://www.kraken.com/legal/disclosures",
       "wikipediaSource": "https://en.wikipedia.org/wiki/Kraken_(company)",
       "lastVerified": "2026-10-02",
-      "notes": "Agrément MiCA délivré le 25/06/2025 à Payward Europe Solutions Limited (Banque centrale d'Irlande), passeporté vers la France."
+      "notes": "Agrément MiCA délivré le 25/06/2025 à Payward Europe Solutions Limited (Banque centrale d'Irlande), passeporté vers la France.",
+      "amf": {
+        "noAmf": null,
+        "passeport": true,
+        "entite": "PAYWARD EUROPE SOLUTIONS LIMITED / KRAKEN DIGITAL ASSET EXCHANGE (“KRAKEN”)",
+        "nature": "Agrément MICA",
+        "statut": "Agréé",
+        "debut": "2025-06-25",
+        "rapprochement": "domaine",
+        "controle": "2026-10-10"
+      }
     },
     {
       "id": "bitget",
@@ -300,7 +348,17 @@
       "publicSource": "https://traderepublic.com/legal-documents",
       "wikipediaSource": "https://en.wikipedia.org/wiki/Trade_Republic",
       "lastVerified": "2026-10-02",
-      "notes": "Agrément MiCA délivré le 28/04/2025 à Trade Republic Bank GmbH (BaFin, Allemagne), passeporté vers la France."
+      "notes": "Agrément MiCA délivré le 28/04/2025 à Trade Republic Bank GmbH (BaFin, Allemagne), passeporté vers la France.",
+      "amf": {
+        "noAmf": null,
+        "passeport": true,
+        "entite": "TRADE REPUBLIC BANK GMBH",
+        "nature": "Agrément MICA",
+        "statut": "Agréé",
+        "debut": "2025-04-28",
+        "rapprochement": "domaine",
+        "controle": "2026-10-10"
+      }
     },
     {
       "id": "coinhouse",
@@ -328,7 +386,17 @@
       "publicSource": "https://www.coinhouse.com/fr/",
       "wikipediaSource": "https://fr.wikipedia.org/wiki/Coinhouse",
       "lastVerified": "2026-10-02",
-      "notes": "Agrément MiCA délivré le 07/05/2026 à COINHOUSE SAS (AMF, France, n° A2026-013)."
+      "notes": "Agrément MiCA délivré le 07/05/2026 à COINHOUSE SAS (AMF, France, n° A2026-013).",
+      "amf": {
+        "noAmf": "A2026-013",
+        "passeport": false,
+        "entite": "COINHOUSE SAS",
+        "nature": "Agrément MICA",
+        "statut": "Agréé",
+        "debut": "2026-05-07",
+        "rapprochement": "numero",
+        "controle": "2026-10-10"
+      }
     },
     {
       "id": "bitstack",
@@ -356,7 +424,17 @@
       "publicSource": "https://www.bitstack-app.com/conditions-generales-de-vente",
       "wikipediaSource": null,
       "lastVerified": "2026-10-02",
-      "notes": "Agrément MiCA délivré le 30/06/2025 à BITSTACK DIGITAL ASSETS SAS (AMF, France, n° A2025-003)."
+      "notes": "Agrément MiCA délivré le 30/06/2025 à BITSTACK DIGITAL ASSETS SAS (AMF, France, n° A2025-003).",
+      "amf": {
+        "noAmf": "A2025-003",
+        "passeport": false,
+        "entite": "BITSTACK DIGITAL ASSETS SAS",
+        "nature": "Agrément MICA",
+        "statut": "Agréé",
+        "debut": "2025-06-30",
+        "rapprochement": "numero",
+        "controle": "2026-10-10"
+      }
     },
     {
       "id": "swissborg",
@@ -384,7 +462,17 @@
       "publicSource": "https://swissborg.com/legal",
       "wikipediaSource": "https://en.wikipedia.org/wiki/SwissBorg",
       "lastVerified": "2026-10-02",
-      "notes": "Agrément MiCA délivré le 05/03/2026 à BLOCKNODES SAS (AMF, France, n° A2026-011)."
+      "notes": "Agrément MiCA délivré le 05/03/2026 à BLOCKNODES SAS (AMF, France, n° A2026-011).",
+      "amf": {
+        "noAmf": "A2026-011",
+        "passeport": false,
+        "entite": "BLOCKNODES SAS",
+        "nature": "Agrément MICA",
+        "statut": "Agréé",
+        "debut": "2026-03-05",
+        "rapprochement": "numero",
+        "controle": "2026-10-10"
+      }
     },
     {
       "id": "crypto-com",
@@ -441,7 +529,17 @@
       "publicSource": "https://crypto.com/document/regulatory-information",
       "wikipediaSource": "https://en.wikipedia.org/wiki/Crypto.com",
       "lastVerified": "2026-10-02",
-      "notes": "Agrément MiCA délivré le 27/01/2025 à Foris DAX MT Limited (MFSA, Malte), passeporté vers la France."
+      "notes": "Agrément MiCA délivré le 27/01/2025 à Foris DAX MT Limited (MFSA, Malte), passeporté vers la France.",
+      "amf": {
+        "noAmf": null,
+        "passeport": true,
+        "entite": "FORIS DAX MT LIMITED",
+        "nature": "Agrément MICA",
+        "statut": "Agréé",
+        "debut": "2025-02-12",
+        "rapprochement": "domaine",
+        "controle": "2026-10-10"
+      }
     },
     {
       "id": "bybit",
@@ -498,7 +596,17 @@
       "publicSource": "https://www.bybit.com/en/help-center/article/Bybit-EU-MiCAR-License",
       "wikipediaSource": "https://en.wikipedia.org/wiki/Bybit",
       "lastVerified": "2026-10-02",
-      "notes": "Agrément MiCA délivré le 28/05/2025 à Bybit EU GmbH (FMA, Autriche), passeporté vers la France."
+      "notes": "Agrément MiCA délivré le 28/05/2025 à Bybit EU GmbH (FMA, Autriche), passeporté vers la France.",
+      "amf": {
+        "noAmf": null,
+        "passeport": true,
+        "entite": "BYBIT EU GMBH",
+        "nature": "Agrément MICA",
+        "statut": "Agréé",
+        "debut": "2025-05-28",
+        "rapprochement": "nom",
+        "controle": "2026-10-10"
+      }
     },
     {
       "id": "okx",
@@ -556,7 +664,17 @@
       "publicSource": "https://www.okx.com/eu/help/okcoin-europe-ltd-licenses",
       "wikipediaSource": "https://en.wikipedia.org/wiki/OKX",
       "lastVerified": "2026-10-02",
-      "notes": "Agrément MiCA délivré le 27/01/2025 à OKX Europe Limited (MFSA, Malte), passeporté vers la France."
+      "notes": "Agrément MiCA délivré le 27/01/2025 à OKX Europe Limited (MFSA, Malte), passeporté vers la France.",
+      "amf": {
+        "noAmf": null,
+        "passeport": true,
+        "entite": "OKCOIN EUROPE LIMITED",
+        "nature": "Agrément MICA",
+        "statut": "Agréé",
+        "debut": "2025-02-15",
+        "rapprochement": "domaine",
+        "controle": "2026-10-10"
+      }
     },
     {
       "id": "mexc",
@@ -642,7 +760,17 @@
       "publicSource": "https://www.kucoin.com/about-us",
       "wikipediaSource": "https://en.wikipedia.org/wiki/KuCoin",
       "lastVerified": "2026-10-02",
-      "notes": "Agrément MiCA délivré le 27/11/2025 à KuCoin EU Exchange GmbH (FMA, Autriche), passeporté vers la France."
+      "notes": "Agrément MiCA délivré le 27/11/2025 à KuCoin EU Exchange GmbH (FMA, Autriche), passeporté vers la France.",
+      "amf": {
+        "noAmf": null,
+        "passeport": true,
+        "entite": "KUCOIN EU EXCHANGE GMBH",
+        "nature": "Agrément MICA",
+        "statut": "Agréé",
+        "debut": "2025-11-27",
+        "rapprochement": "nom",
+        "controle": "2026-10-10"
+      }
     },
     {
       "id": "gate-io",
@@ -699,7 +827,17 @@
       "publicSource": "https://www.gate.io/about",
       "wikipediaSource": "https://en.wikipedia.org/wiki/Gate.io",
       "lastVerified": "2026-10-02",
-      "notes": "Agrément MiCA délivré le 29/09/2025 à Gate Technology Limited (MFSA, Malte), passeporté vers la France."
+      "notes": "Agrément MiCA délivré le 29/09/2025 à Gate Technology Limited (MFSA, Malte), passeporté vers la France.",
+      "amf": {
+        "noAmf": null,
+        "passeport": true,
+        "entite": "GATE TECHNOLOGY LIMITED",
+        "nature": "Agrément MICA",
+        "statut": "Agréé",
+        "debut": "2025-09-30",
+        "rapprochement": "domaine",
+        "controle": "2026-10-10"
+      }
     },
     {
       "id": "phemex",
@@ -844,7 +982,17 @@
       "publicSource": "https://www.gemini.com/legal",
       "wikipediaSource": "https://en.wikipedia.org/wiki/Gemini_(company)",
       "lastVerified": "2026-10-02",
-      "notes": "Agrément MiCA maltais toujours inscrit au registre de l'ESMA, mais Gemini ne sert plus les clients français depuis avril 2026."
+      "notes": "Agrément MiCA maltais toujours inscrit au registre de l'ESMA, mais Gemini ne sert plus les clients français depuis avril 2026.",
+      "amf": {
+        "noAmf": null,
+        "passeport": true,
+        "entite": "GEMINI INTERGALACTIC EU LTD",
+        "nature": "Agrément MICA",
+        "statut": "Agréé",
+        "debut": "2025-08-21",
+        "rapprochement": "domaine",
+        "controle": "2026-10-10"
+      }
     },
     {
       "id": "bitfinex",
@@ -994,7 +1142,17 @@
       "publicSource": "https://n26.com/en-eu/crypto",
       "wikipediaSource": "https://en.wikipedia.org/wiki/N26_(bank)",
       "lastVerified": "2026-10-02",
-      "notes": "Agrément MiCA délivré le 14/05/2025 à N26 Bank SE (BaFin, Allemagne), passeporté vers la France."
+      "notes": "Agrément MiCA délivré le 14/05/2025 à N26 Bank SE (BaFin, Allemagne), passeporté vers la France.",
+      "amf": {
+        "noAmf": null,
+        "passeport": true,
+        "entite": "N26 BANK SE",
+        "nature": "Agrément MICA",
+        "statut": "Agréé",
+        "debut": "2025-07-08",
+        "rapprochement": "domaine",
+        "controle": "2026-10-10"
+      }
     },
     {
       "id": "revolut",
@@ -1051,7 +1209,17 @@
       "publicSource": "https://www.revolut.com/legal/terms-cryptocurrency/",
       "wikipediaSource": "https://en.wikipedia.org/wiki/Revolut",
       "lastVerified": "2026-10-02",
-      "notes": "Agrément MiCA délivré le 20/10/2025 à Revolut Digital Assets (Europe) Ltd (CySEC, Chypre), passeporté vers la France."
+      "notes": "Agrément MiCA délivré le 20/10/2025 à Revolut Digital Assets (Europe) Ltd (CySEC, Chypre), passeporté vers la France.",
+      "amf": {
+        "noAmf": null,
+        "passeport": true,
+        "entite": "REVOLUT DIGITAL ASSETS EUROPE LTD",
+        "nature": "Agrément MICA",
+        "statut": "Agréé",
+        "debut": "2025-10-21",
+        "rapprochement": "domaine",
+        "controle": "2026-10-10"
+      }
     },
     {
       "id": "etoro",
@@ -1108,7 +1276,17 @@
       "publicSource": "https://www.etoro.com/customer-service/regulation-license/",
       "wikipediaSource": "https://en.wikipedia.org/wiki/Etoro",
       "lastVerified": "2026-10-02",
-      "notes": "Agrément MiCA délivré le 16/01/2025 à eToro (Europe) Ltd (CySEC, Chypre), passeporté vers la France."
+      "notes": "Agrément MiCA délivré le 16/01/2025 à eToro (Europe) Ltd (CySEC, Chypre), passeporté vers la France.",
+      "amf": {
+        "noAmf": null,
+        "passeport": true,
+        "entite": "ETORO (Europe) LTD",
+        "nature": "Agrément MICA",
+        "statut": "Agréé",
+        "debut": "2025-03-22",
+        "rapprochement": "domaine",
+        "controle": "2026-10-10"
+      }
     },
     {
       "id": "nexo",
@@ -1194,7 +1372,17 @@
       "publicSource": "https://youngplatform.com/it/about-us/",
       "wikipediaSource": null,
       "lastVerified": "2026-10-02",
-      "notes": "Agrément MiCA délivré le 30/06/2026 à YOUNG PLATFORM S.P.A. (CONSOB, Italie), passeporté vers la France."
+      "notes": "Agrément MiCA délivré le 30/06/2026 à YOUNG PLATFORM S.P.A. (CONSOB, Italie), passeporté vers la France.",
+      "amf": {
+        "noAmf": null,
+        "passeport": true,
+        "entite": "YOUNG PLATFORM S.P.A.",
+        "nature": "Agrément MICA",
+        "statut": "Agréé",
+        "debut": "2026-06-30",
+        "rapprochement": "domaine",
+        "controle": "2026-10-10"
+      }
     },
     {
       "id": "paymium",
@@ -1221,7 +1409,17 @@
       "publicSource": "https://paymium.com/page/legal",
       "wikipediaSource": "https://fr.wikipedia.org/wiki/Paymium",
       "lastVerified": "2026-10-02",
-      "notes": "Agrément MiCA délivré le 22/06/2026 à PAYMIUM SAS (AMF, France, n° A2026-018)."
+      "notes": "Agrément MiCA délivré le 22/06/2026 à PAYMIUM SAS (AMF, France, n° A2026-018).",
+      "amf": {
+        "noAmf": "A2026-018",
+        "passeport": false,
+        "entite": "PAYMIUM SAS",
+        "nature": "Agrément MICA",
+        "statut": "Agréé",
+        "debut": "2026-06-22",
+        "rapprochement": "numero",
+        "controle": "2026-10-10"
+      }
     },
     {
       "id": "stackinsat",
@@ -1277,7 +1475,17 @@
       "publicSource": "https://www.feel-mining.com/mentions-legales",
       "wikipediaSource": null,
       "lastVerified": "2026-10-02",
-      "notes": "Agrément MiCA délivré le 24/07/2026 à BLOCKCHAIN PROCESS SECURITY (B.P.S.) SAS (AMF, France, n° A2026-029)."
+      "notes": "Agrément MiCA délivré le 24/07/2026 à BLOCKCHAIN PROCESS SECURITY (B.P.S.) SAS (AMF, France, n° A2026-029).",
+      "amf": {
+        "noAmf": "A2026-029",
+        "passeport": false,
+        "entite": "BLOCKCHAIN PROCESS SECURITY (B.P.S.) SAS",
+        "nature": "Agrément MICA",
+        "statut": "Agréé",
+        "debut": "2026-07-24",
+        "rapprochement": "numero",
+        "controle": "2026-10-10"
+      }
     },
     {
       "id": "deblock",
@@ -1304,7 +1512,17 @@
       "publicSource": "https://deblock.com/legal",
       "wikipediaSource": null,
       "lastVerified": "2026-10-02",
-      "notes": "Agrément MiCA délivré le 23/05/2025 à DEBLOCK SAS (AMF, France, n° A2025-001)."
+      "notes": "Agrément MiCA délivré le 23/05/2025 à DEBLOCK SAS (AMF, France, n° A2025-001).",
+      "amf": {
+        "noAmf": "A2025-001",
+        "passeport": false,
+        "entite": "DEBLOCK SAS",
+        "nature": "Agrément MICA",
+        "statut": "Agréé",
+        "debut": "2025-05-23",
+        "rapprochement": "numero",
+        "controle": "2026-10-10"
+      }
     },
     {
       "id": "lydia-crypto",
@@ -1586,7 +1804,17 @@
       "publicSource": "https://www.blockchain.com/legal",
       "wikipediaSource": "https://en.wikipedia.org/wiki/Blockchain.com",
       "lastVerified": "2026-10-02",
-      "notes": "Agrément MiCA délivré le 22/10/2025 à Blockchain.com Operations (Malta) Limited (MFSA, Malte), passeporté vers la France."
+      "notes": "Agrément MiCA délivré le 22/10/2025 à Blockchain.com Operations (Malta) Limited (MFSA, Malte), passeporté vers la France.",
+      "amf": {
+        "noAmf": null,
+        "passeport": true,
+        "entite": "BLOCKCHAIN.COM OPERATIONS (MALTA) LIMITED",
+        "nature": "Agrément MICA",
+        "statut": "Agréé",
+        "debut": "2025-12-01",
+        "rapprochement": "domaine",
+        "controle": "2026-10-10"
+      }
     },
     {
       "id": "bitvavo",
@@ -1642,7 +1870,17 @@
       "publicSource": "https://bitvavo.com/en/legal",
       "wikipediaSource": "https://en.wikipedia.org/wiki/Bitvavo",
       "lastVerified": "2026-10-02",
-      "notes": "Agrément MiCA délivré le 26/06/2025 à Bitvavo B.V. (AFM, Pays-Bas), passeporté vers la France."
+      "notes": "Agrément MiCA délivré le 26/06/2025 à Bitvavo B.V. (AFM, Pays-Bas), passeporté vers la France.",
+      "amf": {
+        "noAmf": null,
+        "passeport": true,
+        "entite": "BITVAVO B.V.",
+        "nature": "Agrément MICA",
+        "statut": "Agréé",
+        "debut": "2025-07-14",
+        "rapprochement": "domaine",
+        "controle": "2026-10-10"
+      }
     },
     {
       "id": "bit2me",
@@ -1698,7 +1936,17 @@
       "publicSource": "https://bit2me.com/legal",
       "wikipediaSource": "https://es.wikipedia.org/wiki/Bit2Me",
       "lastVerified": "2026-10-02",
-      "notes": "Agrément MiCA délivré le 31/10/2025 à Bitcoinforme S.L. (CNMV, Espagne), passeporté vers la France."
+      "notes": "Agrément MiCA délivré le 31/10/2025 à Bitcoinforme S.L. (CNMV, Espagne), passeporté vers la France.",
+      "amf": {
+        "noAmf": null,
+        "passeport": true,
+        "entite": "BITCOINFORME, S.L.",
+        "nature": "Agrément MICA",
+        "statut": "Agréé",
+        "debut": "2025-10-31",
+        "rapprochement": "domaine",
+        "controle": "2026-10-10"
+      }
     },
     {
       "id": "wirex",
@@ -1810,7 +2058,17 @@
       "publicSource": "https://robinhood.com/eu/en/about/disclosures/",
       "wikipediaSource": "https://en.wikipedia.org/wiki/Robinhood_Markets",
       "lastVerified": "2026-10-02",
-      "notes": "Agrément MiCA délivré le 29/05/2025 à Robinhood Europe UAB (Banque de Lituanie), passeporté vers la France."
+      "notes": "Agrément MiCA délivré le 29/05/2025 à Robinhood Europe UAB (Banque de Lituanie), passeporté vers la France.",
+      "amf": {
+        "noAmf": null,
+        "passeport": true,
+        "entite": "ROBINHOOD EUROPE UAB",
+        "nature": "Agrément MICA",
+        "statut": "Agréé",
+        "debut": "2025-06-16",
+        "rapprochement": "domaine",
+        "controle": "2026-10-10"
+      }
     },
     {
       "id": "bitstamp",
@@ -1866,7 +2124,17 @@
       "publicSource": "https://www.bitstamp.net/legal",
       "wikipediaSource": "https://en.wikipedia.org/wiki/Bitstamp",
       "lastVerified": "2026-10-02",
-      "notes": "Agrément MiCA délivré le 15/05/2025 à Bitstamp Europe S.A. (CSSF, Luxembourg), passeporté vers la France."
+      "notes": "Agrément MiCA délivré le 15/05/2025 à Bitstamp Europe S.A. (CSSF, Luxembourg), passeporté vers la France.",
+      "amf": {
+        "noAmf": null,
+        "passeport": true,
+        "entite": "BITSTAMP EUROPE S.A.",
+        "nature": "Agrément MICA",
+        "statut": "Agréé",
+        "debut": "2025-05-15",
+        "rapprochement": "domaine",
+        "controle": "2026-10-10"
+      }
     },
     {
       "id": "ftx",

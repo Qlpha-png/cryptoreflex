@@ -22,6 +22,15 @@ import { NextResponse } from "next/server";
 import psanData from "@/data/psan-registry.json";
 import { BRAND } from "@/lib/brand";
 import { PUBLIC_API_CACHE_CONTROL, psanLastUpdated } from "@/lib/public-data-dates";
+import registryJson from "@/data/psan-registry.json";
+import micaAuto from "@/data/veille/mica-auto.json";
+
+const registryMeta = (registryJson as { _meta: { amf?: { publication?: string } } })._meta;
+/** Date du dernier contrôle automatique du registre de l'ESMA (data/veille/mica-auto.json), null si absent. */
+function controleMicaPlusRecent(): string | null {
+  const c = (micaAuto as { controle?: unknown }).controle;
+  return typeof c === "string" ? c : null;
+}
 
 export const dynamic = "force-static";
 export const revalidate = 86_400;
@@ -29,6 +38,9 @@ export const revalidate = 86_400;
 interface PsanPayload {
   _meta: {
     source: string;
+    /** lot Z4 : date de chaque source (contrôle du registre ESMA, publication de la liste blanche AMF) */
+    sourcesDates: { esma: string | null; amf: string | null };
+    sourcesAttribution: string;
     schemaVersion: string;
     license: string;
     licenseUrl: string;
@@ -55,9 +67,13 @@ function buildPayload(): PsanPayload {
 
   return {
     _meta: {
-      source: "Cryptoreflex (consolidation registres AMF / ESMA / BaFin / CNMV / MFSA / CSSF / Bank of Lithuania / Central Bank of Ireland)",
+      // lot Z4 : sources réellement lues (ESMA, AMF), date de chacune ; aucun aval des autorités suggéré
+      source: "Registre intérimaire MiCA de l'ESMA (CASPS.csv) et liste blanche de l'AMF (data.gouv.fr), mis en forme par Cryptoreflex",
+      sourcesDates: { esma: controleMicaPlusRecent(), amf: registryMeta.amf?.publication ?? null },
+      sourcesAttribution: "Sources : ESMA (registre MiCA) et AMF (liste blanche, Licence Ouverte 2.0).",
       schemaVersion: "1.0",
-      license: "CC-BY-4.0",
+      // reprise Z4 : la CC-BY couvre la mise en forme ; les données officielles restent sous les conditions de leur producteur
+      license: "CC-BY-4.0 pour la mise en forme Cryptoreflex ; données ESMA (source à citer) et AMF (Licence Ouverte 2.0 : producteur et date) sous leurs propres conditions",
       licenseUrl: "https://creativecommons.org/licenses/by/4.0/deed.fr",
       attribution:
         "Donnees fournies par Cryptoreflex (https://cryptoreflex.fr) sous licence CC-BY 4.0. Mention obligatoire en cas de reutilisation.",

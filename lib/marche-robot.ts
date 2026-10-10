@@ -5,7 +5,7 @@
  * Écrivain UNIQUE des cours du top 100, de l'instantané de secours et des métriques globales :
  *  1. CoinMarketCap `listings/latest?limit=100&convert=USD` (1 crédit ; Basic = une seule devise par appel) ;
  *     CoinGecko /coins/markets SEULEMENT si CoinMarketCap échoue (clé absente, garde-fou du budget, panne) ;
- *  2. l'euro : taux de lib/fx.ts (BCE, sinon secours daté), écrit avec le relevé (« converti au taux du JJ/MM ») ;
+ *  2. l'euro : taux BCE de data/fx-bce.json (robot R6, lib/fx-bce.ts), écrit avec le relevé (« converti au taux BCE du JJ/MM ») ;
  *  3. métriques globales CMC (1 crédit) au premier passage de chaque heure : UNE capitalisation totale et UNE dominance
  *     pour tout le site (accueil, /marche, bandeau) ;
  *  4. une seule commande MSET (bandeau + instantané de secours + global) puis la trace « dernier passage + résultat ».

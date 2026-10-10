@@ -22,6 +22,7 @@ import { getTopMarket } from "@/lib/price-source";
 import { createRateLimiter } from "@/lib/rate-limit";
 import { getClientIp } from "@/lib/ip";
 import { fiatPerUsd } from "@/lib/fx";
+import { FX_BCE } from "@/lib/fx-bce";
 import { pricesUpdatedAt } from "@/lib/prices-updated-at";
 
 export const revalidate = 60;
@@ -106,7 +107,8 @@ async function _fetchPortfolioPrices(
   }
 
   const sparklineFlag = withSparkline ? "true" : "false";
-  const url = `${COINGECKO_BASE}/coins/markets?vs_currency=eur&ids=${ids.join(
+  // lot Z4 : prix en DOLLARS convertis au taux BCE (même taux que la source principale ; avant : euros au taux propre de CoinGecko)
+  const url = `${COINGECKO_BASE}/coins/markets?vs_currency=usd&ids=${ids.join(
     ","
   )}&order=market_cap_desc&per_page=${ids.length}&page=1&sparkline=${sparklineFlag}&price_change_percentage=24h`;
 
@@ -122,7 +124,7 @@ async function _fetchPortfolioPrices(
     const json = (await res.json()) as CoinGeckoMarket[];
     return json.map((c) => ({
       id: c.id,
-      priceEur: c.current_price ?? 0,
+      priceEur: (c.current_price ?? 0) * FX_BCE.eur,
       change24hPct: c.price_change_percentage_24h ?? 0,
       symbol: c.symbol?.toUpperCase(),
       name: c.name,
@@ -250,7 +252,7 @@ export async function GET(request: Request) {
 
   // 08/10/2026 (lot fraîcheur A) : heure RÉELLE du plus ancien relevé servi, plus l'heure de la réponse
   return NextResponse.json(
-    { prices, updatedAt: pricesUpdatedAt(prices) },
+    { prices, updatedAt: pricesUpdatedAt(prices), fx: { date: FX_BCE.date, source: "BCE" } },
     {
       headers: {
         "Cache-Control": "public, s-maxage=60, stale-while-revalidate=120",

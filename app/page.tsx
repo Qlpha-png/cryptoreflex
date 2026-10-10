@@ -92,7 +92,7 @@ async function HomePage() {
             ? { mcapUsd: globalMetrics.totalMarketCapUsd, mcapChange24h: globalMetrics.marketCapChange24h, btcDominance: globalMetrics.btcDominance }
             : null
         }
-        fearGreed={fearGreed ? { value: fearGreed.value, label: fearGreed.classification, source: fearGreed.source ?? null } : null}
+        fearGreed={fearGreed ? { value: fearGreed.value, label: fearGreed.classification, source: fearGreed.source ?? null, date: fearGreed.timestamp } : null}
         priceSource={priceSource}
       />
       {/* Heure RÉELLE du relevé servi (Data Cache), pas l'heure du rendu : un dernier relevé ancien n'est pas « en direct ». */}

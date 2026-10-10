@@ -26,6 +26,7 @@
 export type EventCategory =
   | "Halving"
   | "FOMC"
+  | "BCE"
   | "ETF"
   | "Listing"
   | "Update"
@@ -37,6 +38,7 @@ export type EventCategory =
 export const EVENT_CATEGORIES: readonly EventCategory[] = [
   "Halving",
   "FOMC",
+  "BCE",
   "ETF",
   "Listing",
   "Update",
@@ -49,6 +51,7 @@ export const EVENT_CATEGORIES: readonly EventCategory[] = [
 export const CATEGORY_DESCRIPTION: Record<EventCategory, string> = {
   Halving: "Réduction de l'émission monétaire d'un protocole PoW (Bitcoin, Litecoin…).",
   FOMC: "Réunion du Federal Open Market Committee — décision de taux de la Fed.",
+  BCE: "Réunion de politique monétaire du Conseil des gouverneurs de la BCE — décisions sur les taux de la zone euro.",
   ETF: "Décision d'autorisation d'un ETF spot (SEC, AMF…).",
   Listing: "Cotation d'un nouveau token sur une plateforme majeure.",
   Update: "Mise à jour réseau (mainnet, soft fork, EIP).",
@@ -64,6 +67,7 @@ export const CATEGORY_DESCRIPTION: Record<EventCategory, string> = {
 export const CATEGORY_BADGE: Record<EventCategory, string> = {
   Halving: "bg-warning/15 text-amber-200 ring-warning/30",
   FOMC: "bg-info/15 text-sky-200 ring-info/30",
+  BCE: "bg-blue-500/15 text-blue-200 ring-blue-500/30",
   ETF: "bg-emerald-500/15 text-emerald-200 ring-emerald-500/30",
   Listing: "bg-fuchsia-500/15 text-fuchsia-200 ring-fuchsia-500/30",
   Update: "bg-indigo-500/15 text-indigo-200 ring-indigo-500/30",

@@ -203,7 +203,7 @@ export const CLUSTERS: Cluster[] = [
       { path: "/outils/calculateur-roi-crypto", label: "Calculateur ROI", weight: 2 },
       { path: "/outils/simulateur-dca", label: "Simulateur DCA", weight: 2 },
       { path: "/outils/convertisseur", label: "Convertisseur temps réel", weight: 2 },
-      { path: "/halving-bitcoin", label: "Compte à rebours halving Bitcoin", weight: 1 },
+      { path: "/halving-bitcoin", label: "Date estimée du halving Bitcoin", weight: 1 },
     ],
     crossLinks: ["/cryptos", "/staking"],
   },

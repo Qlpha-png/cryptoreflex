@@ -10,6 +10,7 @@
  *  - Coût maintenance acceptable : ~15-25 events / trimestre à actualiser.
  */
 import eventsData from "@/data/events.json";
+import { PROCHAIN_HALVING, jourParis } from "@/lib/calendrier-officiel";
 
 /* -------------------------------------------------------------------------- */
 /* Types                                                                      */
@@ -51,7 +52,11 @@ interface EventsFile {
   events: CryptoEvent[];
 }
 
-const EVENTS = eventsData as EventsFile;
+/* Lot Z4 (10/10/2026) : halving Bitcoin à venir injecté depuis data/calendrier-officiel.json (robot R7). */
+const HALVING_BTC: CryptoEvent[] = PROCHAIN_HALVING
+  ? [{ id: "btc-halving-2028", title: "Halving Bitcoin (BTC)", category: "halving", date: jourParis(PROCHAIN_HALVING.estimation), isApproximate: true, description: `5e halving Bitcoin au bloc 1 050 000 — récompense par bloc 3,125 → 1,5625 BTC. Estimation ${PROCHAIN_HALVING.resume} (mempool.space).`, impact: "high", links: [{ label: "Page halving : estimation et méthode", url: "/halving-bitcoin" }] }]
+  : [];
+const EVENTS: EventsFile = { ...(eventsData as EventsFile), events: [...(eventsData as EventsFile).events, ...HALVING_BTC] };
 
 /** Métadonnée du fichier (date du dernier refresh manuel). */
 export const EVENTS_META = EVENTS._meta;

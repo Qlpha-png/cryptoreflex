@@ -17,6 +17,7 @@
  *           localStorage isolé navigateur — aucune donnée envoyée serveur.
  */
 
+import { mentionConversionBce } from "@/lib/fx-bce";
 import {
   useCallback,
   useEffect,
@@ -352,6 +353,7 @@ export default function PortfolioTracker() {
             </div>
           </div>
 
+          <p className="mb-2 text-xs text-muted">Valeurs en euros : cours en dollars {mentionConversionBce()}.</p>
           {/* Tableau */}
           <div className="rounded-2xl border border-border overflow-hidden">
             <div className="overflow-x-auto">

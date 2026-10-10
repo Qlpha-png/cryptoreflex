@@ -60,7 +60,8 @@ export default function CalendarPageClient({
   const filtered = useMemo(() => applyFilters(events, filters), [events, filters]);
 
   return (
-    <div className="grid gap-6 lg:grid-cols-[280px_1fr]">
+    // grid-cols-[minmax(0,1fr)] : en mobile, la colonne unique ne s'élargit jamais au contenu (titre long → débordement à 390 px)
+    <div className="grid grid-cols-[minmax(0,1fr)] gap-6 lg:grid-cols-[280px_1fr]">
       {/* Sidebar filtres — sticky sur desktop */}
       <aside className="lg:sticky lg:top-24 lg:self-start">
         <EventFilters

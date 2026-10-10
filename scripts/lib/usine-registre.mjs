@@ -178,7 +178,7 @@ export const POSTES = [
   },
   {
     id: "refresh-fomc",
-    nom: "Calendrier FOMC",
+    nom: "Calendrier officiel (Fed, BCE, halving)",
     atelier: "actualiser",
     genre: "robot",
     moteur: "github",
@@ -188,8 +188,23 @@ export const POSTES = [
     cadence: "le lundi",
     declencheur: "Gardien (horloge Vercel) ; filet GitHub",
     ageMaxH: SEMAINE_H,
-    produit: "réunions de la Fed dans l'agenda (commit seulement si elles changent)",
-    description: "Relit le calendrier officiel de la Fed ; rouge si la page change de structure.",
+    produit: "réunions de la Fed (bloc FOMC de lib/events-seed.ts), décisions de la BCE et prochain halving en fourchette (data/calendrier-officiel.json)",
+    description: "Relit les calendriers officiels de la Fed et de la BCE et la hauteur de bloc (mempool.space, recoupée avec blockstream.info) ; rouge si une page change de structure ou si un contrôle échoue (anciennes données gardées).",
+  },
+  {
+    id: "fx-bce",
+    nom: "Taux de change BCE",
+    atelier: "actualiser",
+    genre: "robot",
+    moteur: "github",
+    workflow: "fx-bce.yml",
+    gardien: ["fx-bce"],
+    horaire: "35 15 * * 1-5",
+    cadence: "chaque jour ouvré à 15 h 35 UTC",
+    declencheur: "Gardien (horloge Vercel) ; filet GitHub",
+    ageMaxH: 80,
+    produit: "data/fx-bce.json : taux de référence de la BCE (commit seulement si la valeur change), lu partout où un prix en dollars est converti en euros",
+    description: "Lot Z4 (R6) : rouge si la BCE est injoignable ou change de format ; publication de plus de 4 jours ouvrés ou variation de 3 % ou plus = valeurs précédentes gardées et ticket privé.",
   },
   {
     id: "weekly-events",
@@ -351,7 +366,7 @@ export const POSTES = [
     ageMaxH: 30,
     /* un passage « en échec » de ce robot signifie : une source officielle a changé (ticket privé à relire), pas une panne */
     echecSignifie: "écart détecté sur une source officielle (ticket privé à relire)",
-    produit: "Légifrance, BOFiP, impots.gouv, registre MiCA de l'ESMA, grilles de frais relus ; date du contrôle MiCA publiée",
+    produit: "Légifrance, BOFiP, impots.gouv, registre MiCA de l'ESMA, listes blanche et noire de l'AMF (lot Z4), grilles de frais relus ; date du contrôle MiCA et de la liste blanche AMF publiées",
     description: "Un changement de source = ticket privé ; une nouvelle référence n'est acceptée qu'après relecture humaine.",
   },
   {

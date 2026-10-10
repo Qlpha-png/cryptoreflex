@@ -93,7 +93,7 @@ export default function EventCard({ event, hideDate = false, compact = false }: 
 
           {/* Source */}
           <div className="mt-3 flex items-center gap-2 text-caption text-muted">
-            <span>via</span>
+            <span>Source : </span>
             <a
               href={event.sourceUrl}
               target="_blank"

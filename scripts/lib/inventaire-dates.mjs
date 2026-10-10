@@ -13,6 +13,7 @@ import path from "node:path";
 export const SEUILS = {
   frais: 90, mica: 14, securite: 14, support: 90, rendements: 14, evenements: 30, airdrops: 14, editorial: 180,
   roadmaps: 180, decentralisation: 120, wallets: 90, "historique-prix": 35, fiscalite: 30, notes: 30, "tarifs-partenaires": 90,
+  change: 6, amf: 7, officiel: 9,
 };
 
 /**

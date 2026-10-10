@@ -18,6 +18,10 @@ const INTERDITS: RegExp[] = [
   /\b(vérifiée?s?|rédigée?s?) manuellement\b/i, // « plus-values calculées manuellement » (fiche d'un tableur) reste permis
   /\boutil (exclusif|signature|avancé)\b/i,
   /\banalyse indépendante cryptoreflex\b/i,
+  // 10/10/2026 : titre des avis et image de partage
+  /\banalyse complète et indépendante\b/i,
+  /\bavis indépendants cryptoreflex\b/i,
+  /\bverdict objectif\b/i,
 ];
 /* Fichiers où ces mots décrivent le passé (journal des corrections) ou des valeurs retirées : pas affichés comme promesse. */
 const EXCLUS = new Set(["data/corrections.json"]);

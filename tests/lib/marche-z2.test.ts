@@ -7,6 +7,7 @@
  *  4. Budget : plan des robots ≤ 250 crédits/jour.
  */
 import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
+import { FX_BCE } from "@/lib/fx-bce";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import cmcMapJson from "@/data/cmc-id-map.json";
@@ -86,7 +87,6 @@ describe("1. robot R1 : écrivain unique", () => {
       appels.push({ url, init });
       if (url.startsWith(KV_TEST_URL)) return json({ result: "OK" });
       if (url.includes("/v1/key/info")) return json({}, 404);
-      if (url.includes("frankfurter")) return json({ date: "2026-10-08", rates: { EUR: 0.86, GBP: 0.75, CHF: 0.8 } });
       return handler(url);
     }) as unknown as typeof fetch;
     return appels;
@@ -103,7 +103,8 @@ describe("1. robot R1 : écrivain unique", () => {
     const { releverMarche } = await import("@/lib/marche-robot");
     const r = await releverMarche({ now: () => new Date("2026-10-08T12:00:30Z") });
     expect(r).toMatchObject({ ok: true, source: "coinmarketcap", count: 100, global: true });
-    expect(r.fx).toEqual({ eurPerUsd: 0.86, date: "2026-10-08", source: "bce" });
+    // lot Z4 : le taux vient de data/fx-bce.json (robot R6), plus d'appel Frankfurter
+    expect(r.fx).toEqual({ eurPerUsd: FX_BCE.eur, date: FX_BCE.date, source: "bce" });
     // le compteur /v1/key/info (0 crédit, garde-fou) n'est pas un appel facturé
     const cmc = appels.filter((a) => a.url.includes("pro-api.coinmarketcap.com") && !a.url.includes("/v1/key/info"));
     expect(cmc.map((a) => a.url.replace(/\?.*/, ""))).toEqual([
@@ -118,7 +119,7 @@ describe("1. robot R1 : écrivain unique", () => {
     expect(m[0][0]).toBe("MSET");
     expect(m[0].filter((_, i) => i % 2 === 1)).toEqual(["cg-ticker-prices:v1", "price-source:top-snapshot", "marche:global:v1"]);
     const ticker = JSON.parse(m[0][2]);
-    expect(ticker).toMatchObject({ source: "coinmarketcap", fetchedAt: "2026-10-08T12:00:30.000Z", fx: { eurPerUsd: 0.86 } });
+    expect(ticker).toMatchObject({ source: "coinmarketcap", fetchedAt: "2026-10-08T12:00:30.000Z", fx: { eurPerUsd: FX_BCE.eur } });
     expect(ticker.prices.bitcoin).toMatchObject({ price: 60_000, rank: 1, change1h: 0.1, change7d: 2 });
     const snap = JSON.parse(m[0][4]);
     expect(snap.updatedAt).toBe(ticker.fetchedAt);

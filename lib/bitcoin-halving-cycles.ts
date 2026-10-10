@@ -6,6 +6,7 @@
  * historiques sont vérifiables on-chain. Les projections futures sont des
  * SCÉNARIOS — affichage explicite "estimation, pas un conseil".
  */
+import { PROCHAIN_HALVING, jourParis } from "@/lib/calendrier-officiel";
 
 export interface HalvingEvent {
   /** Numéro du halving (1 = 2012, 2 = 2016, 3 = 2020, 4 = 2024, 5 = 2028...). */
@@ -63,10 +64,12 @@ export const HALVING_HISTORY: HalvingEvent[] = [
   },
 ];
 
+/* Lot Z4 (10/10/2026) : le 5e halving vient de data/calendrier-officiel.json (robot R7 : estimation centrale, fourchette
+   affichée à côté) ; 2032 et 2036 restent des projections à 4 ans, affichées à l'année seulement. */
 export const FUTURE_HALVINGS: HalvingEvent[] = [
   {
     index: 5,
-    dateIso: "2028-04-15",
+    dateIso: PROCHAIN_HALVING ? jourParis(PROCHAIN_HALVING.estimation) : "2028-04-01",
     rewardAfter: 1.5625,
     priceAtEur: null,
     athNextCycleEur: null,

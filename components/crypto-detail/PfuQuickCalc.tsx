@@ -4,7 +4,7 @@ import { avecTypoSync } from "@/components/ui/Typo";
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { Calculator, ArrowRight, Info } from "lucide-react";
-import { FX_FALLBACK } from "@/lib/fx-fallback";
+import { FX_BCE, mentionConversionBce } from "@/lib/fx-bce";
 
 interface Props {
   symbol: string;
@@ -40,7 +40,7 @@ interface Props {
  *
  * Euros : taux du jour fourni par la page (lib/fx.ts) ; à défaut, dernier taux BCE connu (avant le 05/10/2026 : 0,92 figé).
  */
-function PfuQuickCalc({ symbol, cryptoName, priceUsd, usdToEur = FX_FALLBACK.eur }: Props) {
+function PfuQuickCalc({ symbol, cryptoName, priceUsd, usdToEur = FX_BCE.eur }: Props) {
   const priceEur = priceUsd * usdToEur;
 
   const [purchasePriceEur, setPurchasePriceEur] = useState<string>("");
@@ -106,6 +106,9 @@ function PfuQuickCalc({ symbol, cryptoName, priceUsd, usdToEur = FX_FALLBACK.eur
           </h3>
           <p className="mt-1 text-xs text-muted">
             Simulation PFU 31,4% (article 150 VH bis CGI) — calcul indicatif par opération.
+          </p>
+          <p className="mt-1 text-xs text-muted">
+            Valeur actuelle : cours en dollars {mentionConversionBce()}.
           </p>
         </div>
         <span className="inline-flex items-center gap-1 rounded-md border border-primary/30 bg-gold-soft px-2 py-0.5 text-xs font-mono font-bold uppercase tracking-wider text-primary">

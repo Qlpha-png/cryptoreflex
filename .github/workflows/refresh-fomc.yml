@@ -1,4 +1,4 @@
-# Calendrier FOMC (Fed) — robot hebdomadaire (lot fraîcheur A, 08/10/2026, audit n° 34 : réunion du 29 avril affichée au
+# Calendrier officiel (Fed, BCE, halving) — robot hebdomadaire R7 (lot fraîcheur A, 08/10/2026, audit n° 34 : réunion du 29 avril affichée au
 # 6 mai, juillet / octobre / décembre absents, badge « automatique » sans aucun robot).
 #
 # Lit https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm (scripts/refresh-fomc.mjs), réécrit SEULEMENT le bloc
@@ -6,7 +6,7 @@
 # les tests, puis commite « chore(events): FOMC ». Rien n'est commité si les réunions n'ont pas changé.
 # ÉCHEC (rouge) si la page est injoignable, si sa structure a changé ou si elle donne moins de 8 réunions pour l'année :
 # le calendrier du site reste alors tel quel, et la sentinelle voit l'échec (contrôle des robots + cadence de 8,5 jours).
-name: Calendrier FOMC (Fed)
+name: Calendrier officiel (Fed, BCE, halving)
 
 # Lancé par l'horloge Vercel (lib/gardien.ts, /api/cron/gardien/refresh-fomc, lundi 06 h 20 UTC) ; l'horaire ci-dessous
 # reste comme filet (doublon sans danger : commit seulement si le calendrier change, groupe de concurrence). Premier passage :
@@ -20,6 +20,9 @@ on:
     paths:
       - scripts/refresh-fomc.mjs
       - scripts/lib/fomc.mjs
+      - scripts/refresh-calendrier-officiel.mjs
+      - scripts/lib/bce-calendrier.mjs
+      - scripts/lib/halving.mjs
       - .github/workflows/refresh-fomc.yml
 
 permissions:
@@ -50,29 +53,38 @@ jobs:
         id: fomc
         run: node scripts/refresh-fomc.mjs
 
+      # 10/10/2026 (lot Z4, R7 étendu) : réunions de politique monétaire de la BCE et prochain halving en fourchette
+      # (mempool.space, recoupé avec blockstream.info) → data/calendrier-officiel.json + extrait tests/fixtures/bce/reference.html.
+      # Ne tourne qu'après une lecture réussie de la Fed : la date « Fed, BCE : relevé automatique » est celle de ce passage.
+      # Une partie en échec garde ses anciennes données (ROUGE à la fin du job), les autres sont publiées.
+      - name: Lire la BCE et le halving
+        id: cal
+        continue-on-error: true
+        run: node scripts/refresh-calendrier-officiel.mjs
+
       - name: Dépendances (tests)
-        if: steps.fomc.outputs.changed == 'true'
+        if: steps.fomc.outputs.changed == 'true' || steps.cal.outputs.changed == 'true'
         run: npm ci --no-audit --no-fund
 
       # Bloquant avant tout commit : le seed doit être la traduction exacte de la page lue, et le projet doit compiler.
       - name: Tests du calendrier
-        if: steps.fomc.outputs.changed == 'true'
+        if: steps.fomc.outputs.changed == 'true' || steps.cal.outputs.changed == 'true'
         run: |
-          npx vitest run tests/lib/events-fomc.test.ts
+          npx vitest run tests/lib/events-fomc.test.ts tests/lib/calendrier-officiel.test.ts
           npx tsc --noEmit -p .
 
       - name: Commit + push (avec reprise anti-course)
-        if: steps.fomc.outputs.changed == 'true'
+        if: steps.fomc.outputs.changed == 'true' || steps.cal.outputs.changed == 'true'
         run: |
-          git add lib/events-seed.ts tests/fixtures/fomc/reference.html
+          git add lib/events-seed.ts tests/fixtures/fomc/reference.html data/calendrier-officiel.json tests/fixtures/bce/reference.html
           if git diff --staged --quiet; then
             echo "Aucun fichier modifié." >> "$GITHUB_STEP_SUMMARY"
             exit 0
           fi
           git config user.name "Cryptoreflex Bot"
           git config user.email "bot@cryptoreflex.fr"
-          git commit -m "chore(events): FOMC ($(date -u +%Y-%m-%d))" \
-            -m "Calendrier officiel de la Fed relu par .github/workflows/refresh-fomc.yml" \
+          git commit -m "chore(events): FOMC, BCE et halving ($(date -u +%Y-%m-%d))" \
+            -m "Calendriers officiels de la Fed et de la BCE, hauteur de bloc (mempool.space) relus par .github/workflows/refresh-fomc.yml" \
             -m "" \
             -m "Co-Authored-By: Cryptoreflex Bot <bot@cryptoreflex.fr>"
           for i in 1 2 3; do
@@ -86,4 +98,10 @@ jobs:
             sleep 2
           done
           echo "## ❌ Push du calendrier FOMC impossible après 3 essais" >> "$GITHUB_STEP_SUMMARY"
+          exit 1
+
+      - name: Échec si la BCE ou le halving n'ont pas pu être relus
+        if: steps.cal.outcome == 'failure'
+        run: |
+          echo "Calendrier BCE ou halving : lecture refusée, anciennes données gardées (voir le résumé)."
           exit 1

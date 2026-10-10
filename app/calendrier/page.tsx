@@ -43,6 +43,7 @@ import { fitDescription, fitTitle } from "@/lib/seo-text";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import VerifieLe from "@/components/ui/VerifieLe";
 import { EVENTS_SEED_REVU_LE } from "@/lib/events-seed";
+import { BCE_CALENDRIER_URL, CALENDRIER_OFFICIEL, FED_CALENDRIER_URL } from "@/lib/calendrier-officiel";
 
 // QUOTA VERCEL 2026-06-11 — revalidate allongé (ISR writes 409K/200K Hobby) :
 // le HTML seed peut dater, les données fraîches arrivent côté client.
@@ -52,7 +53,7 @@ const PAGE_PATH = "/calendrier";
 const PAGE_URL = `${BRAND.url}${PAGE_PATH}`;
 const PAGE_TITLE = "Calendrier crypto 2026 — halvings, FOMC, ETF, conférences";
 const PAGE_DESCRIPTION =
-  "Tous les événements crypto importants en 2026 : décisions FOMC de la Fed, halvings, listings nouveaux tokens, mises à jour réseau, conférences majeures (Token2049, Devcon, BTC Prague, EthCC).";
+  "Tous les événements crypto importants en 2026 : décisions de la Fed et de la BCE, halvings, listings nouveaux tokens, mises à jour réseau, conférences majeures (Token2049, Devcon, BTC Prague, EthCC).";
 
 export const metadata: Metadata = {
   title: fitTitle(PAGE_TITLE),
@@ -126,8 +127,15 @@ export default async function CalendarPage() {
         <div className="mx-auto max-w-6xl px-4 py-12 md:py-16">
           <Breadcrumbs chemin="/calendrier" className="mb-6" />
           <div className="flex flex-col items-start gap-4">
+            {/* lot Z4 : réunions Fed et BCE relues par le robot R7 (data/calendrier-officiel.json) ; autres événements tenus à la main */}
             <span className="text-xs text-muted">
-              <VerifieLe date={EVENTS_SEED_REVU_LE} famille="evenements" label="Événements vérifiés" />
+              <VerifieLe date={CALENDRIER_OFFICIEL.releveLe} famille="officiel" label="Dates Fed et BCE relevées" />
+              {" · Sources : "}
+              <a href={FED_CALENDRIER_URL} target="_blank" rel="nofollow noopener noreferrer" className="underline underline-offset-2 hover:text-fg">Réserve fédérale (Fed)</a>
+              {", "}
+              <a href={BCE_CALENDRIER_URL} target="_blank" rel="nofollow noopener noreferrer" className="underline underline-offset-2 hover:text-fg">BCE</a>
+              {" · "}
+              <VerifieLe date={EVENTS_SEED_REVU_LE} famille="evenements" label="Autres événements vérifiés" age={false} />
             </span>
             <h1 className="text-h1 font-extrabold tracking-tight text-fg md:text-display">
               Calendrier crypto 2026

@@ -64,7 +64,7 @@ export interface TickerEntry {
 
 export type TickerRecord = Record<string, TickerEntry>;
 
-/** Taux de change utilisé pour l'euro (lib/fx.ts : BCE, sinon secours daté). */
+/** Taux de change utilisé pour l'euro (lib/fx-bce.ts : taux BCE de data/fx-bce.json, robot R6 ; « binance » = anciens relevés d'avant le lot Z4). */
 export interface TickerFx {
   eurPerUsd: number;
   date: string;

@@ -119,7 +119,7 @@ export const TOOLS: Tool[] = [
   },
   {
     title: "Simulateur halving Bitcoin",
-    desc: "Compte à rebours du prochain halving (avril 2028) + impact prix historique.",
+    desc: "Projection d'un achat régulier jusqu'aux halvings 2028, 2032 et 2036, selon 3 scénarios.",
     href: "/outils/simulateur-halving-bitcoin",
     Icon: Coins,
     tier: "free",

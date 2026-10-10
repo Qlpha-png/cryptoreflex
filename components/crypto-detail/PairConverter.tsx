@@ -3,7 +3,7 @@
 import { avecTypoSync } from "@/components/ui/Typo";
 import { useState, useMemo, useCallback } from "react";
 import { ArrowRightLeft, Calculator } from "lucide-react";
-import { FX_FALLBACK } from "@/lib/fx-fallback";
+import { FX_BCE, mentionConversionBce } from "@/lib/fx-bce";
 import { sourceInfo } from "@/lib/data-sources/attribution";
 import type { SourceName } from "@/lib/data-sources/priorities";
 
@@ -19,7 +19,7 @@ interface Props {
    */
   priceUsd: number;
   /**
-   * Taux de change USD→EUR optionnel. Si absent : FX_FALLBACK.eur (dernier taux BCE connu, lib/fx-fallback.ts).
+   * Taux de change USD→EUR optionnel. Si absent : FX_BCE.eur (taux de référence BCE, data/fx-bce.json, lib/fx-bce.ts).
    * Le composant accepte un override depuis la fiche pour précision.
    */
   usdToEur?: number;
@@ -52,7 +52,7 @@ function PairConverter({
   symbol,
   name,
   priceUsd,
-  usdToEur = FX_FALLBACK.eur,
+  usdToEur = FX_BCE.eur,
   priceSource = null,
 }: Props) {
   const priceLabel = sourceInfo(priceSource)?.label;
@@ -244,7 +244,7 @@ function PairConverter({
             {formatFiatAmount(fiatRate, fiat)}
           </span>
           {" — "}
-          <span className="text-fg-4">prix indicatif{priceLabel ? ` (${priceLabel})` : ""}</span>
+          <span className="text-fg-4">prix indicatif{priceLabel ? ` (${priceLabel})` : ""}{fiat === "EUR" ? `, ${mentionConversionBce()}` : ""}</span>
         </span>
         <span className="font-mono">
           {direction === "fiat-to-crypto" ? (

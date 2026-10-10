@@ -27,6 +27,7 @@ vi.mock("@/lib/price-providers", () => ({
     return C.cascade;
   }),
 }));
+import { FX_BCE } from "@/lib/fx-bce";
 vi.mock("@/lib/fx", () => ({
   fiatPerUsd: vi.fn(async () => ({ usd: 1, eur: 0.9, gbp: 0.75, chf: 0.8, date: "2026-10-05", source: "bce" })),
 }));
@@ -73,7 +74,7 @@ afterEach(() => {
 });
 
 describe("historique : chaîne des sources", () => {
-  it("Binance passe par data-api.binance.vision (bougies et taux EUR/USDT), jamais par api.binance.com", async () => {
+  it("Binance passe par data-api.binance.vision (bougies), jamais par api.binance.com ; euros au taux BCE (data/fx-bce.json), plus aucun appel EURUSDT", async () => {
     mockFetch((u) => {
       if (u.includes("/klines")) return json(klines(40));
       if (u.includes("EURUSDT")) return json({ price: "1.10" });
@@ -83,9 +84,9 @@ describe("historique : chaîne des sources", () => {
     const pts = await fetchHistoricalPrices("bitcoin", 365);
     expect(pts.length).toBe(40);
     expect(urls.some((u) => u.startsWith("https://data-api.binance.vision/api/v3/klines?symbol=BTCUSDT"))).toBe(true);
-    expect(urls.some((u) => u.startsWith("https://data-api.binance.vision/api/v3/ticker/price?symbol=EURUSDT"))).toBe(true);
+    expect(urls.some((u) => u.includes("EURUSDT"))).toBe(false); // lot Z4 : taux BCE du fichier, plus de cours de stablecoin
     expect(urls.some((u) => u.includes("api.binance.com"))).toBe(false);
-    expect(pts.at(-1)!.price).toBeCloseTo(139 / 1.1, 6); // clôture USDT convertie en euros
+    expect(pts.at(-1)!.price).toBeCloseTo(139 * FX_BCE.eur, 6); // clôture USDT convertie au taux BCE
   });
 
   it("sans CRYPTOCOMPARE_API_KEY : aucun appel CryptoCompare, repli direct sur CoinGecko", async () => {

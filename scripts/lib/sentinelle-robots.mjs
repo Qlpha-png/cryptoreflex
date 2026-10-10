@@ -21,9 +21,11 @@ export const CADENCE = [
   ["refresh-static-details-kv.yml", "détails des fiches", 16],
   ["weekly-blog.yml", "article de la semaine", 8 * 24 + 12],
   ["veille-officielle.yml", "veille officielle de nuit (lois, BOFiP, registre MiCA, frais)", 30],
-  ["refresh-fomc.yml", "calendrier FOMC de la Fed", 8 * 24 + 12],
+  ["refresh-fomc.yml", "calendrier officiel (Fed, BCE, halving)", 8 * 24 + 12],
   // 10/10/2026 (lot Z3) : robot de nuit « fiches sans défaut » (03:40 UTC, durée jusqu'à 5 h)
   ["fiches-liens.yml", "fiches sans défaut (liens et pages)", 32],
+  // 10/10/2026 (lot Z4) : taux BCE, jours ouvrés 15:35 UTC → du vendredi au lundi = 72 h, + marge
+  ["fx-bce.yml", "taux de change BCE", 80],
 ];
 
 /**

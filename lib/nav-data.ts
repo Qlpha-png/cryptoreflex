@@ -107,7 +107,7 @@ export const ONGLETS: Onglet[] = [
           {
             "href": "/outils/simulateur-halving-bitcoin",
             "label": "Simuler l’effet du halving",
-            "phrase": "Compte à rebours et projection d’un achat régulier"
+            "phrase": "Projection d’un achat régulier jusqu’aux prochains halvings"
           }
         ]
       },

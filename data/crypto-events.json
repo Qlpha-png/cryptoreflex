@@ -13,13 +13,6 @@
         "description": "Plus grande conférence Bitcoin annuelle, annonces produits et politiques majeures attendues.",
         "importance": "medium",
         "sourceUrl": "https://b.tc/conference"
-      },
-      {
-        "date": "2028-04-20",
-        "type": "halving",
-        "title": "Halving Bitcoin #5",
-        "description": "Réduction programmée de la récompense des mineurs : 3,125 BTC -> 1,5625 BTC par bloc. Évènement structurant du cycle BTC.",
-        "importance": "low"
       }
     ],
     "ethereum": [

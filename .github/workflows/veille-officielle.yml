@@ -72,6 +72,17 @@ jobs:
           VEILLE_REPORT: veille-report.md
         run: node scripts/veille-officielle.mjs --navigateur ${{ env.ENREGISTRER == 'true' && '--enregistrer' || '' }} ${{ env.DETAIL == 'true' && '--detail' || '' }}
 
+      # 10/10/2026 (lot Z4) : listes de l'AMF (data.gouv.fr). Liste blanche → champs machine de data/psan-registry.json
+      # (date de publication de l'AMF affichée sur le site) ; liste noire lue en mémoire seulement → correspondances avec les
+      # plateformes suivies dans veille-amf-alertes.json (jamais commité), transmises au dépôt PRIVÉ ci-dessous. Le résumé
+      # public ne porte que des décomptes. Rouge si la liste blanche est refusée (format, volume) ou si un numéro AMF
+      # affiché par le site n'est plus en vigueur.
+      - name: Listes de l'AMF
+        id: amf
+        if: ${{ !cancelled() }}
+        continue-on-error: true
+        run: node scripts/veille-amf.mjs
+
       - name: Enregistrer la nouvelle référence
         # aussi quand des écarts de valeur restent : les versions relues sont enregistrées, l'écart reste signalé
         if: env.ENREGISTRER == 'true'
@@ -90,7 +101,7 @@ jobs:
           for i in 1 2 3; do
             if git push origin HEAD:main; then exit 0; fi
             git fetch origin main
-            git rebase origin/main || { git rebase --abort; exit 1; }
+            git rebase --autostash origin/main || { git rebase --abort; exit 1; }
             sleep 2
           done
           exit 1
@@ -100,6 +111,8 @@ jobs:
       # contrôlé automatiquement le JJ/MM/AAAA ». Une plateforme en écart garde sa date précédente (ticket ci-dessous).
       # Reprise Z1 : même étape pour data/veille/licences-ref.json (première référence d'une page de licence, écrite
       # automatiquement ; sans elle aucun ticket « relire la licence » ne peut s'ouvrir).
+      # Reprise Z4 : « rebase --autostash » dans les trois étapes de publication, car data/psan-registry.json (listes de
+      # l'AMF) reste modifié et non indexé jusqu'à l'étape suivante ; sans lui, une course de push rendait le job rouge.
       - name: Publier la date du contrôle automatique du registre MiCA
         if: ${{ !cancelled() }}
         run: |
@@ -118,7 +131,31 @@ jobs:
           for i in 1 2 3; do
             if git push origin HEAD:main; then exit 0; fi
             git fetch origin main
-            git rebase origin/main || { git rebase --abort; exit 1; }
+            git rebase --autostash origin/main || { git rebase --abort; exit 1; }
+            sleep 2
+          done
+          exit 1
+
+      - name: Publier les listes de l'AMF
+        if: ${{ !cancelled() && steps.amf.outputs.changed == 'true' }}
+        run: |
+          if [ -z "$(git status --porcelain -- data/psan-registry.json)" ]; then
+            echo "Listes de l'AMF : rien de nouveau."
+            exit 0
+          fi
+          # bloquant avant le commit : le registre écrit doit rester lisible par le site
+          npx vitest run tests/lib/amf-listes.test.ts
+          git config user.name "Cryptoreflex Bot"
+          git config user.email "bot@cryptoreflex.fr"
+          git add data/psan-registry.json
+          git commit -m "chore(veille): liste blanche de l'AMF ($(date -u +%Y-%m-%d))" \
+            -m "Généré par .github/workflows/veille-officielle.yml (scripts/veille-amf.mjs, champs machine de data/psan-registry.json)." \
+            -m "" \
+            -m "Co-Authored-By: Cryptoreflex Bot <bot@cryptoreflex.fr>"
+          for i in 1 2 3; do
+            if git push origin HEAD:main; then exit 0; fi
+            git fetch origin main
+            git rebase --autostash origin/main || { git rebase --abort; exit 1; }
             sleep 2
           done
           exit 1
@@ -190,8 +227,62 @@ jobs:
               await github.rest.issues.create({ ...depot, title: titre, body: corps, labels: ["licence"] });
             }
 
+      # Lot Z4 : correspondances liste noire × plateformes suivies (un ticket par plateforme et domaine, titre stable, jamais
+      # recréé même fermé) et refus de la liste blanche / numéro AMF en écart (un ticket, complété). Jamais de partie locale
+      # d'adresse e-mail : seul le domaine est transmis, et seulement au dépôt privé.
+      - name: Tickets « listes AMF » (dépôt privé)
+        if: always() && env.TICKETS_PRIVES == 'true' && steps.amf.outputs.alerte == 'true' && hashFiles('veille-amf-alertes.json') != ''
+        continue-on-error: true
+        uses: actions/github-script@v9
+        with:
+          github-token: ${{ secrets.SENTINELLE_TOKEN }}
+          script: |
+            const fs = require("fs");
+            const depot = { owner: "Qlpha-png", repo: "cryptoreflex-sentinelle" };
+            const a = JSON.parse(fs.readFileSync("veille-amf-alertes.json", "utf8"));
+            const runUrl = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
+            const tous = await github.paginate(github.rest.issues.listForRepo, { ...depot, state: "all", labels: "liste-noire", per_page: 100 });
+            for (const m of a.noire || []) {
+              if (!m.plateforme) continue;
+              const titre = `[Liste noire AMF] ${m.plateforme} : ${m.domaine}`;
+              if (tous.some((i) => i.title === titre)) continue;
+              const nature = m.urgent
+                ? "**URGENT** : domaine officiel d'une plateforme présentée comme autorisée sur le site."
+                : m.type === "usurpation"
+                  ? "Usurpation de la marque (une usurpation n'est pas une interdiction de la plateforme : rien ne change sur le site)."
+                  : "Domaine officiel d'une plateforme déjà signalée comme non conforme (information).";
+              const corps = [
+                nature,
+                "",
+                `- Plateforme : ${m.nomPlateforme} (${m.plateforme})`,
+                `- Inscription : ${m.courriel ? "adresse e-mail @" : ""}${m.domaine}`,
+                `- Catégorie AMF : ${m.categorie}`,
+                `- Date d'inscription : ${m.date}`,
+                "- Source : listes noires de l'AMF publiées sur data.gouv.fr (jeu 641d5dab1d84b530f7720b08)",
+                "",
+                `[Voir l'exécution](${runUrl})`,
+              ].join("\n");
+              await github.rest.issues.create({ ...depot, title: titre, body: corps, labels: ["liste-noire", "monitoring"] });
+            }
+            const lignes = [
+              ...(a.blanche || []),
+              ...(a.numeros || []).map((n) => `numéro ${n.numero} affiché sur la fiche ${n.id} : ${n.raison}`),
+              ...(a.noire || []).filter((m) => !m.plateforme).map((m) => `liste noire : ${m.type} (${m.detail})`),
+            ];
+            if (!lignes.length) return;
+            const corps = [`Listes de l'AMF, passage du ${a.date} :`, "", ...lignes.map((l) => `- ${l}`), "", "Le site garde la donnée en place, avec sa date.", "", `[Voir l'exécution](${runUrl})`].join("\n");
+            const { data: ouverts } = await github.rest.issues.listForRepo({ ...depot, state: "open", labels: "amf-listes", per_page: 10 });
+            if (ouverts[0]) await github.rest.issues.createComment({ ...depot, issue_number: ouverts[0].number, body: corps });
+            else await github.rest.issues.create({ ...depot, title: `[AMF] liste blanche ou numéro en écart - ${a.date}`, body: corps, labels: ["amf-listes", "monitoring"] });
+
       - name: Échec si changement (e-mail GitHub)
         if: steps.run.outcome == 'failure'
         run: |
           echo "Une source officielle a changé : voir le ticket « veille-officielle »."
+          exit 1
+
+      - name: Échec si liste AMF refusée
+        if: steps.amf.outcome == 'failure'
+        run: |
+          echo "Liste de l'AMF refusée (format, volume, recul, injoignable) ou numéro AMF en écart : voir le ticket « amf-listes »."
           exit 1

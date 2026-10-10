@@ -244,7 +244,7 @@ function MicaVerifier({ initialPlatformId }: Props) {
               autorisée en France ».
             </p>
             <p className="text-xs text-muted">
-              Source consolidée :{" "}
+              Sources :{" "}
               <a
                 href={meta.officialSources.amf}
                 target="_blank"
@@ -262,15 +262,6 @@ function MicaVerifier({ initialPlatformId }: Props) {
               >
                 ESMA
               </a>
-              {" · "}
-              <a
-                href={meta.officialSources.bafin}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-primary-soft hover:underline"
-              >
-                BaFin
-              </a>
               .
             </p>
           </div>
@@ -279,10 +270,18 @@ function MicaVerifier({ initialPlatformId }: Props) {
 
       <p className="text-xs text-muted">
         {/* 08/10/2026 (lot fraîcheur A) : plus de « mise à jour mensuelle » (aucun robot ne la tenait) */}
-        <VerifieLe date={meta.lastUpdated} famille="mica" label="Données vérifiées" inconnue="Date de vérification inconnue" age={false} /> · Registre
-        de l&apos;ESMA relu chaque nuit par notre veille pour les plateformes de nos
-        comparatifs, statuts mis à jour après vérification. Information à titre
-        indicatif — ne constitue pas un conseil en investissement.
+        <VerifieLe date={meta.lastUpdated} famille="mica" label="Fiches vérifiées" inconnue="Date de vérification inconnue" age={false} /> · Registre
+        de l&apos;ESMA relu chaque nuit pour les plateformes de nos comparatifs
+        {meta.amf ? (
+          <>
+            {" · "}
+            <a href={meta.amf.url} target="_blank" rel="noopener noreferrer" className="text-primary-soft hover:underline">
+              Source : AMF
+            </a>
+            , liste blanche <VerifieLe date={meta.amf.publication} famille="amf" label="mise à jour" age={false} />
+          </>
+        ) : null}
+        . Information à titre indicatif — ne constitue pas un conseil en investissement.
       </p>
     </div>
   );
@@ -466,19 +465,17 @@ function ResultCardBase({
             className="inline-flex items-center gap-1 text-primary-soft hover:underline"
           >
             <FileText className="h-3.5 w-3.5" />
-            Source officielle plateforme
+            Licences publiées par {platform.name}
           </a>
-          {platform.wikipediaSource && (
-            <a
-              href={platform.wikipediaSource}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 text-primary-soft hover:underline"
-            >
-              <FileText className="h-3.5 w-3.5" />
-              Wikipedia
-            </a>
-          )}
+          {platform.amf && getMicaMeta().amf ? (
+            <span>
+              <a href={getMicaMeta().amf!.url} target="_blank" rel="noopener noreferrer" className="text-primary-soft hover:underline">
+                Liste blanche de l&apos;AMF
+              </a>{" "}
+              ({platform.amf.noAmf ? `n° ${platform.amf.noAmf}` : "agrément par passeport"}),{" "}
+              <VerifieLe date={getMicaMeta().amf!.publication} famille="amf" label="mise à jour" age={false} />
+            </span>
+          ) : null}
           <span>
             <VerifieLe date={platform.lastVerified} famille="mica" label="Vérifié" inconnue="Date de vérification inconnue" age={false} />
           </span>

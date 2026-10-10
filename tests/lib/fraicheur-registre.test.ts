@@ -84,7 +84,8 @@ describe("registre data/fraicheur/registre.json", () => {
     for (const r of res) expect(["ok", "attention", "defaut"], r.id).toContain(r.etat);
     // sans accès (KV, GitHub, Supabase, site), une lecture réseau ne prouve rien : ❌, avec la raison
     expect(res.find((r: { id: string }) => r.id === "1")!.msg).toMatch(/accès KV absent/);
-    expect(res.find((r: { id: string }) => r.id === "18b")!.etat).toBe("defaut");
+    // lot Z4 : la liste noire AMF est lue par la veille R5 (date du contrôle dans data/psan-registry.json) : plus ❌ d office
+    expect(res.find((r: { id: string }) => r.id === "18b")!.msg).not.toMatch(/aucun robot/);
     expect(res.find((r: { id: string }) => r.id === "43")!.msg).toMatch(/recomptage non fait/);
     const n = compter(res);
     expect(n.ok + n.attention + n.defaut).toBe(54);
@@ -94,7 +95,7 @@ describe("registre data/fraicheur/registre.json", () => {
     const pages: Record<string, string> = {
       "/marche": 'x\\"asOf\\":\\"2026-10-08T11:50:00Z\\"',
       "/": '"updatedAt":"2026-10-08T11:55:00.000Z"',
-      "/marche/fear-greed": 'Dernière mise à jour : <time dateTime="2026-10-08T00:00:00Z">08 octobre 2026</time> "dateModified":"2026-10-08T00:00:00Z"',
+      "/marche/fear-greed": 'Valeur du <time dateTime="2026-10-08T00:00:00Z">8 octobre 2026</time> "dateModified":"2026-10-08T00:00:00Z"',
       "/feed.xml": "<pubDate>Thu, 08 Oct 2026 04:33:00 GMT</pubDate>",
       "/analyses-techniques": 'data-calcul="bitcoin|2026-10-08T06:19:37Z" data-calcul="ethereum|2026-10-08T06:19:37Z"',
       "/api/public/platforms": '{"_meta":{"lastUpdated":"2026-10-08"}}',

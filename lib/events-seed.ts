@@ -22,6 +22,7 @@
  */
 
 import type { CryptoEvent } from "@/lib/events-types";
+import { evenementHalving, evenementsBce } from "@/lib/calendrier-officiel";
 
 /**
  * Note méthodologique sur les dates :
@@ -249,6 +250,13 @@ export const EVENTS_SEED: CryptoEvent[] = [
   /* </fomc-auto> */
 
   /* ========================================================================
+   * RÉUNIONS DE LA BCE + PROCHAIN HALVING BITCOIN — lus dans data/calendrier-officiel.json (robot R7, lot Z4) :
+   * calendrier officiel du Conseil des gouverneurs de la BCE ; halving estimé en fourchette (mempool.space).
+   * ======================================================================== */
+  ...evenementsBce(),
+  ...evenementHalving(),
+
+  /* ========================================================================
    * 10 ÉVÉNEMENTS À VENIR (post 2026-04-26)
    * ======================================================================== */
   {
@@ -378,7 +386,8 @@ export const EVENTS_SEED: CryptoEvent[] = [
   {
     id: "btc-halving-2024",
     title: "Quatrième halving Bitcoin",
-    date: "2024-04-19",
+    // bloc 840 000 horodaté 2024-04-20T00:09:27Z (mempool.space, relu le 10/10/2026) ; avant le lot Z4 : 19/04, faux
+    date: "2024-04-20",
     crypto: "BTC",
     category: "Halving",
     source: "Bitcoin protocol",

@@ -4,6 +4,7 @@ import { avecTypoSync } from "@/components/ui/Typo";
 import { useEffect, useMemo, useState } from "react";
 import { ArrowDownUp, Loader2, RefreshCw } from "lucide-react";
 import { COIN_NAMES } from "@/lib/historical-prices";
+import { mentionFxBce } from "@/lib/fx-bce";
 
 /* -------------------------------------------------------------------------- */
 /*  Listes (alignées sur lib/historical-prices.ts)                            */
@@ -97,7 +98,7 @@ function Converter({
           <p className="text-sm text-muted">
             {/* reprise du 08/10/2026 (juré I3) : deux devises = taux de référence journalier, pas un taux de marché */}
             {FIAT_OPTIONS.includes(from) && FIAT_OPTIONS.includes(to)
-              ? "Deux devises : taux de référence journalier (BCE), daté en tête de page"
+              ? `Deux devises : ${mentionFxBce()}`
               : "Taux du marché — supporte cross-crypto et fiat"}
           </p>
         </div>

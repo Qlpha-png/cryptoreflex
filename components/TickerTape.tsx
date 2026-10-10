@@ -50,7 +50,7 @@ interface Props {
   coins: TickerCoin[];
   globalMetrics: TickerGlobals | null;
   /** `source` : source réelle de l'indice (alternative.me, ou CoinMarketCap en relais). */
-  fearGreed: { value: number; label: string; source?: SourceName | null } | null;
+  fearGreed: { value: number; label: string; source?: SourceName | null; date?: string | null } | null;
   /** Source réelle des cours au chargement (components/home/market-source.ts) : attribution affichée dans le bandeau. */
   priceSource?: MarketSource | null;
 }
@@ -92,7 +92,7 @@ function TickerTape({ coins, globalMetrics, fearGreed, priceSource = null }: Pro
     }
     if (fearGreed) {
       globalCells.push(
-        <TapeCell key="fg" label="Fear & Greed">
+        <TapeCell key="fg" label="Peur et avidité">
           <span
             className={`num-data ${
               fearGreed.value >= 55
@@ -106,7 +106,7 @@ function TickerTape({ coins, globalMetrics, fearGreed, priceSource = null }: Pro
           </span>
           <span className="text-muted">· {fearGreed.label}</span>
           {/* Attribution collée à la donnée (conditions d'alternative.me, 06/10/2026). */}
-          <FearGreedSource className="text-muted" focusable={!dup} source={fearGreed.source} />
+          <FearGreedSource className="text-muted" focusable={!dup} source={fearGreed.source} date={fearGreed.date} />
         </TapeCell>,
       );
     }

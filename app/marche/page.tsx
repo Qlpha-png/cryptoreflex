@@ -242,6 +242,7 @@ async function MarcheDashboardPage() {
                       classification={fearGreed.classification}
                       size={260}
                       source={fearGreed.source}
+                      date={fearGreed.timestamp}
                     />
                   </div>
                   {typeof fearGreed.deltaVsYesterday === "number" && (
@@ -347,10 +348,9 @@ async function MarcheDashboardPage() {
                 Le piège du Fear & Greed
               </div>
               <p className="mt-2 text-sm text-fg/70">
-                L'indice est utile en extrême : "Extreme Fear" (&lt;25) coïncide
-                souvent avec des creux de cycle ; "Extreme Greed" (&gt;75) avec
-                des sommets. Entre les deux (zone neutre 40-60), il a peu de
-                valeur signal — c'est le bruit du marché.
+                L&apos;indice se lit surtout à ses extrêmes (peur extrême,
+                cupidité extrême) ; entre les deux, il dit peu de chose. Ce
+                n&apos;est pas un signal d&apos;achat ou de vente.
               </p>
             </div>
           </aside>

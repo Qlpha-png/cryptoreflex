@@ -41,6 +41,7 @@ import { conversionGrid, formatConverted, formatAmount, ratioSeries, rateStats, 
 import { getAllCryptos } from "@/lib/cryptos";
 import { withHreflang } from "@/lib/seo-alternates";
 import { eurPerUnit, fiatPerUsd } from "@/lib/fx";
+import { FX_BCE, jourFx, mentionConversionBce } from "@/lib/fx-bce";
 import { formatJJMMAAAA } from "@/lib/fraicheur";
 import Breadcrumbs from "@/components/Breadcrumbs";
 
@@ -179,13 +180,10 @@ export default async function PairPage({ params }: PageProps) {
 
   // reprise du 08/10/2026 (juré I3) : taux daté (deux devises) = la vraie source et la vraie date, sans promesse de fréquence
   const tauxDate = rate?.label ? formatJJMMAAAA(rate.lastUpdated) : null;
-  const sourceTaux = rate?.label
-    ? rate.label.startsWith("taux de secours")
-      ? "taux de secours, référence BCE"
-      : /Binance/.test(rate.label)
-        ? "Binance et BCE"
-        : "BCE"
-    : null;
+  const sourceTaux = rate?.label ? (rate.label.startsWith("dernier taux") ? "dernier taux BCE connu" : "BCE") : null;
+  /* lot Z4 : crypto ↔ euro, livre ou franc suisse = prix en dollars converti au taux BCE (data/fx-bce.json) : mention datée */
+  const DEVISES_CONVERTIES = ["eur", "gbp", "chf"];
+  const conversionBce = !rate?.label && (DEVISES_CONVERTIES.includes(from) || DEVISES_CONVERTIES.includes(to));
   const faqItems = [
     {
       question: `Combien vaut 1 ${fromUp} en ${toUp} aujourd'hui ?`,
@@ -253,7 +251,7 @@ export default async function PairPage({ params }: PageProps) {
             <p className="mt-4 text-lg text-fg-max/70">
               {rate?.rate != null ? (
                 <>
-                  {rate.label?.startsWith("taux de secours") ? "Au dernier taux connu" : "Au taux actuel"},{" "}
+                  {rate.label?.startsWith("dernier taux") ? "Au dernier taux connu" : "Au taux actuel"},{" "}
                   <strong className="text-fg-max">
                     1 {fromName} ={" "}
                     <span className="font-mono">{formatRate(rate.rate)} {toUp}</span>
@@ -267,6 +265,7 @@ export default async function PairPage({ params }: PageProps) {
                   ) : (
                     "."
                   )}
+                  {conversionBce ? <> Prix en dollars {mentionConversionBce()}.</> : null}
                 </>
               ) : (
                 <>Taux {fromUp}/{toUp} en cours d'actualisation…</>
@@ -362,7 +361,7 @@ export default async function PairPage({ params }: PageProps) {
                 ) : null}
               </p>
               <p className="mt-2 text-xs text-muted">
-                Clôtures quotidiennes (Binance, repli CoinGecko), prix en dollars convertis en euros à un taux de change constant ;
+                Clôtures quotidiennes (Binance, repli CoinGecko), prix en dollars convertis en euros au taux BCE du {jourFx(FX_BCE.date, true)}, appliqué à toute la période ;
                 valeurs indicatives, à recouper avant toute décision. Ce n&apos;est pas un conseil en investissement.
               </p>
             </section>

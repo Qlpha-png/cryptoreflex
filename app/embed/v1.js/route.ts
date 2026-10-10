@@ -131,7 +131,7 @@ function generateWidgetJs(): string {
     return (
       '<div style="' +
       attribFooterStyles() +
-      '">Données <a href="' +
+      '">Sources : registre MiCA de l&#39;ESMA et liste blanche de l&#39;AMF · mise en forme <a href="' +
       BASE_URL +
       '" rel="dofollow" style="' +
       linkStyles() +

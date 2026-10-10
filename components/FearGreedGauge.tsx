@@ -32,6 +32,8 @@ interface Props {
   showSource?: boolean;
   /** Source réelle de l'indice (06/10/2026 : alternative.me, ou CoinMarketCap en relais). */
   source?: SourceName | null;
+  /** Lot Z4 : horodatage ISO de la valeur (affiché à côté de la source). */
+  date?: string | null;
 }
 
 function FearGreedGauge({
@@ -40,6 +42,7 @@ function FearGreedGauge({
   size = 360,
   showSource = true,
   source = null,
+  date = null,
 }: Props) {
   // Clamp 0..100
   const v = Math.max(0, Math.min(100, value));
@@ -184,7 +187,7 @@ function FearGreedGauge({
       >
         {classification}
       </div>
-      {showSource && <FearGreedSource className="mt-2 text-xs text-muted" source={source} />}
+      {showSource && <FearGreedSource className="mt-2 text-xs text-muted" source={source} date={date} />}
     </div>
   );
 }

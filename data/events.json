@@ -189,20 +189,8 @@
       "category": "halving",
       "date": "2028-04-10",
       "isApproximate": true,
-      "description": "Halving estimé BCH — récompense bloc 3,125 → 1,5625 BCH. Quelques jours avant le halving Bitcoin attendu.",
+      "description": "Halving estimé BCH — récompense bloc 3,125 → 1,5625 BCH.",
       "impact": "medium"
-    },
-    {
-      "id": "btc-halving-2028",
-      "title": "Halving Bitcoin (BTC)",
-      "category": "halving",
-      "date": "2028-04-15",
-      "isApproximate": true,
-      "description": "5e halving Bitcoin au block 1 050 000 — récompense par bloc 3,125 → 1,5625 BTC. Date estimée mi-avril 2028, peut varier de quelques jours selon le hashrate.",
-      "impact": "high",
-      "links": [
-        { "label": "Notre page halving + countdown", "url": "/halving-bitcoin" }
-      ]
     },
     {
       "id": "btc-mainnet-anniversary-2029",

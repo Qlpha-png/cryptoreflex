@@ -57,6 +57,7 @@ import MiCAComplianceBadge from "@/components/MiCAComplianceBadge";
 import VerifieLe from "@/components/ui/VerifieLe";
 import TrustpilotLink from "@/components/TrustpilotLink";
 import { dateStatutMica } from "@/lib/mica-auto";
+import { getMicaMeta, getMicaPlatformById } from "@/lib/mica";
 import RelatedPagesNav from "@/components/RelatedPagesNav";
 import NextStepsGuide from "@/components/NextStepsGuide";
 import PlatformLogo from "@/components/PlatformLogo";
@@ -85,8 +86,10 @@ export function generateMetadata({ params }: Props): Metadata {
   // marque en suffixe auto-ajouté par root layout. Title <60c, description <155c.
   // FIX 2026-05-09 : retiré "par Cryptoreflex" pour éviter doublon avec le
   // template root `%s | Cryptoreflex` qui doublait la marque.
-  const title = `${p.name} avis 2026 — analyse complète et indépendante`;
-  const description = `${p.name} en 2026 : frais réels, conformité MiCA, support FR. Notre verdict objectif (${fmtNb(p.scoring.global)}/5), selon notre méthodologie publique.`;
+  // 10/10/2026 (règle de Kev : aucune mention inutile) : le titre dit ce que la page contient, plus « analyse complète et
+  // indépendante » ni « verdict objectif ».
+  const title = `${p.name} avis 2026 : frais, sécurité et statut MiCA`;
+  const description = `${p.name} en 2026 : frais réels, conformité MiCA, support FR. Note de ${fmtNb(p.scoring.global)}/5 selon notre méthodologie publique.`;
   return {
     title,
     description,
@@ -385,6 +388,20 @@ function ReviewPage({ params }: Props) {
   const feesNonVerifie = v?.verdict === "non-verifie";
   // reprise du 08/10/2026 (L6 MiCA) : date du contrôle automatique du registre ESMA si plus récente que la relecture humaine
   const micaAffiche = dateStatutMica(p.id, p.mica.lastVerified, "Statut MiCA vérifié");
+  // lot Z4 : la source officielle est citée à côté du statut, avec la date du contrôle (aucun aval suggéré)
+  const parAmf = /^Liste blanche AMF/.test(p.mica.registerSource ?? "");
+  const citeAmf = /AMF/.test(p.mica.registerSource ?? "");
+  // reprise Z4 : le libellé suit l'origine de la date. Date AMF = publication de la liste blanche SEULEMENT si le robot R5
+  // a rapproché cette fiche (champ « amf » de data/psan-registry.json) ; sinon date de la relecture humaine de la liste.
+  // La date du contrôle automatique (mica-auto.json) vient du registre de l'ESMA : jamais présentée comme un contrôle AMF.
+  const amfPublication = getMicaPlatformById(p.id)?.amf ? (getMicaMeta().amf?.publication ?? null) : null;
+  const sourceAmf = amfPublication
+    ? { date: amfPublication, famille: "amf" as const, label: "liste blanche de l'AMF mise à jour" }
+    : { date: p.mica.lastVerified, famille: "mica" as const, label: "liste blanche de l'AMF consultée" };
+  const sourceStatut = parAmf
+    ? { date: sourceAmf.date, famille: sourceAmf.famille, label: amfPublication ? "Source : AMF, liste blanche mise à jour" : "Source : liste blanche de l'AMF, consultée" }
+    : { date: micaAffiche.date, famille: "mica" as const, label: "Source : registre MiCA de l'ESMA, contrôlé" };
+  const piedEsma = !parAmf || micaAffiche.auto;
   const verdictLabel =
     v?.verdict === "fiable"
       ? "Vérifié"
@@ -857,7 +874,12 @@ function ReviewPage({ params }: Props) {
               <div className="mt-1 text-sm font-semibold text-fg-max">{p.mica.status}</div>
               <p className="mt-2 text-sm text-fg-max/70">
                 Enregistré le {p.mica.registrationDate ? new Date(p.mica.registrationDate).toLocaleDateString("fr-FR") : "—"}.{" "}
-                <VerifieLe date={p.mica.lastVerified} famille={isWallet ? "wallets" : "mica"} label="Vérifié par Cryptoreflex" age={false} />.
+                {isWallet ? (
+                  <VerifieLe date={p.mica.lastVerified} famille="wallets" label="Vérifié" age={false} />
+                ) : (
+                  <VerifieLe date={sourceStatut.date} famille={sourceStatut.famille} label={sourceStatut.label} age={false} />
+                )}
+                .
               </p>
             </div>
             <div className="rounded-xl border border-border bg-surface p-4">
@@ -899,7 +921,7 @@ function ReviewPage({ params }: Props) {
               {available ? `Ouvrir le site de ${p.name}` : "Cherchez une plateforme autorisée en France"}
             </div>
             <p className="mt-1 text-sm text-fg-max/70 max-w-xl">
-              {isWallet ? "Portefeuille matériel, hors champ MiCA" : available ? "Plateforme agréée MiCA" : "Non autorisée en France"} · <VerifieLe date={p.mica.lastVerified} famille={isWallet ? "wallets" : "mica"} label="vérifié" age={false} />.
+              {isWallet ? "Portefeuille matériel, hors champ MiCA" : available ? "Plateforme agréée MiCA" : "Non autorisée en France"} · <VerifieLe date={isWallet ? p.mica.lastVerified : micaAffiche.date} famille={isWallet ? "wallets" : "mica"} label={isWallet ? "vérifié" : "registre contrôlé"} age={false} />.
             </p>
           </div>
           <div className="shrink-0">
@@ -1208,7 +1230,25 @@ function ReviewPage({ params }: Props) {
         {/* DISCLAIMER */}
         <section className="mt-12 rounded-xl border border-border bg-surface/50 p-5">
           <p className="text-xs text-muted leading-relaxed">
-            Cette fiche est générée à partir de nos données ; Kevin Voisin, éditeur de {BRAND.name}, en est responsable. <VerifieLe date={p.mica.lastVerified} famille={isWallet ? "wallets" : "mica"} label="Statut MiCA vérifié" age={false} /> auprès des sources publiques (site officiel, registre AMF).{" "}
+            Cette fiche est générée à partir de nos données ; Kevin Voisin, éditeur de {BRAND.name}, en est responsable. {isWallet ? (
+              <>
+                <VerifieLe date={p.mica.lastVerified} famille="wallets" label="Statut vérifié" age={false} /> sur le site officiel du fabricant.{" "}
+              </>
+            ) : (
+              <>
+                {piedEsma && (
+                  <>
+                    <VerifieLe date={micaAffiche.date} famille="mica" label="Statut MiCA contrôlé" age={false} /> sur le registre MiCA de l&apos;ESMA
+                    {citeAmf ? " ; " : ". "}
+                  </>
+                )}
+                {citeAmf && (
+                  <>
+                    <VerifieLe date={sourceAmf.date} famille={sourceAmf.famille} label={piedEsma ? sourceAmf.label : `Statut MiCA : ${sourceAmf.label}`} age={false} />.{" "}
+                  </>
+                )}
+              </>
+            )}
             {paidKind === "affiliate"
               ? `${BRAND.name} perçoit une commission via les liens vers ${p.name} marqués « Publicité », sans surcoût ni biais sur la note attribuée`
               : paidKind === "referral"

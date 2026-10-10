@@ -11,7 +11,7 @@ import FearGreedGauge from "@/components/FearGreedGauge";
 import EmptyState from "@/components/ui/EmptyState";
 import { withHreflang } from "@/lib/seo-alternates";
 import { fitDescription, fitTitle } from "@/lib/seo-text";
-import FearGreedSource from "@/components/FearGreedSource";
+import FearGreedSource, { FEAR_GREED_SOURCE_URL } from "@/components/FearGreedSource";
 import Breadcrumbs from "@/components/Breadcrumbs";
 
 /**
@@ -57,19 +57,19 @@ export const metadata: Metadata = {
 const FAQ_ITEMS = [
   {
     q: "Qu'est-ce que le Fear & Greed Index Bitcoin ?",
-    a: "Le Fear & Greed Index est un indicateur composite qui mesure le sentiment du marché crypto sur une échelle de 0 à 100. 0 signifie une peur extrême (les investisseurs vendent) et 100 une cupidité extrême (FOMO d'achat). L'indicateur est calculé par alternative.me à partir de 6 sources : volatilité (25 %), momentum/volume (25 %), réseaux sociaux (15 %), dominance Bitcoin (10 %), tendances Google (10 %) et sondages (15 %).",
+    a: "Le Fear & Greed Index est un indicateur composite qui mesure le sentiment du marché crypto sur une échelle de 0 à 100. 0 signifie une peur extrême (les investisseurs vendent) et 100 une cupidité extrême (FOMO d'achat). L'indicateur est calculé par alternative.me à partir de 6 sources : volatilité (25 %), momentum/volume (25 %), réseaux sociaux (15 %), dominance Bitcoin (10 %), tendances Google (10 %) et sondages (15 %, en pause selon alternative.me, page lue le 10/10/2026).",
   },
   {
     q: "Comment utiliser l'indice Fear & Greed dans ma stratégie ?",
-    a: "L'usage classique vient de Warren Buffett : 'Soyez craintif quand les autres sont avides, et avide quand les autres sont craintifs.' Concrètement, beaucoup d'investisseurs long terme accumulent quand l'indice est sous 25 (peur extrême) et prennent des bénéfices quand il dépasse 75 (cupidité). Ce n'est PAS un signal de timing parfait — l'indice peut rester en peur extrême plusieurs semaines pendant un bear market, ou en cupidité pendant tout un bull run.",
+    a: "L'indice décrit le sentiment du marché ; il ne donne ni moment d'achat ni moment de vente. Il peut rester en peur extrême plusieurs semaines, ou en cupidité pendant toute une hausse.",
   },
   {
     q: "Le Fear & Greed est-il fiable pour prendre des décisions ?",
-    a: "C'est un indicateur de sentiment, pas un signal d'achat ou de vente. Il fonctionne bien en complément d'autres analyses (cours, fondamentaux, on-chain) mais ne doit jamais être utilisé seul. Plusieurs études académiques ont montré une corrélation modérée avec les rendements futurs sur Bitcoin, mais avec des faux signaux fréquents. Considérez-le comme un thermomètre du marché, pas comme une boule de cristal.",
+    a: "C'est un indicateur de sentiment, pas un signal d'achat ou de vente. Il fonctionne bien en complément d'autres analyses (cours, fondamentaux, on-chain) mais ne doit jamais être utilisé seul. Considérez-le comme un thermomètre du marché, pas comme une boule de cristal.",
   },
   {
     q: "À quelle fréquence l'indice est-il mis à jour ?",
-    a: "L'API publie un nouveau score chaque jour, généralement vers minuit UTC. Cette page Cryptoreflex met en cache la donnée pendant 1 heure côté serveur (ISR Next.js) pour économiser les appels API. Si vous voyez un score qui semble bloqué pendant plusieurs heures, c'est normal — alternative.me publie une seule valeur par jour.",
+    a: "alternative.me publie une valeur par jour. La date de la valeur affichée est indiquée sous la jauge.",
   },
   {
     q: "Quelle est la différence avec le Fear & Greed des actions ?",
@@ -131,9 +131,11 @@ export default async function FearGreedPage() {
             )}
           </h1>
           <p className="mt-3 text-base text-muted max-w-2xl">
-            L'indicateur de référence pour mesurer le sentiment du marché crypto.
-            De 0 (peur extrême) à 100 (cupidité extrême), réactualisé chaque jour
-            par alternative.me. Un thermomètre, pas un signal d'achat.
+            De 0 (peur extrême) à 100 (cupidité extrême), publié chaque jour par{" "}
+            <a href={FEAR_GREED_SOURCE_URL} target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 hover:text-fg">
+              alternative.me
+            </a>
+            . Un thermomètre, pas un signal d'achat.
           </p>
         </header>
 
@@ -150,25 +152,28 @@ export default async function FearGreedPage() {
           <section className="glass rounded-3xl p-6 sm:p-10" aria-label="Jauge Fear & Greed">
             <FearGreedGauge value={fg.value} classification={fg.classification} showSource={false} />
             <p className="mt-4 text-center text-xs text-muted">
-              Dernière mise à jour :{" "}
+              Valeur du{" "}
               <time dateTime={fg.timestamp}>
                 {new Date(fg.timestamp).toLocaleDateString("fr-FR", {
-                  day: "2-digit",
+                  timeZone: "Europe/Paris",
+                  day: "numeric",
                   month: "long",
                   year: "numeric",
                 })}
               </time>{" "}
-              · <FearGreedSource source={fg.source} /> · Cache serveur 1 h
+              · <FearGreedSource source={fg.source} />
             </p>
           </section>
         )}
 
         {/* Légende des zones */}
-        <section className="mt-10 grid grid-cols-2 sm:grid-cols-4 gap-3">
-          <Zone color="#dc2626" border="#dc262655" range="0 – 24" label="Peur extrême" hint="Marché paniqué, opportunités d'accumulation pour les long terme." />
-          <Zone color="rgb(var(--c-warning))" border="rgb(var(--c-warning) / 0.3333333)" range="25 – 49" label="Peur" hint="Sentiment baissier dominant, prudence." />
-          <Zone color="#eab308" border="#eab30855" range="50 – 74" label="Neutre / Cupidité" hint="Marché équilibré qui penche vers l'optimisme." />
-          <Zone color="rgb(var(--c-success))" border="rgb(var(--c-success) / 0.3333333)" range="75 – 100" label="Cupidité extrême" hint="Euphorie, FOMO. Souvent un sommet local approche." />
+        <section className="mt-10 grid grid-cols-2 sm:grid-cols-5 gap-3">
+          {/* lot Z4 : les 5 classes publiées par alternative.me, sans seuils chiffrés (alternative.me n'en publie aucun) */}
+          <Zone color="#dc2626" border="#dc262655" label="Peur extrême" hint="Sentiment très négatif." />
+          <Zone color="rgb(var(--c-warning))" border="rgb(var(--c-warning) / 0.3333333)" label="Peur" hint="Sentiment négatif." />
+          <Zone color="#eab308" border="#eab30855" label="Neutre" hint="Sentiment équilibré." />
+          <Zone color="rgb(var(--c-success) / 0.6)" border="rgb(var(--c-success) / 0.2)" label="Cupidité" hint="Sentiment positif." />
+          <Zone color="rgb(var(--c-success))" border="rgb(var(--c-success) / 0.3333333)" label="Cupidité extrême" hint="Sentiment euphorique." />
         </section>
 
         {/* Section éducative — H2 1 */}
@@ -212,8 +217,8 @@ export default async function FearGreedPage() {
               price manipulation" = peur, "Bitcoin price prediction" = cupidité.
             </li>
             <li>
-              <strong>Sondages (15 %)</strong> — sondages hebdomadaires auprès
-              de la communauté crypto.
+              <strong>Sondages (15 %)</strong> — en pause selon alternative.me
+              (page lue le 10/10/2026).
             </li>
           </ul>
         </section>
@@ -224,15 +229,14 @@ export default async function FearGreedPage() {
             Comment utiliser l'indice Fear &amp; Greed ?
           </h2>
           <div className="mt-4 grid gap-4 sm:grid-cols-2">
+            {/* reprise Z4 : plus aucun seuil d'achat ou de vente (alternative.me n'en publie aucun ; ce serait un conseil) */}
             <div className="rounded-2xl border border-accent-green/30 bg-accent-green/5 p-5">
               <h3 className="text-lg font-bold text-accent-green">
-                Stratégie contrarienne
+                Un thermomètre du sentiment
               </h3>
               <p className="mt-2 text-sm text-fg/85 leading-relaxed">
-                "Soyez craintif quand les autres sont avides, avide quand les
-                autres sont craintifs" — Warren Buffett. Beaucoup d'investisseurs
-                accumulent en DCA quand l'indice est sous 25 et allègent
-                progressivement quand il dépasse 75.
+                L&apos;indice décrit le sentiment du marché ; il ne donne ni
+                moment d&apos;achat ni moment de vente.
               </p>
             </div>
             <div className="rounded-2xl border border-warning/30 bg-warning/5 p-5">
@@ -248,26 +252,15 @@ export default async function FearGreedPage() {
             </div>
             <div className="rounded-2xl border border-border bg-surface p-5">
               <h3 className="text-lg font-bold text-fg">
-                Couplé au DCA
+                Et l&apos;investissement programmé ?
               </h3>
               <p className="mt-2 text-sm text-fg/85 leading-relaxed">
-                Un usage simple : moduler la taille de vos achats DCA mensuels.
-                Doubler la mise quand l'indice est sous 30, ne rien acheter
-                quand il dépasse 80. Voir notre{" "}
+                Un investissement programmé (DCA) fixe le montant et la date à
+                l&apos;avance, quel que soit le sentiment du jour. Voir notre{" "}
                 <Link href="/outils/simulateur-dca" className="underline hover:text-fg">
                   simulateur DCA
                 </Link>
                 .
-              </p>
-            </div>
-            <div className="rounded-2xl border border-border bg-surface p-5">
-              <h3 className="text-lg font-bold text-fg">
-                Comme indicateur de risque
-              </h3>
-              <p className="mt-2 text-sm text-fg/85 leading-relaxed">
-                Quand l'indice dépasse 80 plusieurs jours d'affilée, c'est un
-                bon moment pour vérifier sa hygiène : sortie partielle, prise
-                de profit, sécurisation hardware wallet.
               </p>
             </div>
           </div>
@@ -283,9 +276,7 @@ export default async function FearGreedPage() {
               <Info className="h-5 w-5 text-primary shrink-0 mt-0.5" aria-hidden="true" />
               <div>
                 <p className="text-sm text-fg/85 leading-relaxed">
-                  Un graphique d'historique sur 30, 90 et 365 jours sera
-                  disponible prochainement (V2). En attendant, vous pouvez
-                  consulter l'historique complet directement sur{" "}
+                  L&apos;historique complet est publié sur{" "}
                   <a
                     href="https://alternative.me/crypto/fear-and-greed-index/"
                     target="_blank"
@@ -299,9 +290,7 @@ export default async function FearGreedPage() {
                 <p className="mt-3 text-xs text-muted">
                   Le score actuel est{" "}
                   <strong>{fg ? `${fg.value}/100` : "indisponible"}</strong>
-                  {fg && ` (${fg.classification})`}, ce qui correspond à la
-                  catégorie&nbsp;
-                  {fg ? <strong>{zoneLabelFor(fg.value)}</strong> : "—"}.
+                  {fg && ` (${fg.classification})`}.
                 </p>
               </div>
             </div>
@@ -335,11 +324,11 @@ export default async function FearGreedPage() {
         <aside className="mt-12 glass rounded-2xl p-6 sm:p-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
             <h2 className="text-lg font-bold text-fg">
-              Combine le sentiment et la heatmap
+              Croisez le sentiment et la heatmap
             </h2>
             <p className="mt-1 text-sm text-fg/70">
-              Visualise les variations 24h du top 100 crypto pour voir si le
-              marché est rouge, vert, ou mitigé.
+              Visualisez les variations 24 h du top 100 crypto pour voir si le
+              marché est rouge, vert ou mitigé.
             </p>
           </div>
           <Link href="/marche/heatmap" className="btn-primary shrink-0">
@@ -350,7 +339,11 @@ export default async function FearGreedPage() {
 
         {/* Mentions */}
         <p className="mt-8 text-xs text-muted leading-relaxed">
-          Données fournies par alternative.me (cache serveur 1 h). Cette page
+          Indice :{" "}
+          <a href={FEAR_GREED_SOURCE_URL} target="_blank" rel="noopener noreferrer" className="underline hover:text-fg">
+            alternative.me
+          </a>
+          . Cette page
           est purement informative et ne constitue pas un conseil en
           investissement. Investir dans les cryptomonnaies comporte un risque
           de perte en capital. Voir notre{" "}
@@ -367,14 +360,12 @@ export default async function FearGreedPage() {
 function Zone({
   color,
   border,
-  range,
   label,
   hint,
 }: {
   color: string;
   /** Bordure explicite (jamais color + "55", qui casse avec une variable). */
   border: string;
-  range: string;
   label: string;
   hint: string;
 }) {
@@ -383,21 +374,11 @@ function Zone({
       className="rounded-xl border bg-surface p-4"
       style={{ borderColor: border }}
     >
-      <div
-        className="text-xs font-mono uppercase tracking-wider"
-        style={{ color }}
-      >
-        {range}
-      </div>
+      <div className="h-1.5 w-8 rounded-full" style={{ background: color }} aria-hidden="true" />
       <div className="mt-1 text-sm font-bold text-fg">{label}</div>
       <div className="mt-1 text-xs text-muted">{hint}</div>
     </div>
   );
 }
 
-function zoneLabelFor(v: number): string {
-  if (v <= 24) return "Peur extrême";
-  if (v <= 49) return "Peur";
-  if (v <= 74) return "Neutre / Cupidité";
-  return "Cupidité extrême";
-}
+

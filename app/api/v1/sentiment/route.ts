@@ -7,7 +7,7 @@
  *
  * Réponse :
  *   {
- *     fear_greed: {value: 25, label: "Extreme Fear", interpretation: "buy_signal_contrarian"},
+ *     fear_greed: {value, label, date}   (label = classe publiée par alternative.me, telle quelle)
  *     history_7d: [{value, label, date}],
  *     ...
  *   }
@@ -45,14 +45,9 @@ export async function GET(req: Request): Promise<Response> {
     // fall through with empty
   }
 
+  // reprise Z4 : plus de champ d'interprétation (signaux d'achat ou de vente sur des seuils inventés : conseil
+  // en investissement servi à des clients) ; seule la classe publiée par alternative.me est renvoyée.
   const current = fgData[0];
-  const interpret = (val: number): string => {
-    if (val <= 20) return "extreme_fear_contrarian_buy";
-    if (val <= 40) return "fear_cautious_buy";
-    if (val <= 60) return "neutral";
-    if (val <= 80) return "greed_take_profit";
-    return "extreme_greed_contrarian_sell";
-  };
 
   return successResponse(
     {
@@ -60,7 +55,6 @@ export async function GET(req: Request): Promise<Response> {
         ? {
             value: Number(current.value),
             label: current.value_classification,
-            interpretation: interpret(Number(current.value)),
             date: new Date(Number(current.timestamp) * 1000).toISOString(),
           }
         : null,
@@ -76,6 +70,9 @@ export async function GET(req: Request): Promise<Response> {
             : "deteriorating"
           : null,
       source: "alternative.me",
+      // lot Z4 : attribution exigée par alternative.me (« right next to the display of the data »)
+      source_url: "https://alternative.me/crypto/fear-and-greed-index/",
+      attribution: "Source : alternative.me (https://alternative.me/crypto/fear-and-greed-index/)",
       updated_at: new Date().toISOString(),
     },
     {

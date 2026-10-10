@@ -76,3 +76,4 @@ veille-report.md
 
 # L'Usine : fichiers de travail de l'agent IA (résumé de PR, sortie), joints au passage GitHub, jamais commités
 usine/.sortie/
+veille-amf-alertes.json

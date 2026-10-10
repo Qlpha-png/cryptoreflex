@@ -13,7 +13,7 @@ import { unstable_cache } from "next/cache";
 import { cgHeaders } from "@/lib/coingecko";
 import type { SourceName } from "@/lib/data-sources/priorities";
 import { formatDataDateFr, isoOrNull, oldestIso } from "@/lib/data-dates";
-import { FX_FALLBACK } from "@/lib/fx-fallback";
+import { FX_BCE, type SourceFx } from "@/lib/fx-bce";
 
 const COINGECKO_BASE = "https://api.coingecko.com/api/v3";
 
@@ -205,33 +205,11 @@ const BINANCE_PAIR_OVERRIDE: Record<string, string | "__USD_1__"> = {
   // (laissé vide pour l'instant, fallback CC/CG prendra le relais)
 };
 
-// Cache du ratio EUR/USD (1h) pour ne pas multiplier les appels.
-let _eurUsdCache: { rate: number; ts: number } | null = null;
-const EUR_USD_CACHE_MS = 60 * 60 * 1000;
-
+/* Taux USD → EUR des séries historiques : taux de référence de la BCE (data/fx-bce.json, robot R6, lot Z4). Avant le
+   10/10/2026 : paire euro-USDT de Binance (cours d'un stablecoin, licence exclue S26), puis taux de secours en dur.
+   Limite connue : un seul taux (celui de la dernière publication) est appliqué à toute la série, mention à l'écran. */
 async function _getEurUsdRate(): Promise<number> {
-  if (_eurUsdCache && Date.now() - _eurUsdCache.ts < EUR_USD_CACHE_MS) {
-    return _eurUsdCache.rate;
-  }
-  try {
-    const res = await fetch(`${BINANCE_BASE}/ticker/price?symbol=EURUSDT`, {
-      next: { revalidate: 60 },
-      signal: AbortSignal.timeout(3000),
-    });
-    if (!res.ok) throw new Error(`EUR/USDT → ${res.status}`);
-    const json = (await res.json()) as { price: string };
-    const eurInUsd = parseFloat(json.price); // 1 EUR = X USDT
-    if (!Number.isFinite(eurInUsd) || eurInUsd <= 0) throw new Error("invalid rate");
-    // 1 USD = 1 / eurInUsd EUR
-    const rate = 1 / eurInUsd;
-    _eurUsdCache = { rate, ts: Date.now() };
-    return rate;
-  } catch (err) {
-    console.warn(`[historical-prices] EUR/USD fetch failed:`, err);
-    // Secours : taux BCE du jour, sinon dernier taux BCE connu (lib/fx.ts ; avant le 05/10/2026 : 0,92 figé)
-    const { fiatPerUsd } = await import("@/lib/fx");
-    return (await fiatPerUsd()).eur;
-  }
+  return FX_BCE.eur;
 }
 
 /**
@@ -736,15 +714,9 @@ export interface SimplePrice {
 }
 
 /** Mention datée d'un taux de change journalier (lib/fx.ts) : « taux BCE du 2 octobre 2026 », « taux de secours … ». */
-export function fxRateLabel(fx: { date: string; source: "bce" | "binance" | "secours" }, pair: { from: string; to: string }): string {
+export function fxRateLabel(fx: { date: string; source: SourceFx }, _pair?: { from: string; to: string }): string {
   const jour = formatDataDateFr(fx.date) ?? "date inconnue";
-  if (fx.source === "secours") return `taux de secours (référence BCE du ${jour}), le taux du jour est indisponible`;
-  if (fx.source === "binance") {
-    const seulementEuroDollar = [pair.from, pair.to].every((c) => c === "eur" || c === "usd");
-    return seulementEuroDollar
-      ? `taux EUR/USDT de Binance du ${jour}`
-      : `taux du ${jour} (euro : Binance ; livre et franc suisse : rapport BCE du ${formatDataDateFr(FX_FALLBACK.date) ?? FX_FALLBACK.date})`;
-  }
+  if (fx.source === "secours") return `dernier taux de référence BCE connu, du ${jour}`;
   return `taux de référence BCE du ${jour}`;
 }
 

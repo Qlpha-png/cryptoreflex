@@ -10,7 +10,7 @@
  * Fonctions pures, testées dans tests/lib/convertisseur-stats.test.ts.
  */
 import type { HistoricalPoint } from "@/lib/historical-prices";
-import { FX_FALLBACK } from "@/lib/fx-fallback";
+import { FX_BCE } from "@/lib/fx-bce";
 
 export type PairKind = "crypto-fiat" | "fiat-crypto" | "crypto-crypto" | "fiat-fiat";
 const FIATS = new Set(["eur", "usd", "gbp", "chf"]);
@@ -31,13 +31,12 @@ export function pairKind(from: string, to: string): PairKind {
 export const historySupported = (s: string): boolean => s.toLowerCase() === "eur" || !isFiatLike(s);
 
 /**
- * Monnaies « fiduciaires » du convertisseur et leur prix en euros de secours (derniers taux BCE connus, lib/fx-fallback.ts).
- * La page utilise le taux du jour (eurPerUnit(fiatPerUsd()), lib/fx.ts) ; ces valeurs ne servent que si celui-ci manque.
- * Avant le 05/10/2026 : taux figés de mai (1 USD = 0,92 €).
+ * Monnaies « fiduciaires » du convertisseur et leur prix en euros : taux de référence de la BCE (data/fx-bce.json, robot R6,
+ * lot Z4 ; lib/fx-bce.ts). Avant le 05/10/2026 : taux figés de mai (1 USD = 0,92 €) ; avant le 10/10/2026 : taux de secours en dur.
  */
 export const FIAT_EUR_PRICE: Record<string, number> = {
-  eur: 1, usd: FX_FALLBACK.eur, usdt: FX_FALLBACK.eur, usdc: FX_FALLBACK.eur, dai: FX_FALLBACK.eur,
-  gbp: FX_FALLBACK.eur / FX_FALLBACK.gbp, chf: FX_FALLBACK.eur / FX_FALLBACK.chf,
+  eur: 1, usd: FX_BCE.eur, usdt: FX_BCE.eur, usdc: FX_BCE.eur, dai: FX_BCE.eur,
+  gbp: FX_BCE.eur / FX_BCE.gbp, chf: FX_BCE.eur / FX_BCE.chf,
 };
 
 /** Taux de repli `from`/`to` à partir des derniers prix en euros connus (null = inconnu) */
