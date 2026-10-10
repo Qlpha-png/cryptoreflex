@@ -1,0 +1,116 @@
+{
+ "id": "r-just-mining",
+ "origine": "reel-reconstitue",
+ "type": "extraction",
+ "source": "fiche AVANT = data/platforms.json au commit 6d1fdcbd~1 (valeurs et textes d'origine) ; PAGE reconstituée à partir de fees.verified.note du commit 6d1fdcbd (relevé du 05/10/2026 sur https://www.meria.com/feePolicy) : ce n'est PAS une copie de la page (le dépôt ne conserve pas le texte des pages), mais les phrases relevées ce jour-là, entourées d'un décor de chiffres parasites.",
+ "description": "Just Mining (Meria) : la page donne 0,99 % pour BTC/ETH/USDC et 2,39 % pour les autres cryptos ; le modèle prend le palier 0,99 % : proposé « à relire » (écart 1,51), la citation montre le palier à un humain.",
+ "plateforme": {
+  "id": "just-mining",
+  "name": "Just Mining",
+  "fees": {
+   "spotMaker": 1.5,
+   "spotTaker": 1.5,
+   "instantBuy": 2.5,
+   "withdrawalCrypto": "Variable",
+   "withdrawalFiatSepa": "~1,24-1,49 % (min 100 €)",
+   "spread": "variable (inclus)",
+   "verified": {
+    "date": "2026-06-13",
+    "source": "https://cryptoast.fr/meria-avis/",
+    "model": "courtier",
+    "makerTakerApplies": false,
+    "realCostPct": "0,99-2,39 % virement · 1,5-3,15 % carte (selon crypto)",
+    "verdict": "douteux",
+    "note": "Renommé Meria. Fourchette variable selon crypto et moyen de paiement. Retrait EUR PAS gratuit (~1,24-1,49 %, min 100 €). Commission staking 5-15 % des récompenses."
+   }
+  }
+ },
+ "pages": [
+  {
+   "url": "https://www.meria.com/feePolicy",
+   "texte": "Just Mining : tarifs et frais. Cette page décrit les frais applicables aux clients particuliers résidant dans l'Espace économique européen. Les tarifs peuvent évoluer ; la version en vigueur est celle affichée sur cette page. Grille officielle Meria : achat 0,99 % sur BTC, ETH et USDC par virement ou depuis le solde (carte : 1,5 % sur BTC, 1,75 % sur ETH et USDC), 2,39 % sur les autres cryptos (3,15 % par carte). Retrait en euros : 1,24 % de conversion, minimum 100 €. Retrait de crypto à frais fixes (ex. 0,00012 BTC). Programme de parrainage : 10 € offerts après 100 € échangés. Intérêts sur les euros déposés : jusqu'à 2 % par an. Service client joignable de 9 h à 18 h."
+  }
+ ],
+ "compteur": {
+  "deja": 0
+ },
+ "env": {},
+ "testsVerts": true,
+ "client": {
+  "lectures": [
+   {
+    "extractions": [
+     {
+      "champ": "spotMaker",
+      "valeur": null,
+      "unite": null,
+      "citation_exacte": null,
+      "url": "https://www.meria.com/feePolicy"
+     },
+     {
+      "champ": "spotTaker",
+      "valeur": null,
+      "unite": null,
+      "citation_exacte": null,
+      "url": "https://www.meria.com/feePolicy"
+     },
+     {
+      "champ": "instantBuy",
+      "valeur": 0.99,
+      "unite": "%",
+      "citation_exacte": "achat 0,99 % sur BTC, ETH et USDC",
+      "url": "https://www.meria.com/feePolicy"
+     }
+    ]
+   },
+   {
+    "extractions": [
+     {
+      "champ": "instantBuy",
+      "valeur": 0.99,
+      "unite": "%",
+      "citation_exacte": "achat 0,99 % sur BTC, ETH et USDC",
+      "url": "https://www.meria.com/feePolicy"
+     },
+     {
+      "champ": "spotTaker",
+      "valeur": null,
+      "unite": null,
+      "citation_exacte": null,
+      "url": "https://www.meria.com/feePolicy"
+     },
+     {
+      "champ": "spotMaker",
+      "valeur": null,
+      "unite": null,
+      "citation_exacte": null,
+      "url": "https://www.meria.com/feePolicy"
+     }
+    ]
+   }
+  ]
+ },
+ "verite": {
+  "instantBuy": 2.39
+ },
+ "attendu": {
+  "arret": null,
+  "appels": 2,
+  "champs": {
+   "instantBuy": {
+    "statut": "propose",
+    "niveau": "a_relire",
+    "nouvelle": 0.99
+   },
+   "spotMaker": {
+    "statut": "non-trouve"
+   },
+   "spotTaker": {
+    "statut": "non-trouve"
+   }
+  },
+  "action": "proposition",
+  "fusionner": false,
+  "ticket": false
+ }
+}

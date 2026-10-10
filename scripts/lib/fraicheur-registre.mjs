@@ -19,9 +19,9 @@ export const METHODES = ["kv", "workflow", "fichier", "constante", "dossier", "p
 /**
  * 51 familles de la carte + 18b (liste noire AMF), dans l'ordre ; lot Z3 (10/10/2026) : + 52 (liens et défauts des fiches)
  * et 53 (archive des cours) ; reprise Z5 (10/10/2026) : + 54 (repère Lido et contrôles des rendements, robot R8) ;
- * lot Z6 (10/10/2026) : + 55 (revue périodique mensuelle, robot R14).
+ * lot Z6 (10/10/2026) : + 55 (revue périodique mensuelle, robot R14) ; lot Z7 : + 56 (propositions de correction des frais, robots R10 et R11).
  */
-export const IDS_ATTENDUS = [...Array.from({ length: 55 }, (_, i) => String(i + 1)).flatMap((id) => (id === "18" ? ["18", "18b"] : [id]))];
+export const IDS_ATTENDUS = [...Array.from({ length: 56 }, (_, i) => String(i + 1)).flatMap((id) => (id === "18" ? ["18", "18b"] : [id]))];
 export const ICONES = { ok: "✅", attention: "⚠️", defaut: "❌" };
 
 export function chargerRegistre(root) {

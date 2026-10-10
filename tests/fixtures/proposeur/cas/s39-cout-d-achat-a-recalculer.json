@@ -1,0 +1,140 @@
+{
+ "origine": "synthetique",
+ "type": "extraction",
+ "plateforme": {
+  "id": "plateforme-test",
+  "name": "Plateforme Test",
+  "fees": {
+   "spotMaker": 0.4,
+   "spotTaker": 0.8,
+   "instantBuy": 1,
+   "withdrawalCrypto": "Variable",
+   "withdrawalFiatSepa": 1,
+   "spread": "non publié",
+   "verified": {
+    "date": "2026-10-05",
+    "source": "https://frais.plateforme-test.example/tarifs",
+    "model": "exchange",
+    "makerTakerApplies": true,
+    "realCostPct": "Selon la grille officielle",
+    "verdict": "fiable",
+    "note": "Grille officielle relevée."
+   },
+   "cost": {
+    "path": "Appli : achat instantané",
+    "c100": 1,
+    "c1000": 10,
+    "kind": "partiel",
+    "note": "Coût de l'achat.",
+    "date": "2026-10-05",
+    "source": "https://frais.plateforme-test.example/tarifs"
+   }
+  }
+ },
+ "compteur": {
+  "deja": 0
+ },
+ "env": {
+  "R11_FUSION_FRAIS": "on"
+ },
+ "testsVerts": true,
+ "id": "s39-cout-d-achat-a-recalculer",
+ "description": "La fiche porte un coût d'achat réel (fees.cost) dérivé du taux d'achat instantané : à relire.",
+ "pages": [
+  {
+   "url": "https://frais.plateforme-test.example/tarifs",
+   "texte": "Plateforme Test : tarifs et frais. Cette page décrit les frais applicables aux clients particuliers résidant dans l'Espace économique européen. Les tarifs peuvent évoluer ; la version en vigueur est celle affichée sur cette page. Achat instantané : 1,2 % du montant. Programme de parrainage : 10 € offerts après 100 € échangés. Intérêts sur les euros déposés : jusqu'à 2 % par an. Service client joignable de 9 h à 18 h."
+  }
+ ],
+ "client": {
+  "lectures": [
+   {
+    "extractions": [
+     {
+      "champ": "spotMaker",
+      "valeur": null,
+      "unite": null,
+      "citation_exacte": null,
+      "url": "https://frais.plateforme-test.example/tarifs"
+     },
+     {
+      "champ": "spotTaker",
+      "valeur": null,
+      "unite": null,
+      "citation_exacte": null,
+      "url": "https://frais.plateforme-test.example/tarifs"
+     },
+     {
+      "champ": "instantBuy",
+      "valeur": 1.2,
+      "unite": "%",
+      "citation_exacte": "Achat instantané : 1,2 %",
+      "url": "https://frais.plateforme-test.example/tarifs"
+     },
+     {
+      "champ": "withdrawalFiatSepa",
+      "valeur": null,
+      "unite": null,
+      "citation_exacte": null,
+      "url": "https://frais.plateforme-test.example/tarifs"
+     }
+    ]
+   },
+   {
+    "extractions": [
+     {
+      "champ": "withdrawalFiatSepa",
+      "valeur": null,
+      "unite": null,
+      "citation_exacte": null,
+      "url": "https://frais.plateforme-test.example/tarifs"
+     },
+     {
+      "champ": "instantBuy",
+      "valeur": 1.2,
+      "unite": "%",
+      "citation_exacte": "Achat instantané : 1,2 %",
+      "url": "https://frais.plateforme-test.example/tarifs"
+     },
+     {
+      "champ": "spotTaker",
+      "valeur": null,
+      "unite": null,
+      "citation_exacte": null,
+      "url": "https://frais.plateforme-test.example/tarifs"
+     },
+     {
+      "champ": "spotMaker",
+      "valeur": null,
+      "unite": null,
+      "citation_exacte": null,
+      "url": "https://frais.plateforme-test.example/tarifs"
+     }
+    ]
+   }
+  ]
+ },
+ "attendu": {
+  "arret": null,
+  "appels": 2,
+  "champs": {
+   "spotMaker": {
+    "statut": "non-trouve"
+   },
+   "spotTaker": {
+    "statut": "non-trouve"
+   },
+   "instantBuy": {
+    "statut": "propose",
+    "niveau": "a_relire",
+    "nouvelle": 1.2
+   },
+   "withdrawalFiatSepa": {
+    "statut": "non-trouve"
+   }
+  },
+  "action": "proposition",
+  "fusionner": false,
+  "ticket": false
+ }
+}

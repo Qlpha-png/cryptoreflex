@@ -19,6 +19,10 @@
  *               (data/veille/frais-auto.json → fees.autoCheckedAt, scripts/lib/frais-auto.mjs) ; jamais un montant modifié ;
  *  - [echeances] lot Z6 : dates de la page officielle du calendrier de déclaration (impots.gouv.fr) et textes de loi qui citent
  *               la directive 2023/2226 (DAC8, recherche de l'API Légifrance) : empreinte, ticket si changement, jamais de fusion.
+ *  - [proposeur] lot Z7 : le TEXTE des pages de frais dont les taux ont changé est écrit sur le disque du runner (VEILLE_TEXTES,
+ *               dans $RUNNER_TEMP ; défaut veille-frais-textes.json à côté du rapport), jamais commité et JAMAIS envoyé en
+ *               artefact (dépôt public) : l'étape suivante du MÊME job (action .github/actions/proposeur, R10) le lit sur place.
+ *               Les plateformes de frais.sansConservation (sources.json) ne sont jamais lues par le proposeur.
  * Un écart → ligne « - ❌ » dans le rapport, code de sortie 1, ticket GitHub « veille-officielle » (lu par la routine
  * Claude du matin, qui relit la source, met le site à jour puis réenregistre la référence).
  *
@@ -34,6 +38,7 @@ import { readFileSync, writeFileSync, existsSync, appendFileSync } from "node:fs
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { phrasesLicence } from "./lib/fraicheur-registre.mjs";
+import { UA, jetonsFrais, texte } from "./lib/page-texte.mjs";
 import { VERDICTS_DATABLES, depuisPourEnregistrement, fusionnerFraisAuto, jugerFraisAuto, statutPage } from "./lib/frais-auto.mjs";
 import { comparer, controleAvance, corpsRecherchePiste, datesDePage, empreinte as empreinteDates, idsLegifrance } from "./lib/echeances.mjs";
 
@@ -47,7 +52,6 @@ const SOURCES = JSON.parse(readFileSync(path.join(ROOT, "data/veille/sources.jso
 const ETAT_PATH = path.join(ROOT, "data/veille/etat.json");
 const ETAT = existsSync(ETAT_PATH) ? JSON.parse(readFileSync(ETAT_PATH, "utf8")) : {};
 const REPORT = process.env.VEILLE_REPORT || path.join(ROOT, "veille-report.md");
-const UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0 Safari/537.36 CryptoreflexVeille/1.0";
 const AUJ = new Date().toISOString().slice(0, 10);
 
 const lignes = []; // { niveau: "fail"|"warn"|"new"|"ok", zone, msg, changement? }
@@ -82,20 +86,6 @@ const SECRETS = [process.env.PISTE_CLIENT_ID, process.env.PISTE_CLIENT_SECRET].f
 const propre = (s) => SECRETS.reduce((t, x) => t.split(x).join("***"), String(s));
 const log = (...a) => console.log(propre(a.join(" ")));
 
-const ENT = { nbsp: " ", eacute: "é", egrave: "è", ecirc: "ê", agrave: "à", acirc: "â", ccedil: "ç", ocirc: "ô", ucirc: "û", icirc: "î", iuml: "ï", euml: "ë", rsquo: "'", lsquo: "'", laquo: "«", raquo: "»", amp: "&", quot: '"', apos: "'", lt: "<", gt: ">", deg: "°", euro: "€", Eacute: "É" };
-/** Texte comparable : balises retirées, entités décodées, toutes les espaces (insécables comprises) réduites à une seule. */
-function texte(html) {
-  return String(html || "")
-    .replace(/<script[\s\S]*?<\/script>/gi, " ")
-    .replace(/<style[\s\S]*?<\/style>/gi, " ")
-    .replace(/<[^>]+>/g, " ")
-    .replace(/&#x([0-9a-f]+);/gi, (_, h) => String.fromCodePoint(parseInt(h, 16)))
-    .replace(/&#(\d+);/g, (_, d) => String.fromCodePoint(Number(d)))
-    .replace(/&([a-z]+);/gi, (m, n) => ENT[n] ?? m)
-    .replace(/[’‘]/g, "'")
-    .replace(/[\s    ]+/g, " ")
-    .trim();
-}
 const norm = (s) => texte(s);
 const jour = (v) => {
   if (v == null || v === "") return null;
@@ -410,8 +400,6 @@ function ecrireMicaAuto(nouvelles) {
 }
 
 /* ------------------------------------------------------------------ grilles de frais */
-/** Taux et montants d'une grille (« 1 000 € » et « 1,50 % » compris), normalisés et dédoublonnés. */
-const jetonsFrais = (t) => [...new Set((t.match(/\d{1,3}(?:[ .,]\d{3})+(?:,\d+)? ?(?:%|€)|\d+(?:[.,]\d+)? ?(?:%|€)/g) || []).map((x) => x.replace(/ /g, "").replace(/\./g, ",")))].sort();
 /* Navigateur réel (Playwright, option --navigateur) pour les grilles rendues en JavaScript ou filtrées : lancé une seule fois. */
 let navigateur = null;
 async function rendre(url) {
@@ -453,7 +441,7 @@ async function empreinte(url, { index = false, viaNav = false } = {}) {
         } else {
           const t = texte(html);
           const jetons = jetonsFrais(t);
-          if (t.length >= 1500 && jetons.length) return { emp: { jetons: sha(jetons.join("|")), liste: jetons.slice(0, 80) } };
+          if (t.length >= 1500 && jetons.length) return { emp: { jetons: sha(jetons.join("|")), liste: jetons.slice(0, 80) }, texte: t };
           const ph = phrasesFrais(t);
           if (t.length >= 1500 && ph.length) return { emp: { phrases: sha(ph.join("|")), liste: ph.slice(0, 40) } };
           pourquoi = "pas de grille lisible sans navigateur";
@@ -470,7 +458,7 @@ async function empreinte(url, { index = false, viaNav = false } = {}) {
       return { pourquoi: `navigateur : HTTP ${r.status}, ${liens.length} lien(s) PDF` };
     }
     const jetons = jetonsFrais(r.texte);
-    if (r.status < 400 && r.texte.length >= 800 && jetons.length) return { emp: { mode: "navigateur", jetons: sha(jetons.join("|")), liste: jetons.slice(0, 80) } };
+    if (r.status < 400 && r.texte.length >= 800 && jetons.length) return { emp: { mode: "navigateur", jetons: sha(jetons.join("|")), liste: jetons.slice(0, 80) }, texte: r.texte };
     const ph = phrasesFrais(r.texte);
     if (r.status < 400 && r.texte.length >= 800 && ph.length) return { emp: { mode: "navigateur", phrases: sha(ph.join("|")), liste: ph.slice(0, 40) } };
     return { pourquoi: r.status >= 400 ? `bloquée (HTTP ${r.status}, protection anti-robot probable)` : `navigateur : HTTP ${r.status}, ${r.texte.length} caractères, ni taux ni phrase de frais` };
@@ -496,7 +484,7 @@ async function veilleFrais() {
     const suivi = (suiviFrais[p.id] = []); // lot Z6 : statut de chaque page, pour la date du contrôle automatique
     for (const [url, estIndex] of [...pages.map((u) => [u, false]), ...index.map((u) => [u, true])]) {
       // Une page relevée au navigateur se relit TOUJOURS au navigateur (sinon l'empreinte changerait avec la méthode).
-      const { emp, pourquoi, disparue } = await empreinte(url, { index: estIndex, viaNav: NAVIGATEUR && refP[url]?.mode === "navigateur" });
+      const { emp, pourquoi, disparue, texte: texteLu } = await empreinte(url, { index: estIndex, viaNav: NAVIGATEUR && refP[url]?.mode === "navigateur" });
       suivi.push({ url, ...statutPage({ ref: refP[url], emp, disparue }) });
       // Page de frais supprimée (404/410) : la source citée par le comparateur n'existe plus → à traiter, pas à taire.
       if (disparue) { if (!refP[url]?.disparue) changement("frais", `${p.name} : page de frais disparue (${pourquoi}) → retrouver la grille officielle et corriger la source citée ; ${url}`); obs[url] = { disparue: true }; continue; }
@@ -515,6 +503,8 @@ async function veilleFrais() {
       }
       const quoi = cle === "pdf" ? "le document PDF a changé" : cle === "liens" ? "la liste des documents tarifaires a changé" : cle === "phrases" ? "les phrases sur les frais ou limites ont changé" : "les taux ou montants de la page ont changé";
       changement("frais", `${p.name} : ${quoi}${diff} → revérifier les frais affichés au comparateur ; ${url}`);
+      // lot Z7 : seul le texte d'une page dont les TAUX ont changé part au proposeur (ni PDF, ni liste de PDF, ni phrases)
+      if (cle === "jetons" && texteLu && !ENREGISTRER && !(F.sansConservation || []).includes(p.id)) textesFrais.push({ plateforme: p.id, nom: p.name, url, texte: texteLu.slice(0, TEXTE_FRAIS_MAX), releve: AUJ });
     }
   }
   if (navigateur) await navigateur.b.close().catch(() => {});
@@ -529,6 +519,10 @@ async function veilleFrais() {
  * leur date précédente. Règles dans scripts/lib/frais-auto.mjs. Le robot ne modifie jamais un montant de frais.
  */
 const suiviFrais = {};
+/* Lot Z7 : texte des pages de frais changées, pour le proposeur R10. Fichier de travail du run, À CÔTÉ du rapport, jamais
+   dans le dépôt (.gitignore) : le workflow le publie comme artefact d'un jour. Taille bornée par page. */
+const textesFrais = [];
+const TEXTE_FRAIS_MAX = 150_000;
 const FRAIS_AUTO_PATH = path.join(ROOT, "data/veille/frais-auto.json");
 function ecrireFraisAuto(platforms, suivi) {
   const sansEcart = [];
@@ -665,6 +659,7 @@ const md = [
 ].join("\n");
 writeFileSync(REPORT, propre(md));
 // lot Z1 : changements de licence, lus par le workflow (un ticket « relire la licence » par page, dédoublonné)
+if (textesFrais.length) writeFileSync(process.env.VEILLE_TEXTES || path.join(path.dirname(REPORT), "veille-frais-textes.json"), JSON.stringify({ date: AUJ, pages: textesFrais }));
 if (licencesChangees.length) writeFileSync(path.join(path.dirname(REPORT), "veille-licences.json"), propre(JSON.stringify(licencesChangees, null, 1)));
 if (ENREGISTRER && Object.keys(observe.licences).length) { Object.assign(LICENCES_REF.pages, observe.licences); licencesRefModifiee = true; }
 if (licencesRefModifiee) ecrireLicencesRef();

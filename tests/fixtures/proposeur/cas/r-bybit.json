@@ -1,0 +1,136 @@
+{
+ "id": "r-bybit",
+ "origine": "reel-reconstitue",
+ "type": "extraction",
+ "source": "fiche AVANT = data/platforms.json au commit 6d1fdcbd~1 (valeurs et textes d'origine) ; PAGE reconstituée à partir de fees.verified.note du commit 6d1fdcbd (relevé du 05/10/2026 sur https://www.bybit.eu/en-EU/help-center/article/Trading-Fee-Structure) : ce n'est PAS une copie de la page (le dépôt ne conserve pas le texte des pages), mais les phrases relevées ce jour-là, entourées d'un décor de chiffres parasites.",
+ "description": "Bybit EU : taux unique 0,25 % (maker = taker) depuis le 05/10/2026, contre 0,1 % avant.",
+ "plateforme": {
+  "id": "bybit",
+  "name": "Bybit",
+  "fees": {
+   "spotMaker": 0.1,
+   "spotTaker": 0.1,
+   "instantBuy": 2,
+   "withdrawalCrypto": "Variable",
+   "withdrawalFiatSepa": 0,
+   "spread": "0,1-0,4%",
+   "verified": {
+    "date": "2026-06-13",
+    "source": "https://www.bybit.com/en/announcement-info/fee-rate/",
+    "model": "exchange",
+    "makerTakerApplies": true,
+    "realCostPct": "0,10/0,10 % (spot) · carte via tiers ~1-3 %",
+    "verdict": "fiable",
+    "note": "Spot 0,10 % confirmé (officiel). Achat carte = prestataires tiers (1-3 %, non publié par Bybit). Retrait SEPA EUR non vérifié. -25 % en MNT (optionnel)."
+   }
+  }
+ },
+ "pages": [
+  {
+   "url": "https://www.bybit.eu/en-EU/help-center/article/Trading-Fee-Structure",
+   "texte": "Bybit : tarifs et frais. Cette page décrit les frais applicables aux clients particuliers résidant dans l'Espace économique européen. Les tarifs peuvent évoluer ; la version en vigueur est celle affichée sur cette page. Bybit EU (entité agréée pour la France) : taux unique de 0,25 % (maker = taker) au niveau VIP 0, depuis le 05/10/2026 (grille officielle). Achat par carte via des prestataires tiers (1-3 %, non publié par Bybit). Retrait SEPA en euros non vérifié. Programme de parrainage : 10 € offerts après 100 € échangés. Intérêts sur les euros déposés : jusqu'à 2 % par an. Service client joignable de 9 h à 18 h."
+  }
+ ],
+ "compteur": {
+  "deja": 0
+ },
+ "env": {},
+ "testsVerts": true,
+ "client": {
+  "lectures": [
+   {
+    "extractions": [
+     {
+      "champ": "spotMaker",
+      "valeur": 0.25,
+      "unite": "%",
+      "citation_exacte": "taux unique de 0,25 % (maker = taker)",
+      "url": "https://www.bybit.eu/en-EU/help-center/article/Trading-Fee-Structure"
+     },
+     {
+      "champ": "spotTaker",
+      "valeur": 0.25,
+      "unite": "%",
+      "citation_exacte": "taux unique de 0,25 % (maker = taker)",
+      "url": "https://www.bybit.eu/en-EU/help-center/article/Trading-Fee-Structure"
+     },
+     {
+      "champ": "instantBuy",
+      "valeur": null,
+      "unite": null,
+      "citation_exacte": null,
+      "url": "https://www.bybit.eu/en-EU/help-center/article/Trading-Fee-Structure"
+     },
+     {
+      "champ": "withdrawalFiatSepa",
+      "valeur": null,
+      "unite": null,
+      "citation_exacte": null,
+      "url": "https://www.bybit.eu/en-EU/help-center/article/Trading-Fee-Structure"
+     }
+    ]
+   },
+   {
+    "extractions": [
+     {
+      "champ": "withdrawalFiatSepa",
+      "valeur": null,
+      "unite": null,
+      "citation_exacte": null,
+      "url": "https://www.bybit.eu/en-EU/help-center/article/Trading-Fee-Structure"
+     },
+     {
+      "champ": "instantBuy",
+      "valeur": null,
+      "unite": null,
+      "citation_exacte": null,
+      "url": "https://www.bybit.eu/en-EU/help-center/article/Trading-Fee-Structure"
+     },
+     {
+      "champ": "spotTaker",
+      "valeur": 0.25,
+      "unite": "%",
+      "citation_exacte": "taux unique de 0,25 % (maker = taker)",
+      "url": "https://www.bybit.eu/en-EU/help-center/article/Trading-Fee-Structure"
+     },
+     {
+      "champ": "spotMaker",
+      "valeur": 0.25,
+      "unite": "%",
+      "citation_exacte": "taux unique de 0,25 % (maker = taker)",
+      "url": "https://www.bybit.eu/en-EU/help-center/article/Trading-Fee-Structure"
+     }
+    ]
+   }
+  ]
+ },
+ "verite": {
+  "spotMaker": 0.25,
+  "spotTaker": 0.25
+ },
+ "attendu": {
+  "arret": null,
+  "appels": 2,
+  "champs": {
+   "spotMaker": {
+    "statut": "propose",
+    "niveau": "a_relire",
+    "nouvelle": 0.25
+   },
+   "spotTaker": {
+    "statut": "propose",
+    "niveau": "a_relire",
+    "nouvelle": 0.25
+   },
+   "instantBuy": {
+    "statut": "non-trouve"
+   },
+   "withdrawalFiatSepa": {
+    "statut": "non-trouve"
+   }
+  },
+  "action": "proposition",
+  "fusionner": false,
+  "ticket": false
+ }
+}

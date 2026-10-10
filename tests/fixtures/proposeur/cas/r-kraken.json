@@ -1,0 +1,138 @@
+{
+ "id": "r-kraken",
+ "origine": "reel-reconstitue",
+ "type": "extraction",
+ "source": "fiche AVANT = data/platforms.json au commit 6d1fdcbd~1 (valeurs et textes d'origine) ; PAGE reconstituée à partir de fees.verified.note du commit 6d1fdcbd (relevé du 05/10/2026 sur https://www.kraken.com/features/fee-schedule) : ce n'est PAS une copie de la page (le dépôt ne conserve pas le texte des pages), mais les phrases relevées ce jour-là, entourées d'un décor de chiffres parasites.",
+ "description": "Kraken Pro : maker 0,25 -> 0,4 et taker 0,4 -> 0,8 ; Instant Buy (1 %) et retrait SEPA (1 €) confirmés.",
+ "plateforme": {
+  "id": "kraken",
+  "name": "Kraken",
+  "fees": {
+   "spotMaker": 0.25,
+   "spotTaker": 0.4,
+   "instantBuy": 1,
+   "withdrawalCrypto": "Variable",
+   "withdrawalFiatSepa": 1,
+   "spread": "0,2-0,8%",
+   "verified": {
+    "date": "2026-06-13",
+    "source": "https://www.kraken.com/features/fee-schedule",
+    "model": "exchange",
+    "makerTakerApplies": true,
+    "realCostPct": "0,25/0,40 % (Pro) · Instant Buy 1 % + frais",
+    "verdict": "fiable",
+    "note": "Kraken Pro = 0,25 % maker / 0,40 % taker (page officielle). Instant Buy (appli simple) = 1 % + frais du moyen de paiement. Retrait SEPA 1 €."
+   }
+  }
+ },
+ "pages": [
+  {
+   "url": "https://www.kraken.com/features/fee-schedule",
+   "texte": "Kraken : tarifs et frais. Cette page décrit les frais applicables aux clients particuliers résidant dans l'Espace économique européen. Les tarifs peuvent évoluer ; la version en vigueur est celle affichée sur cette page. Kraken Pro, premier palier : 0,40 % maker / 0,80 % taker (grille officielle). Instant Buy (appli simple) = 1 % + frais du moyen de paiement. Retrait SEPA 1 € (relevé du 13/06/2026). Programme de parrainage : 10 € offerts après 100 € échangés. Intérêts sur les euros déposés : jusqu'à 2 % par an. Service client joignable de 9 h à 18 h."
+  }
+ ],
+ "compteur": {
+  "deja": 0
+ },
+ "env": {},
+ "testsVerts": true,
+ "client": {
+  "lectures": [
+   {
+    "extractions": [
+     {
+      "champ": "spotMaker",
+      "valeur": 0.4,
+      "unite": "%",
+      "citation_exacte": "0,40 % maker",
+      "url": "https://www.kraken.com/features/fee-schedule"
+     },
+     {
+      "champ": "spotTaker",
+      "valeur": 0.8,
+      "unite": "%",
+      "citation_exacte": "0,80 % taker",
+      "url": "https://www.kraken.com/features/fee-schedule"
+     },
+     {
+      "champ": "instantBuy",
+      "valeur": 1,
+      "unite": "%",
+      "citation_exacte": "Instant Buy (appli simple) = 1 %",
+      "url": "https://www.kraken.com/features/fee-schedule"
+     },
+     {
+      "champ": "withdrawalFiatSepa",
+      "valeur": 1,
+      "unite": "€",
+      "citation_exacte": "Retrait SEPA 1 €",
+      "url": "https://www.kraken.com/features/fee-schedule"
+     }
+    ]
+   },
+   {
+    "extractions": [
+     {
+      "champ": "withdrawalFiatSepa",
+      "valeur": 1,
+      "unite": "€",
+      "citation_exacte": "Retrait SEPA 1 €",
+      "url": "https://www.kraken.com/features/fee-schedule"
+     },
+     {
+      "champ": "instantBuy",
+      "valeur": 1,
+      "unite": "%",
+      "citation_exacte": "Instant Buy (appli simple) = 1 %",
+      "url": "https://www.kraken.com/features/fee-schedule"
+     },
+     {
+      "champ": "spotTaker",
+      "valeur": 0.8,
+      "unite": "%",
+      "citation_exacte": "0,80 % taker",
+      "url": "https://www.kraken.com/features/fee-schedule"
+     },
+     {
+      "champ": "spotMaker",
+      "valeur": 0.4,
+      "unite": "%",
+      "citation_exacte": "0,40 % maker",
+      "url": "https://www.kraken.com/features/fee-schedule"
+     }
+    ]
+   }
+  ]
+ },
+ "verite": {
+  "spotMaker": 0.4,
+  "spotTaker": 0.8,
+  "instantBuy": 1,
+  "withdrawalFiatSepa": 1
+ },
+ "attendu": {
+  "arret": null,
+  "appels": 2,
+  "champs": {
+   "spotMaker": {
+    "statut": "propose",
+    "niveau": "a_relire",
+    "nouvelle": 0.4
+   },
+   "spotTaker": {
+    "statut": "propose",
+    "niveau": "a_relire",
+    "nouvelle": 0.8
+   },
+   "instantBuy": {
+    "statut": "identique"
+   },
+   "withdrawalFiatSepa": {
+    "statut": "identique"
+   }
+  },
+  "action": "proposition",
+  "fusionner": false,
+  "ticket": false
+ }
+}

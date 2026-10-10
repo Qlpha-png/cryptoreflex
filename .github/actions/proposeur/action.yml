@@ -1,0 +1,268 @@
+# Proposeur (R10) + fusion (R11) — action composite du lot Z7 (10/10/2026, reprise). Utilisée par DEUX workflows :
+#  - veille-officielle.yml : étape du MÊME job que la veille, juste après la détection d'un changement de TAUX sur une page de
+#    frais. Le texte des pages est lu sur le disque du runner ($RUNNER_TEMP), jamais d'artefact : le dépôt est PUBLIC, un
+#    artefact y est téléchargeable par n'importe quel compte GitHub pendant sa durée de vie (rediffusion de pages sous
+#    conditions restrictives) ;
+#  - proposeur.yml : lancement manuel seulement ; il relit lui-même UNE fois les pages des plateformes demandées.
+# Décisions de Kev (10/10/2026) : Gemini (offre gratuite, usage interne) ne décide jamais, il EXTRAIT ; tout le jugement est du
+# code déterministe testé (scripts/lib/proposeur.mjs, scripts/lib/fusion-regles.mjs). Plafond de 50 appels par jour (compteur
+# conservé par le cache). Quota, clé refusée, panne, taux de rejet anormal : ticket privé, rien n'est publié, sortie `echec`.
+# Mode « propose » par défaut : une demande de fusion étiquetée « proposition-frais » par plateforme, jamais fusionnée seule.
+# La fusion automatique des frais n'existe que si la variable de dépôt R11_FUSION_FRAIS vaut exactement « on ».
+# AVANT toute demande de fusion : tsc et la suite de tests tournent sur la branche de la proposition (les demandes ouvertes avec
+# GITHUB_TOKEN ne déclenchent pas la CI : ce contrôle-là fait foi) ; échec = aucune demande de fusion, ticket privé motivé.
+# Droits attendus du job appelant (jeton par défaut en lecture seule) : contents: write et pull-requests: write, rien de plus large.
+# Tickets : dépôt PRIVÉ Qlpha-png/cryptoreflex-sentinelle (jeton SENTINELLE_TOKEN ; absent : aucun ticket, `echec` reste le signal).
+name: Proposeur de corrections de frais (R10/R11)
+description: Lit par Gemini les pages de frais changées, juge par code déterministe, ouvre une demande de fusion étiquetée (jamais fusionnée seule sauf R11_FUSION_FRAIS = on)
+
+inputs:
+  textes:
+    description: Chemin du fichier JSON du texte des pages de frais changées (disque du runner, hors dépôt)
+    required: true
+  gemini-api-key:
+    description: Clé Gemini (secret GEMINI_API_KEY)
+    required: true
+  sentinelle-token:
+    description: Jeton des tickets privés (secret SENTINELLE_TOKEN), vide = aucun ticket
+    required: false
+    default: ""
+  github-token:
+    description: Jeton du dépôt (GITHUB_TOKEN) pour les branches et les demandes de fusion
+    required: true
+  fusion-frais:
+    description: Variable de dépôt R11_FUSION_FRAIS (« on » active la fusion automatique des frais, toute autre valeur = mode propose)
+    required: false
+    default: ""
+  modeles-a:
+    description: Modèles de la lecture A, séparés par des virgules (vide = défaut du dépôt)
+    required: false
+    default: ""
+  modeles-b:
+    description: Modèles de la lecture B, séparés par des virgules (vide = défaut du dépôt)
+    required: false
+    default: ""
+
+outputs:
+  echec:
+    description: "true si le proposeur s'est arrêté (clé refusée, quota, erreur, taux de rejet anormal, contrôles rouges)"
+    value: ${{ steps.bilan.outputs.echec }}
+
+runs:
+  using: composite
+  steps:
+    - name: Y a-t-il quelque chose à lire ?
+      id: travail
+      shell: bash
+      env:
+        TEXTES: ${{ inputs.textes }}
+        SENTINELLE_TOKEN: ${{ inputs.sentinelle-token }}
+      run: |
+        echo "jour=$(date -u +%F)" >> "$GITHUB_OUTPUT"
+        if [ -n "$SENTINELLE_TOKEN" ]; then echo "prives=true" >> "$GITHUB_OUTPUT"; else echo "prives=false" >> "$GITHUB_OUTPUT"; fi
+        if [ -s "$TEXTES" ]; then
+          echo "oui=true" >> "$GITHUB_OUTPUT"
+        else
+          echo "oui=false" >> "$GITHUB_OUTPUT"
+          echo "Proposeur : aucune page de frais dont les taux ont changé, rien à proposer." >> "$GITHUB_STEP_SUMMARY"
+        fi
+
+    # Même vérification que « Sonde Gemini » (clé valide) ; seuls le code HTTP et le statut d'erreur sont lus, jamais la clé.
+    - name: Clé Gemini valide ?
+      id: cle
+      if: steps.travail.outputs.oui == 'true'
+      shell: bash
+      env:
+        GEMINI_API_KEY: ${{ inputs.gemini-api-key }}
+      run: |
+        set -o pipefail
+        if [ -z "$GEMINI_API_KEY" ]; then
+          echo "valide=false" >> "$GITHUB_OUTPUT"
+          echo "raison=le secret GEMINI_API_KEY est absent" >> "$GITHUB_OUTPUT"
+          exit 0
+        fi
+        code=$(curl -s -o "$RUNNER_TEMP/modeles.json" -w "%{http_code}" -H "x-goog-api-key: $GEMINI_API_KEY" "https://generativelanguage.googleapis.com/v1beta/models?pageSize=1")
+        if [ "$code" = "200" ]; then
+          echo "valide=true" >> "$GITHUB_OUTPUT"
+        else
+          statut=$(jq -r '.error.status // ""' "$RUNNER_TEMP/modeles.json" 2>/dev/null || true)
+          echo "valide=false" >> "$GITHUB_OUTPUT"
+          echo "raison=HTTP ${code} ${statut}" >> "$GITHUB_OUTPUT"
+        fi
+
+    - name: Ticket « clé Gemini invalide » (dépôt privé)
+      if: steps.travail.outputs.oui == 'true' && steps.cle.outputs.valide == 'false' && steps.travail.outputs.prives == 'true'
+      uses: actions/github-script@v9
+      env:
+        RAISON: ${{ steps.cle.outputs.raison }}
+      with:
+        github-token: ${{ inputs.sentinelle-token }}
+        script: |
+          const depot = { owner: "Qlpha-png", repo: "cryptoreflex-sentinelle" };
+          const runUrl = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
+          const titre = "[Proposeur] clé Gemini invalide";
+          const ouverts = await github.paginate(github.rest.issues.listForRepo, { ...depot, state: "open", labels: "gemini", per_page: 100 });
+          if (ouverts.some((i) => i.title === titre)) return; // un seul ticket ouvert tant que la clé n'est pas remplacée
+          const corps = [
+            "Une grille de frais a changé, mais le proposeur n'a pas pu lire la page : la clé Gemini est refusée ou absente.",
+            "",
+            `- Raison : ${process.env.RAISON}`,
+            "- Effet : aucune proposition de correction, rien n'est publié ; le ticket « veille-officielle » reste la seule alerte.",
+            "- À faire : créer une clé gratuite (Google AI Studio, projet sans facturation), la mettre dans le secret GitHub GEMINI_API_KEY, lancer « Sonde Gemini », puis relancer « Proposeur » avec les identifiants des plateformes concernées.",
+            "",
+            `[Voir l'exécution](${runUrl})`,
+          ].join("\n");
+          await github.rest.issues.create({ ...depot, title: titre, body: corps, labels: ["gemini", "monitoring"] });
+
+    - name: Tickets privés non configurés
+      if: steps.travail.outputs.oui == 'true' && steps.travail.outputs.prives != 'true'
+      shell: bash
+      run: |
+        echo "Secret SENTINELLE_TOKEN absent : aucun ticket (la sortie « echec » reste le signal)."
+
+    # Compteur d'appels du jour : cache à clé unique par passage, restauré par préfixe (le plus récent du jour).
+    - name: Compteur d'appels Gemini du jour (restauration)
+      if: steps.travail.outputs.oui == 'true' && steps.cle.outputs.valide == 'true'
+      uses: actions/cache/restore@v4
+      with:
+        path: .proposeur-cache
+        key: gemini-appels-${{ steps.travail.outputs.jour }}-${{ github.run_id }}
+        restore-keys: |
+          gemini-appels-${{ steps.travail.outputs.jour }}-
+
+    - name: Lecture par Gemini, garde-fous et décision
+      id: prop
+      if: steps.travail.outputs.oui == 'true' && steps.cle.outputs.valide == 'true'
+      continue-on-error: true
+      shell: bash
+      env:
+        GEMINI_API_KEY: ${{ inputs.gemini-api-key }}
+        R11_FUSION_FRAIS: ${{ inputs.fusion-frais }}
+        GEMINI_MODELES_A: ${{ inputs.modeles-a }}
+        GEMINI_MODELES_B: ${{ inputs.modeles-b }}
+        TEXTES: ${{ inputs.textes }}
+      run: |
+        mkdir -p .proposeur-cache
+        node scripts/proposeur.mjs --textes="$TEXTES" --sortie="$RUNNER_TEMP/proposeur" --compteur=.proposeur-cache/compteur.json
+
+    - name: Compteur d'appels Gemini du jour (sauvegarde)
+      if: always() && steps.prop.conclusion != 'skipped'
+      continue-on-error: true
+      uses: actions/cache/save@v4
+      with:
+        path: .proposeur-cache
+        key: gemini-appels-${{ steps.travail.outputs.jour }}-${{ github.run_id }}
+
+    # Une demande de fusion par plateforme, étiquetée « proposition-frais », avec chaque valeur, sa citation courte (200
+    # caractères au plus : la phrase qui porte le chiffre, jamais la page) et l'adresse. tsc et la suite de tests tournent sur
+    # la branche AVANT l'ouverture : rouge = aucune demande de fusion, ligne dans le ticket privé. Mode « propose » : jamais
+    # fusionnée ici. Mode « on » : fusionnée seulement si TOUTES les lignes sont « automatique » (décision R11 déjà prise).
+    - name: Contrôles puis demandes de fusion (une par plateforme)
+      id: pr
+      if: steps.prop.outputs.plateformes != ''
+      shell: bash
+      env:
+        GH_TOKEN: ${{ inputs.github-token }}
+        R11_FUSION_FRAIS: ${{ inputs.fusion-frais }}
+      run: |
+        set -euo pipefail
+        dir="$RUNNER_TEMP/proposeur"
+        git config user.name "Cryptoreflex Bot"
+        git config user.email "bot@cryptoreflex.fr"
+        gh label create proposition-frais --color 0e8a16 --description "Correction de frais proposée par le robot R10 (relecture humaine)" 2>/dev/null || true
+        base=$(git rev-parse HEAD)
+        courante=$(git rev-parse --abbrev-ref HEAD)
+        [ -d node_modules ] || npm ci --no-audit --no-fund
+        : > "$dir/echecs.md"
+        # lecture sur le descripteur 3 : aucune commande du corps de boucle ne peut consommer la liste
+        while read -r id <&3; do
+          [[ "$id" =~ ^[a-z0-9-]+$ ]] || { echo "Identifiant refusé : $id"; continue; }
+          titre="[$id] $(jq -r .titre "$dir/$id.json")"
+          ouvertes=$(gh pr list --state open --label proposition-frais --json title --jq '.[].title')
+          if grep -qF "[$id]" <<< "$ouvertes"; then
+            echo "$id : une demande de fusion est déjà ouverte, pas de doublon."
+            continue
+          fi
+          branche="proposition/frais-${id}-$(date -u +%Y%m%d)-${GITHUB_RUN_ID}"
+          git switch -c "$branche" "$base"
+          node scripts/proposeur.mjs --appliquer="$id" --sortie="$dir"
+          jq empty data/platforms.json
+          if git diff --quiet -- data/platforms.json; then
+            echo "$id : aucune valeur ne change finalement."
+            git switch --detach "$base"
+            git branch -D "$branche"
+            continue
+          fi
+          # contrôles sur la branche de la proposition, AVANT toute demande de fusion (la CI ne se déclenche pas)
+          if ! { npx tsc --noEmit -p . && npx vitest run; } > "$RUNNER_TEMP/controles-$id.log" 2>&1; then
+            echo "$id : compilation ou tests en échec avec la proposition : aucune demande de fusion ouverte."
+            {
+              echo "- **$id** : compilation (tsc) ou tests (vitest) en échec avec la proposition : aucune demande de fusion ouverte, rien n'est publié. Fin du journal :"
+              echo '```'
+              tail -n 15 "$RUNNER_TEMP/controles-$id.log" | cut -c1-200
+              echo '```'
+            } >> "$dir/echecs.md"
+            echo "echecs=true" >> "$GITHUB_OUTPUT"
+            git checkout -- data/platforms.json
+            git switch --detach "$base"
+            git branch -D "$branche"
+            continue
+          fi
+          git add data/platforms.json
+          git commit -m "proposition(frais): $id (robot R10, à relire)" \
+            -m "Valeurs extraites de la page officielle par Gemini, jugées par code déterministe (scripts/lib/proposeur.mjs). Détail, citations courtes et adresses dans la demande de fusion." \
+            -m "" \
+            -m "Co-Authored-By: Cryptoreflex Bot <bot@cryptoreflex.fr>"
+          git push origin "$branche"
+          url=$(gh pr create --base main --head "$branche" --title "$titre" --body-file "$dir/$id.md" --label proposition-frais)
+          echo "$id : demande de fusion $url (tsc et tests verts)"
+          echo "- $id : $url" >> "$GITHUB_STEP_SUMMARY"
+          git switch --detach "$base"
+          if [ "$R11_FUSION_FRAIS" = "on" ] && [ "$(jq -r .fusionAutoSiTestsVerts "$dir/$id.json")" = "true" ]; then
+            gh pr merge "$url" --squash --delete-branch
+            echo "$id : fusionnée automatiquement ($url) ; les scores ne sont recalculés (scores.yml) qu'au prochain push humain ou à la main : un push de GITHUB_TOKEN ne déclenche pas de workflow, et le jeton n'a pas le droit de relancer scores.yml" >> "$GITHUB_STEP_SUMMARY"
+          fi
+        done 3< "$dir/plateformes.txt"
+        if [ "$courante" != "HEAD" ]; then git switch "$courante"; fi
+
+    - name: Ticket « proposeur » (dépôt privé)
+      if: always() && steps.travail.outputs.prives == 'true' && (steps.prop.outputs.ticket == 'true' || steps.pr.outputs.echecs == 'true')
+      uses: actions/github-script@v9
+      with:
+        github-token: ${{ inputs.sentinelle-token }}
+        script: |
+          const fs = require("fs");
+          const depot = { owner: "Qlpha-png", repo: "cryptoreflex-sentinelle" };
+          const date = new Date().toISOString().slice(0, 10);
+          const runUrl = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
+          const lire = (f) => { try { return fs.readFileSync(`${process.env.RUNNER_TEMP}/proposeur/${f}`, "utf8").trim(); } catch (e) { return ""; } };
+          let corps = [lire("ticket.md"), lire("echecs.md")].filter(Boolean).join("\n\n");
+          if (!corps) corps = "Le proposeur a signalé un rejet, mais son compte rendu est illisible : voir le journal du run.";
+          corps += `\n\n**Run** : ${runUrl}\n**Date** : ${date}`;
+          const ouverts = await github.rest.issues.listForRepo({ ...depot, state: "open", labels: "proposeur", per_page: 50 });
+          const deja = ouverts.data.find((i) => i.title.startsWith("[Proposeur]"));
+          if (deja) {
+            await github.rest.issues.createComment({ ...depot, issue_number: deja.number, body: corps });
+            return;
+          }
+          await github.rest.issues.create({ ...depot, title: `[Proposeur] rejets de la lecture des frais - ${date}`, body: corps, labels: ["proposeur", "monitoring"] });
+
+    # Bilan : `echec` = clé refusée, quota atteint, erreur du script, taux de rejet anormal (60 % des lignes jugées rejetées à
+    # partir de 5 : un modèle « latest » a peut-être changé de comportement, rejouer « Banc du proposeur ») ou contrôles rouges.
+    - name: Bilan
+      id: bilan
+      if: always()
+      shell: bash
+      env:
+        OUI: ${{ steps.travail.outputs.oui }}
+        CLE: ${{ steps.cle.outputs.valide }}
+        PROP: ${{ steps.prop.outcome }}
+        ARRET: ${{ steps.prop.outputs.arret }}
+        ANORMAL: ${{ steps.prop.outputs.rejet_anormal }}
+        ECHECS: ${{ steps.pr.outputs.echecs }}
+      run: |
+        echec=false
+        if [ "$OUI" = "true" ] && [ "$CLE" = "false" ]; then echec=true; fi
+        if [ "$PROP" = "failure" ] || [ -n "$ARRET" ] || [ "$ANORMAL" = "true" ] || [ "$ECHECS" = "true" ]; then echec=true; fi
+        echo "echec=$echec" >> "$GITHUB_OUTPUT"
+        if [ "$echec" = "true" ]; then echo "Proposeur arrêté (clé Gemini refusée, quota, erreur, taux de rejet anormal ou contrôles rouges) : voir le ticket privé. Aucune valeur n'a été publiée."; fi

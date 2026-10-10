@@ -1,0 +1,16 @@
+{
+ "origine": "synthetique",
+ "type": "decision",
+ "env": {
+  "R11_FUSION_FRAIS": "on"
+ },
+ "testsVerts": true,
+ "id": "d01-fiscalite-jamais-automatique",
+ "description": "Famille « lois, BOFiP, barème, DAC8 » : jamais automatique, même avec l'interrupteur « on » et tous les voyants verts : brouillon de demande de fusion.",
+ "famille": "lois-bofip-bareme-dac8",
+ "niveau": "automatique",
+ "attendu": {
+  "action": "brouillon",
+  "fusionner": false
+ }
+}

@@ -1,0 +1,134 @@
+{
+ "id": "r-young-platform",
+ "origine": "reel-reconstitue",
+ "type": "extraction",
+ "source": "fiche AVANT = data/platforms.json au commit 6d1fdcbd~1 (valeurs et textes d'origine) ; PAGE reconstituée à partir de fees.verified.note du commit 6d1fdcbd (relevé du 05/10/2026 sur https://support.youngplatform.com/hc/en-us/articles/360020601499-Withdraw-Euro-from-Pro) : ce n'est PAS une copie de la page (le dépôt ne conserve pas le texte des pages), mais les phrases relevées ce jour-là, entourées d'un décor de chiffres parasites.",
+ "description": "Young Platform : retrait en euros 1,50 -> 1,99 € (écart de 0,49 : sous la limite, mais la note de la fiche cite « 1,50 € » : à relire) ; le modèle donne « Pro = 0,20 % » pour le maker sans libellé de frais : refusé.",
+ "plateforme": {
+  "id": "young-platform",
+  "name": "Young Platform",
+  "fees": {
+   "spotMaker": 0.2,
+   "spotTaker": 0.2,
+   "instantBuy": 2.5,
+   "withdrawalCrypto": "Variable",
+   "withdrawalFiatSepa": 1.5,
+   "spread": "App 0,15-0,5% · Pro order-book",
+   "verified": {
+    "date": "2026-06-13",
+    "source": "https://www.cryptowisser.com/exchange/young-platform/",
+    "model": "hybride",
+    "makerTakerApplies": false,
+    "realCostPct": "Pro 0,20 % · App ~0,2-0,4 % + spread",
+    "verdict": "douteux",
+    "note": "Pro = 0,20 % base. App = courtier (commission + spread 0,15-0,5 %, plus large sur altcoins). Retrait EUR 1,50 € FIXE (≈3 % sur 50 €). Token YNG réduit (optionnel). Achat carte non confirmé."
+   }
+  }
+ },
+ "pages": [
+  {
+   "url": "https://support.youngplatform.com/hc/en-us/articles/360020601499-Withdraw-Euro-from-Pro",
+   "texte": "Young Platform : tarifs et frais. Cette page décrit les frais applicables aux clients particuliers résidant dans l'Espace économique européen. Les tarifs peuvent évoluer ; la version en vigueur est celle affichée sur cette page. Retrait en euros 1,99 € (minimum 20 €, page officielle). Dépôt par carte réservé aux cartes italiennes, depuis l'Italie (2,2 % + 0,25 €) : pas d'achat par carte depuis la France. Pro = 0,20 % et appli = commission + spread 0,15-0,5 % (sources tierces, non confirmées). Token YNG réduit les frais (optionnel). Programme de parrainage : 10 € offerts après 100 € échangés. Intérêts sur les euros déposés : jusqu'à 2 % par an. Service client joignable de 9 h à 18 h."
+  }
+ ],
+ "compteur": {
+  "deja": 0
+ },
+ "env": {},
+ "testsVerts": true,
+ "client": {
+  "lectures": [
+   {
+    "extractions": [
+     {
+      "champ": "spotMaker",
+      "valeur": 0.2,
+      "unite": "%",
+      "citation_exacte": "Pro = 0,20 %",
+      "url": "https://support.youngplatform.com/hc/en-us/articles/360020601499-Withdraw-Euro-from-Pro"
+     },
+     {
+      "champ": "spotTaker",
+      "valeur": null,
+      "unite": null,
+      "citation_exacte": null,
+      "url": "https://support.youngplatform.com/hc/en-us/articles/360020601499-Withdraw-Euro-from-Pro"
+     },
+     {
+      "champ": "instantBuy",
+      "valeur": null,
+      "unite": null,
+      "citation_exacte": null,
+      "url": "https://support.youngplatform.com/hc/en-us/articles/360020601499-Withdraw-Euro-from-Pro"
+     },
+     {
+      "champ": "withdrawalFiatSepa",
+      "valeur": 1.99,
+      "unite": "€",
+      "citation_exacte": "Retrait en euros 1,99 €",
+      "url": "https://support.youngplatform.com/hc/en-us/articles/360020601499-Withdraw-Euro-from-Pro"
+     }
+    ]
+   },
+   {
+    "extractions": [
+     {
+      "champ": "withdrawalFiatSepa",
+      "valeur": 1.99,
+      "unite": "€",
+      "citation_exacte": "Retrait en euros 1,99 €",
+      "url": "https://support.youngplatform.com/hc/en-us/articles/360020601499-Withdraw-Euro-from-Pro"
+     },
+     {
+      "champ": "instantBuy",
+      "valeur": null,
+      "unite": null,
+      "citation_exacte": null,
+      "url": "https://support.youngplatform.com/hc/en-us/articles/360020601499-Withdraw-Euro-from-Pro"
+     },
+     {
+      "champ": "spotTaker",
+      "valeur": null,
+      "unite": null,
+      "citation_exacte": null,
+      "url": "https://support.youngplatform.com/hc/en-us/articles/360020601499-Withdraw-Euro-from-Pro"
+     },
+     {
+      "champ": "spotMaker",
+      "valeur": 0.2,
+      "unite": "%",
+      "citation_exacte": "Pro = 0,20 %",
+      "url": "https://support.youngplatform.com/hc/en-us/articles/360020601499-Withdraw-Euro-from-Pro"
+     }
+    ]
+   }
+  ]
+ },
+ "verite": {
+  "withdrawalFiatSepa": 1.99
+ },
+ "attendu": {
+  "arret": null,
+  "appels": 2,
+  "champs": {
+   "withdrawalFiatSepa": {
+    "statut": "propose",
+    "niveau": "a_relire",
+    "nouvelle": 1.99
+   },
+   "spotMaker": {
+    "statut": "rejete",
+    "raison": "libellé"
+   },
+   "spotTaker": {
+    "statut": "non-trouve"
+   },
+   "instantBuy": {
+    "statut": "non-trouve"
+   }
+  },
+  "action": "proposition",
+  "fusionner": false,
+  "ticket": true
+ }
+}

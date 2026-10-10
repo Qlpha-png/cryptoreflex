@@ -400,6 +400,18 @@ export const POSTES = [
     description: "Lot Z6 (R14) : seuils de lib/fraicheur.ts ; ne modifie aucun fichier, ne publie rien, aucun accès réseau ; un seul ticket par mois.",
   },
   {
+    id: "proposeur",
+    nom: "Proposeur de corrections de frais (R10/R11)",
+    atelier: "proteger",
+    genre: "robot",
+    moteur: "github",
+    workflow: "proposeur.yml",
+    cadence: "dans chaque passage de la veille qui voit une grille de taux changer ; lancement manuel pour quelques plateformes",
+    declencheur: "étape du job de la veille officielle (action .github/actions/proposeur) ; lancement manuel de proposeur.yml avec des identifiants de plateformes",
+    produit: "une demande de fusion étiquetée « proposition-frais » par plateforme dont la page officielle de frais a changé (valeur, citation exacte, adresse), ou un ticket privé motivé ; jamais de texte généré publié",
+    description: "Lot Z7 (R10 + R11) : Gemini gratuit n'extrait que des chiffres (deux lectures) ; littéralité, vraisemblance, écart de 0,5 point et table de fusion sont du code testé. Mode « propose » par défaut ; fusion automatique des frais seulement si R11_FUSION_FRAIS = « on ». Fiscalité et incidents : jamais. Plafond de 50 appels par jour, clé refusée ou quota = ticket, rien n'est publié. tsc et les tests tournent sur la branche avant toute demande de fusion. Le texte des pages reste sur le disque du runner (aucun artefact : dépôt public).",
+  },
+  {
     id: "incidents",
     nom: "Détection d'incidents de sécurité (R9)",
     atelier: "proteger",

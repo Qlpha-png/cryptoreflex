@@ -238,7 +238,7 @@
     }
   },
   "frais": {
-    "_lisezmoi": "Pages officielles qui portent les frais affichés au comparateur (relevés vérifiés du 05/10/2026), en plus de fees.cost.source de data/platforms.json. « pages » : empreinte des taux et montants (ou du PDF) ; « index » : liste des PDF publiés (une nouvelle grille tarifaire = un nouveau lien). « ignorer » : identifiants de plateformes à ne pas surveiller.",
+    "_lisezmoi": "Pages officielles qui portent les frais affichés au comparateur (relevés vérifiés du 05/10/2026), en plus de fees.cost.source de data/platforms.json. « pages » : empreinte des taux et montants (ou du PDF) ; « index » : liste des PDF publiés (une nouvelle grille tarifaire = un nouveau lien). « ignorer » : identifiants de plateformes à ne pas surveiller. « sansConservation » (lot Z7) : identifiants de plateformes dont la page n’est JAMAIS lue par le proposeur (page sous licence restrictive ; le texte ne quitte de toute façon pas le disque du runner).",
     "pages": {
       "swissborg": [
         "https://swissborg.com/legal/pricing-policy",
@@ -433,7 +433,8 @@
         "https://www.coinhouse.com/fr/documents-legaux"
       ]
     },
-    "ignorer": []
+    "ignorer": [],
+    "sansConservation": []
   },
   "echeances": {
     "_lisezmoi": "Lot Z6 (10/10/2026, famille 28) : calendrier fiscal et transposition de DAC8, suivis par empreinte seulement (jamais de fusion automatique). « pages » : dates écrites en toutes lettres dans la page officielle (jour de la semaine, jour, mois, année). « recherchesPiste » : textes de loi qui citent le texte exact donné, trouvés par la recherche de l'API officielle Légifrance (PISTE, mêmes identifiants que la veille de loi) ; on suit l'ensemble des identifiants trouvés. EUR-Lex (directive 2023/2226) n'est pas automatisé : défi anti-robot, accès non prouvé. Référence : data/veille/echeances.json (écrite à la première lecture, avancée avec --enregistrer après relecture).",

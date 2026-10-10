@@ -1,0 +1,14 @@
+{
+ "origine": "synthetique",
+ "type": "decision",
+ "env": {},
+ "testsVerts": true,
+ "id": "d05-dates-de-controle-hors-r11",
+ "description": "Dates « rien n'a changé » : déjà automatiques ailleurs, R11 n'intervient pas.",
+ "famille": "dates-controle",
+ "niveau": "automatique",
+ "attendu": {
+  "action": "deja-automatique",
+  "fusionner": false
+ }
+}

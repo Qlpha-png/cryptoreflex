@@ -1,0 +1,76 @@
+# Proposeur (R10/R11) — LANCEMENT MANUEL (lot Z7, reprise du 10/10/2026). Le proposeur tourne d'abord DANS le job de la veille
+# officielle (étape « Proposeur de corrections de frais », juste après la détection d'un changement de taux, avec le texte des
+# pages lu sur le disque du runner). Ce workflow ne sert qu'à le relancer à la main pour quelques plateformes : il relit alors
+# lui-même UNE fois leurs pages de frais (mêmes règles que la veille : mêmes adresses, aucun contournement, pas de navigateur,
+# pas de nouvelle tentative, 1 seconde entre deux requêtes) puis exécute la même action (.github/actions/proposeur).
+# AUCUN artefact : le dépôt est public, un artefact y serait téléchargeable par n'importe quel compte GitHub.
+# Règles de fond (voir l'action) : Gemini extrait seulement ; code déterministe testé ; 50 appels par jour ; mode « propose »
+# par défaut (demande de fusion étiquetée « proposition-frais », jamais fusionnée seule) ; fusion automatique des frais
+# seulement si la variable de dépôt R11_FUSION_FRAIS vaut exactement « on » ; fiscalité et incidents : jamais ; tsc et tests sur
+# la branche AVANT toute demande de fusion ; clé refusée, quota ou panne = ticket privé et job rouge.
+# Prérequis (à faire une fois par Kev) : Settings > Actions > General > « Allow GitHub Actions to create and approve pull
+# requests » coché ; secret GEMINI_API_KEY valide (voir « Sonde Gemini »).
+# Un robot manuel : « jamais lancé » n'est pas un défaut pour la sentinelle.
+name: Proposeur (R10/R11, lancement manuel)
+
+on:
+  workflow_dispatch:
+    inputs:
+      plateformes:
+        description: "Identifiants des plateformes dont relire les pages de frais (5 au plus, séparés par des espaces), par exemple : kraken coinbase"
+        required: true
+        type: string
+
+permissions:
+  contents: write
+  pull-requests: write # rien de plus large : le jeton par défaut du dépôt est en lecture seule
+
+concurrency:
+  group: proposeur
+  cancel-in-progress: false
+
+jobs:
+  proposeur:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    # bash -eo pipefail : une commande en échec dans un tube fait échouer l'étape (règle du lot)
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v6
+        with:
+          ref: main
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node 20
+        uses: actions/setup-node@v6
+        with:
+          node-version: "20"
+          cache: npm
+
+      - name: Dépendances
+        run: npm ci --no-audit --no-fund
+
+      # Lecture unique des pages de frais suivies des plateformes demandées (identifiants validés par le script).
+      - name: Relecture des pages de frais (une fois, sans contournement)
+        env:
+          PLATEFORMES: ${{ inputs.plateformes }}
+        run: node scripts/proposeur-lecture.mjs --plateformes="$PLATEFORMES" --sortie="$RUNNER_TEMP/veille-frais-textes.json"
+
+      - name: Proposeur de corrections de frais (R10/R11)
+        id: proposeur
+        uses: ./.github/actions/proposeur
+        with:
+          textes: ${{ runner.temp }}/veille-frais-textes.json
+          gemini-api-key: ${{ secrets.GEMINI_API_KEY }}
+          sentinelle-token: ${{ secrets.SENTINELLE_TOKEN }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          fusion-frais: ${{ vars.R11_FUSION_FRAIS }}
+
+      - name: Échec si le proposeur s'est arrêté
+        if: always() && steps.proposeur.outputs.echec == 'true'
+        run: |
+          echo "Proposeur arrêté (clé Gemini, quota, erreur, taux de rejet anormal ou contrôles rouges) : voir le ticket privé « [Proposeur] ». Aucune valeur n'a été publiée."
+          exit 1

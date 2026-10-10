@@ -30,6 +30,8 @@ export const CADENCE = [
   ["rendements.yml", "rendements (Lido, contrôle Aave et Rocket Pool)", 30],
   // 10/10/2026 (lot Z6) : revue périodique (R14), le 1er de chaque mois à 06:20 UTC ; 34 jours = un mois + marge
   ["revue-periodique.yml", "revue périodique mensuelle (données tenues à la main)", 34 * 24],
+  // 10/10/2026 (lot Z7, reprise) : le proposeur de frais (R10/R11) est une ÉTAPE du job de la veille officielle (surveillée
+  // ci-dessus) ; proposeur.yml n'est qu'un lancement manuel : « jamais lancé » est neutre, comme les autres robots manuels.
 ];
 
 /**

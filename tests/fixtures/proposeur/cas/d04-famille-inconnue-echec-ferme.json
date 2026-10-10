@@ -1,0 +1,16 @@
+{
+ "origine": "synthetique",
+ "type": "decision",
+ "env": {
+  "R11_FUSION_FRAIS": "on"
+ },
+ "testsVerts": true,
+ "id": "d04-famille-inconnue-echec-ferme",
+ "description": "Famille absente de la table : ticket, aucune écriture.",
+ "famille": "inconnue",
+ "niveau": "automatique",
+ "attendu": {
+  "action": "ticket",
+  "fusionner": false
+ }
+}

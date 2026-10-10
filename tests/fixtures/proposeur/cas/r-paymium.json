@@ -1,0 +1,140 @@
+{
+ "id": "r-paymium",
+ "origine": "reel-reconstitue",
+ "type": "extraction",
+ "source": "fiche AVANT = data/platforms.json au commit 6d1fdcbd~1 (valeurs et textes d'origine) ; PAGE reconstituée à partir de fees.verified.note du commit 6d1fdcbd (relevé du 05/10/2026 sur https://www.paymium.com/fr/tarification) : ce n'est PAS une copie de la page (le dépôt ne conserve pas le texte des pages), mais les phrases relevées ce jour-là, entourées d'un décor de chiffres parasites.",
+ "description": "Paymium : ordres limites 0,40 % / 0,60 % (1,49 % avant), achat au marché 1,49 % confirmé, retrait SEPA gratuit -> 0,99 € (gratuit vers payant : à relire).",
+ "plateforme": {
+  "id": "paymium",
+  "name": "Paymium",
+  "fees": {
+   "spotMaker": 1.49,
+   "spotTaker": 1.49,
+   "instantBuy": 1.49,
+   "withdrawalCrypto": "0,0001 BTC",
+   "withdrawalFiatSepa": 0,
+   "spread": "non publié",
+   "verified": {
+    "date": "2026-06-13",
+    "source": "https://coinacademy.fr/exchange/paymium-avis/",
+    "model": "courtier",
+    "makerTakerApplies": false,
+    "realCostPct": "achat ~1,49 % · carte jusqu'à 8 % · maker/taker à vérifier sur paymium.com",
+    "verdict": "douteux",
+    "note": "PSAN AMF (exchange BTC français). Maker/taker divergents entre 4 sources (grille off. en 404) → non publiés. Carte jusqu'à 8 %. ⚠ Frais d'inactivité après 3 ans : 5 %/an BTC + 10 %/an EUR."
+   }
+  }
+ },
+ "pages": [
+  {
+   "url": "https://www.paymium.com/fr/tarification",
+   "texte": "Paymium : tarifs et frais. Cette page décrit les frais applicables aux clients particuliers résidant dans l'Espace économique européen. Les tarifs peuvent évoluer ; la version en vigueur est celle affichée sur cette page. Grille officielle : ordres limites 0,40 % maker / 0,60 % taker (moins de 10 000 € sur 30 jours) ; ordres au marché et échanges 1,49 % ; carte jusqu'à 3,5 % ; retrait SEPA 0,99 € (minimum 10 €) ; retrait BTC gratuit en ≈ 24 h ou 0,00004 BTC en ≈ 10 min. Programme de parrainage : 10 € offerts après 100 € échangés. Intérêts sur les euros déposés : jusqu'à 2 % par an. Service client joignable de 9 h à 18 h."
+  }
+ ],
+ "compteur": {
+  "deja": 0
+ },
+ "env": {},
+ "testsVerts": true,
+ "client": {
+  "lectures": [
+   {
+    "extractions": [
+     {
+      "champ": "spotMaker",
+      "valeur": 0.4,
+      "unite": "%",
+      "citation_exacte": "0,40 % maker",
+      "url": "https://www.paymium.com/fr/tarification"
+     },
+     {
+      "champ": "spotTaker",
+      "valeur": 0.6,
+      "unite": "%",
+      "citation_exacte": "0,60 % taker",
+      "url": "https://www.paymium.com/fr/tarification"
+     },
+     {
+      "champ": "instantBuy",
+      "valeur": 1.49,
+      "unite": "%",
+      "citation_exacte": "ordres au marché et échanges 1,49 %",
+      "url": "https://www.paymium.com/fr/tarification"
+     },
+     {
+      "champ": "withdrawalFiatSepa",
+      "valeur": 0.99,
+      "unite": "€",
+      "citation_exacte": "retrait SEPA 0,99 €",
+      "url": "https://www.paymium.com/fr/tarification"
+     }
+    ]
+   },
+   {
+    "extractions": [
+     {
+      "champ": "withdrawalFiatSepa",
+      "valeur": 0.99,
+      "unite": "€",
+      "citation_exacte": "retrait SEPA 0,99 €",
+      "url": "https://www.paymium.com/fr/tarification"
+     },
+     {
+      "champ": "instantBuy",
+      "valeur": 1.49,
+      "unite": "%",
+      "citation_exacte": "ordres au marché et échanges 1,49 %",
+      "url": "https://www.paymium.com/fr/tarification"
+     },
+     {
+      "champ": "spotTaker",
+      "valeur": 0.6,
+      "unite": "%",
+      "citation_exacte": "0,60 % taker",
+      "url": "https://www.paymium.com/fr/tarification"
+     },
+     {
+      "champ": "spotMaker",
+      "valeur": 0.4,
+      "unite": "%",
+      "citation_exacte": "0,40 % maker",
+      "url": "https://www.paymium.com/fr/tarification"
+     }
+    ]
+   }
+  ]
+ },
+ "verite": {
+  "spotMaker": 0.4,
+  "spotTaker": 0.6,
+  "instantBuy": 1.49,
+  "withdrawalFiatSepa": 0.99
+ },
+ "attendu": {
+  "arret": null,
+  "appels": 2,
+  "champs": {
+   "spotMaker": {
+    "statut": "propose",
+    "niveau": "a_relire",
+    "nouvelle": 0.4
+   },
+   "spotTaker": {
+    "statut": "propose",
+    "niveau": "a_relire",
+    "nouvelle": 0.6
+   },
+   "instantBuy": {
+    "statut": "identique"
+   },
+   "withdrawalFiatSepa": {
+    "statut": "propose",
+    "niveau": "a_relire",
+    "nouvelle": 0.99
+   }
+  },
+  "action": "proposition",
+  "fusionner": false,
+  "ticket": false
+ }
+}

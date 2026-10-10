@@ -1,0 +1,136 @@
+{
+ "id": "r-okx",
+ "origine": "reel-reconstitue",
+ "type": "extraction",
+ "source": "fiche AVANT = data/platforms.json au commit 6d1fdcbd~1 (valeurs et textes d'origine) ; PAGE reconstituée à partir de fees.verified.note du commit 6d1fdcbd (relevé du 05/10/2026 sur https://www.okx.com/en-eu/fees) : ce n'est PAS une copie de la page (le dépôt ne conserve pas le texte des pages), mais les phrases relevées ce jour-là, entourées d'un décor de chiffres parasites.",
+ "description": "OKX Europe : 0,10 % maker / 0,20 % taker en compte spot seul (grille EEE) contre 0,08 / 0,10 avant.",
+ "plateforme": {
+  "id": "okx",
+  "name": "OKX",
+  "fees": {
+   "spotMaker": 0.08,
+   "spotTaker": 0.1,
+   "instantBuy": 4,
+   "withdrawalCrypto": "Variable selon réseau",
+   "withdrawalFiatSepa": 0,
+   "spread": "0,05-0,5%",
+   "verified": {
+    "date": "2026-06-13",
+    "source": "https://www.okx.com/en-eu/fees",
+    "model": "exchange",
+    "makerTakerApplies": true,
+    "realCostPct": "grille EEA spécifique — palier régulier à vérifier sur okx.com · carte via tiers 3-6 %",
+    "verdict": "douteux",
+    "note": "⚠ OKX applique une grille Europe (EEA) DISTINCTE de la grille mondiale 0,08/0,10 ; le palier régulier EEA n'a pas pu être confirmé (possiblement plus élevé). Achat carte via tiers (MoonPay/Banxa) 3-6 %. SEPA gratuit. Vérifiez sur okx.com/fees."
+   }
+  }
+ },
+ "pages": [
+  {
+   "url": "https://www.okx.com/en-eu/fees",
+   "texte": "OKX : tarifs et frais. Cette page décrit les frais applicables aux clients particuliers résidant dans l'Espace économique européen. Les tarifs peuvent évoluer ; la version en vigueur est celle affichée sur cette page. Grille OKX Europe (officielle) : utilisateur régulier à 0,10 % maker / 0,20 % taker sur un compte spot seul, 0,08 % / 0,10 % sur un compte spot et dérivés. Achat par carte via des tiers (MoonPay, Banxa) : 3 à 6 %. SEPA gratuit. Programme de parrainage : 10 € offerts après 100 € échangés. Intérêts sur les euros déposés : jusqu'à 2 % par an. Service client joignable de 9 h à 18 h."
+  }
+ ],
+ "compteur": {
+  "deja": 0
+ },
+ "env": {},
+ "testsVerts": true,
+ "client": {
+  "lectures": [
+   {
+    "extractions": [
+     {
+      "champ": "spotMaker",
+      "valeur": 0.1,
+      "unite": "%",
+      "citation_exacte": "0,10 % maker",
+      "url": "https://www.okx.com/en-eu/fees"
+     },
+     {
+      "champ": "spotTaker",
+      "valeur": 0.2,
+      "unite": "%",
+      "citation_exacte": "0,20 % taker",
+      "url": "https://www.okx.com/en-eu/fees"
+     },
+     {
+      "champ": "instantBuy",
+      "valeur": null,
+      "unite": null,
+      "citation_exacte": null,
+      "url": "https://www.okx.com/en-eu/fees"
+     },
+     {
+      "champ": "withdrawalFiatSepa",
+      "valeur": null,
+      "unite": null,
+      "citation_exacte": null,
+      "url": "https://www.okx.com/en-eu/fees"
+     }
+    ]
+   },
+   {
+    "extractions": [
+     {
+      "champ": "withdrawalFiatSepa",
+      "valeur": null,
+      "unite": null,
+      "citation_exacte": null,
+      "url": "https://www.okx.com/en-eu/fees"
+     },
+     {
+      "champ": "instantBuy",
+      "valeur": null,
+      "unite": null,
+      "citation_exacte": null,
+      "url": "https://www.okx.com/en-eu/fees"
+     },
+     {
+      "champ": "spotTaker",
+      "valeur": 0.2,
+      "unite": "%",
+      "citation_exacte": "0,20 % taker",
+      "url": "https://www.okx.com/en-eu/fees"
+     },
+     {
+      "champ": "spotMaker",
+      "valeur": 0.1,
+      "unite": "%",
+      "citation_exacte": "0,10 % maker",
+      "url": "https://www.okx.com/en-eu/fees"
+     }
+    ]
+   }
+  ]
+ },
+ "verite": {
+  "spotMaker": 0.1,
+  "spotTaker": 0.2
+ },
+ "attendu": {
+  "arret": null,
+  "appels": 2,
+  "champs": {
+   "spotMaker": {
+    "statut": "propose",
+    "niveau": "a_relire",
+    "nouvelle": 0.1
+   },
+   "spotTaker": {
+    "statut": "propose",
+    "niveau": "a_relire",
+    "nouvelle": 0.2
+   },
+   "instantBuy": {
+    "statut": "non-trouve"
+   },
+   "withdrawalFiatSepa": {
+    "statut": "non-trouve"
+   }
+  },
+  "action": "proposition",
+  "fusionner": false,
+  "ticket": false
+ }
+}

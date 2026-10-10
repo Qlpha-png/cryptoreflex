@@ -1,0 +1,128 @@
+{
+ "origine": "synthetique",
+ "type": "extraction",
+ "plateforme": {
+  "id": "plateforme-test",
+  "name": "Plateforme Test",
+  "fees": {
+   "spotMaker": 0.4,
+   "spotTaker": 0.8,
+   "instantBuy": 1,
+   "withdrawalCrypto": "Variable",
+   "withdrawalFiatSepa": 1,
+   "spread": "non publié",
+   "verified": {
+    "date": "2026-10-05",
+    "source": "https://frais.plateforme-test.example/tarifs",
+    "model": "exchange",
+    "makerTakerApplies": true,
+    "realCostPct": "Selon la grille officielle",
+    "verdict": "fiable",
+    "note": "Grille officielle relevée."
+   }
+  }
+ },
+ "compteur": {
+  "deja": 0
+ },
+ "env": {},
+ "testsVerts": true,
+ "id": "s21-page-sans-chiffre-modele-invente",
+ "description": "Même page sans chiffre ; le modèle invente taker 0,8 % avec une citation fabriquée.",
+ "pages": [
+  {
+   "url": "https://frais.plateforme-test.example/tarifs",
+   "texte": "Plateforme Test : tarifs et frais. Cette page décrit les frais applicables aux clients particuliers résidant dans l'Espace économique européen. Les tarifs peuvent évoluer ; la version en vigueur est celle affichée sur cette page. Les frais dépendent de votre profil et de votre volume d'échanges. Consultez votre espace client pour connaître votre grille personnalisée. Les frais sont indiqués avant chaque ordre."
+  }
+ ],
+ "client": {
+  "lectures": [
+   {
+    "extractions": [
+     {
+      "champ": "spotMaker",
+      "valeur": null,
+      "unite": null,
+      "citation_exacte": null,
+      "url": "https://frais.plateforme-test.example/tarifs"
+     },
+     {
+      "champ": "spotTaker",
+      "valeur": 0.9,
+      "unite": "%",
+      "citation_exacte": "Frais taker : 0,9 %",
+      "url": "https://frais.plateforme-test.example/tarifs"
+     },
+     {
+      "champ": "instantBuy",
+      "valeur": null,
+      "unite": null,
+      "citation_exacte": null,
+      "url": "https://frais.plateforme-test.example/tarifs"
+     },
+     {
+      "champ": "withdrawalFiatSepa",
+      "valeur": null,
+      "unite": null,
+      "citation_exacte": null,
+      "url": "https://frais.plateforme-test.example/tarifs"
+     }
+    ]
+   },
+   {
+    "extractions": [
+     {
+      "champ": "withdrawalFiatSepa",
+      "valeur": null,
+      "unite": null,
+      "citation_exacte": null,
+      "url": "https://frais.plateforme-test.example/tarifs"
+     },
+     {
+      "champ": "instantBuy",
+      "valeur": null,
+      "unite": null,
+      "citation_exacte": null,
+      "url": "https://frais.plateforme-test.example/tarifs"
+     },
+     {
+      "champ": "spotTaker",
+      "valeur": 0.9,
+      "unite": "%",
+      "citation_exacte": "Frais taker : 0,9 %",
+      "url": "https://frais.plateforme-test.example/tarifs"
+     },
+     {
+      "champ": "spotMaker",
+      "valeur": null,
+      "unite": null,
+      "citation_exacte": null,
+      "url": "https://frais.plateforme-test.example/tarifs"
+     }
+    ]
+   }
+  ]
+ },
+ "attendu": {
+  "arret": null,
+  "appels": 2,
+  "champs": {
+   "spotMaker": {
+    "statut": "non-trouve"
+   },
+   "spotTaker": {
+    "statut": "rejete",
+    "raison": "absente du texte"
+   },
+   "instantBuy": {
+    "statut": "non-trouve"
+   },
+   "withdrawalFiatSepa": {
+    "statut": "non-trouve"
+   }
+  },
+  "action": null,
+  "fusionner": false,
+  "ticket": true
+ }
+}

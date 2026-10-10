@@ -1,0 +1,135 @@
+{
+ "id": "r-coinhouse",
+ "origine": "reel-reconstitue",
+ "type": "extraction",
+ "source": "fiche AVANT = data/platforms.json au commit 6d1fdcbd~1 (valeurs et textes d'origine) ; PAGE reconstituée à partir de fees.verified.note du commit 6d1fdcbd (relevé du 05/10/2026 sur https://cms-www.coinhouse.com/wp-content/uploads/2026/02/CH_-GrilleTarifaire_Web_FR_DEC25-4.pdf) : ce n'est PAS une copie de la page (le dépôt ne conserve pas le texte des pages), mais les phrases relevées ce jour-là, entourées d'un décor de chiffres parasites.",
+ "description": "Coinhouse : grille du 09/02/2026 (achat 0,99 %). Le modèle attribue ce taux d'achat au maker et au taker, qui n'existent pas chez un courtier : refusé ; l'achat instantané 1,99 -> 0,99 est proposé « à relire ».",
+ "plateforme": {
+  "id": "coinhouse",
+  "name": "Coinhouse",
+  "fees": {
+   "spotMaker": 1.49,
+   "spotTaker": 1.49,
+   "instantBuy": 1.99,
+   "withdrawalCrypto": "Variable",
+   "withdrawalFiatSepa": 0,
+   "spread": "non publié",
+   "verified": {
+    "date": "2026-06-13",
+    "source": "https://www.moneyvox.fr/epargne/coinhouse",
+    "model": "courtier",
+    "makerTakerApplies": false,
+    "realCostPct": "carte 1,49-1,99 % · compte euro 0,69-0,99 % (sources divergentes)",
+    "verdict": "douteux",
+    "note": "Courtier PSAN. Sources divergent (millésimes de grille) : carte 1,49-1,99 %, compte euro 0,69-0,99 % → à confirmer sur coinhouse.com. Frais fixe 0,12 €/transaction."
+   }
+  }
+ },
+ "pages": [
+  {
+   "url": "https://cms-www.coinhouse.com/wp-content/uploads/2026/02/CH_-GrilleTarifaire_Web_FR_DEC25-4.pdf",
+   "texte": "Coinhouse : tarifs et frais. Cette page décrit les frais applicables aux clients particuliers résidant dans l'Espace économique européen. Les tarifs peuvent évoluer ; la version en vigueur est celle affichée sur cette page. Grille officielle publiée le 09/02/2026 (offre Classique, particuliers) : achat 0,99 % via le Compte Euro ou un virement SEPA, 1,99 % par carte et en achat récurrent, vente 1,29 %, conversion entre cryptos 0,79 %, plus 0,12 € de frais de traitement par transaction. Retrait de crypto : frais de réseau + 0,29 % (minimum 1,49 €, maximum 150 €). Virements SEPA sortants gratuits. Programme de parrainage : 10 € offerts après 100 € échangés. Intérêts sur les euros déposés : jusqu'à 2 % par an. Service client joignable de 9 h à 18 h."
+  }
+ ],
+ "compteur": {
+  "deja": 0
+ },
+ "env": {},
+ "testsVerts": true,
+ "client": {
+  "lectures": [
+   {
+    "extractions": [
+     {
+      "champ": "spotMaker",
+      "valeur": 0.99,
+      "unite": "%",
+      "citation_exacte": "achat 0,99 %",
+      "url": "https://cms-www.coinhouse.com/wp-content/uploads/2026/02/CH_-GrilleTarifaire_Web_FR_DEC25-4.pdf"
+     },
+     {
+      "champ": "spotTaker",
+      "valeur": 0.99,
+      "unite": "%",
+      "citation_exacte": "achat 0,99 %",
+      "url": "https://cms-www.coinhouse.com/wp-content/uploads/2026/02/CH_-GrilleTarifaire_Web_FR_DEC25-4.pdf"
+     },
+     {
+      "champ": "instantBuy",
+      "valeur": 0.99,
+      "unite": "%",
+      "citation_exacte": "achat 0,99 %",
+      "url": "https://cms-www.coinhouse.com/wp-content/uploads/2026/02/CH_-GrilleTarifaire_Web_FR_DEC25-4.pdf"
+     },
+     {
+      "champ": "withdrawalFiatSepa",
+      "valeur": null,
+      "unite": null,
+      "citation_exacte": null,
+      "url": "https://cms-www.coinhouse.com/wp-content/uploads/2026/02/CH_-GrilleTarifaire_Web_FR_DEC25-4.pdf"
+     }
+    ]
+   },
+   {
+    "extractions": [
+     {
+      "champ": "withdrawalFiatSepa",
+      "valeur": null,
+      "unite": null,
+      "citation_exacte": null,
+      "url": "https://cms-www.coinhouse.com/wp-content/uploads/2026/02/CH_-GrilleTarifaire_Web_FR_DEC25-4.pdf"
+     },
+     {
+      "champ": "instantBuy",
+      "valeur": 0.99,
+      "unite": "%",
+      "citation_exacte": "achat 0,99 %",
+      "url": "https://cms-www.coinhouse.com/wp-content/uploads/2026/02/CH_-GrilleTarifaire_Web_FR_DEC25-4.pdf"
+     },
+     {
+      "champ": "spotTaker",
+      "valeur": 0.99,
+      "unite": "%",
+      "citation_exacte": "achat 0,99 %",
+      "url": "https://cms-www.coinhouse.com/wp-content/uploads/2026/02/CH_-GrilleTarifaire_Web_FR_DEC25-4.pdf"
+     },
+     {
+      "champ": "spotMaker",
+      "valeur": 0.99,
+      "unite": "%",
+      "citation_exacte": "achat 0,99 %",
+      "url": "https://cms-www.coinhouse.com/wp-content/uploads/2026/02/CH_-GrilleTarifaire_Web_FR_DEC25-4.pdf"
+     }
+    ]
+   }
+  ]
+ },
+ "verite": {
+  "instantBuy": 0.99
+ },
+ "attendu": {
+  "arret": null,
+  "appels": 2,
+  "champs": {
+   "spotMaker": {
+    "statut": "rejete",
+    "raison": "libellé"
+   },
+   "spotTaker": {
+    "statut": "rejete",
+    "raison": "libellé"
+   },
+   "instantBuy": {
+    "statut": "propose",
+    "niveau": "a_relire",
+    "nouvelle": 0.99
+   },
+   "withdrawalFiatSepa": {
+    "statut": "non-trouve"
+   }
+  },
+  "action": "proposition",
+  "fusionner": false,
+  "ticket": true
+ }
+}

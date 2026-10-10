@@ -1,0 +1,132 @@
+{
+ "id": "r-etoro",
+ "origine": "reel-reconstitue",
+ "type": "extraction",
+ "source": "fiche AVANT = data/platforms.json au commit 6d1fdcbd~1 (valeurs et textes d'origine) ; PAGE reconstituée à partir de fees.verified.note du commit 6d1fdcbd (relevé du 05/10/2026 sur https://www.etoro.com/trading/fees/) : ce n'est PAS une copie de la page (le dépôt ne conserve pas le texte des pages), mais les phrases relevées ce jour-là, entourées d'un décor de chiffres parasites.",
+ "description": "eToro : 1 % par achat ou vente confirmé ; retrait en euros devenu gratuit (5 -> 0) : une gratuité n'a pas de chiffre à citer, refusée et laissée à la relecture humaine.",
+ "plateforme": {
+  "id": "etoro",
+  "name": "eToro",
+  "fees": {
+   "spotMaker": 1,
+   "spotTaker": 1,
+   "instantBuy": 1,
+   "withdrawalCrypto": "2 % retrait fiat",
+   "withdrawalFiatSepa": 5,
+   "spread": "BTC ~0,75 %, altcoins 1-5 %",
+   "verified": {
+    "date": "2026-06-13",
+    "source": "https://brokerchooser.com/broker-reviews/etoro-review/etoro-fees",
+    "model": "courtier",
+    "makerTakerApplies": false,
+    "realCostPct": "1 % par ordre (+ spread altcoins jusqu'à 5 %)",
+    "verdict": "fiable",
+    "note": "1 % achat/vente. Achat non-levier = vraie crypto, MAIS levier/short = CFD (61 % des comptes particuliers perdent). Inactivité 10 $/mois, transfert externe 2 %, retrait min 30 $ + conversion 0,5 %."
+   }
+  }
+ },
+ "pages": [
+  {
+   "url": "https://www.etoro.com/trading/fees/",
+   "texte": "eToro : tarifs et frais. Cette page décrit les frais applicables aux clients particuliers résidant dans l'Espace économique européen. Les tarifs peuvent évoluer ; la version en vigueur est celle affichée sur cette page. 1 % par achat ou vente (paliers Bronze à Gold). Achat sans levier = vraie crypto ; levier ou vente à découvert = CFD, produit à risque. Retrait gratuit et sans minimum depuis un compte en euros (5 $ et 30 $ minimum seulement depuis le compte en dollars). Pas de frais d'inactivité. Transfert de crypto vers eToro Money : 2 %. Programme de parrainage : 10 € offerts après 100 € échangés. Intérêts sur les euros déposés : jusqu'à 2 % par an. Service client joignable de 9 h à 18 h."
+  }
+ ],
+ "compteur": {
+  "deja": 0
+ },
+ "env": {},
+ "testsVerts": true,
+ "client": {
+  "lectures": [
+   {
+    "extractions": [
+     {
+      "champ": "spotMaker",
+      "valeur": null,
+      "unite": null,
+      "citation_exacte": null,
+      "url": "https://www.etoro.com/trading/fees/"
+     },
+     {
+      "champ": "spotTaker",
+      "valeur": null,
+      "unite": null,
+      "citation_exacte": null,
+      "url": "https://www.etoro.com/trading/fees/"
+     },
+     {
+      "champ": "instantBuy",
+      "valeur": 1,
+      "unite": "%",
+      "citation_exacte": "1 % par achat ou vente",
+      "url": "https://www.etoro.com/trading/fees/"
+     },
+     {
+      "champ": "withdrawalFiatSepa",
+      "valeur": 0,
+      "unite": "€",
+      "citation_exacte": "Retrait gratuit et sans minimum depuis un compte en euros",
+      "url": "https://www.etoro.com/trading/fees/"
+     }
+    ]
+   },
+   {
+    "extractions": [
+     {
+      "champ": "withdrawalFiatSepa",
+      "valeur": 0,
+      "unite": "€",
+      "citation_exacte": "Retrait gratuit et sans minimum depuis un compte en euros",
+      "url": "https://www.etoro.com/trading/fees/"
+     },
+     {
+      "champ": "instantBuy",
+      "valeur": 1,
+      "unite": "%",
+      "citation_exacte": "1 % par achat ou vente",
+      "url": "https://www.etoro.com/trading/fees/"
+     },
+     {
+      "champ": "spotTaker",
+      "valeur": null,
+      "unite": null,
+      "citation_exacte": null,
+      "url": "https://www.etoro.com/trading/fees/"
+     },
+     {
+      "champ": "spotMaker",
+      "valeur": null,
+      "unite": null,
+      "citation_exacte": null,
+      "url": "https://www.etoro.com/trading/fees/"
+     }
+    ]
+   }
+  ]
+ },
+ "verite": {
+  "instantBuy": 1
+ },
+ "attendu": {
+  "arret": null,
+  "appels": 2,
+  "champs": {
+   "instantBuy": {
+    "statut": "identique"
+   },
+   "withdrawalFiatSepa": {
+    "statut": "rejete",
+    "raison": "ne figure pas dans la citation"
+   },
+   "spotMaker": {
+    "statut": "non-trouve"
+   },
+   "spotTaker": {
+    "statut": "non-trouve"
+   }
+  },
+  "action": null,
+  "fusionner": false,
+  "ticket": true
+ }
+}

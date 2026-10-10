@@ -1,0 +1,138 @@
+{
+ "id": "r-crypto-com",
+ "origine": "reel-reconstitue",
+ "type": "extraction",
+ "source": "fiche AVANT = data/platforms.json au commit 6d1fdcbd~1 (valeurs et textes d'origine) ; PAGE reconstituée à partir de fees.verified.note du commit 6d1fdcbd (relevé du 05/10/2026 sur https://help.crypto.com/en/articles/10981986-fees-limits-eea) : ce n'est PAS une copie de la page (le dépôt ne conserve pas le texte des pages), mais les phrases relevées ce jour-là, entourées d'un décor de chiffres parasites.",
+ "description": "Crypto.com (EEE) : appli à 0,80 % (1 % avant) et retrait SEPA 0 -> 1 € ; le modèle cite « 0,25/0,50 % » pour maker et taker : deux chiffres dans une citation, refusé.",
+ "plateforme": {
+  "id": "crypto-com",
+  "name": "Crypto.com",
+  "fees": {
+   "spotMaker": 0.25,
+   "spotTaker": 0.5,
+   "instantBuy": 1,
+   "withdrawalCrypto": "Variable selon réseau",
+   "withdrawalFiatSepa": 0,
+   "spread": "App 0,5-2%",
+   "verified": {
+    "date": "2026-06-13",
+    "source": "https://help.crypto.com/en/articles/5977463",
+    "model": "hybride",
+    "makerTakerApplies": true,
+    "realCostPct": "0,25/0,50 % (Exchange base) · App = spread caché 0,5-2 %",
+    "verdict": "douteux",
+    "note": "0,075 % = meilleur tier (CRO + volume), PAS la base. Un débutant utilise l'App = spread caché 0,5-2 %. Exchange base = 0,25/0,50 %. Le 2,99 % carte = US ; recharge carte UE = 1 %."
+   }
+  }
+ },
+ "pages": [
+  {
+   "url": "https://help.crypto.com/en/articles/10981986-fees-limits-eea",
+   "texte": "Crypto.com : tarifs et frais. Cette page décrit les frais applicables aux clients particuliers résidant dans l'Espace économique européen. Les tarifs peuvent évoluer ; la version en vigueur est celle affichée sur cette page. Appli Crypto.com (EEE), grille officielle du 19/05/2026 : 0,80 % par achat depuis le solde ou échange entre cryptos, jusqu'à 4 % par carte bancaire ; retrait SEPA 1 €. Exchange : 0,25/0,50 % au palier de base (sources tierces concordantes, tableau officiel illisible). Programme de parrainage : 10 € offerts après 100 € échangés. Intérêts sur les euros déposés : jusqu'à 2 % par an. Service client joignable de 9 h à 18 h."
+  }
+ ],
+ "compteur": {
+  "deja": 0
+ },
+ "env": {},
+ "testsVerts": true,
+ "client": {
+  "lectures": [
+   {
+    "extractions": [
+     {
+      "champ": "spotMaker",
+      "valeur": 0.25,
+      "unite": "%",
+      "citation_exacte": "Exchange : 0,25/0,50 %",
+      "url": "https://help.crypto.com/en/articles/10981986-fees-limits-eea"
+     },
+     {
+      "champ": "spotTaker",
+      "valeur": 0.5,
+      "unite": "%",
+      "citation_exacte": "Exchange : 0,25/0,50 %",
+      "url": "https://help.crypto.com/en/articles/10981986-fees-limits-eea"
+     },
+     {
+      "champ": "instantBuy",
+      "valeur": 0.8,
+      "unite": "%",
+      "citation_exacte": "0,80 % par achat depuis le solde ou échange entre cryptos",
+      "url": "https://help.crypto.com/en/articles/10981986-fees-limits-eea"
+     },
+     {
+      "champ": "withdrawalFiatSepa",
+      "valeur": 1,
+      "unite": "€",
+      "citation_exacte": "retrait SEPA 1 €",
+      "url": "https://help.crypto.com/en/articles/10981986-fees-limits-eea"
+     }
+    ]
+   },
+   {
+    "extractions": [
+     {
+      "champ": "withdrawalFiatSepa",
+      "valeur": 1,
+      "unite": "€",
+      "citation_exacte": "retrait SEPA 1 €",
+      "url": "https://help.crypto.com/en/articles/10981986-fees-limits-eea"
+     },
+     {
+      "champ": "instantBuy",
+      "valeur": 0.8,
+      "unite": "%",
+      "citation_exacte": "0,80 % par achat depuis le solde ou échange entre cryptos",
+      "url": "https://help.crypto.com/en/articles/10981986-fees-limits-eea"
+     },
+     {
+      "champ": "spotTaker",
+      "valeur": 0.5,
+      "unite": "%",
+      "citation_exacte": "Exchange : 0,25/0,50 %",
+      "url": "https://help.crypto.com/en/articles/10981986-fees-limits-eea"
+     },
+     {
+      "champ": "spotMaker",
+      "valeur": 0.25,
+      "unite": "%",
+      "citation_exacte": "Exchange : 0,25/0,50 %",
+      "url": "https://help.crypto.com/en/articles/10981986-fees-limits-eea"
+     }
+    ]
+   }
+  ]
+ },
+ "verite": {
+  "instantBuy": 0.8,
+  "withdrawalFiatSepa": 1
+ },
+ "attendu": {
+  "arret": null,
+  "appels": 2,
+  "champs": {
+   "spotMaker": {
+    "statut": "rejete",
+    "raison": "plusieurs chiffres"
+   },
+   "spotTaker": {
+    "statut": "rejete",
+    "raison": "plusieurs chiffres"
+   },
+   "instantBuy": {
+    "statut": "propose",
+    "niveau": "a_relire",
+    "nouvelle": 0.8
+   },
+   "withdrawalFiatSepa": {
+    "statut": "propose",
+    "niveau": "a_relire",
+    "nouvelle": 1
+   }
+  },
+  "action": "proposition",
+  "fusionner": false,
+  "ticket": true
+ }
+}

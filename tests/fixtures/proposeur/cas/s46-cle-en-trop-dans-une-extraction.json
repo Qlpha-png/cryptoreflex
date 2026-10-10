@@ -1,0 +1,133 @@
+{
+ "origine": "synthetique",
+ "type": "extraction",
+ "plateforme": {
+  "id": "plateforme-test",
+  "name": "Plateforme Test",
+  "fees": {
+   "spotMaker": 0.4,
+   "spotTaker": 0.8,
+   "instantBuy": 1,
+   "withdrawalCrypto": "Variable",
+   "withdrawalFiatSepa": 1,
+   "spread": "non publié",
+   "verified": {
+    "date": "2026-10-05",
+    "source": "https://frais.plateforme-test.example/tarifs",
+    "model": "exchange",
+    "makerTakerApplies": true,
+    "realCostPct": "Selon la grille officielle",
+    "verdict": "fiable",
+    "note": "Grille officielle relevée."
+   }
+  }
+ },
+ "compteur": {
+  "deja": 0
+ },
+ "env": {},
+ "testsVerts": true,
+ "id": "s46-cle-en-trop-dans-une-extraction",
+ "description": "Une extraction porte une clé « explication » en plus : texte libre refusé, toute la lecture est écartée.",
+ "pages": [
+  {
+   "url": "https://frais.plateforme-test.example/tarifs",
+   "texte": "Plateforme Test : tarifs et frais. Cette page décrit les frais applicables aux clients particuliers résidant dans l'Espace économique européen. Les tarifs peuvent évoluer ; la version en vigueur est celle affichée sur cette page. Frais maker : 0,45 % ; frais taker : 0,85 %. Achat instantané : 1,2 % du montant. Virement SEPA sortant : 1 €. Programme de parrainage : 10 € offerts après 100 € échangés. Intérêts sur les euros déposés : jusqu'à 2 % par an. Service client joignable de 9 h à 18 h."
+  }
+ ],
+ "client": {
+  "lectures": [
+   {
+    "extractions": [
+     {
+      "champ": "spotMaker",
+      "valeur": 0.45,
+      "unite": "%",
+      "citation_exacte": "Frais maker : 0,45 %",
+      "url": "https://frais.plateforme-test.example/tarifs",
+      "explication": "valeur lue sur la page"
+     },
+     {
+      "champ": "spotTaker",
+      "valeur": 0.85,
+      "unite": "%",
+      "citation_exacte": "frais taker : 0,85 %",
+      "url": "https://frais.plateforme-test.example/tarifs"
+     },
+     {
+      "champ": "instantBuy",
+      "valeur": 1.2,
+      "unite": "%",
+      "citation_exacte": "Achat instantané : 1,2 %",
+      "url": "https://frais.plateforme-test.example/tarifs"
+     },
+     {
+      "champ": "withdrawalFiatSepa",
+      "valeur": 1,
+      "unite": "€",
+      "citation_exacte": "Virement SEPA sortant : 1 €",
+      "url": "https://frais.plateforme-test.example/tarifs"
+     }
+    ]
+   },
+   {
+    "extractions": [
+     {
+      "champ": "withdrawalFiatSepa",
+      "valeur": 1,
+      "unite": "€",
+      "citation_exacte": "Virement SEPA sortant : 1 €",
+      "url": "https://frais.plateforme-test.example/tarifs",
+      "explication": "valeur lue sur la page"
+     },
+     {
+      "champ": "instantBuy",
+      "valeur": 1.2,
+      "unite": "%",
+      "citation_exacte": "Achat instantané : 1,2 %",
+      "url": "https://frais.plateforme-test.example/tarifs"
+     },
+     {
+      "champ": "spotTaker",
+      "valeur": 0.85,
+      "unite": "%",
+      "citation_exacte": "frais taker : 0,85 %",
+      "url": "https://frais.plateforme-test.example/tarifs"
+     },
+     {
+      "champ": "spotMaker",
+      "valeur": 0.45,
+      "unite": "%",
+      "citation_exacte": "Frais maker : 0,45 %",
+      "url": "https://frais.plateforme-test.example/tarifs"
+     }
+    ]
+   }
+  ]
+ },
+ "attendu": {
+  "arret": null,
+  "appels": 2,
+  "champs": {
+   "spotMaker": {
+    "statut": "rejete",
+    "raison": "schéma"
+   },
+   "spotTaker": {
+    "statut": "rejete",
+    "raison": "schéma"
+   },
+   "instantBuy": {
+    "statut": "rejete",
+    "raison": "schéma"
+   },
+   "withdrawalFiatSepa": {
+    "statut": "rejete",
+    "raison": "schéma"
+   }
+  },
+  "action": null,
+  "fusionner": false,
+  "ticket": true
+ }
+}

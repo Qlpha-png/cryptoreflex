@@ -1,0 +1,16 @@
+{
+ "origine": "synthetique",
+ "type": "decision",
+ "env": {
+  "R11_FUSION_FRAIS": "on"
+ },
+ "testsVerts": true,
+ "id": "d02-incidents-jamais-automatique",
+ "description": "Incidents de sécurité : jamais de fusion, ticket.",
+ "famille": "incidents",
+ "niveau": "automatique",
+ "attendu": {
+  "action": "ticket",
+  "fusionner": false
+ }
+}

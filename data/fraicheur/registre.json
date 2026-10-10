@@ -605,6 +605,16 @@
       "ageMaxH": 816,
       "critiqueH": 1680,
       "lecture": { "methode": "workflow", "fichier": "revue-periodique.yml", "explication": "dernier passage réussi de revue-periodique.yml (ticket privé mensuel « [Revue périodique] AAAA-MM » listant ce qui dépasse son seuil) : ⚠️ au-delà de 34 jours, ❌ au-delà de 70 jours" }
+    },
+    {
+      "id": "56",
+      "famille": "Propositions de correction des frais (robots R10 proposeur et R11 fusion)",
+      "source": "texte des pages officielles de frais que la veille de nuit vient de lire (S22), gardé sur le disque du runner (aucun artefact) ; extraction par Gemini gratuit (S32), usage interne, aucun texte généré publié",
+      "robot": "étape « Proposeur » du job de la veille officielle (R10/R11, action .github/actions/proposeur ; lancement manuel : proposeur.yml) ; tsc et tests avant toute demande de fusion ; mode « propose » par défaut (demande de fusion étiquetée, jamais fusionnée seule) ; fusion automatique des frais seulement si la variable R11_FUSION_FRAIS vaut « on »",
+      "cadence": "chaque nuit avec la veille ; travail seulement si une grille de taux a changé",
+      "ageMaxH": 30,
+      "critiqueH": 80,
+      "lecture": { "methode": "workflow", "fichier": "veille-officielle.yml", "explication": "dernier passage réussi de veille-officielle.yml, dont le proposeur est une étape (sans grille de taux changée, l'étape se termine aussitôt ; clé Gemini refusée, quota, erreur, taux de rejet anormal ou contrôles rouges rendent le passage rouge) : ⚠️ au-delà de 30 h, ❌ au-delà de 80 h" }
     }
   ],
   "expirations": [

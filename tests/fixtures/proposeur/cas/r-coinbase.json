@@ -1,0 +1,137 @@
+{
+ "id": "r-coinbase",
+ "origine": "reel-reconstitue",
+ "type": "extraction",
+ "source": "fiche AVANT = data/platforms.json au commit 6d1fdcbd~1 (valeurs et textes d'origine) ; PAGE reconstituée à partir de fees.verified.note du commit 6d1fdcbd (relevé du 05/10/2026 sur https://www.coinbase.com/blog/were-lowering-fees-for-many-active-traders-on-coinbase-advanced) : ce n'est PAS une copie de la page (le dépôt ne conserve pas le texte des pages), mais les phrases relevées ce jour-là, entourées d'un décor de chiffres parasites.",
+ "description": "Coinbase Advanced : maker 0,6 -> 0,25 et taker 1,2 -> 0,5 (billet officiel du 16/09/2026). Le modèle prend aussi le taux carte (3,99 %) pour l'achat instantané : refusé.",
+ "plateforme": {
+  "id": "coinbase",
+  "name": "Coinbase",
+  "fees": {
+   "spotMaker": 0.6,
+   "spotTaker": 1.2,
+   "instantBuy": 3.99,
+   "withdrawalCrypto": "Variable selon réseau",
+   "withdrawalFiatSepa": 0,
+   "spread": "0,5-2% (Buy simple)",
+   "verified": {
+    "date": "2026-06-13",
+    "source": "https://www.datawallet.com/crypto/coinbase-fees",
+    "model": "exchange",
+    "makerTakerApplies": true,
+    "realCostPct": "0,60/1,20 % (Advanced) · carte 3,99 %",
+    "verdict": "fiable",
+    "note": "Coinbase Advanced = 0,60 % maker / 1,20 % taker. L'appli 'Buy' simple coûte bien plus cher (carte 3,99 % + spread). Taker 1,20 % parmi les plus chers du marché. Retrait SEPA gratuit (dépôt 0,15 €)."
+   }
+  }
+ },
+ "pages": [
+  {
+   "url": "https://www.coinbase.com/blog/were-lowering-fees-for-many-active-traders-on-coinbase-advanced",
+   "texte": "Coinbase : tarifs et frais. Cette page décrit les frais applicables aux clients particuliers résidant dans l'Espace économique européen. Les tarifs peuvent évoluer ; la version en vigueur est celle affichée sur cette page. Coinbase Advanced, palier d'entrée en Europe : 0,25 % maker / 0,50 % taker depuis le 16/09/2026 (billet officiel de Coinbase). L'appli « Acheter » simple coûte bien plus cher (carte 3,99 % + spread, relevé du 13/06/2026). Retrait SEPA gratuit (dépôt 0,15 €). Programme de parrainage : 10 € offerts après 100 € échangés. Intérêts sur les euros déposés : jusqu'à 2 % par an. Service client joignable de 9 h à 18 h."
+  }
+ ],
+ "compteur": {
+  "deja": 0
+ },
+ "env": {},
+ "testsVerts": true,
+ "client": {
+  "lectures": [
+   {
+    "extractions": [
+     {
+      "champ": "spotMaker",
+      "valeur": 0.25,
+      "unite": "%",
+      "citation_exacte": "0,25 % maker",
+      "url": "https://www.coinbase.com/blog/were-lowering-fees-for-many-active-traders-on-coinbase-advanced"
+     },
+     {
+      "champ": "spotTaker",
+      "valeur": 0.5,
+      "unite": "%",
+      "citation_exacte": "0,50 % taker",
+      "url": "https://www.coinbase.com/blog/were-lowering-fees-for-many-active-traders-on-coinbase-advanced"
+     },
+     {
+      "champ": "instantBuy",
+      "valeur": 3.99,
+      "unite": "%",
+      "citation_exacte": "carte 3,99 % + spread",
+      "url": "https://www.coinbase.com/blog/were-lowering-fees-for-many-active-traders-on-coinbase-advanced"
+     },
+     {
+      "champ": "withdrawalFiatSepa",
+      "valeur": null,
+      "unite": null,
+      "citation_exacte": null,
+      "url": "https://www.coinbase.com/blog/were-lowering-fees-for-many-active-traders-on-coinbase-advanced"
+     }
+    ]
+   },
+   {
+    "extractions": [
+     {
+      "champ": "withdrawalFiatSepa",
+      "valeur": null,
+      "unite": null,
+      "citation_exacte": null,
+      "url": "https://www.coinbase.com/blog/were-lowering-fees-for-many-active-traders-on-coinbase-advanced"
+     },
+     {
+      "champ": "instantBuy",
+      "valeur": 3.99,
+      "unite": "%",
+      "citation_exacte": "carte 3,99 % + spread",
+      "url": "https://www.coinbase.com/blog/were-lowering-fees-for-many-active-traders-on-coinbase-advanced"
+     },
+     {
+      "champ": "spotTaker",
+      "valeur": 0.5,
+      "unite": "%",
+      "citation_exacte": "0,50 % taker",
+      "url": "https://www.coinbase.com/blog/were-lowering-fees-for-many-active-traders-on-coinbase-advanced"
+     },
+     {
+      "champ": "spotMaker",
+      "valeur": 0.25,
+      "unite": "%",
+      "citation_exacte": "0,25 % maker",
+      "url": "https://www.coinbase.com/blog/were-lowering-fees-for-many-active-traders-on-coinbase-advanced"
+     }
+    ]
+   }
+  ]
+ },
+ "verite": {
+  "spotMaker": 0.25,
+  "spotTaker": 0.5
+ },
+ "attendu": {
+  "arret": null,
+  "appels": 2,
+  "champs": {
+   "spotMaker": {
+    "statut": "propose",
+    "niveau": "a_relire",
+    "nouvelle": 0.25
+   },
+   "spotTaker": {
+    "statut": "propose",
+    "niveau": "a_relire",
+    "nouvelle": 0.5
+   },
+   "instantBuy": {
+    "statut": "rejete",
+    "raison": "libellé"
+   },
+   "withdrawalFiatSepa": {
+    "statut": "non-trouve"
+   }
+  },
+  "action": "proposition",
+  "fusionner": false,
+  "ticket": true
+ }
+}

@@ -80,3 +80,8 @@ veille-amf-alertes.json
 
 # lot Z6 : signaux d'incident du robot R9 (ticket privé seulement), jamais commités
 incidents-tickets.json
+
+# lot Z7 : fichiers de travail du proposeur R10 (texte des pages de frais changées, sorties du jour), jamais commités
+veille-frais-textes.json
+proposeur-sortie/
+.proposeur-cache/

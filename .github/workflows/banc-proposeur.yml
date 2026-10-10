@@ -1,0 +1,75 @@
+# Banc du proposeur (lot Z7, 10/10/2026) : rejoue à la demande le banc d'essai du proposeur R10 / de la fusion R11
+# (scripts/banc-proposeur.mjs, cas de tests/fixtures/proposeur/cas).
+#  - Toujours : le banc SIMULÉ (aucun appel réseau, 61 cas dont 10 tirés de vraies grilles) ; rouge au moindre écart, à la
+#    moindre valeur absente de sa source acceptée ou fusion automatique fausse.
+#  - Option « reel » : le banc avec le VRAI Gemini (2 appels par cas, plafond de 50 appels par jour, 20 cas par défaut), pour
+#    contrôler qu'un alias « latest » n'a pas changé de comportement. Mêmes deux garanties (0 valeur absente de la source, 0
+#    valeur fausse acceptée) ; le taux de rejet est affiché pour être comparé d'un rejeu à l'autre.
+# Lancement manuel seulement. La clé n'est jamais imprimée (en-tête HTTP, secret masqué par GitHub). Les appels du banc réel
+# ne passent pas par le compteur du proposeur : éviter de le lancer le même jour qu'un gros passage de la veille.
+name: Banc du proposeur (rejeu à la demande)
+
+on:
+  workflow_dispatch:
+    inputs:
+      reel:
+        description: "Rejouer aussi avec le VRAI Gemini (consomme des appels de l'offre gratuite, 2 par cas)"
+        type: boolean
+        default: false
+      max:
+        description: "Nombre maximal de cas pour le banc réel (25 au plus : 50 appels par jour)"
+        type: string
+        default: "20"
+      modeles_a:
+        description: "Modèles de la lecture A, séparés par des virgules (vide : défaut du dépôt)"
+        type: string
+        default: ""
+      modeles_b:
+        description: "Modèles de la lecture B, séparés par des virgules (vide : défaut du dépôt)"
+        type: string
+        default: ""
+
+permissions:
+  contents: read
+
+concurrency:
+  group: banc-proposeur
+  cancel-in-progress: false
+
+jobs:
+  banc:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      # comparé au booléen ET au texte (un lancement par l'API peut envoyer "true"/"false" en texte)
+      REEL: ${{ inputs.reel == true || inputs.reel == 'true' }}
+      MAX: ${{ inputs.max }}
+      GEMINI_MODELES_A: ${{ inputs.modeles_a }}
+      GEMINI_MODELES_B: ${{ inputs.modeles_b }}
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v6
+        with:
+          ref: main
+
+      - name: Setup Node 20
+        uses: actions/setup-node@v6
+        with:
+          node-version: "20"
+
+      - name: Banc simulé (aucun appel réseau)
+        run: |
+          set -o pipefail
+          node scripts/banc-proposeur.mjs | tee -a "$GITHUB_STEP_SUMMARY"
+
+      - name: Banc réel (vrai Gemini)
+        if: env.REEL == 'true'
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: |
+          set -o pipefail
+          [[ "$MAX" =~ ^[0-9]{1,2}$ ]] || { echo "::error::max doit être un nombre"; exit 1; }
+          node scripts/banc-proposeur.mjs --reel --max="$MAX" | tee -a "$GITHUB_STEP_SUMMARY"

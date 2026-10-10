@@ -30,6 +30,7 @@ on:
 
 permissions:
   contents: write
+  pull-requests: write # lot Z7 : demandes de fusion du proposeur R10 (action .github/actions/proposeur) ; rien de plus large (jeton par défaut en lecture seule)
 
 concurrency:
   group: veille-officielle
@@ -70,6 +71,8 @@ jobs:
           PISTE_CLIENT_ID: ${{ secrets.PISTE_CLIENT_ID }}
           PISTE_CLIENT_SECRET: ${{ secrets.PISTE_CLIENT_SECRET }}
           VEILLE_REPORT: veille-report.md
+          # lot Z7 : texte des pages de frais dont les taux ont changé, sur le disque du runner (jamais en artefact : dépôt public)
+          VEILLE_TEXTES: ${{ runner.temp }}/veille-frais-textes.json
         run: node scripts/veille-officielle.mjs --navigateur ${{ env.ENREGISTRER == 'true' && '--enregistrer' || '' }} ${{ env.DETAIL == 'true' && '--detail' || '' }}
 
       # 10/10/2026 (lot Z4) : listes de l'AMF (data.gouv.fr). Liste blanche → champs machine de data/psan-registry.json
@@ -280,6 +283,24 @@ jobs:
             if (ouverts[0]) await github.rest.issues.createComment({ ...depot, issue_number: ouverts[0].number, body: corps });
             else await github.rest.issues.create({ ...depot, title: `[AMF] liste blanche ou numéro en écart - ${a.date}`, body: corps, labels: ["amf-listes", "monitoring"] });
 
+      # 10/10/2026 (lot Z7, reprise) : proposeur R10 + fusion R11, dans LE MÊME job que la détection. Il lit sur le disque du
+      # runner le texte des pages de frais dont les taux viennent de changer (aucun artefact : le dépôt est public) ; Gemini
+      # (offre gratuite, usage interne) extrait les chiffres, du code déterministe juge ; tsc et les tests tournent sur la
+      # branche AVANT toute demande de fusion étiquetée « proposition-frais », jamais fusionnée seule tant que la variable
+      # R11_FUSION_FRAIS n'est pas « on ». Sans page changée, l'étape se termine aussitôt. Voir .github/actions/proposeur.
+      - name: Proposeur de corrections de frais (R10/R11)
+        id: proposeur
+        if: ${{ !cancelled() }}
+        # un plantage du proposeur ne doit pas masquer les alertes de la veille ci-dessous ; il reste signalé (étape finale)
+        continue-on-error: true
+        uses: ./.github/actions/proposeur
+        with:
+          textes: ${{ runner.temp }}/veille-frais-textes.json
+          gemini-api-key: ${{ secrets.GEMINI_API_KEY }}
+          sentinelle-token: ${{ secrets.SENTINELLE_TOKEN }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          fusion-frais: ${{ vars.R11_FUSION_FRAIS }}
+
       - name: Échec si changement (e-mail GitHub)
         if: steps.run.outcome == 'failure'
         run: |
@@ -290,4 +311,10 @@ jobs:
         if: steps.amf.outcome == 'failure'
         run: |
           echo "Liste de l'AMF refusée (format, volume, recul, injoignable) ou numéro AMF en écart : voir le ticket « amf-listes »."
+          exit 1
+
+      - name: Échec si le proposeur s'est arrêté
+        if: always() && (steps.proposeur.outputs.echec == 'true' || steps.proposeur.outcome == 'failure')
+        run: |
+          echo "Proposeur arrêté (clé Gemini, quota, erreur, taux de rejet anormal ou contrôles rouges) : voir le ticket privé « [Proposeur] ». Aucune valeur n'a été publiée."
           exit 1
