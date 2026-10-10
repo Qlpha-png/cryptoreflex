@@ -1,0 +1,7 @@
+Barlow Condensed 600 / 700 / 800 (normal) - licence SIL Open Font License 1.1 (OFL.txt dans ce dossier).
+Source : depot officiel github.com/google/fonts, ofl/barlowcondensed/BarlowCondensed-{SemiBold,Bold,ExtraBold}.ttf (version 1.408,
+la meme que celle servie par Google Fonts, fichiers v13).
+Fabrication (10/10/2026) : sous-ensemble fontTools (hinting et fonctionnalites OpenType conserves) reunissant les points de code des
+deux fichiers woff2 que Google Fonts sert pour les jeux "latin" et "latin-ext" (union exacte des tables cmap, 389 points de code) ;
+contours des 2 111 glyphes recoupes avec les fichiers officiels de Google : 0 difference.
+Chargee par components/reflex-cards/fonts.ts (next/font/local) : plus aucune requete vers Google au build.

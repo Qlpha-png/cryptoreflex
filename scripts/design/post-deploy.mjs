@@ -12,7 +12,12 @@
  *     document.fonts.check("16px Inter") répondrait VRAI sans rien vérifier) ;
  * (c) police calculée du body et du h1 ≠ police système (Times New Roman, Arial…) ;
  * (d) fichiers de police servis en 200 avec Cache-Control « immutable » ;
- * (e) une capture par page (à regarder) ; (f) au plus 1 BreadcrumbList par page.
+ * (e) une capture par page (à regarder) ; (f) au plus 1 BreadcrumbList par page ;
+ * (g) aucune requête du navigateur vers fonts.googleapis.com / fonts.gstatic.com (toutes les polices sont auto-hébergées
+ *     depuis le 10/10/2026 : Inter et Newsreader sous /fonts/cplus-v1/, Space Grotesk, JetBrains Mono, Barlow Condensed et
+ *     Cinzel via next/font/local → /_next/static/media/).
+ * ATTENTION : next/font/local nomme la famille d'après la constante du code (« __rcSerif_xxxx », « __rcCond_xxxx », « __display_xxxx »,
+ * « __mono_xxxx »), pas d'après la police : pour la page d'une carte ou du jeu, --polices "rcSerif 700,rcCond 700,display 400".
  * 3 pages par défaut = 3 visites (+ CSS et polices) : compatible avec la limite de requêtes de Vercel.
  * Code de sortie 1 si un contrôle échoue (→ rollback immédiat, voir plan §4.0-5).
  */
@@ -38,6 +43,9 @@ for (const [i, route] of PAGES.entries()) {
   const page = await ctx.newPage();
   const fontes = [];
   page.on("response", (r) => { if (r.request().resourceType() === "font") fontes.push({ url: r.url(), statut: r.status(), cache: r.headers()["cache-control"] || "" }); });
+  // (g) polices auto-hébergées depuis le 10/10/2026 : aucune requête vers Google Fonts (CSP du site + build qui ne dépend plus de Google)
+  const requetesGoogle = [];
+  page.on("request", (r) => { if (/^https?:\/\/fonts\.(googleapis|gstatic)\.com\//.test(r.url())) requetesGoogle.push(r.url()); });
   const sep = route.includes("?") ? "&" : "?";
   const r = await page.goto(`${BASE}${route}${sep}v=${Date.now()}`, { waitUntil: "load", timeout: 90000 }).catch((e) => { echecs.push(`${route} : navigation ${String(e.message).slice(0, 100)}`); return null; });
   const statut = r ? r.status() : 0;
@@ -62,6 +70,7 @@ for (const [i, route] of PAGES.entries()) {
     if (f.statut !== 200 && f.statut !== 304) echecs.push(`${route} : (d) police ${nom} en HTTP ${f.statut}`);
     else if (!/immutable/.test(f.cache)) (exige ? echecs : avertissements).push(`${route} : (d) police ${nom} sans « immutable » (${f.cache || "aucun Cache-Control"})`);
   }
+  if (requetesGoogle.length) echecs.push(`${route} : (g) ${requetesGoogle.length} requête(s) vers Google Fonts (polices auto-hébergées : 0 attendu) : ${requetesGoogle[0].slice(0, 120)}`);
   if (m.seo.breadcrumbList > 1) echecs.push(`${route} : (f) ${m.seo.breadcrumbList} BreadcrumbList (1 au plus)`);
   console.log(`${statut} ${route} · classes ${m.polices.classesHtml - m.polices.classesManquantes.length}/${m.polices.classesHtml} définies · body « ${m.polices.familleCorps} » ${m.polices.corpsChargee ? "chargée" : "NON chargée"} · h1 « ${m.polices.familleH1} » · polices servies ${fontes.length} · BreadcrumbList ${m.seo.breadcrumbList}`);
   await ctx.close();

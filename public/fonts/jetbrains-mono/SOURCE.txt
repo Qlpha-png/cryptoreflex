@@ -1,0 +1,4 @@
+JetBrains Mono (police variable, axe wght 100-800), jeu "latin" - licence SIL Open Font License 1.1 (OFL.txt dans ce dossier).
+Source : fichier woff2 officiel servi par Google Fonts (fonts.gstatic.com/s/jetbrainsmono/v24/tDbV2o-flEEny0FZhsfKu5WU4xD7OwE.woff2),
+copie telle quelle, sans modification.
+Chargee par app/layout.tsx (next/font/local, variable --font-mono) : plus aucune requete vers Google au build.

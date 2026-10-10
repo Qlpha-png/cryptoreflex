@@ -1,0 +1,6 @@
+Cinzel (police variable, axe wght 400-900, utilisee en 600 et 700) - licence SIL Open Font License 1.1 (OFL.txt dans ce dossier).
+Source : depot officiel github.com/google/fonts, ofl/cinzel/Cinzel[wght].ttf (version 2.000, la meme que celle servie par Google Fonts, fichiers v26).
+Fabrication (10/10/2026) : sous-ensemble fontTools (hinting, tables de variation et fonctionnalites OpenType conserves) reunissant les points de
+code des deux fichiers woff2 que Google Fonts sert pour les jeux "latin" et "latin-ext" (union exacte des tables cmap, 335 points de code) ;
+contours recoupes avec les fichiers officiels de Google : 0 difference.
+Chargee par components/reflex-cards/fonts.ts (next/font/local) : plus aucune requete vers Google au build.
