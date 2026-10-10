@@ -392,7 +392,10 @@ export function feeShortFr(p: Platform): string {
   if (p.fees.verified?.verdict === "non-verifie") return "non vérifiés";
   const mt = p.fees.verified?.makerTakerApplies ?? true;
   const rc =Number(mt ? p.fees.spotTaker : p.fees.instantBuy);
-  return Number.isFinite(rc) ? `${rc.toLocaleString("fr-FR", { maximumFractionDigits: 2 })}\u00a0%` : "voir l'avis";
+  if (!Number.isFinite(rc)) return "voir l'avis";
+  const taux = `${rc.toLocaleString("fr-FR", { maximumFractionDigits: 2 })}\u00a0%`;
+  // 10/10/2026 : un frais « taker » n'est pas le coût d'un achat simple dans l'appli → il est nommé comme tel
+  return mt ? `${taux} (carnet d'ordres)` : taux;
 }
 
 /** Alias de feeShortFr : tout le site est en français (« 1,49 % » et non « 1.49% », audit du 05/10/2026). */

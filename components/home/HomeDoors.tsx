@@ -2,7 +2,7 @@ import { avecTypoSync } from "@/components/ui/Typo";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, Calculator, GalleryVerticalEnd, GraduationCap, Scale, type LucideIcon } from "lucide-react";
-import { feeShortFr, getTopPlatforms } from "@/lib/platforms";
+import { getTopPlatforms, purchaseCostText, simpleCost1000 } from "@/lib/platforms";
 import PlatformLogo from "@/components/PlatformLogo";
 import { isReflexCardsEnabled } from "@/lib/reflex-cards/data";
 import { STATS, fmtCount } from "@/lib/brand";
@@ -45,12 +45,13 @@ function TopPlatformsBase() {
             {/* pas de fond blanc : certains logos sont blancs (Coinbase), comme dans le comparatif */}
             <PlatformLogo id={p.id} name={p.name} size={28} className="h-7 w-7 rounded-md" />
             <span className="flex-1 min-w-max whitespace-nowrap text-sm font-semibold text-fg">{p.name}</span>
-            {/* « frais d'achat » en entier, sauf dans les 4 colonnes étroites (≥ 1280 px) où « frais » suffit.
-                B1 : le nom n'est plus tronqué (« Kraken » coupé à 320 px) ; c'est la mention des frais qui passe à la ligne. */}
+            {/* 10/10/2026 : coût réel d'un achat de 1 000 € dans l'appli (simpleCost1000, relevé daté sur la fiche),
+                et non plus le frais « taker » d'une interface avancée présenté comme « frais d'achat ».
+                B1 : le nom n'est plus tronqué ; c'est la mention du coût qui passe à la ligne. */}
             <span className="min-w-0 text-right text-xs text-fg/70">
-              <span className="xl:hidden">frais d&apos;achat </span>
-              <span className="hidden xl:inline">frais </span>
-              <b className="text-fg/90">{feeShortFr(p)}</b>
+              <span className="xl:hidden">achat de 1&nbsp;000&nbsp;€ : </span>
+              <span className="hidden xl:inline">1&nbsp;000&nbsp;€ : </span>
+              <b className="text-fg/90">{purchaseCostText(simpleCost1000(p))}</b>
             </span>
           </Link>
         </li>
