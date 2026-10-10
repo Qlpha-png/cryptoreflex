@@ -54,7 +54,7 @@
           "makerTakerApplies": true,
           "realCostPct": "0,25/0,50 % (Advanced, palier d'entrée UE) · achat simple et carte : non chiffrés par Coinbase",
           "verdict": "fiable",
-          "note": "Coinbase Advanced, palier d'entrée en Europe : 0,25 % maker / 0,50 % taker depuis le 16/09/2026 (billet officiel de Coinbase). L'appli « Acheter » simple n'est pas chiffrée sur la page d'aide de Coinbase (relevé du 05/10/2026). Retrait SEPA gratuit (dépôt 0,15 €)."
+          "note": "Coinbase Advanced, palier d'entrée en Europe : 0,25 % maker / 0,50 % taker depuis le 16/09/2026 (billet officiel de Coinbase). L'appli « Acheter » simple n'est pas chiffrée sur la page d'aide de Coinbase. Retrait SEPA gratuit (dépôt 0,15 €)."
         },
         "cardBuy": 3.99,
         "cost": {
@@ -442,7 +442,7 @@
           "makerTakerApplies": true,
           "realCostPct": "0,40/0,80 % (Pro, premier palier) · Instant Buy 1 % + frais",
           "verdict": "fiable",
-          "note": "Kraken Pro, premier palier : 0,40 % maker / 0,80 % taker (grille officielle). Instant Buy (appli simple) = 1 % + frais du moyen de paiement. Retrait SEPA 1 € (relevé du 13/06/2026)."
+          "note": "Kraken Pro, premier palier : 0,40 % maker / 0,80 % taker (grille officielle). Instant Buy (appli simple) = 1 % + frais du moyen de paiement. Retrait SEPA 1 €."
         },
         "cost": {
           "path": "Appli Kraken : achat instantané, payé avec le solde en euros",
@@ -812,7 +812,7 @@
           "makerTakerApplies": false,
           "realCostPct": "0,99 % (Compte Euro ou virement) · 1,99 % (carte) · vente 1,29 % · + 0,12 € par transaction",
           "verdict": "fiable",
-          "note": "Grille officielle publiée le 09/02/2026 (offre Classique, particuliers) : achat 0,99 % via le Compte Euro ou un virement SEPA, 1,99 % par carte et en achat récurrent, vente 1,29 %, conversion entre cryptos 0,79 %, plus 0,12 € de frais de traitement par transaction. Retrait de crypto : frais de réseau + 0,29 % (minimum 1,49 €, maximum 150 €). Virements SEPA sortants gratuits."
+          "note": "Grille officielle (offre Classique, particuliers) : achat 0,99 % via le Compte Euro ou un virement SEPA, 1,99 % par carte et en achat récurrent, vente 1,29 %, conversion entre cryptos 0,79 %, plus 0,12 € de frais de traitement par transaction. Retrait de crypto : frais de réseau + 0,29 % (minimum 1,49 €, maximum 150 €). Virements SEPA sortants gratuits."
         },
         "cardBuy": 1.99,
         "cost": {
@@ -1060,7 +1060,7 @@
           "makerTakerApplies": false,
           "realCostPct": "0,99 % (après virement) · ≈ 3,24 % par carte (dépôt 2,25 % + 0,99 %)",
           "verdict": "fiable",
-          "note": "Grille officielle du 31/08/2026 : frais d'échange 0,99 % ; dépôt par carte 2,25 % (zone Standard, dont la France, minimum 5 €) ; retrait en euros 0,10 % (minimum 1,50 €, maximum 100 €). Dépôt SEPA gratuit (relevé du 13/06/2026). Cashback BORG conditionné au blocage du jeton : ce n'est pas le taux de base."
+          "note": "Grille officielle : frais d'échange 0,99 % ; dépôt par carte 2,25 % (zone Standard, dont la France, minimum 5 €) ; retrait en euros 0,10 % (minimum 1,50 €, maximum 100 €). Dépôt SEPA gratuit. Cashback BORG conditionné au blocage du jeton : ce n'est pas le taux de base."
         },
         "cardBuy": 3.24,
         "cost": {
@@ -1452,7 +1452,7 @@
           "makerTakerApplies": true,
           "realCostPct": "0,10/0,20 % (compte spot) · 0,08/0,10 % (compte spot et dérivés)",
           "verdict": "fiable",
-          "note": "Grille OKX Europe (officielle) : utilisateur régulier à 0,10 % maker / 0,20 % taker sur un compte spot seul, 0,08 % / 0,10 % sur un compte spot et dérivés. Achat par carte : aucun coût chiffré sur cette page (contrôle du 06/10/2026). SEPA gratuit."
+          "note": "Grille OKX Europe (officielle) : utilisateur régulier à 0,10 % maker / 0,20 % taker sur un compte spot seul, 0,08 % / 0,10 % sur un compte spot et dérivés. Achat par carte : aucun coût chiffré sur cette page. SEPA gratuit."
         },
         "cost": {
           "path": "Appli OKX : Buy, payé avec le solde en euros",
@@ -1464,7 +1464,7 @@
             "c1000": null,
             "kind": "partiel"
           },
-          "note": "Marge de 1 % au plus. Mode avancé : 0,20 %. Carte : aucun coût chiffré sur les pages OKX citées (contrôle du 06/10/2026).",
+          "note": "Marge de 1 % au plus. Mode avancé : 0,20 %. Carte : aucun coût chiffré sur les pages OKX citées.",
           "date": "2026-10-05",
           "source": "https://www.okx.com/en-eu/help/how-do-i-buy-crypto-with-my-cash-balance-eea"
         }
@@ -2812,7 +2812,7 @@
           "makerTakerApplies": false,
           "realCostPct": "1,49 % (achat instantané ; 1,29 % avec code de parrainage) · plan d'épargne : 0,99 % les 7 premiers jours, puis 0 %",
           "verdict": "fiable",
-          "note": "Courtier BTC (page officielle mise à jour le 30/09/2026). Achat instantané 1,49 % (1,29 % avec un code de parrainage) ; plan d'épargne Auto-Invest 0,99 % les 7 premiers jours (0,79 % avec un code), puis gratuit dès le 8e jour. Retrait BTC : 1 000 sats ; retrait EUR 1 € ; dépôt SEPA gratuit."
+          "note": "Courtier BTC (page officielle). Achat instantané 1,49 % (1,29 % avec un code de parrainage) ; plan d'épargne Auto-Invest 0,99 % les 7 premiers jours (0,79 % avec un code), puis gratuit dès le 8e jour. Retrait BTC : 1 000 sats ; retrait EUR 1 € ; dépôt SEPA gratuit."
         },
         "cost": {
           "path": "Appli 21bitcoin : Buy › One-Time Purchase, payé avec le compte en euros",
