@@ -26,7 +26,7 @@
     {
       "id": "3",
       "famille": "Détails des fiches (ATH, ATL, offre, courbe 7 j)",
-      "source": "CoinGecko (S3) ; archive maison prévue (R4)",
+      "source": "archive maison des cours (R4, table cours_archive) dès 7 jours de points (« depuis le JJ/MM/AAAA ») ; sinon CoinGecko (S3)",
       "robot": "GitHub refresh-static-details-kv (R3), lancé par le Gardien",
       "cadence": "toutes les 6 h",
       "ageMaxH": 16,
@@ -36,7 +36,7 @@
     {
       "id": "4",
       "famille": "Prix, capitalisation et rang des fiches du top 500",
-      "source": "CoinGecko (S3) ; CoinMarketCap par identifiant prévu (S1, lot Z3)",
+      "source": "CoinMarketCap (S1) par identifiant, lots de 100 (lot Z3) ; CoinGecko (S3) seulement si CoinMarketCap échoue",
       "robot": "GitHub refresh-prices-db (R2), Gardien 08/14/20 h",
       "cadence": "3 fois par jour",
       "ageMaxH": 16,
@@ -46,9 +46,9 @@
     {
       "id": "5",
       "famille": "Prix, capitalisation et rang des fiches hors top 500",
-      "source": "aucune aujourd'hui ; CoinMarketCap (S1) et DexScreener (S2) prévus au lot Z3",
-      "robot": "aucun (R2 étendu au lot Z3)",
-      "cadence": "1 fois par jour",
+      "source": "CoinMarketCap (S1) par identifiant (data/cmc-id-map.json) ; DexScreener (S2) par adresse de contrat pour les fiches sans identifiant CMC (lot Z3) ; sans source : masquage au-delà de 48 h",
+      "robot": "GitHub refresh-prices-db (R2), Gardien 08/14/20 h",
+      "cadence": "3 fois par jour",
       "ageMaxH": 24,
       "critiqueH": 48,
       "lecture": { "methode": "supabase", "table": "cryptos", "colonne": "price_updated_at", "repliColonne": "updated_at", "filtre": "is_published=eq.true&price_usd=not.is.null&or=(market_cap_rank.gt.500,market_cap_rank.is.null)", "mode": "plusAncienne", "explication": "plus ancienne date de cours des fiches publiées hors du top 500 (l'affichage masque déjà tout cours de plus de 48 h)" }
@@ -522,6 +522,26 @@
       "ageMaxH": 30,
       "critiqueH": 48,
       "lecture": { "methode": "kv", "cle": "cron:streak-reminders:last", "champ": "at", "trace": true, "explication": "trace KV « dernier passage + résultat » (lib/cron-trace.ts)" }
+    },
+    {
+      "id": "52",
+      "famille": "Liens et défauts des fiches",
+      "source": "le site lui-même (toutes les fiches /cryptos/<slug> et /acheter/<slug>/fr)",
+      "robot": "GitHub fiches-liens (lot Z3), Gardien 03:40 UTC",
+      "cadence": "chaque nuit",
+      "ageMaxH": 30,
+      "critiqueH": 54,
+      "lecture": { "methode": "workflow", "fichier": "fiches-liens.yml", "et": [{ "methode": "fichier", "fichier": "data/fiches/defauts.json", "chemin": "passeLe", "mode": "plusRecente", "defautSi": { "chemin": "resume.liensInternesMorts", "superieurA": 0, "raison": "lien(s) interne(s) mort(s) au dernier passage" }, "attentionSi": [{ "chemin": "complet", "egal": false, "raison": "dernier passage incomplet" }, { "chemin": "resume.pagesAvecDefauts", "superieurA": 0, "raison": "page(s) avec défaut (NaN, prix à 0, JSON-LD, fiche en erreur…)" }, { "chemin": "resume.liensMortsAffiches", "superieurA": 0, "raison": "lien(s) mort(s) encore affiché(s), non retirable(s)" }] }], "explication": "la plus ancienne de : dernier passage RÉUSSI de fiches-liens.yml (le robot échoue sur un lien interne mort, un plan illisible ou moins de 90 % des pages) et passeLe de data/fiches/defauts.json (commit du robot) ; ✅ si moins de 30 h sans défaut ; ⚠️ si passage incomplet, page avec défaut ou lien mort encore affiché ; ❌ dès qu'un lien interne est mort ou si le robot n'est jamais passé" }
+    },
+    {
+      "id": "53",
+      "famille": "Archive des cours (R4)",
+      "source": "points écrits par R2 (toutes les fiches, 3 fois par jour) et R1 (top 100, chaque heure) dans la table cours_archive",
+      "robot": "R2 refresh-prices (trace cron:refresh-prices:last) ; export mensuel des clôtures par R3",
+      "cadence": "3 fois par jour",
+      "ageMaxH": 16,
+      "critiqueH": 48,
+      "lecture": { "methode": "kv", "cle": "cron:refresh-prices:last", "champ": "at", "trace": true, "attentionSi": { "champ": "archive", "egal": "non disponible", "raison": "archive non disponible : lancer supabase/migrations/20261010_cours_archive.sql (bouton Run)" }, "explication": "trace KV du robot des fiches : heure du dernier passage et état de l'archive ; « non disponible » (migration pas encore lancée) = ⚠️, jamais ❌" }
     }
   ],
   "expirations": [

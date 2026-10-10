@@ -12,6 +12,8 @@ import { getKv } from "@/lib/kv";
 export const CRON_TRACE_KEYS = {
   /** 08/10/2026 (lot Z2) : robot R1, écrivain unique du bandeau, de l'instantané de secours et du global (remplace update-static-prices). */
   refreshTickerPrices: "cron:refresh-ticker-prices:last",
+  /** 10/10/2026 (lot Z3) : robot R2 des fiches (couverture, sources, archive des cours) ; lue par la famille « Archive des cours ». */
+  refreshPrices: "cron:refresh-prices:last",
   streakReminders: "cron:streak-reminders:last",
   emailSeriesFiscalite: "cron:email-series-fiscalite:last",
 } as const;

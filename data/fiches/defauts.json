@@ -1,0 +1,11 @@
+{
+ "_lisezMoi": "Résultat du robot de nuit « fiches sans défaut » (scripts/fiches-liens.mjs, lot Z3). liensSortantsMorts : adresses retirées des fiches au rendu (lib/liens-morts.ts) jusqu'à guérison (mort = DNS, 404, 410 ou 5xx deux nuits de suite). liensInternesMorts : le robot échoue et ouvre un ticket. Fichier initial : aucun passage du robot encore (passeLe vide).",
+ "passeLe": null,
+ "dureeS": null,
+ "complet": false,
+ "resume": null,
+ "liensSortantsMorts": [],
+ "sortantsEnEchec": {},
+ "liensInternesMorts": [],
+ "defautsPages": {}
+}

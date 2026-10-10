@@ -26,6 +26,8 @@ jobs:
   trigger:
     runs-on: ubuntu-latest
     timeout-minutes: 5
+    env:
+      TICKETS_PRIVES: ${{ secrets.SENTINELLE_TOKEN != '' }}
     steps:
       - name: Trigger /api/cron/refresh-prices (retry tolérant)
         env:
@@ -53,9 +55,19 @@ jobs:
               # « 0 erreur » ET au moins une fiche écrite (0 écrite = rien de prouvé, ex. base lue vide)
               # ET (reprise du 08/10, juré I7) au moins 95 % des fiches traitées réellement écrites : une page CoinGecko
               # sur deux ne doit plus laisser un run vert.
-              if [ "$ERRS" = "0" ] && [ "$UPD" != "?" ] && [ "$PROC" != "?" ] && [ "$UPD" -gt 0 ] 2>/dev/null \
-                && [ $(( UPD * 100 )) -ge $(( PROC * 95 )) ] 2>/dev/null; then
-                echo "✅ Success (updated=$UPD / processed=$PROC, errors=0)"
+              # 10/10/2026 (lot Z3) : résumé chiffré du passage dans le run (sources, couverture, archive, durée).
+              {
+                echo "## Robot des fiches (R2)"
+                echo ""
+                jq -r '"| Mesure | Valeur |\n|---|---|\n| Fiches en base | \(.fiches // "?") |\n| Appariées à CoinMarketCap | \(.appariees // "?") |\n| Appariées écrites | \(.ecritesAppariees // "?") (\(.couverturePct // "?") %) |\n| Écrites par CoinMarketCap | \(.coinmarketcap // "?") |\n| Écrites par le repli CoinGecko | \(.coingecko // "?") |\n| Écrites par DexScreener (adresse) | \(.dexscreener // "?") sur \(.dexCandidates // "?") candidates (\(.dexAppels // "?") appels) |\n| Sans source (masquées au-delà de 48 h) | \(.sansSource // "?") |\n| Lignes suspectes (variation > 60 %) | \(.suspectes // "?") |\n| Archive des cours | \(.archive // "?") (\(.archivePoints // 0) points) |\n| Colonnes étendues | \(.colonnesEtendues // "?") |\n| Erreurs | \(.errors // "?") |\n| Durée | \(.durationMs // "?") ms |"' /tmp/body.json 2>/dev/null || echo "résumé illisible"
+              } >> "$GITHUB_STEP_SUMMARY"
+              # 10/10/2026 (lot Z3) : processed = fiches appariées à CoinMarketCap, updated = appariées réellement écrites ;
+              # rouge si une erreur ou si la couverture est sous 95 %. Passage sauté par le frein du mois (cours de moins
+              # de 12 h gardés) : vert, sans écriture.
+              SAUTE=$(jq -r '.saute // false' /tmp/body.json 2>/dev/null || echo "false")
+              if [ "$SAUTE" = "true" ] || { [ "$ERRS" = "0" ] && [ "$UPD" != "?" ] && [ "$PROC" != "?" ] && [ "$UPD" -gt 0 ] 2>/dev/null \
+                && [ $(( UPD * 100 )) -ge $(( PROC * 95 )) ] 2>/dev/null; }; then
+                echo "✅ Success (updated=$UPD / processed=$PROC, errors=0, sauté par le frein : $SAUTE)"
                 exit 0
               fi
               echo "::error::refresh-prices : errors=$ERRS, updated=$UPD sur processed=$PROC (95 % exigés)"
@@ -72,3 +84,43 @@ jobs:
           # par le cache KV, reste à jour, mais les prix des fiches en base, eux, ne bougent plus).
           echo "## ❌ Prix de la base non rafraîchis (3 essais, dernier code HTTP $HTTP)" >> "$GITHUB_STEP_SUMMARY"
           exit 1
+
+      # Reprise Z3 (I5) : une fiche dont le cours CoinMarketCap/DexScreener s'écarte de plus de 60 % de la référence (cours
+      # en base de moins de 48 h, sinon médiane 7 j de l'archive) deux passages de suite n'est pas écrite ET ouvre un ticket
+      # privé (migration de jeton suivie sur l'ancien identifiant, mauvais appariement…).
+      - name: Tickets privés non configurés
+        if: always() && env.TICKETS_PRIVES != 'true'
+        run: |
+          echo "Secret SENTINELLE_TOKEN absent : aucun ticket « cours suspects » (le résumé du run reste le signal)."
+
+      - name: Ticket « cours suspects » (dépôt privé)
+        if: always() && env.TICKETS_PRIVES == 'true'
+        uses: actions/github-script@v9
+        with:
+          github-token: ${{ secrets.SENTINELLE_TOKEN }}
+          script: |
+            const fs = require("fs");
+            let corpsR2 = {};
+            try { corpsR2 = JSON.parse(fs.readFileSync("/tmp/body.json", "utf8")); } catch (e) { return; }
+            const rep = Array.isArray(corpsR2.suspectesRepetees) ? corpsR2.suspectesRepetees : [];
+            if (!rep.length) return;
+            const depot = { owner: "Qlpha-png", repo: "cryptoreflex-sentinelle" };
+            const date = new Date().toISOString().slice(0, 10);
+            const runUrl = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
+            const corps = [
+              `${rep.length} fiche(s) au cours suspect deux passages de suite (écart > 60 % : cours non écrit).`,
+              ``,
+              `**Run** : ${runUrl}`,
+              `**Date** : ${date}`,
+              ``,
+              ...rep.slice(0, 40).map((s) => `- \`${s.id}\` : écart ${s.ecartPct} % (source ${s.source}) — vérifier l'identifiant de data/cmc-id-map.json ou l'adresse de contrat`),
+              ``,
+              `_Ticket créé par \`.github/workflows/refresh-prices-db.yml\` (lot Z3)._`,
+            ].join("\n");
+            const existants = await github.rest.issues.listForRepo({ ...depot, state: "open", labels: "cours-suspects", per_page: 50 });
+            const deja = existants.data.find((i) => i.title.startsWith("[cours-suspects]"));
+            if (deja) {
+              await github.rest.issues.createComment({ ...depot, issue_number: deja.number, body: corps });
+              return;
+            }
+            await github.rest.issues.create({ ...depot, title: `[cours-suspects] fiches au cours suspect - ${date}`, body: corps, labels: ["bug", "cours-suspects", "monitoring"] });

@@ -1,5 +1,6 @@
 import { avecTypoSync } from "@/components/ui/Typo";
 import Link from "next/link";
+import { estLienMort } from "@/lib/liens-morts";
 import {
   ExternalLink,
   FileText,
@@ -155,7 +156,10 @@ function CryptoSources({ cryptoName, sources, className = "" }: Props) {
           );
           return (
             <li key={`${s.type}-${i}-${s.url}`}>
-              {external ? (
+              {external && estLienMort(s.url) ? (
+                // Lot Z3 : lien déclaré mort par le robot de nuit → texte sans lien jusqu'à guérison
+                <div className={linkClassName}>{inner}</div>
+              ) : external ? (
                 <a
                   href={s.url}
                   target="_blank"

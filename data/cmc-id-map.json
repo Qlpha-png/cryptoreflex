@@ -1,6 +1,13 @@
 {
- "_lisezMoi": "Correspondance id du site (= id CoinGecko) -> id numérique CoinMarketCap. Générée le 2026-10-06 par correspondance STRICTE (slug + symbole, ou nom exact + symbole avec candidat unique ; jamais par symbole seul). Toute fiche absente d'ici n'est jamais demandée à CMC : CoinGecko prend le relais. Testée par tests/lib/coinmarketcap.test.ts.",
- "_total": 612,
+ "_lisezMoi": "Correspondance id du site (= id CoinGecko) -> id numérique CoinMarketCap. Construite par scripts/construire-cmc-id-map.mjs (lot Z3) : même symbole ET nom compatible ET prix CMC à ± 5 % du prix de référence ; jamais par symbole seul. Une fiche absente d'ici n'est jamais demandée à CoinMarketCap : le robot des fiches passe par DexScreener (adresse de contrat) ou la fiche garde le masquage au-delà de 48 h. Testée par tests/lib/coinmarketcap.test.ts et tests/lib/fiches-z3.test.ts.",
+ "_total": 618,
+ "_construction": {
+  "le": "2026-10-10T07:04:12.850Z",
+  "fiches": 779,
+  "sourceCmc": "liste CoinMarketCap déjà téléchargée (cmc_list.json, 5000 lignes)",
+  "sourceReference": "instantané CoinGecko public du 08/10/2026 11:12 UTC, et pour 58 fiches (absentes de l'instantané ou rejetées) prix CoinGecko public au plus près de 14:22 UTC le 08/10/2026, heure de la liste CoinMarketCap",
+  "tolerancePct": 5
+ },
  "map": {
   "0x": {
    "id": 1896,
@@ -9,10 +16,6 @@
   "1inch": {
    "id": 8104,
    "symbol": "1INCH"
-  },
-  "a7a5": {
-   "id": 36549,
-   "symbol": "A7A5"
   },
   "aave": {
    "id": 7278,
@@ -34,6 +37,10 @@
    "id": 35976,
    "symbol": "YUSD"
   },
+  "aelf": {
+   "id": 2299,
+   "symbol": "ELF"
+  },
   "aergo": {
    "id": 3637,
    "symbol": "AERGO"
@@ -53,10 +60,6 @@
   "affine": {
    "id": 39987,
    "symbol": "SN120"
-  },
-  "agentfun-ai": {
-   "id": 34319,
-   "symbol": "AGENTFUN"
   },
   "agora-dollar": {
    "id": 32864,
@@ -102,6 +105,10 @@
    "id": 4030,
    "symbol": "ALGO"
   },
+  "alphabet-class-a-ondo-tokenized-stock": {
+   "id": 38001,
+   "symbol": "GOOGLON"
+  },
   "altlayer": {
    "id": 29073,
    "symbol": "ALT"
@@ -133,6 +140,10 @@
   "apenft": {
    "id": 9816,
    "symbol": "NFT"
+  },
+  "apex-token-2": {
+   "id": 19843,
+   "symbol": "APEX"
   },
   "api3": {
    "id": 7737,
@@ -197,6 +208,10 @@
   "atoshi": {
    "id": 36310,
    "symbol": "ATOS"
+  },
+  "auction": {
+   "id": 8602,
+   "symbol": "AUCTION"
   },
   "audiera": {
    "id": 38837,
@@ -302,10 +317,6 @@
    "id": 24647,
    "symbol": "BERA"
   },
-  "bfusd": {
-   "id": 37760,
-   "symbol": "BFUSD"
-  },
   "bianrensheng": {
    "id": 38590,
    "symbol": "币安人生"
@@ -330,17 +341,9 @@
    "id": 1839,
    "symbol": "BNB"
   },
-  "binaryx": {
-   "id": 9891,
-   "symbol": "BNX"
-  },
   "bio-protocol": {
    "id": 34812,
    "symbol": "BIO"
-  },
-  "bitcastle-token": {
-   "id": 38872,
-   "symbol": "BCE"
   },
   "bitcoin": {
    "id": 1,
@@ -362,17 +365,9 @@
    "id": 11092,
    "symbol": "BGB"
   },
-  "bitget-wrapped-btc": {
-   "id": 39908,
-   "symbol": "BGBTC"
-  },
   "bitkub-coin": {
    "id": 16093,
    "symbol": "KUB"
-  },
-  "bitmart-token": {
-   "id": 2933,
-   "symbol": "BMX"
   },
   "bittensor": {
    "id": 22974,
@@ -462,6 +457,10 @@
    "id": 38760,
    "symbol": "CASH"
   },
+  "casper-network": {
+   "id": 5899,
+   "symbol": "CSPR"
+  },
   "cat-in-a-dogs-world": {
    "id": 30126,
    "symbol": "MEW"
@@ -509,6 +508,10 @@
   "chainopera-ai": {
    "id": 38489,
    "symbol": "COAI"
+  },
+  "changenow": {
+   "id": 3893,
+   "symbol": "NOW"
   },
   "cheems-token": {
    "id": 33280,
@@ -602,9 +605,9 @@
    "id": 5198,
    "symbol": "CTC"
   },
-  "crvusd": {
-   "id": 24927,
-   "symbol": "CRVUSD"
+  "cross-2": {
+   "id": 37166,
+   "symbol": "ONE"
   },
   "crypto-com-chain": {
    "id": 3635,
@@ -654,10 +657,6 @@
    "id": 30096,
    "symbol": "DEGEN"
   },
-  "derive": {
-   "id": 35014,
-   "symbol": "DRV"
-  },
   "deso": {
    "id": 10442,
    "symbol": "DESO"
@@ -673,6 +672,10 @@
   "digibyte": {
    "id": 109,
    "symbol": "DGB"
+  },
+  "dkargo": {
+   "id": 5908,
+   "symbol": "DKA"
   },
   "dog-go-to-the-moon-rune": {
    "id": 30933,
@@ -762,10 +765,6 @@
    "id": 29470,
    "symbol": "USDE"
   },
-  "ether-fi": {
-   "id": 29814,
-   "symbol": "ETHFI"
-  },
   "ethereum": {
    "id": 1027,
    "symbol": "ETH"
@@ -826,10 +825,6 @@
    "id": 39549,
    "symbol": "FIDD"
   },
-  "figure-heloc": {
-   "id": 39361,
-   "symbol": "FIGR_HELOC"
-  },
   "filecoin": {
    "id": 2280,
    "symbol": "FIL"
@@ -872,6 +867,10 @@
   },
   "frax": {
    "id": 6952,
+   "symbol": "FRAX"
+  },
+  "frax-share": {
+   "id": 6953,
    "symbol": "FRAX"
   },
   "frax-usd": {
@@ -974,10 +973,6 @@
    "id": 33849,
    "symbol": "HSK"
   },
-  "hastra-prime": {
-   "id": 40545,
-   "symbol": "PRIME"
-  },
   "havven": {
    "id": 2586,
    "symbol": "SNX"
@@ -1005,10 +1000,6 @@
   "hive": {
    "id": 5370,
    "symbol": "HIVE"
-  },
-  "hive_dollar": {
-   "id": 5375,
-   "symbol": "HBD"
   },
   "hivemapper": {
    "id": 22850,
@@ -1058,6 +1049,10 @@
    "id": 10603,
    "symbol": "IMX"
   },
+  "impossible-cloud-network-token": {
+   "id": 37070,
+   "symbol": "ICNT"
+  },
   "injective-protocol": {
    "id": 7226,
    "symbol": "INJ"
@@ -1069,6 +1064,10 @@
   "internet-computer": {
    "id": 8916,
    "symbol": "ICP"
+  },
+  "invesco-qqq-etf-ondo-tokenized-etf": {
+   "id": 38094,
+   "symbol": "QQQON"
   },
   "io": {
    "id": 29835,
@@ -1093,6 +1092,14 @@
   "irys": {
    "id": 38978,
    "symbol": "IRYS"
+  },
+  "ishares-bitcoin-trust-ondo-tokenized": {
+   "id": 39769,
+   "symbol": "IBITON"
+  },
+  "islamic-coin": {
+   "id": 26220,
+   "symbol": "ISLM"
   },
   "janction": {
    "id": 38909,
@@ -1270,6 +1277,10 @@
    "id": 27075,
    "symbol": "MNT"
   },
+  "mantra": {
+   "id": 39611,
+   "symbol": "MANTRA"
+  },
   "mask-network": {
    "id": 8536,
    "symbol": "MASK"
@@ -1281,6 +1292,10 @@
   "matrixdock-gold": {
    "id": 34212,
    "symbol": "XAUM"
+  },
+  "mbg-by-multibank-group": {
+   "id": 36080,
+   "symbol": "MBG"
   },
   "meet48": {
    "id": 36775,
@@ -1310,6 +1325,10 @@
    "id": 30712,
    "symbol": "MERL"
   },
+  "meta-2-2": {
+   "id": 38146,
+   "symbol": "META"
+  },
   "metal": {
    "id": 1788,
    "symbol": "MTL"
@@ -1329,6 +1348,10 @@
   "metis-token": {
    "id": 9640,
    "symbol": "METIS"
+  },
+  "micron-technology-ondo-tokenized-stock": {
+   "id": 38014,
+   "symbol": "MUON"
   },
   "microstrategy-xstock": {
    "id": 37003,
@@ -1374,6 +1397,10 @@
    "id": 328,
    "symbol": "XMR"
   },
+  "moo-deng": {
+   "id": 33093,
+   "symbol": "MOODENG"
+  },
   "moonbirds": {
    "id": 19765,
    "symbol": "BIRB"
@@ -1401,6 +1428,10 @@
   "nano": {
    "id": 1567,
    "symbol": "XNO"
+  },
+  "naoris": {
+   "id": 35114,
+   "symbol": "NAORIS"
   },
   "near": {
    "id": 6535,
@@ -1454,6 +1485,14 @@
    "id": 1732,
    "symbol": "NMR"
   },
+  "nvidia-ondo-tokenized-stock": {
+   "id": 38093,
+   "symbol": "NVDAON"
+  },
+  "nvidia-xstock": {
+   "id": 36992,
+   "symbol": "NVDAX"
+  },
   "oasis-network": {
    "id": 7653,
    "symbol": "ROSE"
@@ -1497,10 +1536,6 @@
   "ontology": {
    "id": 2566,
    "symbol": "ONT"
-  },
-  "openeden-open-dollar": {
-   "id": 36067,
-   "symbol": "USDO"
   },
   "opengradient": {
    "id": 39800,
@@ -1670,13 +1705,13 @@
    "id": 37614,
    "symbol": "PM"
   },
+  "pundi-x-2": {
+   "id": 9040,
+   "symbol": "PUNDIX"
+  },
   "purr-2": {
    "id": 34332,
    "symbol": "PURR"
-  },
-  "pyth-network": {
-   "id": 28177,
-   "symbol": "PYTH"
   },
   "pythia": {
    "id": 35216,
@@ -1822,6 +1857,10 @@
    "id": 5604,
    "symbol": "SCRT"
   },
+  "seda-2": {
+   "id": 23305,
+   "symbol": "SEDA"
+  },
   "seeker": {
    "id": 39377,
    "symbol": "SKR"
@@ -1854,10 +1893,6 @@
    "id": 39417,
    "symbol": "SINGULARRY"
   },
-  "skale": {
-   "id": 5691,
-   "symbol": "SKL"
-  },
   "sky": {
    "id": 33038,
    "symbol": "SKY"
@@ -1873,10 +1908,6 @@
   "snek": {
    "id": 25264,
    "symbol": "SNEK"
-  },
-  "snowbank": {
-   "id": 14027,
-   "symbol": "SB"
   },
   "societe-generale-forge-eurcv": {
    "id": 32796,
@@ -1922,6 +1953,10 @@
    "id": 36569,
    "symbol": "SPK"
   },
+  "spdr-s-p-500-etf-ondo-tokenized-etf": {
+   "id": 38067,
+   "symbol": "SPYON"
+  },
   "spell-token": {
    "id": 11289,
    "symbol": "SPELL"
@@ -1938,10 +1973,6 @@
    "id": 38892,
    "symbol": "STABLE"
   },
-  "staked-frax-usd": {
-   "id": 36038,
-   "symbol": "SFRXUSD"
-  },
   "standx-dusd": {
    "id": 36762,
    "symbol": "DUSD"
@@ -1954,17 +1985,9 @@
    "id": 22691,
    "symbol": "STRK"
   },
-  "stasis-eurs": {
-   "id": 2989,
-   "symbol": "EURS"
-  },
   "status": {
    "id": 1759,
    "symbol": "SNT"
-  },
-  "stau": {
-   "id": 37584,
-   "symbol": "STAU"
   },
   "steem": {
    "id": 1230,
@@ -1986,6 +2009,14 @@
    "id": 1772,
    "symbol": "STORJ"
   },
+  "storx": {
+   "id": 10894,
+   "symbol": "SRX"
+  },
+  "story-2": {
+   "id": 35626,
+   "symbol": "DATA"
+  },
   "stp-network": {
    "id": 4006,
    "symbol": "AWE"
@@ -1993,10 +2024,6 @@
   "straitsx-xusd": {
    "id": 32372,
    "symbol": "XUSD"
-  },
-  "strategy-pp-variable-xstock": {
-   "id": 39711,
-   "symbol": "STRCX"
   },
   "stratis": {
    "id": 1343,
@@ -2041,6 +2068,10 @@
   "syrup": {
    "id": 33824,
    "symbol": "SYRUP"
+  },
+  "tac": {
+   "id": 37338,
+   "symbol": "TAC"
   },
   "tagger": {
    "id": 34958,
@@ -2130,6 +2161,10 @@
    "id": 38935,
    "symbol": "TGBP"
   },
+  "tokenlon": {
+   "id": 8083,
+   "symbol": "LON"
+  },
   "tornado-cash": {
    "id": 8049,
    "symbol": "TORN"
@@ -2218,6 +2253,10 @@
    "id": 36148,
    "symbol": "USD1"
   },
+  "usda-3": {
+   "id": 37721,
+   "symbol": "USDA"
+  },
   "usdai": {
    "id": 38562,
    "symbol": "USDAI"
@@ -2229,10 +2268,6 @@
   "usdgo": {
    "id": 39683,
    "symbol": "USDGO"
-  },
-  "usds": {
-   "id": 33039,
-   "symbol": "USDS"
   },
   "useless-3": {
    "id": 36828,
@@ -2285,10 +2320,6 @@
   "verge": {
    "id": 693,
    "symbol": "XVG"
-  },
-  "verus-coin": {
-   "id": 5049,
-   "symbol": "VRSC"
   },
   "vethor-token": {
    "id": 3012,
@@ -2452,59 +2483,59 @@
   }
  },
  "exclus": [
-  "aelf",
+  "a7a5",
+  "agentfun-ai",
   "aintivirus",
   "alloy-tether",
-  "alphabet-class-a-ondo-tokenized-stock",
   "america-party-5",
   "apes-2-2",
   "apex-4",
-  "apex-token-2",
   "apollo-diversified-credit-securitize-fund",
   "apxusd",
   "apyusd",
-  "auction",
   "avant-usd",
   "backed-cspx-core-s-p-500",
   "basedhype",
   "baseline",
+  "bfusd",
+  "binaryx",
+  "bitcastle-token",
+  "bitget-wrapped-btc",
+  "bitmart-token",
   "blackrock-usd-institutional-digital-liquidity-fund",
   "blast",
   "blockchain-capital",
   "cap-usd",
-  "casper-network",
-  "changenow",
   "coinex-token",
-  "cross-2",
   "crown-brlv",
+  "crvusd",
   "cygnus-finance-global-usd",
   "dai-on-pulsechain",
-  "dkargo",
+  "derive",
   "dmt-nat",
   "ebtc-2",
   "escoin-token",
+  "ether-fi",
   "eutbl",
   "exod",
   "f-x-protocol-fxusd",
   "felix-feusd",
   "fidelity-digital-interest-token",
+  "figure-heloc",
   "flock-2",
-  "frax-share",
   "fx-usd-saving",
   "gekko",
   "greyhunt",
   "grx-chain",
   "hash-2",
   "hashnote-usyc",
+  "hastra-prime",
+  "hive_dollar",
   "home",
-  "impossible-cloud-network-token",
   "infinifi-locked-iusd-1week",
   "infinifi-usd",
   "ini",
-  "invesco-qqq-etf-ondo-tokenized-etf",
-  "ishares-bitcoin-trust-ondo-tokenized",
   "ishares-silver-trust-ondo-tokenized-stock",
-  "islamic-coin",
   "janus-henderson-anemoy-aaa-clo-fund",
   "janus-henderson-anemoy-treasury-fund",
   "jupusd",
@@ -2519,35 +2550,28 @@
   "maga-bitcoin",
   "main-street-usd",
   "main-street-yield",
-  "mantra",
   "mantra-dao",
-  "mbg-by-multibank-group",
   "meme-horse",
   "memetern",
-  "meta-2-2",
   "metronome-synth-usd",
-  "micron-technology-ondo-tokenized-stock",
   "midas-fasanara-global",
   "midas-mf-one",
   "midas-mtbill",
   "mnee-usd-stablecoin",
   "monerium-eur-money-2",
-  "moo-deng",
   "mustang",
   "na-post-settlement-legal-financing-receivables",
-  "naoris",
   "neet",
   "nirvana-ana-2",
   "nkyc-token",
   "noon-usn",
   "novachargex-coin",
   "nusd-2",
-  "nvidia-ondo-tokenized-stock",
-  "nvidia-xstock",
   "nxm",
   "official-fo",
   "omni-network",
   "onyc",
+  "openeden-open-dollar",
   "ousg",
   "ozapay",
   "palladium-network",
@@ -2556,7 +2580,7 @@
   "prize-protocol",
   "proprietary-trading-network",
   "puff-the-dragon",
-  "pundi-x-2",
+  "pyth-network",
   "re-protocol-reusd",
   "rekt-4",
   "resupply-usd",
@@ -2566,20 +2590,21 @@
   "satoshi-stablecoin",
   "saturn-dollar",
   "securitize-tokenized-aaa-clo-fund",
-  "seda-2",
   "sierra-2",
   "siren-2",
+  "skale",
   "small-thing",
-  "spdr-s-p-500-etf-ondo-tokenized-etf",
+  "snowbank",
   "spiko-digital-assets-cash-carry-fund-euro-share-class",
   "spiko-us-t-bills-money-market-fund",
-  "storx",
-  "story-2",
+  "staked-frax-usd",
+  "stasis-eurs",
+  "stau",
   "strategic-oil-supply-2",
+  "strategy-pp-variable-xstock",
   "superstate-short-duration-us-government-securities-fund-ustb",
   "swop-2",
   "sygnum-fiusd-liquidity-fund",
-  "tac",
   "tcy",
   "tdccp",
   "temple",
@@ -2587,7 +2612,6 @@
   "theo-short-duration-us-treasury-fund",
   "tokamak-network",
   "tokenize-xchange",
-  "tokenlon",
   "tradable-apac-diversified-finance-provider-sstn",
   "tradable-eu-latam-pos-financing-sstl",
   "tradable-latam-bnpl-sstn",
@@ -2606,298 +2630,259 @@
   "unity-usd",
   "unitywallet-token",
   "usda-2",
-  "usda-3",
   "usdkg",
+  "usds",
   "usdtb",
   "usdu",
   "usdx",
   "ustbl-tokenized-u-s-treasury-bill",
   "usx",
   "vaneck-treasury-fund",
+  "verus-coin",
   "whiteheart",
   "wojak-5",
   "xdai",
   "xtusd",
   "yooldo-games"
  ],
- "_controlePrix": "Contrôle exhaustif du 06/10/2026 : pour CHAQUE correspondance, prix CMC (API publique sans clé) comparé au prix CoinGecko (API publique sans clé) de l'id du site. Tolérance 5 %. Hors tolérance → retirée (voir _ecartesPrix). Ajouts manuels (_manuels) : désignés par slug CMC + symbole, nom cohérent, prix à ±5 %.",
+ "_controlePrix": "Contrôle à la construction : pour CHAQUE correspondance, prix CoinMarketCap comparé au prix de référence de la fiche (relevé à 6 h au plus). Tolérance 5 %. Hors tolérance → non appariée (voir _ecartesPrix).",
  "_manuels": {
   "apecoin": {
    "cmcSlug": "apecoin-ape",
    "cmcNom": "ApeCoin",
-   "ecartPrixPct": 0,
-   "motif": "remplace 7257"
-  },
-  "world-liberty-financial": {
-   "cmcSlug": "world-liberty-financial-wlfi",
-   "cmcNom": "World Liberty Financial",
-   "ecartPrixPct": 0.1,
-   "motif": "remplace 33023"
-  },
-  "the-open-network": {
-   "cmcSlug": "gram",
-   "cmcNom": "Gram (prev. Toncoin)",
-   "ecartPrixPct": -0.3,
-   "motif": "ajout"
-  },
-  "leo-token": {
-   "cmcSlug": "unus-sed-leo",
-   "cmcNom": "UNUS SED LEO",
-   "ecartPrixPct": -0.1,
-   "motif": "ajout"
-  },
-  "usd1-wlfi": {
-   "cmcSlug": "usd1",
-   "cmcNom": "World Liberty Financial USD",
-   "ecartPrixPct": 0,
-   "motif": "ajout"
-  },
-  "gatechain-token": {
-   "cmcSlug": "gatetoken",
-   "cmcNom": "GateToken",
-   "ecartPrixPct": 0,
-   "motif": "ajout"
-  },
-  "jupiter-exchange-solana": {
-   "cmcSlug": "jupiter-ag",
-   "cmcNom": "Jupiter",
-   "ecartPrixPct": 0,
-   "motif": "ajout"
-  },
-  "pi-network": {
-   "cmcSlug": "pi",
-   "cmcNom": "Pi",
-   "ecartPrixPct": 0,
-   "motif": "ajout"
-  },
-  "bittorrent": {
-   "cmcSlug": "bittorrent-new",
-   "cmcNom": "BitTorrent [New]",
-   "ecartPrixPct": 0.1,
-   "motif": "ajout"
-  },
-  "eigenlayer": {
-   "cmcSlug": "eigencloud",
-   "cmcNom": "EigenCloud",
-   "ecartPrixPct": -0.1,
-   "motif": "ajout"
-  },
-  "gmt-token": {
-   "cmcSlug": "gomining-token",
-   "cmcNom": "GoМining",
-   "ecartPrixPct": 0.1,
-   "motif": "ajout"
-  },
-  "mina-protocol": {
-   "cmcSlug": "mina",
-   "cmcNom": "Mina",
-   "ecartPrixPct": -0.1,
-   "motif": "ajout"
-  },
-  "deep": {
-   "cmcSlug": "deepbook-protocol",
-   "cmcNom": "DeepBook Protocol",
-   "ecartPrixPct": 0,
-   "motif": "ajout"
-  },
-  "beam-2": {
-   "cmcSlug": "onbeam",
-   "cmcNom": "Beam",
-   "ecartPrixPct": 0,
-   "motif": "ajout"
-  },
-  "stp-network": {
-   "cmcSlug": "awe-network",
-   "cmcNom": "AWE",
-   "ecartPrixPct": 0,
-   "motif": "ajout"
-  },
-  "genius-3": {
-   "cmcSlug": "genius-terminal",
-   "cmcNom": "Genius Terminal",
-   "ecartPrixPct": 0,
-   "motif": "ajout"
-  },
-  "htx-dao": {
-   "cmcSlug": "htx",
-   "cmcNom": "HTX",
-   "ecartPrixPct": 0,
-   "motif": "ajout"
-  },
-  "pha": {
-   "cmcSlug": "phala-network",
-   "cmcNom": "Phala Network",
-   "ecartPrixPct": 0,
-   "motif": "ajout"
+   "ecartPrixPct": 1.2
   },
   "bas": {
    "cmcSlug": "bnb-attestation-service",
    "cmcNom": "BAS",
-   "ecartPrixPct": 0.1,
-   "motif": "ajout"
+   "ecartPrixPct": -0.3
   },
-  "threshold-network-token": {
-   "cmcSlug": "threshold",
-   "cmcNom": "Threshold",
-   "ecartPrixPct": 0,
-   "motif": "ajout"
-  },
-  "sushi": {
-   "cmcSlug": "sushiswap",
-   "cmcNom": "SushiSwap",
-   "ecartPrixPct": 0,
-   "motif": "ajout"
-  },
-  "xyo-network": {
-   "cmcSlug": "xyo",
-   "cmcNom": "XYO",
-   "ecartPrixPct": 0,
-   "motif": "ajout"
-  },
-  "zignaly": {
-   "cmcSlug": "zigcoin",
-   "cmcNom": "ZIG Finance",
-   "ecartPrixPct": -0.2,
-   "motif": "ajout"
-  },
-  "g-token": {
-   "cmcSlug": "gravity-token",
-   "cmcNom": "Gravity",
-   "ecartPrixPct": 0,
-   "motif": "ajout"
-  },
-  "popcat": {
-   "cmcSlug": "popcat-sol",
-   "cmcNom": "Popcat (SOL)",
-   "ecartPrixPct": -0.1,
-   "motif": "ajout"
-  },
-  "holoworld": {
-   "cmcSlug": "holoworld-ai",
-   "cmcNom": "Holoworld AI",
-   "ecartPrixPct": 0,
-   "motif": "ajout"
-  },
-  "tesla-xstock": {
-   "cmcSlug": "tesla-tokenized-stock-xstock",
-   "cmcNom": "Tesla tokenized stock (xStock)",
-   "ecartPrixPct": 0,
-   "motif": "ajout"
-  },
-  "circle-xstock": {
-   "cmcSlug": "circle-tokenized-stock-xstock",
-   "cmcNom": "Circle tokenized stock (xStock)",
-   "ecartPrixPct": -0.1,
-   "motif": "ajout"
-  },
-  "sp500-xstock": {
-   "cmcSlug": "sp500-tokenized-stock-xstock",
-   "cmcNom": "SP500 tokenized ETF (xStock)",
-   "ecartPrixPct": -0.1,
-   "motif": "ajout"
-  },
-  "microstrategy-xstock": {
-   "cmcSlug": "microstrategy-tokenized-stock-xstock",
-   "cmcNom": "MicroStrategy tokenized stock (xStock)",
-   "ecartPrixPct": 0.1,
-   "motif": "ajout"
-  },
-  "strategy-pp-variable-xstock": {
-   "cmcSlug": "strategy-pp-variable-tokenized-stock-xstock",
-   "cmcNom": "Strategy PP Variable tokenized stock (xStock)",
-   "ecartPrixPct": -3.5,
-   "motif": "ajout"
-  },
-  "circle-internet-group-ondo-tokenized-stock": {
-   "cmcSlug": "circle-internet-group-tokenized-stock-ondo",
-   "cmcNom": "Circle Internet Group Tokenized Stock (Ondo)",
-   "ecartPrixPct": 0,
-   "motif": "ajout"
+  "bittorrent": {
+   "cmcSlug": "bittorrent-new",
+   "cmcNom": "BitTorrent [New]",
+   "ecartPrixPct": -0.1
   },
   "cheems-token": {
    "cmcSlug": "cheems-pet",
    "cmcNom": "Cheems (cheems.pet)",
-   "ecartPrixPct": 0.1,
-   "motif": "ajout"
+   "ecartPrixPct": 0.5
+  },
+  "circle-internet-group-ondo-tokenized-stock": {
+   "cmcSlug": "circle-internet-group-tokenized-stock-ondo",
+   "cmcNom": "Circle Internet Group Tokenized Stock (Ondo)",
+   "ecartPrixPct": 0.8
+  },
+  "circle-xstock": {
+   "cmcSlug": "circle-tokenized-stock-xstock",
+   "cmcNom": "Circle tokenized stock (xStock)",
+   "ecartPrixPct": 0.8
+  },
+  "deep": {
+   "cmcSlug": "deepbook-protocol",
+   "cmcNom": "DeepBook Protocol",
+   "ecartPrixPct": -0.9
+  },
+  "eigenlayer": {
+   "cmcSlug": "eigencloud",
+   "cmcNom": "EigenCloud",
+   "ecartPrixPct": 1.3
+  },
+  "g-token": {
+   "cmcSlug": "gravity-token",
+   "cmcNom": "Gravity",
+   "ecartPrixPct": 0.7
+  },
+  "gatechain-token": {
+   "cmcSlug": "gatetoken",
+   "cmcNom": "GateToken",
+   "ecartPrixPct": -0.6
+  },
+  "genius-3": {
+   "cmcSlug": "genius-terminal",
+   "cmcNom": "Genius Terminal",
+   "ecartPrixPct": 0.4
+  },
+  "gmt-token": {
+   "cmcSlug": "gomining-token",
+   "cmcNom": "GoМining",
+   "ecartPrixPct": 0
   },
   "helio-protocol-hay": {
    "cmcSlug": "lisusd",
    "cmcNom": "lisUSD",
-   "ecartPrixPct": 0,
-   "motif": "ajout"
+   "ecartPrixPct": 0
+  },
+  "holoworld": {
+   "cmcSlug": "holoworld-ai",
+   "cmcNom": "Holoworld AI",
+   "ecartPrixPct": 1.1
+  },
+  "htx-dao": {
+   "cmcSlug": "htx",
+   "cmcNom": "HTX",
+   "ecartPrixPct": -0.2
+  },
+  "leo-token": {
+   "cmcSlug": "unus-sed-leo",
+   "cmcNom": "UNUS SED LEO",
+   "ecartPrixPct": 0.2
+  },
+  "microstrategy-xstock": {
+   "cmcSlug": "microstrategy-tokenized-stock-xstock",
+   "cmcNom": "MicroStrategy tokenized stock (xStock)",
+   "ecartPrixPct": 0.3
+  },
+  "midnight-3": {
+   "cmcSlug": "midnight-network",
+   "cmcNom": "Midnight",
+   "ecartPrixPct": -2.1
+  },
+  "mina-protocol": {
+   "cmcSlug": "mina",
+   "cmcNom": "Mina",
+   "ecartPrixPct": -1.8
   },
   "ondo-u-s-dollar-token": {
    "cmcSlug": "us-dollar-tokenized-currency-ondo",
    "cmcNom": "U.S. Dollar Tokenized Currency (Ondo)",
-   "ecartPrixPct": 0,
-   "motif": "ajout"
+   "ecartPrixPct": -0.1
+  },
+  "pha": {
+   "cmcSlug": "phala-network",
+   "cmcNom": "Phala Network",
+   "ecartPrixPct": 3.7
+  },
+  "pi-network": {
+   "cmcSlug": "pi",
+   "cmcNom": "Pi",
+   "ecartPrixPct": 1
+  },
+  "popcat": {
+   "cmcSlug": "popcat-sol",
+   "cmcNom": "Popcat (SOL)",
+   "ecartPrixPct": 0
+  },
+  "sp500-xstock": {
+   "cmcSlug": "sp500-tokenized-stock-xstock",
+   "cmcNom": "SP500 tokenized ETF (xStock)",
+   "ecartPrixPct": 0.2
+  },
+  "stp-network": {
+   "cmcSlug": "awe-network",
+   "cmcNom": "AWE",
+   "ecartPrixPct": 0.8
+  },
+  "sushi": {
+   "cmcSlug": "sushiswap",
+   "cmcNom": "SushiSwap",
+   "ecartPrixPct": 1.5
+  },
+  "tesla-xstock": {
+   "cmcSlug": "tesla-tokenized-stock-xstock",
+   "cmcNom": "Tesla tokenized stock (xStock)",
+   "ecartPrixPct": -0.2
+  },
+  "threshold-network-token": {
+   "cmcSlug": "threshold",
+   "cmcNom": "Threshold",
+   "ecartPrixPct": -0.1
+  },
+  "usd1-wlfi": {
+   "cmcSlug": "usd1",
+   "cmcNom": "World Liberty Financial USD",
+   "ecartPrixPct": 0
+  },
+  "world-liberty-financial": {
+   "cmcSlug": "world-liberty-financial-wlfi",
+   "cmcNom": "World Liberty Financial",
+   "ecartPrixPct": 0.2
+  },
+  "xyo-network": {
+   "cmcSlug": "xyo",
+   "cmcNom": "XYO",
+   "ecartPrixPct": -0.5
+  },
+  "zignaly": {
+   "cmcSlug": "zigcoin",
+   "cmcNom": "ZIG Finance",
+   "ecartPrixPct": -0.6
+  },
+  "beam-2": {
+   "cmcSlug": "onbeam",
+   "cmcNom": "Beam",
+   "ecartPrixPct": 0.8
+  },
+  "jupiter-exchange-solana": {
+   "cmcSlug": "jupiter-ag",
+   "cmcNom": "Jupiter",
+   "ecartPrixPct": 1.1
+  },
+  "the-open-network": {
+   "cmcSlug": "gram",
+   "cmcNom": "Gram (prev. Toncoin)",
+   "ecartPrixPct": 0.5
   }
  },
  "_ecartesPrix": {
-  "aelf": {
-   "cmcId": 2299,
-   "cmcSlug": "aelf",
-   "ecartPrixPct": -17.9
+  "derive": {
+   "cmcId": 35014,
+   "cmcSlug": "derive",
+   "ecartPrixPct": 15.6
   },
-  "aintivirus": {
-   "cmcId": 35589,
-   "cmcSlug": "aintivirus",
-   "ecartPrixPct": 2628.7
+  "ether-fi": {
+   "cmcId": 29814,
+   "cmcSlug": "ether-fi-ethfi",
+   "ecartPrixPct": 5.3
+  },
+  "figure-heloc": {
+   "cmcId": 39361,
+   "cmcSlug": "figure-heloc",
+   "ecartPrixPct": 5.3
+  },
+  "pyth-network": {
+   "cmcId": 28177,
+   "cmcSlug": "pyth-network",
+   "ecartPrixPct": 7.8
+  },
+  "skale": {
+   "cmcId": 5691,
+   "cmcSlug": "skale-network",
+   "ecartPrixPct": -6.1
+  },
+  "strategy-pp-variable-xstock": {
+   "cmcId": 39711,
+   "cmcSlug": "strategy-pp-variable-tokenized-stock-xstock",
+   "ecartPrixPct": -7.9
   },
   "blast": {
    "cmcId": 28480,
    "cmcSlug": "blast",
-   "ecartPrixPct": 62.1
-  },
-  "coinex-token": {
-   "cmcId": 2941,
-   "cmcSlug": "coinex-token",
-   "ecartPrixPct": 3752.3
-  },
-  "dkargo": {
-   "cmcId": 5908,
-   "cmcSlug": "dkargo",
-   "ecartPrixPct": -7.4
+   "ecartPrixPct": 153.2
   },
   "flock-2": {
    "cmcId": 35474,
    "cmcSlug": "flock",
    "ecartPrixPct": -100
   },
+  "gekko": {
+   "cmcId": 35189,
+   "cmcSlug": "gekko-ai",
+   "ecartPrixPct": 8902.6
+  },
   "hash-2": {
    "cmcId": 19960,
    "cmcSlug": "provenance-blockchain",
-   "ecartPrixPct": -12.9
-  },
-  "islamic-coin": {
-   "cmcId": 26220,
-   "cmcSlug": "islamic-coin",
-   "ecartPrixPct": 703.8
+   "ecartPrixPct": 11.2
   },
   "kinesis-silver": {
    "cmcId": 24439,
    "cmcSlug": "silver",
-   "ecartPrixPct": -50.9
-  },
-  "liquity-bold-2": {
-   "cmcId": 38953,
-   "cmcSlug": "bold-solana",
-   "ecartPrixPct": -100
-  },
-  "lovebit": {
-   "cmcId": 31886,
-   "cmcSlug": "lovebit",
-   "ecartPrixPct": -5.7
-  },
-  "omni-network": {
-   "cmcId": 30315,
-   "cmcSlug": "omni-network",
-   "ecartPrixPct": 3873.7
+   "ecartPrixPct": -49
   },
   "siren-2": {
    "cmcId": 35766,
    "cmcSlug": "siren-bsc",
-   "ecartPrixPct": 8.7
+   "ecartPrixPct": 10
   }
  }
 }

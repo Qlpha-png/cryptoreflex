@@ -13,6 +13,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { getWhitepaperTldrFor } from "@/lib/whitepaper-tldrs";
+import { estLienMort } from "@/lib/liens-morts";
 
 interface Props {
   cryptoId: string;
@@ -118,6 +119,8 @@ function WhitepaperTldr({ cryptoId, cryptoName }: Props) {
       </ol>
 
       <div className="mt-5 flex items-center justify-between gap-4 flex-wrap text-xs">
+        {/* Lot Z3 : lien retiré tant que le robot de nuit le déclare mort (lib/liens-morts.ts) */}
+        {estLienMort(tldr.whitepaperUrl) ? <span /> : (
         <a
           href={tldr.whitepaperUrl}
           target="_blank"
@@ -127,6 +130,7 @@ function WhitepaperTldr({ cryptoId, cryptoName }: Props) {
           Lire le whitepaper original
           <ExternalLink className="h-3.5 w-3.5" />
         </a>
+        )}
         <span className="text-muted">
           {/* FIX B cohérence dates (2026-05-09) — DD/MM/YYYY au lieu de YYYY-MM-DD brut. */}
           Synthèse pédagogique Cryptoreflex ·{" "}

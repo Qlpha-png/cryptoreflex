@@ -26,7 +26,8 @@
  * Dépôt public = journaux publics : on n'affiche que des nombres et des codes HTTP, jamais de valeur ni de secret.
  */
 
-import { readFileSync } from "fs";
+import { mkdirSync, readFileSync, writeFileSync } from "fs";
+import { ARCHIVE_JOURS_MIN, appliquerArchive, fichierMois, lireArchive, lireClotures, moisAExporter } from "./lib/archive-cours.mjs";
 import { fileURLToPath } from "url";
 import { dirname, resolve } from "path";
 import {
@@ -169,6 +170,35 @@ if (missingIds.length > 0 && !DRY_RUN) {
   }
 } else if (missingIds.length > 0) {
   console.log(`[populate-all] ${missingIds.length} ids non rafraîchis (dry-run : pas de relecture)`);
+}
+
+// 4 bis. Lot Z3 (10/10/2026) : archive maison des cours (R4). Une fiche qui a au moins 7 jours de points prend sa courbe 7 j et
+// ses plus haut / plus bas dans l'archive (« depuis le JJ/MM/AAAA », champ ath_depuis) ; sinon la source actuelle reste.
+// Archive absente (migration 20261010 pas lancée) : rien ne change, une ligne le dit. Puis export des clôtures du mois.
+try {
+  const archive = await lireArchive({ url: NEXT_PUBLIC_SUPABASE_URL, key: SUPABASE_SERVICE_ROLE_KEY });
+  if (archive.disponible) {
+    const n = appliquerArchive(record, archive, Date.now());
+    console.log(`[populate-all] archive des cours : ${archive.extremes.size} fiches archivées, ${n} avec au moins ${ARCHIVE_JOURS_MIN} jours (courbe et extrêmes lus dans l'archive)`);
+  } else console.log(`[populate-all] archive des cours : ${archive.raison} — source actuelle gardée`);
+  if (!DRY_RUN && NEXT_PUBLIC_SUPABASE_URL && SUPABASE_SERVICE_ROLE_KEY) {
+    for (const mois of moisAExporter(Date.now())) {
+      const c = await lireClotures({ url: NEXT_PUBLIC_SUPABASE_URL, key: SUPABASE_SERVICE_ROLE_KEY, mois });
+      if (!c.ok) {
+        console.log(`[populate-all] export ${mois} : ${c.raison}`);
+        continue;
+      }
+      if (!c.lignes.length) {
+        console.log(`[populate-all] export ${mois} : aucune clôture`);
+        continue;
+      }
+      mkdirSync(resolve(ROOT, "data/archive"), { recursive: true });
+      writeFileSync(resolve(ROOT, `data/archive/${mois}.json`), JSON.stringify(fichierMois(mois, c.lignes, Date.now())) + "\n");
+      console.log(`[populate-all] export ${mois} : ${c.lignes.length} clôtures écrites dans data/archive/${mois}.json`);
+    }
+  }
+} catch (err) {
+  console.warn(`[populate-all] archive des cours illisible (${String(err?.message ?? err).slice(0, 80)}) — source actuelle gardée`);
 }
 
 // 5. Écriture : UNE commande MSET (32 seaux + meta)

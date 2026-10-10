@@ -7,6 +7,7 @@ import { ExternalLink, Calendar, Bot } from "lucide-react";
 import CoursFiche from "@/components/crypto-detail/CoursFiche";
 import { COURS_AGE_MAX_H, etatCours, releveDuCours } from "@/lib/cours-fiche";
 import { nettoyerContenuLlm } from "@/lib/fiche-llm-texte";
+import { lienVivant } from "@/lib/liens-morts";
 
 import type { CryptoFicheRow } from "@/lib/cryptos-db";
 import { BRAND } from "@/lib/brand";
@@ -73,6 +74,17 @@ function formatNumber(n: number | null | undefined): string {
   return `${fr(n, maxFrac)} $`;
 }
 
+/**
+ * Prix d'une fiche (reprise Z3, M7) : jamais abrégé en « k $ » et 4 décimales sous 10 $ (1,0021 $ ne s'affiche plus
+ * « 1 $ », 1 789,25 $ ne s'affiche plus « 2 k $ »).
+ */
+function formatPrix(n: number | null | undefined): string {
+  if (n == null || !Number.isFinite(n)) return "—";
+  const abs = Math.abs(n);
+  const maxFrac = abs >= 10 ? 2 : abs >= 0.01 ? 4 : 8;
+  return `${n.toLocaleString("fr-FR", { maximumFractionDigits: maxFrac })} $`;
+}
+
 const SCORE_LABELS: Record<string, string> = {
   decentralization: "Décentralisation",
   complianceFrEu: "Conformité FR/UE",
@@ -89,6 +101,11 @@ function LLMFicheViewBase({ fiche, knownIds }: { fiche: CryptoFicheRow; knownIds
   // L3 a : cours masqué si le relevé du cours (price_updated_at, jamais updated_at seul) est trop ancien (lib/cours-fiche.ts)
   const cours = etatCours(releveDuCours(fiche), Date.now());
   const pageUrl = `${BRAND.url}/cryptos/${fiche.coingecko_id}`;
+  // Lot Z3 : un lien sortant déclaré mort par le robot de nuit (lib/liens-morts.ts) est retiré jusqu'à guérison.
+  const siteOfficiel = lienVivant(fiche.homepage_url);
+  const whitepaper = lienVivant(fiche.whitepaper_url);
+  const depotCode = (fiche.github_repos || []).map((r) => lienVivant(r)).find((r): r is string => !!r) ?? null;
+  const compteX = fiche.twitter_handle ? lienVivant(`https://twitter.com/${fiche.twitter_handle}`) : null;
 
   // BUG G fix (2026-05-09) — homogénéise le JSON-LD avec les fiches
   // éditoriales /cryptos/[slug] (Bitcoin & co.) qui exposent
@@ -103,7 +120,7 @@ function LLMFicheViewBase({ fiche, knownIds }: { fiche: CryptoFicheRow; knownIds
     : undefined;
   const externalSameAs: string[] = [
     `https://www.coingecko.com/en/coins/${fiche.coingecko_id}`,
-    ...(fiche.homepage_url ? [fiche.homepage_url] : []),
+    ...(siteOfficiel ? [siteOfficiel] : []),
   ];
   const schemas = graphSchema([
     articleSchema({
@@ -148,9 +165,10 @@ function LLMFicheViewBase({ fiche, knownIds }: { fiche: CryptoFicheRow; knownIds
             releve={cours.releve}
             depuis={cours.depuis}
             ageMaxH={COURS_AGE_MAX_H}
+            source={fiche.price_source ?? null}
             {...(cours.suivi
               ? {
-                  prix: fiche.price_usd ? formatNumber(fiche.price_usd) : null,
+                  prix: fiche.price_usd ? formatPrix(fiche.price_usd) : null,
                   capitalisation: fiche.market_cap_usd ? formatNumber(fiche.market_cap_usd) : null,
                   rang: fiche.market_cap_rank ?? null,
                 }
@@ -326,11 +344,11 @@ function LLMFicheViewBase({ fiche, knownIds }: { fiche: CryptoFicheRow; knownIds
       <section className="mb-8">
         <h2 className="text-xl font-semibold mb-3">Liens utiles</h2>
         <ul className="space-y-2 text-sm">
-          {fiche.homepage_url ? (
+          {siteOfficiel ? (
             <li>
               <ExternalLink className="size-4 inline mr-1" />
               <a
-                href={fiche.homepage_url}
+                href={siteOfficiel}
                 target="_blank"
                 rel="noopener noreferrer nofollow"
                 className="hover:underline"
@@ -339,11 +357,11 @@ function LLMFicheViewBase({ fiche, knownIds }: { fiche: CryptoFicheRow; knownIds
               </a>
             </li>
           ) : null}
-          {fiche.whitepaper_url ? (
+          {whitepaper ? (
             <li>
               <ExternalLink className="size-4 inline mr-1" />
               <a
-                href={fiche.whitepaper_url}
+                href={whitepaper}
                 target="_blank"
                 rel="noopener noreferrer nofollow"
                 className="hover:underline"
@@ -352,7 +370,7 @@ function LLMFicheViewBase({ fiche, knownIds }: { fiche: CryptoFicheRow; knownIds
               </a>
             </li>
           ) : null}
-          {(fiche.github_repos || []).slice(0, 1).map((repo, i) => (
+          {(depotCode ? [depotCode] : []).map((repo, i) => (
             <li key={i}>
               <ExternalLink className="size-4 inline mr-1" />
               <a
@@ -365,11 +383,11 @@ function LLMFicheViewBase({ fiche, knownIds }: { fiche: CryptoFicheRow; knownIds
               </a>
             </li>
           ))}
-          {fiche.twitter_handle ? (
+          {compteX ? (
             <li>
               <ExternalLink className="size-4 inline mr-1" />
               <a
-                href={`https://twitter.com/${fiche.twitter_handle}`}
+                href={compteX}
                 target="_blank"
                 rel="noopener noreferrer nofollow"
                 className="hover:underline"

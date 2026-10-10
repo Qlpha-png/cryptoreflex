@@ -15,6 +15,7 @@
     { "path": "/api/cron/gardien/health-check", "schedule": "15 */6 * * *" },
     { "path": "/api/cron/gardien/freshness-check", "schedule": "0 9 * * *" },
     { "path": "/api/cron/gardien/weekly-blog", "schedule": "0 8 * * 6" },
-    { "path": "/api/cron/gardien/refresh-fomc", "schedule": "20 6 * * 1" }
+    { "path": "/api/cron/gardien/refresh-fomc", "schedule": "20 6 * * 1" },
+    { "path": "/api/cron/gardien/fiches-liens", "schedule": "40 3 * * *" }
   ]
 }

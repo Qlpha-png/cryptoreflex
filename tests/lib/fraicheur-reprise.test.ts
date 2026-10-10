@@ -115,7 +115,9 @@ describe("I1 — le cours se date avec price_updated_at, jamais avec updated_at 
     expect(releveDuCours({ updated_at: "2026-10-25T07:00:00Z" })).toBe("2026-10-25T07:00:00Z");
   });
   it("refresh-prices écrit price_updated_at ; la vue de fiche lit releveDuCours ; migration SQL fournie", () => {
-    expect(lire("app/api/cron/refresh-prices/route.ts")).toMatch(/price_updated_at: releveCours/);
+    // reprise Z3 : l'écriture est faite par ecrireCours (scripts/lib/fiches-prix.mjs), appelée par la route
+    expect(lire("app/api/cron/refresh-prices/route.ts")).toMatch(/ecrireCours\(sb, aEcrire/);
+    expect(lire("scripts/lib/fiches-prix.mjs")).toMatch(/price_updated_at: u\.releve/);
     expect(lire("components/crypto-detail/LLMFicheView.tsx")).toMatch(/etatCours\(releveDuCours\(fiche\), Date\.now\(\)\)/);
     const sql = lire("supabase/migrations/20261008_cryptos_price_updated_at.sql");
     expect(sql).toMatch(/add column price_updated_at timestamptz/);
@@ -129,7 +131,14 @@ describe("I1 — le cours se date avec price_updated_at, jamais avec updated_at 
         const p = ["app", "lib", "scripts"].map((d) => path.join(ROOT, d, f)).find((x) => fs.existsSync(x));
         return p ? /price_updated_at\s*:/.test(fs.readFileSync(p, "utf8")) : false;
       });
-    expect(ecrivains.map((f) => f.replace(/\\/g, "/"))).toEqual(["api/cron/refresh-prices/route.ts"]);
+    expect(ecrivains.map((f) => f.replace(/\\/g, "/"))).toEqual(["lib/fiches-prix.mjs"]); // ecrireCours, appelée par la seule route refresh-prices (reprise Z3)
+    const appelants = fichiers
+      .filter((f) => /\.(ts|tsx|mjs)$/.test(f) && !/fiches-prix\.mjs$/.test(f))
+      .filter((f) => {
+        const p = ["app", "lib", "scripts"].map((d) => path.join(ROOT, d, f)).find((x) => fs.existsSync(x));
+        return p ? /\becrireCours\(/.test(fs.readFileSync(p, "utf8")) : false;
+      });
+    expect(appelants.map((f) => f.replace(/\\/g, "/"))).toEqual(["api/cron/refresh-prices/route.ts"]);
   });
   it("le plan du site date les fiches générées par leur texte (last_refreshed_at), pas par updated_at", () => {
     const src = lire("app/sitemap.ts");

@@ -42,6 +42,7 @@ import {
 } from "@/lib/kv-ticker";
 import { getKv } from "@/lib/kv";
 import { decisionFrein, freinAutoriseGlobal, freinSautePassage, moisCle } from "@/scripts/lib/budget-mois.mjs";
+import { tableAbsente } from "@/scripts/lib/fiches-prix.mjs";
 
 export const MARCHE_TOP_N = 100;
 /** En dessous, le relevé est jugé incomplet et la source suivante est essayée. */
@@ -184,6 +185,8 @@ export interface ReleveMarche {
   raison?: string;
   fetchedAt?: string;
   fx?: TickerFx;
+  /** Lot Z3 : point horaire de l'archive des cours (premier passage de l'heure seulement). */
+  archive?: "ok" | "non disponible" | "erreur";
 }
 
 /**
@@ -252,7 +255,30 @@ export async function releverMarche(opts: { now?: () => Date; forceGlobal?: bool
   const w = await writeMarcheMset(payload, global);
   const count = Object.keys(record).length;
   if (!w.ok) return { ok: false, source, count, global: false, cmcErreur, raison: "écriture KV refusée (MSET)", fetchedAt: payload.fetchedAt, fx: tickerFx, ...suivi(credits) };
-  return { ok: true, source, count, global: global !== null, ...(source !== "coinmarketcap" ? { cmcErreur } : {}), fetchedAt: payload.fetchedAt, fx: tickerFx, ...suivi(credits) };
+  // Lot Z3 (R4) : un point par heure dans l'archive des cours pour le top 100 relié à une fiche (premier passage de l'heure).
+  const archive = source === "coinmarketcap" && shouldRefreshGlobal(releve) ? await archiverTop(record) : undefined;
+  return { ok: true, source, count, global: global !== null, ...(source !== "coinmarketcap" ? { cmcErreur } : {}), ...(archive ? { archive } : {}), fetchedAt: payload.fetchedAt, fx: tickerFx, ...suivi(credits) };
+}
+
+/**
+ * Points horaires du top 100 dans l'archive des cours (table cours_archive, migration 20261010). Une ligne sans fiche
+ * (id « cmc-<n> ») n'est pas archivée. Ne lève jamais : base absente = pas d'archive ; table absente = « non disponible ».
+ */
+export async function archiverTop(record: TickerRecord, at: string = new Date().toISOString()): Promise<"ok" | "non disponible" | "erreur" | undefined> {
+  const points = Object.values(record)
+    .filter((e) => !e.unlinked && !e.id.startsWith(CMC_UNLINKED_PREFIX) && e.price > 0)
+    .map((e) => ({ fiche: e.id, ts: at, prix_usd: e.price, source: "coinmarketcap" }));
+  if (!points.length) return undefined;
+  try {
+    const { createSupabaseServiceRoleClient } = await import("@/lib/supabase/server");
+    const sb = createSupabaseServiceRoleClient();
+    if (!sb) return undefined;
+    const { error } = await sb.from("cours_archive").insert(points);
+    if (!error) return "ok";
+    return tableAbsente(error) ? "non disponible" : "erreur";
+  } catch {
+    return "erreur";
+  }
 }
 
 /**

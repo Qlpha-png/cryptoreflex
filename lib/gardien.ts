@@ -117,6 +117,15 @@ export const ROBOTS_GARDIEN: readonly RobotGardien[] = [
     horaire: "20 6 * * 1",
     description: "Réunions FOMC relues sur le calendrier officiel de la Fed, le lundi.",
   },
+  {
+    cle: "fiches-liens",
+    workflow: "fiches-liens.yml",
+    // 10/10/2026 (lot Z3) : robot de nuit « fiches sans défaut » (liens internes et sortants, NaN, prix à 0, h1, JSON-LD) ;
+    // une requête par seconde, résultat commité dans data/fiches/defauts.json, lu au rendu (lib/liens-morts.ts).
+    inputs: {},
+    horaire: "40 3 * * *",
+    description: "Fiches sans défaut : liens internes et sortants, textes cassés, prix à 0, h1, données structurées, chaque nuit.",
+  },
 ];
 
 /** Robot de la table, ou undefined si la clé est inconnue. */

@@ -262,7 +262,8 @@ describe("homonymes de symbole", () => {
     process.env.CMC_API_KEY = KEY;
     mockFetch((u) => (u.includes("/listings/latest") ? json({ status: { error_code: 0 }, data: cmcListing() }) : json({}, 404)));
     const { coinmarketcapProvider } = await import("@/lib/price-providers/coinmarketcap");
-    expect(coinmarketcapProvider.canHandle({ coingeckoId: "mantra", symbol: "OM", name: "MANTRA" })).toBe(false);
+    // lot Z3 : la nouvelle MANTRA est dans la table (prix contrôlé) ; l'ancienne (mantra-dao, OM) n'y est pas
+    expect(coinmarketcapProvider.canHandle({ coingeckoId: "mantra-dao", symbol: "OM", name: "MANTRA" })).toBe(false);
     expect(coinmarketcapProvider.canHandle({ coingeckoId: "faux-bitcoin", symbol: "BTC", name: "Bitcoin" })).toBe(false);
     expect(coinmarketcapProvider.canHandle({ coingeckoId: "bitcoin", symbol: "BTC", name: "Bitcoin" })).toBe(true);
     const [site] = Object.keys(MAP);

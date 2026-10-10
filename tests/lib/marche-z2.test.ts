@@ -168,7 +168,8 @@ describe("1. robot R1 : écrivain unique", () => {
 
 describe("2. pages : aucun appel CoinMarketCap, une seule capitalisation globale", () => {
   const RESEAU = /\b(cmcListingsTop|cmcQuotesChunk|cmcQuoteForSite|cmcGlobalMetrics|cmcFearGreed)\b/;
-  const ROBOTS = new Set(["lib/coinmarketcap.ts", "lib/marche-robot.ts"]);
+  // lot Z3 (10/10/2026) : le robot des fiches R2 (lots de 100 par identifiant) est un robot, pas une page
+  const ROBOTS = new Set(["lib/coinmarketcap.ts", "lib/marche-robot.ts", "app/api/cron/refresh-prices/route.ts"]);
 
   it("code : les fonctions réseau de lib/coinmarketcap.ts ne sont appelées que par les robots", () => {
     const fautifs: string[] = [];

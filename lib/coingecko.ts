@@ -1119,6 +1119,11 @@ export interface CoinDetail {
   athDate: string | null;
   atl: number;
   atlDate: string | null;
+  /**
+   * 10/10/2026 (lot Z3) : date du premier point de l'archive maison quand l'ATH/ATL viennent d'elle (R3) ; l'affichage dit
+   * alors « Plus haut depuis le JJ/MM/AAAA » au lieu de « sommet historique ». null/absent = source historique.
+   */
+  athDepuis?: string | null;
   sparkline7d: number[];
   /** 06/10/2026 — source réelle de chaque champ (attribution). */
   sources?: FieldSources;
@@ -1185,6 +1190,8 @@ interface CGMarketsRow {
   atl: number | null;
   atl_date: string | null;
   sparkline_in_7d?: { price: number[] };
+  /** Lot Z3 : ATH/ATL lus dans l'archive maison depuis cette date (scripts/lib/archive-cours.mjs). */
+  ath_depuis?: string | null;
 }
 
 /**
@@ -1402,6 +1409,13 @@ async function _fetchCoinDetail(
         }
         const c = batchDetails[coingeckoId];
         if (c) {
+          const fusion = _mergeSnapFields(snap, { marketCap: c.market_cap, rank: c.market_cap_rank, supply: c.circulating_supply }, "coingecko");
+          // Reprise Z3 (I1) : ATH/ATL (et courbe 7 j) lus dans l'archive maison (relevés CoinMarketCap, DexScreener, repli
+          // CoinGecko mêlés) → aucune attribution à CoinGecko ; l'affichage dit « plus haut depuis le … ».
+          if (c.ath_depuis) {
+            delete fusion.sources.ath;
+            if (!snap.sparkline7d?.length) delete fusion.sources.sparkline7d;
+          }
           return {
             id: c.id,
             symbol: c.symbol.toUpperCase(),
@@ -1410,12 +1424,13 @@ async function _fetchCoinDetail(
             currentPrice: snap.priceUsd, // garde le live du provider rapide
             priceChange24h: snap.change24h,
             priceChange7d: snap.change7d,
-            ..._mergeSnapFields(snap, { marketCap: c.market_cap, rank: c.market_cap_rank, supply: c.circulating_supply }, "coingecko"),
+            ...fusion,
             totalVolume: snap.volume24h,
             totalSupply: c.total_supply,
             maxSupply: c.max_supply,
             ath: c.ath ?? 0,
             athDate: c.ath_date,
+            athDepuis: c.ath_depuis ?? null,
             atl: c.atl ?? 0,
             atlDate: c.atl_date,
             sparkline7d: snap.sparkline7d?.length

@@ -100,6 +100,8 @@ export interface CryptoFicheRow {
   updated_at: string;
   /** date du dernier relevé du cours, écrite seulement par refresh-prices (migration 20261008) ; absente avant la migration */
   price_updated_at?: string | null;
+  /** 10/10/2026 (lot Z3) : source du dernier cours (coinmarketcap, dexscreener, coingecko) ; absente avant la migration 20261010. */
+  price_source?: string | null;
 }
 
 /* -------------------------------------------------------------------------- */

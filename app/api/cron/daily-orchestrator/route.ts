@@ -4,9 +4,7 @@
  * Cron unique de Cryptoreflex (Vercel Hobby = 1 cron/jour max).
  * Orchestre en série tous les jobs quotidiens du site :
  *
- *   0. /api/cron/refresh-prices       — refresh price_usd / market_cap des 780 cryptos DB
- *                                        (FIRST : aggregate-news + daily-brief lisent
- *                                         ensuite des prix frais).
+ *   (refresh-prices retiré le 10/10/2026, lot Z3 : robot R2 lancé 3 fois par jour par le Gardien)
  *   1. /api/cron/evaluate-alerts      — déclenche les alertes prix
  *   2. /api/cron/aggregate-news       — réécrit 5-10 news/jour en MDX
  *   3. /api/cron/refresh-events       — refresh la cache des événements crypto
@@ -63,7 +61,9 @@ const PER_JOB_TIMEOUT_MS = 90_000;
  * de tourner avec les prix de la veille (graceful degradation).
  */
 const SUB_CRONS = [
-  { name: "refresh-prices", path: "/api/cron/refresh-prices", critical: false },
+  // 10/10/2026 (lot Z3) — « refresh-prices » RETIRÉ : le robot des fiches R2 passe 3 fois par jour (Gardien 08/14/20 h,
+  // .github/workflows/refresh-prices-db.yml) ; ce 4e passage à 07:00 doublait l'appel de 08:00 (doublon D3 de la carte du
+  // code) et coûtait 7 crédits CoinMarketCap de plus par jour. La route reste appelable à la main.
   // 06/10/2026 — « refresh-static-details » RETIRÉ : doublon de l'écrivain unique GitHub
   // (.github/workflows/refresh-static-details-kv.yml, 32 seaux KV), qui écrivait 3,1 Mo de plus par passage
   // (quota Upstash épuisé le 06/10/2026). La route reste appelable à la main.

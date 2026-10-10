@@ -1,0 +1,151 @@
+name: Fiches sans défaut (liens et pages, chaque nuit)
+
+# 10/10/2026 (lot Z3) — demande de Kev : « nos fiches doivent être toujours à jour, sans aucun lien mort ou problème ».
+# Robot de nuit (scripts/fiches-liens.mjs) : toutes les fiches /cryptos/<slug> du plan du site + /acheter/<slug>/fr.
+#  (a) liens internes : 200, ou 301/308 → 200 en un saut ; un lien interne mort = ticket privé + robot ROUGE ;
+#  (b) liens sortants : < 400 ; mort après DNS/404/410/5xx deux nuits de suite → retiré des fiches au rendu
+#      (data/fiches/defauts.json, lu par lib/liens-morts.ts) jusqu'à guérison ;
+#  (c) « NaN », « undefined », « null », « [object Object] », prix à 0, image cassée, h1 absent, JSON-LD invalide :
+#      ticket « défauts des fiches » (reprise Z3), comme un lien mort non retirable ou un passage incomplet.
+# Plan du site illisible, plan enfant en échec ou moins de 90 % des pages du passage précédent : robot ROUGE (code 2).
+# Budget : une requête par seconde au plus ; durée mesurée écrite dans le run et dans le fichier.
+# Lancé par l'horloge Vercel (lib/gardien.ts, 03:40 UTC) ; l'horaire ci-dessous est le filet natif de GitHub.
+# Tickets dans le dépôt PRIVÉ Qlpha-png/cryptoreflex-sentinelle (SENTINELLE_TOKEN).
+on:
+  schedule:
+    - cron: "40 3 * * *" # filet de l'horloge Vercel
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: fiches-liens
+  cancel-in-progress: false
+
+jobs:
+  controle:
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    env:
+      TICKETS_PRIVES: ${{ secrets.SENTINELLE_TOKEN != '' }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 1
+
+      - name: Setup Node 20
+        uses: actions/setup-node@v6
+        with:
+          node-version: "20"
+
+      - name: Contrôle des fiches (1 requête par seconde)
+        id: liens
+        continue-on-error: true
+        run: node scripts/fiches-liens.mjs
+
+      - name: Commit du résultat (avec reprise anti-course)
+        if: always()
+        run: |
+          git add data/fiches/defauts.json
+          if git diff --staged --quiet; then
+            echo "Résultat inchangé." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          git config user.name "Cryptoreflex Bot"
+          git config user.email "bot@cryptoreflex.fr"
+          git commit -m "chore(fiches): liens et défauts des fiches ($(date -u +%Y-%m-%d))" \
+            -m "Robot de nuit .github/workflows/fiches-liens.yml" \
+            -m "" \
+            -m "Co-Authored-By: Cryptoreflex Bot <bot@cryptoreflex.fr>"
+          for i in 1 2 3; do
+            if git push origin HEAD:main; then
+              echo "Résultat publié (commit $(git rev-parse --short HEAD))." >> "$GITHUB_STEP_SUMMARY"
+              exit 0
+            fi
+            echo "Push rejeté, rebase puis nouvel essai ($i / 3)…"
+            git fetch origin main
+            git rebase origin/main || { git rebase --abort; break; }
+            sleep 2
+          done
+          echo "## ❌ Push du résultat impossible après 3 essais" >> "$GITHUB_STEP_SUMMARY"
+          exit 1
+
+      - name: Tickets privés non configurés
+        if: steps.liens.outcome == 'failure' && env.TICKETS_PRIVES != 'true'
+        run: |
+          echo "Secret SENTINELLE_TOKEN absent : aucun ticket (l'échec du job reste le signal)."
+
+      - name: Ticket « lien interne mort » (dépôt privé)
+        if: steps.liens.outcome == 'failure' && env.TICKETS_PRIVES == 'true'
+        uses: actions/github-script@v9
+        with:
+          github-token: ${{ secrets.SENTINELLE_TOKEN }}
+          script: |
+            const depot = { owner: "Qlpha-png", repo: "cryptoreflex-sentinelle" };
+            const fs = require("fs");
+            const date = new Date().toISOString().slice(0, 10);
+            const runUrl = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
+            let morts = [];
+            try { morts = JSON.parse(fs.readFileSync("data/fiches/defauts.json", "utf8")).liensInternesMorts || []; } catch (e) { morts = []; }
+            const lignes = morts.slice(0, 40).map((m) => `- \`${m.url}\` : ${m.detail} (sur ${m.nbPages} page(s), dont \`${m.pages[0]}\`)`);
+            const corps = [
+              `Le robot de nuit des fiches a trouvé ${morts.length} lien(s) interne(s) mort(s), ou n'a pas pu finir.`,
+              ``,
+              `**Run** : ${runUrl}`,
+              `**Date** : ${date}`,
+              ``,
+              ...(lignes.length ? lignes : ["(aucun détail lisible : voir le run)"]),
+              ``,
+              `_Ticket créé par \`.github/workflows/fiches-liens.yml\` (lot Z3)._`,
+            ].join("\n");
+            const existants = await github.rest.issues.listForRepo({ ...depot, state: "open", labels: "fiches-liens", per_page: 50 });
+            const deja = existants.data.find((i) => i.title.startsWith("[fiches-liens]"));
+            if (deja) {
+              await github.rest.issues.createComment({ ...depot, issue_number: deja.number, body: corps });
+              return;
+            }
+            await github.rest.issues.create({ ...depot, title: `[fiches-liens] lien interne mort - ${date}`, body: corps, labels: ["bug", "fiches-liens", "monitoring"] });
+
+      # Reprise Z3 (I3) : défauts de page (NaN, prix à 0, JSON-LD, fiche en 404/500), lien mort encore affiché (non
+      # retirable : affiliation, layout) ou passage incomplet → ticket privé ; le robot reste vert (⚠️ à la carte n° 52).
+      - name: Ticket « défauts des fiches » (dépôt privé)
+        if: steps.liens.outputs.alerte == 'true' && steps.liens.outcome != 'failure' && env.TICKETS_PRIVES == 'true'
+        uses: actions/github-script@v9
+        with:
+          github-token: ${{ secrets.SENTINELLE_TOKEN }}
+          script: |
+            const depot = { owner: "Qlpha-png", repo: "cryptoreflex-sentinelle" };
+            const fs = require("fs");
+            const date = new Date().toISOString().slice(0, 10);
+            const runUrl = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
+            let d = {};
+            try { d = JSON.parse(fs.readFileSync("data/fiches/defauts.json", "utf8")); } catch (e) { d = {}; }
+            const affiches = (d.liensMortsAffiches || []).slice(0, 30).map((m) => `- lien mort encore affiché : \`${m.url}\` (sur ${m.nbPages} page(s), dont \`${m.pages[0]}\`)`);
+            const pages = Object.entries(d.defautsPages || {}).slice(0, 30).map(([p, x]) => `- \`${p}\` : ${x.map((y) => `${y.type} (${y.detail})`).join(" ; ")}`);
+            const corps = [
+              `Le robot de nuit des fiches signale des défauts (passage ${d.complet === false ? "INCOMPLET" : "complet"}).`,
+              ``,
+              `**Run** : ${runUrl}`,
+              `**Date** : ${date}`,
+              ``,
+              ...affiches,
+              ...pages,
+              ...(affiches.length || pages.length ? [] : ["(passage incomplet : voir le run)"]),
+              ``,
+              `_Ticket créé par \`.github/workflows/fiches-liens.yml\` (lot Z3)._`,
+            ].join("\n");
+            const existants = await github.rest.issues.listForRepo({ ...depot, state: "open", labels: "fiches-defauts", per_page: 50 });
+            const deja = existants.data.find((i) => i.title.startsWith("[fiches-defauts]"));
+            if (deja) {
+              await github.rest.issues.createComment({ ...depot, issue_number: deja.number, body: corps });
+              return;
+            }
+            await github.rest.issues.create({ ...depot, title: `[fiches-defauts] défauts des fiches - ${date}`, body: corps, labels: ["bug", "fiches-defauts", "monitoring"] });
+
+      - name: Échec si lien interne mort
+        if: steps.liens.outcome == 'failure'
+        run: |
+          echo "Lien interne mort ou contrôle interrompu : voir le résumé et le ticket."
+          exit 1

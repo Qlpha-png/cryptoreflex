@@ -113,6 +113,7 @@ import { fitDescription, fitTitle } from "@/lib/seo-text";
 import { fmtFr } from "@/lib/format-fr";
 import { fiatPerUsd } from "@/lib/fx";
 import { TA_PAGE_SLUGS } from "@/lib/ta-redirect";
+import { estLienMort } from "@/lib/liens-morts";
 
 /* -------------------------------------------------------------------------- */
 /*  Static generation                                                         */
@@ -589,6 +590,7 @@ async function CryptoPage({ params }: Props) {
               ath={detail.ath}
               priceSource={detail.sources?.price ?? null}
               athSource={detail.sources?.ath ?? null}
+              athDepuis={detail.athDepuis ?? null}
             />
           </div>
         )}
@@ -1419,6 +1421,8 @@ function HiddenGemSectionsBase({ gem }: { gem: HiddenGem }) {
             <li key={s} className="text-sm text-fg/85">{s}</li>
           ))}
         </ul>
+        {/* Lot Z3 : lien retiré tant que le robot de nuit le déclare mort (lib/liens-morts.ts) */}
+        {!estLienMort(gem.officialUrl) && (
         <div className="mt-5">
           <a
             href={gem.officialUrl}
@@ -1430,6 +1434,7 @@ function HiddenGemSectionsBase({ gem }: { gem: HiddenGem }) {
             <ExternalLink className="h-3.5 w-3.5" />
           </a>
         </div>
+        )}
       </section>
     </>
   );

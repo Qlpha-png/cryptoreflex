@@ -1,5 +1,6 @@
 import { avecTypoSync } from "@/components/ui/Typo";
 import VerifieLe from "@/components/ui/VerifieLe";
+import { estLienMort } from "@/lib/liens-morts";
 import {
   Calendar,
   Unlock,
@@ -126,7 +127,7 @@ function CryptoEventCalendar({ cryptoId, cryptoName }: Props) {
                 <p className="mt-2 text-sm text-fg/80 leading-relaxed">
                   {e.description}
                 </p>
-                {e.sourceUrl && (
+                {e.sourceUrl && !estLienMort(e.sourceUrl) && (
                   <a
                     href={e.sourceUrl}
                     target="_blank"

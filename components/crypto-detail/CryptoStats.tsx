@@ -48,6 +48,10 @@ function CryptoStats({
         year: "numeric",
       })
     : undefined;
+  // Lot Z3 : ATH/ATL lus dans l'archive maison (R3) → « Plus haut depuis le JJ/MM/AAAA », jamais « historique ».
+  const archiveDepuis = detail?.athDepuis
+    ? new Date(detail.athDepuis).toLocaleDateString("fr-FR", { timeZone: "Europe/Paris", day: "2-digit", month: "2-digit", year: "numeric" })
+    : null;
   const atlDate = detail?.atlDate
     ? new Date(detail.atlDate).toLocaleDateString("fr-FR", {
         day: "2-digit",
@@ -158,7 +162,7 @@ function CryptoStats({
               > simple valeur USD. Color tokens sémantiques selon la distance.
               NB : l'ATH (sommet post-2013) est fiable, contrairement à l'ATL. */}
           <StatCard
-            label="ATH (sommet historique)"
+            label={archiveDepuis ? `Plus haut depuis le ${archiveDepuis}` : "ATH (sommet historique)"}
             sub={athDate}
             badge={
               detail && detail.ath > 0 ? (
@@ -166,6 +170,7 @@ function CryptoStats({
                   current={detail.currentPrice}
                   reference={detail.ath}
                   kind="ath"
+                  depuis={archiveDepuis}
                 />
               ) : undefined
             }
@@ -177,7 +182,7 @@ function CryptoStats({
               démarre ~2013 et rate le vrai plancher (BTC ~0,05$ en 2010 → badge
               ×940 trompeur). Libellé honnête + tooltip qui le précise. */}
           <StatCard
-            label="ATL (plus bas listé)"
+            label={archiveDepuis ? `Plus bas depuis le ${archiveDepuis}` : "ATL (plus bas listé)"}
             sub={atlDate}
             badge={
               detail && detail.atl > 0 ? (
@@ -185,6 +190,7 @@ function CryptoStats({
                   current={detail.currentPrice}
                   reference={detail.atl}
                   kind="atl"
+                  depuis={archiveDepuis}
                 />
               ) : undefined
             }
@@ -212,10 +218,13 @@ function DistanceBadgeBase({
   current,
   reference,
   kind,
+  depuis = null,
 }: {
   current: number;
   reference: number;
   kind: "ath" | "atl";
+  /** Reprise Z3 (I1) : JJ/MM/AAAA du premier point de l'archive maison ; infobulle au même libellé que la carte. */
+  depuis?: string | null;
 }) {
   if (!Number.isFinite(current) || !Number.isFinite(reference) || reference <= 0) {
     return null;
@@ -243,7 +252,7 @@ function DistanceBadgeBase({
     return (
       <span
         className={`mt-1.5 inline-flex items-center gap-1 rounded-md border px-1.5 py-0.5 text-xs font-mono font-bold ${palette}`}
-        title={`Le prix actuel est à ${distance.toLocaleString("fr-FR", { maximumFractionDigits: 1 })} % de son sommet historique`}
+        title={`Le prix actuel est à ${distance.toLocaleString("fr-FR", { maximumFractionDigits: 1 })} % de son ${depuis ? `plus haut depuis le ${depuis}` : "sommet historique"}`}
       >
         <span aria-hidden="true">▼</span>
         {distance.toLocaleString("fr-FR", { minimumFractionDigits: 1, maximumFractionDigits: 1 })} %
@@ -271,7 +280,11 @@ function DistanceBadgeBase({
   return (
     <span
       className="mt-1.5 inline-flex items-center gap-1 rounded-md bg-success-soft border border-success-border px-1.5 py-0.5 text-xs font-mono font-bold text-success-fg"
-      title={`Le prix actuel est ${ratio.toLocaleString("fr-FR", { maximumFractionDigits: 1 })}× supérieur à son plus bas listé (historique CoinGecko depuis ~2013, pas forcément le plancher absolu)`}
+      title={
+        depuis
+          ? `Le prix actuel est ${ratio.toLocaleString("fr-FR", { maximumFractionDigits: 1 })}× supérieur à son plus bas depuis le ${depuis}`
+          : `Le prix actuel est ${ratio.toLocaleString("fr-FR", { maximumFractionDigits: 1 })}× supérieur à son plus bas listé (historique CoinGecko depuis ~2013, pas forcément le plancher absolu)`
+      }
     >
       <span aria-hidden="true">▲</span>
       {display}

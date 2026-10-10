@@ -22,6 +22,8 @@ export const CADENCE = [
   ["weekly-blog.yml", "article de la semaine", 8 * 24 + 12],
   ["veille-officielle.yml", "veille officielle de nuit (lois, BOFiP, registre MiCA, frais)", 30],
   ["refresh-fomc.yml", "calendrier FOMC de la Fed", 8 * 24 + 12],
+  // 10/10/2026 (lot Z3) : robot de nuit « fiches sans défaut » (03:40 UTC, durée jusqu'à 5 h)
+  ["fiches-liens.yml", "fiches sans défaut (liens et pages)", 32],
 ];
 
 /**

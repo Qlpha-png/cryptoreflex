@@ -695,8 +695,9 @@ export async function cmcFearGreed(): Promise<{ value: number; classification: s
  *  - R1 classement top 100 : 1 crédit, toutes les 10 min (vercel.json « *\/10 ») = 144/jour ;
  *  - R1 relancé par l'orchestrateur de 07:00 : au plus 1 crédit/jour (souvent 0 : mémoire de 300 s) ;
  *  - R1 métriques globales : 1 crédit, au premier passage de chaque heure = 24/jour ;
- *  - R2 fiches (lot Z3, prévu) : 7 lots de 100 × 3 passages = 21/jour ;
- *  - table de correspondance (prévue, mensuelle) : ≈ 3 crédits/mois, compté 1/jour par prudence.
+ *  - R2 fiches (lot Z3, app/api/cron/refresh-prices) : 7 lots de 100 × 3 passages = 21/jour (frein actif : 2 passages) ;
+ *  - table de correspondance (scripts/construire-cmc-id-map.mjs, à la demande, au plus mensuelle) : ≈ 8 crédits par
+ *    construction avec la clé, compté 1/jour par prudence.
  * Plafond retenu par l'architecture : ~250 crédits/jour (15 000/mois ÷ 30 = 500 ; marge pour le plafond quotidien non
  * publié de Basic). Le garde-fou /v1/key/info (mode économe à 80 % de l'allocation du jour) reste en place.
  */

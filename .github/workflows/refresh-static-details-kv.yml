@@ -19,8 +19,9 @@ on:
     - cron: "0 */6 * * *" # filet de l'horloge Vercel
   workflow_dispatch:
 
+# 10/10/2026 (lot Z3) : écriture du dépôt pour l'export des clôtures de l'archive des cours (data/archive/AAAA-MM.json).
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
   group: refresh-static-details-kv
@@ -51,6 +52,35 @@ jobs:
           CRON_SECRET: ${{ secrets.CRON_SECRET }}
         run: |
           node scripts/populate-all-cryptos-kv.mjs
+
+      # 10/10/2026 (lot Z3, R4) : copie de secours des clôtures de l'archive des cours (Supabase Free sans sauvegarde).
+      # Le script n'écrit data/archive/AAAA-MM.json qu'au premier passage du 1er du mois (mois précédent) et du lundi (mois
+      # en cours) ; sinon rien à commiter.
+      - name: Commit de l'export de l'archive (avec reprise anti-course)
+        run: |
+          git add data/archive 2>/dev/null || true
+          if git diff --staged --quiet; then
+            echo "Archive des cours : rien à exporter à ce passage." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          git config user.name "Cryptoreflex Bot"
+          git config user.email "bot@cryptoreflex.fr"
+          git commit -m "chore(archive): clôtures de l'archive des cours ($(date -u +%Y-%m-%d))" \
+            -m "Export de secours par .github/workflows/refresh-static-details-kv.yml (table cours_archive)" \
+            -m "" \
+            -m "Co-Authored-By: Cryptoreflex Bot <bot@cryptoreflex.fr>"
+          for i in 1 2 3; do
+            if git push origin HEAD:main; then
+              echo "Archive des cours exportée (commit $(git rev-parse --short HEAD))." >> "$GITHUB_STEP_SUMMARY"
+              exit 0
+            fi
+            echo "Push rejeté, rebase puis nouvel essai ($i / 3)…"
+            git fetch origin main
+            git rebase origin/main || { git rebase --abort; break; }
+            sleep 2
+          done
+          echo "## ❌ Export de l'archive des cours impossible après 3 essais" >> "$GITHUB_STEP_SUMMARY"
+          exit 1
 
       - name: Verify KV coverage
         env:

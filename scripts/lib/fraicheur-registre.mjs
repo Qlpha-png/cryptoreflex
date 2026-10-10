@@ -16,8 +16,11 @@ const HEURE = 3_600_000;
 const JOUR = 24 * HEURE;
 
 export const METHODES = ["kv", "workflow", "fichier", "constante", "dossier", "page", "page-calcul", "supabase", "recomptage", "echeance-jeu", "absence", "aucune"];
-/** 51 familles de la carte + 18b (liste noire AMF), dans l'ordre */
-export const IDS_ATTENDUS = [...Array.from({ length: 51 }, (_, i) => String(i + 1)).flatMap((id) => (id === "18" ? ["18", "18b"] : [id]))];
+/**
+ * 51 familles de la carte + 18b (liste noire AMF), dans l'ordre ; lot Z3 (10/10/2026) : + 52 (liens et défauts des fiches)
+ * et 53 (archive des cours).
+ */
+export const IDS_ATTENDUS = [...Array.from({ length: 53 }, (_, i) => String(i + 1)).flatMap((id) => (id === "18" ? ["18", "18b"] : [id]))];
 export const ICONES = { ok: "✅", attention: "⚠️", defaut: "❌" };
 
 export function chargerRegistre(root) {
@@ -140,6 +143,26 @@ export function lireFichier(root, l) {
     const elements = valeursChemin(j, l.exigerTous, l).length;
     const manquants = elements - vals.filter((v) => instantDe(v) !== null).length;
     if (manquants > 0) return { ...out, etatForce: "defaut", raison: `${manquants} élément(s) sans date sur ${elements}` };
+  }
+  // lot Z3 : défaut forcé si un compteur du fichier dépasse un seuil (ex. liens internes morts des fiches > 0)
+  if (l.defautSi) {
+    const v = Number(valeursChemin(j, l.defautSi.chemin)[0]);
+    if (Number.isFinite(v) && v > (l.defautSi.superieurA ?? 0)) return { ...out, etatForce: "defaut", raison: `${v} ${l.defautSi.raison ?? `> ${l.defautSi.superieurA ?? 0}`}` };
+  }
+  // reprise Z3 (I3, I4) : ⚠️ si un compteur dépasse un seuil (superieurA) ou si un champ vaut une valeur (egal) ;
+  // toutes les raisons vérifiées sont citées.
+  if (Array.isArray(l.attentionSi)) {
+    const raisons = [];
+    for (const c of l.attentionSi) {
+      const brut = valeursChemin(j, c.chemin)[0];
+      if (c.egal !== undefined) {
+        if (brut === c.egal) raisons.push(c.raison ?? `${c.chemin} = ${c.egal}`);
+        continue;
+      }
+      const v = Number(brut);
+      if (Number.isFinite(v) && v > (c.superieurA ?? 0)) raisons.push(`${v} ${c.raison ?? `> ${c.superieurA ?? 0}`}`);
+    }
+    if (raisons.length) return { ...out, etatForce: "attention", raison: raisons.join(" ; ") };
   }
   if (l.pasAvant) {
     const ref = lireFichier(root, l.pasAvant);
@@ -271,6 +294,8 @@ async function lireKv(l, ctx) {
   const out = { date: p[l.champ], detail: `clé KV ${cle}` };
   if (l.trace && p.ok === false) return { ...out, etatForce: "defaut", raison: `dernier passage en échec (${String(p.raison ?? "raison inconnue").slice(0, 100)})` };
   if (l.trace && Number(p.errors) > 0) return { ...out, etatForce: "attention", raison: `${p.errors} erreur(s) au dernier passage` };
+  // lot Z3 : ⚠️ (jamais ❌) quand un champ de la trace vaut une valeur donnée (ex. archive « non disponible »)
+  if (l.attentionSi && p[l.attentionSi.champ] === l.attentionSi.egal) return { ...out, etatForce: "attention", raison: l.attentionSi.raison ?? `${l.attentionSi.champ} = ${l.attentionSi.egal}` };
   return out;
 }
 

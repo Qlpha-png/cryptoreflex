@@ -19,7 +19,7 @@ import { readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { CADENCE, TRACES_CRON, jugerTrace } from "./lib/sentinelle-robots.mjs";
-import { AGE_MAX_H, FICHES_TEMOINS, choisirEchantillon, fichesDuPlan, jugerFiche } from "./lib/sentinelle-cours.mjs";
+import { AGE_MAX_H, ECHANTILLON_COMPLET, ECHANTILLON_LEGER, FICHES_TEMOINS, choisirEchantillon, fichesDuPlan, jugerFiche } from "./lib/sentinelle-cours.mjs";
 import { inventaireDonnees, jugerPageDates, pagesDatesDuJour } from "./lib/inventaire-dates.mjs";
 import {
   chargerRegistre, compter, evaluerRegistre, jugerCmcJour, jugerExpiration, jugerTailleBase, rapportHebdo, ticketsDefauts, validerRegistre,
@@ -497,7 +497,8 @@ async function checkCoursFiches() {
     warn("cours des fiches", `plan du site illisible (${e.message})`);
     return;
   }
-  const echantillon = choisirEchantillon(fiches, Date.now(), 30);
+  // Lot Z3 : 40 fiches au passage complet de la nuit (30 au passage léger), plus les 2 témoins
+  const echantillon = choisirEchantillon(fiches, Date.now(), FULL ? ECHANTILLON_COMPLET : ECHANTILLON_LEGER);
   const defauts = [];
   let controlees = 0, masquees = 0, bloquees = 0;
   const temoinsSansRepere = [];

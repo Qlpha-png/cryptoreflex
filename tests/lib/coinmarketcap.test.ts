@@ -92,14 +92,15 @@ describe("table data/cmc-id-map.json", () => {
   });
 
   it("jamais par symbole seul : homonymes et slugs piégés exclus", () => {
-    // OM : l'ancienne et la nouvelle MANTRA revendiquaient le même id CMC → les deux exclues.
-    expect(MAP["mantra"]).toBeUndefined();
+    // OM : l'ancienne et la nouvelle MANTRA ne partagent jamais un id CMC (lot Z3 : la nouvelle est reliée à
+    // « mantra-new » par symbole + nom + prix à ± 5 % ; l'ancienne, sans ligne compatible, est exclue).
     expect(MAP["mantra-dao"]).toBeUndefined();
-    // Le slug CMC « ether-fi » désigne eETH (28568), pas ETHFI : la fiche pointe vers ETHFI (nom + symbole).
+    if (MAP["mantra"]) expect(MAP["mantra"].id).not.toBe(MAP["mantra-dao"]?.id);
+    // Le slug CMC « ether-fi » désigne eETH (28568), pas ETHFI : si la fiche est reliée, c'est à ETHFI (nom + symbole).
     expect(MAP["ether-fi"]?.id).not.toBe(28568);
-    expect(MAP["ether-fi"]?.symbol).toBe("ETHFI");
-    // FXS : slug CMC devenu FRAX → exclu (relais CoinGecko).
-    expect(MAP["frax-share"]).toBeUndefined();
+    if (MAP["ether-fi"]) expect(MAP["ether-fi"].symbol).toBe("ETHFI");
+    // FXS devenu FRAX : relié seulement si symbole, nom (slug) et prix concordent (lot Z3), jamais à un autre id.
+    if (MAP["frax-share"]) expect(MAP["frax-share"]).toEqual({ id: 6953, symbol: "FRAX" });
   });
 
   it("intégrité : ids uniques, symboles en majuscules, 779 fiches = table + exclues", () => {
@@ -171,7 +172,9 @@ describe("client CoinMarketCap", () => {
 
   it("une ligne du top sans correspondance ne prend jamais l'id d'une fiche qui désigne une autre crypto", async () => {
     const cmc = await import("@/lib/coinmarketcap");
-    const frax = { ...cmc.normalizeCmcCoin(cmcCoin(6953, "FRAX", 1))!, slug: "frax-share" }; // slug CMC = FRAX
+    // slug CMC qui coïncide avec un id du site, sur une ligne absente de la table (lot Z3 : frax-share → 6953 est désormais
+    // une correspondance validée par le prix ; le cas reste testé avec un id CMC hors table)
+    const frax = { ...cmc.normalizeCmcCoin(cmcCoin(888_888, "FRAX", 1))!, slug: "frax-share" };
     const unknown = { ...cmc.normalizeCmcCoin(cmcCoin(999_999, "ZZZ", 1))!, slug: "zzz-inconnu" };
     // Correctif du vérificateur : le slug CMC n'est JAMAIS un id du site, même s'il ne désigne aucune fiche.
     const ton = { ...cmc.normalizeCmcCoin(cmcCoin(424_242, "TONX", 2))!, slug: "toncoin" };
@@ -196,8 +199,9 @@ describe("client CoinMarketCap", () => {
       "world-liberty-financial": [33251, "WLFI"],
     };
     for (const [site, [id, sym]] of Object.entries(expected)) expect(MAP[site], site).toEqual({ id, symbol: sym });
-    // Écart de prix > 5 % au contrôle exhaustif : retirées (relais CoinGecko).
-    for (const site of ["coinex-token", "omni-network", "liquity-bold-2", "flock-2", "islamic-coin", "aintivirus"]) {
+    // Écart de prix > 5 % au contrôle exhaustif : retirées. Lot Z3 (construction du 10/10/2026) : islamic-coin passe le
+    // contrôle à ± 5 % (3,3 %) et revient ; les autres restent exclues (référence périmée, nom ou prix incompatibles).
+    for (const site of ["coinex-token", "omni-network", "liquity-bold-2", "flock-2", "aintivirus"]) {
       expect(MAP[site], site).toBeUndefined();
       expect(EXCLUS).toContain(site);
     }

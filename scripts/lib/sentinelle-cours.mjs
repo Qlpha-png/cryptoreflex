@@ -11,6 +11,9 @@
  */
 export const AGE_MAX_H = 48;
 export const FICHES_TEMOINS = ["audiera", "luxxcoin"];
+/** Lot Z3 (10/10/2026) : taille de l'échantillon (hors témoins) au passage complet de la nuit et au passage léger horaire. */
+export const ECHANTILLON_COMPLET = 40;
+export const ECHANTILLON_LEGER = 30;
 const HEURE = 3_600_000;
 
 /** Entrées /cryptos/<id> d'un plan du site : [{ id, lastmod }] (sans les sous-pages). */

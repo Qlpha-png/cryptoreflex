@@ -43,7 +43,7 @@ const fam = (o: Partial<Famille> = {}): Famille => ({ id: "x", famille: "test", 
 describe("registre data/fraicheur/registre.json", () => {
   it("51 familles de la carte + 18b, chacune avec source, robot, cadence, âge maximal et méthode de lecture", () => {
     expect(validerRegistre(reg)).toEqual([]);
-    expect(IDS_ATTENDUS).toHaveLength(52);
+    expect(IDS_ATTENDUS).toHaveLength(54); // lot Z3 : + 52 (liens des fiches) et 53 (archive des cours)
     expect(reg.familles.map((f: Famille) => f.id)).toEqual(IDS_ATTENDUS);
   });
 
@@ -80,14 +80,14 @@ describe("registre data/fraicheur/registre.json", () => {
 
   it("évaluation complète sans accès réseau : chaque famille a ✅, ⚠️ ou ❌ (jamais « inconnue »)", async () => {
     const res = await evaluerRegistre(reg, { root: ROOT, now: NOW, env: {} });
-    expect(res).toHaveLength(52);
+    expect(res).toHaveLength(54);
     for (const r of res) expect(["ok", "attention", "defaut"], r.id).toContain(r.etat);
     // sans accès (KV, GitHub, Supabase, site), une lecture réseau ne prouve rien : ❌, avec la raison
     expect(res.find((r: { id: string }) => r.id === "1")!.msg).toMatch(/accès KV absent/);
     expect(res.find((r: { id: string }) => r.id === "18b")!.etat).toBe("defaut");
     expect(res.find((r: { id: string }) => r.id === "43")!.msg).toMatch(/recomptage non fait/);
     const n = compter(res);
-    expect(n.ok + n.attention + n.defaut).toBe(52);
+    expect(n.ok + n.attention + n.defaut).toBe(54);
   });
 
   it("évaluation avec accès simulés : KV, GitHub, page, Supabase, recomptage", async () => {
@@ -327,7 +327,7 @@ describe("restitution : ticket par famille ❌ et ticket hebdomadaire", () => {
     const t2 = ticketsDefauts(await evaluerRegistre(reg, { root: ROOT, now: NOW + 3_600_000, env: {} }));
     expect(t2.map((x: { titre: string }) => x.titre)).toEqual(t.map((x: { titre: string }) => x.titre));
   });
-  it("le ticket hebdomadaire liste les 52 familles avec leur état, sans rien ouvrir", async () => {
+  it("le ticket hebdomadaire liste les 54 familles avec leur état, sans rien ouvrir", async () => {
     const res = await evaluerRegistre(reg, { root: ROOT, now: NOW, env: {} });
     const md = rapportHebdo(res, NOW);
     for (const r of res) expect(md).toContain(`| ${r.id} | `);

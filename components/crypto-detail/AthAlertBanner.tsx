@@ -11,6 +11,8 @@ interface Props {
   /** 06/10/2026 — sources réelles (CoinDetail.sources.price / .ath) ; absentes = aucune source citée. */
   priceSource?: SourceName | null;
   athSource?: SourceName | null;
+  /** Lot Z3 : sommet lu dans l'archive maison depuis cette date (ISO) ; absent = sommet historique de la source. */
+  athDepuis?: string | null;
 }
 
 /**
@@ -36,6 +38,7 @@ function AthAlertBanner({
   ath,
   priceSource = null,
   athSource = null,
+  athDepuis = null,
 }: Props) {
   const priceLabel = sourceInfo(priceSource)?.label;
   const athLabel = sourceInfo(athSource)?.label;
@@ -48,6 +51,11 @@ function AthAlertBanner({
   if (!Number.isFinite(currentPrice) || !Number.isFinite(ath) || ath <= 0) {
     return null;
   }
+  // Lot Z3 : sommet lu dans l'archive maison (R3) → « plus haut depuis le JJ/MM/AAAA », jamais « historique ».
+  const depuis = athDepuis
+    ? new Date(athDepuis).toLocaleDateString("fr-FR", { timeZone: "Europe/Paris", day: "2-digit", month: "2-digit", year: "numeric" })
+    : null;
+  const sommet = depuis ? `plus haut depuis le ${depuis}` : "sommet historique";
   const distancePct = ((currentPrice - ath) / ath) * 100;
   // Si on est à plus de -5% de l'ATH = pas pertinent comme signal narratif
   if (distancePct < -5) return null;
@@ -60,15 +68,15 @@ function AthAlertBanner({
   let palette: string;
 
   if (isNewAth) {
-    title = `${cryptoName} vient de signer un nouveau sommet historique`;
-    badge = `+${distancePct.toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} % au-dessus de l'ancien ATH`;
+    title = depuis ? `${cryptoName} dépasse son ${sommet}` : `${cryptoName} vient de signer un nouveau sommet historique`;
+    badge = `+${distancePct.toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} % au-dessus ${depuis ? "de ce plus haut" : "de l'ancien ATH"}`;
     palette = "border-success-border bg-success-soft text-success-fg";
   } else if (isVeryClose) {
-    title = `${cryptoName} à ${Math.abs(distancePct).toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} % de son sommet historique`;
-    badge = "ATH potentiel imminent";
+    title = `${cryptoName} à ${Math.abs(distancePct).toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} % de son ${sommet}`;
+    badge = depuis ? "Proche de ce plus haut" : "ATH potentiel imminent";
     palette = "border-warning-border bg-warning-soft text-warning-fg";
   } else {
-    title = `${cryptoName} se rapproche de son sommet historique`;
+    title = `${cryptoName} se rapproche de son ${sommet}`;
     badge = `Plus que ${Math.abs(distancePct).toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} % à parcourir`;
     palette = "border-warning-border bg-warning-soft text-warning-fg";
   }

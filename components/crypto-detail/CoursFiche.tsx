@@ -22,9 +22,19 @@ export interface CoursFicheProps {
   rang?: number | null;
   /** âge maximal vu par un visiteur, en heures */
   ageMaxH: number;
+  /** lot Z3 : source du cours (coinmarketcap, dexscreener, coingecko), citée après la date ; absente = rien d'affiché */
+  source?: string | null;
 }
 
-export default function CoursFiche({ releve, depuis, prix, capitalisation, rang, ageMaxH }: CoursFicheProps) {
+/** Libellé de la source du cours (lot Z3). DexScreener = prix d'une paire DEX, sans rang ni capitalisation. */
+export const SOURCES_COURS: Readonly<Record<string, string>> = {
+  coinmarketcap: "CoinMarketCap",
+  dexscreener: "prix DEX DexScreener",
+  coingecko: "CoinGecko",
+};
+
+export default function CoursFiche({ releve, depuis, prix, capitalisation, rang, ageMaxH, source }: CoursFicheProps) {
+  const libelleSource = source ? SOURCES_COURS[source] ?? null : null;
   const chiffres = !!(prix || capitalisation || rang);
   const [perime, setPerime] = useState(!chiffres);
   useEffect(() => {
@@ -61,7 +71,7 @@ export default function CoursFiche({ releve, depuis, prix, capitalisation, rang,
           Prix : <strong>{prix}</strong>
         </span>
       ) : null}
-      {depuis ? <span className="text-muted">(relevé du {depuis})</span> : null}
+      {depuis ? <span className="text-muted">(relevé du {depuis}{libelleSource ? ` · ${libelleSource}` : ""})</span> : null}
     </span>
   );
 }

@@ -59,6 +59,8 @@ export async function GET(req: Request): Promise<NextResponse> {
     // Reprise Z2 : raison courte de l'échec CoinMarketCap (relais CoinGecko ou échec total), lue par la sentinelle.
     // Messages de lib/coinmarketcap.ts seulement (« HTTP 429 », « délai dépassé »…) : jamais la clé.
     ...(r.cmcErreur ? { cmcErreur: r.cmcErreur.slice(0, 120) } : {}),
+    // Lot Z3 (R4) : point horaire du top 100 dans l'archive des cours (« non disponible » tant que la migration manque).
+    ...(r.archive ? { archive: r.archive } : {}),
   });
 
   if (r.ok) {

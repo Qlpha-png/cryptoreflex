@@ -1,6 +1,7 @@
 import { avecTypoSync } from "@/components/ui/Typo";
 import { CheckCircle2, Clock, Calendar, ExternalLink, ShieldCheck } from "lucide-react";
 import type { RoadmapEvent } from "@/lib/crypto-roadmaps";
+import { estLienMort } from "@/lib/liens-morts";
 
 interface Props {
   cryptoName: string;
@@ -145,7 +146,7 @@ function RoadmapItemBase({ event }: { event: RoadmapEvent }) {
         <p className="mt-2 text-sm text-muted leading-relaxed">{event.description}</p>
 
         {/* Source primaire (V2 audit fix) — affichée seulement si fournie */}
-        {event.sourceUrl && (
+        {event.sourceUrl && !estLienMort(event.sourceUrl) && (
           <div className="mt-3 flex items-center gap-3 flex-wrap text-xs">
             <a
               href={event.sourceUrl}
