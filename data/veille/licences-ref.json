@@ -21,7 +21,7 @@
         "What does 'commercial use approved' mean in the pricing plans?",
         "Yes, the DEX API can be used for commercial purposes starting from the Basic plan."
       ],
-      "releve": "2026-10-09"
+      "releve": "2026-10-10"
     },
     "S2": {
       "empreinte": "8eeb0b74579ee325",
@@ -37,7 +37,7 @@
         "Resell Restrictions You are prohibited from assigning, selling, marketing, licensing, or otherwise dealing in any way with the API Services for any unauthorized purpose, including but not limited to making the API Services, or any portion t",
         "Scope of Use You are granted a limited, non-exclusive, non-transferable, non-assignable, and revocable license to use the API Services and any updates."
       ],
-      "releve": "2026-10-09"
+      "releve": "2026-10-10"
     },
     "S4": {
       "empreinte": "46962e48a9d5e894",
@@ -54,7 +54,7 @@
         "white_background primary_grey_background Legal notice Copyright notice ESMA owns the copyright for all material on this website.",
         "white_background primary_grey_background Third party websites ESMA's website provides links to third party sites."
       ],
-      "releve": "2026-10-09"
+      "releve": "2026-10-10"
     },
     "S5": {
       "empreinte": "506218c0d8ec8c59",
@@ -94,7 +94,7 @@
         "This licence is version 2.0 of the Open Licence.",
         "When the \"Grantor\" holds transferable \"Intellectual property rights\" on the \"Information\", he/she assigns these to the \"Reuser\" on a non-exclusive basis, free of charge, worldwide, for the entire duration of the \"Intellectual property right"
       ],
-      "releve": "2026-10-09"
+      "releve": "2026-10-10"
     },
     "S7": {
       "empreinte": "4b22a19a2eb563d4",
@@ -103,7 +103,7 @@
         "Commercial use is allowed as long as the attribution is given right next to the display of the data.",
         "We also list various softwares and their alternatives , so that nobody has to buy too expensive licenses anymore, when there is also a reasonable open source alternative."
       ],
-      "releve": "2026-10-09"
+      "releve": "2026-10-10"
     },
     "S8": {
       "empreinte": "37a60ff0380fbb2c",
@@ -125,7 +125,7 @@
         "These sites may contain information that is copyrighted with restrictions on reuse.",
         "This permission extends only to a hyperlink, however, and does not include authority to engage in any other activities such as the \"framing\" of the Board's website on another website (e.g., by creating a part of another website that indepen"
       ],
-      "releve": "2026-10-09"
+      "releve": "2026-10-10"
     }
   }
 }
