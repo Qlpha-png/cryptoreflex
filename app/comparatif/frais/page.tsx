@@ -15,6 +15,7 @@ import {
   Ban,
 } from "lucide-react";
 
+import { dateFraisAffichee, datesDe, libelleFrais } from "@/lib/frais-auto";
 import { getExchangePlatforms, isAvailableFr, getAvailablePlatformCount, purchaseCostText, simpleCost1000 } from "@/lib/platforms";
 import { getReviewHref } from "@/lib/programmatic";
 import { BRAND } from "@/lib/brand";
@@ -167,7 +168,7 @@ function ComparatifFraisPage() {
   // Date(s) réelle(s) des relevés affichés (jamais une date écrite à la main) : « le 08/10/2026 » ou « entre le … et le … ».
   const periode = periodeVerification(all.map((r) => r.v?.date));
   const VERIFIED_AT = periode?.texte ?? "à une date inconnue";
-  const datesFrais = all.map((r) => r.v?.date);
+  const datesFrais = all.map((r) => dateFraisAffichee(r.id, r.v?.date)); // lot Z6 : { date, auto }
   /** Grille officielle illisible le jour du relevé : aucun taux affiché, aucun classement sur d'anciens taux de sites tiers. */
   const nonVerifie = (r: FeesRow) => r.v?.verdict === "non-verifie";
 
@@ -242,9 +243,11 @@ function ComparatifFraisPage() {
             <span className="gradient-text">le vrai coût 2026</span>
           </h1>
           <p className="mt-3 text-base text-muted">
-            <strong className="text-fg">{all.length} plateformes</strong>, frais
-            <strong className="text-fg"><VerifieLe dates={datesFrais} famille="frais" label="relevés" /></strong>{" "}
-            un par un sur les grilles officielles — source et date
+            {/* 10/10/2026 : espace rétablie (« fraisrelevés » en production) ; « un par un » seulement pour des relectures
+                humaines (lot Z6 : une date du contrôle automatique se présente comme telle) */}
+            <strong className="text-fg">{all.length} plateformes</strong>,{" "}
+            <strong className="text-fg"><VerifieLe dates={datesDe(datesFrais)} famille="frais" label={libelleFrais(datesFrais, "frais relevés", { auto: "frais contrôlés automatiquement" })} /></strong>
+            {datesFrais.some((d) => d.auto) ? "" : " un par un sur les grilles officielles"} — source et date
             affichées sur chaque ligne. On distingue le{" "}
             <strong className="text-fg">frais réel d&apos;un achat</strong>{" "}
             (carte / appli simple) du frais maker/taker réservé aux traders.
@@ -422,7 +425,7 @@ function ComparatifFraisPage() {
                       )}
                       {r.v?.date && (
                         <div className="mt-0.5 text-xs text-muted">
-                          <VerifieLe date={r.v.date} famille="frais" label="" age={false} />
+                          <VerifieLe date={dateFraisAffichee(r.id, r.v.date).date} famille="frais" label={libelleFrais([dateFraisAffichee(r.id, r.v.date)], "")} age={false} />
                         </div>
                       )}
                     </td>
@@ -547,7 +550,7 @@ function ComparatifFraisPage() {
         <p className="mt-10 flex items-start gap-2 text-xs text-muted leading-relaxed">
           <Info className="mt-0.5 h-3.5 w-3.5 shrink-0" />
           <span>
-            <VerifieLe dates={datesFrais} famille="frais" label="Frais relevés" age={false} /> sur
+            <VerifieLe dates={datesDe(datesFrais)} famille="frais" label={libelleFrais(datesFrais, "Frais relevés", { auto: "frais contrôlés automatiquement" })} age={false} /> sur
             les grilles tarifaires officielles, ou sur la page de frais publiée par la
             plateforme (source + date sur chaque ligne). Les frais &laquo; à vérifier &raquo;
             n&apos;ont pas pu être confirmés sur une grille officielle ; &laquo; non vérifié &raquo;

@@ -1,0 +1,146 @@
+# Scores des plateformes — robot R12 (lot Z6, 10/10/2026). Architecture 0 € : « les scores se recalculent à chaque
+# modification de donnée, et lastScored est la date de la donnée, jamais l'heure du robot ».
+#
+# Relance scripts/compute-platform-scores.mjs --robot à chaque push qui modifie data/platforms.json (et à la main).
+#  - Écrit data/platforms.json SEULEMENT si les scores ou la date de calcul changent (un commit = un déploiement).
+#  - `_meta.lastScored` = date la plus récente des entrées de données qui ont servi (relevé des frais, coût d'achat, statut
+#    MiCA, sécurité, support), jamais l'heure du robot.
+#  - Garde-fou : tant qu'une plateforme a des notes enregistrées qui ne respectent pas la formule publiée, le robot n'écrit
+#    RIEN et ouvre un ticket privé qui liste l'écart (le 10/10/2026 : 25 plateformes sur 34). Une relance manuelle avec
+#    « accepter_derive » autorise le recalcul complet, après relecture de Kev (les notes et les classements bougent).
+# Aucun cron : l'événement est le push. Le commit du robot ne se relance pas lui-même (GITHUB_TOKEN ne déclenche pas de
+# workflow) et un second passage ne changerait rien (calcul déterministe).
+on:
+  push:
+    branches: [main]
+    paths:
+      - data/platforms.json
+      - scripts/lib/scores-plateformes.mjs
+      - scripts/compute-platform-scores.mjs
+  workflow_dispatch:
+    inputs:
+      accepter_derive:
+        description: "Accepter le recalcul complet même si des notes enregistrées s'écartent de la formule publiée (les notes affichées bougent)"
+        type: boolean
+        default: false
+
+name: Scores des plateformes
+
+permissions:
+  contents: write
+
+concurrency:
+  group: scores
+  cancel-in-progress: false
+
+jobs:
+  scores:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      TICKETS_PRIVES: ${{ secrets.SENTINELLE_TOKEN != '' }}
+      # comparé au booléen ET au texte (un lancement par l'API peut envoyer "true"/"false" en texte)
+      ACCEPTER_DERIVE: ${{ inputs.accepter_derive == true || inputs.accepter_derive == 'true' }}
+    # bash -eo pipefail : une commande en échec dans un tube fait échouer l'étape
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v6
+        with:
+          ref: main
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node 20
+        uses: actions/setup-node@v6
+        with:
+          node-version: "20"
+          cache: npm
+
+      - name: Recalculer les scores
+        id: calcul
+        run: node scripts/compute-platform-scores.mjs --robot ${{ env.ACCEPTER_DERIVE == 'true' && '--accepter-derive' || '' }} --rapport="$RUNNER_TEMP/scores-rapport.md"
+
+      - name: Dépendances (tests)
+        if: steps.calcul.outputs.ecrit == 'true'
+        run: npm ci --no-audit --no-fund
+
+      # Bloquant avant tout commit : le fichier doit rester lisible par le site, le barème copié identique à lib/scoring.ts
+      # et le projet doit compiler.
+      - name: Tests des scores
+        id: tests
+        if: steps.calcul.outputs.ecrit == 'true'
+        run: |
+          npx vitest run tests/lib/scores-z6.test.ts tests/lib/scoring.test.ts tests/lib/cryptoreflex-scores.test.ts
+          npx tsc --noEmit -p .
+
+      - name: Commit + push (avec reprise anti-course)
+        id: publier
+        if: steps.calcul.outputs.ecrit == 'true'
+        run: |
+          git add data/platforms.json
+          if git diff --staged --quiet; then
+            echo "Aucun fichier modifié." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          git config user.name "Cryptoreflex Bot"
+          git config user.email "bot@cryptoreflex.fr"
+          git commit -m "chore(scores): scores recalculés ($(node -p "require('./data/platforms.json')._meta.lastScored"))" \
+            -m "Généré par .github/workflows/scores.yml (scripts/compute-platform-scores.mjs --robot) ; lastScored = date de donnée." \
+            -m "" \
+            -m "Co-Authored-By: Cryptoreflex Bot <bot@cryptoreflex.fr>"
+          for i in 1 2 3; do
+            if git push origin HEAD:main; then
+              echo "Scores publiés (commit $(git rev-parse --short HEAD))." >> "$GITHUB_STEP_SUMMARY"
+              exit 0
+            fi
+            echo "Push rejeté, rebase puis nouvel essai ($i / 3)…"
+            git fetch origin main
+            git rebase origin/main || { git rebase --abort; break; }
+            sleep 2
+          done
+          echo "## ❌ Push des scores impossible après 3 essais" >> "$GITHUB_STEP_SUMMARY"
+          exit 1
+
+      - name: Tickets privés non configurés
+        if: always() && (steps.calcul.outputs.refus == 'true' || failure()) && env.TICKETS_PRIVES != 'true'
+        run: |
+          echo "Secret SENTINELLE_TOKEN absent : aucun ticket (l'échec du job reste le signal)."
+
+      # Un seul ticket ouvert à la fois : complété seulement si la liste des plateformes en écart change.
+      - name: Ticket « scores » (dépôt privé)
+        if: always() && (steps.calcul.outputs.refus == 'true' || failure()) && env.TICKETS_PRIVES == 'true'
+        uses: actions/github-script@v9
+        env:
+          REFUS: ${{ steps.calcul.outputs.refus }}
+          TESTS: ${{ steps.tests.outcome }}
+          PUBLIER: ${{ steps.publier.outcome }}
+        with:
+          github-token: ${{ secrets.SENTINELLE_TOKEN }}
+          script: |
+            const depot = { owner: "Qlpha-png", repo: "cryptoreflex-sentinelle" };
+            const fs = require("fs");
+            const date = new Date().toISOString().slice(0, 10);
+            const runUrl = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
+            let corps = "";
+            try { corps = fs.readFileSync(`${process.env.RUNNER_TEMP}/scores-rapport.md`, "utf8"); } catch (e) { corps = ""; }
+            const bloque = [process.env.TESTS, process.env.PUBLIER].includes("failure");
+            if (!corps || bloque) corps = (corps ? corps + "\n\n" : "") + (bloque ? "**Publication bloquée** : tests ou push en échec, les scores du site ne sont pas à jour. Voir le run." : "Le robot des scores s'est interrompu : voir le résumé du run.");
+            corps += `\n\n**Run** : ${runUrl}\n**Date** : ${date}\n\n_Ticket créé par \`.github/workflows/scores.yml\` (lot Z6, robot R12)._`;
+            const existants = await github.paginate(github.rest.issues.listForRepo, { ...depot, state: "open", labels: "scores", per_page: 50 });
+            const deja = existants.find((i) => i.title.startsWith("[scores]"));
+            if (deja) {
+              const { data: coms } = await github.rest.issues.listComments({ ...depot, issue_number: deja.number, per_page: 100 });
+              const dernier = coms.length ? coms[coms.length - 1].body : deja.body;
+              const liste = (t) => (t || "").split("\n").filter((l) => l.startsWith("| ")).join("\n");
+              if (liste(dernier) !== liste(corps)) await github.rest.issues.createComment({ ...depot, issue_number: deja.number, body: corps });
+              return;
+            }
+            await github.rest.issues.create({ ...depot, title: `[scores] notes enregistrées à relire - ${date}`, body: corps, labels: ["scores", "monitoring"] });
+
+      - name: Échec si le robot est bloqué (tests ou push)
+        if: always() && (steps.tests.outcome == 'failure' || steps.publier.outcome == 'failure' || steps.calcul.outcome == 'failure')
+        run: |
+          echo "Scores : publication bloquée (voir le résumé et le ticket privé)."
+          exit 1

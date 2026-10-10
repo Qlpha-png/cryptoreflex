@@ -103,7 +103,8 @@
   "frais": {
     "bitpanda": {
       "https://cdn.bitpanda.com/terms-and-conditions/cost-transparency-crypto-bitpanda-fr-latest.pdf": {
-        "pdf": "53c828cd48d1fad5"
+        "pdf": "53c828cd48d1fad5",
+        "depuis": "2026-10-05"
       },
       "https://www.bitpanda.com/fr/limits": {
         "jetons": "ea5a6816a19d361e",
@@ -118,7 +119,8 @@
           "300000€",
           "5000000€",
           "999999999€"
-        ]
+        ],
+        "depuis": "2026-10-05"
       }
     },
     "kraken": {
@@ -191,13 +193,15 @@
           "2%",
           "20%",
           "3%"
-        ]
+        ],
+        "depuis": "2026-10-05"
       },
       "https://support.kraken.com/articles/360060101312-faq-s-about-buying-instantly": {
         "jetons": "0b41028676848984",
         "liste": [
           "1%"
-        ]
+        ],
+        "depuis": "2026-10-05"
       },
       "https://support.kraken.com/articles/360000381846-cash-deposit-options-fees-minimums-and-processing-times-": {
         "jetons": "94e8648f599a5f05",
@@ -205,7 +209,8 @@
           "0,25%",
           "0,3%",
           "3,75%"
-        ]
+        ],
+        "depuis": "2026-10-05"
       },
       "https://support.kraken.com/articles/360000423043-cash-withdrawal-options-fees-minimums-and-processing-times-": {
         "jetons": "5abef4cbfd31fbe6",
@@ -215,44 +220,52 @@
           "0,50%",
           "1,5%",
           "1,50%"
-        ]
+        ],
+        "depuis": "2026-10-05"
       },
       "https://support.kraken.com/articles/360048212832-debit-or-credit-card-purchases-with-visa-and-mastercard-": {
         "jetons": "f40aa31d8ecf0571",
         "liste": [
           "10,00€",
           "5000€"
-        ]
+        ],
+        "depuis": "2026-10-05"
       }
     },
     "coinhouse": {
       "https://cms-www.coinhouse.com/wp-content/uploads/2026/08/CH_-GrilleTarifaire_Web_FR_AUG26.pdf": {
-        "pdf": "52179fd876503771"
+        "pdf": "52179fd876503771",
+        "depuis": "2026-10-05"
       },
       "https://support.coinhouse.com/hc/fr/articles/4889682146450-comment-effectuer-un-achat-de-cryptoactif-sur-coinhouse": {
         "jetons": "d4c83ef23b41ff1d",
         "liste": [
           "10€",
           "210000€"
-        ]
+        ],
+        "depuis": "2026-10-05"
       },
       "https://cms-www.coinhouse.com/wp-content/uploads/2026/06/Politique-·-Execution-Version-Publique-Mai-2026.pdf": {
-        "pdf": "b3f828a6014577d2"
+        "pdf": "b3f828a6014577d2",
+        "depuis": "2026-10-05"
       },
       "https://cms-www.coinhouse.com/wp-content/uploads/2026/09/Coinhouse-·-PSCA-·-CGU-Sept-2026-1.pdf": {
-        "pdf": "0d7d80f606422144"
+        "pdf": "0d7d80f606422144",
+        "depuis": "2026-10-05"
       },
       "https://support.coinhouse.com/hc/fr/articles/360016554959-dans-quels-cryptoactifs-puis-je-investir-sur-coinhouse": {
         "jetons": "b7db2c86d15d2a72",
         "liste": [
           "210000€"
-        ]
+        ],
+        "depuis": "2026-10-05"
       },
       "https://support.coinhouse.com/hc/fr/articles/12419059991826-qu-est-ce-que-le-compte-euro-et-comment-le-mettre-en-place": {
         "jetons": "b7db2c86d15d2a72",
         "liste": [
           "210000€"
-        ]
+        ],
+        "depuis": "2026-10-05"
       },
       "https://www.coinhouse.com/fr/documents-legaux": {
         "liens": "4305bf95cd6db51b",
@@ -272,7 +285,8 @@
           "https://cms-www.coinhouse.com/wp-content/uploads/2026/09/Coinhouse-Politique-de-confidentialite-Septembre-2026.pdf",
           "https://cms-www.coinhouse.com/wp-content/uploads/2026/09/Coinhouse-·-PSCA-·-CGU-Sept-2026-1.pdf",
           "https://cms-www.coinhouse.com/wp-content/uploads/2026/09/Conditions-des-operations-promotionnelles-FR-1.pdf"
-        ]
+        ],
+        "depuis": "2026-10-05"
       }
     },
     "bitstack": {
@@ -290,27 +304,31 @@
           "250€",
           "2€",
           "3€"
-        ]
+        ],
+        "depuis": "2026-10-05"
       },
       "https://help.bitstack-app.com/fr/articles/12783145-comment-alimenter-mon-compte-euro-bitstack": {
         "jetons": "f2a132466973bdaa",
         "liste": [
           "0,70%",
           "10€"
-        ]
+        ],
+        "depuis": "2026-10-05"
       },
       "https://help.bitstack-app.com/fr/articles/8335761-comment-acheter-du-bitcoin-sur-bitstack": {
         "jetons": "d78bd2dd99d24978",
         "liste": [
           "1€"
-        ]
+        ],
+        "depuis": "2026-10-05"
       },
       "https://help.bitstack-app.com/fr/articles/6371263-est-ce-que-bitstack-propose-d-autres-cryptomonnaies-que-le-bitcoin": {
         "phrases": "2102663b9267c0eb",
         "liste": [
           "Politique monétaire prévisible : le Bitcoin est limité à 21 millions d'unités .",
           "See the License for the specific language governing permissions and limitations under the License."
-        ]
+        ],
+        "depuis": "2026-10-05"
       },
       "https://help.bitstack-app.com/fr/articles/6379341-quels-sont-les-modes-de-paiement-disponibles-sur-l-application": {
         "phrases": "fd6941f0a5d6292a",
@@ -318,16 +336,19 @@
           "Quels sont les prix et les frais pratiqués par Bitstack ?",
           "See the License for the specific language governing permissions and limitations under the License.",
           "Écrit par Gerardo Mis à jour cette semaine Table des matières Les modes de paiement acceptés Bitstack prend en charge les modes de paiement suivants pour les cl"
-        ]
+        ],
+        "depuis": "2026-10-10"
       },
       "https://help.bitstack-app.com/fr/articles/12784290-comment-effectuer-un-virement-depuis-mon-compte-euro-bitstack": {
         "phrases": "e797596d5122ba72",
         "liste": [
           "See the License for the specific language governing permissions and limitations under the License."
-        ]
+        ],
+        "depuis": "2026-10-05"
       },
       "https://cdn.prod.website-files.com/63ea3e6e2856fff9dbd7717e/696564ed52db4078b1297604_Bitstack%20-%20Politique%20tarifaire.pdf": {
-        "pdf": "f878532618ebc4b6"
+        "pdf": "f878532618ebc4b6",
+        "depuis": "2026-10-05"
       }
     },
     "swissborg": {
@@ -372,7 +393,8 @@
           "92%",
           "95%",
           "99%"
-        ]
+        ],
+        "depuis": "2026-10-05"
       }
     },
     "bybit": {
@@ -381,7 +403,8 @@
         "liste": [
           "1,30%",
           "1,80%"
-        ]
+        ],
+        "depuis": "2026-10-05"
       },
       "https://www.bybit.eu/en-EU/help-center/article/Trading-Fee-Structure": {
         "jetons": "b636b126e4fbb984",
@@ -397,7 +420,8 @@
           "0,2200%",
           "0,2500%",
           "20%"
-        ]
+        ],
+        "depuis": "2026-10-05"
       },
       "https://www.bybit.eu/en-EU/help-center/article/FAQ-Fiat-Deposit": {
         "phrases": "585015aa5f057431",
@@ -413,13 +437,15 @@
           "You can check the deposit limit per transaction from the deposit window.",
           "— All fiat deposit limits shall follow EUR equivalent value.",
           "— Please note that for some currencies, additional verification may be requested in order for the full maximum deposit limit amount to be applied on your accoun"
-        ]
+        ],
+        "depuis": "2026-10-05"
       },
       "https://www.bybit.eu/en-EU/help-center/article/Bybit-Fees-You-Need-to-Know": {
         "jetons": "3342b7db5f17734b",
         "liste": [
           "2%"
-        ]
+        ],
+        "depuis": "2026-10-05"
       },
       "https://www.bybit.eu/en-EU/help-center/article/FAQ-Fiat-Withdrawal": {
         "phrases": "481dd1337ddbce9a",
@@ -434,7 +460,8 @@
           "What is the fiat withdrawal limit applied on my account?",
           "You can find the relevant fee rates applied for each fiat currency and payment method by going to the Fiat withdrawal page and selecting the fiat currency of yo",
           "— Additional verification may be requested even before reaching the limit due to risk control and the review is expected to take up t o 2 working days."
-        ]
+        ],
+        "depuis": "2026-10-05"
       },
       "https://www.bybit.eu/en-EU/learn/essential-guides/bybit-trading-fees": {
         "jetons": "1656a20d84a19352",
@@ -462,7 +489,8 @@
           "20%",
           "3%",
           "4%"
-        ]
+        ],
+        "depuis": "2026-10-05"
       }
     },
     "crypto-com": {
@@ -472,13 +500,15 @@
           "0,00%",
           "0,80%",
           "4%"
-        ]
+        ],
+        "depuis": "2026-10-05"
       },
       "https://crypto.com/eea": {
         "jetons": "d1ce334b6a7f364b",
         "liste": [
           "5%"
-        ]
+        ],
+        "depuis": "2026-10-05"
       },
       "https://crypto.com/exchange/document/fees-limits": {
         "mode": "navigateur",
@@ -500,10 +530,12 @@
           "0,5%",
           "0,500%",
           "12%"
-        ]
+        ],
+        "depuis": "2026-10-05"
       },
       "https://crypto.com/document/mco_services": {
-        "pdf": "cd107587bf8c9af8"
+        "pdf": "cd107587bf8c9af8",
+        "depuis": "2026-10-05"
       },
       "https://crypto.com/eea/fees-limits": {
         "jetons": "41719b2bc325d11c",
@@ -516,7 +548,8 @@
           "1,99%",
           "3,99%",
           "4%"
-        ]
+        ],
+        "depuis": "2026-10-05"
       }
     },
     "etoro": {
@@ -549,7 +582,8 @@
           "40%",
           "50%",
           "51%"
-        ]
+        ],
+        "depuis": "2026-10-05"
       },
       "https://www.etoro.com/fr/trading/fees/conversion/": {
         "jetons": "bae09710f0e50299",
@@ -570,7 +604,8 @@
           "50%",
           "51%",
           "80%"
-        ]
+        ],
+        "depuis": "2026-10-05"
       },
       "https://help.etoro.com/s/article/How-do-I-open-a-position-using-my-GBP-EUR-account-balance-aka-eToro-Money-account-balance?language=fr": {
         "mode": "navigateur",
@@ -587,14 +622,16 @@
           "eToro Asset Management Limited (eToro AM) est autorisé à agir en tant qu'entité responsable en vertu du chapitre 5C de la loi sur les sociétés de 2001.",
           "eToro Money Malta Limited (numéro d'enregistrement de la société C97952) adresse enregistrée : 68, Northfields, Penthouse 10, Independence Avenue MST 9026 Mosta",
           "eToroX Ltd, est autorisé et réglementé par la Commission des services financiers de Gibraltar en tant que fournisseur de technologie de registre distribué, avec"
-        ]
+        ],
+        "depuis": "2026-10-05"
       },
       "https://help.etoro.com/s/article/how-does-etoro-crypto-pricing-work?language=fr": {
         "mode": "navigateur",
         "jetons": "0b41028676848984",
         "liste": [
           "1%"
-        ]
+        ],
+        "depuis": "2026-10-05"
       },
       "https://help.etoro.com/s/article/what-is-the-minimum-trade-size?language=fr": {
         "mode": "navigateur",
@@ -615,7 +652,8 @@
           "eToro Asset Management Limited (eToro AM) est autorisé à agir en tant qu'entité responsable en vertu du chapitre 5C de la loi sur les sociétés de 2001.",
           "eToro Money Malta Limited (numéro d'enregistrement de la société C97952) adresse enregistrée : 68, Northfields, Penthouse 10, Independence Avenue MST 9026 Mosta",
           "eToroX Ltd, est autorisé et réglementé par la Commission des services financiers de Gibraltar en tant que fournisseur de technologie de registre distribué, avec"
-        ]
+        ],
+        "depuis": "2026-10-05"
       },
       "https://help.etoro.com/s/article/What-s-the-deposit-minimum?language=fr": {
         "mode": "navigateur",
@@ -632,7 +670,8 @@
           "eToro Asset Management Limited (eToro AM) est autorisé à agir en tant qu'entité responsable en vertu du chapitre 5C de la loi sur les sociétés de 2001.",
           "eToro Money Malta Limited (numéro d'enregistrement de la société C97952) adresse enregistrée : 68, Northfields, Penthouse 10, Independence Avenue MST 9026 Mosta",
           "eToroX Ltd, est autorisé et réglementé par la Commission des services financiers de Gibraltar en tant que fournisseur de technologie de registre distribué, avec"
-        ]
+        ],
+        "depuis": "2026-10-05"
       },
       "https://help.etoro.com/s/article/Adding-money-to-an-eToro-Money-account-by-manual-bank-transfer?language=en_GB": {
         "mode": "navigateur",
@@ -644,13 +683,15 @@
           "eToro (Europe) Ltd, is authorised and regulated by the Cyprus Securities Exchange Commission (CySEC) under the license number# 109/10.",
           "eToro Money Malta Limited (company registration number C97952) registered address: 68, Northfields, Penthouse 10, Independence Avenue MST 9026 Mosta, Malta.",
           "eToroX Ltd, is authorised and regulated by the Gibraltar Financial Services Commission as a distributed ledger technology provider, with Financial Services Comm"
-        ]
+        ],
+        "depuis": "2026-10-05"
       },
       "https://www.etoro.com/fr/money/availability/": {
         "jetons": "0bab1578bdec6d53",
         "liste": [
           "51%"
-        ]
+        ],
+        "depuis": "2026-10-05"
       }
     },
     "paymium": {
@@ -680,32 +721,38 @@
           "30€",
           "4€",
           "5€"
-        ]
+        ],
+        "depuis": "2026-10-05"
       },
       "https://www.paymium.com/fr/aide/comment-acheter-des-bitcoins": {
         "jetons": "8df4cba6305fc55a",
         "liste": [
           "5€"
-        ]
+        ],
+        "depuis": "2026-10-05"
       },
       "https://www.paymium.com/fr/aide/quels-sont-les-types-d-ordres-sur-paymium": {
         "jetons": "76168d3851177243",
         "liste": [
           "50000€",
           "5€"
-        ]
+        ],
+        "depuis": "2026-10-05"
       },
       "https://paymium-public-files.s3.fr-par.scw.cloud/CGU/CGU_Paymium.pdf": {
-        "pdf": "7610a6e3fa77270d"
+        "pdf": "7610a6e3fa77270d",
+        "depuis": "2026-10-05"
       },
       "https://paymium-public-files.s3.fr-par.scw.cloud/regles/regles_de_fonctionnement_de_la_plateforme_de_negociation.pdf": {
-        "pdf": "dcaf6a660c712912"
+        "pdf": "dcaf6a660c712912",
+        "depuis": "2026-10-05"
       },
       "https://www.paymium.com/fr/aide/quelles-paires-de-crypto-monnaies-sont-proposees-sur-paymium": {
         "jetons": "8df4cba6305fc55a",
         "liste": [
           "5€"
-        ]
+        ],
+        "depuis": "2026-10-05"
       }
     },
     "moonpay": {
@@ -720,7 +767,8 @@
           "3,4%",
           "4,5%",
           "5%"
-        ]
+        ],
+        "depuis": "2026-10-05"
       },
       "https://support.moonpay.com/en/articles/381106-moonpay-balance-how-to-top-up-use-and-withdraw": {
         "phrases": "7628262d1c36e439",
@@ -738,7 +786,8 @@
           "Selling crypto with your MoonPay Balance Tap Sell on the Home screen Select the cryptocurrency Enter the amount Choose MoonPay Balance as the payout method Tap ",
           "Troubleshooting MoonPay Balance isn't showing as a payment option If MoonPay Balance doesn't appear at checkout, it's usually because of one of the following: P",
           "You can't cancel or use the funds until credited A credit or debit card can also be used to top up, with no deposit fee You can top up with PayPal, Venmo, ACH, "
-        ]
+        ],
+        "depuis": "2026-10-05"
       },
       "https://support.moonpay.com/en/articles/380500-how-do-i-buy-cryptocurrency-with-moonpay": {
         "phrases": "01321509f5a6a01b",
@@ -747,7 +796,8 @@
           "Read about MoonPay's fees in our pricing disclosure .",
           "Step 2: Choose your crypto and amount Select the cryptocurrency and enter the amount you want to buy in fiat or crypto Note: Because of how network fees work, w",
           "This can change a little depending on network conditions – but we'll always tell you the minimum amount."
-        ]
+        ],
+        "depuis": "2026-10-05"
       }
     },
     "n26-crypto": {
@@ -760,10 +810,12 @@
           "2,5%",
           "3,5%",
           "30%"
-        ]
+        ],
+        "depuis": "2026-10-05"
       },
       "https://docs.n26.com/legal/01+DE/022+Crypto/en/04crypto-prices-and-fees-en.pdf": {
-        "pdf": "9f0a75bfaa78423a"
+        "pdf": "9f0a75bfaa78423a",
+        "depuis": "2026-10-05"
       },
       "https://support.n26.com/fr-fr/paiements-virements-et-retraits/solde-et-plafonds/comment-alimenter-mon-compte": {
         "jetons": "359752d17cf0736c",
@@ -771,10 +823,12 @@
           "20€",
           "3%",
           "5000€"
-        ]
+        ],
+        "depuis": "2026-10-05"
       },
       "https://docs.n26.com/legal/core/fr/account-pricelist-latest.pdf": {
-        "pdf": "598811fc7e6b7815"
+        "pdf": "598811fc7e6b7815",
+        "depuis": "2026-10-05"
       }
     },
     "21bitcoin": {
@@ -795,7 +849,8 @@
           "10,000€",
           "200,000€",
           "21,000€"
-        ]
+        ],
+        "depuis": "2026-10-10"
       },
       "https://help.21bitcoin.app/en/articles/15284683-does-21bitcoin-charge-a-spread": {
         "jetons": "c9701128775525d2",
@@ -804,7 +859,8 @@
           "0,3%",
           "0,5%",
           "1,5%"
-        ]
+        ],
+        "depuis": "2026-10-05"
       },
       "https://help.21bitcoin.app/en/articles/6453204-what-are-the-fees-at-21bitcoin": {
         "jetons": "cf82b58a1c039b75",
@@ -814,20 +870,23 @@
           "0,79%",
           "1,29%",
           "1,49%"
-        ]
+        ],
+        "depuis": "2026-10-05"
       },
       "https://help.21bitcoin.app/en/articles/7052947-what-are-the-limits-for-buying-bitcoin": {
         "jetons": "b3852c1a0e5ad899",
         "liste": [
           "10€",
           "5€"
-        ]
+        ],
+        "depuis": "2026-10-05"
       },
       "https://help.21bitcoin.app/en/articles/5332229-how-to-fund-your-eur-account": {
         "phrases": "7b0fe650eff3f68b",
         "liste": [
           "International transfers incur high costs and will be automatically returned."
-        ]
+        ],
+        "depuis": "2026-10-05"
       },
       "https://help.21bitcoin.app/en/articles/5884050-how-to-buy-bitcoin": {
         "mode": "navigateur",
@@ -835,7 +894,8 @@
         "liste": [
           "Order Types Custom Price Order Auto-Invest Order Fees Euro Funding & Withdrawals Bitcoin Withdrawals Custody Taxes All Collections Buy & Sell How to buy Bitcoin",
           "Skip to main content English Deutsch English Search Ctrl K General Account Buy & Sell How to buy Bitcoin Create a Savings Plan How to sell Bitcoin What are the "
-        ]
+        ],
+        "depuis": "2026-10-05"
       }
     },
     "just-mining": {
@@ -856,16 +916,19 @@
           "3,15%",
           "5%",
           "7,5%"
-        ]
+        ],
+        "depuis": "2026-10-05"
       },
       "https://www.meria.com/resources/terms.pdf": {
-        "pdf": "2b19b8c92a390298"
+        "pdf": "2b19b8c92a390298",
+        "depuis": "2026-10-05"
       },
       "https://help-center.meria.com/article/1116-deposer-des-euros-sur-votre-compte-meria": {
         "jetons": "d480c1284426fb36",
         "liste": [
           "100€"
-        ]
+        ],
+        "depuis": "2026-10-05"
       },
       "https://help-center.meria.com/article/1154-quel-est-le-minimum-pour-acheter-du-bitcoin": {
         "mode": "navigateur",
@@ -873,7 +936,8 @@
         "liste": [
           "100000€",
           "10€"
-        ]
+        ],
+        "depuis": "2026-10-05"
       },
       "https://help-center.meria.com/article/1119--comment-retirer-mes-cryptomonnaies-sur-mon-compte-bancaire": {
         "jetons": "2388425354345e45",
@@ -882,16 +946,19 @@
           "100€",
           "30000€",
           "5000€"
-        ]
+        ],
+        "depuis": "2026-10-05"
       }
     },
     "coinbase": {},
     "trade-republic": {
       "https://assets.traderepublic.com/assets/files/FeeInformation_PaymentAccount_fr.pdf": {
-        "pdf": "9ea2062201e4dd96"
+        "pdf": "9ea2062201e4dd96",
+        "depuis": "2026-10-05"
       },
       "https://assets.traderepublic.com/assets/files/CA_FR-en-fr.pdf": {
-        "pdf": "310cf0276d224b02"
+        "pdf": "310cf0276d224b02",
+        "depuis": "2026-10-05"
       }
     },
     "revolut": {},
@@ -916,13 +983,15 @@
           "What are the minimum and maximum Buy limits?",
           "You can also: Check that the amount is within the displayed limits.",
           "©2017 - 2026 OKX.COM Language Europe English Deutsch Español (España) Français Italiano Nederlands Polski Português (Portugal) Română Norsk (bokmål) Suomi Svens"
-        ]
+        ],
+        "depuis": "2026-10-05"
       },
       "https://www.okx.com/en-eu/help/buy-sell-convert-spread-disclosure": {
         "jetons": "a7de8dee4ca829bb",
         "liste": [
           "1,00%"
-        ]
+        ],
+        "depuis": "2026-10-05"
       },
       "https://www.okx.com/en-eu/help/what-are-the-new-trading-fees-for-eea-users": {
         "jetons": "5103b1b52d54e3bf",
@@ -959,7 +1028,8 @@
           "0,180%",
           "0,200%",
           "0,350%"
-        ]
+        ],
+        "depuis": "2026-10-05"
       },
       "https://www.okx.com/en-eu/help/how-do-i-buy-with-debit-credit-cards": {
         "jetons": "b0cb042a83e92578",
@@ -968,7 +1038,8 @@
           "1,99%",
           "2,49%",
           "3,00%"
-        ]
+        ],
+        "depuis": "2026-10-05"
       },
       "https://www.okx.com/en-eu/fees": {
         "phrases": "fc8db7bd2d5920a4",
@@ -978,7 +1049,8 @@
           "Stake to Earn Subscribe to receive new crypto airdrops with your assets Agent Trade Kit Automate your trades with AI agents and community-built skills Agent Tra",
           "Switch site Skip to main content Buy crypto P2P trading Buy/Sell with zero trading fees via 100+ payment methods Buy and Sell SEPA, Visa, Mastercard, and more C",
           "Trading Fee | Fee Rate | Crypto Exchange Fees | Fee Tiers | OKX Europe Looks like you're in the United States."
-        ]
+        ],
+        "depuis": "2026-10-05"
       },
       "https://www.okx.com/en-eu/help/how-do-i-deposit-eur-with-sepa-bank-transfer": {
         "phrases": "6eab8b76adc010fd",
@@ -996,7 +1068,8 @@
           "Where do I find limits, fees and processing time details for cash deposit?",
           "While we don't charge a fee for EUR deposits via SEPA bank transfers, additional transfer fees may be charged by your bank.",
           "©2017 - 2026 OKX.COM Language Europe English Deutsch Español (España) Français Italiano Nederlands Polski Português (Portugal) Română Norsk (bokmål) Suomi Svens"
-        ]
+        ],
+        "depuis": "2026-10-05"
       },
       "https://www.okx.com/en-eu/help/how-do-i-withdraw-eur-with-sepa-bank-transfer": {
         "phrases": "b548166e74a7584f",
@@ -1010,7 +1083,8 @@
           "Where do I find limits, fees and processing time details for cash withdrawal?",
           "While we don't charge a fee for EUR withdrawals via SEPA bank transfers, additional transfer fees may be charged by your bank.",
           "©2017 - 2026 OKX.COM Language Europe English Deutsch Español (España) Français Italiano Nederlands Polski Português (Portugal) Română Norsk (bokmål) Suomi Svens"
-        ]
+        ],
+        "depuis": "2026-10-05"
       }
     },
     "bitstamp": {},
@@ -1029,16 +1103,20 @@
           "15000€",
           "30000€",
           "50%"
-        ]
+        ],
+        "depuis": "2026-10-05"
       },
       "https://cdn1.deblock.com/terms/fee_info/Fees_Pages_Deblock_FR_v6.4.3.pdf": {
-        "pdf": "f6a6599ae746e804"
+        "pdf": "f6a6599ae746e804",
+        "depuis": "2026-10-05"
       },
       "https://cdn1.deblock.com/terms/order-execution-policy/20250528-1.5-politique-dexecution-des-ordres.pdf": {
-        "pdf": "74f7afffe8585fe6"
+        "pdf": "74f7afffe8585fe6",
+        "depuis": "2026-10-05"
       },
       "https://cdn1.deblock.com/terms/personal-terms/FR/20260313-v13-personal-terms-FR.pdf": {
-        "pdf": "55e3de3ef7e6ef21"
+        "pdf": "55e3de3ef7e6ef21",
+        "depuis": "2026-10-05"
       },
       "https://deblock.com/fr/accords-juridiques": {
         "mode": "navigateur",
@@ -1065,7 +1143,8 @@
           "https://cdn1.deblock.com/terms/referrals/FR/Deblock_Referral_Terms_v1_FR.docx.pdf",
           "https://cdn1.deblock.com/terms/vaults/FR/20260610-v3.0-Techblock-FR.pdf",
           "https://cdn1.deblock.com/terms/xPay/FR/20240507-v1-applepay-terms-fr.pdf"
-        ]
+        ],
+        "depuis": "2026-10-08"
       }
     },
     "young-platform": {
@@ -1113,7 +1192,8 @@
           "600€",
           "70%",
           "8%"
-        ]
+        ],
+        "depuis": "2026-10-05"
       },
       "https://pro.youngplatform.com/fees": {
         "mode": "navigateur",
@@ -1153,7 +1233,8 @@
           "50€",
           "6%",
           "600€"
-        ]
+        ],
+        "depuis": "2026-10-05"
       },
       "https://youngplatform.com/fr/faq/fees/": {
         "phrases": "22261d461af91462",
@@ -1180,7 +1261,8 @@
           "Réductions et cas particuliers 4.1 Comment réduire les frais ?",
           "Sur Young Platform, le prix de chaque opération se compose de deux éléments : la valeur de référence de marché avec le Spread déjà inclus, et une éventuelle com",
           "Tu trouveras ici les réponses aux questions les plus fréquentes : comment se forme le prix, quels frais s'appliquent aux achats-ventes, conversions, dépôts et r"
-        ]
+        ],
+        "depuis": "2026-10-05"
       }
     },
     "trading212": {
@@ -1188,47 +1270,55 @@
         "jetons": "348ffdae32ae1a8b",
         "liste": [
           "76%"
-        ]
+        ],
+        "depuis": "2026-10-10"
       },
       "https://helpcentre.trading212.com/hc/en-us/articles/30719568726173-How-can-I-manage-my-funds": {
         "jetons": "348ffdae32ae1a8b",
         "liste": [
           "76%"
-        ]
+        ],
+        "depuis": "2026-10-10"
       },
       "https://helpcentre.trading212.com/hc/en-us/articles/360007139838-What-are-the-fees-for-funding-my-account": {
         "jetons": "f44549600b827f79",
         "liste": [
           "0,7%",
           "76%"
-        ]
+        ],
+        "depuis": "2026-10-10"
       },
       "https://helpcentre.trading212.com/hc/en-us/articles/360013564178-Instant-Bank-Transfer-Open-Banking-Deposits": {
         "jetons": "348ffdae32ae1a8b",
         "liste": [
           "76%"
-        ]
+        ],
+        "depuis": "2026-10-10"
       },
       "https://helpcentre.trading212.com/hc/en-us/articles/30721439008797-What-are-the-types-of-orders": {
         "jetons": "348ffdae32ae1a8b",
         "liste": [
           "76%"
-        ]
+        ],
+        "depuis": "2026-10-10"
       },
       "https://helpcentre.trading212.com/hc/en-us/articles/30717768082461-What-is-the-Trading-212-Crypto-account": {
         "jetons": "348ffdae32ae1a8b",
         "liste": [
           "76%"
-        ]
+        ],
+        "depuis": "2026-10-10"
       },
       "https://helpcentre.trading212.com/hc/en-us/articles/30718913607709-Trading-212-Markets-Ltd-Crypto-Account-Regulations": {
         "jetons": "348ffdae32ae1a8b",
         "liste": [
           "76%"
-        ]
+        ],
+        "depuis": "2026-10-10"
       },
       "https://www.trading212.com/legal-documentation/cy/common/Costs-and-Charges-Disclosure_EN.pdf": {
-        "pdf": "50c608f14cacc027"
+        "pdf": "50c608f14cacc027",
+        "depuis": "2026-10-05"
       }
     },
     "feel-mining": {
@@ -1245,10 +1335,37 @@
           "2€",
           "3%",
           "525040€"
-        ]
+        ],
+        "depuis": "2026-10-05"
       },
       "https://feel-mining.com/documents/FEELMINING_CGV_B2C.pdf": {
-        "pdf": "8fbf4fe41d117b58"
+        "pdf": "8fbf4fe41d117b58",
+        "depuis": "2026-10-05"
+      }
+    },
+    "bitfinex": {
+      "https://www.bitfinex.com/fees/": {
+        "jetons": "26a83ceaadcd837d",
+        "liste": [
+          "0,05%",
+          "0,100%",
+          "1,000%",
+          "15%",
+          "15,0%",
+          "18,0%",
+          "5%",
+          "5,0%"
+        ],
+        "depuis": "2026-10-10"
+      }
+    },
+    "stackin": {
+      "https://help.stackinsat.com/fr/article/mise-a-jour-concernant-la-nouvelle-plateforme-stackinsat-skm6pi/": {
+        "phrases": "e95dd3acbd6ff688",
+        "liste": [
+          "👉 Écouter le podcast : https://www.youtube.com/watch?v=FI3PQhtjMt8&t=0s Nous continuerons à mettre cette page à jour au fur et à mesure de l'avancement de notr"
+        ],
+        "depuis": "2026-10-10"
       }
     }
   },

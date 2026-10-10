@@ -77,3 +77,6 @@ veille-report.md
 # L'Usine : fichiers de travail de l'agent IA (résumé de PR, sortie), joints au passage GitHub, jamais commités
 usine/.sortie/
 veille-amf-alertes.json
+
+# lot Z6 : signaux d'incident du robot R9 (ticket privé seulement), jamais commités
+incidents-tickets.json

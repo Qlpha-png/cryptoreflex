@@ -1,0 +1,79 @@
+# Revue périodique — robot R14 (lot Z6, 10/10/2026). Architecture 0 € : certaines données n'ont aucune source gratuite sous
+# licence prouvée (support client, événements, airdrops, roadmaps, scores de décentralisation, textes éditoriaux, lignes de
+# rendements éditoriales, tarifs des partenaires, statut MiCA des wallets) ; leur date « vérifié le » vieillit, le site
+# l'avoue, et ce robot RAPPELLE chaque mois ce qui dépasse son seuil (lib/fraicheur.ts).
+#
+# Le 1er du mois : un ticket PRIVÉ (dépôt Qlpha-png/cryptoreflex-sentinelle, secret SENTINELLE_TOKEN) liste chaque élément
+# au-delà de son seuil. Un seul ticket par mois (titre stable « [Revue périodique] AAAA-MM »). Le robot ne modifie aucun
+# fichier, ne publie rien et ne fait aucune requête réseau hors GitHub.
+#
+# Lancé par l'horloge Vercel (lib/gardien.ts, /api/cron/gardien/revue-periodique, 06:20 UTC le 1er du mois) ; l'horaire ci-dessous
+# est le filet natif de GitHub. Un passage a lieu aussi à la fusion du robot (push sur ses fichiers) : même mois = même
+# ticket, sans doublon.
+on:
+  schedule:
+    - cron: "20 6 1 * *" # filet de l'horloge Vercel
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - scripts/revue-periodique.mjs
+      - scripts/lib/revue-periodique.mjs
+      - .github/workflows/revue-periodique.yml
+
+name: Revue périodique (données qu'aucun robot ne relit)
+
+permissions:
+  contents: read
+
+concurrency:
+  group: revue-periodique
+  cancel-in-progress: false
+
+jobs:
+  revue:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      TICKETS_PRIVES: ${{ secrets.SENTINELLE_TOKEN != '' }}
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v6
+        with:
+          ref: main
+          fetch-depth: 1
+
+      - name: Setup Node 20
+        uses: actions/setup-node@v6
+        with:
+          node-version: "20"
+
+      - name: Revue des dates
+        id: revue
+        run: node scripts/revue-periodique.mjs --ticket="$RUNNER_TEMP/revue-periodique-ticket.md"
+
+      - name: Tickets privés non configurés
+        if: always() && env.TICKETS_PRIVES != 'true'
+        run: |
+          echo "Secret SENTINELLE_TOKEN absent : aucun ticket (la liste est dans le journal et le résumé de ce passage)."
+
+      - name: Ticket « revue périodique » (dépôt privé)
+        if: ${{ always() && env.TICKETS_PRIVES == 'true' && steps.revue.outputs.en_retard != '' && steps.revue.outputs.en_retard != '0' }}
+        uses: actions/github-script@v9
+        env:
+          TITRE: ${{ steps.revue.outputs.titre }}
+        with:
+          github-token: ${{ secrets.SENTINELLE_TOKEN }}
+          script: |
+            const fs = require("fs");
+            const depot = { owner: "Qlpha-png", repo: "cryptoreflex-sentinelle" };
+            const titre = process.env.TITRE;
+            const runUrl = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
+            const corps = fs.readFileSync(`${process.env.RUNNER_TEMP}/revue-periodique-ticket.md`, "utf8") + `\n[Voir l'exécution](${runUrl})`;
+            // un seul ticket par mois, quel que soit son état (fermé = revue faite)
+            const tous = await github.paginate(github.rest.issues.listForRepo, { ...depot, state: "all", labels: "revue-periodique", per_page: 100 });
+            if (tous.some((i) => i.title === titre)) { console.log("Ticket du mois déjà créé."); return; }
+            await github.rest.issues.create({ ...depot, title: titre, body: corps, labels: ["revue-periodique", "monitoring"] });

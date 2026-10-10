@@ -19,6 +19,7 @@ import type { Platform } from "@/lib/platforms";
 import { trackToolUsage } from "@/lib/analytics";
 import ComparateurNotice from "@/components/ComparateurNotice";
 import VerifieLe from "@/components/ui/VerifieLe";
+import { datesDe, type DateFrais } from "@/lib/frais-libelle";
 import {
   ANY_HINT,
   ANY_LABEL,
@@ -276,8 +277,8 @@ export function FilterResult({
   const active = CRITERIA.filter((c) => answers[c.key] === "oui");
   const n = list.length;
   /* Dates des relevés affichés sur les fiches : autorisation MiCA + les trois critères. */
-  const dates = [
-    ...list.map((p) => p.mica.lastVerified),
+  const dates: DateFrais[] = [
+    ...list.map((p) => ({ date: p.mica.lastVerified ?? null, auto: false })),
     ...CRITERIA.flatMap((c) => list.flatMap((p) => c.dates(p))),
   ];
 
@@ -324,7 +325,7 @@ export function FilterResult({
               } le coût complet d'un achat de Bitcoin`}
           {" ; les autres publient un plafond, ajoutent une marge non chiffrée ou ne publient pas ce coût, et ces montants ne se comparent pas entre eux."}
           {" "}
-          <VerifieLe dates={dates} famille="frais" label="Données des fiches relevées" age={false} />.
+          <VerifieLe dates={datesDe(dates)} famille="frais" label={dates.some((d) => d.date && d.auto) ? "Données des fiches relevées ou, pour les frais, contrôlées automatiquement" : "Données des fiches relevées"} age={false} />.
         </p>
       )}
 

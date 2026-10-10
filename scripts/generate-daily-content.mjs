@@ -32,6 +32,7 @@ import path from "node:path";
 import { callLLMRewriter } from "./lib/llm-rewriter.mjs";
 import { fetchAndStorePhoto } from "./lib/news-image.mjs";
 import { generateAnalyses } from "./lib/analyses-techniques.mjs";
+import { analyserIncidents, corpsTicket, plateformesSuivies, titreTicket } from "./lib/incidents.mjs";
 
 /* -------------------------------------------------------------------------- */
 /*  Configuration                                                             */
@@ -182,12 +183,17 @@ function parseRssItems(xml) {
   return items;
 }
 
+/* Lot Z6 (robot R9 « incidents ») : TOUS les éléments des flux lus, avant le tri de pertinence ci-dessous, conservés pour la
+   détection d'incidents de sécurité (scripts/lib/incidents.mjs). Aucune requête de plus : on réutilise la lecture existante. */
+const ELEMENTS_LUS = [];
+
 async function fetchNewsRaw() {
   const all = [];
   for (const source of RSS_SOURCES) {
     try {
       const xml = await fetchRss(source.url);
       const items = parseRssItems(xml);
+      for (const it of items) ELEMENTS_LUS.push({ source: source.name, title: it.title, link: it.link, description: it.description, pubDate: it.pubDate });
       for (const it of items) {
         /* Pertinence (audit 03/10/2026) : mots ENTIERS (« eth » ne doit plus matcher « method »,
            ni « sol » « sold »), et au moins un terme crypto FORT dans le TITRE source. Les actus
@@ -588,6 +594,29 @@ async function generateTA() {
 }
 
 /* -------------------------------------------------------------------------- */
+/*  Incidents de sécurité (robot R9, lot Z6)                                  */
+/* -------------------------------------------------------------------------- */
+
+/* Fichier des signaux, lu par l'étape « Tickets incidents » du workflow (ticket PRIVÉ). Ignoré par git. Les journaux publics
+   du workflow ne portent que des décomptes : ni nom de plateforme, ni titre, ni montant. */
+const INCIDENTS_FILE = process.env.INCIDENTS_FILE || path.join(REPO_ROOT, "incidents-tickets.json");
+
+async function detecterIncidents() {
+  try {
+    const { platforms } = JSON.parse(await fs.readFile(path.join(REPO_ROOT, "data", "platforms.json"), "utf8"));
+    const r = analyserIncidents({ items: ELEMENTS_LUS, suivies: plateformesSuivies(platforms), jour: TODAY, maintenant: Date.now() });
+    const tickets = r.tickets.map((t) => ({ plateforme: t.plateforme, nom: t.nom, titre: titreTicket(t), corps: corpsTicket(t) }));
+    if (tickets.length) await fs.writeFile(INCIDENTS_FILE, JSON.stringify(tickets, null, 1), "utf8");
+    console.log(`[incidents] ${r.lus} éléments de flux lus, ${r.retenus} récents, ${tickets.length} signal(aux) transmis au ticket privé`);
+    return { lus: r.lus, signaux: tickets.length };
+  } catch (err) {
+    // la détection ne doit JAMAIS empêcher la publication du jour
+    console.warn(`[incidents] détection impossible : ${err.message}`);
+    return { lus: 0, signaux: 0 };
+  }
+}
+
+/* -------------------------------------------------------------------------- */
 /*  Main                                                                      */
 /* -------------------------------------------------------------------------- */
 
@@ -598,6 +627,8 @@ async function generateTA() {
   console.log(`========================================`);
 
   const newsRes = ONLY === "analyses" ? { created: 0, skipped: 0, errors: 0 } : await generateNews();
+  // R9 : APRÈS la lecture des flux (faite par generateNews), sans requête de plus
+  const incRes = ONLY === "analyses" ? { lus: 0, signaux: 0 } : await detecterIncidents();
   const taRes = ONLY === "actus" ? { created: 0, skipped: 0, errors: 0 } : await generateTA();
 
   const totalCreated = newsRes.created + taRes.created;
@@ -616,6 +647,8 @@ news_errors=${newsRes.errors}
 news_skipped=${newsRes.skipped}
 ta_updated=${taRes.created}
 ta_errors=${taRes.errors}
+incidents_lus=${incRes.lus}
+incidents_signaux=${incRes.signaux}
 `);
   }
   if (newsRes.created === 0 && newsRes.errors > 0) {

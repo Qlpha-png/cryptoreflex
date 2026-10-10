@@ -1,0 +1,13 @@
+{
+  "_note": "Rejeu du piratage de Bitget (septembre 2026, data/platforms.json → bitget.security.lastIncident, vérifié le 07/10/2026). Le titre de l'élément est reconstitué à partir de l'adresse de l'article de BleepingComputer cité comme source dans data/platforms.json (security.source.lastIncident) : le titre exact publié par le média n'a pas été relu. Sert uniquement à vérifier qu'un élément de flux de cette forme (nom de la plateforme et mot-clé d'incident dans le titre) ouvre exactement un ticket. Aucun montant n'est repris dans le ticket.",
+  "jour": "2026-09-24",
+  "items": [
+    {
+      "source": "BleepingComputer",
+      "title": "Bitget resumes Bitcoin withdrawals after $387.5 million crypto heist",
+      "link": "https://www.bleepingcomputer.com/news/security/bitget-resumes-bitcoin-withdrawals-after-3875-million-crypto-heist/",
+      "description": "",
+      "pubDate": ""
+    }
+  ]
+}

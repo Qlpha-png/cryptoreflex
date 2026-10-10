@@ -14,7 +14,11 @@
  *  - [page]     date « modifié le » / « vérifié le » / millésime des pages officielles (FAQ impots.gouv, 2086,
  *               service-public) et chiffres attendus dans ces pages ;
  *  - [registre] autorisation MiCA de chaque plateforme (registre de l'ESMA) contre data/platforms.json ;
- *  - [frais]    grilles tarifaires citées par le comparateur : empreinte des pourcentages et montants (ou du PDF).
+ *  - [frais]    grilles tarifaires citées par le comparateur : empreinte des pourcentages et montants (ou du PDF) ; lot Z6 : une
+ *               plateforme dont TOUTES les pages sont lues et inchangées reçoit la date du contrôle automatique
+ *               (data/veille/frais-auto.json → fees.autoCheckedAt, scripts/lib/frais-auto.mjs) ; jamais un montant modifié ;
+ *  - [echeances] lot Z6 : dates de la page officielle du calendrier de déclaration (impots.gouv.fr) et textes de loi qui citent
+ *               la directive 2023/2226 (DAC8, recherche de l'API Légifrance) : empreinte, ticket si changement, jamais de fusion.
  * Un écart → ligne « - ❌ » dans le rapport, code de sortie 1, ticket GitHub « veille-officielle » (lu par la routine
  * Claude du matin, qui relit la source, met le site à jour puis réenregistre la référence).
  *
@@ -30,6 +34,8 @@ import { readFileSync, writeFileSync, existsSync, appendFileSync } from "node:fs
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { phrasesLicence } from "./lib/fraicheur-registre.mjs";
+import { VERDICTS_DATABLES, depuisPourEnregistrement, fusionnerFraisAuto, jugerFraisAuto, statutPage } from "./lib/frais-auto.mjs";
+import { comparer, controleAvance, corpsRecherchePiste, datesDePage, empreinte as empreinteDates, idsLegifrance } from "./lib/echeances.mjs";
 
 const ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
 const ARGS = new Set(process.argv.slice(2));
@@ -170,6 +176,9 @@ async function jetonPiste() {
   }
   return { erreur: `jeton refusé (${essais.join(" ; ")}) ; PISTE_CLIENT_ID = ${forme(brutId)}, PISTE_CLIENT_SECRET = ${forme(brutSecret)}` };
 }
+/** Jeton PISTE obtenu une seule fois par passage (Légifrance puis recherche DAC8 des échéances). */
+let pisteCache = null;
+const apiPiste = () => (pisteCache ??= jetonPiste());
 async function lf(api, chemin, corps) {
   const res = await req(api.api + chemin, { method: "POST", headers: { ...(api.entetes || { authorization: `Bearer ${api.token}` }), "content-type": "application/json", accept: "application/json" }, body: JSON.stringify(corps) });
   const brut = await res.text();
@@ -222,7 +231,7 @@ async function articleEnVigueur(api, src) {
 const extraits = (t, max = 1400) => (t.match(/[^.;]*\d[\d ]*(?:,\d+)? ?(?:€|%|euros)[^.;]*/g) || []).map((s) => s.trim()).join(" ‖ ").slice(0, max);
 
 async function veilleLegifrance() {
-  const api = await jetonPiste();
+  const api = await apiPiste();
   if (api.erreur) {
     fail("loi", `Légifrance inaccessible : ${api.erreur}. Les articles de loi ne sont PAS contrôlés cette nuit.`);
     return;
@@ -484,14 +493,17 @@ async function veilleFrais() {
     if (!pages.length && !index.length) continue;
     const refP = ETAT.frais?.[p.id] || {};
     const obs = (observe.frais[p.id] = {});
+    const suivi = (suiviFrais[p.id] = []); // lot Z6 : statut de chaque page, pour la date du contrôle automatique
     for (const [url, estIndex] of [...pages.map((u) => [u, false]), ...index.map((u) => [u, true])]) {
       // Une page relevée au navigateur se relit TOUJOURS au navigateur (sinon l'empreinte changerait avec la méthode).
       const { emp, pourquoi, disparue } = await empreinte(url, { index: estIndex, viaNav: NAVIGATEUR && refP[url]?.mode === "navigateur" });
+      suivi.push({ url, ...statutPage({ ref: refP[url], emp, disparue }) });
       // Page de frais supprimée (404/410) : la source citée par le comparateur n'existe plus → à traiter, pas à taire.
       if (disparue) { if (!refP[url]?.disparue) changement("frais", `${p.name} : page de frais disparue (${pourquoi}) → retrouver la grille officielle et corriger la source citée ; ${url}`); obs[url] = { disparue: true }; continue; }
       if (!emp) { illisibles.push(`${p.name} ${url} (${pourquoi})`); if (refP[url]) obs[url] = refP[url]; continue; }
       vues++;
-      obs[url] = emp;
+      // lot Z6 : « depuis » = date d'enregistrement de cette valeur d'empreinte (conservé tant qu'elle ne change pas)
+      obs[url] = { ...emp, depuis: depuisPourEnregistrement(refP[url], emp, AUJ) };
       const ref = refP[url];
       if (!ref) { nouveau("frais", `${p.name} : ${url} relevée (pas encore de référence)`); continue; }
       const cle = emp.pdf ? "pdf" : emp.liens ? "liens" : emp.phrases ? "phrases" : "jetons";
@@ -508,6 +520,30 @@ async function veilleFrais() {
   if (navigateur) await navigateur.b.close().catch(() => {});
   ok("frais", `${vues} page(s) de frais relues`);
   if (illisibles.length) warn("frais", `pages de frais non relues cette nuit (${illisibles.length}) — référence précédente conservée : ${illisibles.join(" ; ")}`);
+  ecrireFraisAuto(platforms, suiviFrais);
+}
+
+/**
+ * Lot Z6 (10/10/2026) : date du contrôle automatique des grilles de frais (fees.autoCheckedAt). Une plateforme dont toutes
+ * les pages suivies sont lues ET inchangées reçoit la date du jour dans data/veille/frais-auto.json ; les autres gardent
+ * leur date précédente. Règles dans scripts/lib/frais-auto.mjs. Le robot ne modifie jamais un montant de frais.
+ */
+const suiviFrais = {};
+const FRAIS_AUTO_PATH = path.join(ROOT, "data/veille/frais-auto.json");
+function ecrireFraisAuto(platforms, suivi) {
+  const sansEcart = [];
+  const ecarts = [];
+  for (const p of platforms) {
+    if (!suivi[p.id]) continue;
+    const j = jugerFraisAuto({ plateforme: p, suivi: suivi[p.id] });
+    if (j.avance) sansEcart.push(p.id);
+    else if (VERDICTS_DATABLES.includes(p.fees?.verified?.verdict)) ecarts.push(`${p.name} : ${j.raison}`);
+  }
+  const avant = existsSync(FRAIS_AUTO_PATH) ? JSON.parse(readFileSync(FRAIS_AUTO_PATH, "utf8")) : {};
+  writeFileSync(FRAIS_AUTO_PATH, JSON.stringify(fusionnerFraisAuto(avant, sansEcart, AUJ), null, 2) + "\n");
+  log(`frais-auto : ${sansEcart.length} plateforme(s) à la date du contrôle automatique du ${AUJ}`);
+  // information du rapport (jamais un échec : un écart de page a déjà sa propre ligne « ❌ » ou « ⚠️ » plus haut)
+  if (ecarts.length) ok("frais", `date du contrôle automatique non avancée pour ${ecarts.length} plateforme(s) : ${ecarts.join(" ; ")}`.slice(0, 1800));
 }
 
 /* ------------------------------------------------------------------ pages de licence (lot Z1, 08/10/2026) */
@@ -543,8 +579,67 @@ async function veilleLicences() {
   }
 }
 
+/* ------------------------------------------------------------------ calendrier fiscal et DAC8 (lot Z6, 10/10/2026) */
+/* Famille 28 de la carte de fraîcheur. Empreinte des dates de la page officielle du calendrier de déclaration (impots.gouv.fr)
+   et de l'ensemble des textes de loi qui citent la directive 2023/2226 (recherche de l'API Légifrance). Un changement ouvre un
+   ticket (ligne « ❌ » de la veille) et n'est JAMAIS fusionné par un robot. Première lecture = référence écrite dans
+   data/veille/echeances.json ; elle n'avance ensuite qu'avec « --enregistrer ». « controle » = dernière nuit où TOUTES les
+   sources étaient lues et inchangées. Règles et fonctions pures : scripts/lib/echeances.mjs. */
+const ECHEANCES_PATH = path.join(ROOT, "data/veille/echeances.json");
+const ECHEANCES = existsSync(ECHEANCES_PATH) ? JSON.parse(readFileSync(ECHEANCES_PATH, "utf8")) : {};
+ECHEANCES.sources ??= {};
+let echeancesModifiees = false;
+const observeEcheances = {};
+function ecrireEcheances() {
+  const sources = Object.fromEntries(Object.keys(ECHEANCES.sources).sort().map((k) => [k, ECHEANCES.sources[k]]));
+  const _info = "Référence des dates du calendrier fiscal et des textes de loi qui citent DAC8 (data/veille/sources.json → echeances). Écrite par scripts/veille-officielle.mjs à la première lecture d'une source, avancée seulement par « --enregistrer » après relecture. « controle » : dernière nuit où toutes les sources étaient lues et inchangées. Ne pas écrire à la main.";
+  writeFileSync(ECHEANCES_PATH, JSON.stringify({ _info, controle: ECHEANCES.controle ?? null, sources }, null, 2) + "\n");
+}
+function suivreEcheance(cle, sujet, url, obs, suivi) {
+  observeEcheances[cle] = obs;
+  const c = comparer(ECHEANCES.sources[cle], obs);
+  suivi.push({ lu: true, etat: c.etat });
+  if (c.etat === "nouvelle") {
+    ECHEANCES.sources[cle] = obs;
+    echeancesModifiees = true;
+    nouveau("echeances", `${cle} : première référence enregistrée (${obs.liste.length} élément(s)) dans data/veille/echeances.json`);
+  } else if (c.etat === "changee") {
+    changement("echeances", `${cle} (${sujet}) : contenu modifié (apparus : ${c.plus.slice(0, 8).join(" ; ") || "—"} ; disparus : ${c.moins.slice(0, 8).join(" ; ") || "—"}) → relire le texte officiel et les pages du site qui en dépendent, sans fusion automatique ; ${url}`);
+  } else ok("echeances", `${cle} : inchangé (${obs.liste.length} élément(s))`);
+}
+async function veilleEcheances() {
+  const E = SOURCES.echeances;
+  if (!E) return;
+  const suivi = [];
+  for (const p of E.pages || []) {
+    let t;
+    try {
+      const res = await req(p.url);
+      const html = await res.text();
+      if (!res.ok) { warn("echeances", `${p.cle} : HTTP ${res.status} cette nuit (non contrôlée) ; ${p.url}`); suivi.push({ lu: false }); continue; }
+      t = texte(html);
+    } catch (e) { warn("echeances", `${p.cle} : ${raison(e)} (non contrôlée)`); suivi.push({ lu: false }); continue; }
+    const liste = datesDePage(t);
+    if (!liste.length) { fail("echeances", `${p.cle} : aucune date reconnue dans la page (la page a changé de forme, ou la campagne suivante a une autre adresse ?) ; ${p.url}`); suivi.push({ lu: false }); continue; }
+    suivreEcheance(p.cle, p.sujet, p.url, { empreinte: empreinteDates(liste), liste, releve: AUJ }, suivi);
+    await new Promise((r) => setTimeout(r, 1000));
+  }
+  const api = (E.recherchesPiste || []).length ? await apiPiste() : null;
+  for (const s of E.recherchesPiste || []) {
+    if (!api || api.erreur) { warn("echeances", `${s.cle} : recherche non faite cette nuit (PISTE inaccessible)`); suivi.push({ lu: false }); continue; }
+    let r;
+    try { r = await lf(api, "/search", corpsRecherchePiste(s.fond, s.valeur, Date.now())); } catch (e) { warn("echeances", `${s.cle} : ${raison(e)} (non contrôlée)`); suivi.push({ lu: false }); continue; }
+    if (r.status !== 200 || !r.json) { warn("echeances", `${s.cle} : recherche refusée par Légifrance (HTTP ${r.status}) ${r.brut.slice(0, 120)}`); suivi.push({ lu: false }); continue; }
+    const ids = idsLegifrance(r.json);
+    if (DETAIL) log(`échéances ${s.cle} : ${ids.length} identifiant(s) ${ids.slice(0, 10).join(" ")}`);
+    suivreEcheance(s.cle, s.sujet, "API Légifrance (PISTE)", { empreinte: empreinteDates(ids), liste: ids, releve: AUJ }, suivi);
+    await new Promise((r2) => setTimeout(r2, 400));
+  }
+  if (controleAvance(suivi)) { ECHEANCES.controle = AUJ; echeancesModifiees = true; }
+}
+
 /* ------------------------------------------------------------------ exécution */
-const etapes = [["Légifrance", veilleLegifrance], ["BOFiP", veilleBofip], ["pages officielles", veillePages], ["registre MiCA", veilleRegistre]];
+const etapes = [["Légifrance", veilleLegifrance], ["BOFiP", veilleBofip], ["pages officielles", veillePages], ["registre MiCA", veilleRegistre], ["échéances fiscales et DAC8", veilleEcheances]];
 if (!SANS_FRAIS) etapes.push(["grilles de frais", veilleFrais]);
 if (LICENCES) etapes.push(["pages de licence", veilleLicences]);
 for (const [nom, f] of etapes) {
@@ -573,6 +668,9 @@ writeFileSync(REPORT, propre(md));
 if (licencesChangees.length) writeFileSync(path.join(path.dirname(REPORT), "veille-licences.json"), propre(JSON.stringify(licencesChangees, null, 1)));
 if (ENREGISTRER && Object.keys(observe.licences).length) { Object.assign(LICENCES_REF.pages, observe.licences); licencesRefModifiee = true; }
 if (licencesRefModifiee) ecrireLicencesRef();
+// lot Z6 : la référence des échéances (calendrier fiscal, DAC8) n'avance qu'avec « --enregistrer », après relecture
+if (ENREGISTRER && Object.keys(observeEcheances).length) { Object.assign(ECHEANCES.sources, observeEcheances); echeancesModifiees = true; }
+if (echeancesModifiees) ecrireEcheances();
 if (process.env.GITHUB_STEP_SUMMARY) appendFileSync(process.env.GITHUB_STEP_SUMMARY, propre(md) + "\n");
 log(md);
 

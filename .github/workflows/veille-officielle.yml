@@ -116,16 +116,21 @@ jobs:
       - name: Publier la date du contrôle automatique du registre MiCA
         if: ${{ !cancelled() }}
         run: |
-          if [ -z "$(git status --porcelain -- data/veille/mica-auto.json data/veille/licences-ref.json)" ]; then
-            echo "Date du contrôle MiCA et références de licence inchangées (registre illisible cette nuit, ou déjà publiées)."
+          if [ -z "$(git status --porcelain -- data/veille/mica-auto.json data/veille/licences-ref.json data/veille/frais-auto.json data/veille/echeances.json)" ]; then
+            echo "Dates des contrôles automatiques (MiCA, frais, échéances) et références de licence inchangées (sources illisibles cette nuit, ou déjà publiées)."
             exit 0
           fi
           git config user.name "Cryptoreflex Bot"
           git config user.email "bot@cryptoreflex.fr"
           git add data/veille/mica-auto.json
           if [ -f data/veille/licences-ref.json ]; then git add data/veille/licences-ref.json; fi
-          git commit -m "chore(veille): registre MiCA de l'ESMA contrôlé sans écart, références de licence" \
-            -m "Généré par .github/workflows/veille-officielle.yml (data/veille/mica-auto.json, data/veille/licences-ref.json)." \
+          # lot Z6 (10/10/2026) : date du contrôle automatique des grilles de frais (fees.autoCheckedAt, lib/frais-auto.ts) et
+          # référence des échéances (calendrier fiscal, DAC8). Aucun montant de frais n'est jamais écrit par le robot.
+          for f in data/veille/frais-auto.json data/veille/echeances.json; do
+            if [ -f "$f" ]; then git add "$f"; fi
+          done
+          git commit -m "chore(veille): contrôles automatiques (registre MiCA, grilles de frais, échéances), références de licence" \
+            -m "Généré par .github/workflows/veille-officielle.yml (data/veille/mica-auto.json, frais-auto.json, echeances.json, licences-ref.json)." \
             -m "" \
             -m "Co-Authored-By: Cryptoreflex Bot <bot@cryptoreflex.fr>"
           for i in 1 2 3; do

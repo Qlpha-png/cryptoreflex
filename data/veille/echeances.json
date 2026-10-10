@@ -1,0 +1,5 @@
+{
+  "_info": "Référence des dates du calendrier fiscal et des textes de loi qui citent DAC8 (data/veille/sources.json → echeances). Écrite par scripts/veille-officielle.mjs à la première lecture d'une source, avancée seulement par « --enregistrer » après relecture. « controle » : dernière nuit où toutes les sources étaient lues et inchangées. Ne pas écrire à la main.",
+  "controle": null,
+  "sources": {}
+}

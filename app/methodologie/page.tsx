@@ -9,6 +9,7 @@ import { withHreflang } from "@/lib/seo-alternates";
 import { PAGE_PUBLISHED, PAGE_UPDATED, formatDateFr } from "@/lib/engagements";
 import { DELAI_REPONSE } from "@/lib/engagements";
 import VerifieLe from "@/components/ui/VerifieLe";
+import { dateFraisAffichee, datesDe, libelleFrais } from "@/lib/frais-auto";
 import { getExchangePlatforms } from "@/lib/platforms";
 import Breadcrumbs from "@/components/Breadcrumbs";
 
@@ -67,6 +68,8 @@ const CRITERIA = [
 ];
 
 export default function MethodologiePage() {
+  // lot Z6 : date de frais = relecture humaine ou contrôle automatique des grilles ; le libellé dit laquelle
+  const fraisAffiches = getExchangePlatforms().map((p) => dateFraisAffichee(p.id, p.fees.verified?.date));
   return (
     <article className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-16 prose prose-invert">
       <Breadcrumbs chemin="/methodologie" className="not-prose mb-6" />
@@ -160,7 +163,7 @@ export default function MethodologiePage() {
           fees.verified.date de data/platforms.json), recalculées à chaque build. */}
       <ul className="text-fg/85 leading-relaxed">
         <li><strong>Statut MiCA</strong> : <VerifieLe dates={getExchangePlatforms().map((p) => p.mica?.lastVerified)} famille="mica" label="relevé" inconnue="relevé à une date non renseignée" /> sur le registre MiCA de l&apos;ESMA et les listes blanches de l&apos;AMF ; la date est affichée sur chaque fiche</li>
-        <li><strong>Frais</strong> : <VerifieLe dates={getExchangePlatforms().map((p) => p.fees.verified?.date)} famille="frais" label="relevés" inconnue="relevés à une date non renseignée" /> sur la grille officielle de chaque plateforme ; la date et la source sont affichées sur chaque avis</li>
+        <li><strong>Frais</strong> : <VerifieLe dates={datesDe(fraisAffiches)} famille="frais" label={libelleFrais(fraisAffiches, "relevés", { auto: "contrôlés automatiquement", mixte: "relus ou contrôlés automatiquement" })} inconnue="relevés à une date non renseignée" /> sur la grille officielle de chaque plateforme ; la date et la source sont affichées sur chaque avis</li>
         <li><strong>Avis des utilisateurs</strong> : un lien mène à la page Trustpilot officielle de chaque plateforme</li>
         <li><strong>Bonus de bienvenue</strong> : aucun relevé daté à ce jour</li>
       </ul>

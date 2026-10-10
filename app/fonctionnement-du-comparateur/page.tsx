@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import VerifieLe from "@/components/ui/VerifieLe";
 
+import { dateFraisAffichee, datesDe, libelleFrais } from "@/lib/frais-auto";
 import { getAllPlatforms, getPlatformById, isAvailableFr } from "@/lib/platforms";
 import { computeGlobalScore, SCORING_WEIGHTS } from "@/lib/scoring";
 import { PARTNERSHIPS } from "@/lib/partnerships";
@@ -61,8 +62,10 @@ export default function FonctionnementComparateurPage() {
   const ranked = exchanges.filter(isAvailableFr);
   const excluded = exchanges.filter((p) => !isAvailableFr(p));
   const drift = ranked.filter((p) => Math.abs(p.scoring.global - computeGlobalScore(p.scoring)) > 0.05);
-  const feeDates = range(ranked.map((p) => p.fees.cost?.date));
-  const pctDates = range(ranked.map((p) => p.fees.verified?.date));
+  const coutsAffiches = ranked.map((p) => dateFraisAffichee(p.id, p.fees.cost?.date)); // lot Z6 : { date, auto }
+  const pctAffiches = ranked.map((p) => dateFraisAffichee(p.id, p.fees.verified?.date));
+  const feeDates = range(datesDe(coutsAffiches));
+  const pctDates = range(datesDe(pctAffiches));
   const micaDates = range(ranked.map((p) => p.mica.lastVerified));
 
   const live = Object.entries(PARTNERSHIPS).filter(([, m]) => m.status === "live");
@@ -243,9 +246,9 @@ export default function FonctionnementComparateurPage() {
 
       <h2 id="mise-a-jour" className={H2}>Mise à jour des données</h2>
       <ul className={UL}>
-        {feeDates && <li>• Comparatif : coût d&apos;un achat <VerifieLe dates={ranked.map((p) => p.fees.cost?.date)} famille="frais" label="relevé" /> ; la date et la source figurent sous chaque ligne.</li>}
+        {feeDates && <li>• Comparatif : coût d&apos;un achat <VerifieLe dates={datesDe(coutsAffiches)} famille="frais" label={libelleFrais(coutsAffiches, "relevé", { auto: "contrôlé automatiquement", mixte: "relu ou contrôlé automatiquement" })} /> ; la date et la source figurent sous chaque ligne.</li>}
         {/* 08/10/2026 (lot fraîcheur A2) : périodes via <VerifieLe> */}
-        {pctDates && <li>• Page des frais : <VerifieLe dates={ranked.map((p) => p.fees.verified?.date)} famille="frais" label="frais en pourcentage vérifiés" age={false} /> ; la source et la date figurent sur chaque ligne.</li>}
+        {pctDates && <li>• Page des frais : <VerifieLe dates={datesDe(pctAffiches)} famille="frais" label={libelleFrais(pctAffiches, "frais en pourcentage vérifiés", { auto: "frais en pourcentage contrôlés automatiquement", mixte: "frais en pourcentage relus ou contrôlés automatiquement" })} age={false} /> ; la source et la date figurent sur chaque ligne.</li>}
         {micaDates && <li>• <VerifieLe dates={ranked.map((p) => p.mica.lastVerified)} famille="mica" label="Autorisations MiCA vérifiées" />.</li>}
         <li>
           • Une veille automatique compare chaque nuit le registre MiCA de l&apos;ESMA et les grilles tarifaires citées à

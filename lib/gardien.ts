@@ -145,6 +145,16 @@ export const ROBOTS_GARDIEN: readonly RobotGardien[] = [
     horaire: "50 5 * * *",
     description: "Rendements : APR de Lido (médiane sur 7 jours), contrôle des lignes Aave et Rocket Pool, chaque jour.",
   },
+  {
+    cle: "revue-periodique",
+    workflow: "revue-periodique.yml",
+    // 10/10/2026 (lot Z6, robot R14) : le 1er de chaque mois, ticket privé qui liste ce qui dépasse son seuil « vérifié le »
+    // parmi les données qu'aucun robot ne relit (support client, événements, airdrops, roadmaps, décentralisation, textes
+    // éditoriaux, rendements éditoriaux…). Aucune entrée, aucun fichier modifié.
+    inputs: {},
+    horaire: "20 6 1 * *",
+    description: "Revue périodique : ce qui dépasse son seuil « vérifié le » et qu'aucun robot ne relit, le 1er de chaque mois.",
+  },
 ];
 
 /** Robot de la table, ou undefined si la clé est inconnue. */

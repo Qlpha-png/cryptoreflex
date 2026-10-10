@@ -18,9 +18,10 @@ const JOUR = 24 * HEURE;
 export const METHODES = ["kv", "workflow", "fichier", "constante", "dossier", "page", "page-calcul", "supabase", "recomptage", "echeance-jeu", "absence", "aucune"];
 /**
  * 51 familles de la carte + 18b (liste noire AMF), dans l'ordre ; lot Z3 (10/10/2026) : + 52 (liens et défauts des fiches)
- * et 53 (archive des cours) ; reprise Z5 (10/10/2026) : + 54 (repère Lido et contrôles des rendements, robot R8).
+ * et 53 (archive des cours) ; reprise Z5 (10/10/2026) : + 54 (repère Lido et contrôles des rendements, robot R8) ;
+ * lot Z6 (10/10/2026) : + 55 (revue périodique mensuelle, robot R14).
  */
-export const IDS_ATTENDUS = [...Array.from({ length: 54 }, (_, i) => String(i + 1)).flatMap((id) => (id === "18" ? ["18", "18b"] : [id]))];
+export const IDS_ATTENDUS = [...Array.from({ length: 55 }, (_, i) => String(i + 1)).flatMap((id) => (id === "18" ? ["18", "18b"] : [id]))];
 export const ICONES = { ok: "✅", attention: "⚠️", defaut: "❌" };
 
 export function chargerRegistre(root) {
@@ -121,7 +122,22 @@ function choisir(dates, mode) {
 export function lireFichier(root, l, now) {
   let j;
   try { j = JSON.parse(readFileSync(path.join(root, l.fichier), "utf8")); } catch (e) { return { erreur: `${l.fichier} illisible` }; }
-  const vals = valeursChemin(j, l.chemin, l).filter((v) => typeof v === "string" || typeof v === "number");
+  let vals = valeursChemin(j, l.chemin, l).filter((v) => typeof v === "string" || typeof v === "number");
+  // lot Z6 : « rajeunirParId » = pour chaque élément du tableau (chemin « tableau[].sous.chemin »), la plus récente de sa
+  // date relue par un humain et de la date de contrôle automatique de son id (ex. data/veille/frais-auto.json, famille 19).
+  if (l.rajeunirParId && l.chemin.includes("[].")) {
+    let auto = {};
+    try { auto = valeursChemin(JSON.parse(readFileSync(path.join(root, l.rajeunirParId.fichier), "utf8")), l.rajeunirParId.chemin)[0] ?? {}; } catch { /* fichier absent : aucune date automatique */ }
+    const [tableau, sous] = l.chemin.split("[].");
+    vals = valeursChemin(j, `${tableau}[]`, l)
+      .map((el) => {
+        const manuelle = valeursChemin(el, sous)[0];
+        const automatique = el?.id ? auto[el.id] : undefined;
+        if (instantDe(automatique) !== null && (instantDe(manuelle) === null || instantDe(automatique) > instantDe(manuelle))) return automatique;
+        return manuelle;
+      })
+      .filter((v) => typeof v === "string" || typeof v === "number");
+  }
   const date = choisir(vals, l.mode);
   if (date == null) return { erreur: `aucune date lisible dans ${l.fichier} (${l.chemin})` };
   const info = l.champDetail && j?.[l.champDetail] != null ? ` ; ${l.champDetail} = ${j[l.champDetail]}` : "";

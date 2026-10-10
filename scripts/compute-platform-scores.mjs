@@ -8,92 +8,51 @@
  *   global = 0.20·fees + 0.25·security + 0.20·mica + 0.15·ux
  *          + 0.10·support + 0.10·catalogue
  *
- * Et dérive `catalogue` (jusqu'ici manquant) à partir des données déjà
- * présentes dans le JSON :
+ * Et dérive `catalogue` à partir des données déjà présentes dans le JSON :
  *   - cryptos.totalCount
  *   - cryptos.stakingAvailable
  *   - deposit.methods.length
  *   - id ∈ MULTI_ASSET_BROKER_IDS (broker actions/ETF/métaux)
  *
- * Lance ce script à chaque fois que :
+ * Lot Z6 (10/10/2026, robot R12 « scores ») :
+ *   - le barème et les décisions vivent dans scripts/lib/scores-plateformes.mjs (testé : tests/lib/scores-z6.test.ts) ;
+ *   - `_meta.lastScored` = date la plus récente des ENTRÉES DE DONNÉES qui ont servi au calcul (relevé des frais, coût d'achat,
+ *     statut MiCA, sécurité, support), plus jamais la date du jour ni l'heure du robot ;
+ *   - mode robot (--robot, workflow .github/workflows/scores.yml) : n'écrit RIEN tant qu'une plateforme a des notes enregistrées
+ *     qui ne respectent pas la formule publiée (--accepter-derive pour l'autoriser après relecture) ; n'écrit que si les scores
+ *     ou la date de calcul changent.
+ *
+ * Lance ce script (ou laisse le workflow le faire à chaque modification de data/platforms.json) quand :
  *   - tu modifies un sous-score (fees/security/ux/support/mica) à la main,
  *   - tu ajoutes ou retires une plateforme,
- *   - tu changes les poids dans lib/scoring.ts (et /methodologie page).
+ *   - tu changes les poids dans lib/scoring.ts (et dans scripts/lib/scores-plateformes.mjs + /methodologie).
  *
  * Usage :
- *   node scripts/compute-platform-scores.mjs            # write
- *   node scripts/compute-platform-scores.mjs --dry-run  # preview seulement
+ *   node scripts/compute-platform-scores.mjs                      # écrit (comportement historique)
+ *   node scripts/compute-platform-scores.mjs --dry-run            # aperçu seulement
+ *   node scripts/compute-platform-scores.mjs --robot [--accepter-derive] [--rapport=scores-rapport.md]
+ * Sorties du mode robot (GITHUB_OUTPUT) : ecrit=true|false, refus=true|false, incoherents=<nombre>.
  */
 
-import { readFile, writeFile } from "node:fs/promises";
+import { readFile, writeFile, appendFile } from "node:fs/promises";
 import path from "node:path";
 import process from "node:process";
 import { fileURLToPath } from "node:url";
+import { decider, recalculerJeu, TOLERANCE_DERIVE } from "./lib/scores-plateformes.mjs";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const DATA_PATH = path.resolve(__dirname, "..", "data", "platforms.json");
-const DRY_RUN = process.argv.includes("--dry-run");
+const ARGS = process.argv.slice(2);
+const DRY_RUN = ARGS.includes("--dry-run");
+const ROBOT = ARGS.includes("--robot");
+const ACCEPTER_DERIVE = ARGS.includes("--accepter-derive");
+const RAPPORT = ARGS.find((a) => a.startsWith("--rapport="))?.slice("--rapport=".length) ?? "";
+const AUJOURDHUI = new Date().toISOString().slice(0, 10); // sert seulement à écarter une donnée datée du futur
 
-// ─── Constantes (mirror de lib/scoring.ts — keep in sync !) ─────────────────
-
-const SCORING_WEIGHTS = {
-  fees: 0.2,
-  security: 0.25,
-  mica: 0.2,
-  ux: 0.15,
-  support: 0.1,
-  catalogue: 0.1,
-};
-
-const MULTI_ASSET_BROKER_IDS = new Set([
-  "bitpanda",
-  "trade-republic",
-  "revolut",
-  "swissborg",
-]);
-
-// ─── Helpers ────────────────────────────────────────────────────────────────
-
-function round1(n) {
-  return Math.round(n * 10) / 10;
+async function sortie(cle, valeur) {
+  if (process.env.GITHUB_OUTPUT) await appendFile(process.env.GITHUB_OUTPUT, `${cle}=${valeur}\n`);
 }
-
-function computeCatalogueScore({
-  totalCryptos,
-  stakingAvailable,
-  paymentMethodsCount,
-  isMultiAssetBroker,
-}) {
-  const n = Math.max(0, totalCryptos);
-  let base;
-  if (n <= 30) base = 2.5;
-  else if (n <= 100) base = 3.0 + ((n - 30) / 70) * 0.5;
-  else if (n <= 300) base = 3.5 + ((n - 100) / 200) * 0.8;
-  else if (n <= 500) base = 4.3 + ((n - 300) / 200) * 0.4;
-  else if (n <= 700) base = 4.7 + ((n - 500) / 200) * 0.2;
-  else base = 5.0;
-
-  let bonus = 0;
-  if (stakingAvailable) bonus += 0.3;
-  if (paymentMethodsCount >= 5) bonus += 0.2;
-  if (isMultiAssetBroker) bonus += 0.3;
-
-  return round1(Math.min(5, base + bonus));
-}
-
-function computeGlobalScore(sub) {
-  return round1(
-    sub.fees * SCORING_WEIGHTS.fees +
-      sub.security * SCORING_WEIGHTS.security +
-      sub.mica * SCORING_WEIGHTS.mica +
-      sub.ux * SCORING_WEIGHTS.ux +
-      sub.support * SCORING_WEIGHTS.support +
-      sub.catalogue * SCORING_WEIGHTS.catalogue,
-  );
-}
-
-// ─── Run ────────────────────────────────────────────────────────────────────
 
 async function main() {
   const raw = await readFile(DATA_PATH, "utf-8");
@@ -104,92 +63,53 @@ async function main() {
     process.exit(1);
   }
 
+  const r = recalculerJeu(data, AUJOURDHUI);
+
   console.log(`\n📊 Recalcul scoring pour ${data.platforms.length} plateformes\n`);
-  console.log(
-    "ID".padEnd(18) +
-      "Cat".padStart(5) +
-      "  Fees".padStart(8) +
-      "  Sec".padStart(8) +
-      "  MiCA".padStart(8) +
-      "  UX".padStart(8) +
-      "  Sup".padStart(8) +
-      "  =>Glob".padStart(10) +
-      "   (was)".padStart(10),
-  );
-  console.log("─".repeat(88));
-
-  let driftCount = 0;
-  for (const p of data.platforms) {
-    const totalCryptos = p?.cryptos?.totalCount ?? 0;
-    const stakingAvailable = Boolean(p?.cryptos?.stakingAvailable);
-    const paymentMethodsCount = Array.isArray(p?.deposit?.methods)
-      ? p.deposit.methods.length
-      : 0;
-    const isMultiAssetBroker = MULTI_ASSET_BROKER_IDS.has(p.id);
-
-    const catalogue = computeCatalogueScore({
-      totalCryptos,
-      stakingAvailable,
-      paymentMethodsCount,
-      isMultiAssetBroker,
-    });
-
-    const sub = {
-      fees: p.scoring.fees,
-      security: p.scoring.security,
-      mica: p.scoring.mica,
-      ux: p.scoring.ux,
-      support: p.scoring.support,
-      catalogue,
-    };
-    const newGlobal = computeGlobalScore(sub);
-    const oldGlobal = p.scoring.global;
-    const drift = Math.abs(newGlobal - oldGlobal);
-    const driftFlag = drift > 0.05 ? " ⚠️" : "";
-    if (drift > 0.05) driftCount++;
-
-    p.scoring = {
-      global: newGlobal,
-      fees: sub.fees,
-      security: sub.security,
-      ux: sub.ux,
-      support: sub.support,
-      mica: sub.mica,
-      catalogue: sub.catalogue,
-    };
-
-    console.log(
-      p.id.padEnd(18) +
-        String(catalogue).padStart(5) +
-        String(sub.fees).padStart(8) +
-        String(sub.security).padStart(8) +
-        String(sub.mica).padStart(8) +
-        String(sub.ux).padStart(8) +
-        String(sub.support).padStart(8) +
-        String(newGlobal).padStart(10) +
-        ("  (" + oldGlobal + ")").padStart(10) +
-        driftFlag,
-    );
+  console.log("ID".padEnd(18) + "Enregistré".padStart(12) + "Recalculé".padStart(12) + "  État de la ligne");
+  console.log("─".repeat(70));
+  for (const l of r.lignes) {
+    const etat = l.coherent ? "cohérent" : `INCOHÉRENT (${[!l.globalOk && "note globale ≠ formule sur ses sous-notes", !l.catalogueOk && "catalogue ≠ données"].filter(Boolean).join(" ; ")})`;
+    console.log(l.id.padEnd(18) + String(l.avant).padStart(12) + String(l.apres).padStart(12) + "  " + etat);
   }
+  console.log("─".repeat(70));
+  console.log(`\n${data.platforms.length} plateformes recalculées — ${r.incoherents.length} déjà incohérente(s) avec la formule publiée (tolérance ${TOLERANCE_DERIVE}).`);
+  console.log(`lastScored : ${r.lastScoredAvant ?? "(aucun)"} → ${r.lastScoredApres ?? "(aucun)"} (date de donnée la plus récente)\n`);
 
-  console.log("─".repeat(88));
-  console.log(
-    `\n${data.platforms.length} plateformes recalculées — ${driftCount} drifts > 0.05 vs ancien global.\n`,
-  );
-
-  // Met à jour le _meta.lastScored
-  data._meta = data._meta ?? {};
-  data._meta.lastScored = new Date().toISOString().slice(0, 10);
-  data._meta.scoringFormula =
-    "global = 0.20·fees + 0.25·security + 0.20·mica + 0.15·ux + 0.10·support + 0.10·catalogue";
-
-  if (DRY_RUN) {
+  if (ROBOT) {
+    const d = decider(r, { accepterDerive: ACCEPTER_DERIVE });
+    console.log(`Décision du robot : ${d.action} — ${d.raison}`);
+    await sortie("incoherents", r.incoherents.length);
+    await sortie("refus", d.action === "refuser");
+    if (RAPPORT && d.action === "refuser") {
+      const lignes = [
+        `Le robot « scores » (lot Z6) n'a rien écrit : ${d.raison}.`,
+        "",
+        "| Plateforme | Note globale enregistrée | Recalculée par la formule | Écart constaté |",
+        "|---|---|---|---|",
+        ...r.incoherents.map((i) => `| ${i.id} | ${i.avant} | ${i.apres} | ${[!i.globalOk && "note globale ≠ formule sur ses sous-notes", !i.catalogueOk && "sous-note catalogue ≠ données"].filter(Boolean).join(" ; ")} |`),
+        "",
+        "Pour accepter le recalcul complet (les notes et les classements bougent), relancer le workflow « Scores des plateformes » avec l'entrée « accepter_derive ».",
+        "Sinon, corriger les sous-notes à la main (data/platforms.json) puis relancer.",
+      ];
+      await writeFile(RAPPORT, lignes.join("\n") + "\n", "utf-8");
+    }
+    if (d.action !== "ecrire" || DRY_RUN) {
+      await sortie("ecrit", false);
+      return;
+    }
+  } else if (DRY_RUN) {
     console.log("🔍 --dry-run : aucune écriture (relance sans le flag pour appliquer)");
     return;
   }
 
-  await writeFile(DATA_PATH, JSON.stringify(data, null, 2) + "\n", "utf-8");
-  console.log(`✅ data/platforms.json mis à jour — _meta.lastScored = ${data._meta.lastScored}`);
+  if (DRY_RUN) {
+    console.log("🔍 --dry-run : aucune écriture");
+    return;
+  }
+  await writeFile(DATA_PATH, JSON.stringify(r.data, null, 2) + "\n", "utf-8");
+  console.log(`✅ data/platforms.json mis à jour — _meta.lastScored = ${r.data._meta.lastScored}`);
+  if (ROBOT) await sortie("ecrit", true);
 }
 
 main().catch((e) => {

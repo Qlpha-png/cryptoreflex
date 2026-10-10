@@ -417,6 +417,12 @@
         "https://www.revolut.com/fr-FR/legal/exchangingcryptocurrenciespersonalfees/history/",
         "https://www.revolut.com/fr-FR/legal/standard-fees/",
         "https://help.revolut.com/fr-FR/help/wealth/cryptocurrencies/understanding-revolut-cryptocurrency/are-there-any-limits-on-crypto-exchanges/"
+      ],
+      "bitfinex": [
+        "https://www.bitfinex.com/fees/"
+      ],
+      "stackin": [
+        "https://help.stackinsat.com/fr/article/mise-a-jour-concernant-la-nouvelle-plateforme-stackinsat-skm6pi/"
       ]
     },
     "index": {
@@ -428,6 +434,30 @@
       ]
     },
     "ignorer": []
+  },
+  "echeances": {
+    "_lisezmoi": "Lot Z6 (10/10/2026, famille 28) : calendrier fiscal et transposition de DAC8, suivis par empreinte seulement (jamais de fusion automatique). « pages » : dates écrites en toutes lettres dans la page officielle (jour de la semaine, jour, mois, année). « recherchesPiste » : textes de loi qui citent le texte exact donné, trouvés par la recherche de l'API officielle Légifrance (PISTE, mêmes identifiants que la veille de loi) ; on suit l'ensemble des identifiants trouvés. EUR-Lex (directive 2023/2226) n'est pas automatisé : défi anti-robot, accès non prouvé. Référence : data/veille/echeances.json (écrite à la première lecture, avancée avec --enregistrer après relecture).",
+    "pages": [
+      {
+        "cle": "impots.gouv : calendrier de la déclaration de revenus 2026",
+        "url": "https://www.impots.gouv.fr/les-modalites-de-la-declaration-de-revenus-en-2026",
+        "sujet": "Dates limites de la déclaration de revenus en ligne (par département) et papier, correction en ligne"
+      }
+    ],
+    "recherchesPiste": [
+      {
+        "cle": "Légifrance : textes de loi qui citent la directive 2023/2226 (CODE_DATE)",
+        "fond": "CODE_DATE",
+        "valeur": "2023/2226",
+        "sujet": "Articles des codes (CGI, LPF…) qui transposent ou citent DAC8"
+      },
+      {
+        "cle": "Légifrance : lois et ordonnances qui citent la directive 2023/2226 (LODA_DATE)",
+        "fond": "LODA_DATE",
+        "valeur": "2023/2226",
+        "sujet": "Lois, ordonnances et décrets qui transposent ou citent DAC8"
+      }
+    ]
   },
   "licences": {
     "_lisezmoi": "Lot Z1 (08/10/2026, architecture 0 € § 6.2 point 5) : empreinte mensuelle (jours 1 à 3 de chaque mois, ou option --licences, ou --enregistrer) des pages de conditions dont dépend l'usage des sources. Une empreinte qui change ouvre un ticket « relire la licence » (jamais un échec de la veille). Le contrat commercial de CoinMarketCap est derrière un anti-robot : non surveillable.",

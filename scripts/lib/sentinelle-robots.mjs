@@ -28,6 +28,8 @@ export const CADENCE = [
   ["fx-bce.yml", "taux de change BCE", 80],
   // 10/10/2026 (lot Z5) : rendements (Lido, contrôle Aave et Rocket Pool), chaque jour à 05:50 UTC
   ["rendements.yml", "rendements (Lido, contrôle Aave et Rocket Pool)", 30],
+  // 10/10/2026 (lot Z6) : revue périodique (R14), le 1er de chaque mois à 06:20 UTC ; 34 jours = un mois + marge
+  ["revue-periodique.yml", "revue périodique mensuelle (données tenues à la main)", 34 * 24],
 ];
 
 /**

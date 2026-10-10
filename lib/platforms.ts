@@ -1,5 +1,6 @@
 import platformsData from "@/data/platforms.json";
 import walletsData from "@/data/wallets.json";
+import { dateFraisAffichee, withFraisAuto } from "@/lib/frais-auto";
 import { getAffiliationKind } from "@/lib/partnerships";
 import { trustpilotUrlOrNull } from "@/lib/trustpilot";
 
@@ -48,6 +49,12 @@ export interface Platform {
     registerSource?: string;
   };
   fees: {
+    /**
+     * Date du dernier contrôle automatique des grilles de frais (AAAA-MM-JJ), ajoutée au chargement depuis
+     * data/veille/frais-auto.json (lot Z6, lib/frais-auto.ts). Absent : aucun contrôle automatique sans écart.
+     * Jamais saisie à la main ; ne modifie aucun montant.
+     */
+    autoCheckedAt?: string;
     spotMaker: number;
     spotTaker: number;
     /** Achat simple dans l'appli depuis le solde en euros (après un virement), hors surcoût de la carte. */
@@ -245,7 +252,7 @@ export function verifiedBonus(p: Pick<Platform, "bonus">): string | null {
   return p.bonus.amount != null ? p.bonus.welcome : null;
 }
 
-const PLATFORMS = data.platforms.map(withOfficialLink).map(withoutPromotion);
+const PLATFORMS = data.platforms.map(withOfficialLink).map(withoutPromotion).map(withFraisAuto);
 
 /** Concatène exchanges/brokers + hardware wallets (source pour comparatifs cross-catégorie). */
 const ALL = [...PLATFORMS, ...wallets.platforms.map(withOfficialLink)];
@@ -446,9 +453,9 @@ export function frenchHelpRank(s: Support): number {
  *  - non-releve : aucun relevé fees.cost pour cette plateforme.
  */
 export type PurchaseCost =
-  | { status: "ok"; eur: number; kind: CostKind; date: string; source: string }
-  | { status: "non-publie"; date: string; source: string }
-  | { status: "pas-de-carte"; date: string; source: string }
+  | { status: "ok"; eur: number; kind: CostKind; date: string; dateAuto?: boolean; source: string }
+  | { status: "non-publie"; date: string; dateAuto?: boolean; source: string }
+  | { status: "pas-de-carte"; date: string; dateAuto?: boolean; source: string }
   | { status: "non-releve" };
 
 /**
@@ -460,9 +467,11 @@ export type PurchaseCost =
 export function cardCost1000(p: Platform): PurchaseCost {
   const c = p.fees.cost;
   if (!c) return { status: "non-releve" };
-  if (c.card === null) return { status: "pas-de-carte", date: c.date, source: c.source };
-  if (c.card.c1000 == null) return { status: "non-publie", date: c.date, source: c.source };
-  return { status: "ok", eur: c.card.c1000, kind: c.card.kind, date: c.date, source: c.source };
+  const { date: affichee, auto: dateAuto } = dateFraisAffichee(p.id, c.date); // lot Z6 : relecture humaine ou contrôle automatique, le plus récent
+  const date = affichee ?? c.date; // dateAuto vrai : la date est celle du contrôle automatique, le texte doit le dire
+  if (c.card === null) return { status: "pas-de-carte", date, dateAuto, source: c.source };
+  if (c.card.c1000 == null) return { status: "non-publie", date, dateAuto, source: c.source };
+  return { status: "ok", eur: c.card.c1000, kind: c.card.kind, date, dateAuto, source: c.source };
 }
 
 /**
@@ -486,8 +495,10 @@ export function cardCostLabel(p: Pick<Platform, "fees">): string {
 export function simpleCost1000(p: Platform): PurchaseCost & { path: string | null } {
   const c = p.fees.cost;
   if (!c) return { status: "non-releve", path: null };
-  if (c.c1000 == null) return { status: "non-publie", date: c.date, source: c.source, path: c.path };
-  return { status: "ok", eur: c.c1000, kind: c.kind, date: c.date, source: c.source, path: c.path };
+  const { date: affichee, auto: dateAuto } = dateFraisAffichee(p.id, c.date); // lot Z6 : relecture humaine ou contrôle automatique, le plus récent
+  const date = affichee ?? c.date;
+  if (c.c1000 == null) return { status: "non-publie", date, dateAuto, source: c.source, path: c.path };
+  return { status: "ok", eur: c.c1000, kind: c.kind, date, dateAuto, source: c.source, path: c.path };
 }
 
 const eurFr = (n: number) =>

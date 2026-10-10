@@ -11,6 +11,8 @@
  *  - coût publié : fees.cost.kind et c100 (relevé des grilles officielles).
  * Staking, montant minimum et nombre de cryptos ne sont pas relevés sur une source datée : ils ne filtrent rien.
  */
+import { dateFraisAffichee } from "@/lib/frais-auto";
+import type { DateFrais } from "@/lib/frais-libelle";
 import type { Platform } from "@/lib/platforms";
 import { frenchHelpLabel, frenchHelpRank, isAvailableFr } from "@/lib/platforms";
 
@@ -76,8 +78,8 @@ export interface FilterCriterion {
   factLabel: string;
   test: (p: Platform) => boolean;
   fact: (p: Platform) => string;
-  /** Dates des relevés utilisés par ce critère. */
-  dates: (p: Platform) => (string | null | undefined)[];
+  /** Dates des relevés utilisés par ce critère, avec leur nature (relecture humaine ou contrôle automatique des grilles). */
+  dates: (p: Platform) => DateFrais[];
 }
 
 export const ANY_LABEL = "Peu importe";
@@ -94,7 +96,7 @@ export const CRITERIA: FilterCriterion[] = [
     factLabel: "Carte bancaire",
     test: cardAvailable,
     fact: cardFact,
-    dates: (p) => [p.fees.cost?.date],
+    dates: (p) => [dateFraisAffichee(p.id, p.fees.cost?.date)],
   },
   {
     key: "french",
@@ -107,7 +109,7 @@ export const CRITERIA: FilterCriterion[] = [
     factLabel: "Aide en français",
     test: (p) => frenchHelpRank(p.support) > 0,
     fact: (p) => frenchHelpLabel(p.support),
-    dates: (p) => [p.support.verified],
+    dates: (p) => [{ date: p.support.verified ?? null, auto: false }],
   },
   {
     key: "fullCost",
@@ -120,7 +122,7 @@ export const CRITERIA: FilterCriterion[] = [
     factLabel: "Coût d'un achat de Bitcoin",
     test: fullCostPublished,
     fact: costFact,
-    dates: (p) => [p.fees.cost?.date],
+    dates: (p) => [dateFraisAffichee(p.id, p.fees.cost?.date)],
   },
 ];
 

@@ -8,6 +8,7 @@
  *  - « partiel » : une marge non chiffrée s'ajoute. Un coût partiel n'est JAMAIS classé devant un coût publié en entier,
  *    et un coût non publié passe en dernier.
  */
+import { dateFraisAffichee } from "@/lib/frais-auto";
 import { frenchHelpLabel, frenchHelpRank, isAvailableFr, type CostKind, type Platform } from "@/lib/platforms";
 
 export type Goal = "prix" | "debutant" | "francais" | "carte";
@@ -41,6 +42,8 @@ export interface Row {
   /** précision sur les frais (une phrase) */
   note: string | null;
   verifiedDate: string | null;
+  /** vrai : la date vient du contrôle automatique des grilles (lib/frais-auto.ts), pas d'une relecture humaine */
+  verifiedAuto: boolean;
   source: string | null;
   affiliateUrl: string;
   affiliationNotice: string;
@@ -59,6 +62,12 @@ export function costsOf(p: Platform): { simple: Cost; card: Cost | null; path: s
     path: mt ? "ordre au marché, après virement" : "achat dans l'appli, après virement",
     note: null,
   };
+}
+
+/** Date des frais d'une ligne et sa nature (relecture humaine ou contrôle automatique des grilles, lot Z6). */
+function verifiee(p: Platform): { verifiedDate: string | null; verifiedAuto: boolean } {
+  const { date, auto } = dateFraisAffichee(p.id, p.fees.cost?.date ?? p.fees.verified?.date);
+  return { verifiedDate: date, verifiedAuto: auto };
 }
 
 /** Lignes du comparateur : plateformes autorisées en France, hors portefeuilles matériels. */
@@ -83,7 +92,7 @@ export function buildRows(platforms: Platform[], notice: (id: string) => string)
         card,
         path,
         note,
-        verifiedDate: p.fees.cost?.date ?? p.fees.verified?.date ?? null,
+        ...verifiee(p),
         source: p.fees.cost?.source ?? p.fees.verified?.source ?? null,
         affiliateUrl: p.affiliateUrl,
         affiliationNotice: notice(p.id),

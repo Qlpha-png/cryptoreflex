@@ -1,0 +1,5 @@
+{
+  "_info": "Écrit chaque nuit par scripts/veille-officielle.mjs (étape « grilles de frais », règles dans scripts/lib/frais-auto.mjs). Pour chaque plateforme : date du dernier contrôle automatique où TOUTES ses pages de frais suivies étaient lues et inchangées depuis l'enregistrement de leur référence (data/veille/etat.json, champ « depuis »), et où la relecture humaine des frais est postérieure ou égale à cet enregistrement. Une plateforme dont une page a changé, était illisible ou sans référence garde sa date précédente. Le robot ne modifie jamais un montant. Ne jamais écrire à la main.",
+  "controle": null,
+  "plateformes": {}
+}

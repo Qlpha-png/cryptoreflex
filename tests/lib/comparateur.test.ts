@@ -9,7 +9,7 @@ import { getAllPlatforms, isAvailableFr } from "@/lib/platforms";
 const base = (o: Partial<Row>): Row => ({
   id: "x", name: "X", authority: "AMF", country: "France", french: true, supportFr: "Chat", supportFrRank: 1, score: 4, ux: 4,
   simple: { c100: 1, c1000: 10, kind: "exact" }, card: { c100: 2, c1000: 20, kind: "exact" }, path: "achat", note: null,
-  verifiedDate: "2026-10-05", source: "https://x", affiliateUrl: "https://x", affiliationNotice: "", ...o,
+  verifiedDate: "2026-10-05", verifiedAuto: false, source: "https://x", affiliateUrl: "https://x", affiliationNotice: "", ...o,
 });
 
 describe("sortRows", () => {

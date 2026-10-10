@@ -1,3 +1,4 @@
+import { dateFraisAffichee, datesDe, libelleFrais } from "@/lib/frais-auto";
 import { avecTypoSync } from "@/components/ui/Typo";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
@@ -301,6 +302,9 @@ function ComparisonPage({ params }: Props) {
   // reprise du 08/10/2026 (L6 MiCA) : contrôle automatique du registre ESMA, s'il est plus récent que la relecture humaine
   const micaA = dateStatutMica(a.id, a.mica.lastVerified, "");
   const micaB = dateStatutMica(b.id, b.mica.lastVerified, "");
+  // lot Z6 : date de frais = relecture humaine ou contrôle automatique des grilles ; le libellé dit laquelle (lib/frais-auto.ts)
+  const fraisVerifies = [dateFraisAffichee(a.id, a.fees.verified?.date), dateFraisAffichee(b.id, b.fees.verified?.date)];
+  const fraisCouts = [dateFraisAffichee(a.id, a.fees.cost?.date), dateFraisAffichee(b.id, b.fees.cost?.date)];
   const rows = buildRows(a, b);
   const verdict = buildDuelVerdict(a, b);
 
@@ -356,7 +360,7 @@ function ComparisonPage({ params }: Props) {
                   <>
                     Comparatif méthodique : frais réels, sécurité, conformité MiCA, support FR.{" "}
                     {/* 08/10/2026 (lot fraîcheur A2) : dates des DEUX plateformes (avant : celles de la première seule) */}
-                    <VerifieLe dates={[a.fees.verified?.date, b.fees.verified?.date]} famille="frais" label="Frais relevés" inconnue="Frais : date du relevé inconnue" />,{" "}
+                    <VerifieLe dates={datesDe(fraisVerifies)} famille="frais" label={libelleFrais(fraisVerifies, "Frais relevés")} inconnue="Frais : date du relevé inconnue" />,{" "}
                     {micaA.auto && micaB.auto ? (
                       <VerifieLe dates={[micaA.date, micaB.date]} famille="mica" label="registre ESMA contrôlé automatiquement" />
                     ) : (
@@ -688,7 +692,7 @@ function ComparisonPage({ params }: Props) {
             Comparatif généré à partir de nos données ; Kevin Voisin, éditeur de {BRAND.name}, en est responsable. <VerifieLe dates={[a.mica.lastVerified, b.mica.lastVerified]} famille="mica" label="Statuts MiCA vérifiés" age={false} />
             {a.fees.cost?.date || b.fees.cost?.date ? (
               <>
-                , <VerifieLe dates={[a.fees.cost?.date, b.fees.cost?.date]} famille="frais" label="frais relevés" age={false} />
+                , <VerifieLe dates={datesDe(fraisCouts)} famille="frais" label={libelleFrais(fraisCouts, "frais relevés")} age={false} />
               </>
             ) : null}
             . {(okA && isPaidLink(a.id, a.affiliateUrl)) || (okB && isPaidLink(b.id, b.affiliateUrl))

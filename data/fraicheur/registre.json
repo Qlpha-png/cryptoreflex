@@ -197,21 +197,21 @@
       "id": "19",
       "famille": "Frais en % des plateformes suivies par la veille",
       "source": "pages tarifaires officielles (S22)",
-      "robot": "veille de nuit (empreintes des grilles) puis correction humaine",
+      "robot": "veille de nuit (empreintes des grilles ; lot Z6 : date du contrôle automatique fees.autoCheckedAt quand toutes les pages suivies sont lues et inchangées) puis correction humaine",
       "cadence": "1 fois par mois",
       "ageMaxH": 2160,
       "critiqueH": 2880,
-      "lecture": { "methode": "fichier", "fichier": "data/platforms.json", "chemin": "platforms[].fees.verified.date", "mode": "plusAncienne", "exclureIds": ["binance", "bitget", "gemini", "nexo", "wirex", "paypal-crypto", "bitfinex", "bsdex", "plus500", "anycoin-direct", "stackin"], "explication": "plus ancienne date fees.verified.date des plateformes suivies par la veille" }
+      "lecture": { "methode": "fichier", "fichier": "data/platforms.json", "chemin": "platforms[].fees.verified.date", "mode": "plusAncienne", "rajeunirParId": { "fichier": "data/veille/frais-auto.json", "chemin": "plateformes" }, "exclureIds": ["binance", "bitget", "gemini", "nexo", "wirex", "paypal-crypto", "bsdex", "plus500", "anycoin-direct"], "explication": "pour chaque plateforme suivie par la veille, la plus récente de fees.verified.date (relecture humaine) et de la date de contrôle automatique (data/veille/frais-auto.json) ; la famille prend la plus ancienne de ces dates (Bitfinex et Stackin y entrent depuis le lot Z6)" }
     },
     {
       "id": "20",
-      "famille": "Frais des 11 plateformes hors veille",
-      "source": "pages tarifaires officielles (S22), lisibles pour 3 seulement",
-      "robot": "aucun",
+      "famille": "Frais des 9 plateformes hors veille",
+      "source": "pages tarifaires officielles (S22) : Bitfinex et Stackin lisibles sans contournement et suivies depuis le lot Z6 ; Bitget lisible mais son empreinte mélange la colonne « articles liés » (faux changements) ; les autres sont fermées en France, derrière un anti-robot ou sans grille lisible",
+      "robot": "aucun (relecture humaine)",
       "cadence": "1 fois par mois",
       "ageMaxH": 2160,
       "critiqueH": 2880,
-      "lecture": { "methode": "fichier", "fichier": "data/platforms.json", "chemin": "platforms[].fees.verified.date", "mode": "plusAncienne", "ids": ["binance", "bitget", "gemini", "nexo", "wirex", "paypal-crypto", "bitfinex", "bsdex", "plus500", "anycoin-direct", "stackin"], "explication": "plus ancienne date fees.verified.date des 11 plateformes hors veille présentes dans les données" }
+      "lecture": { "methode": "fichier", "fichier": "data/platforms.json", "chemin": "platforms[].fees.verified.date", "mode": "plusAncienne", "ids": ["binance", "bitget", "gemini", "nexo", "wirex", "paypal-crypto", "bsdex", "plus500", "anycoin-direct"], "explication": "plus ancienne date fees.verified.date des 9 plateformes hors veille présentes dans les données" }
     },
     {
       "id": "21",
@@ -221,7 +221,7 @@
       "cadence": "suit les lignes",
       "ageMaxH": 2160,
       "critiqueH": 2880,
-      "lecture": { "methode": "fichier", "fichier": "data/platforms.json", "chemin": "platforms[].fees.verified.date", "mode": "plusAncienne", "explication": "l'en-tête affiche la période des lignes : sa date réelle est la plus ancienne fees.verified.date" }
+      "lecture": { "methode": "fichier", "fichier": "data/platforms.json", "chemin": "platforms[].fees.verified.date", "mode": "plusAncienne", "rajeunirParId": { "fichier": "data/veille/frais-auto.json", "chemin": "plateformes" }, "explication": "l'en-tête affiche la période des lignes : sa date réelle est la plus ancienne des dates affichées (fees.verified.date, ou le contrôle automatique s'il est plus récent)" }
     },
     {
       "id": "22",
@@ -231,7 +231,7 @@
       "cadence": "1 fois par mois",
       "ageMaxH": 2160,
       "critiqueH": 2880,
-      "lecture": { "methode": "fichier", "fichier": "data/platforms.json", "chemin": "platforms[].fees.cost.date", "mode": "plusAncienne", "exigerTous": "platforms[]", "explication": "plus ancienne date fees.cost.date ; une plateforme sans date rend la famille ❌" }
+      "lecture": { "methode": "fichier", "fichier": "data/platforms.json", "chemin": "platforms[].fees.cost.date", "mode": "plusAncienne", "rajeunirParId": { "fichier": "data/veille/frais-auto.json", "chemin": "plateformes" }, "exigerTous": "platforms[]", "explication": "plus ancienne date affichée du coût d'un achat (fees.cost.date, ou le contrôle automatique des grilles s'il est plus récent) ; une plateforme sans date rend la famille ❌" }
     },
     {
       "id": "23",
@@ -246,8 +246,8 @@
     {
       "id": "24",
       "famille": "Sécurité, incidents, piratages",
-      "source": "pages officielles ; flux RSS (S20) pour la détection prévue (R9)",
-      "robot": "aucun (R9 prévu au lot Z6)",
+      "source": "pages officielles ; flux RSS des médias (S20) lus par la publication du jour pour la détection (R9, lot Z6)",
+      "robot": "R9 incidents : détection dans la publication du jour (mots-clés × plateformes suivies), ticket privé, rien n'est publié ; fiche mise à jour en session",
       "cadence": "1 fois par semaine",
       "ageMaxH": 336,
       "critiqueH": 672,
@@ -267,7 +267,7 @@
       "id": "26",
       "famille": "Scores Cryptoreflex (/top, /comparatif)",
       "source": "calcul à partir des données",
-      "robot": "aucun (scripts/compute-platform-scores.mjs lancé à la main ; R12 prévu)",
+      "robot": "R12 scores (workflow scores.yml, à chaque push sur data/platforms.json) : lastScored = date la plus récente des données qui ont servi",
       "cadence": "à chaque changement de donnée",
       "ageMaxH": 720,
       "critiqueH": 2160,
@@ -287,11 +287,11 @@
       "id": "28",
       "famille": "DAC8, calendrier fiscal, échéances de déclaration",
       "source": "impots.gouv (S13), Légifrance (S11) ; EUR-Lex (S14) non prouvé",
-      "robot": "aucun (absents de data/veille/sources.json ; ajout au lot Z6)",
+      "robot": "veille de nuit (R5, lot Z6) : empreinte des dates du calendrier de déclaration (impots.gouv) et des textes de loi qui citent DAC8 (recherche PISTE) ; ticket privé si changement, jamais de fusion automatique",
       "cadence": "à chaque texte, et chaque année",
       "ageMaxH": 720,
       "critiqueH": 1440,
-      "lecture": { "methode": "aucune", "raison": "DAC8 et le calendrier fiscal ne sont suivis par aucun robot (dates écrites dans des phrases)", "explication": "aucune date à lire tant que la veille ne suit pas ces sources : la famille reste ❌" }
+      "lecture": { "methode": "fichier", "fichier": "data/veille/echeances.json", "chemin": "controle", "mode": "plusRecente", "et": [{ "methode": "workflow", "fichier": "veille-officielle.yml" }], "explication": "la plus ancienne de deux dates : « controle » de data/veille/echeances.json (dernière nuit où le calendrier fiscal et la recherche DAC8 de Légifrance étaient lus ET inchangés par rapport à la référence relue) et dernier passage réussi de veille-officielle.yml ; ❌ tant que la première référence n'est pas écrite ou si une source est illisible" }
     },
     {
       "id": "29",
@@ -595,6 +595,16 @@
         ],
         "explication": "heure du dernier point Lido retenu (data/rendements.json, lido.horodatage ; Lido publie vers 12:20 UTC, le robot le lit le lendemain à 05:50) : ⚠️ au-delà de 48 h (un passage manqué ou une variation refusée), ❌ au-delà de 96 h (robot arrêté ou Lido muet) ; ⚠️ si un contrôle est en écart ou muet"
       }
+    },
+    {
+      "id": "55",
+      "famille": "Revue périodique des données qu'aucun robot ne relit (robot R14)",
+      "source": "dates « vérifié le » des familles H (support client, événements, airdrops, roadmaps, décentralisation, textes éditoriaux, rendements éditoriaux, tarifs des partenaires, wallets) : seuils de lib/fraicheur.ts",
+      "robot": "GitHub revue-periodique (R14), lancé par le Gardien le 1er de chaque mois à 06:20 UTC (lot Z6)",
+      "cadence": "1 fois par mois",
+      "ageMaxH": 816,
+      "critiqueH": 1680,
+      "lecture": { "methode": "workflow", "fichier": "revue-periodique.yml", "explication": "dernier passage réussi de revue-periodique.yml (ticket privé mensuel « [Revue périodique] AAAA-MM » listant ce qui dépasse son seuil) : ⚠️ au-delà de 34 jours, ❌ au-delà de 70 jours" }
     }
   ],
   "expirations": [

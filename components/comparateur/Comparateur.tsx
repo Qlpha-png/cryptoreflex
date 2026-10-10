@@ -12,6 +12,7 @@ import Link from "next/link";
 import { ArrowRight, Check, Coins, CreditCard, ExternalLink, Flag, Info, Phone, MessageCircle, Plus, Sprout, X } from "lucide-react";
 import PlatformLogo from "@/components/PlatformLogo";
 import { costLabel, rowCost, sortRows, type Amount, type Goal, type Row } from "@/lib/comparateur";
+import { libelleFrais } from "@/lib/frais-libelle";
 import { outboundRel } from "@/lib/partnerships";
 
 const GOALS: { id: Goal; label: string; hint: string; Icon: typeof Coins }[] = [
@@ -210,7 +211,7 @@ function Comparateur({ rows, duelSlugs }: { rows: Row[]; duelSlugs: string[] }) 
                 </div>
               </div>
               <p className="mt-2 text-xs text-muted">
-                <VerifieLe date={r.verifiedDate} famille="frais" label="Frais vérifiés" inconnue="Frais : date du relevé inconnue" age={false} />
+                <VerifieLe date={r.verifiedDate} famille="frais" label={libelleFrais([{ date: r.verifiedDate, auto: r.verifiedAuto }], "Frais vérifiés")} inconnue="Frais : date du relevé inconnue" age={false} />
                 {r.source ? (
                   <>
                     {" "}·{" "}
@@ -312,7 +313,7 @@ function Comparateur({ rows, duelSlugs }: { rows: Row[]; duelSlugs: string[] }) 
                     ["Agrément", (r: Row) => (r.french ? "AMF (France)" : r.authority)],
                     ["Aide en français", (r: Row) => r.supportFr],
                     ["Note Cryptoreflex", (r: Row) => `${r.score.toLocaleString("fr-FR")}/5`],
-                    ["Frais vérifiés le", (r: Row) => <VerifieLe date={r.verifiedDate} famille="frais" label="" inconnue="—" age={false} />],
+                    ["Date des frais", (r: Row) => <VerifieLe date={r.verifiedDate} famille="frais" label={libelleFrais([{ date: r.verifiedDate, auto: r.verifiedAuto }], "")} inconnue="—" age={false} />],
                   ].map(([label, fn]) => (
                     <tr key={label as string}>
                       <th scope="row" className="py-2.5 pr-3 text-left text-xs font-semibold text-fg/70">{label as string}</th>

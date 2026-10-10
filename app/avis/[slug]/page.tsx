@@ -1,3 +1,4 @@
+import { dateFraisAffichee, libelleFrais } from "@/lib/frais-auto";
 import { avecTypoSync } from "@/components/ui/Typo";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
@@ -211,7 +212,7 @@ function CostTileBase({ label, cost, normalCase = false }: { label: string; cost
         {cost.status !== "non-releve" ? (
           <>
             {" · "}
-            <VerifieLe date={cost.date} famille="frais" label="relevé" age={false} />
+            <VerifieLe date={cost.date} famille="frais" label={libelleFrais([{ date: cost.date, auto: cost.dateAuto === true }], "relevé")} age={false} />
           </>
         ) : (
           ""
@@ -663,7 +664,7 @@ function ReviewPage({ params }: Props) {
             {v?.date ? (
               <>
                 {" ("}
-                <VerifieLe date={v.date} famille="frais" label="frais relevés" age={false} />
+                <VerifieLe date={dateFraisAffichee(p.id, v.date).date} famille="frais" label={libelleFrais([dateFraisAffichee(p.id, v.date)], "frais relevés")} age={false} />
                 {")"}
               </>
             ) : (
@@ -694,7 +695,7 @@ function ReviewPage({ params }: Props) {
                 >
                   Source
                 </a>{" "}
-                · <VerifieLe date={v.date} famille="frais" label="vérifié" age={false} />
+                · <VerifieLe date={dateFraisAffichee(p.id, v.date).date} famille="frais" label={libelleFrais([dateFraisAffichee(p.id, v.date)], "vérifié")} age={false} />
               </div>
             </div>
           )}
