@@ -139,7 +139,7 @@ describe("I1 — le cours se date avec price_updated_at, jamais avec updated_at 
         return p ? /\becrireCours\(/.test(fs.readFileSync(p, "utf8")) : false;
       });
     expect(appelants.map((f) => f.replace(/\\/g, "/"))).toEqual(["api/cron/refresh-prices/route.ts"]);
-  });
+  }, 30_000); // parcours de tous les fichiers d'app/, lib/ et scripts/ : dépassait 5 s sur un poste chargé (10/10/2026)
   it("le plan du site date les fiches générées par leur texte (last_refreshed_at), pas par updated_at", () => {
     const src = lire("app/sitemap.ts");
     expect(src).toMatch(/toLastModified\(r\.last_refreshed_at\)/);

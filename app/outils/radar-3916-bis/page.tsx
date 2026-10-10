@@ -20,7 +20,7 @@ import Breadcrumbs from "@/components/Breadcrumbs";
 export const metadata: Metadata = {
   title: fitTitle("Radar 3916-bis — détectez vos amendes crypto en 2 min (gratuit)"),
   description: fitDescription(
-    "Outil gratuit Cryptoreflex : identifiez vos comptes crypto étrangers à déclarer (Binance, Kraken, MEXC, Bybit, KuCoin, Bitfinex…) et chiffrez l'amende potentielle : 750 € par compte oublié (1 500 € au-delà de 50 000 €). Conforme BOI-CF-CPF-30-20.",
+    "Outil gratuit Cryptoreflex : identifiez vos comptes crypto étrangers à déclarer (Binance, Kraken, MEXC, Bybit, KuCoin, Bitfinex…) et chiffrez l'amende potentielle : 750 € par compte oublié (1 500 € au-delà de 50 000 €), articles 1649 bis C et 1736 du CGI.",
   ),
   alternates: withHreflang(`${BRAND.url}/outils/radar-3916-bis`),
   keywords: [
@@ -190,7 +190,7 @@ export default function RadarPage() {
               </span>
               <span className="badge badge-trust">
                 <ShieldCheck className="h-3.5 w-3.5" aria-hidden="true" /> Source
-                BOI-CF-CPF-30-20
+                art. 1649 bis C du CGI
               </span>
             </div>
 
@@ -278,23 +278,25 @@ export default function RadarPage() {
 
           <p className="mt-8 text-center text-xs text-muted">
             Sources&nbsp;:{" "}
+            Articles{" "}
             <a
-              href="https://bofip.impots.gouv.fr/bofip/3817-PGP.html"
+              href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000054339286"
               target="_blank"
               rel="noopener noreferrer"
               className="underline hover:text-primary"
             >
-              BOI-CF-CPF-30-20
+              1649 bis C
             </a>{" "}
-            · Article 1736 X du{" "}
+            et{" "}
             <a
-              href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000045163049"
+              href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000054373979"
               target="_blank"
               rel="noopener noreferrer"
               className="underline hover:text-primary"
             >
-              Code Général des Impôts
-            </a>
+              1736
+            </a>{" "}
+            du Code général des impôts
           </p>
         </div>
       </section>
