@@ -1,11 +1,11 @@
 {
  "_lisezMoi": "Correspondance id du site (= id CoinGecko) -> id numérique CoinMarketCap. Construite par scripts/construire-cmc-id-map.mjs (lot Z3) : même symbole ET nom compatible ET prix CMC à ± 5 % du prix de référence ; jamais par symbole seul. Une fiche absente d'ici n'est jamais demandée à CoinMarketCap : le robot des fiches passe par DexScreener (adresse de contrat) ou la fiche garde le masquage au-delà de 48 h. Testée par tests/lib/coinmarketcap.test.ts et tests/lib/fiches-z3.test.ts.",
- "_total": 618,
+ "_total": 626,
  "_construction": {
-  "le": "2026-10-10T07:04:12.850Z",
-  "fiches": 779,
-  "sourceCmc": "liste CoinMarketCap déjà téléchargée (cmc_list.json, 5000 lignes)",
-  "sourceReference": "instantané CoinGecko public du 08/10/2026 11:12 UTC, et pour 58 fiches (absentes de l'instantané ou rejetées) prix CoinGecko public au plus près de 14:22 UTC le 08/10/2026, heure de la liste CoinMarketCap",
+  "le": "2026-10-10T08:47:21.221Z",
+  "fiches": 780,
+  "sourceCmc": "API CoinMarketCap du 2026-10-10T08:47:03.301Z (10 crédits), lue par la route du site (945 lignes)",
+  "sourceReference": "base Supabase (price_usd, price_updated_at)",
   "tolerancePct": 5
  },
  "map": {
@@ -16,6 +16,10 @@
   "1inch": {
    "id": 8104,
    "symbol": "1INCH"
+  },
+  "a7a5": {
+   "id": 36549,
+   "symbol": "A7A5"
   },
   "aave": {
    "id": 7278,
@@ -60,6 +64,10 @@
   "affine": {
    "id": 39987,
    "symbol": "SN120"
+  },
+  "agentfun-ai": {
+   "id": 34319,
+   "symbol": "AGENTFUN"
   },
   "agora-dollar": {
    "id": 32864,
@@ -317,6 +325,10 @@
    "id": 24647,
    "symbol": "BERA"
   },
+  "bfusd": {
+   "id": 37760,
+   "symbol": "BFUSD"
+  },
   "bianrensheng": {
    "id": 38590,
    "symbol": "币安人生"
@@ -364,6 +376,10 @@
   "bitget-token": {
    "id": 11092,
    "symbol": "BGB"
+  },
+  "bitget-wrapped-btc": {
+   "id": 39908,
+   "symbol": "BGBTC"
   },
   "bitkub-coin": {
    "id": 16093,
@@ -605,9 +621,9 @@
    "id": 5198,
    "symbol": "CTC"
   },
-  "cross-2": {
-   "id": 37166,
-   "symbol": "ONE"
+  "crvusd": {
+   "id": 24927,
+   "symbol": "CRVUSD"
   },
   "crypto-com-chain": {
    "id": 3635,
@@ -656,6 +672,10 @@
   "degen-base": {
    "id": 30096,
    "symbol": "DEGEN"
+  },
+  "derive": {
+   "id": 35014,
+   "symbol": "DRV"
   },
   "deso": {
    "id": 10442,
@@ -765,6 +785,10 @@
    "id": 29470,
    "symbol": "USDE"
   },
+  "ether-fi": {
+   "id": 29814,
+   "symbol": "ETHFI"
+  },
   "ethereum": {
    "id": 1027,
    "symbol": "ETH"
@@ -825,6 +849,10 @@
    "id": 39549,
    "symbol": "FIDD"
   },
+  "figure-heloc": {
+   "id": 39361,
+   "symbol": "FIGR_HELOC"
+  },
   "filecoin": {
    "id": 2280,
    "symbol": "FIL"
@@ -867,10 +895,6 @@
   },
   "frax": {
    "id": 6952,
-   "symbol": "FRAX"
-  },
-  "frax-share": {
-   "id": 6953,
    "symbol": "FRAX"
   },
   "frax-usd": {
@@ -972,6 +996,10 @@
   "hashkey-ecopoints": {
    "id": 33849,
    "symbol": "HSK"
+  },
+  "hastra-prime": {
+   "id": 40545,
+   "symbol": "PRIME"
   },
   "havven": {
    "id": 2586,
@@ -1257,10 +1285,6 @@
    "id": 39121,
    "symbol": "MAGMA"
   },
-  "maker": {
-   "id": 1518,
-   "symbol": "MKR"
-  },
   "manadia": {
    "id": 40017,
    "symbol": "UMXM"
@@ -1276,10 +1300,6 @@
   "mantle": {
    "id": 27075,
    "symbol": "MNT"
-  },
-  "mantra": {
-   "id": 39611,
-   "symbol": "MANTRA"
   },
   "mask-network": {
    "id": 8536,
@@ -1673,10 +1693,6 @@
    "id": 2132,
    "symbol": "POWR"
   },
-  "precious-metals-usd": {
-   "id": 39662,
-   "symbol": "PMUSD"
-  },
   "project-galaxy": {
    "id": 11877,
    "symbol": "GAL"
@@ -1712,6 +1728,10 @@
   "purr-2": {
    "id": 34332,
    "symbol": "PURR"
+  },
+  "pyth-network": {
+   "id": 28177,
+   "symbol": "PYTH"
   },
   "pythia": {
    "id": 35216,
@@ -1772,10 +1792,6 @@
   "redstone-oracles": {
    "id": 21707,
    "symbol": "RED"
-  },
-  "render-token": {
-   "id": 5690,
-   "symbol": "RENDER"
   },
   "renzo": {
    "id": 30843,
@@ -1893,6 +1909,10 @@
    "id": 39417,
    "symbol": "SINGULARRY"
   },
+  "skale": {
+   "id": 5691,
+   "symbol": "SKL"
+  },
   "sky": {
    "id": 33038,
    "symbol": "SKY"
@@ -1973,6 +1993,10 @@
    "id": 38892,
    "symbol": "STABLE"
   },
+  "staked-frax-usd": {
+   "id": 36038,
+   "symbol": "SFRXUSD"
+  },
   "standx-dusd": {
    "id": 36762,
    "symbol": "DUSD"
@@ -1984,6 +2008,10 @@
   "starknet": {
    "id": 22691,
    "symbol": "STRK"
+  },
+  "stasis-eurs": {
+   "id": 2989,
+   "symbol": "EURS"
   },
   "status": {
    "id": 1759,
@@ -2013,10 +2041,6 @@
    "id": 10894,
    "symbol": "SRX"
   },
-  "story-2": {
-   "id": 35626,
-   "symbol": "DATA"
-  },
   "stp-network": {
    "id": 4006,
    "symbol": "AWE"
@@ -2024,6 +2048,10 @@
   "straitsx-xusd": {
    "id": 32372,
    "symbol": "XUSD"
+  },
+  "strategy-pp-variable-xstock": {
+   "id": 39711,
+   "symbol": "STRCX"
   },
   "stratis": {
    "id": 1343,
@@ -2237,6 +2265,10 @@
    "id": 39120,
    "symbol": "U"
   },
+  "unitywallet-token": {
+   "id": 39826,
+   "symbol": "UNT"
+  },
   "uquid-coin": {
    "id": 2273,
    "symbol": "UQC"
@@ -2253,10 +2285,6 @@
    "id": 36148,
    "symbol": "USD1"
   },
-  "usda-3": {
-   "id": 37721,
-   "symbol": "USDA"
-  },
   "usdai": {
    "id": 38562,
    "symbol": "USDAI"
@@ -2268,6 +2296,10 @@
   "usdgo": {
    "id": 39683,
    "symbol": "USDGO"
+  },
+  "usds": {
+   "id": 33039,
+   "symbol": "USDS"
   },
   "useless-3": {
    "id": 36828,
@@ -2483,8 +2515,6 @@
   }
  },
  "exclus": [
-  "a7a5",
-  "agentfun-ai",
   "aintivirus",
   "alloy-tether",
   "america-party-5",
@@ -2497,44 +2527,40 @@
   "backed-cspx-core-s-p-500",
   "basedhype",
   "baseline",
-  "bfusd",
   "binaryx",
   "bitcastle-token",
-  "bitget-wrapped-btc",
   "bitmart-token",
   "blackrock-usd-institutional-digital-liquidity-fund",
   "blast",
   "blockchain-capital",
   "cap-usd",
   "coinex-token",
+  "cross-2",
   "crown-brlv",
-  "crvusd",
   "cygnus-finance-global-usd",
   "dai-on-pulsechain",
-  "derive",
   "dmt-nat",
   "ebtc-2",
   "escoin-token",
-  "ether-fi",
   "eutbl",
   "exod",
   "f-x-protocol-fxusd",
   "felix-feusd",
   "fidelity-digital-interest-token",
-  "figure-heloc",
   "flock-2",
+  "frax-share",
   "fx-usd-saving",
   "gekko",
   "greyhunt",
   "grx-chain",
   "hash-2",
   "hashnote-usyc",
-  "hastra-prime",
   "hive_dollar",
   "home",
   "infinifi-locked-iusd-1week",
   "infinifi-usd",
   "ini",
+  "io-net",
   "ishares-silver-trust-ondo-tokenized-stock",
   "janus-henderson-anemoy-aaa-clo-fund",
   "janus-henderson-anemoy-treasury-fund",
@@ -2550,6 +2576,8 @@
   "maga-bitcoin",
   "main-street-usd",
   "main-street-yield",
+  "maker",
+  "mantra",
   "mantra-dao",
   "meme-horse",
   "memetern",
@@ -2577,12 +2605,13 @@
   "palladium-network",
   "palm-usd",
   "pleasing-gold",
+  "precious-metals-usd",
   "prize-protocol",
   "proprietary-trading-network",
   "puff-the-dragon",
-  "pyth-network",
   "re-protocol-reusd",
   "rekt-4",
+  "render-token",
   "resupply-usd",
   "rosa-inu",
   "royal-dollar",
@@ -2592,16 +2621,13 @@
   "securitize-tokenized-aaa-clo-fund",
   "sierra-2",
   "siren-2",
-  "skale",
   "small-thing",
   "snowbank",
   "spiko-digital-assets-cash-carry-fund-euro-share-class",
   "spiko-us-t-bills-money-market-fund",
-  "staked-frax-usd",
-  "stasis-eurs",
   "stau",
+  "story-2",
   "strategic-oil-supply-2",
-  "strategy-pp-variable-xstock",
   "superstate-short-duration-us-government-securities-fund-ustb",
   "swop-2",
   "sygnum-fiusd-liquidity-fund",
@@ -2628,10 +2654,9 @@
   "unit-plasma",
   "unit-pump",
   "unity-usd",
-  "unitywallet-token",
   "usda-2",
+  "usda-3",
   "usdkg",
-  "usds",
   "usdtb",
   "usdu",
   "usdx",
@@ -2650,57 +2675,62 @@
   "apecoin": {
    "cmcSlug": "apecoin-ape",
    "cmcNom": "ApeCoin",
-   "ecartPrixPct": 1.2
+   "ecartPrixPct": 0
   },
   "bas": {
    "cmcSlug": "bnb-attestation-service",
    "cmcNom": "BAS",
-   "ecartPrixPct": -0.3
+   "ecartPrixPct": 0
+  },
+  "beam-2": {
+   "cmcSlug": "onbeam",
+   "cmcNom": "Beam",
+   "ecartPrixPct": 0
   },
   "bittorrent": {
    "cmcSlug": "bittorrent-new",
    "cmcNom": "BitTorrent [New]",
-   "ecartPrixPct": -0.1
+   "ecartPrixPct": 0
   },
   "cheems-token": {
    "cmcSlug": "cheems-pet",
    "cmcNom": "Cheems (cheems.pet)",
-   "ecartPrixPct": 0.5
+   "ecartPrixPct": -0.2
   },
   "circle-internet-group-ondo-tokenized-stock": {
    "cmcSlug": "circle-internet-group-tokenized-stock-ondo",
    "cmcNom": "Circle Internet Group Tokenized Stock (Ondo)",
-   "ecartPrixPct": 0.8
+   "ecartPrixPct": 0
   },
   "circle-xstock": {
    "cmcSlug": "circle-tokenized-stock-xstock",
    "cmcNom": "Circle tokenized stock (xStock)",
-   "ecartPrixPct": 0.8
+   "ecartPrixPct": 0
   },
   "deep": {
    "cmcSlug": "deepbook-protocol",
    "cmcNom": "DeepBook Protocol",
-   "ecartPrixPct": -0.9
+   "ecartPrixPct": 0.1
   },
   "eigenlayer": {
    "cmcSlug": "eigencloud",
    "cmcNom": "EigenCloud",
-   "ecartPrixPct": 1.3
+   "ecartPrixPct": 0
   },
   "g-token": {
    "cmcSlug": "gravity-token",
    "cmcNom": "Gravity",
-   "ecartPrixPct": 0.7
+   "ecartPrixPct": 0.1
   },
   "gatechain-token": {
    "cmcSlug": "gatetoken",
    "cmcNom": "GateToken",
-   "ecartPrixPct": -0.6
+   "ecartPrixPct": 0
   },
   "genius-3": {
    "cmcSlug": "genius-terminal",
    "cmcNom": "Genius Terminal",
-   "ecartPrixPct": 0.4
+   "ecartPrixPct": -0.2
   },
   "gmt-token": {
    "cmcSlug": "gomining-token",
@@ -2715,47 +2745,52 @@
   "holoworld": {
    "cmcSlug": "holoworld-ai",
    "cmcNom": "Holoworld AI",
-   "ecartPrixPct": 1.1
+   "ecartPrixPct": 0
   },
   "htx-dao": {
    "cmcSlug": "htx",
    "cmcNom": "HTX",
-   "ecartPrixPct": -0.2
+   "ecartPrixPct": 0
+  },
+  "jupiter-exchange-solana": {
+   "cmcSlug": "jupiter-ag",
+   "cmcNom": "Jupiter",
+   "ecartPrixPct": 0
   },
   "leo-token": {
    "cmcSlug": "unus-sed-leo",
    "cmcNom": "UNUS SED LEO",
-   "ecartPrixPct": 0.2
+   "ecartPrixPct": 0
   },
   "microstrategy-xstock": {
    "cmcSlug": "microstrategy-tokenized-stock-xstock",
    "cmcNom": "MicroStrategy tokenized stock (xStock)",
-   "ecartPrixPct": 0.3
+   "ecartPrixPct": 0
   },
   "midnight-3": {
    "cmcSlug": "midnight-network",
    "cmcNom": "Midnight",
-   "ecartPrixPct": -2.1
+   "ecartPrixPct": 0
   },
   "mina-protocol": {
    "cmcSlug": "mina",
    "cmcNom": "Mina",
-   "ecartPrixPct": -1.8
+   "ecartPrixPct": -0.3
   },
   "ondo-u-s-dollar-token": {
    "cmcSlug": "us-dollar-tokenized-currency-ondo",
    "cmcNom": "U.S. Dollar Tokenized Currency (Ondo)",
-   "ecartPrixPct": -0.1
+   "ecartPrixPct": 0
   },
   "pha": {
    "cmcSlug": "phala-network",
    "cmcNom": "Phala Network",
-   "ecartPrixPct": 3.7
+   "ecartPrixPct": -0.2
   },
   "pi-network": {
    "cmcSlug": "pi",
    "cmcNom": "Pi",
-   "ecartPrixPct": 1
+   "ecartPrixPct": 0
   },
   "popcat": {
    "cmcSlug": "popcat-sol",
@@ -2765,27 +2800,37 @@
   "sp500-xstock": {
    "cmcSlug": "sp500-tokenized-stock-xstock",
    "cmcNom": "SP500 tokenized ETF (xStock)",
-   "ecartPrixPct": 0.2
+   "ecartPrixPct": 0
   },
   "stp-network": {
    "cmcSlug": "awe-network",
    "cmcNom": "AWE",
-   "ecartPrixPct": 0.8
+   "ecartPrixPct": 0
+  },
+  "strategy-pp-variable-xstock": {
+   "cmcSlug": "strategy-pp-variable-tokenized-stock-xstock",
+   "cmcNom": "Strategy PP Variable tokenized stock (xStock)",
+   "ecartPrixPct": 0.1
   },
   "sushi": {
    "cmcSlug": "sushiswap",
    "cmcNom": "SushiSwap",
-   "ecartPrixPct": 1.5
+   "ecartPrixPct": 0.1
   },
   "tesla-xstock": {
    "cmcSlug": "tesla-tokenized-stock-xstock",
    "cmcNom": "Tesla tokenized stock (xStock)",
-   "ecartPrixPct": -0.2
+   "ecartPrixPct": 0
+  },
+  "the-open-network": {
+   "cmcSlug": "gram",
+   "cmcNom": "Gram (prev. Toncoin)",
+   "ecartPrixPct": 0
   },
   "threshold-network-token": {
    "cmcSlug": "threshold",
    "cmcNom": "Threshold",
-   "ecartPrixPct": -0.1
+   "ecartPrixPct": 0.3
   },
   "usd1-wlfi": {
    "cmcSlug": "usd1",
@@ -2795,70 +2840,20 @@
   "world-liberty-financial": {
    "cmcSlug": "world-liberty-financial-wlfi",
    "cmcNom": "World Liberty Financial",
-   "ecartPrixPct": 0.2
+   "ecartPrixPct": 0
   },
   "xyo-network": {
    "cmcSlug": "xyo",
    "cmcNom": "XYO",
-   "ecartPrixPct": -0.5
+   "ecartPrixPct": 0
   },
   "zignaly": {
    "cmcSlug": "zigcoin",
    "cmcNom": "ZIG Finance",
-   "ecartPrixPct": -0.6
-  },
-  "beam-2": {
-   "cmcSlug": "onbeam",
-   "cmcNom": "Beam",
-   "ecartPrixPct": 0.8
-  },
-  "jupiter-exchange-solana": {
-   "cmcSlug": "jupiter-ag",
-   "cmcNom": "Jupiter",
-   "ecartPrixPct": 1.1
-  },
-  "the-open-network": {
-   "cmcSlug": "gram",
-   "cmcNom": "Gram (prev. Toncoin)",
-   "ecartPrixPct": 0.5
+   "ecartPrixPct": 0
   }
  },
  "_ecartesPrix": {
-  "derive": {
-   "cmcId": 35014,
-   "cmcSlug": "derive",
-   "ecartPrixPct": 15.6
-  },
-  "ether-fi": {
-   "cmcId": 29814,
-   "cmcSlug": "ether-fi-ethfi",
-   "ecartPrixPct": 5.3
-  },
-  "figure-heloc": {
-   "cmcId": 39361,
-   "cmcSlug": "figure-heloc",
-   "ecartPrixPct": 5.3
-  },
-  "pyth-network": {
-   "cmcId": 28177,
-   "cmcSlug": "pyth-network",
-   "ecartPrixPct": 7.8
-  },
-  "skale": {
-   "cmcId": 5691,
-   "cmcSlug": "skale-network",
-   "ecartPrixPct": -6.1
-  },
-  "strategy-pp-variable-xstock": {
-   "cmcId": 39711,
-   "cmcSlug": "strategy-pp-variable-tokenized-stock-xstock",
-   "ecartPrixPct": -7.9
-  },
-  "blast": {
-   "cmcId": 28480,
-   "cmcSlug": "blast",
-   "ecartPrixPct": 153.2
-  },
   "flock-2": {
    "cmcId": 35474,
    "cmcSlug": "flock",
@@ -2867,22 +2862,37 @@
   "gekko": {
    "cmcId": 35189,
    "cmcSlug": "gekko-ai",
-   "ecartPrixPct": 8902.6
+   "ecartPrixPct": 10408
   },
   "hash-2": {
    "cmcId": 19960,
    "cmcSlug": "provenance-blockchain",
-   "ecartPrixPct": 11.2
+   "ecartPrixPct": -7.4
   },
   "kinesis-silver": {
    "cmcId": 24439,
    "cmcSlug": "silver",
-   "ecartPrixPct": -49
+   "ecartPrixPct": -51.1
+  },
+  "mantra": {
+   "cmcId": 6536,
+   "cmcSlug": "mantra",
+   "ecartPrixPct": -61
   },
   "siren-2": {
    "cmcId": 35766,
    "cmcSlug": "siren-bsc",
-   "ecartPrixPct": 10
+   "ecartPrixPct": 19.7
+  },
+  "usda-2": {
+   "cmcId": 35965,
+   "cmcSlug": "usda-stablecoin",
+   "ecartPrixPct": 0.5
+  },
+  "usda-3": {
+   "cmcId": 37721,
+   "cmcSlug": "usda-alphapartner",
+   "ecartPrixPct": 0
   }
  }
 }
