@@ -30,6 +30,11 @@ jobs:
   test:
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    # Reflex Cards (tests/e2e/07-08) : sans ces deux variables, /cartes est en 404 dans le build de CI
+    # et les specs échouent. Mêmes valeurs qu'en production (jeu ouvert, jour 1 = 02/10/2026).
+    env:
+      NEXT_PUBLIC_REFLEX_CARDS_ENABLED: "true"
+      NEXT_PUBLIC_REFLEX_CARDS_LAUNCH_DATE: "2026-10-02"
 
     steps:
       - name: Checkout

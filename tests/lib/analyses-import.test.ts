@@ -122,7 +122,8 @@ describe("historique publié (data/analyses-techniques)", () => {
     }
     expect(manquantes).toEqual([]);
     const usd = lignes.filter((h: { currency: string }) => h.currency === "USD");
-    expect(usd.length).toBe(368 - nbRetirees - lignes.filter((h: { date: string; currency: string }) => h.currency === "EUR").length);
+    // seules les lignes en euros du 08/10 remplacent une analyse publiée ; le robot quotidien en ajoute ensuite une par jour (10/10/2026)
+    expect(usd.length).toBe(368 - nbRetirees - lignes.filter((h: { date: string; currency: string }) => h.currency === "EUR" && h.date <= "2026-10-08").length);
     expect(usd.every((h: { origin: string }) => h.origin === "publié")).toBe(true);
   });
 
