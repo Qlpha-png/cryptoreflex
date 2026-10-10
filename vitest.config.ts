@@ -23,6 +23,10 @@ export default defineConfig({
     environment: "node",
     setupFiles: ["./tests/setup/reflex-static-releases.ts"],
     include: ["tests/**/*.test.ts", "tests/**/*.spec.ts"],
+    // 10/10/2026 : 5 s par défaut faisaient tomber 12 à 22 tests (lecture de tout le dépôt, rendu React, pglite) dès que
+    // le poste était chargé (builds et serveurs d'autres sessions) ; ils passent tous seuls. 20 s : assez pour la charge,
+    // assez court pour qu'un vrai blocage reste un échec.
+    testTimeout: 20_000,
     // FIX 2026-05-07 — séparer Vitest (unit) de Playwright (E2E).
     // Sans cet exclude, Vitest tentait de runner les 6 fichiers
     // tests/e2e/*.spec.ts qui utilisent l'API @playwright/test
