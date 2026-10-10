@@ -55,11 +55,12 @@ const PRICING = {
   "qwen/qwen3-next-80b-a3b-instruct:free": { input: 0, output: 0 },
   "z-ai/glm-4.5-air:free": { input: 0, output: 0 },
   "deepseek/deepseek-r1:free": { input: 0, output: 0 },
-  // Gemini API direct (Google AI Studio) — 1500 req/jour Flash gratuit, stable.
   // Format : "google/gemini-..." pour distinguer du provider.
-  "google/gemini-2.5-flash": { input: 0, output: 0 },
-  "google/gemini-1.5-flash": { input: 0, output: 0 },
-  "google/gemini-1.5-pro": { input: 0, output: 0 }, // 50 req/jour gratuit
+  // Gemini API direct (Google AI Studio), offre gratuite. 10/10/2026 : gemini-2.5-flash et 1.5 sont fermés aux nouveaux
+  // comptes (« no longer available to new users ») ; modèles relus par .github/workflows/sonde-gemini.yml (réponse 200).
+  "google/gemini-flash-latest": { input: 0, output: 0 },
+  "google/gemini-3.5-flash-lite": { input: 0, output: 0 },
+  "google/gemini-flash-lite-latest": { input: 0, output: 0 },
 };
 
 /**
@@ -760,7 +761,7 @@ async function callGeminiAPI(rawData, modelName) {
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) throw new Error("GEMINI_API_KEY not set");
 
-  // "google/gemini-2.5-flash" -> "gemini-2.5-flash"
+  // "google/gemini-flash-latest" -> "gemini-flash-latest"
   const geminiModelId = modelName.replace(/^google\//, "");
   const url = `https://generativelanguage.googleapis.com/v1beta/models/${geminiModelId}:generateContent?key=${apiKey}`;
 

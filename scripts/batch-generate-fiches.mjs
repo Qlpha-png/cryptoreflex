@@ -99,10 +99,11 @@ const PRICING = {
   "qwen/qwen3-next-80b-a3b-instruct:free": { input: 0, output: 0 },
   "z-ai/glm-4.5-air:free": { input: 0, output: 0 },
   "deepseek/deepseek-r1:free": { input: 0, output: 0 },
-  // Gemini API direct (Google AI Studio) — 1500 req/jour Flash gratuit, stable.
-  "google/gemini-2.5-flash": { input: 0, output: 0 },
-  "google/gemini-1.5-flash": { input: 0, output: 0 },
-  "google/gemini-1.5-pro": { input: 0, output: 0 },
+  // Gemini API direct (Google AI Studio), offre gratuite. 10/10/2026 : gemini-2.5-flash et 1.5 sont fermés aux nouveaux
+  // comptes (« no longer available to new users ») ; modèles relus par .github/workflows/sonde-gemini.yml (réponse 200).
+  "google/gemini-flash-latest": { input: 0, output: 0 },
+  "google/gemini-3.5-flash-lite": { input: 0, output: 0 },
+  "google/gemini-flash-lite-latest": { input: 0, output: 0 },
 };
 
 function isGeminiModel(model) {
@@ -743,13 +744,13 @@ async function callGeminiAPI(rawData) {
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) throw new Error("GEMINI_API_KEY not set");
   // Cycle 25 fix : si DEFAULT_MODEL n'est pas un modèle Gemini (cas du
-  // fallback Haiku→Gemini), on force `gemini-2.5-flash` (gratuit, qualité
+  // fallback Haiku→Gemini), on force `gemini-flash-latest` (gratuit ; 2.5-flash fermé aux nouveaux comptes le 10/10/2026, qualité
   // décente). Avant : DEFAULT_MODEL.replace(/^google\//, "") laissait
   // `anthropic/claude-haiku-4.5` intact → URL Gemini /models/anthropic/...
   // → 404. Le fallback ne servait à rien.
   const geminiModelId = isGeminiModel(DEFAULT_MODEL)
     ? DEFAULT_MODEL.replace(/^google\//, "")
-    : "gemini-2.5-flash";
+    : "gemini-flash-latest";
   const url = `https://generativelanguage.googleapis.com/v1beta/models/${geminiModelId}:generateContent?key=${apiKey}`;
   const ctrl = new AbortController();
   const tid = setTimeout(() => ctrl.abort(), 180_000);
