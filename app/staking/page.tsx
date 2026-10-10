@@ -9,7 +9,9 @@ import { withHreflang } from "@/lib/seo-alternates";
 import { fitDescription, fitTitle } from "@/lib/seo-text";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import VerifieLe from "@/components/ui/VerifieLe";
-import { STAKING_PAIRS_RELEVE } from "@/lib/staking-rates";
+import TauxSource from "@/components/TauxSource";
+import ExplicationTaux from "@/components/ExplicationTaux";
+import { TAUX_LIDO } from "@/lib/rendements";
 
 export const revalidate = 86400;
 
@@ -38,8 +40,17 @@ export default function StakingIndexPage() {
           <p className="mt-3 text-fg/70">
             20 cryptos staking-éligibles. Filtre par APY, lock-up, risque ou
             plateforme MiCA pour trouver le couple rendement / sécurité qui vous
-            convient. <VerifieLe date={STAKING_PAIRS_RELEVE} famille="rendements" label="APY estimés" />, à recouper avec les UI exchange.
+            convient. <VerifieLe dates={STAKING_PAIRS.map((p) => p.releve)} famille="rendements" label="APY estimés" />, à recouper avec les UI exchange.
           </p>
+          {/* lot Z5 (10/10/2026) : seul repère tenu chaque jour par le robot R8 (Lido, source autorisée) */}
+          {TAUX_LIDO && (
+            <>
+              <p className="mt-2 text-sm text-fg/70">
+                <TauxSource taux={TAUX_LIDO} libelle="Repère Ethereum, APR de Lido (stETH, net de sa commission)" />
+              </p>
+              <ExplicationTaux className="mt-2" />
+            </>
+          )}
         </div>
 
         {/* Comparateur interactif */}

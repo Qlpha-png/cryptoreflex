@@ -29,11 +29,16 @@ import RelatedPagesNav from "@/components/RelatedPagesNav";
 import NextStepsGuide from "@/components/NextStepsGuide";
 import { faqSchema, graphSchema } from "@/lib/schema";
 import { withHreflang } from "@/lib/seo-alternates";
-import { fitTitle } from "@/lib/seo-text";
+import { fitDescription, fitTitle } from "@/lib/seo-text";
+import ExplicationTaux from "@/components/ExplicationTaux";
 import { resolveCoingeckoId } from "@/lib/crypto-aliases";
 import { cryptoPagePath } from "@/lib/crypto-page-slug";
 import { fmtFr, fmtNb } from "@/lib/format-fr";
 import Breadcrumbs from "@/components/Breadcrumbs";
+import VerifieLe from "@/components/ui/VerifieLe";
+import TauxSource from "@/components/TauxSource";
+import { TAUX_LIDO } from "@/lib/rendements";
+import { formatJJMMAAAA } from "@/lib/fraicheur";
 
 export const revalidate = 86400;
 export const dynamicParams = false;
@@ -50,7 +55,9 @@ export function generateMetadata({ params }: Props): Metadata {
   const pair = getStakingPair(params.slug);
   if (!pair) return { robots: { index: false, follow: false } };
   const title = `Staking ${pair.name} (${pair.symbol}) 2026 — APY, plateformes MiCA, risques`;
-  const description = `Comment staker ${pair.name} en France en 2026 : APY ${fmtNb(pair.apyMin)}% – ${fmtNb(pair.apyMax)}%, ${pair.lockUpDays === 0 ? "liquid staking" : `lock-up ${pair.lockUpDays}j`}, plateformes régulées MiCA et risques (slashing, smart contract). Guide Cryptoreflex.`;
+  // lot Z5 : jamais une fourchette sans sa date (données d'avril 2026, calculée depuis la ligne)
+  // reprise Z5 : longueur bornée (fitDescription) ; « Guide Cryptoreflex. » retiré (Google tronquait la fin)
+  const description = fitDescription(`Comment staker ${pair.name} en France en 2026 : APY ${fmtNb(pair.apyMin)}% – ${fmtNb(pair.apyMax)}% (données ${deLaPeriode(pair.releve)}), ${pair.lockUpDays === 0 ? "liquid staking" : `lock-up ${pair.lockUpDays}j`}, plateformes régulées MiCA et risques (slashing, smart contract).`);
   return {
     title: fitTitle(title),
     description,
@@ -104,6 +111,13 @@ function formatLockUp(days: number): string {
   return `${days} jours`;
 }
 
+/** « d'avril 2026 », « de mai 2026 », « du 02/05/2026 » : période d'une date de relevé (AAAA-MM ou AAAA-MM-JJ). */
+function deLaPeriode(releve: string): string {
+  const t = formatJJMMAAAA(releve) ?? releve;
+  if (/^\d/.test(t)) return `du ${t}`;
+  return /^[aeiouéèêâîôûh]/i.test(t) ? `d'${t}` : `de ${t}`;
+}
+
 function netYield(amount: number, apyPct: number, years: number): number {
   // Composé annuel
   return amount * Math.pow(1 + apyPct / 100, years) - amount;
@@ -124,15 +138,25 @@ export default function StakingDetailPage({ params }: Props) {
 
   const risk = RISK_LABELS[pair.risk];
   const apyAvg = (pair.apyMin + pair.apyMax) / 2;
+  // lot Z5 (10/10/2026) : repère ETH tenu chaque jour par le robot R8 (APR de Lido, source autorisée)
+  const lido = pair.cryptoId === "ethereum" ? TAUX_LIDO : null;
+  const periode = deLaPeriode(pair.releve);
 
   // Projection sur 1000 € pour 1 an et 5 ans (composé)
-  const projection1y = netYield(1000, apyAvg, 1);
-  const projection5y = netYield(1000, apyAvg, 5);
+  // reprise Z5 : sur la fiche ETH, la projection part du dernier taux mesuré (APR de Lido daté), pas du milieu d'une
+  // fourchette d'avril 2026 que ce repère contredit ; ailleurs, milieu de fourchette (dit comme tel)
+  const tauxProjection = lido ? lido.valeurPct : apyAvg;
+  const projection1y = netYield(1000, tauxProjection, 1);
+  const projection5y = netYield(1000, tauxProjection, 5);
+  const baseProjection = lido
+    ? `sur l'APR de Lido au ${formatJJMMAAAA(lido.date)} (${fmtFr(lido.valeurPct, 2)} %, net de sa commission)`
+    : `sur le milieu de la fourchette ${periode} (${fmtFr(apyAvg, 1)} %)`;
+  const positionFourchette = !lido ? null : lido.valeurPct < pair.apyMin ? "au-dessus du" : lido.valeurPct > pair.apyMax ? "en dessous du" : "cohérente avec le";
 
   const faqs = [
     {
       question: `Combien rapporte le staking de ${pair.name} en 2026 ?`,
-      answer: `Le rendement annuel net (APY) du staking ${pair.name} oscille entre ${fmtNb(pair.apyMin)}% et ${fmtNb(pair.apyMax)}% en avril 2026, soit ~${fmtFr(apyAvg, 1)}% en moyenne. Sur 1 000 € stakés pendant 1 an, le gain estimé est de ${fmtFr(projection1y, 0)} € (avant fiscalité). Note : l'APY varie selon la demande et les frais du validateur ou de la plateforme.`,
+      answer: `Le rendement annuel (APY) du staking ${pair.name} oscillait entre ${fmtNb(pair.apyMin)}% et ${fmtNb(pair.apyMax)}% selon nos données ${periode}, soit ~${fmtFr(apyAvg, 1)}% en milieu de fourchette.${lido ? ` Repère plus récent : l'APR de Lido (stETH, net de sa commission) est de ${fmtFr(lido.valeurPct, 2)} % (médiane sur 7 jours au ${formatJJMMAAAA(lido.date)}, source : Lido).` : ""} Sur 1 000 € stakés pendant 1 an, le gain estimé ${baseProjection} serait d'environ ${fmtFr(projection1y, 0)} € (estimation avant fiscalité, taux variable, non garanti). Note : l'APY varie selon la demande et les frais du validateur ou de la plateforme.`,
     },
     {
       question: `Y a-t-il un lock-up sur le staking ${pair.name} ?`,
@@ -181,7 +205,7 @@ export default function StakingDetailPage({ params }: Props) {
                 Staker <span className="gradient-text">{pair.name}</span> en France
               </h1>
               <p className="mt-3 max-w-2xl text-fg/80">
-                Rendement, lock-up, risques et plateformes régulées MiCA pour staker du {pair.symbol} en avril 2026 —
+                Rendement, lock-up, risques et plateformes régulées MiCA pour staker du {pair.symbol} —
                 sans gérer un validateur soi-même.
               </p>
 
@@ -190,7 +214,7 @@ export default function StakingDetailPage({ params }: Props) {
                   Icon={TrendingUp}
                   label="APY"
                   value={`${fmtNb(pair.apyMin)}%–${fmtNb(pair.apyMax)}%`}
-                  hint={`Net moyen : ~${fmtFr(apyAvg, 1)}%`}
+                  hint={`Milieu de fourchette : ~${fmtFr(apyAvg, 1)}%`}
                 />
                 <Stat
                   Icon={Lock}
@@ -212,6 +236,17 @@ export default function StakingDetailPage({ params }: Props) {
                   hint={platforms.length > 0 ? "MiCA-compliant" : "Aucune"}
                 />
               </dl>
+              <p className="mt-4 text-xs text-muted">
+                <VerifieLe date={pair.releve} famille="rendements" label="Fourchette d'APY relevée" />, à recouper avec la plateforme.
+                {lido && (
+                  <>
+                    {" "}
+                    <TauxSource taux={lido} libelle="Repère Ethereum, APR de Lido (stETH, net de sa commission)" />
+                    . La fourchette {periode} est {positionFourchette} dernier taux mesuré.
+                  </>
+                )}
+              </p>
+              {lido && <ExplicationTaux className="mt-2" />}
             </div>
           </header>
 
@@ -289,19 +324,22 @@ export default function StakingDetailPage({ params }: Props) {
                 label="Sur 1 an"
                 amount={1000}
                 gain={projection1y}
-                apy={apyAvg}
-                description={`Avec un APY moyen de ${fmtFr(apyAvg, 1)}% (composé annuel)`}
+                apy={tauxProjection}
+                badge={lido ? `${fmtFr(lido.valeurPct, 2)} % APR` : undefined}
+                description={lido ? `Avec l'APR de Lido au ${formatJJMMAAAA(lido.date)}, récompenses réinvesties chaque année` : `Avec le milieu de fourchette (${fmtFr(apyAvg, 1)} %), composé annuel`}
               />
               <ProjectionCard
                 label="Sur 5 ans"
                 amount={1000}
                 gain={projection5y}
-                apy={apyAvg}
+                apy={tauxProjection}
+                badge={lido ? `${fmtFr(lido.valeurPct, 2)} % APR` : undefined}
                 description={`Effet boule de neige des intérêts composés`}
               />
             </div>
             <p className="mt-3 text-xs text-muted">
-              Estimation indicative. APY variable selon validateurs et demande. Hors fiscalité (PFU 31,4% à la cession).
+              Estimation indicative {baseProjection}, taux variable et non garanti. Hors fiscalité : récompenses imposables, régime et moment
+              d&apos;imposition non tranchés par une doctrine dédiée ; cession contre euros au PFU de 31,4 %.
             </p>
             <Link
               href="/outils#calculateur"
@@ -455,12 +493,15 @@ function ProjectionCard({
   amount,
   gain,
   apy,
+  badge,
   description,
 }: {
   label: string;
   amount: number;
   gain: number;
   apy: number;
+  /** texte de la pastille (défaut : « x,x% APY ») */
+  badge?: string;
   description: string;
 }) {
   const total = amount + gain;
@@ -472,7 +513,7 @@ function ProjectionCard({
           {label}
         </span>
         <span className="text-xs font-mono rounded-full bg-primary/15 text-primary-soft px-2 py-0.5">
-          {fmtFr(apy, 1)}% APY
+          {badge ?? `${fmtFr(apy, 1)}% APY`}
         </span>
       </div>
       <div className="mt-4 flex items-baseline gap-2">

@@ -135,6 +135,16 @@ export const ROBOTS_GARDIEN: readonly RobotGardien[] = [
     horaire: "35 15 * * 1-5",
     description: "Taux de change de référence de la BCE (euro, dollar, livre, franc suisse), chaque jour ouvré.",
   },
+  {
+    cle: "rendements",
+    workflow: "rendements.yml",
+    // 10/10/2026 (lot Z5, robot R8) : APR du stETH publié par Lido → data/rendements.json (affiché avec sa date et sa
+    // source) ; contrôle interne des lignes Aave et Rocket Pool (verdicts seulement, valeurs dans le ticket privé).
+    // 05:50 UTC : Lido publie vers 12:22 UTC (le robot lit le point de la veille) ; loin du pic quotidien d'Aave (01:00 UTC).
+    inputs: {},
+    horaire: "50 5 * * *",
+    description: "Rendements : APR de Lido (médiane sur 7 jours), contrôle des lignes Aave et Rocket Pool, chaque jour.",
+  },
 ];
 
 /** Robot de la table, ou undefined si la clé est inconnue. */

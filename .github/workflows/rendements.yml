@@ -1,0 +1,148 @@
+# Rendements — robot R8 (lot Z5, 10/10/2026). Demande de Kev : « tout ce qui n'est pas automatisé doit l'être »,
+# « 0 euro », données « toujours à jour », aucune donnée inventée.
+#
+# Lit l'APR du stETH publié par Lido (https://eth-api.lido.fi/v1/protocol/steth/apr/sma : 7 points quotidiens, médiane
+# sur 7 jours, affichée sur le site avec sa date et « Source : Lido ») et, pour le seul CONTRÔLE interne, l'historique
+# sur 7 jours d'Aave (USDC, DAI, marché principal choisi par adresse) et l'APR de rETH publié par Rocket Pool
+# (scripts/rendements.mjs, décisions dans scripts/lib/rendements.mjs). Commite data/rendements.json SEULEMENT si une
+# donnée affichée change (un commit = un déploiement). Les valeurs d'Aave et de Rocket Pool ne vont JAMAIS dans le dépôt
+# (public) ni dans le résumé du run : seulement dans le ticket privé (fichier hors dépôt, $RUNNER_TEMP).
+# Morpho et la page staking de Kraken sont exclus par leurs conditions d'utilisation (lues le 10/10/2026).
+#
+# Lancé par l'horloge Vercel (lib/gardien.ts, /api/cron/gardien/rendements, 05:50 UTC) ; les horaires ci-dessous sont
+# le filet natif de GitHub (doublon sans danger : groupe de concurrence, commit seulement si une valeur change).
+# Premier passage : à la fusion (push qui modifie le robot).
+on:
+  schedule:
+    - cron: "50 5 * * *" # filet de l'horloge Vercel
+    - cron: "20 8 * * *" # second filet
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - scripts/rendements.mjs
+      - scripts/lib/rendements.mjs
+      - .github/workflows/rendements.yml
+
+name: Rendements (Lido, contrôle Aave et Rocket Pool)
+
+permissions:
+  contents: write
+
+concurrency:
+  group: rendements
+  cancel-in-progress: false
+
+jobs:
+  rendements:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      TICKETS_PRIVES: ${{ secrets.SENTINELLE_TOKEN != '' }}
+    # bash -eo pipefail : une commande en échec dans un tube fait échouer l'étape (règle du lot)
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v6
+        with:
+          ref: main
+          token: ${{ secrets.GITHUB_TOKEN }}
+          # historique : si data/rendements.json est illisible, le robot reprend la dernière version lisible comme
+          # référence du contrôle de variation (git log + git show)
+          fetch-depth: 50
+
+      - name: Setup Node 20
+        uses: actions/setup-node@v6
+        with:
+          node-version: "20"
+          cache: npm
+
+      - name: Lire Lido, contrôler Aave et Rocket Pool
+        id: r
+        continue-on-error: true
+        run: node scripts/rendements.mjs --ticket="$RUNNER_TEMP/rendements-ticket.md"
+
+      - name: Dépendances (tests)
+        id: deps
+        if: steps.r.outputs.changed == 'true'
+        run: npm ci --no-audit --no-fund
+
+      # Bloquant avant tout commit : le fichier doit être lisible par le site et le projet doit compiler.
+      - name: Tests des rendements
+        id: tests
+        if: steps.r.outputs.changed == 'true'
+        run: |
+          npx vitest run tests/lib/rendements.test.ts
+          npx tsc --noEmit -p .
+
+      - name: Commit + push (avec reprise anti-course)
+        id: publier
+        if: steps.r.outputs.changed == 'true'
+        run: |
+          git add data/rendements.json
+          if git diff --staged --quiet; then
+            echo "Aucun fichier modifié." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          git config user.name "Cryptoreflex Bot"
+          git config user.email "bot@cryptoreflex.fr"
+          git commit -m "chore(rendements): Lido et contrôles ($(node -p "require('./data/rendements.json').lido.date"))" \
+            -m "APR de Lido et verdicts de contrôle relus par .github/workflows/rendements.yml" \
+            -m "" \
+            -m "Co-Authored-By: Cryptoreflex Bot <bot@cryptoreflex.fr>"
+          for i in 1 2 3; do
+            if git push origin HEAD:main; then
+              echo "Rendements publiés (commit $(git rev-parse --short HEAD))." >> "$GITHUB_STEP_SUMMARY"
+              exit 0
+            fi
+            echo "Push rejeté, rebase puis nouvel essai ($i / 3)…"
+            git fetch origin main
+            git rebase origin/main || { git rebase --abort; break; }
+            sleep 2
+          done
+          echo "## ❌ Push des rendements impossible après 3 essais" >> "$GITHUB_STEP_SUMMARY"
+          exit 1
+
+      # always() : un échec des tests ou du push ne doit jamais faire sauter le ticket ni l'échec final.
+      - name: Tickets privés non configurés
+        if: always() && (steps.r.outputs.alerte == 'true' || steps.r.outcome == 'failure' || failure()) && env.TICKETS_PRIVES != 'true'
+        run: |
+          echo "Secret SENTINELLE_TOKEN absent : aucun ticket (l'échec du job reste le signal)."
+
+      - name: Ticket « rendements » (dépôt privé)
+        if: always() && (steps.r.outputs.alerte == 'true' || steps.r.outcome == 'failure' || failure()) && env.TICKETS_PRIVES == 'true'
+        uses: actions/github-script@v9
+        env:
+          DEPS: ${{ steps.deps.outcome }}
+          TESTS: ${{ steps.tests.outcome }}
+          PUBLIER: ${{ steps.publier.outcome }}
+        with:
+          github-token: ${{ secrets.SENTINELLE_TOKEN }}
+          script: |
+            const depot = { owner: "Qlpha-png", repo: "cryptoreflex-sentinelle" };
+            const fs = require("fs");
+            const date = new Date().toISOString().slice(0, 10);
+            const runUrl = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
+            let corps = "";
+            try { corps = fs.readFileSync(`${process.env.RUNNER_TEMP}/rendements-ticket.md`, "utf8"); } catch (e) { corps = ""; }
+            const bloque = [process.env.DEPS, process.env.TESTS, process.env.PUBLIER].includes("failure");
+            if (!corps) corps = bloque
+              ? `Le robot des rendements a lu ses sources, mais la publication est bloquée (tests ou push en échec) : data/rendements.json n'est pas à jour sur le site. Voir le run.\n\n_Ticket créé par \`.github/workflows/rendements.yml\` (lot Z5)._`
+              : `Le robot des rendements s'est interrompu (source injoignable ou erreur du script) : voir le résumé du run.\n\n_Ticket créé par \`.github/workflows/rendements.yml\` (lot Z5)._`;
+            else if (bloque) corps += `\n\n**Publication bloquée** : tests ou push en échec, data/rendements.json n'est pas à jour sur le site.`;
+            corps += `\n\n**Run** : ${runUrl}\n**Date** : ${date}`;
+            const existants = await github.rest.issues.listForRepo({ ...depot, state: "open", labels: "rendements", per_page: 50 });
+            const deja = existants.data.find((i) => i.title.startsWith("[rendements]"));
+            if (deja) {
+              await github.rest.issues.createComment({ ...depot, issue_number: deja.number, body: corps });
+              return;
+            }
+            await github.rest.issues.create({ ...depot, title: `[rendements] Lido, Aave, Rocket Pool - ${date}`, body: corps, labels: ["bug", "rendements", "monitoring"] });
+
+      - name: Échec si alerte
+        if: always() && (steps.r.outputs.alerte == 'true' || steps.r.outcome == 'failure' || failure())
+        run: |
+          echo "Rendements : alerte (voir le résumé et le ticket privé)."
+          exit 1

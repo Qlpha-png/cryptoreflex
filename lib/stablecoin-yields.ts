@@ -1,22 +1,21 @@
 /**
- * lib/stablecoin-yields.ts — Comparateur APY stablecoins (USDC / USDT / EURC)
+ * lib/stablecoin-yields.ts — rendements de stablecoins affichés sur /outils/yield-stablecoins (page hors index).
  *
- * KILLER FEATURE 2026-05-02 (audit innovation expert) — répond à la question
- * #1 du débutant FR : "Où placer ma trésorerie en stable ?"
+ * Lot Z5 (10/10/2026), demande de Kev : données « toujours à jour », aucune donnée inventée, jamais une valeur sans date.
+ *  - Chaque ligne porte sa date de relevé (`releveLe`), affichée avec son âge (<VerifieLe>) ; la date de la page est
+ *    calculée depuis les lignes (plus de date globale écrite à la main).
+ *  - Aucune de ces lignes n'a de source automatique autorisée : Aave et Rocket Pool ne servent qu'au CONTRÔLE (robot R8,
+ *    data/rendements.json) ; Morpho et Kraken l'interdisent par leurs conditions (lues le 10/10/2026). Les lignes Aave
+ *    portent `controle` : quand la médiane Aave sur 7 jours tombe dans la fourchette affichée, la page affiche la date
+ *    de ce contrôle ; sinon un ticket privé demande la correction.
+ *  - Retirées le 10/10/2026 : les offres « Earn » sur USDC et EURC (Bitpanda, Coinbase, Kraken, SwissBorg), car le site
+ *    explique lui-même (guide acheter-usdc-usdt-france-2026-stablecoins) que MiCA interdit aux plateformes agréées de
+ *    rémunérer la détention de ces jetons, et qu'aucun relevé daté ne prouvait le contraire ; Kraken USDT Earn, absent
+ *    de la liste staking/Earn de Kraken lue le 10/10/2026.
+ *  - L'ancienne note « mises à jour manuellement pour rester sous le seuil d'un statut CIF » n'avait aucune source : elle
+ *    ne justifie rien ici (question juridique non tranchée, à poser à Kev si un jour des taux de plateformes sont automatisés).
  *
- * Données : APY observés (avril 2026) sur les plateformes régulées MiCA + 2-3
- * acteurs internationaux référence. Mises à jour MANUELLEMENT (vs scraping
- * automatique) pour rester sous le seuil "comparateur d'investissements
- * réglementés AMF" qui exigerait un statut CIF — le scraping live pousserait
- * au-delà du purement éditorial.
- *
- * Refresh cadence : édité hebdo via PR. Le composant `<StablecoinYieldsTable>`
- * affiche `lastUpdated` pour transparence.
- *
- * Pourquoi pas live ? Trade Republic / Crypto.com ne publient
- * pas leurs APY via API publique stable. Les afficher à la milliseconde près
- * créerait un faux signal de précision dans un produit volatile par nature
- * (les APY varient au jour le jour selon utilization rate).
+ * À NE PAS interpréter comme un conseil en investissement (cf. AMF).
  */
 
 export interface StablecoinYield {
@@ -42,124 +41,22 @@ export interface StablecoinYield {
   notes?: string;
   /** Lien d'inscription (affiliation si applicable). */
   url: string;
+  /** Date du relevé de la ligne (AAAA-MM-JJ), affichée avec son âge. */
+  releveLe: string;
+  /** Contrôle par le robot R8 (data/rendements.json) : identifiant du contrôle de la ligne. */
+  controle?: "aave-usdc" | "aave-dai";
 }
 
-/**
- * Données YIELD avril 2026.
- *
- * Sources :
- *  - Sites officiels des plateformes (sections Earn / Yield / Stake)
- *  - Vérification croisée DefiLlama pour les yields DeFi
- *  - Test live avec compte de tracking interne (montant 100€)
- *
- * À NE PAS interpréter comme un conseil en investissement (cf. AMF).
- */
 export const STABLECOIN_YIELDS: StablecoinYield[] = [
   // === Centralized Earn (CeFi) ===
-  {
-    platformId: "bitpanda",
-    platformName: "Bitpanda",
-    regulation: "MiCA",
-    stablecoin: "USDC",
-    apyMin: 4.5,
-    apyMax: 4.5,
-    lockUpDays: 0,
-    productType: "Earn",
-    risk: 2,
-    notes: "Liquide, capé à 25k€ par stablecoin. APY fixe.",
-    url: "https://www.bitpanda.com/fr",
-  },
-  {
-    platformId: "bitpanda",
-    platformName: "Bitpanda",
-    regulation: "MiCA",
-    stablecoin: "USDT",
-    apyMin: 4.0,
-    apyMax: 4.0,
-    lockUpDays: 0,
-    productType: "Earn",
-    risk: 2,
-    url: "https://www.bitpanda.com/fr",
-  },
-  {
-    platformId: "bitpanda",
-    platformName: "Bitpanda",
-    regulation: "MiCA",
-    stablecoin: "EURC",
-    apyMin: 3.2,
-    apyMax: 3.2,
-    lockUpDays: 0,
-    productType: "Earn",
-    risk: 2,
-    notes: "EURC = stablecoin EUR émis par Circle, conforme MiCA.",
-    url: "https://www.bitpanda.com/fr",
-  },
-  {
-    platformId: "coinbase",
-    platformName: "Coinbase",
-    regulation: "MiCA",
-    stablecoin: "USDC",
-    apyMin: 4.1,
-    apyMax: 4.1,
-    lockUpDays: 0,
-    productType: "Earn",
-    risk: 2,
-    notes: "USDC Rewards. Coinbase = émetteur (via Circle).",
-    url: "https://www.coinbase.com/fr",
-  },
-  {
-    platformId: "kraken",
-    platformName: "Kraken",
-    regulation: "MiCA",
-    stablecoin: "USDC",
-    apyMin: 4.5,
-    apyMax: 5.5,
-    lockUpDays: 0,
-    productType: "Earn",
-    risk: 2,
-    notes: "Par paliers : 5,5 % jusqu'à 25 000 $, 4,5 % au-delà.",
-    url: "https://www.kraken.com/fr-fr",
-  },
-  {
-    platformId: "kraken",
-    platformName: "Kraken",
-    regulation: "MiCA",
-    stablecoin: "USDT",
-    apyMin: 5.0,
-    apyMax: 5.0,
-    lockUpDays: 0,
-    productType: "Earn",
-    risk: 2,
-    url: "https://www.kraken.com/fr-fr",
-  },
+  // Reprise Z5 (10/10/2026) : ligne « Bitpanda · MiCA · USDT · Earn 4,0 % » (relevé du 02/05/2026) retirée. L'USDT n'a
+  // pas d'émetteur agréé dans l'UE ; la déclaration publique de l'ESMA du 17/01/2025 (ESMA75-223375936-6099) demande aux
+  // prestataires d'arrêter leurs services sur ces jetons (au plus une vente seule jusqu'à la fin du T1 2025). Aucun relevé
+  // daté ne prouve une offre Earn USDT ouverte en France : la règle de la page (« sans relevé daté, nous ne l'affichons
+  // pas ») s'applique.
   // Audit 2026-10-02 : entrées « Binance Earn » retirées — Binance a cessé ses
   // services sur crypto-actifs en France le 1er juillet 2026 (absente du
   // registre MiCA de l'ESMA) ; elles étaient en outre étiquetées « MiCA » à tort.
-  {
-    platformId: "swissborg",
-    platformName: "SwissBorg",
-    regulation: "MiCA",
-    stablecoin: "USDC",
-    apyMin: 5.0,
-    apyMax: 8.0,
-    lockUpDays: 0,
-    productType: "Earn",
-    risk: 3,
-    notes: "Smart Yield — APY tier selon plan Premium.",
-    url: "https://swissborg.com/fr",
-  },
-  {
-    platformId: "swissborg",
-    platformName: "SwissBorg",
-    regulation: "MiCA",
-    stablecoin: "EURC",
-    apyMin: 3.5,
-    apyMax: 5.0,
-    lockUpDays: 0,
-    productType: "Earn",
-    risk: 3,
-    url: "https://swissborg.com/fr",
-  },
 
   // === DeFi (référence — non-MiCA) ===
   {
@@ -172,8 +69,10 @@ export const STABLECOIN_YIELDS: StablecoinYield[] = [
     lockUpDays: 0,
     productType: "DeFi",
     risk: 4,
-    notes: "Smart contract risk. Variable selon utilization. EthMainnet.",
+    notes: "Risque de smart contract. Taux variable selon l'utilisation. Réseau Ethereum.",
     url: "https://app.aave.com/",
+    releveLe: "2026-05-02",
+    controle: "aave-usdc",
   },
   {
     platformId: "aave",
@@ -186,6 +85,8 @@ export const STABLECOIN_YIELDS: StablecoinYield[] = [
     productType: "DeFi",
     risk: 4,
     url: "https://app.aave.com/",
+    releveLe: "2026-05-02",
+    controle: "aave-dai",
   },
   {
     platformId: "compound",
@@ -198,11 +99,14 @@ export const STABLECOIN_YIELDS: StablecoinYield[] = [
     productType: "DeFi",
     risk: 4,
     url: "https://app.compound.finance/",
+    releveLe: "2026-05-02",
   },
 ];
 
-/** Date de dernière vérification (à bump à chaque édition manuelle). */
-export const STABLECOIN_YIELDS_LAST_UPDATED = "2026-05-02";
+/** Dates de relevé de toutes les lignes (la plus ancienne compte pour l'âge affiché). */
+export function datesReleveStablecoins(lignes: ReadonlyArray<Pick<StablecoinYield, "releveLe">> = STABLECOIN_YIELDS): string[] {
+  return lignes.map((y) => y.releveLe);
+}
 
 /**
  * Filtre + tri pour le composant table : récupère les yields d'un stablecoin

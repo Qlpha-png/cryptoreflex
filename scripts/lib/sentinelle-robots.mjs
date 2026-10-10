@@ -26,6 +26,8 @@ export const CADENCE = [
   ["fiches-liens.yml", "fiches sans défaut (liens et pages)", 32],
   // 10/10/2026 (lot Z4) : taux BCE, jours ouvrés 15:35 UTC → du vendredi au lundi = 72 h, + marge
   ["fx-bce.yml", "taux de change BCE", 80],
+  // 10/10/2026 (lot Z5) : rendements (Lido, contrôle Aave et Rocket Pool), chaque jour à 05:50 UTC
+  ["rendements.yml", "rendements (Lido, contrôle Aave et Rocket Pool)", 30],
 ];
 
 /**

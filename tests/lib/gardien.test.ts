@@ -220,7 +220,7 @@ describe("GET /api/cron/gardien/[robot]", () => {
 /* ------------------------------------------------------------------ tickets privés + journaux publics */
 describe("workflows : tickets dans le dépôt privé uniquement", () => {
   const fichiers = readdirSync(DOSSIER_WF).filter((f) => /\.ya?ml$/.test(f));
-  const ATTENDUS = ["audit-navigateur.yml", "daily-content.yml", "fiches-liens.yml", "fx-bce.yml", "freshness-check.yml", "health-check.yml", "refresh-prices-db.yml", "sentinelle.yml", "veille-officielle.yml", "weekly-blog.yml", "weekly-events.yml"];
+  const ATTENDUS = ["audit-navigateur.yml", "daily-content.yml", "fiches-liens.yml", "fx-bce.yml", "freshness-check.yml", "health-check.yml", "refresh-prices-db.yml", "rendements.yml", "sentinelle.yml", "veille-officielle.yml", "weekly-blog.yml", "weekly-events.yml"];
   const DEPOT_PRIVE = `const depot = { owner: "Qlpha-png", repo: "cryptoreflex-sentinelle" };`;
 
   it("aucun « gh issue » ni appel d'API de tickets en dehors des étapes github-script prévues", () => {
@@ -231,7 +231,7 @@ describe("workflows : tickets dans le dépôt privé uniquement", () => {
     }
   });
 
-  it("les 11 workflows à tickets sont exactement ceux attendus", () => {
+  it("les 12 workflows à tickets sont exactement ceux attendus (lot Z5 : + rendements)", () => {
     const avecTickets = fichiers.filter((f) => /github\.rest\.issues\./.test(readFileSync(path.join(DOSSIER_WF, f), "utf8"))).sort();
     expect(avecTickets).toEqual([...ATTENDUS].sort());
   });

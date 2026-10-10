@@ -6,12 +6,18 @@ import VerifieLe from "@/components/ui/VerifieLe";
 import { Coins, ShieldAlert, Lock, Sparkles, ArrowRight, Info } from "lucide-react";
 import {
   STAKING_RATES,
-  STAKING_RATES_PERIODE,
+  apyNetFournisseur,
   computeStakingReward,
   getStakingDataById,
+  plusAncienReleve,
   type StakingCryptoData,
   type StakingMethod,
+  type StakingProviderRate,
 } from "@/lib/staking-rates";
+import TauxSource from "@/components/TauxSource";
+import ExplicationTaux from "@/components/ExplicationTaux";
+import { dateControle, statutControle } from "@/lib/rendements";
+import { SEUILS_JOURS, formatJJMMAAAA } from "@/lib/fraicheur";
 import { getPlatformById } from "@/lib/platforms";
 import AffiliateLink from "@/components/AffiliateLink";
 import { track } from "@/lib/analytics";
@@ -44,11 +50,22 @@ function formatEur(value: number): string {
   }).format(value);
 }
 
-function CalculateurApyStaking() {
+/** Fourchette contrôlée d'une ligne (taux net arrondi au millième, comme la table CONTROLES du robot). */
+const afficheControle = (p: StakingProviderRate) => {
+  const net = Math.round(apyNetFournisseur(p) * 1000) / 1000;
+  return { minPct: net, maxPct: net };
+};
+
+/**
+ * `maintenant` : instant sérialisé (tests) ; sinon lu une fois dans le navigateur (le composant n'est jamais rendu côté
+ * serveur : `ssr: false` sur ses deux pages).
+ */
+function CalculateurApyStaking({ maintenant: maintenantFixe }: { maintenant?: number } = {}) {
   const [coinId, setCoinId] = useState<StakingCryptoData["id"]>("ethereum");
   const [amount, setAmount] = useState<number>(1000);
   const [months, setMonths] = useState<number>(12);
   const [hasInteracted, setHasInteracted] = useState(false);
+  const [maintenant] = useState<number | null>(() => maintenantFixe ?? (typeof window === "undefined" ? null : Date.now()));
 
   const data = useMemo(() => getStakingDataById(coinId), [coinId]);
 
@@ -57,19 +74,32 @@ function CalculateurApyStaking() {
     return data.providers
       .map((p) => {
         const grossReward = computeStakingReward(amount, p.apy, months);
-        // On retire les frais du provider (ex: Lido prend 10 % sur les rewards).
-        const netReward = grossReward * (1 - p.feePct / 100);
+        // Frais retirés d'un APY brut seulement : l'APR publié par Lido est déjà net de sa commission (lot Z5,
+        // 10/10/2026 : avant, la ligne Lido perdait 10 % une seconde fois).
+        const netReward = computeStakingReward(amount, apyNetFournisseur(p), months);
+        // reprise Z5 : une ligne que le contrôle du robot contredit n'affiche plus de taux et sort du classement
+        const enVerification = !!p.controle && statutControle(p.controle, afficheControle(p)) === "ecart";
         return {
           ...p,
           grossReward,
           netReward,
           finalValue: amount + netReward,
+          enVerification,
         };
       })
-      .sort((a, b) => b.netReward - a.netReward);
+      .sort((a, b) => Number(a.enVerification) - Number(b.enVerification) || b.netReward - a.netReward);
   }, [data, amount, months]);
 
-  const bestRow = rows[0];
+  // Encadré (reprise Z5, juré droit D3) : seulement une ligne accessible à ce montant (jamais le validateur direct,
+  // 32 ETH minimum) ET datée de moins de 14 jours (taux tenu par le robot) ; sinon pas d'encadré.
+  const seuilMs = SEUILS_JOURS.rendements * 86_400_000;
+  const bestRow = rows.find(
+    (r) => !r.enVerification && r.method !== "direct" && !!r.taux && maintenant !== null && maintenant - Date.parse(`${r.taux.date}T00:00:00Z`) < seuilMs,
+  );
+  const releve = data ? plusAncienReleve(data.providers) : null;
+  const lido = rows.find((r) => r.taux)?.taux ?? null;
+  const rocketPool = rows.find((r) => r.controle === "rocketpool-reth");
+  const rpControle = rocketPool && !rocketPool.enVerification ? dateControle("rocketpool-reth", afficheControle(rocketPool)) : null;
 
   // Tracking : déclenche `apy-staking-result-shown` une fois par interaction
   // significative (changement de crypto OU de montant > 0).
@@ -162,27 +192,30 @@ function CalculateurApyStaking() {
       </div>
 
       {/* Résultats */}
-      {data && bestRow && (
+      {data && rows.length > 0 && (
         <div className="space-y-4">
-          {/* Highlight meilleur provider */}
-          <div className="glass glow-border rounded-2xl p-6 sm:p-8">
-            <div className="flex items-start gap-3">
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/15 text-primary-soft">
-                <Sparkles className="h-6 w-6" />
-              </div>
-              <div className="flex-1">
-                <span className="badge-info">Meilleur rendement net estimé</span>
-                <h3 className="mt-2 text-xl font-bold text-fg-max">
-                  {bestRow.provider} — APY {fmtFr(bestRow.apy, 2)} %
-                </h3>
-                <p className="mt-1 text-sm text-fg-max/70">
-                  Avec {formatEur(amount)} stakés sur {months} mois, vous touchez
-                  ~ <span className="text-primary-soft font-bold">{formatEur(bestRow.netReward)}</span> nets
-                  (frais provider {bestRow.feePct} % retirés).
-                </p>
+          {/* Estimation sur un taux daté (reprise Z5 : plus de « meilleur rendement » sur des taux du T1 2026) */}
+          {bestRow && bestRow.taux && (
+            <div className="glass glow-border rounded-2xl p-6 sm:p-8">
+              <div className="flex items-start gap-3">
+                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/15 text-primary-soft">
+                  <Sparkles className="h-6 w-6" />
+                </div>
+                <div className="flex-1">
+                  <span className="badge-info">Estimation sur un taux daté</span>
+                  <h3 className="mt-2 text-xl font-bold text-fg-max">
+                    {bestRow.provider} — {bestRow.apyNet ? "APR net" : "APY"} {fmtFr(bestRow.apy, 2)} % au {formatJJMMAAAA(bestRow.taux.date)}
+                  </h3>
+                  <p className="mt-1 text-sm text-fg-max/70">
+                    Avec {formatEur(amount)} stakés sur {months} mois, vous toucheriez environ{" "}
+                    <span className="text-primary-soft font-bold">{formatEur(bestRow.netReward)}</span> nets{" "}
+                    {bestRow.apyNet ? `(frais de ${bestRow.feePct} % déjà déduits par la source)` : `(frais de ${bestRow.feePct} % retirés)`} :
+                    estimation, taux variable, non garanti.
+                  </p>
+                </div>
               </div>
             </div>
-          </div>
+          )}
 
           {/* Tableau comparatif */}
           <div className="glass rounded-2xl overflow-hidden">
@@ -191,8 +224,8 @@ function CalculateurApyStaking() {
                 <thead className="bg-elevated/60 text-xs uppercase tracking-wide text-fg-4">
                   <tr>
                     <th className="px-4 py-3 text-left">Provider</th>
-                    <th className="px-4 py-3 text-left">Méthode</th>
-                    <th className="px-4 py-3 text-right">APY brut</th>
+                    <th className="hidden sm:table-cell px-4 py-3 text-left">Méthode</th>
+                    <th className="px-4 py-3 text-right">APY</th>
                     <th className="px-4 py-3 text-right">Frais</th>
                     <th className="px-4 py-3 text-right">Lock-up</th>
                     <th className="px-4 py-3 text-right">Récompense nette</th>
@@ -202,28 +235,66 @@ function CalculateurApyStaking() {
                   {rows.map((r) => (
                     <tr key={r.provider} className="hover:bg-fg-max/5">
                       <td className="px-4 py-3 font-semibold text-fg-max">{r.provider}</td>
-                      <td className="px-4 py-3">
+                      <td className="hidden sm:table-cell px-4 py-3">
                         <span className={`inline-flex items-center rounded-full border px-2 py-0.5 text-xs font-semibold ${METHOD_BADGE[r.method]}`}>
                           {METHOD_LABEL[r.method]}
                         </span>
                       </td>
-                      <td className="px-4 py-3 text-right text-fg-max/80">{fmtFr(r.apy, 2)} %</td>
-                      <td className="px-4 py-3 text-right text-fg-4">{r.feePct} %</td>
-                      <td className="px-4 py-3 text-right text-fg-4">
+                      <td className="px-4 py-3 text-right text-fg-max/80">
+                        {r.enVerification ? (
+                          <span className="inline-block min-w-[9rem] text-xs font-semibold text-warning-fg [overflow-wrap:normal] [word-break:normal]" data-taux-en-verification="">
+                            Taux en cours de vérification : consultez le protocole
+                          </span>
+                        ) : (
+                          <>
+                            <span className="num-data whitespace-nowrap">{fmtFr(r.apy, 2)} %</span>
+                            <span className="block whitespace-nowrap text-xs text-fg-4">{r.apyNet ? "APR net, frais déduits" : "brut"}</span>
+                            <span className="block whitespace-nowrap text-xs text-fg-4">
+                              {r.taux ? (
+                                <>
+                                  {"au "}
+                                  <VerifieLe date={r.taux.date} famille="rendements" label="" age={false} />
+                                </>
+                              ) : r.releve ? (
+                                <VerifieLe date={r.releve.debut} affichage={r.releve.texte} famille="rendements" label="relevé au" age={false} />
+                              ) : null}
+                            </span>
+                          </>
+                        )}
+                      </td>
+                      <td className="px-4 py-3 text-right text-fg-4 whitespace-nowrap">{r.feePct} %</td>
+                      <td className="px-4 py-3 text-right text-fg-4 whitespace-nowrap">
                         {r.lockupDays === 0 ? "Liquide" : `${r.lockupDays} j`}
                       </td>
-                      <td className="px-4 py-3 text-right font-bold text-primary-soft">
-                        {formatEur(r.netReward)}
+                      <td className="px-4 py-3 text-right font-bold text-primary-soft whitespace-nowrap">
+                        {r.enVerification ? "—" : formatEur(r.netReward)}
                       </td>
                     </tr>
                   ))}
                 </tbody>
               </table>
             </div>
-            <p className="border-t border-border bg-elevated/40 px-4 py-2 text-xs text-fg-4">
-              <VerifieLe date={STAKING_RATES_PERIODE.debut} affichage={STAKING_RATES_PERIODE.texte} famille="rendements" label="APY indicatifs relevés au" age={false} /> — varient quotidiennement avec le réseau et les pools.
-              Récompenses nettes affichées sans réinvestissement automatique.
-            </p>
+            <div className="space-y-1 border-t border-border bg-elevated/40 px-4 py-2 text-xs text-fg-4">
+              {lido && (
+                <p>
+                  <TauxSource taux={lido} libelle="Lido (stETH), APR net de sa commission" />
+                </p>
+              )}
+              {lido && <ExplicationTaux />}
+              {rpControle && (
+                <p>
+                  <VerifieLe date={rpControle} famille="rendements" label="Rocket Pool (rETH) : taux net contrôlé" />
+                </p>
+              )}
+              <p>
+                {releve && (
+                  <>
+                    <VerifieLe date={releve.debut} affichage={releve.texte} famille="rendements" label={lido ? "Autres APY indicatifs relevés au" : "APY indicatifs relevés au"} age={false} /> — varient quotidiennement avec le réseau et les pools.{" "}
+                  </>
+                )}
+                Récompenses nettes affichées sans réinvestissement automatique.
+              </p>
+            </div>
           </div>
 
           {/* Risques */}
@@ -314,4 +385,4 @@ function CalculateurApyStaking() {
   );
 }
 
-export default avecTypoSync(CalculateurApyStaking);
+export default avecTypoSync<{ maintenant?: number }>(CalculateurApyStaking);

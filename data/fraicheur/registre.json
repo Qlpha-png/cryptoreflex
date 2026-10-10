@@ -326,22 +326,22 @@
     {
       "id": "32",
       "famille": "Rendements de stablecoins",
-      "source": "relevé éditorial ; Aave (S17), Morpho (S18) prévus (R8) ; DefiLlama : décision en attente",
-      "robot": "aucun (R8 au lot Z5)",
-      "cadence": "1 fois par semaine",
+      "source": "relevé éditorial daté par ligne (releveLe) ; offres Earn USDC, EURC et USDT retirées (MiCA, déclaration ESMA du 17/01/2025) ; contrôle Aave : famille 54",
+      "robot": "aucun pour les valeurs (aucune source autorisée à l'affichage) ; contrôle quotidien des lignes Aave par R8 (famille 54)",
+      "cadence": "relevé éditorial à refaire",
       "ageMaxH": 336,
       "critiqueH": 672,
-      "lecture": { "methode": "constante", "fichier": "lib/stablecoin-yields.ts", "motif": "STABLECOIN_YIELDS_LAST_UPDATED\\s*=\\s*\"([\\d-]+)\"", "explication": "constante STABLECOIN_YIELDS_LAST_UPDATED" }
+      "lecture": {"methode":"constante","fichier":"lib/stablecoin-yields.ts","motif":"releveLe:\\s*\"([\\d-]+)\"","tous":true,"mode":"plusAncienne","explication":"plus ancienne date releveLe des lignes de lib/stablecoin-yields.ts (affichée sous chaque taux, âge sous les tableaux). Aucune ligne n'a de source automatique autorisée : la famille reste ❌ tant que les lignes éditoriales ne sont pas relues. Le contrôle des lignes Aave par le robot R8 est jugé par la famille 54"}
     },
     {
       "id": "33",
       "famille": "Rendements de staking",
-      "source": "relevé éditorial ; Lido (S15), Rocket Pool (S16), Kraken (S19) prévus (R8)",
-      "robot": "aucun (R8 au lot Z5)",
-      "cadence": "1 semaine à 1 mois",
+      "source": "relevé éditorial daté par ligne (fourchettes de /staking, lignes du calculateur) ; page staking de Kraken (S19) exclue par ses conditions EEE ; repère Lido : famille 54",
+      "robot": "aucun pour ces lignes (aucune source autorisée à l'affichage) ; repère Lido tenu par R8 (famille 54)",
+      "cadence": "relevé éditorial à refaire",
       "ageMaxH": 336,
       "critiqueH": 720,
-      "lecture": { "methode": "constante", "fichier": "lib/staking-rates.ts", "motif": "STAKING_PAIRS_RELEVE\\s*=\\s*\"([\\d-]+)\"", "explication": "constante STAKING_PAIRS_RELEVE (mois seul = 1er du mois, jamais rajeuni)" }
+      "lecture": {"methode":"constante","fichier":"lib/programmatic.ts","motif":"releve:\\s*\"([\\d-]+)\"","tous":true,"mode":"plusAncienne","et":[{"methode":"constante","fichier":"lib/staking-rates.ts","motif":"debut:\\s*\"([\\d-]+)\"","tous":true,"mode":"plusAncienne"}],"explication":"plus ancienne date de relevé des fourchettes de /staking (lib/programmatic.ts, releve) et des lignes éditoriales du calculateur (lib/staking-rates.ts, debut) : mois seul = 1er du mois, jamais rajeuni. La famille reste ❌ tant que ces lignes ne sont pas relues. Le repère Lido (robot R8) est jugé par la famille 54"}
     },
     {
       "id": "34",
@@ -542,6 +542,59 @@
       "ageMaxH": 16,
       "critiqueH": 48,
       "lecture": { "methode": "kv", "cle": "cron:refresh-prices:last", "champ": "at", "trace": true, "attentionSi": { "champ": "archive", "egal": "non disponible", "raison": "archive non disponible : lancer supabase/migrations/20261010_cours_archive.sql (bouton Run)" }, "explication": "trace KV du robot des fiches : heure du dernier passage et état de l'archive ; « non disponible » (migration pas encore lancée) = ⚠️, jamais ❌" }
+    },
+    {
+      "id": "54",
+      "famille": "Repère Lido et contrôles des rendements (robot R8)",
+      "source": "Lido (S15, affiché : APR du stETH, médiane sur 7 jours) ; Aave (S17) et Rocket Pool (S16) en contrôle seulement (verdicts, aucune valeur dans le dépôt) ; Morpho (S18) et Kraken (S19) exclus par leurs conditions",
+      "robot": "GitHub rendements (R8), lancé par le Gardien à 05:50 UTC (lot Z5)",
+      "cadence": "1 fois par jour",
+      "ageMaxH": 48,
+      "critiqueH": 96,
+      "lecture": {
+        "methode": "fichier",
+        "fichier": "data/rendements.json",
+        "chemin": "lido.horodatage",
+        "mode": "plusRecente",
+        "attentionSi": [
+          {
+            "chemin": "lido.controle.statut",
+            "egal": "variation-refusee",
+            "raison": "Lido : variation refusée, valeur précédente gardée (ticket privé)"
+          },
+          {
+            "chemin": "controles.rocketpool-reth.statut",
+            "egal": "ecart",
+            "raison": "Rocket Pool : écart avec le taux affiché, ligne « en cours de vérification » (ticket privé)"
+          },
+          {
+            "chemin": "controles.rocketpool-reth.statut",
+            "egal": "source-muette",
+            "raison": "Rocket Pool : source de contrôle muette"
+          },
+          {
+            "chemin": "controles.aave-usdc.statut",
+            "egal": "ecart",
+            "raison": "Aave USDC : écart avec la fourchette affichée, ligne « en cours de vérification » (ticket privé)"
+          },
+          {
+            "chemin": "controles.aave-dai.statut",
+            "egal": "ecart",
+            "raison": "Aave DAI : écart avec la fourchette affichée, ligne « en cours de vérification » (ticket privé)"
+          },
+          {
+            "chemin": "controles.aave-usdc.statut",
+            "egal": "source-muette",
+            "raison": "Aave USDC : source de contrôle muette"
+          },
+          {
+            "chemin": "controles.aave-dai.statut",
+            "egal": "source-muette",
+            "raison": "Aave DAI : source de contrôle muette"
+          }
+        ],
+        "explication": "heure du dernier point Lido retenu (data/rendements.json, lido.horodatage ; Lido publie vers 12:20 UTC, le robot le lit le lendemain à 05:50) : ⚠️ au-delà de 48 h (un passage manqué ou une variation refusée), ❌ au-delà de 96 h (robot arrêté ou Lido muet) ; ⚠️ si un contrôle est en écart ou muet"
+      }
     }
   ],
   "expirations": [

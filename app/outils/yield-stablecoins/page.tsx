@@ -10,10 +10,12 @@ import {
 
 import {
   STABLECOIN_YIELDS,
-  STABLECOIN_YIELDS_LAST_UPDATED,
+  datesReleveStablecoins,
   getYieldsFor,
   getAvailableStablecoins,
 } from "@/lib/stablecoin-yields";
+import { dateControle, statutControle } from "@/lib/rendements";
+import { latestIso } from "@/lib/data-dates";
 import { BRAND } from "@/lib/brand";
 import { findPaidPlatformByUrl } from "@/lib/platforms";
 import StructuredData from "@/components/StructuredData";
@@ -22,7 +24,7 @@ import RelatedPagesNav from "@/components/RelatedPagesNav";
 import NextStepsGuide from "@/components/NextStepsGuide";
 import Tldr from "@/components/ui/Tldr";
 import { withHreflang } from "@/lib/seo-alternates";
-import { fitTitle } from "@/lib/seo-text";
+import { fitDescription, fitTitle } from "@/lib/seo-text";
 import { fmtFr } from "@/lib/format-fr";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import VerifieLe from "@/components/ui/VerifieLe";
@@ -33,8 +35,12 @@ import VerifieLe from "@/components/ui/VerifieLe";
  * KILLER FEATURE 2026-05-02 (audit innovation expert) — répond à la
  * question #1 du débutant FR : "Où placer ma trésorerie en stable ?"
  *
- * Données : `lib/stablecoin-yields.ts` (édition manuelle hebdo, vs scraping
- * automatique qui pousserait le site dans le statut CIF/AMF).
+ * Données : `lib/stablecoin-yields.ts` — chaque ligne porte sa date de relevé (affichée avec son âge) ; les lignes
+ * Aave portent en plus la date du dernier contrôle cohérent du robot R8 (data/rendements.json, lot Z5).
+ * Indexation (décision du lot Z5, 10/10/2026) : la page RESTE hors index. Aucune ligne n'a de source automatique
+ * autorisée (Aave : contrôle seulement ; Morpho, Kraken : conditions d'utilisation), toutes ont un relevé de plus de
+ * 14 jours, et la ligne Aave DAI est en écart avec le contrôle. Condition pour la réindexer : chaque taux affiché
+ * sourcé et daté de moins de 14 jours.
  *
  * Server Component pur — aucun JS shippé pour la table (interactivité limitée
  * aux liens vers les plateformes).
@@ -43,16 +49,17 @@ import VerifieLe from "@/components/ui/VerifieLe";
 export const revalidate = 86400; // 24h — donnée éditoriale, pas live
 
 export const metadata: Metadata = {
-  /* Page d'attente ou contenu périmé : hors index tant que l'outil n'existe pas (audit 03/10/2026) */
+  /* Hors index (audit 03/10/2026, confirmé au lot Z5 le 10/10/2026) : aucun taux sourcé et daté de moins de 14 jours */
   robots: { index: false, follow: true },
-  title: fitTitle("Comparateur APY stablecoins 2026 — où placer USDC, USDT, EURC en France"),
-  description:
-    "Comparatif des rendements (APY) des stablecoins USDC, USDT, EURC sur les plateformes régulées MiCA en France. Données vérifiées, transparence totale.",
+  title: fitTitle("Rendements des stablecoins 2026 — USDC et DAI (DeFi), taux datés"),
+  description: fitDescription(
+    "Rendements (APY) de l'USDC et du DAI en DeFi (Aave, Compound), chaque taux avec sa date de relevé. Offres Earn sur USDC, EURC et USDT retirées (MiCA).",
+  ),
   alternates: withHreflang(`${BRAND.url}/outils/yield-stablecoins`),
   openGraph: {
-    title: "Comparateur yield stablecoins — Cryptoreflex",
+    title: "Rendements des stablecoins USDC et DAI (DeFi) — Cryptoreflex",
     description:
-      "Combien rapporte votre USDC, USDT ou EURC sur Bitpanda, Coinbase, Kraken, SwissBorg ? Comparatif d'APY datés : vérifiez toujours le taux du jour sur la plateforme.",
+      "Rendements de stablecoins avec leur date de relevé : vérifiez toujours le taux du jour sur le protocole.",
     url: `${BRAND.url}/outils/yield-stablecoins`,
     type: "website",
   },
@@ -64,40 +71,42 @@ export default function YieldStablecoinsPage() {
   // « bitpanda.com/fr » sans code n'en est pas un → plus de rel « sponsored » ni d'annonce « liens d'affiliation ».
   const isPaidYield = (url: string) => findPaidPlatformByUrl(url) !== undefined;
   const anyPaidYield = STABLECOIN_YIELDS.some((y) => isPaidYield(y.url));
+  // dates calculées depuis les lignes (lot Z5) : jamais une date globale écrite à la main
+  const datesReleve = datesReleveStablecoins();
 
   const faqItems = [
     {
       q: "Le yield sur stablecoin est-il garanti ?",
-      a: "Non, jamais. Les APY varient au jour le jour selon le taux d'utilisation côté plateforme et les conditions de marché. Les chiffres affichés sont indicatifs, relevés à la date indiquée sur la page.",
+      a: "Non, jamais. Les APY varient au jour le jour selon le taux d'utilisation côté plateforme et les conditions de marché. Les chiffres affichés sont indicatifs, avec la date indiquée sur la page.",
     },
     {
       q: "Quelle est la fiscalité du yield stablecoin en France ?",
       a: "Les intérêts/récompenses perçus sont imposables, mais le régime et le moment exacts (revenu à la perception, ou plus-value à la cession) ne sont pas tranchés par une source officielle dédiée — à vérifier selon votre situation. Un échange crypto→crypto sans soulte n'est, lui, pas un fait générateur (sursis, art. 150 VH bis CGI) ; l'imposition intervient à la cession contre euro.",
     },
     {
-      q: "Pourquoi pas de DeFi (Aave, Compound) sur votre liste prioritaire ?",
-      a: "Le DeFi expose à un risque smart contract (hack, exploit) et de pool (depeg). On le mentionne en référence pour les profils avancés mais on priorise les plateformes MiCA pour les débutants français.",
+      q: "Pourquoi les offres « Earn » sur USDC, EURC et USDT ne figurent-elles plus ici ?",
+      a: "Le règlement européen MiCA interdit aux plateformes agréées de rémunérer la détention de jetons de monnaie électronique comme l'USDC ou l'EURC (voir notre guide pour acheter de l'USDC en France). L'USDT n'a pas d'émetteur agréé dans l'Union européenne : le 17/01/2025, l'ESMA a demandé aux plateformes d'arrêter leurs services sur ce type de jeton. Sans relevé daté qui prouve qu'une telle offre est ouverte en France, nous ne l'affichons pas. Les lignes DeFi (Aave, Compound) restent en référence : elles exposent à un risque de smart contract (piratage, faille) et de dépeg.",
     },
     {
       q: "Comment vérifier que le taux affiché est encore actuel ?",
-      a: "Cette page indique la date de son dernier relevé, et signale elle-même un relevé de plus de 14 jours (« à revérifier »). Les taux changent souvent : pour le taux du jour, allez sur la plateforme directement.",
+      a: "Chaque taux est affiché avec sa date de relevé, et la page signale sous les tableaux une date de plus de 14 jours. Les fourchettes Aave sont contrôlées chaque jour par un robot : quand une fourchette reste juste, la date du contrôle est affichée ; quand le contrôle la contredit, le taux n'est plus affiché (« en cours de vérification ») jusqu'à sa correction. Les taux changent souvent : pour le taux du jour, allez sur le protocole directement.",
     },
     {
       q: "Quelle différence entre USDC et EURC ?",
-      a: "USDC est adossé au dollar, EURC à l'euro (les deux émis par Circle, conformes MiCA). Pour un Français, EURC évite le risque de change EUR/USD mais propose des APY généralement plus bas (marché plus petit).",
+      a: "USDC est adossé au dollar, EURC à l'euro (les deux émis par Circle, conformes MiCA). Pour un Français, EURC évite le risque de change EUR/USD. Aucune ligne EURC n'est affichée ici : nous n'avons pas de relevé daté d'un rendement EURC ouvert en France.",
     },
   ];
 
   const schemas = graphSchema([
     articleSchema({
       slug: "outils/yield-stablecoins",
-      title: "Comparateur APY stablecoins en France 2026",
+      title: "Rendements des stablecoins en France 2026",
       description:
-        "Combien rapporte mon USDC, USDT ou EURC sur les plateformes régulées MiCA ? Comparatif transparent.",
+        "Rendements de l'USDC et du DAI en DeFi, chaque taux avec sa date de relevé.",
       date: "2026-05-02",
-      dateModified: STABLECOIN_YIELDS_LAST_UPDATED,
+      dateModified: latestIso(datesReleve) ?? "2026-05-02",
       category: "Outil",
-      tags: ["stablecoin", "yield", "USDC", "USDT", "EURC", "Earn"],
+      tags: ["stablecoin", "yield", "USDC", "DAI", "DeFi"],
     }),
     faqSchema(faqItems.map((item) => ({ question: item.q, answer: item.a }))),
   ]);
@@ -117,31 +126,31 @@ export default function YieldStablecoinsPage() {
             <span className="gradient-text">stablecoin</span> ?
           </h1>
           <p className="mt-4 text-base sm:text-lg text-fg/80 leading-relaxed max-w-2xl">
-            Comparatif transparent des rendements (APY) sur USDC, USDT, EURC et
-            DAI. Plateformes MiCA prioritaires pour la France.
+            Rendements (APY) de l&apos;USDC et du DAI en DeFi, chaque taux avec sa date de
+            relevé. Les offres « Earn » sur USDC, EURC et USDT ne sont plus listées (règlement MiCA).
           </p>
         </header>
 
         {/* TLDR */}
         <div className="mt-8">
           <Tldr
-            headline="Sur USDC, plusieurs plateformes régulées en France affichent 4 à 5 % d'APY (donnée publique des opérateurs). Pas de risque de change, mais risque plateforme et risque de dépeg réels — à lire avant tout dépôt."
+            headline="Aucun rendement de stablecoin n'est garanti. Cette page ne garde que des taux datés : leur âge est affiché sous les tableaux, et un taux ancien doit être vérifié sur la plateforme avant tout dépôt."
             bullets={[
               {
-                emoji: "💎",
-                text: "Bitpanda + Coinbase + Kraken : APY 4-5 %, 0 lock-up, MiCA",
+                emoji: "🧾",
+                text: "Offres « Earn » sur USDC et EURC retirées (MiCA interdit aux plateformes agréées de rémunérer ces jetons), et sur USDT (jeton sans émetteur agréé dans l'UE)",
               },
               {
-                emoji: "🔥",
-                text: "SwissBorg Smart Yield : jusqu'à 8 % sur USDC, mais risque plateforme plus élevé (3/5)",
+                emoji: "🔎",
+                text: "Fourchettes Aave contrôlées chaque jour par un robot : une fourchette contredite n'est plus affichée",
               },
               {
-                emoji: "🇪🇺",
-                text: "EURC = pas de risque EUR/USD, APY plus bas (3-5 %)",
+                emoji: "🏦",
+                text: "DeFi (Aave, Compound) : risque de smart contract, hors régulation européenne",
               },
               {
                 emoji: "⚠️",
-                text: "Yield non garanti — varie chaque jour selon utilization",
+                text: "Rendement variable chaque jour selon l'utilisation des protocoles",
               },
             ]}
             readingTime="5 min"
@@ -152,7 +161,11 @@ export default function YieldStablecoinsPage() {
         {/* Tables par stablecoin */}
         <div className="mt-12 space-y-12">
           {stablecoins.map((sc) => {
-            const yields = getYieldsFor(sc);
+            // reprise Z5 : une ligne que le contrôle du robot contredit (statut « ecart ») n'affiche plus son taux et
+            // passe en fin de tableau (hors classement) ; aucune valeur de la source de contrôle n'est affichée
+            const yields = getYieldsFor(sc)
+              .map((y) => ({ ...y, enVerification: !!y.controle && statutControle(y.controle, { minPct: y.apyMin, maxPct: y.apyMax }) === "ecart" }))
+              .sort((a, b) => Number(a.enVerification) - Number(b.enVerification));
             if (yields.length === 0) return null;
             return (
               <section
@@ -168,23 +181,24 @@ export default function YieldStablecoinsPage() {
                     <TrendingUp className="h-5 w-5 text-primary" aria-hidden />
                     {sc}{" "}
                     <span className="text-sm font-normal text-muted">
-                      ({yields.length} plateformes)
+                      ({yields.length} {yields.length > 1 ? "lignes" : "ligne"})
                     </span>
                   </h2>
                   <div className="text-xs text-muted">
-                    Trié par APY desc.
+                    Trié par APY décroissant.
                   </div>
                 </header>
 
-                <div className="mt-5 -mx-5 sm:mx-0 overflow-x-auto">
-                  <table className="w-full min-w-[640px] border-collapse text-sm">
+                <p className="mt-3 text-xs text-muted sm:hidden">Faites glisser le tableau vers la gauche pour voir toutes les colonnes.</p>
+                <div className="mt-3 sm:mt-5 -mx-5 sm:mx-0 overflow-x-auto">
+                  <table className="w-full min-w-[480px] sm:min-w-[640px] border-collapse text-sm">
                     <thead className="text-left text-xs uppercase tracking-wider text-muted">
                       <tr className="border-b border-border">
                         <th className="px-3 py-2 font-semibold">Plateforme</th>
                         <th className="px-3 py-2 font-semibold">Régulation</th>
                         <th className="px-3 py-2 font-semibold text-right">APY</th>
-                        <th className="px-3 py-2 font-semibold text-right">Lock-up</th>
-                        <th className="px-3 py-2 font-semibold">Type</th>
+                        <th className="hidden sm:table-cell px-3 py-2 font-semibold text-right">Lock-up</th>
+                        <th className="hidden sm:table-cell px-3 py-2 font-semibold">Type</th>
                         <th className="px-3 py-2 font-semibold">Risque</th>
                         <th className="px-3 py-2 font-semibold">Action</th>
                       </tr>
@@ -199,6 +213,7 @@ export default function YieldStablecoinsPage() {
                                 {y.notes}
                               </span>
                             )}
+                            {y.controle && !y.enVerification && <ControleAave id={y.controle} minPct={y.apyMin} maxPct={y.apyMax} />}
                           </td>
                           <td className="px-3 py-3">
                             <span
@@ -216,15 +231,26 @@ export default function YieldStablecoinsPage() {
                               {y.regulation}
                             </span>
                           </td>
-                          <td className="px-3 py-3 font-mono tabular-nums text-right font-bold text-success">
-                            {y.apyMin === y.apyMax
-                              ? `${fmtFr(y.apyMax, 1)} %`
-                              : `${fmtFr(y.apyMin, 1)} - ${fmtFr(y.apyMax, 1)} %`}
+                          <td className="px-3 py-3 text-right">
+                            {y.enVerification ? (
+                              <span className="inline-block min-w-[9rem] text-xs font-semibold text-warning-fg [overflow-wrap:normal] [word-break:normal]" data-taux-en-verification="">
+                                Taux en cours de vérification : consultez le protocole
+                              </span>
+                            ) : (
+                              <>
+                                <span className="block whitespace-nowrap font-mono tabular-nums font-bold text-success">
+                                  {y.apyMin === y.apyMax
+                                    ? `${fmtFr(y.apyMax, 1)} %`
+                                    : `${fmtFr(y.apyMin, 1)} - ${fmtFr(y.apyMax, 1)} %`}
+                                </span>
+                                <VerifieLe date={y.releveLe} famille="rendements" label="relevé" age={false} className="block whitespace-nowrap text-xs font-normal text-muted" />
+                              </>
+                            )}
                           </td>
-                          <td className="px-3 py-3 font-mono tabular-nums text-right text-fg/80">
+                          <td className="hidden sm:table-cell px-3 py-3 font-mono tabular-nums text-right text-fg/80">
                             {y.lockUpDays === 0 ? "—" : `${y.lockUpDays} j`}
                           </td>
-                          <td className="px-3 py-3 text-fg/80">
+                          <td className="hidden sm:table-cell px-3 py-3 text-fg/80">
                             {y.productType}
                           </td>
                           <td className="px-3 py-3">
@@ -269,7 +295,7 @@ export default function YieldStablecoinsPage() {
           <Info className="h-4 w-4 text-primary-soft mt-0.5 shrink-0" aria-hidden />
           <p className="leading-relaxed">
             <strong>
-              <VerifieLe date={STABLECOIN_YIELDS_LAST_UPDATED} famille="rendements" label="Taux relevés" />.
+              <VerifieLe dates={datesReleve} famille="rendements" label="Taux relevés" />.
             </strong>{" "}
             Les APY varient au jour le jour selon le taux d&apos;utilisation
             côté plateforme. Données relevées à la date indiquée : vérifiez le taux du jour sur la plateforme.
@@ -316,5 +342,20 @@ export default function YieldStablecoinsPage() {
         </div>
       </div>
     </article>
+  );
+}
+
+/**
+ * Date du dernier contrôle cohérent d'une ligne Aave (robot R8), seulement si la fourchette affichée n'a pas changé.
+ * Reprise Z5 : le contrôle n'est plus attribué à Aave dans le texte public (ses conditions encadrent l'extraction
+ * automatisée : risque remonté à Kev) ; l'âge est affiché (source muette ou robot arrêté = date qui vieillit, signalée).
+ */
+function ControleAave({ id, minPct, maxPct }: { id: "aave-usdc" | "aave-dai"; minPct: number; maxPct: number }) {
+  const le = dateControle(id, { minPct, maxPct });
+  if (!le) return null;
+  return (
+    <span className="block text-xs text-muted font-normal mt-0.5">
+      <VerifieLe date={le} famille="rendements" label="Fourchette contrôlée" />
+    </span>
   );
 }

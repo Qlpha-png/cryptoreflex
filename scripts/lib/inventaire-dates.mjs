@@ -27,6 +27,8 @@ export const PAGES_DATES = [
   "/historique-prix/bitcoin/2026", "/top/meilleures-plateformes-crypto-france-2026", "/cryptos/bitcoin/acheter-en-france",
   "/top", "/methodologie", "/api-publique", "/comparatif/frais", "/partenaires/waltio", "/impots", "/transparence",
   "/quiz/plateforme", "/outils/succession-crypto", "/embed/verificateur-mica/kraken", "/fonctionnement-du-comparateur",
+  // lot Z5 (10/10/2026) : fiche staking avec fourchette datée ET repère Lido tenu par le robot R8
+  "/staking/ethereum",
 ];
 
 /**
@@ -63,12 +65,18 @@ export const CHAMPS = [
   ["data/hidden-gems.json", "_meta.lastUpdated", "editorial"],
   ["data/top-cryptos.json", "_meta.lastUpdated", "editorial"],
   ["data/fiscal-tools.json", "_meta.lastUpdated", "tarifs-partenaires"],
+  // lot Z5 : jour du dernier point Lido (robot R8)
+  ["data/rendements.json", "lido.date", "rendements"],
 ];
-/** dates écrites dans le code (constante = expression régulière qui capture la date) */
+/**
+ * dates écrites dans le code (constante = expression régulière qui capture la date) ; drapeau « g » = une date par ligne
+ * de données (lot Z5 : releveLe de chaque rendement de stablecoin, releve de chaque fourchette de /staking, début de
+ * période de chaque ligne du calculateur), toutes comptées
+ */
 export const CONSTANTES = [
-  ["lib/stablecoin-yields.ts", /STABLECOIN_YIELDS_LAST_UPDATED\s*=\s*"([\d-]+)"/, "rendements"],
-  ["lib/staking-rates.ts", /STAKING_PAIRS_RELEVE\s*=\s*"([\d-]+)"/, "rendements"],
-  ["lib/staking-rates.ts", /debut:\s*"([\d-]+)"/, "rendements"],
+  ["lib/stablecoin-yields.ts", /releveLe:\s*"([\d-]+)"/g, "rendements"],
+  ["lib/programmatic.ts", /releve:\s*"([\d-]+)"/g, "rendements"],
+  ["lib/staking-rates.ts", /debut:\s*"([\d-]+)"/g, "rendements"],
   ["lib/events-seed.ts", /EVENTS_SEED_REVU_LE\s*=\s*"([\d-]+)"/, "evenements"],
 ];
 
@@ -103,8 +111,8 @@ export function inventaireDonnees(root, maintenant) {
   for (const [f, re, famille] of CONSTANTES) {
     let src = "";
     try { src = readFileSync(path.join(root, f), "utf8"); } catch { /* fichier absent : 0 date */ }
-    const m = src.match(re);
-    ligne(`${f} ${re.source.split("\\")[0]}`, famille, m ? [m[1]] : []);
+    const dates = re.global ? [...src.matchAll(re)].map((m) => m[1]) : (src.match(re) ? [src.match(re)[1]] : []);
+    ligne(`${f} ${re.source.split("\\")[0]}`, famille, dates);
   }
   return out;
 }

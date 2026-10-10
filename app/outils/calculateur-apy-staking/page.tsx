@@ -10,7 +10,14 @@ import { withHreflang } from "@/lib/seo-alternates";
 import { fitDescription, fitTitle } from "@/lib/seo-text";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import VerifieLe from "@/components/ui/VerifieLe";
-import { STAKING_RATES_PERIODE } from "@/lib/staking-rates";
+import TauxSource from "@/components/TauxSource";
+import { STAKING_RATES, plusAncienReleve } from "@/lib/staking-rates";
+import { TAUX_LIDO } from "@/lib/rendements";
+import { formatJJMMAAAA } from "@/lib/fraicheur";
+import { fmtFr } from "@/lib/format-fr";
+
+// lot Z5 (10/10/2026) : dates calculées depuis les lignes du calculateur (plus de période écrite à la main)
+const RELEVE_CALCULATEUR = plusAncienReleve(STAKING_RATES.flatMap((c) => c.providers));
 
 // Lazy-load : Client lourd (compare 5+ providers, calcul on input change).
 const CalculateurApyStaking = dynamic(
@@ -29,7 +36,7 @@ const CalculateurApyStaking = dynamic(
 export const metadata: Metadata = {
   title: fitTitle("Calculateur APY staking crypto 2026 — ETH, SOL, ADA, DOT, ATOM, NEAR"),
   description: fitDescription(
-    "Calculez vos récompenses de staking en EUR sur ETH, SOL, ADA, DOT, ATOM, NEAR. Comparez staking direct vs liquid staking (Lido, Marinade) vs CEX (Coinbase, Kraken). APY indicatifs Q1 2026.",
+    "Récompenses de staking en euros (ETH, SOL, ADA, DOT, ATOM, NEAR) : APR de Lido mis à jour chaque jour, autres taux datés. Staking direct, liquid staking ou CEX.",
   ),
   alternates: withHreflang("https://www.cryptoreflex.fr/outils/calculateur-apy-staking"),
   openGraph: {
@@ -54,8 +61,12 @@ const FAQ_ITEMS = [
   },
   {
     question: "Quel APY réaliste viser sur l'ETH en 2026 ?",
-    answer:
-      "L'APY brut Ethereum tourne autour de 3-4 % en 2026 (cf. eth.ethereum.org), inférieur aux 5-7 % de 2022 car le ratio de validateurs a augmenté. Lido vous ramène ~ 3 % net (10 % de frais), Coinbase ~ 2,4 % (25 % de frais). Pour un APY plus élevé, regardez du côté de Solana (5-7 %), DOT (10-12 %) ou ATOM (12-14 %), au prix d'une volatilité plus élevée.",
+    // lot Z5 : réponse calculée depuis les données (l'ancienne citait un site douteux et des taux non datés)
+    answer: `Les taux changent chaque jour.${
+      TAUX_LIDO
+        ? ` Repère le plus récent : l'APR de Lido (stETH), net de sa commission de 10 %, est de ${fmtFr(TAUX_LIDO.valeurPct, 2)} % (médiane sur 7 jours au ${formatJJMMAAAA(TAUX_LIDO.date)}, source : Lido).`
+        : ""
+    } Les autres taux du calculateur sont des moyennes indicatives${RELEVE_CALCULATEUR ? ` du ${RELEVE_CALCULATEUR.texte}` : ""}, avec leur date de relevé sous chaque taux et leur âge en haut de la page. Un rendement plus élevé sur d'autres cryptos va de pair avec une volatilité plus élevée.`,
   },
   {
     question: "Comment sont taxées mes récompenses de staking en France ?",
@@ -107,7 +118,11 @@ export default function CalculateurApyStakingPage() {
           <div className="max-w-3xl">
             <span className="inline-flex items-center gap-2 rounded-full border border-accent-green/30 bg-accent-green/10 px-3 py-1 text-xs font-semibold text-accent-green">
               <Coins className="h-3.5 w-3.5" />
-              <VerifieLe date={STAKING_RATES_PERIODE.debut} affichage={STAKING_RATES_PERIODE.texte} famille="rendements" label="APY indicatifs relevés au" />
+              {RELEVE_CALCULATEUR ? (
+                <VerifieLe date={RELEVE_CALCULATEUR.debut} affichage={RELEVE_CALCULATEUR.texte} famille="rendements" label="APY indicatifs relevés au" />
+              ) : (
+                "Taux datés ligne par ligne"
+              )}
             </span>
             <h1 className="mt-4 text-4xl sm:text-5xl font-extrabold tracking-tight text-fg-max">
               Calculateur <span className="gradient-text">APY staking crypto</span>
@@ -117,6 +132,11 @@ export default function CalculateurApyStakingPage() {
               On compare staking direct, liquid staking (Lido, Marinade) et CEX
               (Coinbase, Kraken) en 1 clic.
             </p>
+            {TAUX_LIDO && (
+              <p className="mt-3 text-sm text-fg-max/70">
+                <TauxSource taux={TAUX_LIDO} libelle="APR de Lido (stETH, net de sa commission)" />
+              </p>
+            )}
           </div>
 
           {/* Composant */}
@@ -132,7 +152,7 @@ export default function CalculateurApyStakingPage() {
             <Card
               icon={<Coins className="h-6 w-6" />}
               title="Rendement passif"
-              text="3 à 14 % brut/an selon la crypto, distribué automatiquement, en plus de la valorisation du token."
+              text="Récompenses distribuées automatiquement, en plus de la valorisation du token ; les taux du calculateur sont datés ligne par ligne."
             />
             <Card
               icon={<ShieldCheck className="h-6 w-6" />}

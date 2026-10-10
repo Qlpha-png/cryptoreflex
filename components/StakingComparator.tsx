@@ -17,7 +17,7 @@ import type { StakingPair } from "@/lib/programmatic";
 import { getPlatformById, isAvailableFr } from "@/lib/platforms";
 import AffiliateLink from "@/components/AffiliateLink";
 import { isPaidLink } from "@/lib/partnerships";
-import { fmtFr, fmtNb } from "@/lib/format-fr";
+import { fmtNb } from "@/lib/format-fr";
 
 /* ------------------------------------------------------------------ */
 /*  Types & constantes                                                 */
@@ -369,16 +369,13 @@ function StakingComparator({ pairs }: Props) {
 
   /* ----------------------------- Stats ---------------------------- */
 
+  // Reprise Z5 (10/10/2026) : « APY moyen » et « APY max » retirés. Calculés sur des fourchettes relevées en avril 2026
+  // sans source automatique, ils étaient contredits par le repère Lido daté affiché juste au-dessus (2 à 3 fois moins).
+  // À remettre seulement quand les fourchettes seront relues et datées de moins de 14 jours.
   const stats = useMemo(() => {
-    if (filtered.length === 0) {
-      return { avg: 0, max: 0, platforms: 0 };
-    }
-    const avg =
-      filtered.reduce((s, p) => s + avgApy(p), 0) / filtered.length;
-    const max = filtered.reduce((m, p) => Math.max(m, p.apyMax), 0);
     const platformSet = new Set<string>();
     filtered.forEach((p) => p.availableOn.forEach((id) => platformSet.add(id)));
-    return { avg, max, platforms: platformSet.size };
+    return { platforms: platformSet.size };
   }, [filtered]);
 
   const total = pairs.length;
@@ -394,20 +391,10 @@ function StakingComparator({ pairs }: Props) {
     >
       {/* Stats récap */}
       <div
-        className="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-3"
+        className="mt-8 grid grid-cols-2 gap-3"
         aria-live="polite"
       >
         <StatPill label="Affichées" value={`${shown} / ${total}`} />
-        <StatPill
-          label="APY moyen"
-          value={shown > 0 ? `${fmtFr(stats.avg, 1)}%` : "—"}
-          tone="success"
-        />
-        <StatPill
-          label="APY max"
-          value={shown > 0 ? `${fmtFr(stats.max, 1)}%` : "—"}
-          tone="success"
-        />
         <StatPill
           label="Plateformes"
           value={shown > 0 ? `${stats.platforms}` : "—"}

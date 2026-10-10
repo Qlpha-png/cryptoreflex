@@ -18,9 +18,9 @@ const JOUR = 24 * HEURE;
 export const METHODES = ["kv", "workflow", "fichier", "constante", "dossier", "page", "page-calcul", "supabase", "recomptage", "echeance-jeu", "absence", "aucune"];
 /**
  * 51 familles de la carte + 18b (liste noire AMF), dans l'ordre ; lot Z3 (10/10/2026) : + 52 (liens et défauts des fiches)
- * et 53 (archive des cours).
+ * et 53 (archive des cours) ; reprise Z5 (10/10/2026) : + 54 (repère Lido et contrôles des rendements, robot R8).
  */
-export const IDS_ATTENDUS = [...Array.from({ length: 53 }, (_, i) => String(i + 1)).flatMap((id) => (id === "18" ? ["18", "18b"] : [id]))];
+export const IDS_ATTENDUS = [...Array.from({ length: 54 }, (_, i) => String(i + 1)).flatMap((id) => (id === "18" ? ["18", "18b"] : [id]))];
 export const ICONES = { ok: "✅", attention: "⚠️", defaut: "❌" };
 
 export function chargerRegistre(root) {
@@ -118,7 +118,7 @@ function choisir(dates, mode) {
   return (mode === "plusRecente" ? ts[ts.length - 1] : ts[0]).d;
 }
 
-export function lireFichier(root, l) {
+export function lireFichier(root, l, now) {
   let j;
   try { j = JSON.parse(readFileSync(path.join(root, l.fichier), "utf8")); } catch (e) { return { erreur: `${l.fichier} illisible` }; }
   const vals = valeursChemin(j, l.chemin, l).filter((v) => typeof v === "string" || typeof v === "number");
@@ -149,6 +149,13 @@ export function lireFichier(root, l) {
     const v = Number(valeursChemin(j, l.defautSi.chemin)[0]);
     if (Number.isFinite(v) && v > (l.defautSi.superieurA ?? 0)) return { ...out, etatForce: "defaut", raison: `${v} ${l.defautSi.raison ?? `> ${l.defautSi.superieurA ?? 0}`}` };
   }
+  // lot Z5 : ❌ si la date lue (fichier d'un robot) dépasse N heures, même quand la famille retient une date plus
+  // ancienne par « et » (ex. n° 33 : robot R8 arrêté ou Lido muet, alors que les lignes éditoriales datent d'avril).
+  // Avant « attentionSi » : un robot arrêté est plus grave qu'un écart signalé.
+  if (typeof l.defautSiPlusVieuxQueH === "number" && Number.isFinite(now)) {
+    const h = (now - instantDe(date)) / 3_600_000;
+    if (h > l.defautSiPlusVieuxQueH) return { ...out, etatForce: "defaut", raison: `${l.fichier} ${l.chemin} : ${ageTexte(h)} (maximum ${l.defautSiPlusVieuxQueH} h) : robot arrêté ou source muette` };
+  }
   // reprise Z3 (I3, I4) : ⚠️ si un compteur dépasse un seuil (superieurA) ou si un champ vaut une valeur (egal) ;
   // toutes les raisons vérifiées sont citées.
   if (Array.isArray(l.attentionSi)) {
@@ -165,7 +172,7 @@ export function lireFichier(root, l) {
     if (raisons.length) return { ...out, etatForce: "attention", raison: raisons.join(" ; ") };
   }
   if (l.pasAvant) {
-    const ref = lireFichier(root, l.pasAvant);
+    const ref = lireFichier(root, l.pasAvant, now);
     if (ref.date && instantDe(ref.date) > instantDe(date)) return { ...out, etatForce: "attention", raison: `données modifiées après cette date (${ref.date})` };
   }
   return out;
@@ -174,6 +181,13 @@ export function lireFichier(root, l) {
 export function lireConstante(root, l) {
   let src;
   try { src = readFileSync(path.join(root, l.fichier), "utf8"); } catch { return { erreur: `${l.fichier} illisible` }; }
+  // lot Z5 : « tous » = une date par ligne de données (ex. releveLe de chaque rendement), retenue selon « mode »
+  if (l.tous) {
+    const dates = [...src.matchAll(new RegExp(l.motif, "g"))].map((m) => m[1]);
+    const date = choisir(dates, l.mode ?? "plusAncienne");
+    if (date == null) return { erreur: `aucune date lisible dans ${l.fichier}` };
+    return { date, detail: `${l.fichier} (${dates.length} date${dates.length > 1 ? "s" : ""}, ${l.mode === "plusRecente" ? "la plus récente" : "la plus ancienne"})` };
+  }
   const m = src.match(new RegExp(l.motif));
   if (!m) return { erreur: `constante introuvable dans ${l.fichier}` };
   return { date: m[1], detail: `${l.fichier}` };
@@ -366,7 +380,7 @@ export async function lireFamille(f, ctx) {
   switch (l.methode) {
     case "kv": lu = await lireKv(l, ctx); break;
     case "workflow": lu = await lireWorkflow(l, ctx); break;
-    case "fichier": lu = lireFichier(ctx.root, l); break;
+    case "fichier": lu = lireFichier(ctx.root, l, ctx.now); break;
     case "constante": lu = lireConstante(ctx.root, l); break;
     case "dossier": lu = lireDossier(ctx.root, l); break;
     case "page":

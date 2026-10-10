@@ -346,9 +346,13 @@ export interface StakingPair {
   cryptoId: string;
   symbol: string;
   name: string;
-  /** Range APY net observé sur les exchanges MiCA (avril 2026). */
+  /** Fourchette d'APY relevée sur les plateformes (date : `releve`). */
   apyMin: number;
   apyMax: number;
+  /** Date du relevé de la fourchette (AAAA-MM ou AAAA-MM-JJ) : affichée avec son âge (<VerifieLe>), jamais rajeunie.
+   *  Lot Z5 (10/10/2026) : aucune source automatique autorisée pour ces lignes (Kraken : conditions EEE ; Coinbase,
+   *  Bitpanda : aucune API) ; seul l'APR de Lido est tenu par le robot R8 (repère ETH, lib/rendements.ts). */
+  releve: string;
   /** Lock-up minimum en jours (0 = liquid staking). */
   lockUpDays: number;
   /** Plateformes (id) qui proposent ce staking en FR. */
@@ -358,26 +362,26 @@ export interface StakingPair {
 }
 
 export const STAKING_PAIRS: StakingPair[] = [
-  { cryptoId: "ethereum", symbol: "ETH", name: "Ethereum", apyMin: 2.8, apyMax: 4.5, lockUpDays: 0, availableOn: ["coinbase", "kraken", "bitpanda", "swissborg"], risk: 2 },
-  { cryptoId: "solana", symbol: "SOL", name: "Solana", apyMin: 5.5, apyMax: 7.8, lockUpDays: 2, availableOn: ["coinbase", "kraken", "bitpanda"], risk: 2 },
-  { cryptoId: "cardano", symbol: "ADA", name: "Cardano", apyMin: 2.5, apyMax: 4.0, lockUpDays: 0, availableOn: ["coinbase", "kraken", "bitpanda"], risk: 1 },
-  { cryptoId: "polkadot", symbol: "DOT", name: "Polkadot", apyMin: 10.0, apyMax: 14.0, lockUpDays: 28, availableOn: ["kraken", "bitpanda"], risk: 3 },
-  { cryptoId: "cosmos", symbol: "ATOM", name: "Cosmos", apyMin: 11.0, apyMax: 16.0, lockUpDays: 21, availableOn: ["kraken", "bitpanda"], risk: 3 },
-  { cryptoId: "tezos", symbol: "XTZ", name: "Tezos", apyMin: 4.0, apyMax: 6.0, lockUpDays: 0, availableOn: ["coinbase", "kraken", "bitpanda"], risk: 1 },
-  { cryptoId: "polygon", symbol: "MATIC", name: "Polygon", apyMin: 3.5, apyMax: 5.5, lockUpDays: 3, availableOn: ["bitpanda"], risk: 2 },
-  { cryptoId: "avalanche", symbol: "AVAX", name: "Avalanche", apyMin: 6.0, apyMax: 8.5, lockUpDays: 14, availableOn: ["kraken", "coinbase"], risk: 2 },
-  { cryptoId: "near-protocol", symbol: "NEAR", name: "NEAR Protocol", apyMin: 8.0, apyMax: 11.0, lockUpDays: 2, availableOn: [], risk: 3 },
-  { cryptoId: "celestia", symbol: "TIA", name: "Celestia", apyMin: 12.0, apyMax: 17.0, lockUpDays: 21, availableOn: ["kraken"], risk: 4 },
-  { cryptoId: "injective", symbol: "INJ", name: "Injective", apyMin: 10.0, apyMax: 15.0, lockUpDays: 21, availableOn: [], risk: 4 },
-  { cryptoId: "algorand", symbol: "ALGO", name: "Algorand", apyMin: 1.5, apyMax: 3.0, lockUpDays: 0, availableOn: ["kraken"], risk: 1 },
-  { cryptoId: "tron", symbol: "TRX", name: "TRON", apyMin: 4.0, apyMax: 6.5, lockUpDays: 14, availableOn: ["bitpanda"], risk: 3 },
-  { cryptoId: "aptos", symbol: "APT", name: "Aptos", apyMin: 6.5, apyMax: 8.0, lockUpDays: 14, availableOn: ["coinbase"], risk: 3 },
-  { cryptoId: "sui", symbol: "SUI", name: "Sui", apyMin: 4.0, apyMax: 6.0, lockUpDays: 1, availableOn: [], risk: 3 },
-  { cryptoId: "internet-computer", symbol: "ICP", name: "Internet Computer", apyMin: 7.0, apyMax: 11.0, lockUpDays: 180, availableOn: ["coinbase"], risk: 3 },
-  { cryptoId: "hedera", symbol: "HBAR", name: "Hedera", apyMin: 3.0, apyMax: 5.0, lockUpDays: 0, availableOn: ["bitpanda"], risk: 2 },
-  { cryptoId: "stacks", symbol: "STX", name: "Stacks", apyMin: 6.0, apyMax: 9.0, lockUpDays: 14, availableOn: ["okx"], risk: 4 },
-  { cryptoId: "lido-dao", symbol: "LDO", name: "Lido DAO", apyMin: 1.5, apyMax: 3.0, lockUpDays: 0, availableOn: ["kraken"], risk: 3 },
-  { cryptoId: "mina-protocol", symbol: "MINA", name: "Mina Protocol", apyMin: 8.0, apyMax: 12.0, lockUpDays: 0, availableOn: ["kraken"], risk: 3 },
+  { cryptoId: "ethereum", symbol: "ETH", name: "Ethereum", apyMin: 2.8, apyMax: 4.5, lockUpDays: 0, availableOn: ["coinbase", "kraken", "bitpanda", "swissborg"], risk: 2, releve: "2026-04" },
+  { cryptoId: "solana", symbol: "SOL", name: "Solana", apyMin: 5.5, apyMax: 7.8, lockUpDays: 2, availableOn: ["coinbase", "kraken", "bitpanda"], risk: 2, releve: "2026-04" },
+  { cryptoId: "cardano", symbol: "ADA", name: "Cardano", apyMin: 2.5, apyMax: 4.0, lockUpDays: 0, availableOn: ["coinbase", "kraken", "bitpanda"], risk: 1, releve: "2026-04" },
+  { cryptoId: "polkadot", symbol: "DOT", name: "Polkadot", apyMin: 10.0, apyMax: 14.0, lockUpDays: 28, availableOn: ["kraken", "bitpanda"], risk: 3, releve: "2026-04" },
+  { cryptoId: "cosmos", symbol: "ATOM", name: "Cosmos", apyMin: 11.0, apyMax: 16.0, lockUpDays: 21, availableOn: ["kraken", "bitpanda"], risk: 3, releve: "2026-04" },
+  { cryptoId: "tezos", symbol: "XTZ", name: "Tezos", apyMin: 4.0, apyMax: 6.0, lockUpDays: 0, availableOn: ["coinbase", "kraken", "bitpanda"], risk: 1, releve: "2026-04" },
+  { cryptoId: "polygon", symbol: "MATIC", name: "Polygon", apyMin: 3.5, apyMax: 5.5, lockUpDays: 3, availableOn: ["bitpanda"], risk: 2, releve: "2026-04" },
+  { cryptoId: "avalanche", symbol: "AVAX", name: "Avalanche", apyMin: 6.0, apyMax: 8.5, lockUpDays: 14, availableOn: ["kraken", "coinbase"], risk: 2, releve: "2026-04" },
+  { cryptoId: "near-protocol", symbol: "NEAR", name: "NEAR Protocol", apyMin: 8.0, apyMax: 11.0, lockUpDays: 2, availableOn: [], risk: 3, releve: "2026-04" },
+  { cryptoId: "celestia", symbol: "TIA", name: "Celestia", apyMin: 12.0, apyMax: 17.0, lockUpDays: 21, availableOn: ["kraken"], risk: 4, releve: "2026-04" },
+  { cryptoId: "injective", symbol: "INJ", name: "Injective", apyMin: 10.0, apyMax: 15.0, lockUpDays: 21, availableOn: [], risk: 4, releve: "2026-04" },
+  { cryptoId: "algorand", symbol: "ALGO", name: "Algorand", apyMin: 1.5, apyMax: 3.0, lockUpDays: 0, availableOn: ["kraken"], risk: 1, releve: "2026-04" },
+  { cryptoId: "tron", symbol: "TRX", name: "TRON", apyMin: 4.0, apyMax: 6.5, lockUpDays: 14, availableOn: ["bitpanda"], risk: 3, releve: "2026-04" },
+  { cryptoId: "aptos", symbol: "APT", name: "Aptos", apyMin: 6.5, apyMax: 8.0, lockUpDays: 14, availableOn: ["coinbase"], risk: 3, releve: "2026-04" },
+  { cryptoId: "sui", symbol: "SUI", name: "Sui", apyMin: 4.0, apyMax: 6.0, lockUpDays: 1, availableOn: [], risk: 3, releve: "2026-04" },
+  { cryptoId: "internet-computer", symbol: "ICP", name: "Internet Computer", apyMin: 7.0, apyMax: 11.0, lockUpDays: 180, availableOn: ["coinbase"], risk: 3, releve: "2026-04" },
+  { cryptoId: "hedera", symbol: "HBAR", name: "Hedera", apyMin: 3.0, apyMax: 5.0, lockUpDays: 0, availableOn: ["bitpanda"], risk: 2, releve: "2026-04" },
+  { cryptoId: "stacks", symbol: "STX", name: "Stacks", apyMin: 6.0, apyMax: 9.0, lockUpDays: 14, availableOn: ["okx"], risk: 4, releve: "2026-04" },
+  { cryptoId: "lido-dao", symbol: "LDO", name: "Lido DAO", apyMin: 1.5, apyMax: 3.0, lockUpDays: 0, availableOn: ["kraken"], risk: 3, releve: "2026-04" },
+  { cryptoId: "mina-protocol", symbol: "MINA", name: "Mina Protocol", apyMin: 8.0, apyMax: 12.0, lockUpDays: 0, availableOn: ["kraken"], risk: 3, releve: "2026-04" },
 ];
 
 export function getStakingPair(cryptoId: string): StakingPair | undefined {
