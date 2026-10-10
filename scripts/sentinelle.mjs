@@ -209,7 +209,9 @@ async function checkRobots() {
     /* 05/10/2026 : la veille officielle est exclue — son « échec » signale une source officielle modifiée (ticket
        « veille-officielle » dédié, traité par la routine), et relancer un passage « enregistrer » accepterait une nouvelle
        référence sans relecture. */
-    const runs = (j.workflow_runs || []).filter((w) => w.name && !/sentinelle/i.test(w.name) && !/veille-officielle\.yml$/.test(w.path || "") && w.status === "completed");
+    /* 10/10/2026 : un passage déclenché par une pull request (tests E2E d'une branche proposée) ne dit rien du site en
+       ligne : il est ignoré ici (le ticket restait ouvert 15 h sur une PR déjà fusionnée). */
+    const runs = (j.workflow_runs || []).filter((w) => w.name && !/sentinelle/i.test(w.name) && !/veille-officielle\.yml$/.test(w.path || "") && w.event !== "pull_request" && w.status === "completed");
     // dernier résultat par tâche : un échec réparé ensuite n'est plus un défaut
     const latest = new Map();
     for (const w of runs) if (!latest.has(w.name)) latest.set(w.name, w);
